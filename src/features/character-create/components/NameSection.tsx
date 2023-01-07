@@ -5,7 +5,7 @@ export function NameSection() {
     <Stack spacing={0}>
       <Typography variant={"h6"}>Name</Typography>
       <Typography color={"GrayText"}>
-        Every adventurer has a name. What is yours?
+        A good story starts with a good name. Or a bad one.
       </Typography>
       <div>
         <TextField

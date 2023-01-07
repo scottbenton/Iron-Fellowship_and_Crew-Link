@@ -1,5 +1,15 @@
 import { colors, createTheme } from "@mui/material";
 
+declare module "@mui/material/styles" {
+  interface Theme {
+    fontFamilyTitle: string;
+  }
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    fontFamilyTitle: string;
+  }
+}
+
 export const lightTheme = createTheme({
   palette: {
     primary: {
@@ -26,4 +36,17 @@ export const lightTheme = createTheme({
       '"Segoe UI Symbol"',
     ].join(","),
   },
+  fontFamilyTitle: [
+    "Staatliches",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    '"Segoe UI"',
+    "Roboto",
+    '"Helvetica Neue"',
+    "Arial",
+    "sans-serif",
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+  ].join(","),
 });

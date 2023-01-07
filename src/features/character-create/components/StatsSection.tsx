@@ -49,7 +49,9 @@ export function StatsSection() {
   return (
     <Box>
       <Typography variant={"h6"}>Stats</Typography>
-      <Typography color={"GrayText"}>Select number for each stat</Typography>
+      <Typography color={"GrayText"}>
+        Select a number 1-3 for each stat.
+      </Typography>
       <Box mt={2}>
         <StatDropdown
           label={"Edge"}
