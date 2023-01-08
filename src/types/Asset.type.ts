@@ -5,9 +5,9 @@ export enum ASSET_TYPES {
   RITUAL = "Ritual",
 }
 
-export interface Asset {
+export interface JsonAsset {
   Name: string;
-  "Asset Type": ASSET_TYPES;
+  "Asset Type": string;
   "Input Fields"?: string[];
   Deed?: boolean;
   Description?: string;
@@ -16,7 +16,7 @@ export interface Asset {
     Text: string;
     Enabled?: boolean;
     "Alter Properties"?: {
-      "Asset Track"?: {
+      "Asset Track": {
         Name: string;
         Max: number;
       };
@@ -25,7 +25,7 @@ export interface Asset {
   "Asset Track"?: {
     Name: string;
     Max: number;
-    "Starting Value": number;
+    "Starting Value"?: number;
   };
   MultiFieldAssetTrack?: {
     Fields: {
@@ -33,6 +33,40 @@ export interface Asset {
       ActiveText: string;
       InactiveText: string;
       IsActive: boolean;
-    };
+    }[];
   };
+}
+
+export interface Asset {
+  name: string;
+  type: ASSET_TYPES;
+  inputs?: string[];
+  deed?: boolean;
+  description?: string;
+  abilities: {
+    name?: string;
+    text: string;
+    startsEnabled?: boolean;
+    alterTrack?: {
+      trackName: string;
+      max: number;
+    };
+  }[];
+  track?: {
+    name: string;
+    max: number;
+    startingValue?: number;
+  };
+  multiFieldTrack?: {
+    options: string[];
+  };
+}
+
+interface StoredAsset {
+  id: string;
+  enabledAbilities: boolean[];
+  inputs?: {
+    [label: string]: string;
+  };
+  tracks?: { [name: string]: number };
 }

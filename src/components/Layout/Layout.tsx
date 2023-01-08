@@ -1,4 +1,4 @@
-import { Box, Container, LinearProgress, useTheme } from "@mui/material";
+import { Box, Container, LinearProgress } from "@mui/material";
 import { PropsWithChildren } from "react";
 import { AUTH_STATE, useAuth } from "../../hooks/useAuth";
 import { Header } from "./Header";
@@ -7,7 +7,6 @@ export interface LayoutProps extends PropsWithChildren {}
 
 export function Layout(props: LayoutProps) {
   const { children } = props;
-  const theme = useTheme();
 
   const { authState } = useAuth();
 
@@ -16,9 +15,18 @@ export function Layout(props: LayoutProps) {
   }
 
   return (
-    <Box>
+    <Box minHeight={"100vh"} display={"flex"} flexDirection={"column"}>
       <Header />
-      <Container maxWidth={"xl"}>{children}</Container>
+      <Container
+        maxWidth={"xl"}
+        sx={(theme) => ({
+          py: 4,
+          backgroundColor: theme.palette.background.paper,
+          flexGrow: 1,
+        })}
+      >
+        {children}
+      </Container>
     </Box>
   );
 }

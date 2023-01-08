@@ -16,7 +16,7 @@ export function CharacterCreatePage() {
       <Box
         width={"100vw"}
         height={150}
-        sx={{
+        sx={(theme) => ({
           backgroundSize: "cover",
           backgroundPosition: "top",
           backgroundRepeat: "no-repeat",
@@ -24,9 +24,17 @@ export function CharacterCreatePage() {
           filter: "brightness(50%) grayscale(25%)",
           position: "absolute",
           left: 0,
-        }}
+          // top: 0,
+          marginTop: -4,
+        })}
       ></Box>
-      <Box height={150} display={"flex"} alignItems={"flex-end"} paddingY={2}>
+      <Box
+        height={150}
+        display={"flex"}
+        alignItems={"flex-end"}
+        paddingY={2}
+        mt={-4}
+      >
         <Typography
           variant={"h4"}
           color={"white"}
