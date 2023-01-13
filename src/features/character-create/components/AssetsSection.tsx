@@ -13,6 +13,7 @@ import {
   paths,
   combatTalents,
   rituals,
+  assets,
 } from "../../../data/assets";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AssetCard } from "../../../components/AssetCard/AssetCard";
@@ -20,6 +21,7 @@ import { AddAssetCard } from "./AddAssetCard";
 import { useState } from "react";
 import { Asset } from "../../../types/Asset.type";
 import { AssetCardDialog } from "../../../components/AssetCardDialog";
+import { useCharacterCreateStore } from "../store/characterCreate.store";
 
 const assetGroups = [
   {
@@ -45,11 +47,27 @@ const assetGroups = [
 ];
 
 export function AssetsSection() {
-  const [currentlySelectedAssets, setCurrentlySelectedAssets] = useState<
-    (Asset | undefined)[]
-  >([undefined, undefined, undefined]);
+  const selectedAssets = useCharacterCreateStore((store) => store.assets);
+  const setSelectedAsset = useCharacterCreateStore(
+    (store) => store.selectAsset
+  );
+
+  // const [currentlySelectedAssets, setCurrentlySelectedAssets] = useState<
+  //   (Asset | undefined)[]
+  // >([undefined, undefined, undefined]);
   const [currentlySelectingAssetIndex, setCurrentlySelectingAssetIndex] =
     useState<number>();
+
+  const selectAsset = (assetId: string) => {
+    if (typeof currentlySelectingAssetIndex === "number") {
+      setSelectedAsset(currentlySelectingAssetIndex, assetId);
+    }
+    setCurrentlySelectingAssetIndex(undefined);
+  };
+
+  const removeAsset = (index: number) => {
+    setSelectedAsset(index);
+  };
 
   return (
     <Stack>
@@ -61,46 +79,50 @@ export function AssetsSection() {
       <Grid
         sx={(theme) => ({
           backgroundColor: theme.palette.background.default,
-          padding: 2,
+          pr: 2,
+          pb: 2,
           borderRadius: theme.shape.borderRadius,
           mt: 2,
         })}
         container
         spacing={2}
       >
-        <AddAssetCard onClick={() => setCurrentlySelectingAssetIndex(0)} />
-        <AddAssetCard onClick={() => setCurrentlySelectingAssetIndex(1)} />
-        <AddAssetCard onClick={() => setCurrentlySelectingAssetIndex(2)} />
+        {selectedAssets.map((storedAsset, index) => (
+          <Grid
+            key={index}
+            item
+            xs={12}
+            sm={6}
+            lg={4}
+            sx={{ display: "flex", justifyContent: "center" }}
+          >
+            {storedAsset ? (
+              <AssetCard
+                asset={assets[storedAsset.id]}
+                sx={{
+                  // maxWidth: 380,
+                  minHeight: 450,
+                  width: "100%",
+                }}
+                actions={
+                  <Button color={"error"} onClick={() => removeAsset(index)}>
+                    Remove
+                  </Button>
+                }
+              />
+            ) : (
+              <AddAssetCard
+                onClick={() => setCurrentlySelectingAssetIndex(index)}
+              />
+            )}
+          </Grid>
+        ))}
       </Grid>
       <AssetCardDialog
         open={typeof currentlySelectingAssetIndex === "number"}
         handleClose={() => setCurrentlySelectingAssetIndex(undefined)}
-        handleAssetSelection={() => {}}
+        handleAssetSelection={(asset) => selectAsset(asset.id)}
       />
-
-      {assetGroups.map((group) => (
-        <Accordion variant={"outlined"}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Box>
-              <Typography variant={"h6"}>{group.name}</Typography>
-              <Typography color={"GrayText"}>{group.description}</Typography>
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container spacing={2}>
-              {group.assets.map((asset, index) => (
-                <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                  <AssetCard
-                    asset={asset}
-                    hideTracks={true}
-                    actions={<Button>Select</Button>}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </AccordionDetails>
-        </Accordion>
-      ))}
     </Stack>
   );
 }

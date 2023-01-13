@@ -1,6 +1,10 @@
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import { Stack, TextField, Typography } from "@mui/material";
+import { useCharacterCreateStore } from "../store/characterCreate.store";
 
 export function NameSection() {
+  const name = useCharacterCreateStore((store) => store.name);
+  const setName = useCharacterCreateStore((store) => store.setName);
+
   return (
     <Stack spacing={0}>
       <Typography variant={"h6"}>Name</Typography>
@@ -12,6 +16,8 @@ export function NameSection() {
           label={"Name"}
           variant={"filled"}
           sx={{ mt: 2, minWidth: 350 }}
+          value={name}
+          onChange={(evt) => setName(evt.target.value)}
         />
       </div>
     </Stack>

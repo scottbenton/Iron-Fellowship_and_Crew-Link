@@ -10,11 +10,8 @@ export const rituals: Asset[] = [];
 
 jsonAssets.Assets.forEach((jsonAsset: JsonAsset) => {
   const asset = convertJsonAssetToAsset(jsonAsset);
-  const key = `${asset.type}-${asset.name}`
-    .toLocaleLowerCase()
-    .replaceAll(" ", "-");
 
-  assets[key] = asset;
+  assets[asset.id] = asset;
 
   switch (asset.type) {
     case ASSET_TYPES.COMPANION:
@@ -74,13 +71,19 @@ function convertJsonAssetToAsset(asset: JsonAsset): Asset {
     "MultiFieldAssetTrack"
   ]
     ? {
+        name: asset["MultiFieldAssetTrack"].Fields[0].Name,
         options: asset["MultiFieldAssetTrack"].Fields.map(
-          (field) => field.Name
+          (field) => field.ActiveText
         ),
       }
     : undefined;
 
+  const id = `${assetType}-${asset.Name}`
+    .toLocaleLowerCase()
+    .replaceAll(" ", "-");
+
   return {
+    id,
     name: asset.Name,
     type: assetType,
     inputs: asset["Input Fields"],

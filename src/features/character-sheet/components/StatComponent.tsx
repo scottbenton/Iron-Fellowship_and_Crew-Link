@@ -1,0 +1,138 @@
+import { Box, ButtonBase, Card, Typography } from "@mui/material";
+import { STATS } from "../../../types/stats.enum";
+
+import PlusIcon from "@mui/icons-material/Add";
+import MinusIcon from "@mui/icons-material/Remove";
+import { useState } from "react";
+
+export interface StatComponentProps {
+  label: string;
+  value: number;
+  updateTrack?: {
+    min: number;
+    max: number;
+    handleChange: (newValue: number) => Promise<boolean>;
+  };
+}
+
+export function StatComponent(props: StatComponentProps) {
+  const { label, value, updateTrack } = props;
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleStatUpdate = (newValue: number) => {
+    if (
+      updateTrack &&
+      newValue >= updateTrack.min &&
+      newValue <= updateTrack.max
+    ) {
+      setLoading(true);
+      updateTrack
+        .handleChange(newValue)
+        .catch((e) => {
+          console.error(e);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
+  // const { error } = useSnackbar();
+  // const [loading, setLoading] = useState<boolean>(false);
+
+  // const handleStatUpdate = (newValue: number) => {
+  //   setLoading(true);
+  //   updateStat(characterId, stat, newValue)
+  //     .catch((e) => {
+  //       error(e);
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // };
+
+  // const handleIncrement = () => {
+  //   if (value < 9) {
+  //     handleStatUpdate(value + 1);
+  //   }
+  // };
+
+  // const handleDecrement = () => {
+  //   if (value >= 1) {
+  //     handleStatUpdate(value - 1);
+  //   }
+  // };
+
+  return (
+    <Card
+      variant={"outlined"}
+      sx={(theme) => ({
+        borderRadius: theme.shape.borderRadius,
+        overflow: "hidden",
+        width: 75,
+        display: "flex",
+        flexDirection: "column",
+      })}
+    >
+      <Typography
+        display={"block"}
+        textAlign={"center"}
+        variant={"subtitle1"}
+        sx={(theme) => ({
+          fontFamily: theme.fontFamilyTitle,
+          color: theme.palette.grey[600],
+          backgroundColor: theme.palette.grey[100],
+        })}
+      >
+        {label}
+      </Typography>
+      <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
+        {updateTrack && (
+          <ButtonBase
+            onClick={() => handleStatUpdate(value + 1)}
+            sx={(theme) => ({
+              width: "100%",
+              color: theme.palette.grey[600],
+              "&:hover": {
+                backgroundColor: theme.palette.action.hover,
+              },
+            })}
+          >
+            <PlusIcon sx={{ width: 20, height: 20 }} />
+          </ButtonBase>
+        )}
+        <Typography
+          sx={[
+            (theme) => ({
+              color: theme.palette.grey[700],
+              paddingX: 0,
+              flexGrow: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }),
+            updateTrack ? { lineHeight: "1.5rem" } : {},
+          ]}
+          variant={"h6"}
+          textAlign={"center"}
+        >
+          {value}
+        </Typography>
+        {updateTrack && (
+          <ButtonBase
+            onClick={() => handleStatUpdate(value - 1)}
+            sx={(theme) => ({
+              width: "100%",
+              color: theme.palette.grey[600],
+              "&:hover": {
+                backgroundColor: theme.palette.action.hover,
+              },
+            })}
+          >
+            <MinusIcon sx={{ width: 20, height: 20 }} />
+          </ButtonBase>
+        )}
+      </Box>
+    </Card>
+  );
+}

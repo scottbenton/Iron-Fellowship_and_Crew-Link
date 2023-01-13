@@ -9,43 +9,34 @@ export function AddAssetCard(props: AddAssetCardProps) {
   const { onClick } = props;
 
   return (
-    <Grid
-      item
-      xs={12}
-      sm={6}
-      lg={4}
-      sx={{ display: "flex", justifyContent: "center" }}
+    <Card
+      sx={{
+        minHeight: 450,
+        width: "100%",
+      }}
+      variant={"outlined"}
     >
-      <Card
+      <CardActionArea
+        onClick={onClick}
         sx={{
-          maxWidth: 300,
-          minHeight: 400,
-          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          height: "100%",
         }}
-        variant={"outlined"}
       >
-        <CardActionArea
-          onClick={onClick}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-            height: "100%",
-          }}
-        >
-          <Typography variant={"h6"} color={"GrayText"}>
-            Add Asset
-          </Typography>
-          <AddIcon
-            sx={(theme) => ({
-              color: theme.palette.grey[400],
-              width: 32,
-              height: 32,
-            })}
-          />
-        </CardActionArea>
-      </Card>
-    </Grid>
+        <Typography variant={"h6"} color={"GrayText"}>
+          Add Asset
+        </Typography>
+        <AddIcon
+          sx={(theme) => ({
+            color: theme.palette.grey[400],
+            width: 32,
+            height: 32,
+          })}
+        />
+      </CardActionArea>
+    </Card>
   );
 }

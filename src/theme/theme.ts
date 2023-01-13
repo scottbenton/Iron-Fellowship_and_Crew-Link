@@ -18,9 +18,7 @@ export const lightTheme = createTheme({
       dark: "#27272a",
     },
     secondary: {
-      light: "#facc15",
-      main: "#eab308",
-      dark: "#ca8a04",
+      main: "#ff6584",
     },
     background: {
       paper: "#fff",
@@ -71,4 +69,7 @@ export const lightTheme = createTheme({
     '"Segoe UI Emoji"',
     '"Segoe UI Symbol"',
   ].join(","),
+  shape: {
+    borderRadius: 2,
+  },
 });

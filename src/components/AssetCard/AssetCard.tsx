@@ -9,9 +9,11 @@ import {
 } from "@mui/material";
 import { ReactNode } from "react";
 import { Asset } from "../../types/Asset.type";
+import { MarkdownRenderer } from "../MarkdownRenderer/MarkdownRenderer";
 
 export interface AssetCardProps {
   asset: Asset;
+
   readOnly?: boolean;
   hideTracks?: boolean;
   actions?: ReactNode;
@@ -52,22 +54,29 @@ export function AssetCard(props: AssetCardProps) {
         {asset.inputs &&
           asset.inputs.length > 0 &&
           asset.inputs?.map((field, index) => (
-            <TextField label={field} variant={"standard"} fullWidth />
+            <TextField
+              label={field}
+              variant={"standard"}
+              fullWidth
+              disabled={readOnly}
+              key={index}
+            />
           ))}
 
         <Box>
           {asset.abilities.map((ability, index) => (
-            <Box display={"flex"} alignItems={"flex-start"} mt={2}>
-              <Checkbox checked={ability.startsEnabled ?? false} />
+            <Box display={"flex"} alignItems={"flex-start"} mt={2} key={index}>
+              <Checkbox
+                checked={ability.startsEnabled ?? false}
+                disabled={ability.startsEnabled || readOnly}
+              />
               <Box key={index}>
                 {ability.name && (
-                  <Typography display={"inline"}>
+                  <Typography display={"inline"} variant={"body2"}>
                     <b>{ability.name}: </b>
                   </Typography>
                 )}
-                <Typography display={"inline"} color={"GrayText"}>
-                  {ability.text}
-                </Typography>
+                <MarkdownRenderer markdown={ability.text} inlineParagraph />
               </Box>
             </Box>
           ))}

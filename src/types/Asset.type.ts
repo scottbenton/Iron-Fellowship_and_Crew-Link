@@ -38,6 +38,7 @@ export interface JsonAsset {
 }
 
 export interface Asset {
+  id: string;
   name: string;
   type: ASSET_TYPES;
   inputs?: string[];
@@ -58,15 +59,17 @@ export interface Asset {
     startingValue?: number;
   };
   multiFieldTrack?: {
+    name: string;
     options: string[];
   };
 }
 
-interface StoredAsset {
+export interface StoredAsset {
   id: string;
   enabledAbilities: boolean[];
   inputs?: {
     [label: string]: string;
   };
-  tracks?: { [name: string]: number };
+  trackValue?: number;
+  multiFieldTrackValue?: string;
 }

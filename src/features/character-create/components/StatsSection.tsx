@@ -1,16 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { STATS } from "../../../types/stats.enum";
+import { useCharacterCreateStore } from "../store/characterCreate.store";
 import { StatDropdown } from "./StatDropdown";
 
 export function StatsSection() {
-  const [stats, setStats] = useState<{ [key in STATS]: number | undefined }>({
-    [STATS.EDGE]: undefined,
-    [STATS.HEART]: undefined,
-    [STATS.IRON]: undefined,
-    [STATS.SHADOW]: undefined,
-    [STATS.WITS]: undefined,
-  });
+  const stats = useCharacterCreateStore((store) => store.stats);
+  const setStat = useCharacterCreateStore((store) => store.setStat);
 
   const [statsRemainingTracker, setStatsRemainingTracker] = useState<number[]>([
     3, 2, 2, 1, 1,
@@ -29,18 +25,12 @@ export function StatsSection() {
         }
       }
 
-      setStats((prevStats) => {
-        let newStats = { ...prevStats };
+      const currentStat = stats[stat];
+      if (currentStat) {
+        remaining.push(currentStat);
+      }
 
-        const currentStat = newStats[stat];
-        if (currentStat) {
-          remaining.push(currentStat);
-        }
-
-        newStats[stat] = value;
-
-        return newStats;
-      });
+      setStat(stat, value);
 
       return remaining;
     });
