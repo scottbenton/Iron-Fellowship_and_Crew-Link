@@ -5,12 +5,20 @@ import { AssetsSection } from "./AssetsSection";
 
 export interface TabsSectionProps {
   assets?: StoredAsset[];
+  characterId: string;
+}
+
+enum TABS {
+  ASSETS,
+  VOWS,
+  BONDS,
+  DEBILITIES,
 }
 
 export function TabsSection(props: TabsSectionProps) {
-  const { assets } = props;
+  const { assets, characterId } = props;
 
-  const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
+  const [selectedTab, setSelectedTab] = useState<TABS>(TABS.ASSETS);
   return (
     <Card
       variant={"outlined"}
@@ -18,18 +26,25 @@ export function TabsSection(props: TabsSectionProps) {
     >
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
-          value={selectedTabIndex}
-          onChange={(evt, value) => setSelectedTabIndex(value)}
-          aria-label="basic tabs example"
+          value={selectedTab}
+          onChange={(evt, value) => setSelectedTab(value)}
         >
-          <Tab label="Assets" />
+          <Tab label="Assets" value={TABS.ASSETS} />
+          {/* <Tab label="Vows" />
           <Tab label="Bonds" />
-          <Tab label="Item Three" />
+          <Tab label="Debilities" />
+          <Tab label="Combat" /> */}
         </Tabs>
       </Box>
-      <Box flexGrow={1} overflow={"auto"}>
-        {selectedTabIndex === 0 && assets && (
-          <AssetsSection assetData={assets} />
+      <Box
+        flexGrow={1}
+        overflow={"auto"}
+        bgcolor={(theme) =>
+          selectedTab === TABS.ASSETS ? theme.palette.grey[100] : undefined
+        }
+      >
+        {selectedTab === TABS.ASSETS && assets && (
+          <AssetsSection assetData={assets} characterId={characterId} />
         )}
       </Box>
     </Card>

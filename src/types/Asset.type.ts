@@ -53,7 +53,7 @@ export interface Asset {
       max: number;
     };
   }[];
-  track?: {
+  track: {
     name: string;
     max: number;
     startingValue?: number;
@@ -66,7 +66,9 @@ export interface Asset {
 
 export interface StoredAsset {
   id: string;
-  enabledAbilities: boolean[];
+  enabledAbilities: {
+    [index: number]: boolean;
+  };
   inputs?: {
     [label: string]: string;
   };

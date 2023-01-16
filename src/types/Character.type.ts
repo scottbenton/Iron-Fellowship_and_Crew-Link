@@ -15,5 +15,8 @@ export interface CharacterDocument {
 }
 
 export interface AssetDocument {
-  assets: StoredAsset[];
+  assetOrder: string[];
+  assets: {
+    [key: string]: StoredAsset;
+  };
 }

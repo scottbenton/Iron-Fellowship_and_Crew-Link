@@ -14,9 +14,13 @@ export function getAssets(
     return onSnapshot(
       getCharacterAssetDoc(uid, characterId),
       (snapshot) => {
-        const assets = snapshot.data()?.assets;
-        if (assets) {
-          onAssets(assets);
+        const data = snapshot.data();
+        const assets = data?.assets;
+        const assetOrder = data?.assetOrder;
+
+        if (assets && assetOrder) {
+          const orderedAssets = assetOrder.map((assetId) => assets[assetId]);
+          onAssets(Object.values(orderedAssets));
         } else {
           onError("No assets found");
         }

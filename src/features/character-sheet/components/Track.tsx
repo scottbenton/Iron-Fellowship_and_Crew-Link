@@ -1,20 +1,11 @@
 import {
   Box,
-  ButtonBase,
-  Card,
-  Hidden,
-  Input,
-  InputLabel,
-  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import { SystemStyleObject } from "@mui/system";
 import { useEffect, useState } from "react";
-
-import PlusIcon from "@mui/icons-material/Add";
-import MinusIcon from "@mui/icons-material/Remove";
 
 export interface TrackProps {
   label: string;
@@ -23,6 +14,7 @@ export interface TrackProps {
   value: number;
   onChange: (newValue: number) => Promise<boolean>;
   sx?: SystemStyleObject;
+  disabled?: boolean;
 }
 
 function getArr(min: number, max: number): number[] {
@@ -36,33 +28,20 @@ function getArr(min: number, max: number): number[] {
 }
 
 export function Track(props: TrackProps) {
-  const { label, min, max, value, onChange, sx } = props;
+  const { label, min, max, value, onChange, sx, disabled } = props;
 
-  const [inputValue, setInputValue] = useState(value + "");
   const [loading, setLoading] = useState<boolean>(false);
-
   const [numbers, setNumbers] = useState<number[]>([]);
 
   const handleChange = (newValue: number) => {
     if (newValue >= min && newValue <= max) {
       setLoading(true);
-      setInputValue(newValue + "");
       onChange(newValue)
-        .catch(() => {
-          setInputValue(value + "");
-        })
+        .catch(() => {})
         .finally(() => {
           setLoading(false);
         });
-    } else {
-      setInputValue(value + "");
     }
-  };
-
-  const handleBlur = () => {
-    const intInputValue = parseInt(inputValue);
-
-    handleChange(intInputValue);
   };
 
   useEffect(() => {
@@ -82,12 +61,20 @@ export function Track(props: TrackProps) {
       </Typography>
       <ToggleButtonGroup
         exclusive
-        disabled={loading}
+        disabled={disabled || loading}
         value={value}
         onChange={(evt, value) => handleChange(value)}
+        sx={{
+          width: "100%",
+          display: "flex",
+        }}
       >
         {numbers.map((num) => (
-          <ToggleButton key={num} value={num} sx={{ py: 0, px: 1 }}>
+          <ToggleButton
+            key={num}
+            value={num}
+            sx={{ py: 0, px: 1, flexGrow: 1 }}
+          >
             {num}
           </ToggleButton>
         ))}

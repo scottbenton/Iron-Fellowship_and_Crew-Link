@@ -10,7 +10,6 @@ import { useCharacterStore } from "../../stores/character.store";
 import { StoredAsset } from "../../types/Asset.type";
 import { getAssets } from "./api/getAssets";
 import { MovesSection } from "./components/MovesSection";
-import { StatComponent } from "./components/StatComponent";
 import { StatsSection } from "./components/StatsSection";
 import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
@@ -91,7 +90,7 @@ export function CharacterSheetPage() {
         display={"flex"}
         sx={(theme) => ({
           [theme.breakpoints.up("md")]: {
-            height: "90vh",
+            height: "calc(100vh - 110px)",
             overflow: "hidden",
           },
         })}
@@ -131,7 +130,7 @@ export function CharacterSheetPage() {
               supply={character.supply}
               momentum={character.momentum}
             />
-            <TabsSection assets={assets} />
+            <TabsSection assets={assets} characterId={characterId} />
           </Box>
         </Grid>
       </Grid>

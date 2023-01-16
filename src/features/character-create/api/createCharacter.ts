@@ -30,12 +30,20 @@ export function createFirebaseCharacter(
         momentum: momentumTrack.startingValue,
       };
 
-      console.debug(assets);
+      const assetOrder: string[] = [];
+      let assetsMap: { [key: string]: StoredAsset } = {};
+      assets.map((asset) => {
+        assetOrder.push(asset.id);
+        assetsMap[asset.id] = asset;
+      });
 
       addDoc(getUsersCharacterCollection(uid), character)
         .then((doc) => {
           const id = doc.id;
-          setDoc(getCharacterAssetDoc(uid, id), { assets })
+          setDoc(getCharacterAssetDoc(uid, id), {
+            assetOrder,
+            assets: assetsMap,
+          })
             .then(() => {
               resolve(id);
             })

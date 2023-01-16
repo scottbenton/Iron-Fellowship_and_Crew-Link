@@ -104,11 +104,7 @@ export function AssetsSection() {
                   minHeight: 450,
                   width: "100%",
                 }}
-                actions={
-                  <Button color={"error"} onClick={() => removeAsset(index)}>
-                    Remove
-                  </Button>
-                }
+                handleDeleteClick={() => removeAsset(index)}
               />
             ) : (
               <AddAssetCard

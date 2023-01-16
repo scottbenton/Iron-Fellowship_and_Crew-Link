@@ -1,4 +1,4 @@
-import { Box, Card, Rating, Stack, Typography } from "@mui/material";
+import { Box, Card, Grid, Rating, Stack, Typography } from "@mui/material";
 import {
   healthTrack,
   momentumTrack,
@@ -40,8 +40,8 @@ export function TracksSection(props: TracksSectionProps) {
     });
 
   return (
-    <Stack spacing={2} alignItems={"flex-end"}>
-      <Stack spacing={2} direction={"row"}>
+    <Grid container spacing={2}>
+      <Grid item xs={4}>
         <Track
           label={"Health"}
           value={health}
@@ -49,6 +49,8 @@ export function TracksSection(props: TracksSectionProps) {
           min={healthTrack.min}
           max={healthTrack.max}
         />
+      </Grid>
+      <Grid item xs={4}>
         <Track
           label={"Spirit"}
           value={spirit}
@@ -56,6 +58,8 @@ export function TracksSection(props: TracksSectionProps) {
           min={spiritTrack.min}
           max={spiritTrack.max}
         />
+      </Grid>
+      <Grid item xs={4}>
         <Track
           label={"Supply"}
           value={supply}
@@ -63,14 +67,16 @@ export function TracksSection(props: TracksSectionProps) {
           min={supplyTrack.min}
           max={supplyTrack.max}
         />
-      </Stack>
-      <Track
-        label={"Momentum"}
-        value={momentum}
-        onChange={(newValue) => updateTrackValue("momentum", newValue)}
-        min={momentumTrack.min}
-        max={momentumTrack.max}
-      />
-    </Stack>
+      </Grid>
+      <Grid item xs={12}>
+        <Track
+          label={"Momentum"}
+          value={momentum}
+          onChange={(newValue) => updateTrackValue("momentum", newValue)}
+          min={momentumTrack.min}
+          max={momentumTrack.max}
+        />
+      </Grid>
+    </Grid>
   );
 }
