@@ -23,6 +23,7 @@ import {
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { Track } from "../character-sheet/components/Track";
 import { AddCharacterDialog } from "./components/AddCharacterDialog";
+import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
 import { useCampaignCharacters } from "./hooks/useCampaignCharacters";
 
 export function CampaignSheetPage() {
@@ -172,6 +173,9 @@ export function CampaignSheetPage() {
             onChange={(newValue) => updateCampaignSupply(campaignId, newValue)}
           />
         </Grid>
+        <Grid item xs={0} sm={6} md={8} lg={9} />
+
+        <CampaignProgressTracks campaignId={campaignId} />
       </Grid>
       <AddCharacterDialog
         open={addCharacterDialogOpen}

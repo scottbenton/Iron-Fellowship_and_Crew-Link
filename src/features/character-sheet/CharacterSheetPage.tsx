@@ -31,12 +31,17 @@ export function CharacterSheetPage() {
   const campaignId = character?.campaignId;
 
   useEffect(() => {
+    return () => {
+      resetState();
+    };
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = loadAssets();
     return () => {
       unsubscribe && unsubscribe();
-      resetState();
     };
-  }, [characterId]);
+  }, [character]);
 
   useEffect(() => {
     setCharacter(
@@ -58,12 +63,13 @@ export function CharacterSheetPage() {
     };
   }, [characterId, campaignId]);
 
-  if (loading)
+  if (loading) {
     return (
       <LinearProgress
         sx={{ width: "100vw", position: "absolute", left: 0, marginTop: -3 }}
       />
     );
+  }
 
   if (!character) {
     return (

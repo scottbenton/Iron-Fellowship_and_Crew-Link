@@ -5,8 +5,8 @@ import { useCampaignStore } from "../../../stores/campaigns.store";
 import { CharacterDocument } from "../../../types/Character.type";
 
 export function useCampaignCharacters(campaignId?: string) {
-  const characters = useCampaignStore(
-    (store) => store.campaigns[campaignId ?? ""].characters
+  const characters = useCampaignStore((store) =>
+    campaignId ? store.campaigns[campaignId]?.characters : undefined
   );
 
   const [campaignCharacters, setCampaignCharacters] = useState<{
@@ -17,7 +17,7 @@ export function useCampaignCharacters(campaignId?: string) {
     let unsubscribes: Unsubscribe[] = [];
 
     try {
-      characters.forEach((character) => {
+      (characters || []).forEach((character) => {
         unsubscribes.push(
           onSnapshot(
             getCharacterDoc(character.uid, character.characterId),

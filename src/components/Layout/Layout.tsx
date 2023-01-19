@@ -1,7 +1,8 @@
 import { Box, Container, LinearProgress } from "@mui/material";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { AUTH_STATE, useAuth } from "../../hooks/useAuth";
+import { useContinueUrl } from "../../hooks/useContinueUrl";
 import { paths, ROUTES } from "../../routes";
 import { Header } from "./Header";
 
@@ -13,20 +14,30 @@ export function Layout(props: LayoutProps) {
   const { pathname } = useLocation();
   const { authState } = useAuth();
 
+  const { redirectWithContinueUrl, navigateToContinueURL } = useContinueUrl();
+
+  useEffect(() => {
+    if (
+      pathname !== paths[ROUTES.LOGIN] &&
+      authState === AUTH_STATE.UNAUTHENTICATED
+    ) {
+      console.debug("REDIRECTING TO LOGIN PAGE");
+      redirectWithContinueUrl(paths[ROUTES.LOGIN]);
+    } else if (
+      pathname === paths[ROUTES.LOGIN] &&
+      authState === AUTH_STATE.AUTHENTICATED
+    ) {
+      console.debug("REDIRECTING TO CONTINUE URL");
+      navigateToContinueURL(paths[ROUTES.CHARACTER_SELECT]);
+    }
+  }, [pathname, authState]);
+
   if (authState === AUTH_STATE.LOADING) {
     return <LinearProgress />;
   }
 
   return (
     <Box minHeight={"100vh"} display={"flex"} flexDirection={"column"}>
-      {pathname !== paths[ROUTES.LOGIN] &&
-        authState === AUTH_STATE.UNAUTHENTICATED && (
-          <Navigate to={paths[ROUTES.LOGIN]} />
-        )}
-      {pathname === paths[ROUTES.LOGIN] &&
-        authState === AUTH_STATE.AUTHENTICATED && (
-          <Navigate to={paths[ROUTES.CHARACTER_SELECT]} />
-        )}
       <Header />
       <Container
         maxWidth={"xl"}

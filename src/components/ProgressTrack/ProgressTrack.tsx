@@ -1,9 +1,10 @@
-import { Box, ButtonBase, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
 import PlusIcon from "@mui/icons-material/Add";
 import { DIFFICULTY } from "../../types/Track.type";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export interface ProgressTracksProps {
   label: string;
@@ -12,6 +13,7 @@ export interface ProgressTracksProps {
   max: number;
   value: number;
   onValueChange?: (value: number) => void;
+  onDelete?: () => void;
 }
 
 const getDifficultyLabel = (difficulty: DIFFICULTY): string => {
@@ -47,9 +49,28 @@ const getDifficultyStep = (difficulty?: DIFFICULTY): number => {
 };
 
 export function ProgressTrack(props: ProgressTracksProps) {
-  const { label, description, difficulty, max, value, onValueChange } = props;
+  const {
+    label,
+    description,
+    difficulty,
+    max,
+    value,
+    onValueChange,
+    onDelete,
+  } = props;
 
   const [checks, setChecks] = useState<number[]>([]);
+
+  const handleDelete = () => {
+    if (onDelete) {
+      const shouldDelete = confirm(
+        "Are you sure you want to delete this track?"
+      );
+      if (shouldDelete) {
+        onDelete();
+      }
+    }
+  };
 
   useEffect(() => {
     let checks: number[] = [];
@@ -74,31 +95,48 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   return (
     <Box>
-      {difficulty && (
-        <Typography
-          variant={"subtitle1"}
-          color={(theme) => theme.palette.text.secondary}
-          fontFamily={(theme) => theme.fontFamilyTitle}
-        >
-          {getDifficultyLabel(difficulty)}
-        </Typography>
-      )}
-      <Typography
-        variant={"h6"}
-        color={(theme) => theme.palette.text.primary}
-        fontFamily={(theme) => theme.fontFamilyTitle}
+      <Box
+        display={"flex"}
+        alignItems={"flex-start"}
+        justifyContent={"space-between"}
       >
-        {label}
-      </Typography>
-      {description && (
-        <Typography
-          variant={"subtitle1"}
-          color={(theme) => theme.palette.text.secondary}
-          whiteSpace={"pre-wrap"}
-        >
-          {description}
-        </Typography>
-      )}
+        <Box>
+          {difficulty && (
+            <Typography
+              variant={"subtitle1"}
+              color={(theme) => theme.palette.text.secondary}
+              fontFamily={(theme) => theme.fontFamilyTitle}
+            >
+              {getDifficultyLabel(difficulty)}
+            </Typography>
+          )}
+          <Typography
+            variant={"h6"}
+            color={(theme) => theme.palette.text.primary}
+            fontFamily={(theme) => theme.fontFamilyTitle}
+          >
+            {label}
+          </Typography>
+          {description && (
+            <Typography
+              variant={"subtitle1"}
+              color={(theme) => theme.palette.text.secondary}
+              whiteSpace={"pre-wrap"}
+            >
+              {description}
+            </Typography>
+          )}
+        </Box>
+        {onDelete && (
+          <Button
+            onClick={() => handleDelete()}
+            endIcon={<DeleteIcon />}
+            color={"error"}
+          >
+            Delete Track
+          </Button>
+        )}
+      </Box>
       <Box display={"flex"} mt={1}>
         {onValueChange && (
           <ButtonBase

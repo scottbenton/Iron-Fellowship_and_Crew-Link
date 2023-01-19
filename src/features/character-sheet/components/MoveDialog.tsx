@@ -1,5 +1,4 @@
 import {
-  Box,
   Dialog,
   DialogContent,
   DialogTitle,

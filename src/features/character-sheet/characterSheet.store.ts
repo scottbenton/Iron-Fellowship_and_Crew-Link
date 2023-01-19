@@ -27,7 +27,7 @@ export type TRACK_KEYS = "health" | "spirit" | "supply" | "momentum";
 
 export type TrackWithId = StoredTrack & { id: string };
 
-const convertTrackMapToArray = (trackMap: {
+export const convertTrackMapToArray = (trackMap: {
   [id: string]: StoredTrack;
 }): TrackWithId[] => {
   return Object.keys(trackMap)
