@@ -1,12 +1,15 @@
-import { Box, Button, LinearProgress } from "@mui/material";
+import { Button, LinearProgress } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
+import { useAuth } from "../../hooks/useAuth";
 import { constructCampaignSheetUrl, paths, ROUTES } from "../../routes";
 import { useCampaignJoinStore } from "./campaign-join.store";
 
 export function CampaignJoinPage() {
   const { campaignId } = useParams();
+  const uid = useAuth().user?.uid;
+
   const navigate = useNavigate();
 
   const campaign = useCampaignJoinStore((store) => store.campaign);
@@ -70,6 +73,10 @@ export function CampaignJoinPage() {
   }
 
   if (!campaign) return null;
+
+  if (uid && campaign.users.includes(uid)) {
+    return <Navigate to={constructCampaignSheetUrl(campaignId)} />;
+  }
 
   return (
     <EmptyState
