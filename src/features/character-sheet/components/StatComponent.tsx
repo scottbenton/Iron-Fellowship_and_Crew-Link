@@ -1,4 +1,4 @@
-import { Box, ButtonBase, Card, Typography } from "@mui/material";
+import { Box, ButtonBase, Card, SxProps, Typography } from "@mui/material";
 import { STATS } from "../../../types/stats.enum";
 
 import PlusIcon from "@mui/icons-material/Add";
@@ -13,10 +13,11 @@ export interface StatComponentProps {
     max: number;
     handleChange: (newValue: number) => Promise<boolean>;
   };
+  sx?: SxProps;
 }
 
 export function StatComponent(props: StatComponentProps) {
-  const { label, value, updateTrack } = props;
+  const { label, value, updateTrack, sx } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -66,13 +67,16 @@ export function StatComponent(props: StatComponentProps) {
   return (
     <Card
       variant={"outlined"}
-      sx={(theme) => ({
-        borderRadius: theme.shape.borderRadius,
-        overflow: "hidden",
-        width: 75,
-        display: "flex",
-        flexDirection: "column",
-      })}
+      sx={[
+        (theme) => ({
+          borderRadius: theme.shape.borderRadius,
+          overflow: "hidden",
+          width: 75,
+          display: "flex",
+          flexDirection: "column",
+        }),
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       <Typography
         display={"block"}
@@ -116,6 +120,14 @@ export function StatComponent(props: StatComponentProps) {
           variant={"h6"}
           textAlign={"center"}
         >
+          <Typography
+            component={"span"}
+            variant={"body1"}
+            mr={0.2}
+            color={(theme) => theme.palette.grey[500]}
+          >
+            {value > 0 ? "+" : ""}
+          </Typography>
           {value}
         </Typography>
         {updateTrack && (

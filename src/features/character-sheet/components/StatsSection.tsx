@@ -25,9 +25,9 @@ export function StatsSection() {
         <StatComponent label={"Heart"} value={stats[STATS.HEART]} />
         <StatComponent label={"Iron"} value={stats[STATS.IRON]} />
         <StatComponent label={"Shadow"} value={stats[STATS.SHADOW]} />
-      </Stack>
-      <Stack spacing={1} direction={"row"} flexWrap={"wrap"} p={0.5}>
         <StatComponent label={"Wits"} value={stats[STATS.WITS]} />
+      </Stack>
+      <Stack spacing={1} direction={"row"} flexWrap={"wrap"} p={0.5} ml={4}>
         <StatComponent label={"Health"} value={health} />
         <StatComponent label={"Spirit"} value={spirit} />
         <StatComponent label={"Supply"} value={supply} />

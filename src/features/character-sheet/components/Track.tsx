@@ -75,6 +75,7 @@ export function Track(props: TrackProps) {
             value={num}
             sx={{ py: 0, px: 1, flexGrow: 1 }}
           >
+            {num > 0 && "+"}
             {num}
           </ToggleButton>
         ))}
