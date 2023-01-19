@@ -21,26 +21,36 @@ export interface CharacterCreateStore {
   selectAsset: (index: number, assetId?: string) => void;
 
   createCharacter: () => Promise<string>;
+
+  resetState: () => void;
 }
+
+const defaultState: {
+  name: string;
+  stats: CharacterCreateStore["stats"];
+  assets: CharacterCreateStore["assets"];
+} = {
+  name: "",
+  stats: {
+    [STATS.EDGE]: undefined,
+    [STATS.HEART]: undefined,
+    [STATS.IRON]: undefined,
+    [STATS.SHADOW]: undefined,
+    [STATS.WITS]: undefined,
+  },
+  assets: [undefined, undefined, undefined],
+};
 
 export const useCharacterCreateStore = create<CharacterCreateStore>()(
   (set, getState) => ({
-    name: "",
+    ...defaultState,
     setName: (name) => set({ name }),
-    stats: {
-      [STATS.EDGE]: undefined,
-      [STATS.HEART]: undefined,
-      [STATS.IRON]: undefined,
-      [STATS.SHADOW]: undefined,
-      [STATS.WITS]: undefined,
-    },
     setStat: (stat, value) =>
       set(
         produce((state: CharacterCreateStore) => {
           state.stats[stat] = value;
         })
       ),
-    assets: [undefined, undefined, undefined],
     selectAsset: (index, assetId) => {
       if (assetId) {
         const asset = assets[assetId];
@@ -110,5 +120,12 @@ export const useCharacterCreateStore = create<CharacterCreateStore>()(
             });
         }
       }),
+
+    resetState: () => {
+      set({
+        ...getState(),
+        ...defaultState,
+      });
+    },
   })
 );

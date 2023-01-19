@@ -35,6 +35,10 @@ export function CampaignSheetPage() {
 
   const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCampaignStore((store) => store.loading);
+  const removeCharacter = useCampaignStore(
+    (store) => store.removeCharacterFromCampaign
+  );
+
   const [addCharacterDialogOpen, setAddCharacterDialogOpen] =
     useState<boolean>(false);
   const updateCampaignSupply = useCampaignStore(
@@ -141,13 +145,21 @@ export function CampaignSheetPage() {
       <CharacterList
         characters={campaignCharacters}
         actions={(characterId, index) =>
-          campaign.characters[index].uid === uid ? (
-            <Button
-              component={Link}
-              to={constructCharacterSheetUrl(characterId)}
-            >
-              View
-            </Button>
+          campaign.characters[index]?.uid === uid ? (
+            <>
+              <Button
+                component={Link}
+                to={constructCharacterSheetUrl(characterId)}
+              >
+                View
+              </Button>
+              <Button
+                color={"error"}
+                onClick={() => removeCharacter(campaignId, characterId, uid)}
+              >
+                Remove from Campaign
+              </Button>
+            </>
           ) : (
             <></>
           )

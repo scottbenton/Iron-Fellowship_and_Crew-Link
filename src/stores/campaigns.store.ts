@@ -3,7 +3,13 @@ import { StoredCampaign } from "../types/Campaign.type";
 import produce from "immer";
 import { firebaseAuth } from "../config/firebase.config";
 import { supplyTrack } from "../data/defaultTracks";
-import { addDoc, arrayUnion, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  arrayRemove,
+  arrayUnion,
+  deleteField,
+  updateDoc,
+} from "firebase/firestore";
 import {
   getCampaignCollection,
   getCampaignDoc,
@@ -30,6 +36,11 @@ interface CampaignStore {
   updateCampaignSupply: (
     campaignId: string,
     supplyValue: number
+  ) => Promise<boolean>;
+  removeCharacterFromCampaign: (
+    campaignId: string,
+    characterId: string,
+    userId: string
   ) => Promise<boolean>;
 }
 
@@ -126,4 +137,25 @@ export const useCampaignStore = create<CampaignStore>()((set, getState) => ({
           reject("Failed to update campaign supply");
         });
     }),
+
+  removeCharacterFromCampaign: async (
+    campaignId,
+    characterId,
+    userId
+  ): Promise<boolean> => {
+    try {
+      let campaignPromise = updateDoc(getCampaignDoc(campaignId), {
+        characters: arrayRemove({ characterId, uid: userId }),
+      });
+      let characterPromise = updateDoc(getCharacterDoc(userId, characterId), {
+        campaignId: deleteField(),
+      });
+
+      await Promise.all([campaignPromise, characterPromise]);
+      return true;
+    } catch (e) {
+      console.error(e);
+      throw new Error("Failed to remove character from campaign");
+    }
+  },
 }));

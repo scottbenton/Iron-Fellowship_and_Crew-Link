@@ -15,6 +15,7 @@ export function useCampaignCharacters(campaignId?: string) {
 
   useEffect(() => {
     let unsubscribes: Unsubscribe[] = [];
+    setCampaignCharacters({});
 
     try {
       (characters || []).forEach((character) => {

@@ -6,6 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageBanner } from "../../components/Layout/PageBanner";
 import { useSnackbar } from "../../hooks/useSnackbar";
@@ -28,6 +29,7 @@ export function CharacterCreatePage() {
   const createCharacter = useCharacterCreateStore(
     (store) => store.createCharacter
   );
+  const resetStore = useCharacterCreateStore((store) => store.resetState);
 
   const handleCreateCharacter = () => {
     createCharacter()
@@ -38,6 +40,12 @@ export function CharacterCreatePage() {
         error(err);
       });
   };
+
+  useEffect(() => {
+    return () => {
+      resetStore();
+    };
+  }, []);
 
   return (
     <>
