@@ -13,6 +13,11 @@ export interface CharacterDocument {
   supply: number;
   momentum: number;
   campaignId?: string;
+  experience?: {
+    earned?: number;
+    spent?: number;
+  };
+  bonds?: number;
 }
 
 export interface AssetDocument {

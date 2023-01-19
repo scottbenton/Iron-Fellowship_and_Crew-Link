@@ -118,6 +118,13 @@ export interface CharacterSheetStore {
     shared: boolean,
     id: string
   ) => Promise<boolean>;
+
+  updateExperience: (
+    value: number,
+    type: "spent" | "earned"
+  ) => Promise<boolean>;
+  updateBonds: (value: number) => Promise<boolean>;
+  updateName: (value: string) => Promise<boolean>;
 }
 
 const initialState = {
@@ -555,6 +562,72 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
             console.error(e);
             reject("Failed to remove progress track");
           });
+      });
+    },
+
+    updateExperience: (value, type) => {
+      return new Promise((resolve, reject) => {
+        const uid = firebaseAuth.currentUser?.uid;
+        const characterId = getState().characterId ?? "";
+
+        if (uid) {
+          updateDoc(getCharacterDoc(uid, characterId), {
+            [`experience.${type}`]: value,
+          })
+            .then(() => {
+              resolve(true);
+            })
+            .catch((e) => {
+              console.error(e);
+              reject("Failed to update experience");
+            });
+        } else {
+          reject("No user found.");
+        }
+      });
+    },
+
+    updateBonds: (value) => {
+      return new Promise((resolve, reject) => {
+        const uid = firebaseAuth.currentUser?.uid;
+        const characterId = getState().characterId ?? "";
+
+        if (uid) {
+          updateDoc(getCharacterDoc(uid, characterId), {
+            bonds: value,
+          })
+            .then(() => {
+              resolve(true);
+            })
+            .catch((e) => {
+              console.error(e);
+              reject("Failed to update bonds");
+            });
+        } else {
+          reject("No user found.");
+        }
+      });
+    },
+
+    updateName: (value) => {
+      return new Promise((resolve, reject) => {
+        const uid = firebaseAuth.currentUser?.uid;
+        const characterId = getState().characterId ?? "";
+
+        if (uid) {
+          updateDoc(getCharacterDoc(uid, characterId), {
+            name: value,
+          })
+            .then(() => {
+              resolve(true);
+            })
+            .catch((e) => {
+              console.error(e);
+              reject("Failed to update bonds");
+            });
+        } else {
+          reject("No user found.");
+        }
       });
     },
   })

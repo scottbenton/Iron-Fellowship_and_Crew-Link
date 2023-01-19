@@ -1013,6 +1013,22 @@
       ]
     },
     {
+      "Name": "Stone Calm",
+      "Asset Type": "Combat Talent",
+      "Abilities": [
+        {
+          "Text": "When you *Secure an Advantage* or *Compel* by remaining calm in a tense situation, add +1 and take +1 momentum on a hit.",
+          "Enabled": true
+        },
+        {
+          "Text": "TBD"
+        },
+        {
+          "Text": "TBD"
+        }
+      ]
+    },
+    {
       "Name": "Sunderer",
       "Asset Type": "Combat Talent",
       "Description": "If you wield an axe...",

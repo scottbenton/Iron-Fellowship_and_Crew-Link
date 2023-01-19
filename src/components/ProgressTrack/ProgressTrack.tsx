@@ -7,7 +7,7 @@ import { DIFFICULTY } from "../../types/Track.type";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export interface ProgressTracksProps {
-  label: string;
+  label?: string;
   difficulty?: DIFFICULTY;
   description?: string;
   max: number;
@@ -110,13 +110,15 @@ export function ProgressTrack(props: ProgressTracksProps) {
               {getDifficultyLabel(difficulty)}
             </Typography>
           )}
-          <Typography
-            variant={"h6"}
-            color={(theme) => theme.palette.text.primary}
-            fontFamily={(theme) => theme.fontFamilyTitle}
-          >
-            {label}
-          </Typography>
+          {label && (
+            <Typography
+              variant={"h6"}
+              color={(theme) => theme.palette.text.primary}
+              fontFamily={(theme) => theme.fontFamilyTitle}
+            >
+              {label}
+            </Typography>
+          )}
           {description && (
             <Typography
               variant={"subtitle1"}
@@ -137,7 +139,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
           </Button>
         )}
       </Box>
-      <Box display={"flex"} mt={1}>
+      <Box display={"flex"} mt={label ? 1 : 0}>
         {onValueChange && (
           <ButtonBase
             onClick={() =>
