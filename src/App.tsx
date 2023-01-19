@@ -2,8 +2,12 @@ import { Button } from "@mui/material";
 import { Unsubscribe } from "firebase/firestore";
 import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useUsersCampaigns } from "./api/useUsersCampaigns";
 import { EmptyState } from "./components/EmptyState/EmptyState";
 import { Layout } from "./components/Layout";
+import { CampaignJoinPage } from "./features/campaign-join/CampaignJoinPage";
+import { CampaignListPage } from "./features/campaign-list/CampaignListPage";
+import { CampaignSheetPage } from "./features/campaign-sheet/CampaignSheetPage";
 import { CharacterCreatePage } from "./features/character-create/CharacterCreatePage";
 import { CharacterSelectPage } from "./features/character-select/CharacterSelectPage";
 import { CharacterSheetPage } from "./features/character-sheet/CharacterSheetPage";
@@ -17,6 +21,8 @@ export function App() {
   const getUsersCharacters = useCharacterStore(
     (store) => store.getUsersCharacters
   );
+
+  useUsersCampaigns();
 
   useEffect(() => {
     let unsubscribe: Unsubscribe | null;
@@ -50,11 +56,15 @@ export function App() {
         />
         <Route
           path={paths[ROUTES.CAMPAIGN_SELECT]}
-          element={<>Campaign Select</>}
+          element={<CampaignListPage />}
         />
         <Route
           path={paths[ROUTES.CAMPAIGN_SHEET]}
-          element={<>Campaign Sheet</>}
+          element={<CampaignSheetPage />}
+        />
+        <Route
+          path={paths[ROUTES.CAMPAIGN_JOIN]}
+          element={<CampaignJoinPage />}
         />
         <Route
           path={paths[ROUTES.LOGIN]}

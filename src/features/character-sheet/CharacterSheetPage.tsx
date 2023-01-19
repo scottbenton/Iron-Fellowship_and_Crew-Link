@@ -1,14 +1,13 @@
 import { Box, Button, Grid, LinearProgress, Typography } from "@mui/material";
-import { Unsubscribe } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { PageBanner } from "../../components/Layout/PageBanner";
 import { paths, ROUTES } from "../../routes";
+import { useCampaignStore } from "../../stores/campaigns.store";
 import { useCharacterStore } from "../../stores/character.store";
-import { StoredAsset } from "../../types/Asset.type";
-import { getAssets } from "./api/getAssets";
+import { useCharacterSheetStore } from "./characterSheet.store";
 import { MovesSection } from "./components/MovesSection";
 import { StatsSection } from "./components/StatsSection";
 import { TabsSection } from "./components/TabsSection";
@@ -17,24 +16,47 @@ import { TracksSection } from "./components/TracksSection";
 export function CharacterSheetPage() {
   const { characterId } = useParams();
   const characters = useCharacterStore((store) => store.characters);
+  const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCharacterStore((store) => store.loading);
 
-  const [assets, setAssets] = useState<StoredAsset[]>();
+  const character = useCharacterSheetStore((store) => store.character);
+  const setCharacter = useCharacterSheetStore((store) => store.setCharacter);
+  const setCampaign = useCharacterSheetStore((store) => store.setCampaign);
+  const loadAssets = useCharacterSheetStore((store) => store.loadAssets);
+  const loadProgressTracks = useCharacterSheetStore(
+    (store) => store.loadProgressTracks
+  );
+  const resetState = useCharacterSheetStore((store) => store.resetState);
+
+  const campaignId = character?.campaignId;
 
   useEffect(() => {
-    let unsubscribe: Unsubscribe | undefined;
-    if (characterId) {
-      unsubscribe = getAssets(
-        characterId,
-        (newAssets) => setAssets(newAssets),
-        (error) => console.error(error)
-      );
-    }
-
+    const unsubscribe = loadAssets();
     return () => {
       unsubscribe && unsubscribe();
+      resetState();
     };
   }, [characterId]);
+
+  useEffect(() => {
+    setCharacter(
+      characterId,
+      characterId ? characters[characterId] : undefined
+    );
+
+    const campaignId = characterId
+      ? characters[characterId]?.campaignId
+      : undefined;
+
+    setCampaign(campaignId, campaignId ? campaigns[campaignId] : undefined);
+  }, [characters, characterId, campaigns]);
+
+  useEffect(() => {
+    const unsubscribe = loadProgressTracks();
+    return () => {
+      unsubscribe();
+    };
+  }, [characterId, campaignId]);
 
   if (loading)
     return (
@@ -43,9 +65,7 @@ export function CharacterSheetPage() {
       />
     );
 
-  const character = characters[characterId || ""];
-
-  if (!character || !characterId) {
+  if (!character) {
     return (
       <EmptyState
         title={"Character not Found"}
@@ -76,13 +96,7 @@ export function CharacterSheetPage() {
         >
           {character.name}
         </Typography>
-        <StatsSection
-          characterId={characterId}
-          stats={character.stats}
-          health={character.health}
-          spirit={character.spirit}
-          supply={character.supply}
-        />
+        <StatsSection />
       </PageBanner>
       <Grid
         container
@@ -105,12 +119,7 @@ export function CharacterSheetPage() {
             },
           })}
         >
-          <MovesSection
-            stats={character.stats}
-            health={character.health}
-            spirit={character.spirit}
-            supply={character.supply}
-          />
+          <MovesSection />
         </Grid>
         <Grid
           item
@@ -123,14 +132,8 @@ export function CharacterSheetPage() {
           })}
         >
           <Box display={"flex"} height={"100%"} flexDirection={"column"}>
-            <TracksSection
-              characterId={characterId}
-              health={character.health}
-              spirit={character.spirit}
-              supply={character.supply}
-              momentum={character.momentum}
-            />
-            <TabsSection assets={assets} characterId={characterId} />
+            <TracksSection />
+            <TabsSection />
           </Box>
         </Grid>
       </Grid>

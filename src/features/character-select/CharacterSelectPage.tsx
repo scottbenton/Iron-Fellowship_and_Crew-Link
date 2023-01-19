@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { deleteCharacter } from "../../api/deleteCharacter";
+import { CharacterList } from "../../components/CharacterList/CharacterList";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { getHueFromString } from "../../functions/getHueFromString";
 import { useSnackbar } from "../../hooks/useSnackbar";
@@ -48,15 +49,11 @@ export function CharacterSelectPage() {
           }
         />
       ) : (
-        <Grid container spacing={2}>
-          <Grid
-            item
-            xs={12}
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
+        <>
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
           >
             <Typography
               variant={"h5"}
@@ -71,52 +68,28 @@ export function CharacterSelectPage() {
             >
               Create a Character
             </Button>
-          </Grid>
-          {Object.keys(characters).map((characterKey, index) => {
-            const hue = getHueFromString(characterKey);
-
-            return (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card variant={"outlined"}>
-                  <CardActionArea
-                    component={Link}
-                    to={constructCharacterSheetUrl(characterKey)}
-                    sx={{ p: 2 }}
-                  >
-                    <Box display={"flex"} alignItems={"center"}>
-                      <Avatar
-                        sx={{
-                          backgroundColor: `hsl(${hue}, 60%, 85%)`,
-                          color: `hsl(${hue}, 80%, 20%)`,
-                        }}
-                      >
-                        {characters[characterKey].name[0]}
-                      </Avatar>
-                      <Typography variant={"h6"} ml={2}>
-                        {characters[characterKey].name}
-                      </Typography>
-                    </Box>
-                  </CardActionArea>
-                  <Box
-                    display={"flex"}
-                    justifyContent={"flex-end"}
-                    sx={(theme) => ({
-                      backgroundColor: theme.palette.grey[100],
-                      color: "white",
-                    })}
-                  >
-                    <Button
-                      color={"error"}
-                      onClick={() => handleDelete(characterKey)}
-                    >
-                      Delete
-                    </Button>
-                  </Box>
-                </Card>
-              </Grid>
-            );
-          })}
-        </Grid>
+          </Box>
+          <CharacterList
+            characters={characters}
+            actions={(characterId) => (
+              <>
+                <Button
+                  color={"primary"}
+                  component={Link}
+                  to={constructCharacterSheetUrl(characterId)}
+                >
+                  View
+                </Button>
+                <Button
+                  color={"error"}
+                  onClick={() => handleDelete(characterId)}
+                >
+                  Delete
+                </Button>
+              </>
+            )}
+          />
+        </>
       )}
     </>
   );

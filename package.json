@@ -15,6 +15,7 @@
     "@fontsource/staatliches": "^4.5.9",
     "@iconify-icons/game-icons": "^1.2.1",
     "@mui/icons-material": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.115",
     "@mui/material": "^5.11.3",
     "firebase": "^9.15.0",
     "immer": "^9.0.17",
@@ -24,6 +25,7 @@
     "react-markdown": "^8.0.4",
     "react-router-dom": "^6.6.1",
     "remark-gfm": "^3.0.1",
+    "vite-plugin-svgr": "^2.4.0",
     "zustand": "^4.2.0"
   },
   "devDependencies": {

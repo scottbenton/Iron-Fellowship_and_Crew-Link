@@ -5,7 +5,16 @@ import {
   DocumentReference,
 } from "firebase/firestore";
 import { firestore } from "../config/firebase.config";
+import { StoredCampaign } from "../types/Campaign.type";
 import { AssetDocument, CharacterDocument } from "../types/Character.type";
+import { TracksDocument } from "../types/Track.type";
+
+export function constructCampaignCollectionPath() {
+  return `/campaigns`;
+}
+export function constructCampaignDocPath(campaignId: string) {
+  return `/campaigns/${campaignId}`;
+}
 
 export function constructUsersCharacterCollectionPath(userId: string) {
   return `/characters/${userId}/characters`;
@@ -20,6 +29,31 @@ export function constructCharacterAssetDocPath(
   characterId: string
 ) {
   return `/characters/${userId}/characters/${characterId}/assets/assets`;
+}
+
+export function constructCharacterTrackDocPath(
+  userId: string,
+  characterId: string
+) {
+  return `/characters/${userId}/characters/${characterId}/tracks/tracks`;
+}
+
+export function constructSharedCampaignTracksDocPath(campaignId: string) {
+  return `/campaigns/${campaignId}/tracks/tracks`;
+}
+
+export function getCampaignCollection() {
+  return collection(
+    firestore,
+    constructCampaignCollectionPath()
+  ) as CollectionReference<StoredCampaign>;
+}
+
+export function getCampaignDoc(campaignId: string) {
+  return doc(
+    firestore,
+    constructCampaignDocPath(campaignId)
+  ) as DocumentReference<StoredCampaign>;
 }
 
 export function getUsersCharacterCollection(userId: string) {
@@ -41,4 +75,18 @@ export function getCharacterAssetDoc(userId: string, characterId: string) {
     firestore,
     constructCharacterAssetDocPath(userId, characterId)
   ) as DocumentReference<AssetDocument>;
+}
+
+export function getCharacterTracksDoc(userId: string, characterId: string) {
+  return doc(
+    firestore,
+    constructCharacterTrackDocPath(userId, characterId)
+  ) as DocumentReference<TracksDocument>;
+}
+
+export function getSharedCampaignTracksCollection(campaignId: string) {
+  return doc(
+    firestore,
+    constructSharedCampaignTracksDocPath(campaignId)
+  ) as DocumentReference<TracksDocument>;
 }

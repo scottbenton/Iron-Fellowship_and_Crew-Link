@@ -12,6 +12,7 @@ export interface CharacterDocument {
   spirit: number;
   supply: number;
   momentum: number;
+  campaignId?: string;
 }
 
 export interface AssetDocument {

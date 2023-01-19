@@ -1,14 +1,11 @@
 import { Unsubscribe } from "firebase/firestore";
 import create from "zustand";
 import { getUsersCharacters as getCurrentUsersCharacters } from "../api/getUsersCharacters";
-import { StoredAsset } from "../types/Asset.type";
 import { CharacterDocument } from "../types/Character.type";
 
 interface CharacterStore {
   characters: {
-    [key: string]: CharacterDocument & {
-      assets?: StoredAsset[];
-    };
+    [key: string]: CharacterDocument;
   };
   error?: string;
   loading: boolean;

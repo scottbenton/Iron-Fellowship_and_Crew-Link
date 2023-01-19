@@ -1,4 +1,4 @@
-import { Box, Card, Grid, Rating, Stack, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import {
   healthTrack,
   momentumTrack,
@@ -6,34 +6,33 @@ import {
   supplyTrack,
 } from "../../../data/defaultTracks";
 import { useSnackbar } from "../../../hooks/useSnackbar";
-import { TrackKeys, updateCharacterTrack } from "../api/updateCharacterTrack";
-import { StatComponent } from "./StatComponent";
-import HealthFilledIcon from "@mui/icons-material/Favorite";
-import HealthOutlinedIcon from "@mui/icons-material/FavoriteBorder";
-import SpiritFilledIcon from "@mui/icons-material/LocalFireDepartment";
-import SpiritOutlinedIcon from "@mui/icons-material/LocalFireDepartmentOutlined";
 import { Track } from "./Track";
+import { TRACK_KEYS, useCharacterSheetStore } from "../characterSheet.store";
 
-export interface TracksSectionProps {
-  characterId: string;
-  health: number;
-  spirit: number;
-  supply: number;
-  momentum: number;
-}
-
-export function TracksSection(props: TracksSectionProps) {
-  const { characterId, health, spirit, supply, momentum } = props;
+export function TracksSection() {
   const { error } = useSnackbar();
 
-  const updateTrackValue = (track: TrackKeys, newValue: number) =>
+  const updateCharacterTrack = useCharacterSheetStore(
+    (store) => store.updateCharacterTrack
+  );
+  const momentum = useCharacterSheetStore(
+    (store) => store.character?.momentum
+  ) as number;
+  const health = useCharacterSheetStore(
+    (store) => store.character?.health
+  ) as number;
+  const spirit = useCharacterSheetStore(
+    (store) => store.character?.spirit
+  ) as number;
+  const supply = useCharacterSheetStore((store) => store.supply) as number;
+
+  const updateTrackValue = (track: TRACK_KEYS, newValue: number) =>
     new Promise<boolean>((resolve, reject) => {
-      updateCharacterTrack(characterId, track, newValue)
+      updateCharacterTrack(track, newValue)
         .then(() => {
           resolve(true);
         })
         .catch((e) => {
-          console.error(e);
           error("Error: Failed to update your " + track);
           reject(e);
         });

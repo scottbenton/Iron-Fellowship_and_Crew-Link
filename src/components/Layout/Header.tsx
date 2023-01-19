@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { AUTH_STATE, useAuth } from "../../hooks/useAuth";
 import { paths, ROUTES } from "../../routes";
 import { LoginButton } from "./LoginButton";
+import { ReactComponent as IronJournalLogo } from "./iron-journal-logo.svg";
 
 export function Header() {
   const theme = useTheme();
@@ -27,9 +28,12 @@ export function Header() {
             justifyContent: "space-between",
           }}
         >
-          <Typography fontFamily={"Staatliches"} variant={"h5"}>
-            Iron Journal
-          </Typography>
+          <Box display={"flex"} alignItems={"center"}>
+            <IronJournalLogo width={32} height={32} />
+            <Typography fontFamily={"Staatliches"} variant={"h5"} ml={2}>
+              Iron Journal
+            </Typography>
+          </Box>
           {authState === AUTH_STATE.AUTHENTICATED ? (
             <Box>
               <Button
