@@ -59,7 +59,7 @@ function convertJsonAssetToAsset(asset: JsonAsset): Asset {
       : undefined,
   }));
 
-  const assetTrack: Asset["track"] = asset["Asset Track"]
+  const assetTrack: Asset["track"] | undefined = asset["Asset Track"]
     ? {
         name: asset["Asset Track"].Name,
         max: asset["Asset Track"].Max,

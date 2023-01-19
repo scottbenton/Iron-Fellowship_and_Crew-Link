@@ -53,7 +53,7 @@ export interface Asset {
       max: number;
     };
   }[];
-  track: {
+  track?: {
     name: string;
     max: number;
     startingValue?: number;
