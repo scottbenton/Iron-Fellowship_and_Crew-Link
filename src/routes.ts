@@ -8,14 +8,17 @@ export enum ROUTES {
   LOGIN,
 }
 
+export const CHARACTER_PREFIX = "characters";
+export const CAMPAIGN_PREFIX = "campaigns";
+
 export const paths: { [key in ROUTES]: string } = {
-  [ROUTES.CHARACTER_SELECT]: "/characters",
-  [ROUTES.CHARACTER_SHEET]: "/characters/:characterId",
-  [ROUTES.CHARACTER_CREATE]: "/characters/create",
-  [ROUTES.CAMPAIGN_SELECT]: "/campaigns",
-  [ROUTES.CAMPAIGN_SHEET]: "/campaigns/:campaignId",
-  [ROUTES.CAMPAIGN_JOIN]: "/campaigns/:campaignId/join",
-  [ROUTES.LOGIN]: "/login",
+  [ROUTES.CHARACTER_SELECT]: `/${CHARACTER_PREFIX}`,
+  [ROUTES.CHARACTER_SHEET]: `/${CHARACTER_PREFIX}/:characterId`,
+  [ROUTES.CHARACTER_CREATE]: `/${CHARACTER_PREFIX}/create`,
+  [ROUTES.CAMPAIGN_SELECT]: `/${CAMPAIGN_PREFIX}`,
+  [ROUTES.CAMPAIGN_SHEET]: `/${CAMPAIGN_PREFIX}/:campaignId`,
+  [ROUTES.CAMPAIGN_JOIN]: `/${CAMPAIGN_PREFIX}/:campaignId/join`,
+  [ROUTES.LOGIN]: `/login`,
 };
 
 export function constructCharacterSheetUrl(characterId: string) {
