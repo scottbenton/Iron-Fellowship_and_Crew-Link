@@ -1,13 +1,6 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Formik, useFormik } from "formik";
-import { useEffect } from "react";
+import { Box, Button, TextField } from "@mui/material";
+import { Formik } from "formik";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageBanner } from "../../components/Layout/PageBanner";
 import { SectionHeading } from "../../components/SectionHeading";
@@ -17,22 +10,26 @@ import { StoredAsset } from "../../types/Asset.type";
 import { STATS } from "../../types/stats.enum";
 import { AssetsSection } from "./components/AssetsSection";
 import { StatsField } from "./components/StatsField";
-import { useCharacterCreateStore } from "./store/characterCreate.store";
+import { createFirebaseCharacter } from "./api/createCharacter";
+import { StatsMap } from "../../types/Character.type";
+
+export type AssetArrayType = [
+  StoredAsset | undefined,
+  StoredAsset | undefined,
+  StoredAsset | undefined
+];
 
 type CharacterCreateFormValues = {
   name: string;
   stats: { [key in STATS]: number | undefined };
-  assets: [
-    StoredAsset | undefined,
-    StoredAsset | undefined,
-    StoredAsset | undefined
-  ];
+  assets: AssetArrayType;
 };
 type Keys = keyof CharacterCreateFormValues;
 
 export function CharacterCreatePage() {
   const navigate = useNavigate();
   const { error } = useSnackbar();
+  const [isLoading, setIsLoading] = useState(false);
 
   const validate = (values: CharacterCreateFormValues) => {
     const errors: { [key in keyof CharacterCreateFormValues]?: string } = {};
@@ -58,26 +55,24 @@ export function CharacterCreatePage() {
     return errors;
   };
 
-  const createCharacter = useCharacterCreateStore(
-    (store) => store.createCharacter
-  );
-  const resetStore = useCharacterCreateStore((store) => store.resetState);
-
-  const handleCreateCharacter = () => {
-    createCharacter()
-      .then((id) => {
-        navigate(constructCharacterSheetUrl(id));
+  const handleSubmit = (values: CharacterCreateFormValues) => {
+    setIsLoading(true);
+    createFirebaseCharacter(
+      values.name,
+      values.stats as StatsMap,
+      values.assets as [StoredAsset, StoredAsset, StoredAsset]
+    )
+      .then((characterId) => {
+        navigate(constructCharacterSheetUrl(characterId));
       })
-      .catch((err) => {
-        error(err);
+      .catch((e) => {
+        console.error(e);
+        error("Failed to create character");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
-
-  useEffect(() => {
-    return () => {
-      resetStore();
-    };
-  }, []);
 
   return (
     <>
@@ -95,7 +90,7 @@ export function CharacterCreatePage() {
           assets: [undefined, undefined, undefined],
         }}
         validate={validate}
-        onSubmit={() => {}}
+        onSubmit={handleSubmit}
       >
         {(form) => (
           <form onSubmit={form.handleSubmit}>
@@ -113,13 +108,12 @@ export function CharacterCreatePage() {
               />
             </div>
             <StatsField />
-            <SectionHeading breakContainer label={"Assets"} sx={{ mt: 4 }} />
             <AssetsSection />
             <Box display={"flex"} justifyContent={"flex-end"} mt={2}>
               <Button
                 type={"submit"}
                 variant={"contained"}
-                // onClick={() => handleCreateCharacter()}
+                disabled={isLoading}
               >
                 Create Character
               </Button>
