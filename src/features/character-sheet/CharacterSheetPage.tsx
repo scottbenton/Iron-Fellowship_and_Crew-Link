@@ -1,9 +1,15 @@
-import { Box, Button, Grid, LinearProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
-import { PageBanner } from "../../components/Layout/PageBanner";
 import { paths, ROUTES } from "../../routes";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { useCharacterStore } from "../../stores/character.store";
@@ -93,7 +99,21 @@ export function CharacterSheetPage() {
 
   return (
     <>
-      <PageBanner containerSx={{ py: 0.5 }}>
+      <Box
+        sx={[
+          (theme) => ({
+            position: "relative",
+            marginX: theme.spacing(-3),
+            px: 3,
+            top: theme.spacing(-3),
+            backgroundColor: theme.palette.primary.light,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            py: 0.5,
+          }),
+        ]}
+      >
         <Typography
           variant={"h4"}
           color={"white"}
@@ -103,7 +123,7 @@ export function CharacterSheetPage() {
           {character.name}
         </Typography>
         <StatsSection />
-      </PageBanner>
+      </Box>
       <Grid
         container
         spacing={2}

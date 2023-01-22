@@ -71,7 +71,6 @@ export function AssetsSection() {
 
   return (
     <Stack>
-      <Typography variant={"h6"}>Assets</Typography>
       <Typography color={"GrayText"}>
         Choose three Assets to start your story!
       </Typography>

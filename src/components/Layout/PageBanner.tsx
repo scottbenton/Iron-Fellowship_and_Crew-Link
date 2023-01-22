@@ -2,52 +2,61 @@ import { Box, Container, SxProps, Theme, Typography } from "@mui/material";
 import { SystemStyleObject } from "@mui/system";
 import { PropsWithChildren } from "react";
 
-export interface PageBannerProps extends PropsWithChildren {
-  sx?: SxProps;
-  containerSx?: SxProps;
-}
+export interface PageBannerProps extends PropsWithChildren {}
 
 export function PageBanner(props: PageBannerProps) {
-  const { children, sx, containerSx } = props;
+  const { children } = props;
+
   return (
     <Box
       sx={[
         (theme) => ({
           position: "relative",
-          width: "100vw",
-          left: `calc((100% - 100vw) / 2)`,
           top: theme.spacing(-3),
-          backgroundColor: theme.palette.primary.light,
+          marginBottom: theme.spacing(-3),
+
+          display: "flex",
+          alignItems: "flex-end",
+
+          marginX: theme.spacing(-3),
+          px: 3,
+          py: 1,
+
+          height: 100,
+          [theme.breakpoints.up("sm")]: {
+            height: 150,
+            py: 3,
+          },
         }),
-        ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
-      <Container
-        maxWidth={"xl"}
-        sx={[
-          (theme) => ({
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            paddingY: 2,
-          }),
-          ...(Array.isArray(containerSx) ? containerSx : [containerSx]),
-        ]}
-      >
-        {typeof children === "string" ? (
-          <Typography
-            variant={"h4"}
-            color={"white"}
-            position={"relative"}
-            fontFamily={(theme) => theme.fontFamilyTitle}
-          >
-            {children}
-          </Typography>
-        ) : (
-          children
-        )}
-      </Container>
+      <Box
+        position={"absolute"}
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        sx={{
+          backgroundSize: "cover",
+          backgroundPosition: "top",
+          backgroundRepeat: "no-repeat",
+          backgroundImage: "url(/assets/ForestBackdrop.jpg)",
+          filter: "brightness(50%) grayscale(25%)",
+        }}
+      />
+      {typeof children === "string" ? (
+        <Typography
+          variant={"h4"}
+          color={"white"}
+          position={"relative"}
+          zIndex={20}
+          fontFamily={(theme) => theme.fontFamilyTitle}
+        >
+          {children}
+        </Typography>
+      ) : (
+        children
+      )}
     </Box>
   );
 }

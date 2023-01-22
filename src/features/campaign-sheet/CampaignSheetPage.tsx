@@ -80,26 +80,7 @@ export function CampaignSheetPage() {
 
   return (
     <>
-      <PageBanner
-        sx={{
-          height: 128,
-          backgroundSize: "cover",
-          backgroundPosition: "top",
-          backgroundRepeat: "no-repeat",
-          backgroundImage: "url(/assets/ForestBackdrop.jpg)",
-          filter: "brightness(50%) grayscale(25%)",
-        }}
-      />
-      <Typography
-        variant={"h4"}
-        fontFamily={(theme) => theme.fontFamilyTitle}
-        color={"white"}
-        mt={-10}
-        position={"relative"}
-      >
-        {campaign.name}
-      </Typography>
-
+      <PageBanner>{campaign.name}</PageBanner>
       <Box
         mt={3}
         display={"flex"}
