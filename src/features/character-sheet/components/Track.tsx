@@ -49,32 +49,51 @@ export function Track(props: TrackProps) {
   }, [min, max]);
 
   return (
-    <Box sx={sx} display={"flex"} flexDirection={"column"}>
+    <Box sx={sx} display={"flex"} overflow={"auto"}>
       {label && (
-        <Typography
-          component={"label"}
-          variant={"subtitle1"}
-          fontFamily={(theme) => theme.fontFamilyTitle}
-          color={(theme) => theme.palette.text.secondary}
+        <Box
+          bgcolor={(theme) => theme.palette.primary.light}
+          color={(theme) => theme.palette.primary.contrastText}
+          px={0.5}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          sx={(theme) => ({
+            borderTopLeftRadius: theme.shape.borderRadius,
+            borderBottomLeftRadius: theme.shape.borderRadius,
+          })}
         >
-          {label}
-        </Typography>
+          <Typography
+            fontFamily={(theme) => theme.fontFamilyTitle}
+            variant={"subtitle1"}
+          >
+            {label}
+          </Typography>
+        </Box>
       )}
       <ToggleButtonGroup
         exclusive
         disabled={disabled || loading}
         value={value}
         onChange={(evt, value) => handleChange(value)}
-        sx={{
-          width: "100%",
-          display: "flex",
-        }}
+        sx={[
+          {
+            width: "100%",
+            display: "flex",
+          },
+          label
+            ? {
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              }
+            : {},
+        ]}
       >
         {numbers.map((num) => (
           <ToggleButton
             key={num}
             value={num}
-            sx={{ py: 0, px: 1, flexGrow: 1 }}
+            sx={{ py: 0, px: 0.5, flexGrow: 1 }}
           >
             {num > 0 && "+"}
             {num}

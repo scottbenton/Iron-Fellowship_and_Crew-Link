@@ -19,19 +19,39 @@ export function StatsSection() {
   const supply = useCharacterSheetStore((store) => store.supply) as number;
 
   return (
-    <Box display={"flex"} flexWrap={"wrap"} justifyContent={"center"}>
-      <Stack spacing={1} direction={"row"} flexWrap={"wrap"} p={0.5}>
-        <StatComponent label={"Edge"} value={stats[STATS.EDGE]} />
-        <StatComponent label={"Heart"} value={stats[STATS.HEART]} />
-        <StatComponent label={"Iron"} value={stats[STATS.IRON]} />
-        <StatComponent label={"Shadow"} value={stats[STATS.SHADOW]} />
-        <StatComponent label={"Wits"} value={stats[STATS.WITS]} />
-      </Stack>
-      <Stack spacing={1} direction={"row"} flexWrap={"wrap"} p={0.5} ml={4}>
-        <StatComponent label={"Health"} value={health} />
-        <StatComponent label={"Spirit"} value={spirit} />
-        <StatComponent label={"Supply"} value={supply} />
-      </Stack>
+    <Box display={"flex"} flexWrap={"wrap"} justifyContent={"flex-start"}>
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} p={0.5}>
+        <StatComponent
+          label={"Edge"}
+          value={stats[STATS.EDGE]}
+          sx={{ mt: 1, mr: 1 }}
+        />
+        <StatComponent
+          label={"Heart"}
+          value={stats[STATS.HEART]}
+          sx={{ mt: 1, mr: 1 }}
+        />
+        <StatComponent
+          label={"Iron"}
+          value={stats[STATS.IRON]}
+          sx={{ mt: 1, mr: 1 }}
+        />
+        <StatComponent
+          label={"Shadow"}
+          value={stats[STATS.SHADOW]}
+          sx={{ mt: 1, mr: 1 }}
+        />
+        <StatComponent
+          label={"Wits"}
+          value={stats[STATS.WITS]}
+          sx={{ mt: 1, mr: 4 }}
+        />
+      </Box>
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} p={0.5}>
+        <StatComponent label={"Health"} value={health} sx={{ mt: 1, mr: 1 }} />
+        <StatComponent label={"Spirit"} value={spirit} sx={{ mt: 1, mr: 1 }} />
+        <StatComponent label={"Supply"} value={supply} sx={{ mt: 1 }} />
+      </Box>
     </Box>
   );
 }

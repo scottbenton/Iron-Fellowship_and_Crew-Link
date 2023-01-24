@@ -111,6 +111,7 @@ export function CharacterSheetPage() {
             justifyContent: "space-between",
             alignItems: "center",
             py: 0.5,
+            flexWrap: "wrap",
           }),
         ]}
       >

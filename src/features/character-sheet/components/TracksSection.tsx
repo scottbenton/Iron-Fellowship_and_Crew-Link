@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import {
   healthTrack,
   momentumTrack,
@@ -40,7 +40,7 @@ export function TracksSection() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={4}>
+      <Grid item xs={12} md={4}>
         <Track
           label={"Health"}
           value={health}
@@ -49,7 +49,7 @@ export function TracksSection() {
           max={healthTrack.max}
         />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={12} md={4}>
         <Track
           label={"Spirit"}
           value={spirit}
@@ -58,7 +58,7 @@ export function TracksSection() {
           max={spiritTrack.max}
         />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={12} md={4}>
         <Track
           label={"Supply"}
           value={supply}

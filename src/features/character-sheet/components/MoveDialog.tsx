@@ -1,4 +1,5 @@
 import {
+  Box,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -47,21 +48,24 @@ export function MoveDialog(props: MoveDialogProps) {
     <Dialog open={!!move} onClose={() => handleClose()}>
       <DialogTitle display={"flex"} justifyContent={"space-between"}>
         <span>{move?.name}</span>
-        <IconButton onClick={() => handleClose()}>
-          <CloseIcon />
-        </IconButton>
+        <span>
+          <IconButton onClick={() => handleClose()}>
+            <CloseIcon />
+          </IconButton>
+        </span>
       </DialogTitle>
       <DialogContent>
         {move?.stats && (
-          <Stack spacing={1} direction={"row"} flexWrap={"wrap"} p={0.5}>
+          <Box display={"flex"} flexWrap={"wrap"}>
             {move.stats.map((stat, index) => (
               <StatComponent
                 key={index}
                 label={labels[stat]}
                 value={rollableValues[stat]}
+                sx={{ mt: 1, mr: 1 }}
               />
             ))}
-          </Stack>
+          </Box>
         )}
         {move?.text && <MarkdownRenderer markdown={move?.text} />}
       </DialogContent>
