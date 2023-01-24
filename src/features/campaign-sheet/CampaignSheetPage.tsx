@@ -7,10 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { CharacterList } from "../../components/CharacterList/CharacterList";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { PageBanner } from "../../components/Layout/PageBanner";
+import { SectionHeading } from "../../components/SectionHeading";
 import { supplyTrack } from "../../data/defaultTracks";
 import { useAuth } from "../../hooks/useAuth";
 import { useSnackbar } from "../../hooks/useSnackbar";
@@ -81,33 +82,25 @@ export function CampaignSheetPage() {
   return (
     <>
       <PageBanner>{campaign.name}</PageBanner>
-      <Box
-        mt={3}
-        display={"flex"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-      >
-        <Typography
-          variant={"h6"}
-          fontFamily={(theme) => theme.fontFamilyTitle}
-          color={(theme) => theme.palette.primary.light}
-        >
-          Characters
-        </Typography>
-        <div>
-          <Button variant={"outlined"} onClick={() => copyLinkToClipboard()}>
-            Copy Invite Link
-          </Button>
-          <Button
-            variant={"contained"}
-            sx={{ ml: 1 }}
-            onClick={() => setAddCharacterDialogOpen(true)}
-          >
-            Add a Character
-          </Button>
-        </div>
-      </Box>
-      <Divider sx={{ mt: 1, mb: 3 }} />
+      <SectionHeading
+        label={"Characters"}
+        action={
+          <div>
+            <Button onClick={() => copyLinkToClipboard()}>
+              Copy Invite Link
+            </Button>
+            <Button
+              variant={"contained"}
+              sx={{ ml: 1 }}
+              onClick={() => setAddCharacterDialogOpen(true)}
+            >
+              Add a Character
+            </Button>
+          </div>
+        }
+        breakContainer
+        sx={{ mt: 2, mb: 3 }}
+      />
       {campaign.characters.length === 0 && (
         <EmptyState
           imageSrc="/assets/nature.svg"
@@ -146,30 +139,16 @@ export function CampaignSheetPage() {
           )
         }
       />
-      <Box mt={4}>
-        <Typography
-          variant={"h6"}
-          fontFamily={(theme) => theme.fontFamilyTitle}
-          color={(theme) => theme.palette.primary.light}
-        >
-          Shared Tracks
-        </Typography>
-        <Divider sx={{ mt: 1 }} />
-      </Box>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4} lg={3} sx={{ mt: 2 }}>
-          <Track
-            label={"Supply"}
-            min={supplyTrack.min}
-            max={supplyTrack.max}
-            value={campaign.supply}
-            onChange={(newValue) => updateCampaignSupply(campaignId, newValue)}
-          />
-        </Grid>
-        <Grid item xs={0} sm={6} md={8} lg={9} />
+      <SectionHeading label={"Supply Track"} sx={{ mt: 4 }} breakContainer />
+      <Track
+        sx={{ mt: 4, mb: 4, maxWidth: 400 }}
+        min={supplyTrack.min}
+        max={supplyTrack.max}
+        value={campaign.supply}
+        onChange={(newValue) => updateCampaignSupply(campaignId, newValue)}
+      />
 
-        <CampaignProgressTracks campaignId={campaignId} />
-      </Grid>
+      <CampaignProgressTracks campaignId={campaignId} />
       <AddCharacterDialog
         open={addCharacterDialogOpen}
         handleClose={() => setAddCharacterDialogOpen(false)}

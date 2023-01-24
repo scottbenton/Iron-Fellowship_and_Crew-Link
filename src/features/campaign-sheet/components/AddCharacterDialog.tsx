@@ -1,14 +1,23 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
   IconButton,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { CharacterList } from "../../../components/CharacterList/CharacterList";
 import { useCharacterStore } from "../../../stores/character.store";
 import { useCampaignStore } from "../../../stores/campaigns.store";
+import { Link } from "react-router-dom";
+import {
+  constructCharacterCreateInCampaignUrl,
+  paths,
+  ROUTES,
+} from "../../../routes";
 
 export interface AddCharacterDialogProps {
   open: boolean;
@@ -44,6 +53,14 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
         </IconButton>
       </DialogTitle>
       <DialogContent>
+        {Object.keys(characters).length > 0 && (
+          <Typography
+            sx={{ mb: 1 }}
+            color={(theme) => theme.palette.text.secondary}
+          >
+            Add an existing character
+          </Typography>
+        )}
         {!isLoading && (
           <CharacterList
             characters={characters}
@@ -58,6 +75,18 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
             )}
           />
         )}
+        {Object.keys(characters).length > 0 && (
+          <Divider sx={{ my: 3 }}>OR</Divider>
+        )}
+        <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
+          <Button
+            variant={"contained"}
+            component={Link}
+            to={constructCharacterCreateInCampaignUrl(campaignId)}
+          >
+            Create New Character
+          </Button>
+        </Box>
       </DialogContent>
     </Dialog>
   );

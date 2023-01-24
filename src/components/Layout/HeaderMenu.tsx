@@ -10,7 +10,6 @@ const getInitials = (name: string) => {
   if (names.length > 1) {
     initials += names[names.length - 1].substring(0, 1).toUpperCase();
   }
-
   return initials;
 };
 
@@ -31,7 +30,7 @@ export function HeaderMenu() {
         ref={anchorRef}
         onClick={() => setMenuOpen(true)}
       >
-        <Avatar alt={initials} src={user.photoURL ?? undefined} />
+        <Avatar src={user.photoURL ?? undefined}>{initials}</Avatar>
       </ButtonBase>
       <Menu
         open={menuOpen}

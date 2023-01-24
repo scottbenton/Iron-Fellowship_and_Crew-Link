@@ -149,47 +149,44 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
 
   return (
     <>
-      <Grid item xs={12} md={6}>
-        <ProgressTrackList
-          tracks={vows}
-          typeLabel={"Shared Vow"}
-          handleAdd={(newTrack) => addProgressTrack(TRACK_TYPES.VOW, newTrack)}
-          handleUpdateValue={(trackId, value) =>
-            updateProgressTrackValue(TRACK_TYPES.VOW, trackId, value)
-          }
-          handleDeleteTrack={(trackId) =>
-            removeProgressTrack(TRACK_TYPES.VOW, trackId)
-          }
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <ProgressTrackList
-          tracks={frays}
-          typeLabel={"Shared Combat Track"}
-          handleAdd={(newTrack) => addProgressTrack(TRACK_TYPES.FRAY, newTrack)}
-          handleUpdateValue={(trackId, value) =>
-            updateProgressTrackValue(TRACK_TYPES.FRAY, trackId, value)
-          }
-          handleDeleteTrack={(trackId) =>
-            removeProgressTrack(TRACK_TYPES.FRAY, trackId)
-          }
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <ProgressTrackList
-          tracks={journeys}
-          typeLabel={"Shared Journey"}
-          handleAdd={(newTrack) =>
-            addProgressTrack(TRACK_TYPES.JOURNEY, newTrack)
-          }
-          handleUpdateValue={(trackId, value) =>
-            updateProgressTrackValue(TRACK_TYPES.JOURNEY, trackId, value)
-          }
-          handleDeleteTrack={(trackId) =>
-            removeProgressTrack(TRACK_TYPES.JOURNEY, trackId)
-          }
-        />
-      </Grid>
+      <ProgressTrackList
+        tracks={vows}
+        typeLabel={"Shared Vow"}
+        handleAdd={(newTrack) => addProgressTrack(TRACK_TYPES.VOW, newTrack)}
+        handleUpdateValue={(trackId, value) =>
+          updateProgressTrackValue(TRACK_TYPES.VOW, trackId, value)
+        }
+        handleDeleteTrack={(trackId) =>
+          removeProgressTrack(TRACK_TYPES.VOW, trackId)
+        }
+        headingBreakContainer
+      />
+      <ProgressTrackList
+        tracks={frays}
+        typeLabel={"Shared Combat Track"}
+        handleAdd={(newTrack) => addProgressTrack(TRACK_TYPES.FRAY, newTrack)}
+        handleUpdateValue={(trackId, value) =>
+          updateProgressTrackValue(TRACK_TYPES.FRAY, trackId, value)
+        }
+        handleDeleteTrack={(trackId) =>
+          removeProgressTrack(TRACK_TYPES.FRAY, trackId)
+        }
+        headingBreakContainer
+      />
+      <ProgressTrackList
+        tracks={journeys}
+        typeLabel={"Shared Journey"}
+        handleAdd={(newTrack) =>
+          addProgressTrack(TRACK_TYPES.JOURNEY, newTrack)
+        }
+        handleUpdateValue={(trackId, value) =>
+          updateProgressTrackValue(TRACK_TYPES.JOURNEY, trackId, value)
+        }
+        handleDeleteTrack={(trackId) =>
+          removeProgressTrack(TRACK_TYPES.JOURNEY, trackId)
+        }
+        headingBreakContainer
+      />
     </>
   );
 }

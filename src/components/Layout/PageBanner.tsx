@@ -18,12 +18,14 @@ export function PageBanner(props: PageBannerProps) {
           display: "flex",
           alignItems: "flex-end",
 
-          marginX: theme.spacing(-3),
-          px: 3,
+          marginX: theme.spacing(-2),
+          px: 2,
           py: 1,
 
           height: 100,
           [theme.breakpoints.up("sm")]: {
+            marginX: theme.spacing(-3),
+
             height: 150,
             py: 3,
           },

@@ -32,3 +32,7 @@ export function constructCampaignSheetUrl(campaignId: string) {
 export function constructCampaignJoinUrl(campaignId: string) {
   return `/campaigns/${campaignId}/join`;
 }
+
+export function constructCharacterCreateInCampaignUrl(campaignId: string) {
+  return paths[ROUTES.CHARACTER_CREATE] + "?campaignId=" + campaignId;
+}

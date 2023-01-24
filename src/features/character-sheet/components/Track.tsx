@@ -8,7 +8,7 @@ import { SystemStyleObject } from "@mui/system";
 import { useEffect, useState } from "react";
 
 export interface TrackProps {
-  label: string;
+  label?: string;
   min: number;
   max: number;
   value: number;
@@ -50,15 +50,16 @@ export function Track(props: TrackProps) {
 
   return (
     <Box sx={sx} display={"flex"} flexDirection={"column"}>
-      <Typography
-        component={"label"}
-        htmlFor={label + "-track-input"}
-        variant={"subtitle1"}
-        fontFamily={(theme) => theme.fontFamilyTitle}
-        color={(theme) => theme.palette.text.secondary}
-      >
-        {label}
-      </Typography>
+      {label && (
+        <Typography
+          component={"label"}
+          variant={"subtitle1"}
+          fontFamily={(theme) => theme.fontFamilyTitle}
+          color={(theme) => theme.palette.text.secondary}
+        >
+          {label}
+        </Typography>
+      )}
       <ToggleButtonGroup
         exclusive
         disabled={disabled || loading}

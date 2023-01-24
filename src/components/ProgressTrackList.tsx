@@ -11,11 +11,18 @@ export interface ProgressTrackListProps {
   handleAdd: (newTrack: StoredTrack) => Promise<boolean>;
   handleUpdateValue: (trackId: string, value: number) => Promise<boolean>;
   handleDeleteTrack: (trackId: string) => Promise<boolean>;
+  headingBreakContainer?: boolean;
 }
 
 export function ProgressTrackList(props: ProgressTrackListProps) {
-  const { tracks, typeLabel, handleAdd, handleUpdateValue, handleDeleteTrack } =
-    props;
+  const {
+    tracks,
+    typeLabel,
+    handleAdd,
+    handleUpdateValue,
+    handleDeleteTrack,
+    headingBreakContainer,
+  } = props;
 
   return (
     <>
@@ -30,8 +37,9 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
             }}
           />
         }
+        breakContainer={headingBreakContainer}
       />
-      <Stack px={2} mt={2} spacing={4} mb={4}>
+      <Stack px={headingBreakContainer ? 0 : 2} mt={2} spacing={4} mb={4}>
         {Array.isArray(tracks) &&
           tracks.map((track, index) => (
             <ProgressTrack

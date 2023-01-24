@@ -1,17 +1,21 @@
 import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { PageBanner } from "../../components/Layout/PageBanner";
 import { SectionHeading } from "../../components/SectionHeading";
 import { useSnackbar } from "../../hooks/useSnackbar";
-import { constructCharacterSheetUrl } from "../../routes";
+import {
+  constructCampaignSheetUrl,
+  constructCharacterSheetUrl,
+} from "../../routes";
 import { StoredAsset } from "../../types/Asset.type";
 import { STATS } from "../../types/stats.enum";
 import { AssetsSection } from "./components/AssetsSection";
 import { StatsField } from "./components/StatsField";
 import { createFirebaseCharacter } from "./api/createCharacter";
 import { StatsMap } from "../../types/Character.type";
+import { useCampaignStore } from "../../stores/campaigns.store";
 
 export type AssetArrayType = [
   StoredAsset | undefined,
@@ -27,9 +31,15 @@ type CharacterCreateFormValues = {
 type Keys = keyof CharacterCreateFormValues;
 
 export function CharacterCreatePage() {
+  const campaignId = useSearchParams()[0].get("campaignId");
+
   const navigate = useNavigate();
   const { error } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
+
+  const addCharacterToCampaign = useCampaignStore(
+    (store) => store.addCharacterToCampaign
+  );
 
   const validate = (values: CharacterCreateFormValues) => {
     const errors: { [key in keyof CharacterCreateFormValues]?: string } = {};
@@ -63,7 +73,19 @@ export function CharacterCreatePage() {
       values.assets as [StoredAsset, StoredAsset, StoredAsset]
     )
       .then((characterId) => {
-        navigate(constructCharacterSheetUrl(characterId));
+        if (campaignId) {
+          addCharacterToCampaign(campaignId, characterId)
+            .catch((e) => {
+              console.error(e);
+              error("Failed to add character to campaign");
+            })
+            .finally(() => {
+              // add character to campaign
+              navigate(constructCampaignSheetUrl(campaignId));
+            });
+        } else {
+          navigate(constructCharacterSheetUrl(characterId));
+        }
       })
       .catch((e) => {
         console.error(e);

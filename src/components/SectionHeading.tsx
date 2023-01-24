@@ -14,13 +14,26 @@ export function SectionHeading(props: SectionHeadingProps) {
   return (
     <Box
       bgcolor={(theme) => theme.palette.grey[200]}
-      px={3}
       py={0.5}
       display={"flex"}
-      alignItems={"center"}
       justifyContent={"space-between"}
-      mx={breakContainer ? -3 : 0}
-      sx={sx}
+      sx={[
+        (theme) => ({
+          flexDirection: "row",
+          alignItems: "center",
+
+          marginX: breakContainer ? -3 : 0,
+          paddingX: 3,
+
+          [theme.breakpoints.down("sm")]: {
+            flexDirection: "column",
+
+            marginX: breakContainer ? -2 : 0,
+            paddingX: 2,
+          },
+        }),
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       <Typography
         variant={"h6"}

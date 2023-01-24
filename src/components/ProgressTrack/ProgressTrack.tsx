@@ -4,7 +4,7 @@ import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
 import PlusIcon from "@mui/icons-material/Add";
 import { DIFFICULTY } from "../../types/Track.type";
-import DeleteIcon from "@mui/icons-material/Delete";
+import CompleteIcon from "@mui/icons-material/Check";
 
 export interface ProgressTracksProps {
   label?: string;
@@ -64,7 +64,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
   const handleDelete = () => {
     if (onDelete) {
       const shouldDelete = confirm(
-        "Are you sure you want to delete this track?"
+        "Are you sure you want to complete this track?"
       );
       if (shouldDelete) {
         onDelete();
@@ -129,15 +129,6 @@ export function ProgressTrack(props: ProgressTracksProps) {
             </Typography>
           )}
         </Box>
-        {onDelete && (
-          <Button
-            onClick={() => handleDelete()}
-            endIcon={<DeleteIcon />}
-            color={"error"}
-          >
-            Delete Track
-          </Button>
-        )}
       </Box>
       <Box display={"flex"} mt={label ? 1 : 0}>
         {onValueChange && (
@@ -206,6 +197,16 @@ export function ProgressTrack(props: ProgressTracksProps) {
           </ButtonBase>
         )}
       </Box>
+      {onDelete && (
+        <Button
+          onClick={() => handleDelete()}
+          endIcon={<CompleteIcon />}
+          variant={"outlined"}
+          sx={{ mt: 2 }}
+        >
+          Complete Track
+        </Button>
+      )}
     </Box>
   );
 }

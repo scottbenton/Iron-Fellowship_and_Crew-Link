@@ -139,6 +139,7 @@ export function CharacterSheetPage() {
           item
           xs={12}
           md={4}
+          lg={3}
           sx={(theme) => ({
             [theme.breakpoints.up("md")]: {
               height: "100%",
@@ -151,6 +152,7 @@ export function CharacterSheetPage() {
           item
           xs={12}
           md={8}
+          lg={9}
           sx={(theme) => ({
             [theme.breakpoints.up("md")]: {
               height: "100%",
