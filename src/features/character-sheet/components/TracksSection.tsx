@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, ButtonBase, Grid, Typography } from "@mui/material";
 import {
   healthTrack,
   momentumTrack,
@@ -8,6 +8,7 @@ import {
 import { useSnackbar } from "../../../hooks/useSnackbar";
 import { Track } from "./Track";
 import { TRACK_KEYS, useCharacterSheetStore } from "../characterSheet.store";
+import ResetIcon from "@mui/icons-material/Replay";
 
 export function TracksSection() {
   const { error } = useSnackbar();
@@ -18,6 +19,10 @@ export function TracksSection() {
   const momentum = useCharacterSheetStore(
     (store) => store.character?.momentum
   ) as number;
+  const maxMomentum = useCharacterSheetStore((store) => store.maxMomentum);
+  const momentumResetValue = useCharacterSheetStore(
+    (store) => store.momentumResetValue
+  );
   const health = useCharacterSheetStore(
     (store) => store.character?.health
   ) as number;
@@ -68,13 +73,31 @@ export function TracksSection() {
         />
       </Grid>
       <Grid item xs={12}>
-        <Track
-          label={"Momentum"}
-          value={momentum}
-          onChange={(newValue) => updateTrackValue("momentum", newValue)}
-          min={momentumTrack.min}
-          max={momentumTrack.max}
-        />
+        <Box display={"flex"}>
+          <Track
+            label={"Momentum"}
+            value={momentum}
+            onChange={(newValue) => updateTrackValue("momentum", newValue)}
+            min={momentumTrack.min}
+            max={maxMomentum ?? momentumTrack.max}
+            sx={{ flexGrow: 1 }}
+          />
+          <ButtonBase
+            sx={(theme) => ({
+              backgroundColor: theme.palette.primary.light,
+              color: theme.palette.primary.contrastText,
+              borderRadius: theme.shape.borderRadius,
+              ml: 0.25,
+
+              "&:hover": {
+                backgroundColor: theme.palette.primary.main,
+              },
+            })}
+            onClick={() => updateTrackValue("momentum", momentumResetValue)}
+          >
+            <ResetIcon />
+          </ButtonBase>
+        </Box>
       </Grid>
     </Grid>
   );

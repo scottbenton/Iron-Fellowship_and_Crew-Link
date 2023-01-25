@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   Grid,
+  Hidden,
   LinearProgress,
   Typography,
 } from "@mui/material";
@@ -103,7 +104,7 @@ export function CharacterSheetPage() {
         sx={[
           (theme) => ({
             position: "relative",
-            marginX: theme.spacing(-3),
+            mx: -3,
             px: 3,
             top: theme.spacing(-3),
             backgroundColor: theme.palette.primary.light,
@@ -112,6 +113,10 @@ export function CharacterSheetPage() {
             alignItems: "center",
             py: 0.5,
             flexWrap: "wrap",
+            [theme.breakpoints.down("sm")]: {
+              mx: -2,
+              px: 2,
+            },
           }),
         ]}
       >
@@ -136,19 +141,21 @@ export function CharacterSheetPage() {
           },
         })}
       >
-        <Grid
-          item
-          xs={12}
-          md={4}
-          lg={3}
-          sx={(theme) => ({
-            [theme.breakpoints.up("md")]: {
-              height: "100%",
-            },
-          })}
-        >
-          <MovesSection />
-        </Grid>
+        <Hidden mdDown>
+          <Grid
+            item
+            xs={12}
+            md={4}
+            lg={3}
+            sx={(theme) => ({
+              [theme.breakpoints.up("md")]: {
+                height: "100%",
+              },
+            })}
+          >
+            <MovesSection />
+          </Grid>
+        </Hidden>
         <Grid
           item
           xs={12}

@@ -1,4 +1,5 @@
 import { StoredAsset } from "./Asset.type";
+import { DEBILITIES } from "./debilities.enum";
 import { STATS } from "./stats.enum";
 
 export type StatsMap = {
@@ -18,6 +19,9 @@ export interface CharacterDocument {
     spent?: number;
   };
   bonds?: number;
+  debilities?: {
+    [key in DEBILITIES]?: boolean;
+  };
 }
 
 export interface AssetDocument {

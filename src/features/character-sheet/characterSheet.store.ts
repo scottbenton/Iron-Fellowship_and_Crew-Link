@@ -10,6 +10,7 @@ import {
 import produce from "immer";
 import create from "zustand";
 import { firebaseAuth } from "../../config/firebase.config";
+import { momentumTrack } from "../../data/defaultTracks";
 import {
   getCampaignDoc,
   getCharacterAssetDoc,
@@ -20,6 +21,7 @@ import {
 import { StoredAsset } from "../../types/Asset.type";
 import { StoredCampaign } from "../../types/Campaign.type";
 import { CharacterDocument } from "../../types/Character.type";
+import { DEBILITIES } from "../../types/debilities.enum";
 import { STATS } from "../../types/stats.enum";
 import { StoredTrack, TRACK_TYPES } from "../../types/Track.type";
 
@@ -59,6 +61,9 @@ export interface CharacterSheetStore {
   campaign?: StoredCampaign;
 
   supply?: number;
+
+  momentumResetValue?: number;
+  maxMomentum?: number;
 
   setCharacter: (characterId?: string, character?: CharacterDocument) => void;
   setCampaign: (campaignId?: string, campaign?: StoredCampaign) => void;
@@ -125,6 +130,7 @@ export interface CharacterSheetStore {
   ) => Promise<boolean>;
   updateBonds: (value: number) => Promise<boolean>;
   updateName: (value: string) => Promise<boolean>;
+  updateDebility: (debility: DEBILITIES, active: boolean) => Promise<boolean>;
 }
 
 const initialState = {
@@ -154,6 +160,23 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
     setCharacter: (characterId?: string, character?: CharacterDocument) => {
       set(
         produce((store: CharacterSheetStore) => {
+          if (character) {
+            const numberOfActiveDebilities = Object.values(
+              character.debilities ?? {}
+            ).filter((debility) => debility).length;
+
+            store.maxMomentum = momentumTrack.max - numberOfActiveDebilities;
+            if (numberOfActiveDebilities >= 2) {
+              store.momentumResetValue = 0;
+            } else if (numberOfActiveDebilities === 1) {
+              store.momentumResetValue = 1;
+            } else {
+              store.momentumResetValue = momentumTrack.startingValue;
+            }
+          } else {
+            store.maxMomentum = momentumTrack.max;
+            store.momentumResetValue = momentumTrack.startingValue;
+          }
           store.characterId = characterId;
           store.character = character;
           if (!store.campaignId) {
@@ -624,6 +647,41 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
             .catch((e) => {
               console.error(e);
               reject("Failed to update bonds");
+            });
+        } else {
+          reject("No user found.");
+        }
+      });
+    },
+
+    updateDebility: (debility, active) => {
+      return new Promise((resolve, reject) => {
+        const uid = firebaseAuth.currentUser?.uid;
+        const state = getState();
+        const characterId = state.characterId ?? "";
+        const maxMomentum = getState().maxMomentum;
+        const momentum = getState().character?.momentum;
+
+        if (uid) {
+          let newMomentum = momentum;
+          if (
+            active === true &&
+            typeof momentum === "number" &&
+            maxMomentum &&
+            maxMomentum - 1 < momentum
+          ) {
+            newMomentum = maxMomentum - 1;
+          }
+          updateDoc(getCharacterDoc(uid, characterId), {
+            [`debilities.${debility}`]: active,
+            momentum: newMomentum,
+          })
+            .then(() => {
+              resolve(true);
+            })
+            .catch((e) => {
+              console.error(e);
+              reject("Failed to update debilities");
             });
         } else {
           reject("No user found.");
