@@ -33,8 +33,8 @@ export function Track(props: TrackProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [numbers, setNumbers] = useState<number[]>([]);
 
-  const handleChange = (newValue: number) => {
-    if (newValue >= min && newValue <= max) {
+  const handleChange = (newValue: number | undefined) => {
+    if (typeof newValue === "number" && newValue >= min && newValue <= max) {
       setLoading(true);
       onChange(newValue)
         .catch(() => {})
