@@ -57,7 +57,8 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
           <Tabs
             value={selectedTab}
             onChange={(evt, value) => setSelectedTab(value)}
-            aria-label="basic tabs example"
+            variant={"scrollable"}
+            scrollButtons={"auto"}
           >
             {assetGroups.map((group, index) => (
               <Tab label={group.name} key={index} />
