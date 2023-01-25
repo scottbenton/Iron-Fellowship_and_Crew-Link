@@ -93,7 +93,12 @@ export function TracksSection() {
                 backgroundColor: theme.palette.primary.main,
               },
             })}
-            onClick={() => updateTrackValue("momentum", momentumResetValue)}
+            onClick={() =>
+              updateTrackValue(
+                "momentum",
+                momentumResetValue ?? momentumTrack.startingValue
+              )
+            }
           >
             <ResetIcon />
           </ButtonBase>
