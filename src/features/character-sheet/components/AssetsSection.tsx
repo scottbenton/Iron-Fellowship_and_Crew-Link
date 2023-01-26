@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AssetCard } from "../../../components/AssetCard/AssetCard";
 import { AssetCardDialog } from "../../../components/AssetCardDialog";
 import { assets } from "../../../data/assets";
-import { StoredAsset } from "../../../types/Asset.type";
+import { Asset, StoredAsset } from "../../../types/Asset.type";
 import { useCharacterSheetStore } from "../characterSheet.store";
 
 export function AssetsSection() {
@@ -27,10 +27,14 @@ export function AssetsSection() {
     (store) => store.updateAssetMultiTrack
   );
 
+  const updateCustomAsset = useCharacterSheetStore(
+    (store) => store.updateCustomAsset
+  );
+
   const [isAssetDialogOpen, setIsAssetDialogOpen] = useState<boolean>(false);
 
-  const handleAssetAdd = (assetId: string) => {
-    const asset = assets[assetId];
+  const handleAssetAdd = (asset: Asset) => {
+    const assetId = asset.id;
 
     let inputs: StoredAsset["inputs"];
     asset.inputs?.forEach((input) => {
@@ -52,6 +56,10 @@ export function AssetsSection() {
     }
     if (asset.track) {
       storedAsset.trackValue = asset.track.startingValue ?? asset.track.max;
+    }
+
+    if (assetId.startsWith("custom-")) {
+      storedAsset.customAsset = asset;
     }
 
     addAsset(storedAsset).finally(() => {
@@ -84,7 +92,7 @@ export function AssetsSection() {
           sx={{ display: "flex", justifyContent: "center" }}
         >
           <AssetCard
-            asset={assets[storedAsset.id]}
+            asset={storedAsset.customAsset ?? assets[storedAsset.id]}
             storedAsset={storedAsset}
             handleInputChange={(label, value) =>
               updateAssetInput(storedAsset.id, label, value)
@@ -104,6 +112,9 @@ export function AssetsSection() {
               updateAssetMultiTrack(storedAsset.id, value)
             }
             handleDeleteClick={() => handleAssetDelete(storedAsset.id)}
+            handleCustomAssetUpdate={(asset) =>
+              updateCustomAsset(storedAsset.id, asset)
+            }
           />
         </Grid>
       ))}
@@ -120,7 +131,7 @@ export function AssetsSection() {
       <AssetCardDialog
         open={isAssetDialogOpen}
         handleClose={() => setIsAssetDialogOpen(false)}
-        handleAssetSelection={(asset) => handleAssetAdd(asset.id)}
+        handleAssetSelection={(asset) => handleAssetAdd(asset)}
       />
     </Grid>
   );

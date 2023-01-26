@@ -74,4 +74,5 @@ export interface StoredAsset {
   };
   trackValue?: number;
   multiFieldTrackValue?: string;
+  customAsset?: Asset;
 }

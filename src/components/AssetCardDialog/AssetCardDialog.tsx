@@ -14,6 +14,7 @@ import { useState } from "react";
 import { companions, paths, combatTalents, rituals } from "../../data/assets";
 import { Asset } from "../../types/Asset.type";
 import { AssetCard } from "../AssetCard/AssetCard";
+import { CreateCustomAsset } from "./CreateCustomAsset";
 
 const assetGroups = [
   {
@@ -41,7 +42,7 @@ const assetGroups = [
 export interface AssetCardDialogProps {
   open: boolean;
   handleClose: () => void;
-  handleAssetSelection: (assetId: Asset) => void;
+  handleAssetSelection: (asset: Asset) => void;
 }
 
 export function AssetCardDialog(props: AssetCardDialogProps) {
@@ -63,27 +64,36 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
             {assetGroups.map((group, index) => (
               <Tab label={group.name} key={index} />
             ))}
+            <Tab label={"custom"} />
           </Tabs>
         </Box>
         <Box py={1}>
-          <Typography color={"GrayText"}>
-            {assetGroups[selectedTab].description}
-          </Typography>
-          <Grid container spacing={1} mt={2}>
-            {assetGroups[selectedTab].assets.map((asset, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <AssetCard
-                  asset={asset}
-                  readOnly
-                  actions={
-                    <Button onClick={() => handleAssetSelection(asset)}>
-                      Select
-                    </Button>
-                  }
-                />
+          {selectedTab < assetGroups.length ? (
+            <>
+              <Typography color={"GrayText"}>
+                {assetGroups[selectedTab].description}
+              </Typography>
+              <Grid container spacing={1} mt={2}>
+                {assetGroups[selectedTab].assets.map((asset, index) => (
+                  <Grid item xs={12} sm={6} md={4} key={index}>
+                    <AssetCard
+                      asset={asset}
+                      readOnly
+                      actions={
+                        <Button onClick={() => handleAssetSelection(asset)}>
+                          Select
+                        </Button>
+                      }
+                    />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
+            </>
+          ) : (
+            <CreateCustomAsset
+              handleSelect={(asset) => handleAssetSelection(asset)}
+            />
+          )}
         </Box>
       </DialogContent>
       <DialogActions

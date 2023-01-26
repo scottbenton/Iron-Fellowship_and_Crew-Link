@@ -3,7 +3,7 @@ import { assets } from "../../../data/assets";
 import { AssetCard } from "../../../components/AssetCard/AssetCard";
 import { AddAssetCard } from "./AddAssetCard";
 import { useState } from "react";
-import { StoredAsset } from "../../../types/Asset.type";
+import { Asset, StoredAsset } from "../../../types/Asset.type";
 import { AssetCardDialog } from "../../../components/AssetCardDialog";
 import { SectionHeading } from "../../../components/SectionHeading";
 import { useField } from "formik";
@@ -15,11 +15,10 @@ export function AssetsSection() {
   const [currentlySelectingAssetIndex, setCurrentlySelectingAssetIndex] =
     useState<number>();
 
-  const selectAsset = (assetId: string) => {
+  const selectAsset = (asset: Asset) => {
+    const assetId = asset.id;
     if (typeof currentlySelectingAssetIndex === "number") {
       const newAssets = [...field.value];
-
-      const asset = assets[assetId];
 
       let inputs: StoredAsset["inputs"];
       asset.inputs?.forEach((input) => {
@@ -41,6 +40,10 @@ export function AssetsSection() {
       }
       if (asset.track) {
         storedAsset.trackValue = asset.track.startingValue ?? asset.track.max;
+      }
+
+      if (assetId.startsWith("custom-")) {
+        storedAsset.customAsset = asset;
       }
 
       newAssets[currentlySelectingAssetIndex] = storedAsset;
@@ -89,7 +92,7 @@ export function AssetsSection() {
             >
               {storedAsset ? (
                 <AssetCard
-                  asset={assets[storedAsset.id]}
+                  asset={storedAsset.customAsset ?? assets[storedAsset.id]}
                   sx={{
                     // maxWidth: 380,
                     minHeight: 450,
@@ -113,7 +116,7 @@ export function AssetsSection() {
         <AssetCardDialog
           open={typeof currentlySelectingAssetIndex === "number"}
           handleClose={() => setCurrentlySelectingAssetIndex(undefined)}
-          handleAssetSelection={(asset) => selectAsset(asset.id)}
+          handleAssetSelection={(asset) => selectAsset(asset)}
         />
       </Stack>
     </>

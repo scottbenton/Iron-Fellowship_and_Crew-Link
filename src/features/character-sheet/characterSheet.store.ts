@@ -18,7 +18,7 @@ import {
   getCharacterTracksDoc,
   getSharedCampaignTracksCollection,
 } from "../../lib/firebase.lib";
-import { StoredAsset } from "../../types/Asset.type";
+import { Asset, StoredAsset } from "../../types/Asset.type";
 import { StoredCampaign } from "../../types/Campaign.type";
 import { CharacterDocument } from "../../types/Character.type";
 import { DEBILITIES } from "../../types/debilities.enum";
@@ -78,6 +78,7 @@ export interface CharacterSheetStore {
   loadAssets: () => Unsubscribe | undefined;
   addAsset: (asset: StoredAsset) => Promise<boolean>;
   removeAsset: (assetId: string) => Promise<boolean>;
+  updateCustomAsset: (assetId: string, asset: Asset) => Promise<boolean>;
   updateAssetInput: (
     assetId: string,
     label: string,
@@ -325,6 +326,28 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
         }
       });
     },
+
+    updateCustomAsset: (assetId: string, asset: Asset) =>
+      new Promise((resolve, reject) => {
+        const uid = firebaseAuth.currentUser?.uid;
+        const characterId = getState().characterId ?? "";
+
+        if (uid) {
+          //@ts-ignore
+          updateDoc(getCharacterAssetDoc(uid, characterId), {
+            [`assets.${assetId}.customAsset`]: asset,
+          })
+            .then(() => {
+              resolve(true);
+            })
+            .catch((e) => {
+              console.error(e);
+              reject("Error updating custom asset");
+            });
+        } else {
+          reject("No user found");
+        }
+      }),
 
     updateAssetInput: (assetId, label, value) =>
       new Promise((resolve, reject) => {
