@@ -1,9 +1,9 @@
 import { Box, ButtonBase, Card, SxProps, Typography } from "@mui/material";
-import { STATS } from "../../../types/stats.enum";
 
 import PlusIcon from "@mui/icons-material/Add";
 import MinusIcon from "@mui/icons-material/Remove";
 import { useState } from "react";
+import { useRoller } from "../../../components/DieRollProvider";
 
 export interface StatComponentProps {
   label: string;
@@ -18,6 +18,8 @@ export interface StatComponentProps {
 
 export function StatComponent(props: StatComponentProps) {
   const { label, value, updateTrack, sx } = props;
+
+  const { roll } = useRoller();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -74,9 +76,15 @@ export function StatComponent(props: StatComponentProps) {
           width: 75,
           display: "flex",
           flexDirection: "column",
+          alignItems: "stretch",
         }),
+
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
+      component={updateTrack ? "div" : ButtonBase}
+      onClick={() => {
+        !updateTrack && roll(label, value);
+      }}
     >
       <Typography
         display={"block"}

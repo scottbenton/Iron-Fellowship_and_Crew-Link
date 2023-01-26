@@ -3,6 +3,7 @@ import { Unsubscribe } from "firebase/firestore";
 import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useUsersCampaigns } from "./api/useUsersCampaigns";
+import { DieRollProvider } from "./components/DieRollProvider";
 import { EmptyState } from "./components/EmptyState/EmptyState";
 import { Layout } from "./components/Layout";
 import { CampaignJoinPage } from "./features/campaign-join/CampaignJoinPage";
@@ -52,7 +53,11 @@ export function App() {
         />
         <Route
           path={paths[ROUTES.CHARACTER_SHEET]}
-          element={<CharacterSheetPage />}
+          element={
+            <DieRollProvider>
+              <CharacterSheetPage />
+            </DieRollProvider>
+          }
         />
         <Route
           path={paths[ROUTES.CAMPAIGN_SELECT]}

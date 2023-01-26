@@ -21,13 +21,11 @@ export function Layout(props: LayoutProps) {
       pathname !== paths[ROUTES.LOGIN] &&
       authState === AUTH_STATE.UNAUTHENTICATED
     ) {
-      console.debug("REDIRECTING TO LOGIN PAGE");
       redirectWithContinueUrl(paths[ROUTES.LOGIN]);
     } else if (
       pathname === paths[ROUTES.LOGIN] &&
       authState === AUTH_STATE.AUTHENTICATED
     ) {
-      console.debug("REDIRECTING TO CONTINUE URL");
       navigateToContinueURL(paths[ROUTES.CHARACTER_SELECT]);
     }
   }, [pathname, authState]);
