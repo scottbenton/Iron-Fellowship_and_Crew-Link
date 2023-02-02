@@ -95,7 +95,7 @@ export function CharacterSelectPage() {
               to={paths[ROUTES.CHARACTER_CREATE]}
               color={"primary"}
               sx={{
-                position: "absolute",
+                position: "fixed",
                 bottom: 16,
                 right: 16,
               }}

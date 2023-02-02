@@ -107,7 +107,7 @@ export function CampaignListPage() {
           onClick={() => setCreateCampaignDialogOpen(true)}
           color={"primary"}
           sx={{
-            position: "absolute",
+            position: "fixed",
             bottom: 16,
             right: 16,
           }}

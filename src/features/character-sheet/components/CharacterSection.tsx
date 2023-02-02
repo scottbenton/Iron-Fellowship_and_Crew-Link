@@ -183,7 +183,7 @@ export function CharacterSection() {
 
       <SectionHeading label={"Stats & Settings"} />
       {name && (
-        <Box px={2}>
+        <Box pt={2} px={2}>
           <TextField
             label={"Name"}
             defaultValue={name}
@@ -201,7 +201,7 @@ export function CharacterSection() {
               max: 5,
               handleChange: (newValue) => updateStat(STATS.EDGE, newValue),
             }}
-            sx={{ mr: 2, mt: 2 }}
+            sx={{ mr: 2, mb: 2 }}
           />
           <StatComponent
             label="Heart"
@@ -211,7 +211,7 @@ export function CharacterSection() {
               max: 5,
               handleChange: (newValue) => updateStat(STATS.HEART, newValue),
             }}
-            sx={{ mr: 2, mt: 2 }}
+            sx={{ mr: 2, mb: 2 }}
           />
           <StatComponent
             label="Iron"
@@ -221,7 +221,7 @@ export function CharacterSection() {
               max: 5,
               handleChange: (newValue) => updateStat(STATS.IRON, newValue),
             }}
-            sx={{ mr: 2, mt: 2 }}
+            sx={{ mr: 2, mb: 2 }}
           />
           <StatComponent
             label="Shadow"
@@ -231,7 +231,7 @@ export function CharacterSection() {
               max: 5,
               handleChange: (newValue) => updateStat(STATS.SHADOW, newValue),
             }}
-            sx={{ mr: 2, mt: 2 }}
+            sx={{ mr: 2, mb: 2 }}
           />
           <StatComponent
             label="Wits"
@@ -241,7 +241,7 @@ export function CharacterSection() {
               max: 5,
               handleChange: (newValue) => updateStat(STATS.WITS, newValue),
             }}
-            sx={{ mr: 2, mt: 2 }}
+            sx={{ mr: 2, mb: 2 }}
           />
         </Box>
       )}
