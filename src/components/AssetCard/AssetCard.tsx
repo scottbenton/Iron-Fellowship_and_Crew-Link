@@ -133,7 +133,6 @@ export function AssetCard(props: AssetCardProps) {
           >
             {asset.name}
           </Typography>
-          <IconButton></IconButton>
           {asset.description && (
             <Typography variant={"body2"} color={"GrayText"}>
               {asset.description}
