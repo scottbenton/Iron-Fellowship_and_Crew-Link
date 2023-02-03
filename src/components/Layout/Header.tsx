@@ -14,7 +14,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AUTH_STATE, useAuth } from "../../hooks/useAuth";
 import { CAMPAIGN_PREFIX, CHARACTER_PREFIX, paths, ROUTES } from "../../routes";
 import { LoginButton } from "./LoginButton";
-import { ReactComponent as IronJournalLogo } from "./iron-journal-logo.svg";
+import { ReactComponent as IronFellowshipLogo } from "./iron-fellowship-logo.svg";
 import { useEffect, useState } from "react";
 import { HeaderMenu } from "./HeaderMenu";
 
@@ -51,9 +51,9 @@ export function Header() {
           }}
         >
           <Box display={"flex"} alignItems={"center"}>
-            <IronJournalLogo width={32} height={32} />
+            <IronFellowshipLogo width={32} height={32} />
             <Typography fontFamily={"Staatliches"} variant={"h5"} ml={2}>
-              Iron Journal
+              Iron Fellowship
             </Typography>
           </Box>
           {authState === AUTH_STATE.AUTHENTICATED ? (

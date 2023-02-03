@@ -76,7 +76,7 @@ export function App() {
           element={
             <EmptyState
               imageSrc="/assets/nature.svg"
-              title={"Get Started on Iron Journal"}
+              title={"Get Started on Iron Fellowship"}
               message={"Create your account or login to start"}
               callToAction={
                 <Button
