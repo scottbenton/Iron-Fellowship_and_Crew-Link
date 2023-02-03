@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "iron-journal-1ac32"
-  }
+    "default": "iron-fellowship-dev",
+    "dev": "iron-fellowship-dev"
+  },
+  "targets": {},
+  "etags": {}
 }
