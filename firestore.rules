@@ -1,6 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+  	match /characters/{userId} {
+    	allow read: if true;
+      allow write, delete: if userId == request.auth.uid;
+      match /{document=**} {
+      	allow read: if true;
+        allow write, delete: if userId == request.auth.uid;
+      }
+    }
+    match /campaigns/{document=**} {
+    	allow read, write, delete: if true;
+    }
     match /{document=**} {
       allow read, write: if false;
     }
