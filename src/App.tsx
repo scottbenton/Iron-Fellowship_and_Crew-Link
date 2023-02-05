@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { Unsubscribe } from "firebase/firestore";
 import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useUsersCampaigns } from "./api/useUsersCampaigns";
+import { useListenToUsersCampaigns } from "./api/campaign/listenToUsersCampaigns";
 import { DieRollProvider } from "./components/DieRollProvider";
 import { EmptyState } from "./components/EmptyState/EmptyState";
 import { Layout } from "./components/Layout";
@@ -23,7 +23,7 @@ export function App() {
     (store) => store.getUsersCharacters
   );
 
-  useUsersCampaigns();
+  useListenToUsersCampaigns();
 
   useEffect(() => {
     let unsubscribe: Unsubscribe | null;
