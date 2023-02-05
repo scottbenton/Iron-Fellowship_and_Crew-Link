@@ -13,7 +13,7 @@ jobs:
           BRANCH_NAME: ${{ github.ref_name }}
           REPOSITORY: ${{ github.repository }}
         run: |
-          mkdir -p ./pr
+          mkdir -p ./variables
           echo $PR_NUMBER > ./variables/pr_number
           echo $BRANCH_NAME > ./variables/branch_name
           echo $REPOSITORY > ./variables/repository
