@@ -2,10 +2,11 @@ import { Button, Grid } from "@mui/material";
 import { useState } from "react";
 import { AssetCard } from "../../../components/AssetCard/AssetCard";
 import { AssetCardDialog } from "../../../components/AssetCardDialog";
-import ConfirmDeleteDialog from "../../../components/ConfirmDeleteDialog";
 import { assets } from "../../../data/assets";
 import { Asset, StoredAsset } from "../../../types/Asset.type";
 import { useCharacterSheetStore } from "../characterSheet.store";
+
+import { useConfirm } from "material-ui-confirm";
 
 export function AssetsSection() {
   const assetData = useCharacterSheetStore((store) => store.assets) ?? [];
@@ -70,18 +71,24 @@ export function AssetsSection() {
 
   const handleAssetDelete = (assetId: string) => {
     removeAsset(assetId);
-    handleClose();
   };
 
-  // ConfirmDeleteDialog open/close state
-  const [open, setOpen] = useState(false);
+  const confirm = useConfirm();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+  const handleClick = (assetId: string) => {
+    confirm({
+      title: "Delete Asset",
+      description: "Are you sure you want to remove this asset?",
+      confirmationText: "Delete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        handleAssetDelete(assetId);
+      })
+      .catch(() => {});
   };
 
   return (
@@ -121,19 +128,11 @@ export function AssetsSection() {
             handleMultiFieldTrackValueChange={(value) =>
               updateAssetMultiTrack(storedAsset.id, value)
             }
-            handleDeleteClick={handleClickOpen}
+            handleDeleteClick={() => handleClick(storedAsset.id)}
             handleCustomAssetUpdate={(asset) =>
               updateCustomAsset(storedAsset.id, asset)
             }
           />
-          <ConfirmDeleteDialog
-            title={"Delete asset?"}
-            handleDelete={() => handleAssetDelete(storedAsset.id)}
-            open={open}
-            handleClose={handleClose}
-          >
-            Are you sure you want to remove this asset?
-          </ConfirmDeleteDialog>
         </Grid>
       ))}
       <Grid item xs={12}>

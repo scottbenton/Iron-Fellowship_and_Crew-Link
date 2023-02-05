@@ -7,9 +7,8 @@ import { useSnackbar } from "../../hooks/useSnackbar";
 import { constructCharacterSheetUrl, paths, ROUTES } from "../../routes";
 import { useCharacterStore } from "../../stores/character.store";
 import AddCharacterIcon from "@mui/icons-material/PersonAdd";
-import ConfirmDeleteDialog from "../../components/ConfirmDeleteDialog";
 
-import { useState } from "react";
+import { useConfirm } from "material-ui-confirm";
 
 export function CharacterSelectPage() {
   const characters = useCharacterStore((store) => store.characters);
@@ -21,15 +20,22 @@ export function CharacterSelectPage() {
     });
   };
 
-  // ConfirmDeleteDialog open/close state
-  const [open, setOpen] = useState(false);
+  const confirm = useConfirm();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+  const handleClick = (characterId: string) => {
+    confirm({
+      title: "Delete Character",
+      description: `Are you sure you want to delete ${characters[characterId].name}?`,
+      confirmationText: "Delete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        handleDelete(characterId);
+      })
+      .catch(() => {});
   };
 
   return (
@@ -86,17 +92,12 @@ export function CharacterSelectPage() {
                 >
                   View
                 </Button>
-                <Button color={"error"} onClick={handleClickOpen}>
+                <Button
+                  color={"error"}
+                  onClick={() => handleClick(characterId)}
+                >
                   Delete
                 </Button>
-                <ConfirmDeleteDialog
-                  title={"Delete Character?"}
-                  handleDelete={() => handleDelete(characterId)}
-                  open={open}
-                  handleClose={handleClose}
-                >
-                  {`Are you sure you want to delete ${characters[characterId].name}?`}
-                </ConfirmDeleteDialog>
               </>
             )}
           />

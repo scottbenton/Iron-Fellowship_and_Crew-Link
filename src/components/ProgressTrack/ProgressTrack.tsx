@@ -5,7 +5,8 @@ import MinusIcon from "@mui/icons-material/Remove";
 import PlusIcon from "@mui/icons-material/Add";
 import { DIFFICULTY } from "../../types/Track.type";
 import CompleteIcon from "@mui/icons-material/Check";
-import ConfirmDeleteDialog from "../ConfirmDeleteDialog";
+
+import { useConfirm } from "material-ui-confirm";
 
 export interface ProgressTracksProps {
   label?: string;
@@ -68,15 +69,22 @@ export function ProgressTrack(props: ProgressTracksProps) {
     }
   };
 
-  // ConfirmDeleteDialog open/close state
-  const [open, setOpen] = useState(false);
+  const confirm = useConfirm();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+  const handleClick = () => {
+    confirm({
+      title: "Complete Track",
+      description: "Are you sure you want to complete this track?",
+      confirmationText: "Complete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        handleDelete();
+      })
+      .catch(() => {});
   };
 
   useEffect(() => {
@@ -206,7 +214,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
       </Box>
       {onDelete && (
         <Button
-          onClick={handleClickOpen}
+          onClick={handleClick}
           endIcon={<CompleteIcon />}
           variant={"outlined"}
           sx={{ mt: 2 }}
@@ -214,14 +222,6 @@ export function ProgressTrack(props: ProgressTracksProps) {
           Complete Track
         </Button>
       )}
-      <ConfirmDeleteDialog
-        title={"Complete track?"}
-        handleDelete={() => handleDelete()}
-        open={open}
-        handleClose={handleClose}
-      >
-        Are you sure you want to complete this track?
-      </ConfirmDeleteDialog>
     </Box>
   );
 }
