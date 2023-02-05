@@ -18,16 +18,34 @@ jobs:
 
     steps:
       - name: "Download Artifact"
-        uses: actions/download-artifact@v3
+
+        uses: actions/github-script@v6
         with:
-          name: variables
-          path: variables/
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "variables"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/variables.zip`, Buffer.from(download.data));
       - name: "Extract Variables"
+        run: unzip variables.zip
+      - name: "Set Variables"
         id: setVariables
         run: |
-          echo "issue_number=$(<./variables/pr_number)" >> $GITHUB_OUTPUT &
-          echo "branch_name=$(<./variables/branch_name)" >> $GITHUB_OUTPUT &
-          echo "repository=$(<./variables/repository)" >> $GITHUB_OUTPUT
+          echo "issue_number=$(<./pr_number)" >> $GITHUB_OUTPUT &
+          echo "branch_name=$(<./branch_name)" >> $GITHUB_OUTPUT &
+          echo "repository=$(<./repository)" >> $GITHUB_OUTPUT
   build_and_preview:
     runs-on: ubuntu-latest
     needs: get_variables
