@@ -53,8 +53,12 @@ jobs:
       url: ${{ steps.deploy.outputs.details_url }}
     steps:
       - uses: actions/checkout@v2
-      - run: npm ci && npm run build
-      - id: deploy
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+      - name: Deploy Build
+        id: deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"

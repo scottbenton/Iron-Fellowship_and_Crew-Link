@@ -17,3 +17,11 @@ jobs:
         with:
           name: pr_number
           path: pr/
+      - uses: actions/checkout@v2
+      - name: Build Iron Fellowship
+        run: npm ci && npm run build
+      - name: Upload Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/
