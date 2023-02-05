@@ -1,0 +1,10 @@
+name: Kick off Firebase Hosting deploy on PR
+on:
+  - pull_request
+
+jobs:
+  preflight-job:
+    name: Preflight Step
+    runs-on: ubuntu-latest
+    steps:
+      - run: env
