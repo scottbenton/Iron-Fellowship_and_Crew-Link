@@ -45,7 +45,7 @@ jobs:
     env:
       VITE_FIREBASE_APIKEY: "${{secrets.FIREBASE_APIKEY_DEV}}"
       VITE_FIREBASE_AUTHDOMAIN: "${{secrets.FIREBASE_AUTHDOMAIN_DEV}}"
-      VITE_FIREBASE_PROJECTID: "${{vars.FIREBASE_PROJECTID_DEV}}"
+      VITE_FIREBASE_PROJECTID: iron-fellowship-dev
       VITE_FIREBASE_STORAGEBUCKET: "${{secrets.FIREBASE_STORAGEBUCKET_DEV}}"
       VITE_FIREBASE_MESSAGINGSENDERID: "${{secrets.FIREBASE_MESSAGINGID_DEV}}"
       VITE_FIREBASE_APPID: "${{secrets.FIREBASE_APPID_DEV}}"
@@ -73,7 +73,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            console.log("${{vars.FIREBASE_PROJECTID_DEV}}");
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
