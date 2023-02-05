@@ -53,7 +53,7 @@ export function Header() {
           <Box display={"flex"} alignItems={"center"}>
             <IronFellowshipLogo width={32} height={32} />
             <Typography fontFamily={"Staatliches"} variant={"h5"} ml={2}>
-              Iron Fellowship
+              Iron Fellowship TEST PR
             </Typography>
           </Box>
           {authState === AUTH_STATE.AUTHENTICATED ? (
