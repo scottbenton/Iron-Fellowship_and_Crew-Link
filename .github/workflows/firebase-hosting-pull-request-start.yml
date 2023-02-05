@@ -1,5 +1,5 @@
 name: Kick off Firebase Hosting deploy on PR
-on
+on:
   - pull_request
 
 jobs:
