@@ -4,8 +4,7 @@
 name: Deploy to Firebase Hosting on PR
 on:
   workflow_run:
-    workflows:
-      - Kick off Firebase Hosting deploy on PR
+    workflows: [Kick off Firebase Hosting deploy on PR]
     types:
       - completed
 jobs:
