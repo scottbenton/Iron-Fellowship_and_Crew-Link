@@ -42,7 +42,15 @@ New features should be developed in feature branches, and then merged into the `
 
 ### Firebase Setup
 
-Firebase provides authentication, database, and image storage to this application. In order to run the application locally, you will need to set up a `.env.local` file with the information firebase needs to connect to these services. You can either get access to the dev environment from me, or you can set up your own firebase instance. Either way, you will need to fill out your `.env.local` file, adding values to the following properties.
+Firebase provides authentication, database, and image storage to this application.
+
+The first step is to create a firebase project. You can do this by going to the [firebase console](https://console.firebase.google.com/). Once you have created a project, you will need to register a web app.
+
+![Firebase Web App Setup](./readme_assets/FirebaseWeb.png)
+
+In order to run the application locally, you will need to set up a `.env.local` file with the information firebase needs to connect to these services.
+
+Once registered the web app, it will give you a config object. Copy the values from this object into your `.env.local` file in the following properties:
 
 ```
 VITE_FIREBASE_APIKEY=
@@ -52,3 +60,5 @@ VITE_FIREBASE_STORAGEBUCKET=
 VITE_FIREBASE_MESSAGINGSENDERID=
 VITE_FIREBASE_APPID=
 ```
+
+Also remember to enable Google Authentication as provider in your firebase project. You can do this by going to the Authentication tab in the firebase console.
