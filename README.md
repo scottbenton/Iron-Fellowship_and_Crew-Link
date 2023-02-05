@@ -35,7 +35,7 @@ New features should be developed in feature branches, and then merged into the `
 
 ### Setup
 
-1. Clone this project `git clone https://github.com/scottbenton/Iron-Journal.git`
+1. Clone this project `git clone https://github.com/scottbenton/Iron-Fellowship.git`
 1. Install dependencies `npm i`
 1. Set up firebase (see Firebase Setup below)
 1. Run `npm run dev` and go to your browser to see the output.
