@@ -78,7 +78,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
       confirmationText: "Complete",
       confirmationButtonProps: {
         variant: "contained",
-        color: "error",
+        color: "primary",
       },
     })
       .then(() => {
