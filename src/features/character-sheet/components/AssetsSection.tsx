@@ -6,6 +6,8 @@ import { assets } from "../../../data/assets";
 import { Asset, StoredAsset } from "../../../types/Asset.type";
 import { useCharacterSheetStore } from "../characterSheet.store";
 
+import { useConfirm } from "material-ui-confirm";
+
 export function AssetsSection() {
   const assetData = useCharacterSheetStore((store) => store.assets) ?? [];
   const characterId = useCharacterSheetStore(
@@ -68,10 +70,25 @@ export function AssetsSection() {
   };
 
   const handleAssetDelete = (assetId: string) => {
-    const shouldDelete = confirm("Are you sure you want to remove this asset?");
-    if (shouldDelete) {
-      removeAsset(assetId);
-    }
+    removeAsset(assetId);
+  };
+
+  const confirm = useConfirm();
+
+  const handleClick = (assetId: string) => {
+    confirm({
+      title: "Delete Asset",
+      description: "Are you sure you want to remove this asset?",
+      confirmationText: "Delete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        handleAssetDelete(assetId);
+      })
+      .catch(() => {});
   };
 
   return (
@@ -111,7 +128,7 @@ export function AssetsSection() {
             handleMultiFieldTrackValueChange={(value) =>
               updateAssetMultiTrack(storedAsset.id, value)
             }
-            handleDeleteClick={() => handleAssetDelete(storedAsset.id)}
+            handleDeleteClick={() => handleClick(storedAsset.id)}
             handleCustomAssetUpdate={(asset) =>
               updateCustomAsset(storedAsset.id, asset)
             }
