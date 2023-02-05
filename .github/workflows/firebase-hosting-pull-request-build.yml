@@ -2,10 +2,13 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on PR
-"on": pull_request
+on:
+  workflow_run:
+    workflows: [Kick off Firebase Hosting deploy on PR]
+    types:
+      - completed
 jobs:
   build_and_preview:
-    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     env:
       VITE_FIREBASE_APIKEY: "${{secrets.FIREBASE_APIKEY_DEV}}"
