@@ -5,6 +5,7 @@ import MinusIcon from "@mui/icons-material/Remove";
 import PlusIcon from "@mui/icons-material/Add";
 import { DIFFICULTY } from "../../types/Track.type";
 import CompleteIcon from "@mui/icons-material/Check";
+import ConfirmDeleteDialog from "../ConfirmDeleteDialog";
 
 export interface ProgressTracksProps {
   label?: string;
@@ -63,13 +64,19 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   const handleDelete = () => {
     if (onDelete) {
-      const shouldDelete = confirm(
-        "Are you sure you want to complete this track?"
-      );
-      if (shouldDelete) {
-        onDelete();
-      }
+      onDelete();
     }
+  };
+
+  // ConfirmDeleteDialog open/close state
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -199,7 +206,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
       </Box>
       {onDelete && (
         <Button
-          onClick={() => handleDelete()}
+          onClick={handleClickOpen}
           endIcon={<CompleteIcon />}
           variant={"outlined"}
           sx={{ mt: 2 }}
@@ -207,6 +214,14 @@ export function ProgressTrack(props: ProgressTracksProps) {
           Complete Track
         </Button>
       )}
+      <ConfirmDeleteDialog
+        title={"Complete track?"}
+        handleDelete={() => handleDelete()}
+        open={open}
+        handleClose={handleClose}
+      >
+        Are you sure you want to complete this track?
+      </ConfirmDeleteDialog>
     </Box>
   );
 }

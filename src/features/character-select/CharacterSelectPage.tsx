@@ -7,20 +7,29 @@ import { useSnackbar } from "../../hooks/useSnackbar";
 import { constructCharacterSheetUrl, paths, ROUTES } from "../../routes";
 import { useCharacterStore } from "../../stores/character.store";
 import AddCharacterIcon from "@mui/icons-material/PersonAdd";
+import ConfirmDeleteDialog from "../../components/ConfirmDeleteDialog";
+
+import { useState } from "react";
 
 export function CharacterSelectPage() {
   const characters = useCharacterStore((store) => store.characters);
   const { error } = useSnackbar();
 
   const handleDelete = (characterId: string) => {
-    const shouldDelete = confirm(
-      `Are you sure you want to delete ${characters[characterId].name}?`
-    );
-    if (shouldDelete) {
-      deleteCharacter(characterId).catch((e) => {
-        error("Error deleting your character.");
-      });
-    }
+    deleteCharacter(characterId).catch((e) => {
+      error("Error deleting your character.");
+    });
+  };
+
+  // ConfirmDeleteDialog open/close state
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -77,12 +86,17 @@ export function CharacterSelectPage() {
                 >
                   View
                 </Button>
-                <Button
-                  color={"error"}
-                  onClick={() => handleDelete(characterId)}
-                >
+                <Button color={"error"} onClick={handleClickOpen}>
                   Delete
                 </Button>
+                <ConfirmDeleteDialog
+                  title={"Delete Character?"}
+                  handleDelete={() => handleDelete(characterId)}
+                  open={open}
+                  handleClose={handleClose}
+                >
+                  {`Are you sure you want to delete ${characters[characterId].name}?`}
+                </ConfirmDeleteDialog>
               </>
             )}
           />

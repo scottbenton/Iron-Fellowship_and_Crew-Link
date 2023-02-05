@@ -2,6 +2,7 @@ import { Button, Grid } from "@mui/material";
 import { useState } from "react";
 import { AssetCard } from "../../../components/AssetCard/AssetCard";
 import { AssetCardDialog } from "../../../components/AssetCardDialog";
+import ConfirmDeleteDialog from "../../../components/ConfirmDeleteDialog";
 import { assets } from "../../../data/assets";
 import { Asset, StoredAsset } from "../../../types/Asset.type";
 import { useCharacterSheetStore } from "../characterSheet.store";
@@ -68,10 +69,19 @@ export function AssetsSection() {
   };
 
   const handleAssetDelete = (assetId: string) => {
-    const shouldDelete = confirm("Are you sure you want to remove this asset?");
-    if (shouldDelete) {
-      removeAsset(assetId);
-    }
+    removeAsset(assetId);
+    handleClose();
+  };
+
+  // ConfirmDeleteDialog open/close state
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -111,11 +121,19 @@ export function AssetsSection() {
             handleMultiFieldTrackValueChange={(value) =>
               updateAssetMultiTrack(storedAsset.id, value)
             }
-            handleDeleteClick={() => handleAssetDelete(storedAsset.id)}
+            handleDeleteClick={handleClickOpen}
             handleCustomAssetUpdate={(asset) =>
               updateCustomAsset(storedAsset.id, asset)
             }
           />
+          <ConfirmDeleteDialog
+            title={"Delete asset?"}
+            handleDelete={() => handleAssetDelete(storedAsset.id)}
+            open={open}
+            handleClose={handleClose}
+          >
+            Are you sure you want to remove this asset?
+          </ConfirmDeleteDialog>
         </Grid>
       ))}
       <Grid item xs={12}>
