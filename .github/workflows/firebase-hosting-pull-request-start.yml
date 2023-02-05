@@ -10,7 +10,7 @@ jobs:
       - name: Save PR Information
         env:
           PR_NUMBER: ${{ github.event.number }}
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: ${{ github.head_ref }}
           REPOSITORY: ${{ github.repository }}
         run: |
           mkdir -p ./variables
