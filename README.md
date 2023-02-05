@@ -62,5 +62,3 @@ VITE_FIREBASE_APPID=
 ```
 
 Also remember to enable Google Authentication as provider in your firebase project. You can do this by going to the Authentication tab in the firebase console.
-
-You can either get access to the dev environment from me, or you can set up your own firebase instance. Either way, you will need to fill out your `.env.local` file, adding values to the following properties.
