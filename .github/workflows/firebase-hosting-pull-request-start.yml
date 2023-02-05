@@ -7,13 +7,17 @@ jobs:
     name: Preflight Step
     runs-on: ubuntu-latest
     steps:
-      - name: Save PR number
+      - name: Save PR Information
         env:
           PR_NUMBER: ${{ github.event.number }}
+          BRANCH_NAME: ${{ github.head_ref }}
+          REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
         run: |
-          mkdir -p ./pr
-          echo $PR_NUMBER > ./pr/pr_number
+          mkdir -p ./variables
+          echo $PR_NUMBER > ./variables/pr_number
+          echo $BRANCH_NAME > ./variables/branch_name
+          echo $REPOSITORY > ./variables/repository
       - uses: actions/upload-artifact@v3
         with:
-          name: pr_number
-          path: pr/
+          name: variables
+          path: variables/
