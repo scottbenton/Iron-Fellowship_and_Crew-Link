@@ -11,7 +11,7 @@ jobs:
         env:
           PR_NUMBER: ${{ github.event.number }}
           BRANCH_NAME: ${{ github.head_ref }}
-          REPOSITORY: ${{ github.repository }}
+          REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
         run: |
           mkdir -p ./variables
           echo $PR_NUMBER > ./variables/pr_number
