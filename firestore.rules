@@ -12,6 +12,10 @@ service cloud.firestore {
     match /campaigns/{document=**} {
     	allow read, write, delete: if true;
     }
+    match /users/{userId} {
+    	allow read: if true;
+    	allow write: if userId == request.auth.uid;
+    }
     match /{document=**} {
       allow read, write: if false;
     }
