@@ -15,6 +15,7 @@ import { SectionHeading } from "../../components/SectionHeading";
 import { supplyTrack } from "../../data/defaultTracks";
 import { useAuth } from "../../hooks/useAuth";
 import { useSnackbar } from "../../hooks/useSnackbar";
+import { getUsersDoc } from "../../lib/firebase.lib";
 import {
   constructCampaignJoinUrl,
   constructCharacterSheetUrl,
@@ -25,6 +26,7 @@ import { useCampaignStore } from "../../stores/campaigns.store";
 import { Track } from "../character-sheet/components/Track";
 import { AddCharacterDialog } from "./components/AddCharacterDialog";
 import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
+import GMInfo from "./components/GMInfo";
 import { useCampaignCharacters } from "./hooks/useCampaignCharacters";
 
 export function CampaignSheetPage() {
@@ -47,6 +49,8 @@ export function CampaignSheetPage() {
   );
 
   const campaignCharacters = useCampaignCharacters(campaignId);
+
+  const updateCampaignGM = useCampaignStore((store) => store.updateCampaignGM);
 
   useEffect(() => {
     if (!loading && (!campaignId || !campaigns[campaignId])) {
@@ -82,6 +86,40 @@ export function CampaignSheetPage() {
   return (
     <>
       <PageBanner>{campaign.name}</PageBanner>
+      <SectionHeading
+        label={"Campaign GM"}
+        breakContainer
+        action={
+          uid === campaign.gmId && (
+            <div>
+              <Button onClick={() => updateCampaignGM(campaignId, null)}>
+                Step Down As GM
+              </Button>
+              <Button variant={"contained"} color="error" sx={{ ml: 1 }}>
+                Delete Campaign
+              </Button>
+            </div>
+          )
+        }
+      />
+
+      {campaign.gmId ? (
+        <GMInfo campaign={campaign} />
+      ) : (
+        <div>
+          <Typography mt={1}>
+            This campaign currently does not have a GM.
+          </Typography>
+          <Button
+            variant={"contained"}
+            sx={{ mt: 2 }}
+            onClick={() => updateCampaignGM(campaignId, uid)}
+          >
+            Mark Self As GM
+          </Button>
+        </div>
+      )}
+
       <SectionHeading
         label={"Characters"}
         action={
@@ -147,7 +185,6 @@ export function CampaignSheetPage() {
         value={campaign.supply}
         onChange={(newValue) => updateCampaignSupply(campaignId, newValue)}
       />
-
       <CampaignProgressTracks campaignId={campaignId} />
       <AddCharacterDialog
         open={addCharacterDialogOpen}

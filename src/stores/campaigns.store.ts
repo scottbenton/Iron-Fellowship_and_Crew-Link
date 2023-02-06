@@ -42,6 +42,10 @@ interface CampaignStore {
     characterId: string,
     userId: string
   ) => Promise<boolean>;
+  updateCampaignGM: (
+    campaignId: string,
+    userId?: string | null
+  ) => Promise<boolean>;
 }
 
 export const useCampaignStore = create<CampaignStore>()((set, getState) => ({
@@ -158,4 +162,16 @@ export const useCampaignStore = create<CampaignStore>()((set, getState) => ({
       throw new Error("Failed to remove character from campaign");
     }
   },
+
+  updateCampaignGM: (campaignId, userId) =>
+    new Promise((resolve, reject) => {
+      updateDoc(getCampaignDoc(campaignId), { gmId: userId })
+        .then(() => {
+          resolve(true);
+        })
+        .catch((error) => {
+          console.error(error);
+          reject("Failed to update the campaign GM");
+        });
+    }),
 }));
