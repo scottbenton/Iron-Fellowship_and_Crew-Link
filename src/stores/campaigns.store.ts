@@ -7,6 +7,7 @@ import {
   addDoc,
   arrayRemove,
   arrayUnion,
+  deleteDoc,
   deleteField,
   updateDoc,
 } from "firebase/firestore";
@@ -84,12 +85,20 @@ export const useCampaignStore = create<CampaignStore>()((set, getState) => ({
       })
     );
   },
-  removeCampaign: (campaignId: string) => {
+  removeCampaign: async (campaignId: string) => {
     set(
       produce((state: CampaignStore) => {
         delete state.campaigns[campaignId];
       })
     );
+
+    const campaignDoc = getCampaignDoc(campaignId);
+
+    try {
+      await deleteDoc(campaignDoc);
+    } catch (error) {
+      console.error(error);
+    }
   },
   setError: (error?: string) => {
     set(

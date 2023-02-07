@@ -6,6 +6,8 @@ import {
   LinearProgress,
   Typography,
 } from "@mui/material";
+import { deleteField, updateDoc } from "firebase/firestore";
+import { useConfirm } from "material-ui-confirm";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { CharacterList } from "../../components/CharacterList/CharacterList";
@@ -15,7 +17,7 @@ import { SectionHeading } from "../../components/SectionHeading";
 import { supplyTrack } from "../../data/defaultTracks";
 import { useAuth } from "../../hooks/useAuth";
 import { useSnackbar } from "../../hooks/useSnackbar";
-import { getUsersDoc } from "../../lib/firebase.lib";
+import { getCharacterDoc } from "../../lib/firebase.lib";
 import {
   constructCampaignJoinUrl,
   constructCharacterSheetUrl,
@@ -35,6 +37,7 @@ export function CampaignSheetPage() {
 
   const { error, success } = useSnackbar();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCampaignStore((store) => store.loading);
@@ -51,6 +54,8 @@ export function CampaignSheetPage() {
   const campaignCharacters = useCampaignCharacters(campaignId);
 
   const updateCampaignGM = useCampaignStore((store) => store.updateCampaignGM);
+
+  const removeCampaign = useCampaignStore((store) => store.removeCampaign);
 
   useEffect(() => {
     if (!loading && (!campaignId || !campaigns[campaignId])) {
@@ -83,6 +88,32 @@ export function CampaignSheetPage() {
       });
   };
 
+  const handleRemoveCampaign = async () => {
+    try {
+      await confirm({
+        title: "End Campaign",
+        description:
+          "Are you sure you want to end your campaign? This will also remove your current characters from the campaign",
+        confirmationText: "End",
+        confirmationButtonProps: {
+          variant: "contained",
+          color: "error",
+        },
+      });
+
+      for (const { characterId, uid } of campaign.characters) {
+        await updateDoc(getCharacterDoc(uid, characterId), {
+          campaignId: deleteField(),
+        });
+      }
+
+      // will cause the alert bar to pop up
+      removeCampaign(campaignId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <PageBanner>{campaign.name}</PageBanner>
@@ -95,8 +126,13 @@ export function CampaignSheetPage() {
               <Button onClick={() => updateCampaignGM(campaignId, null)}>
                 Step Down As GM
               </Button>
-              <Button variant={"contained"} color="error" sx={{ ml: 1 }}>
-                Delete Campaign
+              <Button
+                variant={"contained"}
+                color="error"
+                sx={{ ml: 1 }}
+                onClick={handleRemoveCampaign}
+              >
+                End Campaign
               </Button>
             </div>
           )
