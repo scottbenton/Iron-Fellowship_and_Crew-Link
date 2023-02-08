@@ -26,6 +26,10 @@ interface CampaignStore {
 
   setCampaign: (campaignId: string, campaign: StoredCampaign) => void;
   removeCampaign: (campaignId: string) => void;
+  deleteCampaign: (
+    campaignId: string,
+    characters: { uid: string; characterId: string }[]
+  ) => void;
   setError: (error?: string) => void;
   setLoading: (isLoading: boolean) => void;
   createCampaign: (campaignLabel: string) => Promise<string>;
@@ -85,21 +89,39 @@ export const useCampaignStore = create<CampaignStore>()((set, getState) => ({
       })
     );
   },
-  removeCampaign: async (campaignId: string) => {
+  removeCampaign: (campaignId: string) => {
     set(
       produce((state: CampaignStore) => {
         delete state.campaigns[campaignId];
       })
     );
+  },
 
+  deleteCampaign: async (
+    campaignId: string,
+    characters: { uid: string; characterId: string }[]
+  ) => {
     const campaignDoc = getCampaignDoc(campaignId);
 
     try {
-      await deleteDoc(campaignDoc);
+      const allUpdates = [];
+
+      for (const { characterId, uid } of characters) {
+        const updateDocPromise = updateDoc(getCharacterDoc(uid, characterId), {
+          campaignId: deleteField(),
+        });
+
+        allUpdates.push(updateDocPromise);
+      }
+
+      const deleteDocPromise = deleteDoc(campaignDoc);
+
+      await Promise.all([...allUpdates, deleteDocPromise]);
     } catch (error) {
       console.error(error);
     }
   },
+
   setError: (error?: string) => {
     set(
       produce((state: CampaignStore) => {
