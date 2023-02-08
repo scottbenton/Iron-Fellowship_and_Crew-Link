@@ -56,6 +56,7 @@ export function CampaignSheetPage() {
   const updateCampaignGM = useCampaignStore((store) => store.updateCampaignGM);
 
   const removeCampaign = useCampaignStore((store) => store.removeCampaign);
+  const deleteCampaign = useCampaignStore((store) => store.deleteCampaign);
 
   useEffect(() => {
     if (!loading && (!campaignId || !campaigns[campaignId])) {
@@ -101,13 +102,9 @@ export function CampaignSheetPage() {
         },
       });
 
-      for (const { characterId, uid } of campaign.characters) {
-        await updateDoc(getCharacterDoc(uid, characterId), {
-          campaignId: deleteField(),
-        });
-      }
-
       // will cause the alert bar to pop up
+      deleteCampaign(campaignId, campaign.characters);
+
       removeCampaign(campaignId);
     } catch (error) {
       console.error(error);
@@ -140,7 +137,7 @@ export function CampaignSheetPage() {
       />
 
       {campaign.gmId ? (
-        <GMInfo campaign={campaign} />
+        <GMInfo gmId={campaign.gmId} />
       ) : (
         <div>
           <Typography mt={1}>
