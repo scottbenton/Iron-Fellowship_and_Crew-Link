@@ -1,6 +1,8 @@
 import { onAuthStateChanged, UserInfo } from "firebase/auth";
+import { setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { firebaseAuth } from "../config/firebase.config";
+import { getUsersDoc } from "../lib/firebase.lib";
 
 export enum AUTH_STATE {
   LOADING,
@@ -17,6 +19,13 @@ export function useAuth() {
       firebaseAuth,
       (user) => {
         if (user) {
+          const userDoc = {
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          };
+
+          setDoc(getUsersDoc(user.uid), userDoc);
+
           setUser(user);
           setAuthState(AUTH_STATE.AUTHENTICATED);
         } else {

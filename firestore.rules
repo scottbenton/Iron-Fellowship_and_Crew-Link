@@ -6,11 +6,16 @@ service cloud.firestore {
       allow write, delete: if userId == request.auth.uid;
       match /{document=**} {
       	allow read: if true;
-        allow write, delete: if userId == request.auth.uid;
+        allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(["campaignId"])     
+        allow write, delete: if userId == request.auth.uid
       }
     }
     match /campaigns/{document=**} {
     	allow read, write, delete: if true;
+    }
+    match /users/{userId} {
+    	allow read: if true;
+    	allow write: if userId == request.auth.uid;
     }
     match /{document=**} {
       allow read, write: if false;

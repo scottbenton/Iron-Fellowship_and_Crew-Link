@@ -7,6 +7,7 @@ import {
   addDoc,
   arrayRemove,
   arrayUnion,
+  deleteDoc,
   deleteField,
   updateDoc,
 } from "firebase/firestore";
@@ -25,6 +26,10 @@ interface CampaignStore {
 
   setCampaign: (campaignId: string, campaign: StoredCampaign) => void;
   removeCampaign: (campaignId: string) => void;
+  deleteCampaign: (
+    campaignId: string,
+    characters: { uid: string; characterId: string }[]
+  ) => void;
   setError: (error?: string) => void;
   setLoading: (isLoading: boolean) => void;
   createCampaign: (campaignLabel: string) => Promise<string>;
@@ -41,6 +46,10 @@ interface CampaignStore {
     campaignId: string,
     characterId: string,
     userId: string
+  ) => Promise<boolean>;
+  updateCampaignGM: (
+    campaignId: string,
+    userId?: string | null
   ) => Promise<boolean>;
 }
 
@@ -87,6 +96,32 @@ export const useCampaignStore = create<CampaignStore>()((set, getState) => ({
       })
     );
   },
+
+  deleteCampaign: async (
+    campaignId: string,
+    characters: { uid: string; characterId: string }[]
+  ) => {
+    const campaignDoc = getCampaignDoc(campaignId);
+
+    try {
+      const allUpdates = [];
+
+      for (const { characterId, uid } of characters) {
+        const updateDocPromise = updateDoc(getCharacterDoc(uid, characterId), {
+          campaignId: deleteField(),
+        });
+
+        allUpdates.push(updateDocPromise);
+      }
+
+      const deleteDocPromise = deleteDoc(campaignDoc);
+
+      await Promise.all([...allUpdates, deleteDocPromise]);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
   setError: (error?: string) => {
     set(
       produce((state: CampaignStore) => {
@@ -158,4 +193,16 @@ export const useCampaignStore = create<CampaignStore>()((set, getState) => ({
       throw new Error("Failed to remove character from campaign");
     }
   },
+
+  updateCampaignGM: (campaignId, userId) =>
+    new Promise((resolve, reject) => {
+      updateDoc(getCampaignDoc(campaignId), { gmId: userId })
+        .then(() => {
+          resolve(true);
+        })
+        .catch((error) => {
+          console.error(error);
+          reject("Failed to update the campaign GM");
+        });
+    }),
 }));
