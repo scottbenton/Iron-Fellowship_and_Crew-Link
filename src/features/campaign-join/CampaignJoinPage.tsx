@@ -1,6 +1,7 @@
 import { Button, LinearProgress } from "@mui/material";
 import { useEffect } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { useCampaignStore } from "stores/campaigns.store";
 import { useAddUserToCampaign } from "../../api/campaign/addUserToCampaign";
 import { useGetCampaign } from "../../api/campaign/getCampaign";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
@@ -20,12 +21,11 @@ export function CampaignJoinPage() {
     getCampaign,
   } = useGetCampaign();
   const { addUserToCampaign, loading: isJoining } = useAddUserToCampaign();
+  const campaigns = useCampaignStore((store) => store.campaigns);
 
   const handleJoinCampaign = () => {
     if (campaignId && uid) {
-      addUserToCampaign({ campaignId, userId: uid }).then(() => {
-        navigate(constructCampaignSheetUrl(campaignId));
-      });
+      addUserToCampaign({ campaignId, userId: uid }).catch();
     }
   };
 
@@ -70,7 +70,7 @@ export function CampaignJoinPage() {
 
   if (!campaign) return null;
 
-  if (uid && campaign.users.includes(uid)) {
+  if (uid && campaigns && campaigns[campaignId]?.users.includes(uid)) {
     return <Navigate to={constructCampaignSheetUrl(campaignId)} />;
   }
 

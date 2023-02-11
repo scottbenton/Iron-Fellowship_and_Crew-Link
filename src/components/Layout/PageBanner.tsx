@@ -22,11 +22,8 @@ export function PageBanner(props: PageBannerProps) {
           px: 2,
           py: 1,
 
-          height: 100,
           [theme.breakpoints.up("sm")]: {
             marginX: theme.spacing(-3),
-
-            height: 150,
             py: 3,
           },
         }),
@@ -53,6 +50,12 @@ export function PageBanner(props: PageBannerProps) {
           position={"relative"}
           zIndex={20}
           fontFamily={(theme) => theme.fontFamilyTitle}
+          sx={(theme) => ({
+            mt: 5,
+            [theme.breakpoints.up("sm")]: {
+              mt: 7,
+            },
+          })}
         >
           {children}
         </Typography>

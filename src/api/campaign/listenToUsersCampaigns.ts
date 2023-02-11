@@ -1,4 +1,3 @@
-import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
 import { useEffect } from "react";
 import { getErrorMessage } from "../../functions/getErrorMessage";
@@ -13,6 +12,7 @@ export function listenToUsersCampaigns(
   dataHandler: {
     onDocChange: (id: string, data: StoredCampaign) => void;
     onDocRemove: (id: string) => void;
+    onLoaded: () => void;
   },
   onError: (error: any) => void
 ) {
@@ -33,6 +33,7 @@ export function listenToUsersCampaigns(
           dataHandler.onDocChange(change.doc.id, change.doc.data());
         }
       });
+      dataHandler.onLoaded();
     },
     (error) => onError(error)
   );
@@ -41,6 +42,7 @@ export function listenToUsersCampaigns(
 export function useListenToUsersCampaigns() {
   const setCampaign = useCampaignStore((state) => state.setCampaign);
   const removeCampaign = useCampaignStore((state) => state.removeCampaign);
+  const setLoading = useCampaignStore((state) => state.setLoading);
 
   const { error } = useSnackbar();
 
@@ -54,6 +56,7 @@ export function useListenToUsersCampaigns() {
       {
         onDocChange: (id, doc) => setCampaign(id, doc),
         onDocRemove: (id) => removeCampaign(id),
+        onLoaded: () => setLoading(false),
       },
       (err) => {
         console.error(err);

@@ -10,6 +10,7 @@ interface CharacterStore {
   loading: boolean;
 
   setCharacter: (characterId: string, character: CharacterDocument) => void;
+  setLoading: (loading: boolean) => void;
   removeCharacter: (characterId: string) => void;
 }
 
@@ -17,6 +18,14 @@ export const useCharacterStore = create<CharacterStore>()((set, getState) => ({
   characters: {},
   error: undefined,
   loading: true,
+
+  setLoading: (loading) => {
+    set(
+      produce((state: CharacterStore) => {
+        state.loading = loading;
+      })
+    );
+  },
 
   setCharacter: (characterId, character) => {
     set(
