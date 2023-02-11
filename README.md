@@ -31,7 +31,7 @@ Keep checking back!
 ## Development
 
 Any development help on this project is more than welcome!
-New features should be developed in feature branches, and then merged into the `dev` branch to deploy to our [development environment](https://dev.iron-fellowship.scottbenton.dev). Once our dev branch is at a point where everything looks good to ship, we can merge into the `main` branch to deploy to our production environment.
+New features should be developed in feature branches, and then merged into the `dev` branch to deploy to our [development environment](https://dev.iron-fellowship.scottbenton.dev). Once our dev branch is at a point where everything looks good to ship, we can merge into the `prod` branch to deploy to our production environment.
 
 ### Setup
 
