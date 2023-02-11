@@ -1,4 +1,4 @@
-import { Button, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import { useDeleteCampaign } from "api/campaign/deleteCampaign";
 import { useUpdateCampaignGM } from "api/campaign/updateCampaignGM";
 import { useConfirm } from "material-ui-confirm";
@@ -25,6 +25,8 @@ import { Track } from "../character-sheet/components/Track";
 import { AddCharacterDialog } from "./components/AddCharacterDialog";
 import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
 import GMInfo from "./components/GMInfo";
+import { useUserDoc } from "api/user/getUserDoc";
+import { CampaignActionsMenu } from "./components/CampaignActionsMenu";
 
 export function CampaignSheetPage() {
   const { campaignId } = useParams();
@@ -49,6 +51,8 @@ export function CampaignSheetPage() {
   const { updateCampaignGM } = useUpdateCampaignGM();
 
   const { deleteCampaign } = useDeleteCampaign();
+
+  const { user: gm } = useUserDoc(campaigns[campaignId ?? ""]?.gmId);
 
   useEffect(() => {
     if (!loading && (!campaignId || !campaigns[campaignId])) {
@@ -106,45 +110,46 @@ export function CampaignSheetPage() {
 
   return (
     <>
-      <PageBanner>{campaign.name}</PageBanner>
-      <SectionHeading
-        label={"Campaign GM"}
-        breakContainer
-        action={
-          uid === campaign.gmId && (
-            <div>
-              <Button onClick={() => updateCampaignGM({ campaignId })}>
-                Step Down As GM
-              </Button>
-              <Button
-                variant={"contained"}
-                color="error"
-                sx={{ ml: 1 }}
-                onClick={handleRemoveCampaign}
-              >
-                End Campaign
-              </Button>
-            </div>
-          )
-        }
-      />
+      <PageBanner>
+        <Box
+          zIndex={20}
+          color={"white"}
+          display={"flex"}
+          flexWrap={"wrap"}
+          width={"100%"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+        >
+          <Box>
+            <Typography
+              variant={"h4"}
+              fontFamily={(theme) => theme.fontFamilyTitle}
+            >
+              {campaign.name}
+            </Typography>
 
-      {campaign.gmId ? (
-        <GMInfo gmId={campaign.gmId} />
-      ) : (
-        <div>
-          <Typography mt={1}>
-            This campaign currently does not have a GM.
-          </Typography>
-          <Button
-            variant={"contained"}
-            sx={{ mt: 2 }}
-            onClick={() => updateCampaignGM({ campaignId, gmId: uid })}
-          >
-            Mark Self As GM
-          </Button>
-        </div>
-      )}
+            {!campaign.gmId && (
+              <Button
+                onClick={() => updateCampaignGM({ campaignId, gmId: uid })}
+                variant={"outlined"}
+                color={"inherit"}
+                sx={{ mt: 2 }}
+              >
+                Mark self as GM
+              </Button>
+            )}
+            {campaign.gmId && (
+              <Typography
+                variant={"h6"}
+                fontFamily={(theme) => theme.fontFamilyTitle}
+              >
+                GM: {gm?.displayName ?? "Loading..."}
+              </Typography>
+            )}
+          </Box>
+          <CampaignActionsMenu campaign={campaign} campaignId={campaignId} />
+        </Box>
+      </PageBanner>
 
       <SectionHeading
         label={"Characters"}
@@ -163,7 +168,7 @@ export function CampaignSheetPage() {
           </div>
         }
         breakContainer
-        sx={{ mt: 2, mb: 3 }}
+        sx={{ mb: 3 }}
       />
       {campaign.characters.length === 0 && (
         <EmptyState

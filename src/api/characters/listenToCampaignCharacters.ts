@@ -1,7 +1,6 @@
-import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
-import { useEffect, useMemo, useState } from "react";
+import { onSnapshot, Unsubscribe } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { getErrorMessage } from "../../functions/getErrorMessage";
-import { useAuth } from "../../hooks/useAuth";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { getCharacterDoc } from "../../lib/firebase.lib";
 import { useCampaignStore } from "../../stores/campaigns.store";
