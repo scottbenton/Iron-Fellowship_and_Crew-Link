@@ -18,6 +18,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             maxSnack={3}
             autoHideDuration={5000}
             anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+            preventDuplicate
           >
             <App />
           </SnackbarProvider>

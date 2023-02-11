@@ -13,6 +13,7 @@ export function listenToUsersCharacters(
   dataHandler: {
     onDocChange: (id: string, data: CharacterDocument) => void;
     onDocRemove: (id: string) => void;
+    onLoaded: () => void;
   },
   onError: (error: any) => void
 ) {
@@ -30,6 +31,7 @@ export function listenToUsersCharacters(
           dataHandler.onDocChange(change.doc.id, change.doc.data());
         }
       });
+      dataHandler.onLoaded();
     },
     (error) => onError(error)
   );
@@ -38,6 +40,7 @@ export function listenToUsersCharacters(
 export function useListenToUsersCharacters() {
   const setCharacter = useCharacterStore((state) => state.setCharacter);
   const removeCharacter = useCharacterStore((state) => state.removeCharacter);
+  const setLoading = useCharacterStore((state) => state.setLoading);
 
   const { error } = useSnackbar();
 
@@ -51,6 +54,7 @@ export function useListenToUsersCharacters() {
       {
         onDocChange: (id, doc) => setCharacter(id, doc),
         onDocRemove: (id) => removeCharacter(id),
+        onLoaded: () => setLoading(false),
       },
       (err) => {
         console.error(err);
