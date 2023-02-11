@@ -1,6 +1,6 @@
+import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
 import { useEffect } from "react";
-import { firebaseAuth } from "../../config/firebase.config";
 import { getErrorMessage } from "../../functions/getErrorMessage";
 import { useAuth } from "../../hooks/useAuth";
 import { useSnackbar } from "../../hooks/useSnackbar";
@@ -16,33 +16,26 @@ export function listenToUsersCampaigns(
   },
   onError: (error: any) => void
 ) {
-  if (uid) {
-    const campaignsQuery = query(
-      getCampaignCollection(),
-      where("users", "array-contains", uid)
-    );
-    console.debug("STARTING SNAPSHOT LISTENER");
-    return onSnapshot(
-      campaignsQuery,
-      (snapshot) => {
-        console.debug("HAVE SNAPSHOT");
-        console.debug(
-          snapshot.docs.forEach((doc) => {
-            console.debug(doc.data());
-          })
-        );
-        snapshot.docChanges().forEach((change) => {
-          console.debug(change);
-          if (change.type === "removed") {
-            dataHandler.onDocRemove(change.doc.id);
-          } else {
-            dataHandler.onDocChange(change.doc.id, change.doc.data());
-          }
-        });
-      },
-      (error) => onError(error)
-    );
+  if (!uid) {
+    return;
   }
+  const campaignsQuery = query(
+    getCampaignCollection(),
+    where("users", "array-contains", uid)
+  );
+  return onSnapshot(
+    campaignsQuery,
+    (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "removed") {
+          dataHandler.onDocRemove(change.doc.id);
+        } else {
+          dataHandler.onDocChange(change.doc.id, change.doc.data());
+        }
+      });
+    },
+    (error) => onError(error)
+  );
 }
 
 export function useListenToUsersCampaigns() {
@@ -55,8 +48,6 @@ export function useListenToUsersCampaigns() {
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
-
-    console.debug("LISTENING TO CAMPAIGNS");
 
     listenToUsersCampaigns(
       uid,

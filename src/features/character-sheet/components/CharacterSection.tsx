@@ -1,15 +1,17 @@
 import {
   Stack,
   Box,
-  Grid,
   TextField,
-  Typography,
   FormControl,
   FormLabel,
   FormGroup,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
+import { useCharacterSheetUpdateBonds } from "api/characters/updateBonds";
+import { useUpdateCharacterStat } from "api/characters/updateCharacterStat";
+import { useCharacterSheetUpdateDebility } from "api/characters/updateDebility";
+import { useCharacterSheetUpdateName } from "api/characters/updateName";
 import { ProgressTrack } from "../../../components/ProgressTrack";
 import { SectionHeading } from "../../../components/SectionHeading";
 import { useSnackbar } from "../../../hooks/useSnackbar";
@@ -25,24 +27,25 @@ export function CharacterSection() {
   const bondValue = useCharacterSheetStore(
     (store) => store.character?.bonds ?? 0
   );
-  const updateBonds = useCharacterSheetStore((store) => store.updateBonds);
+  const characterId = useCharacterSheetStore((store) => store.characterId);
+  const { updateBonds } = useCharacterSheetUpdateBonds();
 
   const stats = useCharacterSheetStore((store) => store.character?.stats);
-  const updateStat = useCharacterSheetStore((store) => store.updateStat);
+  const { updateCharacterStat } = useUpdateCharacterStat();
 
   const name = useCharacterSheetStore((store) => store.character?.name);
-  const updateName = useCharacterSheetStore((store) => store.updateName);
+  const { updateName } = useCharacterSheetUpdateName();
 
   const debilities =
     useCharacterSheetStore((store) => store.character?.debilities) ?? {};
-  const updateDebility = useCharacterSheetStore(
-    (store) => store.updateDebility
-  );
+  const { updateDebility } = useCharacterSheetUpdateDebility();
+
+  const handleStatChange = (stat: STATS, value: number) => {
+    return updateCharacterStat({ characterId, stat, value });
+  };
 
   const handleDebilityChange = (debility: DEBILITIES, checked: boolean) => {
-    updateDebility(debility, checked).catch((e) => {
-      error("Failed to update debility");
-    });
+    updateDebility({ debility, active: checked });
   };
 
   return (
@@ -73,7 +76,7 @@ export function CharacterSection() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={debilities[DEBILITIES.WOUNDED]}
+                    checked={debilities[DEBILITIES.WOUNDED] ?? false}
                     onChange={(evt, checked) =>
                       handleDebilityChange(DEBILITIES.WOUNDED, checked)
                     }
@@ -85,7 +88,7 @@ export function CharacterSection() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={debilities[DEBILITIES.SHAKEN]}
+                    checked={debilities[DEBILITIES.SHAKEN] ?? false}
                     onChange={(evt, checked) =>
                       handleDebilityChange(DEBILITIES.SHAKEN, checked)
                     }
@@ -97,7 +100,7 @@ export function CharacterSection() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={debilities[DEBILITIES.UNPREPARED]}
+                    checked={debilities[DEBILITIES.UNPREPARED] ?? false}
                     onChange={(evt, checked) =>
                       handleDebilityChange(DEBILITIES.UNPREPARED, checked)
                     }
@@ -109,7 +112,7 @@ export function CharacterSection() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={debilities[DEBILITIES.ENCUMBERED]}
+                    checked={debilities[DEBILITIES.ENCUMBERED] ?? false}
                     onChange={(evt, checked) =>
                       handleDebilityChange(DEBILITIES.ENCUMBERED, checked)
                     }
@@ -126,7 +129,7 @@ export function CharacterSection() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={debilities[DEBILITIES.MAIMED]}
+                    checked={debilities[DEBILITIES.MAIMED] ?? false}
                     onChange={(evt, checked) =>
                       handleDebilityChange(DEBILITIES.MAIMED, checked)
                     }
@@ -138,7 +141,7 @@ export function CharacterSection() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={debilities[DEBILITIES.CORRUPTED]}
+                    checked={debilities[DEBILITIES.CORRUPTED] ?? false}
                     onChange={(evt, checked) =>
                       handleDebilityChange(DEBILITIES.CORRUPTED, checked)
                     }
@@ -155,7 +158,7 @@ export function CharacterSection() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={debilities[DEBILITIES.CURSED]}
+                    checked={debilities[DEBILITIES.CURSED] ?? false}
                     onChange={(evt, checked) =>
                       handleDebilityChange(DEBILITIES.CURSED, checked)
                     }
@@ -167,7 +170,7 @@ export function CharacterSection() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={debilities[DEBILITIES.TORMENTED]}
+                    checked={debilities[DEBILITIES.TORMENTED] ?? false}
                     onChange={(evt, checked) =>
                       handleDebilityChange(DEBILITIES.TORMENTED, checked)
                     }
@@ -199,7 +202,8 @@ export function CharacterSection() {
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) => updateStat(STATS.EDGE, newValue),
+              handleChange: (newValue) =>
+                handleStatChange(STATS.EDGE, newValue),
             }}
             sx={{ mr: 2, mb: 2 }}
           />
@@ -209,7 +213,8 @@ export function CharacterSection() {
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) => updateStat(STATS.HEART, newValue),
+              handleChange: (newValue) =>
+                handleStatChange(STATS.HEART, newValue),
             }}
             sx={{ mr: 2, mb: 2 }}
           />
@@ -219,7 +224,8 @@ export function CharacterSection() {
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) => updateStat(STATS.IRON, newValue),
+              handleChange: (newValue) =>
+                handleStatChange(STATS.IRON, newValue),
             }}
             sx={{ mr: 2, mb: 2 }}
           />
@@ -229,7 +235,8 @@ export function CharacterSection() {
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) => updateStat(STATS.SHADOW, newValue),
+              handleChange: (newValue) =>
+                handleStatChange(STATS.SHADOW, newValue),
             }}
             sx={{ mr: 2, mb: 2 }}
           />
@@ -239,7 +246,8 @@ export function CharacterSection() {
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) => updateStat(STATS.WITS, newValue),
+              handleChange: (newValue) =>
+                handleStatChange(STATS.WITS, newValue),
             }}
             sx={{ mr: 2, mb: 2 }}
           />

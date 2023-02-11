@@ -11,13 +11,9 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { CharacterList } from "../../../components/CharacterList/CharacterList";
 import { useCharacterStore } from "../../../stores/character.store";
-import { useCampaignStore } from "../../../stores/campaigns.store";
 import { Link } from "react-router-dom";
-import {
-  constructCharacterCreateInCampaignUrl,
-  paths,
-  ROUTES,
-} from "../../../routes";
+import { constructCharacterCreateInCampaignUrl } from "../../../routes";
+import { useAddCharacterToCampaignMutation } from "../../../api/campaign/addCharacterToCampaign";
 
 export interface AddCharacterDialogProps {
   open: boolean;
@@ -30,12 +26,11 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
 
   const characters = useCharacterStore((store) => store.characters);
   const isLoading = useCharacterStore((store) => store.loading);
-  const addCharacterToCampaign = useCampaignStore(
-    (store) => store.addCharacterToCampaign
-  );
+  const { addCharacterToCampaign, loading } =
+    useAddCharacterToCampaignMutation();
 
   const addCharacter = (characterId: string) => {
-    addCharacterToCampaign(campaignId, characterId).finally(() => {
+    addCharacterToCampaign({ campaignId, characterId }).finally(() => {
       handleClose();
     });
   };
@@ -48,7 +43,11 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
         alignItems={"center"}
       >
         <span>Add Character</span>
-        <IconButton onClick={() => handleClose()} sx={{ ml: 2 }}>
+        <IconButton
+          onClick={() => handleClose()}
+          disabled={loading}
+          sx={{ ml: 2 }}
+        >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -67,7 +66,7 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
             maxColumns={1}
             actions={(characterId) => (
               <Button
-                disabled={!!characters[characterId].campaignId}
+                disabled={!!characters[characterId].campaignId || loading}
                 onClick={() => addCharacter(characterId)}
               >
                 {characters[characterId].campaignId ? "Selected" : "Select"}
@@ -83,6 +82,7 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
             variant={"contained"}
             component={Link}
             to={constructCharacterCreateInCampaignUrl(campaignId)}
+            disabled={loading}
           >
             Create New Character
           </Button>

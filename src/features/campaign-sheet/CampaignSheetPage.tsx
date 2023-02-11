@@ -1,13 +1,9 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  LinearProgress,
-  Typography,
-} from "@mui/material";
+import { Button, LinearProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useRemoveCharacterFromCampaign } from "../../api/campaign/removeCharacterFromCampaign";
+import { useUpdateCampaignSupply } from "../../api/campaign/updateCampaignSupply";
+import { useListenToCampaignCharacters } from "../../api/characters/listenToCampaignCharacters";
 import { CharacterList } from "../../components/CharacterList/CharacterList";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { PageBanner } from "../../components/Layout/PageBanner";
@@ -25,7 +21,6 @@ import { useCampaignStore } from "../../stores/campaigns.store";
 import { Track } from "../character-sheet/components/Track";
 import { AddCharacterDialog } from "./components/AddCharacterDialog";
 import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
-import { useCampaignCharacters } from "./hooks/useCampaignCharacters";
 
 export function CampaignSheetPage() {
   const { campaignId } = useParams();
@@ -36,17 +31,15 @@ export function CampaignSheetPage() {
 
   const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCampaignStore((store) => store.loading);
-  const removeCharacter = useCampaignStore(
-    (store) => store.removeCharacterFromCampaign
-  );
+
+  const { removeCharacterFromCampaign } = useRemoveCharacterFromCampaign();
 
   const [addCharacterDialogOpen, setAddCharacterDialogOpen] =
     useState<boolean>(false);
-  const updateCampaignSupply = useCampaignStore(
-    (store) => store.updateCampaignSupply
-  );
 
-  const campaignCharacters = useCampaignCharacters(campaignId);
+  const { updateCampaignSupply } = useUpdateCampaignSupply();
+
+  const campaignCharacters = useListenToCampaignCharacters(campaignId);
 
   useEffect(() => {
     if (!loading && (!campaignId || !campaigns[campaignId])) {
@@ -54,6 +47,7 @@ export function CampaignSheetPage() {
       navigate(paths[ROUTES.CAMPAIGN_SELECT]);
     }
   }, [loading, campaigns, campaignId]);
+
   if (loading) {
     return (
       <LinearProgress
@@ -129,7 +123,9 @@ export function CampaignSheetPage() {
               </Button>
               <Button
                 color={"error"}
-                onClick={() => removeCharacter(campaignId, characterId, uid)}
+                onClick={() =>
+                  removeCharacterFromCampaign({ campaignId, characterId })
+                }
               >
                 Remove from Campaign
               </Button>
@@ -145,7 +141,9 @@ export function CampaignSheetPage() {
         min={supplyTrack.min}
         max={supplyTrack.max}
         value={campaign.supply}
-        onChange={(newValue) => updateCampaignSupply(campaignId, newValue)}
+        onChange={(newValue) =>
+          updateCampaignSupply({ campaignId, supply: newValue })
+        }
       />
 
       <CampaignProgressTracks campaignId={campaignId} />

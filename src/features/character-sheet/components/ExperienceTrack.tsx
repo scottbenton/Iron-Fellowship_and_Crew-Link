@@ -4,6 +4,7 @@ import EarnedIcon from "@mui/icons-material/HighlightOff";
 import EmptyIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { ExperienceButtons } from "./ExperienceButtons";
 import { useCharacterSheetStore } from "../characterSheet.store";
+import { useCharacterSheetUpdateExperience } from "api/characters/updateExperience";
 
 const totalExp = 30;
 
@@ -15,21 +16,17 @@ export function ExperienceTrack() {
     (store) => store.character?.experience?.spent ?? 0
   );
 
-  const updateExperience = useCharacterSheetStore(
-    (store) => store.updateExperience
-  );
+  const { updateExperience } = useCharacterSheetUpdateExperience();
 
   const handleEarnedExperienceChange = (proposedValue: number) => {
-    console.debug(proposedValue);
     if (proposedValue >= spentExp && proposedValue <= totalExp) {
-      console.debug("updating");
-      updateExperience(proposedValue, "earned");
+      updateExperience({ value: proposedValue, type: "earned" });
     }
   };
 
   const handleSpentExperienceChange = (proposedValue: number) => {
     if (proposedValue >= 0 && proposedValue <= earnedExp) {
-      updateExperience(proposedValue, "spent");
+      updateExperience({ value: proposedValue, type: "spent" });
     }
   };
 

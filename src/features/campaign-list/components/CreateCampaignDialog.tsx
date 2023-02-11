@@ -9,10 +9,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
-import { useCampaignStore } from "../../../stores/campaigns.store";
-import { useSnackbar } from "../../../hooks/useSnackbar";
 import { useNavigate } from "react-router-dom";
 import { constructCampaignSheetUrl } from "../../../routes";
+import { useCreateCampaignMutation } from "../../../api/campaign/createCampaign";
 
 export interface CreateCampaignDialogProps {
   open: boolean;
@@ -21,26 +20,19 @@ export interface CreateCampaignDialogProps {
 
 export function CreateCampaignDialog(props: CreateCampaignDialogProps) {
   const { open, handleClose } = props;
-  const { error } = useSnackbar();
   const navigate = useNavigate();
 
-  const createCampaign = useCampaignStore((store) => store.createCampaign);
+  const { createCampaign, loading } = useCreateCampaignMutation();
 
-  const [loading, setLoading] = useState<boolean>(false);
   const [label, setLabel] = useState<string>("");
 
   const handleCreate = () => {
-    setLoading(true);
     createCampaign(label)
       .then((campaignId) => {
-        setLoading(false);
         navigate(constructCampaignSheetUrl(campaignId));
-        // navigate to handle create
       })
       .catch(() => {
-        error("Error creating campaign.");
         handleClose();
-        setLoading(false);
       });
   };
 

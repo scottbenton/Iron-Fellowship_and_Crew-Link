@@ -40,31 +40,6 @@ export function StatComponent(props: StatComponentProps) {
         });
     }
   };
-  // const { error } = useSnackbar();
-  // const [loading, setLoading] = useState<boolean>(false);
-
-  // const handleStatUpdate = (newValue: number) => {
-  //   setLoading(true);
-  //   updateStat(characterId, stat, newValue)
-  //     .catch((e) => {
-  //       error(e);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // };
-
-  // const handleIncrement = () => {
-  //   if (value < 9) {
-  //     handleStatUpdate(value + 1);
-  //   }
-  // };
-
-  // const handleDecrement = () => {
-  //   if (value >= 1) {
-  //     handleStatUpdate(value - 1);
-  //   }
-  // };
 
   return (
     <Card

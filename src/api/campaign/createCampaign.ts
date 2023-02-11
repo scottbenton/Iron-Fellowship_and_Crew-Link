@@ -1,3 +1,4 @@
+import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { addDoc } from "firebase/firestore";
 import { firebaseAuth } from "../../config/firebase.config";
 import { supplyTrack } from "../../data/defaultTracks";
@@ -12,7 +13,7 @@ export const createCampaign: ApiFunction<string, string> = function (
     const uid = firebaseAuth.currentUser?.uid;
 
     if (!uid) {
-      reject(new Error("User is not logged in."));
+      reject(new UserNotLoggedInException());
       return;
     }
 
@@ -35,17 +36,12 @@ export const createCampaign: ApiFunction<string, string> = function (
 };
 
 export function useCreateCampaignMutation() {
-  const {
-    data,
-    error,
-    loading,
-    call: handleCreateCampaign,
-  } = useApiState(createCampaign);
+  const { data, error, loading, call } = useApiState(createCampaign);
 
   return {
     data,
     error,
     loading,
-    handleCreateCampaign,
+    createCampaign: call,
   };
 }

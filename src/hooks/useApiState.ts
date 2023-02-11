@@ -22,28 +22,31 @@ export function useApiState<Params, ReturnType>(
   const errorSnackbar = useSnackbar().error;
 
   const call = useCallback(
-    (params: Params) => {
-      setLoading(true);
-      apiFunction(params)
-        .then((value) => {
-          setData(value);
-          setError(undefined);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error(error);
-          const errorMessage = getErrorMessage(
-            error,
-            config?.defaultErrorMessage ?? "Failed to fetch data"
-          );
-          if (!config?.disableErrorSnackbar) {
-            errorSnackbar(errorMessage);
-          }
-          setData(undefined);
-          setError(errorMessage);
-          setLoading(false);
-        });
-    },
+    (params: Params) =>
+      new Promise<ReturnType>((resolve, reject) => {
+        setLoading(true);
+        apiFunction(params)
+          .then((value) => {
+            setData(value);
+            setError(undefined);
+            setLoading(false);
+            resolve(value);
+          })
+          .catch((error) => {
+            console.error(error);
+            const errorMessage = getErrorMessage(
+              error,
+              config?.defaultErrorMessage ?? "Failed to fetch data"
+            );
+            if (!config?.disableErrorSnackbar) {
+              errorSnackbar(errorMessage);
+            }
+            setData(undefined);
+            setError(errorMessage);
+            setLoading(false);
+            reject(errorMessage);
+          });
+      }),
     [apiFunction, errorSnackbar, config]
   );
 
