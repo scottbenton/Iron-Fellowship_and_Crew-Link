@@ -1,20 +1,9 @@
-import { Grid } from "@mui/material";
-import {
-  deleteField,
-  onSnapshot,
-  setDoc,
-  Unsubscribe,
-  updateDoc,
-} from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useAddCampaignProgressTrack } from "api/campaign/tracks/addCampaignProgressTrack";
+import { useListenToCampaignProgressTracks } from "api/campaign/tracks/listenToCampaignProgressTracks";
+import { useRemoveCampaignProgressTrack } from "api/campaign/tracks/removeCampaignProgressTrack";
+import { useUpdateCampaignProgressTrack } from "api/campaign/tracks/updateCampaignProgressTrack";
 import { ProgressTrackList } from "../../../components/ProgressTrackList";
-import { firebaseAuth } from "../../../config/firebase.config";
-import { getSharedCampaignTracksCollection } from "../../../lib/firebase.lib";
-import { StoredTrack, TRACK_TYPES } from "../../../types/Track.type";
-import {
-  convertTrackMapToArray,
-  TrackWithId,
-} from "../../character-sheet/characterSheet.store";
+import { TRACK_TYPES } from "../../../types/Track.type";
 
 export interface CampaignProgressTracksProps {
   campaignId: string;
@@ -23,153 +12,66 @@ export interface CampaignProgressTracksProps {
 export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
   const { campaignId } = props;
 
-  const [vows, setVows] = useState<TrackWithId[]>();
-  const [frays, setFrays] = useState<TrackWithId[]>();
-  const [journeys, setJourneys] = useState<TrackWithId[]>();
+  const { vows, journeys, frays } =
+    useListenToCampaignProgressTracks(campaignId);
 
-  useEffect(() => {
-    let unsubscribe: Unsubscribe;
-
-    const uid = firebaseAuth.currentUser?.uid;
-
-    if (campaignId && uid) {
-      unsubscribe = onSnapshot(
-        getSharedCampaignTracksCollection(campaignId),
-        (snapshot) => {
-          const data = snapshot.data();
-
-          setVows(convertTrackMapToArray(data?.[TRACK_TYPES.VOW] ?? {}));
-          setJourneys(
-            convertTrackMapToArray(data?.[TRACK_TYPES.JOURNEY] ?? {})
-          );
-          setFrays(convertTrackMapToArray(data?.[TRACK_TYPES.FRAY] ?? {}));
-        }
-      );
-    }
-
-    return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [campaignId]);
-
-  const addProgressTrack = (type: TRACK_TYPES, track: StoredTrack) => {
-    return new Promise<boolean>((resolve, reject) => {
-      const uid = firebaseAuth.currentUser?.uid;
-
-      if (!uid) {
-        reject("No user found");
-        return;
-      }
-      if (!campaignId) {
-        reject("No campaign found");
-        return;
-      }
-
-      setDoc(
-        getSharedCampaignTracksCollection(campaignId ?? ""),
-        {
-          [type]: {
-            [track.label + track.createdTimestamp.toString()]: track,
-          },
-        },
-        { merge: true }
-      )
-        .then(() => {
-          resolve(true);
-        })
-        .catch((e) => {
-          console.error(e);
-          reject("Failed to add shared progress track");
-        });
-    });
-  };
-
-  const updateProgressTrackValue = (
-    type: TRACK_TYPES,
-    id: string,
-    value: number
-  ) => {
-    return new Promise<boolean>((resolve, reject) => {
-      const uid = firebaseAuth.currentUser?.uid;
-
-      if (!uid) {
-        reject("No user found");
-        return;
-      }
-      if (!campaignId) {
-        reject("No campaign found");
-        return;
-      }
-
-      updateDoc(
-        getSharedCampaignTracksCollection(campaignId ?? ""),
-        //@ts-ignore
-        {
-          [`${type}.${id}.value`]: value,
-        }
-      )
-        .then(() => {
-          resolve(true);
-        })
-        .catch((e) => {
-          console.error(e);
-          reject("Failed to update progress track");
-        });
-    });
-  };
-
-  const removeProgressTrack = (type: TRACK_TYPES, id: string) => {
-    return new Promise<boolean>((resolve, reject) => {
-      const uid = firebaseAuth.currentUser?.uid;
-
-      if (!uid) {
-        reject("No user found");
-        return;
-      }
-      if (!campaignId) {
-        reject("No campaign found");
-        return;
-      }
-
-      updateDoc(
-        getSharedCampaignTracksCollection(campaignId ?? ""), //@ts-ignore
-        {
-          [`${type}.${id}`]: deleteField(),
-        }
-      )
-        .then(() => {
-          resolve(true);
-        })
-        .catch((e) => {
-          console.error(e);
-          reject("Failed to remove progress track");
-        });
-    });
-  };
+  const { addCampaignProgressTrack } = useAddCampaignProgressTrack();
+  const { updateCampaignProgressTrack } = useUpdateCampaignProgressTrack();
+  const { removeCampaignProgressTrack } = useRemoveCampaignProgressTrack();
 
   return (
     <>
       <ProgressTrackList
         tracks={vows}
         typeLabel={"Shared Vow"}
-        handleAdd={(newTrack) => addProgressTrack(TRACK_TYPES.VOW, newTrack)}
+        handleAdd={(newTrack) =>
+          addCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.VOW,
+            track: newTrack,
+          })
+        }
         handleUpdateValue={(trackId, value) =>
-          updateProgressTrackValue(TRACK_TYPES.VOW, trackId, value)
+          updateCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.VOW,
+            trackId,
+            value,
+          })
         }
         handleDeleteTrack={(trackId) =>
-          removeProgressTrack(TRACK_TYPES.VOW, trackId)
+          removeCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.VOW,
+            id: trackId,
+          })
         }
         headingBreakContainer
       />
       <ProgressTrackList
         tracks={frays}
         typeLabel={"Shared Combat Track"}
-        handleAdd={(newTrack) => addProgressTrack(TRACK_TYPES.FRAY, newTrack)}
+        handleAdd={(newTrack) =>
+          addCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.FRAY,
+            track: newTrack,
+          })
+        }
         handleUpdateValue={(trackId, value) =>
-          updateProgressTrackValue(TRACK_TYPES.FRAY, trackId, value)
+          updateCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.FRAY,
+            trackId,
+            value,
+          })
         }
         handleDeleteTrack={(trackId) =>
-          removeProgressTrack(TRACK_TYPES.FRAY, trackId)
+          removeCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.FRAY,
+            id: trackId,
+          })
         }
         headingBreakContainer
       />
@@ -177,13 +79,26 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
         tracks={journeys}
         typeLabel={"Shared Journey"}
         handleAdd={(newTrack) =>
-          addProgressTrack(TRACK_TYPES.JOURNEY, newTrack)
+          addCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.JOURNEY,
+            track: newTrack,
+          })
         }
         handleUpdateValue={(trackId, value) =>
-          updateProgressTrackValue(TRACK_TYPES.JOURNEY, trackId, value)
+          updateCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.JOURNEY,
+            trackId,
+            value,
+          })
         }
         handleDeleteTrack={(trackId) =>
-          removeProgressTrack(TRACK_TYPES.JOURNEY, trackId)
+          removeCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.JOURNEY,
+            id: trackId,
+          })
         }
         headingBreakContainer
       />

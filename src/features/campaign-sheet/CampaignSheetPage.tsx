@@ -1,15 +1,12 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  LinearProgress,
-  Typography,
-} from "@mui/material";
-import { deleteField, updateDoc } from "firebase/firestore";
+import { Button, LinearProgress, Typography } from "@mui/material";
+import { useDeleteCampaign } from "api/campaign/deleteCampaign";
+import { useUpdateCampaignGM } from "api/campaign/updateCampaignGM";
 import { useConfirm } from "material-ui-confirm";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useRemoveCharacterFromCampaign } from "../../api/campaign/removeCharacterFromCampaign";
+import { useUpdateCampaignSupply } from "../../api/campaign/updateCampaignSupply";
+import { useListenToCampaignCharacters } from "../../api/characters/listenToCampaignCharacters";
 import { CharacterList } from "../../components/CharacterList/CharacterList";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { PageBanner } from "../../components/Layout/PageBanner";
@@ -17,7 +14,6 @@ import { SectionHeading } from "../../components/SectionHeading";
 import { supplyTrack } from "../../data/defaultTracks";
 import { useAuth } from "../../hooks/useAuth";
 import { useSnackbar } from "../../hooks/useSnackbar";
-import { getCharacterDoc } from "../../lib/firebase.lib";
 import {
   constructCampaignJoinUrl,
   constructCharacterSheetUrl,
@@ -29,7 +25,6 @@ import { Track } from "../character-sheet/components/Track";
 import { AddCharacterDialog } from "./components/AddCharacterDialog";
 import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
 import GMInfo from "./components/GMInfo";
-import { useCampaignCharacters } from "./hooks/useCampaignCharacters";
 
 export function CampaignSheetPage() {
   const { campaignId } = useParams();
@@ -41,22 +36,19 @@ export function CampaignSheetPage() {
 
   const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCampaignStore((store) => store.loading);
-  const removeCharacter = useCampaignStore(
-    (store) => store.removeCharacterFromCampaign
-  );
+
+  const { removeCharacterFromCampaign } = useRemoveCharacterFromCampaign();
 
   const [addCharacterDialogOpen, setAddCharacterDialogOpen] =
     useState<boolean>(false);
-  const updateCampaignSupply = useCampaignStore(
-    (store) => store.updateCampaignSupply
-  );
 
-  const campaignCharacters = useCampaignCharacters(campaignId);
+  const { updateCampaignSupply } = useUpdateCampaignSupply();
 
-  const updateCampaignGM = useCampaignStore((store) => store.updateCampaignGM);
+  const campaignCharacters = useListenToCampaignCharacters(campaignId);
 
-  const removeCampaign = useCampaignStore((store) => store.removeCampaign);
-  const deleteCampaign = useCampaignStore((store) => store.deleteCampaign);
+  const { updateCampaignGM } = useUpdateCampaignGM();
+
+  const { deleteCampaign } = useDeleteCampaign();
 
   useEffect(() => {
     if (!loading && (!campaignId || !campaigns[campaignId])) {
@@ -64,6 +56,7 @@ export function CampaignSheetPage() {
       navigate(paths[ROUTES.CAMPAIGN_SELECT]);
     }
   }, [loading, campaigns, campaignId]);
+
   if (loading) {
     return (
       <LinearProgress
@@ -103,9 +96,9 @@ export function CampaignSheetPage() {
       });
 
       // will cause the alert bar to pop up
-      deleteCampaign(campaignId, campaign.characters);
+      deleteCampaign({ campaignId, characters: campaign.characters });
 
-      removeCampaign(campaignId);
+      // removeCampaign(campaignId);
     } catch (error) {
       console.error(error);
     }
@@ -120,7 +113,7 @@ export function CampaignSheetPage() {
         action={
           uid === campaign.gmId && (
             <div>
-              <Button onClick={() => updateCampaignGM(campaignId, null)}>
+              <Button onClick={() => updateCampaignGM({ campaignId })}>
                 Step Down As GM
               </Button>
               <Button
@@ -146,7 +139,7 @@ export function CampaignSheetPage() {
           <Button
             variant={"contained"}
             sx={{ mt: 2 }}
-            onClick={() => updateCampaignGM(campaignId, uid)}
+            onClick={() => updateCampaignGM({ campaignId, gmId: uid })}
           >
             Mark Self As GM
           </Button>
@@ -200,7 +193,9 @@ export function CampaignSheetPage() {
               </Button>
               <Button
                 color={"error"}
-                onClick={() => removeCharacter(campaignId, characterId, uid)}
+                onClick={() =>
+                  removeCharacterFromCampaign({ campaignId, characterId })
+                }
               >
                 Remove from Campaign
               </Button>
@@ -216,7 +211,9 @@ export function CampaignSheetPage() {
         min={supplyTrack.min}
         max={supplyTrack.max}
         value={campaign.supply}
-        onChange={(newValue) => updateCampaignSupply(campaignId, newValue)}
+        onChange={(newValue) =>
+          updateCampaignSupply({ campaignId, supply: newValue })
+        }
       />
       <CampaignProgressTracks campaignId={campaignId} />
       <AddCharacterDialog

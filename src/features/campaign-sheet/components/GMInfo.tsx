@@ -1,22 +1,18 @@
-import { useEffect, useState } from "react";
-import { getDoc } from "firebase/firestore";
-import { getUsersDoc } from "../../../lib/firebase.lib";
-import { UserDocument } from "../../../types/User.type";
+import { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import { useGetUserDoc } from "api/user/getUserDoc";
 
 interface GMInfoProps {
   gmId: string;
 }
 
 const GMInfo = ({ gmId }: GMInfoProps) => {
-  const [gm, setGm] = useState<UserDocument>();
+  const { getUserDoc, data: gm } = useGetUserDoc();
 
   useEffect(() => {
-    getDoc(getUsersDoc(gmId)).then((gmSnap) => {
-      setGm(gmSnap.data());
-    });
+    getUserDoc({ uid: gmId }).catch(() => {});
   }, [gmId]);
 
   if (!gm) return null;

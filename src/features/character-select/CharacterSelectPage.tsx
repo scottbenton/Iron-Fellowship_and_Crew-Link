@@ -1,6 +1,13 @@
-import { Box, Button, Fab, Hidden, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Fab,
+  Hidden,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
-import { deleteCharacter } from "../../api/deleteCharacter";
+import { deleteCharacter } from "../../api/characters/deleteCharacter";
 import { CharacterList } from "../../components/CharacterList/CharacterList";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { useSnackbar } from "../../hooks/useSnackbar";
@@ -12,6 +19,8 @@ import { useConfirm } from "material-ui-confirm";
 
 export function CharacterSelectPage() {
   const characters = useCharacterStore((store) => store.characters);
+  const loading = useCharacterStore((store) => store.loading);
+
   const { error } = useSnackbar();
 
   const handleDelete = (characterId: string) => {
@@ -37,6 +46,19 @@ export function CharacterSelectPage() {
       })
       .catch(() => {});
   };
+
+  if (loading) {
+    return (
+      <LinearProgress
+        sx={{
+          width: "100vw",
+          position: "absolute",
+          left: 0,
+          marginTop: -3,
+        }}
+      />
+    );
+  }
 
   return (
     <>
