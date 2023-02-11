@@ -1,4 +1,4 @@
-import { Card, TextField } from "@mui/material";
+import { Card, Input, InputAdornment } from "@mui/material";
 import { useState } from "react";
 import { StatsMap } from "../../../types/Character.type";
 import { Move } from "../../../types/Moves.type";
@@ -6,6 +6,7 @@ import { useCharacterSheetStore } from "../characterSheet.store";
 import useFilterMoves from "../hooks/useFilterMoves";
 import { MoveCategory } from "./MoveCategory";
 import { MoveDialog } from "./MoveDialog";
+import SearchIcon from "@mui/icons-material/Search";
 
 export function MovesSection() {
   // We know character is defined at this point, hence the typecasting
@@ -30,13 +31,28 @@ export function MovesSection() {
 
   return (
     <>
-      <TextField
-        label={"Search moves"}
-        fullWidth
-        onChange={handleSearch}
-        sx={{ mb: 2 }}
-      />
       <Card variant={"outlined"} sx={{ height: "100%", overflow: "auto" }}>
+        <Input
+          fullWidth
+          startAdornment={
+            <InputAdornment position={"start"}>
+              <SearchIcon
+                sx={(theme) => ({ color: theme.palette.grey[300] })}
+              />
+            </InputAdornment>
+          }
+          aria-label={"Filter Moves"}
+          placeholder={"Filter Moves"}
+          onChange={handleSearch}
+          color={"secondary"}
+          sx={(theme) => ({
+            backgroundColor: theme.palette.primary.main,
+            color: "#fff",
+            px: 2,
+            borderBottomColor: theme.palette.primary.light,
+          })}
+        />
+
         {filteredMoves.map((category, index) => (
           <MoveCategory
             key={index}
