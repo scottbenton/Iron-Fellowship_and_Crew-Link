@@ -24,6 +24,7 @@ export function PageBanner(props: PageBannerProps) {
 
           [theme.breakpoints.up("sm")]: {
             marginX: theme.spacing(-3),
+            px: 3,
             py: 3,
           },
         }),
