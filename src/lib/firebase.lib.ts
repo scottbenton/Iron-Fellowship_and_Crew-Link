@@ -8,6 +8,7 @@ import { firestore } from "../config/firebase.config";
 import { StoredCampaign } from "../types/Campaign.type";
 import { AssetDocument, CharacterDocument } from "../types/Character.type";
 import { TracksDocument } from "../types/Track.type";
+import { UserDocument } from "../types/User.type";
 
 export function constructCampaignCollectionPath() {
   return `/campaigns`;
@@ -40,6 +41,10 @@ export function constructCharacterTrackDocPath(
 
 export function constructSharedCampaignTracksDocPath(campaignId: string) {
   return `/campaigns/${campaignId}/tracks/tracks`;
+}
+
+export function constructUserDocPath(userId: string) {
+  return `/users/${userId}`;
 }
 
 export function getCampaignCollection() {
@@ -89,4 +94,11 @@ export function getSharedCampaignTracksCollection(campaignId: string) {
     firestore,
     constructSharedCampaignTracksDocPath(campaignId)
   ) as DocumentReference<TracksDocument>;
+}
+
+export function getUsersDoc(userId: string) {
+  return doc(
+    firestore,
+    constructUserDocPath(userId)
+  ) as DocumentReference<UserDocument>;
 }

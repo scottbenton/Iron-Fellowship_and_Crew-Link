@@ -1,4 +1,12 @@
 import { Button, Grid } from "@mui/material";
+import { useCharacterSheetAddAsset } from "api/characters/assets/addAsset";
+import { useListenToCharacterSheetAssets } from "api/characters/assets/listenToAssets";
+import { useCharacterSheetRemoveAsset } from "api/characters/assets/removeAsset";
+import { useCharacterSheetUpdateAssetCheckbox } from "api/characters/assets/updateAssetCheckbox";
+import { useCharacterSheetUpdateAssetInput } from "api/characters/assets/updateAssetInput";
+import { useCharacterSheetUpdateAssetMultiTrack } from "api/characters/assets/updateAssetMultiTrack";
+import { useCharacterSheetUpdateAssetTrack } from "api/characters/assets/updateAssetTrack";
+import { useCharacterSheetUpdateCustomAsset } from "api/characters/assets/updateCustomAsset";
 import { useState } from "react";
 import { AssetCard } from "../../../components/AssetCard/AssetCard";
 import { AssetCardDialog } from "../../../components/AssetCardDialog";
@@ -6,30 +14,20 @@ import { assets } from "../../../data/assets";
 import { Asset, StoredAsset } from "../../../types/Asset.type";
 import { useCharacterSheetStore } from "../characterSheet.store";
 
+import { useConfirm } from "material-ui-confirm";
+
 export function AssetsSection() {
   const assetData = useCharacterSheetStore((store) => store.assets) ?? [];
-  const characterId = useCharacterSheetStore(
-    (store) => store.characterId ?? ""
-  );
+  useListenToCharacterSheetAssets();
 
-  const addAsset = useCharacterSheetStore((store) => store.addAsset);
-  const removeAsset = useCharacterSheetStore((store) => store.removeAsset);
-  const updateAssetInput = useCharacterSheetStore(
-    (store) => store.updateAssetInput
-  );
-  const updateAssetCheckbox = useCharacterSheetStore(
-    (store) => store.updateAssetAbilityCheckbox
-  );
-  const updateAssetTrack = useCharacterSheetStore(
-    (store) => store.updateAssetTrack
-  );
-  const updateAssetMultiTrack = useCharacterSheetStore(
-    (store) => store.updateAssetMultiTrack
-  );
+  const { addAsset, loading } = useCharacterSheetAddAsset();
+  const { removeAsset } = useCharacterSheetRemoveAsset();
+  const { updateAssetInput } = useCharacterSheetUpdateAssetInput();
+  const { updateAssetCheckbox } = useCharacterSheetUpdateAssetCheckbox();
+  const { updateAssetTrack } = useCharacterSheetUpdateAssetTrack();
+  const { updateAssetMultiTrack } = useCharacterSheetUpdateAssetMultiTrack();
 
-  const updateCustomAsset = useCharacterSheetStore(
-    (store) => store.updateCustomAsset
-  );
+  const { updateCustomAsset } = useCharacterSheetUpdateCustomAsset();
 
   const [isAssetDialogOpen, setIsAssetDialogOpen] = useState<boolean>(false);
 
@@ -68,10 +66,25 @@ export function AssetsSection() {
   };
 
   const handleAssetDelete = (assetId: string) => {
-    const shouldDelete = confirm("Are you sure you want to remove this asset?");
-    if (shouldDelete) {
-      removeAsset(assetId);
-    }
+    removeAsset(assetId);
+  };
+
+  const confirm = useConfirm();
+
+  const handleClick = (assetId: string) => {
+    confirm({
+      title: "Delete Asset",
+      description: "Are you sure you want to remove this asset?",
+      confirmationText: "Delete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        handleAssetDelete(assetId);
+      })
+      .catch(() => {});
   };
 
   return (
@@ -95,7 +108,11 @@ export function AssetsSection() {
             asset={storedAsset.customAsset ?? assets[storedAsset.id]}
             storedAsset={storedAsset}
             handleInputChange={(label, value) =>
-              updateAssetInput(storedAsset.id, label, value)
+              updateAssetInput({
+                assetId: storedAsset.id,
+                inputLabel: label,
+                inputValue: value,
+              })
             }
             sx={{
               // maxWidth: 380,
@@ -103,17 +120,21 @@ export function AssetsSection() {
               width: "100%",
             }}
             handleAbilityCheck={(abilityIndex, checked) =>
-              updateAssetCheckbox(storedAsset.id, abilityIndex, checked)
+              updateAssetCheckbox({
+                assetId: storedAsset.id,
+                abilityIndex,
+                checked,
+              })
             }
             handleTrackValueChange={(value) =>
-              updateAssetTrack(storedAsset.id, value)
+              updateAssetTrack({ assetId: storedAsset.id, value })
             }
             handleMultiFieldTrackValueChange={(value) =>
-              updateAssetMultiTrack(storedAsset.id, value)
+              updateAssetMultiTrack({ assetId: storedAsset.id, value })
             }
-            handleDeleteClick={() => handleAssetDelete(storedAsset.id)}
+            handleDeleteClick={() => handleClick(storedAsset.id)}
             handleCustomAssetUpdate={(asset) =>
-              updateCustomAsset(storedAsset.id, asset)
+              updateCustomAsset({ assetId: storedAsset.id, asset })
             }
           />
         </Grid>
@@ -130,6 +151,7 @@ export function AssetsSection() {
 
       <AssetCardDialog
         open={isAssetDialogOpen}
+        loading={loading}
         handleClose={() => setIsAssetDialogOpen(false)}
         handleAssetSelection={(asset) => handleAssetAdd(asset)}
       />

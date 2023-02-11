@@ -20,6 +20,7 @@
     "firebase": "^9.15.0",
     "formik": "^2.2.9",
     "immer": "^9.0.17",
+    "material-ui-confirm": "^3.0.8",
     "notistack": "^2.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -28,6 +29,7 @@
     "react-transition-group": "^4.4.5",
     "remark-gfm": "^3.0.1",
     "vite-plugin-svgr": "^2.4.0",
+    "vite-tsconfig-paths": "^4.0.5",
     "zustand": "^4.2.0"
   },
   "devDependencies": {

@@ -9,13 +9,13 @@ import { useSnackbar } from "../../../hooks/useSnackbar";
 import { Track } from "./Track";
 import { TRACK_KEYS, useCharacterSheetStore } from "../characterSheet.store";
 import ResetIcon from "@mui/icons-material/Replay";
+import { useUpdateCharacterSheetTrack } from "api/shared/updateCharacterSheetTrack";
 
 export function TracksSection() {
   const { error } = useSnackbar();
 
-  const updateCharacterTrack = useCharacterSheetStore(
-    (store) => store.updateCharacterTrack
-  );
+  const { updateTrack } = useUpdateCharacterSheetTrack();
+
   const momentum = useCharacterSheetStore(
     (store) => store.character?.momentum
   ) as number;
@@ -33,7 +33,7 @@ export function TracksSection() {
 
   const updateTrackValue = (track: TRACK_KEYS, newValue: number) =>
     new Promise<boolean>((resolve, reject) => {
-      updateCharacterTrack(track, newValue)
+      updateTrack({ trackKey: track, value: newValue })
         .then(() => {
           resolve(true);
         })

@@ -41,12 +41,13 @@ const assetGroups = [
 
 export interface AssetCardDialogProps {
   open: boolean;
+  loading?: boolean;
   handleClose: () => void;
   handleAssetSelection: (asset: Asset) => void;
 }
 
 export function AssetCardDialog(props: AssetCardDialogProps) {
-  const { open, handleClose, handleAssetSelection } = props;
+  const { open, loading, handleClose, handleAssetSelection } = props;
 
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -80,7 +81,10 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
                       asset={asset}
                       readOnly
                       actions={
-                        <Button onClick={() => handleAssetSelection(asset)}>
+                        <Button
+                          onClick={() => handleAssetSelection(asset)}
+                          disabled={loading}
+                        >
                           Select
                         </Button>
                       }
@@ -102,7 +106,11 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
           color: "white",
         })}
       >
-        <Button onClick={() => handleClose()} color={"inherit"}>
+        <Button
+          onClick={() => handleClose()}
+          color={"inherit"}
+          disabled={loading}
+        >
           Close
         </Button>
       </DialogActions>

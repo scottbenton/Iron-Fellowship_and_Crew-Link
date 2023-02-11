@@ -1,6 +1,5 @@
-import { Unsubscribe } from "firebase/firestore";
+import produce from "immer";
 import create from "zustand";
-import { getUsersCharacters as getCurrentUsersCharacters } from "../api/getUsersCharacters";
 import { CharacterDocument } from "../types/Character.type";
 
 interface CharacterStore {
@@ -10,7 +9,8 @@ interface CharacterStore {
   error?: string;
   loading: boolean;
 
-  getUsersCharacters: () => Unsubscribe | null;
+  setCharacter: (characterId: string, character: CharacterDocument) => void;
+  removeCharacter: (characterId: string) => void;
 }
 
 export const useCharacterStore = create<CharacterStore>()((set, getState) => ({
@@ -18,10 +18,20 @@ export const useCharacterStore = create<CharacterStore>()((set, getState) => ({
   error: undefined,
   loading: true,
 
-  getUsersCharacters: () => {
-    return getCurrentUsersCharacters(
-      (characters) => set({ characters, loading: false }),
-      (error) => set({ error, loading: false })
+  setCharacter: (characterId, character) => {
+    set(
+      produce((state: CharacterStore) => {
+        state.characters[characterId] = character;
+        state.loading = false;
+      })
+    );
+  },
+
+  removeCharacter: (characterId) => {
+    set(
+      produce((state: CharacterStore) => {
+        delete state.characters[characterId];
+      })
     );
   },
 }));

@@ -1,13 +1,12 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  LinearProgress,
-  Typography,
-} from "@mui/material";
+import { Button, LinearProgress, Typography } from "@mui/material";
+import { useDeleteCampaign } from "api/campaign/deleteCampaign";
+import { useUpdateCampaignGM } from "api/campaign/updateCampaignGM";
+import { useConfirm } from "material-ui-confirm";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useRemoveCharacterFromCampaign } from "../../api/campaign/removeCharacterFromCampaign";
+import { useUpdateCampaignSupply } from "../../api/campaign/updateCampaignSupply";
+import { useListenToCampaignCharacters } from "../../api/characters/listenToCampaignCharacters";
 import { CharacterList } from "../../components/CharacterList/CharacterList";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { PageBanner } from "../../components/Layout/PageBanner";
@@ -25,7 +24,7 @@ import { useCampaignStore } from "../../stores/campaigns.store";
 import { Track } from "../character-sheet/components/Track";
 import { AddCharacterDialog } from "./components/AddCharacterDialog";
 import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
-import { useCampaignCharacters } from "./hooks/useCampaignCharacters";
+import GMInfo from "./components/GMInfo";
 
 export function CampaignSheetPage() {
   const { campaignId } = useParams();
@@ -33,20 +32,23 @@ export function CampaignSheetPage() {
 
   const { error, success } = useSnackbar();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCampaignStore((store) => store.loading);
-  const removeCharacter = useCampaignStore(
-    (store) => store.removeCharacterFromCampaign
-  );
+
+  const { removeCharacterFromCampaign } = useRemoveCharacterFromCampaign();
 
   const [addCharacterDialogOpen, setAddCharacterDialogOpen] =
     useState<boolean>(false);
-  const updateCampaignSupply = useCampaignStore(
-    (store) => store.updateCampaignSupply
-  );
 
-  const campaignCharacters = useCampaignCharacters(campaignId);
+  const { updateCampaignSupply } = useUpdateCampaignSupply();
+
+  const campaignCharacters = useListenToCampaignCharacters(campaignId);
+
+  const { updateCampaignGM } = useUpdateCampaignGM();
+
+  const { deleteCampaign } = useDeleteCampaign();
 
   useEffect(() => {
     if (!loading && (!campaignId || !campaigns[campaignId])) {
@@ -54,6 +56,7 @@ export function CampaignSheetPage() {
       navigate(paths[ROUTES.CAMPAIGN_SELECT]);
     }
   }, [loading, campaigns, campaignId]);
+
   if (loading) {
     return (
       <LinearProgress
@@ -79,9 +82,70 @@ export function CampaignSheetPage() {
       });
   };
 
+  const handleRemoveCampaign = async () => {
+    try {
+      await confirm({
+        title: "End Campaign",
+        description:
+          "Are you sure you want to end your campaign? This will also remove your current characters from the campaign",
+        confirmationText: "End",
+        confirmationButtonProps: {
+          variant: "contained",
+          color: "error",
+        },
+      });
+
+      // will cause the alert bar to pop up
+      deleteCampaign({ campaignId, characters: campaign.characters });
+
+      // removeCampaign(campaignId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <PageBanner>{campaign.name}</PageBanner>
+      <SectionHeading
+        label={"Campaign GM"}
+        breakContainer
+        action={
+          uid === campaign.gmId && (
+            <div>
+              <Button onClick={() => updateCampaignGM({ campaignId })}>
+                Step Down As GM
+              </Button>
+              <Button
+                variant={"contained"}
+                color="error"
+                sx={{ ml: 1 }}
+                onClick={handleRemoveCampaign}
+              >
+                End Campaign
+              </Button>
+            </div>
+          )
+        }
+      />
+
+      {campaign.gmId ? (
+        <GMInfo gmId={campaign.gmId} />
+      ) : (
+        <div>
+          <Typography mt={1}>
+            This campaign currently does not have a GM.
+          </Typography>
+          <Button
+            variant={"contained"}
+            sx={{ mt: 2 }}
+            onClick={() => updateCampaignGM({ campaignId, gmId: uid })}
+          >
+            Mark Self As GM
+          </Button>
+        </div>
+      )}
+
       <SectionHeading
         label={"Characters"}
         action={
@@ -129,7 +193,9 @@ export function CampaignSheetPage() {
               </Button>
               <Button
                 color={"error"}
-                onClick={() => removeCharacter(campaignId, characterId, uid)}
+                onClick={() =>
+                  removeCharacterFromCampaign({ campaignId, characterId })
+                }
               >
                 Remove from Campaign
               </Button>
@@ -145,9 +211,10 @@ export function CampaignSheetPage() {
         min={supplyTrack.min}
         max={supplyTrack.max}
         value={campaign.supply}
-        onChange={(newValue) => updateCampaignSupply(campaignId, newValue)}
+        onChange={(newValue) =>
+          updateCampaignSupply({ campaignId, supply: newValue })
+        }
       />
-
       <CampaignProgressTracks campaignId={campaignId} />
       <AddCharacterDialog
         open={addCharacterDialogOpen}

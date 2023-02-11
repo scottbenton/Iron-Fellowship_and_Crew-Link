@@ -1,10 +1,8 @@
 import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
-import { useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { PageBanner } from "../../components/Layout/PageBanner";
 import { SectionHeading } from "../../components/SectionHeading";
-import { useSnackbar } from "../../hooks/useSnackbar";
 import {
   constructCampaignSheetUrl,
   constructCharacterSheetUrl,
@@ -13,9 +11,9 @@ import { StoredAsset } from "../../types/Asset.type";
 import { STATS } from "../../types/stats.enum";
 import { AssetsSection } from "./components/AssetsSection";
 import { StatsField } from "./components/StatsField";
-import { createFirebaseCharacter } from "./api/createCharacter";
 import { StatsMap } from "../../types/Character.type";
-import { useCampaignStore } from "../../stores/campaigns.store";
+import { useAddCharacterToCampaignMutation } from "../../api/campaign/addCharacterToCampaign";
+import { useCreateCharacter } from "../../api/characters/createCharacter";
 
 export type AssetArrayType = [
   StoredAsset | undefined,
@@ -28,18 +26,14 @@ type CharacterCreateFormValues = {
   stats: { [key in STATS]: number | undefined };
   assets: AssetArrayType;
 };
-type Keys = keyof CharacterCreateFormValues;
 
 export function CharacterCreatePage() {
   const campaignId = useSearchParams()[0].get("campaignId");
 
   const navigate = useNavigate();
-  const { error } = useSnackbar();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const addCharacterToCampaign = useCampaignStore(
-    (store) => store.addCharacterToCampaign
-  );
+  const { addCharacterToCampaign } = useAddCharacterToCampaignMutation();
+  const { createCharacter, loading } = useCreateCharacter();
 
   const validate = (values: CharacterCreateFormValues) => {
     const errors: { [key in keyof CharacterCreateFormValues]?: string } = {};
@@ -66,34 +60,22 @@ export function CharacterCreatePage() {
   };
 
   const handleSubmit = (values: CharacterCreateFormValues) => {
-    setIsLoading(true);
-    createFirebaseCharacter(
-      values.name,
-      values.stats as StatsMap,
-      values.assets as [StoredAsset, StoredAsset, StoredAsset]
-    )
+    createCharacter({
+      name: values.name,
+      stats: values.stats as StatsMap,
+      assets: values.assets as [StoredAsset, StoredAsset, StoredAsset],
+    })
       .then((characterId) => {
         if (campaignId) {
-          addCharacterToCampaign(campaignId, characterId)
-            .catch((e) => {
-              console.error(e);
-              error("Failed to add character to campaign");
-            })
-            .finally(() => {
-              // add character to campaign
-              navigate(constructCampaignSheetUrl(campaignId));
-            });
+          addCharacterToCampaign({ campaignId, characterId }).finally(() => {
+            // add character to campaign
+            navigate(constructCampaignSheetUrl(campaignId));
+          });
         } else {
           navigate(constructCharacterSheetUrl(characterId));
         }
       })
-      .catch((e) => {
-        console.error(e);
-        error("Failed to create character");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      .catch(() => {});
   };
 
   return (
@@ -132,11 +114,7 @@ export function CharacterCreatePage() {
             <StatsField />
             <AssetsSection />
             <Box display={"flex"} justifyContent={"flex-end"} mt={2}>
-              <Button
-                type={"submit"}
-                variant={"contained"}
-                disabled={isLoading}
-              >
+              <Button type={"submit"} variant={"contained"} disabled={loading}>
                 Create Character
               </Button>
             </Box>

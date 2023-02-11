@@ -1,12 +1,13 @@
 import {
   Box,
   Button,
-  Container,
   Grid,
   Hidden,
   LinearProgress,
   Typography,
 } from "@mui/material";
+import { useListenToCampaignProgressTracksCharacterSheet } from "api/campaign/tracks/listenToCampaignProgressTracks";
+import { useListenToCharacterProgressTracks } from "api/characters/tracks/listenToCharacterProgressTracks";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -29,26 +30,16 @@ export function CharacterSheetPage() {
   const character = useCharacterSheetStore((store) => store.character);
   const setCharacter = useCharacterSheetStore((store) => store.setCharacter);
   const setCampaign = useCharacterSheetStore((store) => store.setCampaign);
-  const loadAssets = useCharacterSheetStore((store) => store.loadAssets);
-  const loadProgressTracks = useCharacterSheetStore(
-    (store) => store.loadProgressTracks
-  );
   const resetState = useCharacterSheetStore((store) => store.resetState);
 
-  const campaignId = character?.campaignId;
+  useListenToCharacterProgressTracks();
+  useListenToCampaignProgressTracksCharacterSheet();
 
   useEffect(() => {
     return () => {
       resetState();
     };
   }, []);
-
-  useEffect(() => {
-    const unsubscribe = loadAssets();
-    return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [character]);
 
   useEffect(() => {
     setCharacter(
@@ -62,13 +53,6 @@ export function CharacterSheetPage() {
 
     setCampaign(campaignId, campaignId ? campaigns[campaignId] : undefined);
   }, [characters, characterId, campaigns]);
-
-  useEffect(() => {
-    const unsubscribe = loadProgressTracks();
-    return () => {
-      unsubscribe();
-    };
-  }, [characterId, campaignId]);
 
   if (loading) {
     return (

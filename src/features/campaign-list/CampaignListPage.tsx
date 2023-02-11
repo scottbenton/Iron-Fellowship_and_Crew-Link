@@ -7,6 +7,7 @@ import {
   Typography,
   Hidden,
   Fab,
+  LinearProgress,
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -31,9 +32,23 @@ export function CampaignListPage() {
     })
   );
   const campaignMap = useCampaignStore((store) => store.campaigns);
+  const loading = useCampaignStore((store) => store.loading);
 
   const [createCampaignDialogOpen, setCreateCampaignDialogOpen] =
     useState<boolean>(false);
+
+  if (loading) {
+    return (
+      <LinearProgress
+        sx={{
+          width: "100vw",
+          position: "absolute",
+          left: 0,
+          marginTop: -3,
+        }}
+      />
+    );
+  }
 
   return (
     <>
