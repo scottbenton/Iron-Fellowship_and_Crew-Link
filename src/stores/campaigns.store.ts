@@ -35,6 +35,7 @@ export const useCampaignStore = create<CampaignStore>()((set, getState) => ({
       })
     );
   },
+
   setError: (error?: string) => {
     set(
       produce((state: CampaignStore) => {

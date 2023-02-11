@@ -6,6 +6,8 @@ import PlusIcon from "@mui/icons-material/Add";
 import { DIFFICULTY } from "../../types/Track.type";
 import CompleteIcon from "@mui/icons-material/Check";
 
+import { useConfirm } from "material-ui-confirm";
+
 export interface ProgressTracksProps {
   label?: string;
   difficulty?: DIFFICULTY;
@@ -63,13 +65,26 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   const handleDelete = () => {
     if (onDelete) {
-      const shouldDelete = confirm(
-        "Are you sure you want to complete this track?"
-      );
-      if (shouldDelete) {
-        onDelete();
-      }
+      onDelete();
     }
+  };
+
+  const confirm = useConfirm();
+
+  const handleClick = () => {
+    confirm({
+      title: "Complete Track",
+      description: "Are you sure you want to complete this track?",
+      confirmationText: "Complete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "primary",
+      },
+    })
+      .then(() => {
+        handleDelete();
+      })
+      .catch(() => {});
   };
 
   useEffect(() => {
@@ -199,7 +214,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
       </Box>
       {onDelete && (
         <Button
-          onClick={() => handleDelete()}
+          onClick={handleClick}
           endIcon={<CompleteIcon />}
           variant={"outlined"}
           sx={{ mt: 2 }}

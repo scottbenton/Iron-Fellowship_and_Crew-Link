@@ -15,6 +15,8 @@ import { constructCharacterSheetUrl, paths, ROUTES } from "../../routes";
 import { useCharacterStore } from "../../stores/character.store";
 import AddCharacterIcon from "@mui/icons-material/PersonAdd";
 
+import { useConfirm } from "material-ui-confirm";
+
 export function CharacterSelectPage() {
   const characters = useCharacterStore((store) => store.characters);
   const loading = useCharacterStore((store) => store.loading);
@@ -22,14 +24,27 @@ export function CharacterSelectPage() {
   const { error } = useSnackbar();
 
   const handleDelete = (characterId: string) => {
-    const shouldDelete = confirm(
-      `Are you sure you want to delete ${characters[characterId].name}?`
-    );
-    if (shouldDelete) {
-      deleteCharacter(characterId).catch((e) => {
-        error("Error deleting your character.");
-      });
-    }
+    deleteCharacter(characterId).catch((e) => {
+      error("Error deleting your character.");
+    });
+  };
+
+  const confirm = useConfirm();
+
+  const handleClick = (characterId: string) => {
+    confirm({
+      title: "Delete Character",
+      description: `Are you sure you want to delete ${characters[characterId].name}?`,
+      confirmationText: "Delete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        handleDelete(characterId);
+      })
+      .catch(() => {});
   };
 
   if (loading) {
@@ -101,7 +116,7 @@ export function CharacterSelectPage() {
                 </Button>
                 <Button
                   color={"error"}
-                  onClick={() => handleDelete(characterId)}
+                  onClick={() => handleClick(characterId)}
                 >
                   Delete
                 </Button>

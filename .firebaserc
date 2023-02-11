@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "iron-fellowship-dev",
+    "default": "iron-journal-1ac32",
     "dev": "iron-fellowship-dev"
   },
   "targets": {},

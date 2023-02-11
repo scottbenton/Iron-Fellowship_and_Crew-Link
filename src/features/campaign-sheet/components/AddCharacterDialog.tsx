@@ -77,7 +77,12 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
         {Object.keys(characters).length > 0 && (
           <Divider sx={{ my: 3 }}>OR</Divider>
         )}
-        <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          mt={2}
+        >
           <Button
             variant={"contained"}
             component={Link}
