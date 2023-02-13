@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { CampaignGMScreenPage } from "features/campaign-gm-screen/CampaignGMScreenPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useListenToUsersCampaigns } from "./api/campaign/listenToUsersCampaigns";
 import { useListenToUsersCharacters } from "./api/characters/listenToUsersCharacters";
@@ -51,6 +52,10 @@ export function App() {
         <Route
           path={paths[ROUTES.CAMPAIGN_JOIN]}
           element={<CampaignJoinPage />}
+        />
+        <Route
+          path={paths[ROUTES.CAMPAIGN_GM_SCREEN]}
+          element={<CampaignGMScreenPage />}
         />
         <Route
           path={paths[ROUTES.LOGIN]}

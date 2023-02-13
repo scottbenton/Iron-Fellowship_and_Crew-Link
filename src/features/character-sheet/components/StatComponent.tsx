@@ -13,11 +13,12 @@ export interface StatComponentProps {
     max: number;
     handleChange: (newValue: number) => Promise<boolean>;
   };
+  disableRoll?: boolean;
   sx?: SxProps;
 }
 
 export function StatComponent(props: StatComponentProps) {
-  const { label, value, updateTrack, sx } = props;
+  const { label, value, updateTrack, disableRoll, sx } = props;
 
   const { roll } = useRoller();
 
@@ -56,9 +57,9 @@ export function StatComponent(props: StatComponentProps) {
 
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-      component={updateTrack ? "div" : ButtonBase}
+      component={updateTrack || disableRoll ? "div" : ButtonBase}
       onClick={() => {
-        !updateTrack && roll(label, value);
+        !(updateTrack || disableRoll) && roll(label, value);
       }}
     >
       <Typography

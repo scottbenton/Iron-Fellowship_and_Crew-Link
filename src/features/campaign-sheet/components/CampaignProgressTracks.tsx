@@ -7,10 +7,11 @@ import { TRACK_TYPES } from "../../../types/Track.type";
 
 export interface CampaignProgressTracksProps {
   campaignId: string;
+  addPadding?: boolean;
 }
 
 export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
-  const { campaignId } = props;
+  const { campaignId, addPadding } = props;
 
   const { vows, journeys, frays } =
     useListenToCampaignProgressTracks(campaignId);
@@ -46,7 +47,7 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
             id: trackId,
           })
         }
-        headingBreakContainer
+        headingBreakContainer={!addPadding}
       />
       <ProgressTrackList
         tracks={frays}
@@ -73,7 +74,7 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
             id: trackId,
           })
         }
-        headingBreakContainer
+        headingBreakContainer={!addPadding}
       />
       <ProgressTrackList
         tracks={journeys}
@@ -100,7 +101,7 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
             id: trackId,
           })
         }
-        headingBreakContainer
+        headingBreakContainer={!addPadding}
       />
     </>
   );
