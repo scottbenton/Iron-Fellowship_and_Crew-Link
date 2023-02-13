@@ -3,8 +3,9 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Typography,
+  SxProps,
+  Theme,
 } from "@mui/material";
-import { SystemStyleObject } from "@mui/system";
 import { useEffect, useState } from "react";
 
 export interface TrackProps {
@@ -13,7 +14,7 @@ export interface TrackProps {
   max: number;
   value: number;
   onChange: (newValue: number) => Promise<boolean>;
-  sx?: SystemStyleObject;
+  sx?: SxProps<Theme>;
   disabled?: boolean;
 }
 

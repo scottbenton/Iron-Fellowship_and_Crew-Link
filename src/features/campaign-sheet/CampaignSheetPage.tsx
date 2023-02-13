@@ -1,7 +1,5 @@
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
-import { useDeleteCampaign } from "api/campaign/deleteCampaign";
 import { useUpdateCampaignGM } from "api/campaign/updateCampaignGM";
-import { useConfirm } from "material-ui-confirm";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRemoveCharacterFromCampaign } from "../../api/campaign/removeCharacterFromCampaign";
@@ -15,6 +13,7 @@ import { supplyTrack } from "../../data/defaultTracks";
 import { useAuth } from "../../hooks/useAuth";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import {
+  constructCampaignGMScreenUrl,
   constructCampaignJoinUrl,
   constructCharacterSheetUrl,
   paths,
@@ -24,7 +23,6 @@ import { useCampaignStore } from "../../stores/campaigns.store";
 import { Track } from "../character-sheet/components/Track";
 import { AddCharacterDialog } from "./components/AddCharacterDialog";
 import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
-import GMInfo from "./components/GMInfo";
 import { useUserDoc } from "api/user/getUserDoc";
 import { CampaignActionsMenu } from "./components/CampaignActionsMenu";
 
@@ -34,7 +32,6 @@ export function CampaignSheetPage() {
 
   const { error, success } = useSnackbar();
   const navigate = useNavigate();
-  const confirm = useConfirm();
 
   const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCampaignStore((store) => store.loading);
@@ -49,8 +46,6 @@ export function CampaignSheetPage() {
   const campaignCharacters = useListenToCampaignCharacters(campaignId);
 
   const { updateCampaignGM } = useUpdateCampaignGM();
-
-  const { deleteCampaign } = useDeleteCampaign();
 
   const { user: gm } = useUserDoc(campaigns[campaignId ?? ""]?.gmId);
 
@@ -86,28 +81,6 @@ export function CampaignSheetPage() {
       });
   };
 
-  const handleRemoveCampaign = async () => {
-    try {
-      await confirm({
-        title: "End Campaign",
-        description:
-          "Are you sure you want to end your campaign? This will also remove your current characters from the campaign",
-        confirmationText: "End",
-        confirmationButtonProps: {
-          variant: "contained",
-          color: "error",
-        },
-      });
-
-      // will cause the alert bar to pop up
-      deleteCampaign({ campaignId, characters: campaign.characters });
-
-      // removeCampaign(campaignId);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <>
       <PageBanner>
@@ -138,13 +111,24 @@ export function CampaignSheetPage() {
                 Mark self as GM
               </Button>
             )}
-            {campaign.gmId && (
+            {campaign.gmId && campaign.gmId !== uid && (
               <Typography
                 variant={"h6"}
                 fontFamily={(theme) => theme.fontFamilyTitle}
               >
                 GM: {gm?.displayName ?? "Loading..."}
               </Typography>
+            )}
+            {campaign.gmId && campaign.gmId === uid && (
+              <Button
+                component={Link}
+                to={constructCampaignGMScreenUrl(campaignId)}
+                variant={"outlined"}
+                color={"inherit"}
+                sx={{ mt: 2 }}
+              >
+                Open GM Screen
+              </Button>
             )}
           </Box>
           <CampaignActionsMenu campaign={campaign} campaignId={campaignId} />
