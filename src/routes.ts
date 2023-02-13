@@ -5,6 +5,7 @@ export enum ROUTES {
   CAMPAIGN_SELECT,
   CAMPAIGN_SHEET,
   CAMPAIGN_JOIN,
+  CAMPAIGN_GM_SCREEN,
   LOGIN,
 }
 
@@ -18,6 +19,7 @@ export const paths: { [key in ROUTES]: string } = {
   [ROUTES.CAMPAIGN_SELECT]: `/${CAMPAIGN_PREFIX}`,
   [ROUTES.CAMPAIGN_SHEET]: `/${CAMPAIGN_PREFIX}/:campaignId`,
   [ROUTES.CAMPAIGN_JOIN]: `/${CAMPAIGN_PREFIX}/:campaignId/join`,
+  [ROUTES.CAMPAIGN_GM_SCREEN]: `/${CAMPAIGN_PREFIX}/:campaignId/gm-screen`,
   [ROUTES.LOGIN]: `/login`,
 };
 
@@ -31,6 +33,10 @@ export function constructCampaignSheetUrl(campaignId: string) {
 
 export function constructCampaignJoinUrl(campaignId: string) {
   return `/campaigns/${campaignId}/join`;
+}
+
+export function constructCampaignGMScreenUrl(campaignId: string) {
+  return `/campaigns/${campaignId}/gm-screen`;
 }
 
 export function constructCharacterCreateInCampaignUrl(campaignId: string) {

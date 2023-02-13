@@ -39,7 +39,17 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
         }
         breakContainer={headingBreakContainer}
       />
-      <Stack px={headingBreakContainer ? 0 : 2} mt={2} spacing={4} mb={4}>
+      <Stack
+        mt={2}
+        spacing={4}
+        mb={4}
+        sx={(theme) => ({
+          px: headingBreakContainer ? 0 : 2,
+          [theme.breakpoints.up("md")]: {
+            px: headingBreakContainer ? 0 : 3,
+          },
+        })}
+      >
         {Array.isArray(tracks) &&
           tracks.map((track, index) => (
             <ProgressTrack
