@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ReactNode, useState } from "react";
-import { Track } from "../../features/character-sheet/components/Track";
+import { Track } from "../Track";
 import { Asset, StoredAsset } from "../../types/Asset.type";
 import { MarkdownRenderer } from "../MarkdownRenderer/MarkdownRenderer";
 import { AssetCardField } from "./AssetCardField";

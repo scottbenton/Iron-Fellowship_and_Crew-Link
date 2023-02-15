@@ -1,16 +1,18 @@
 import { Box, Card, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
-import { MovesSection } from "features/character-sheet/components/MovesSection";
+import { MovesSection } from "components/MovesSection/MovesSection";
 import { useEffect } from "react";
 import { useState } from "react";
 import { StoredCampaign } from "types/Campaign.type";
 import { CharacterSection } from "./CharacterSection";
 import { CampaignProgressTracks } from "features/campaign-sheet/components/CampaignProgressTracks";
 import { TracksSection } from "./TracksSection";
+import { OracleSection } from "components/OracleSection";
 
 enum TABS {
   MOVES,
   CHARACTERS,
   TRACKS,
+  ORACLE,
 }
 
 export interface TabsSectionProps {
@@ -49,6 +51,7 @@ export function TabsSection(props: TabsSectionProps) {
           {isMobile && <Tab label={"Moves"} value={TABS.MOVES} />}
           <Tab label="Characters" value={TABS.CHARACTERS} />
           <Tab label="Tracks" value={TABS.TRACKS} />
+          <Tab label="Oracle" value={TABS.ORACLE} />
         </Tabs>
       </Box>
       <Box
@@ -67,6 +70,7 @@ export function TabsSection(props: TabsSectionProps) {
         {selectedTab === TABS.TRACKS && (
           <TracksSection campaignId={campaignId} supply={campaign.supply} />
         )}
+        {selectedTab === TABS.ORACLE && <OracleSection />}
       </Box>
     </Card>
   );

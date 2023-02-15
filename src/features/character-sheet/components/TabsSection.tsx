@@ -4,11 +4,15 @@ import { TRACK_TYPES } from "../../../types/Track.type";
 import { AssetsSection } from "./AssetsSection";
 import { ProgressTrackSection } from "./ProgressTrackSection";
 import { CharacterSection } from "./CharacterSection";
-import { MovesSection } from "./MovesSection";
+import { MovesSection } from "components/MovesSection";
+import { useCharacterSheetStore } from "../characterSheet.store";
+import { CharacterDocument } from "types/Character.type";
+import { OracleSection } from "components/OracleSection";
 
 enum TABS {
   MOVES,
   ASSETS,
+  ORACLE,
   VOWS,
   JOURNEYS,
   FRAYS,
@@ -20,6 +24,20 @@ export function TabsSection() {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.ASSETS);
+
+  const stats = useCharacterSheetStore((store) => {
+    const character = store.character as CharacterDocument;
+    return {
+      ...character.stats,
+      health: character.health,
+      spirit: character.spirit,
+      supply: store.supply ?? 0,
+    };
+  });
+
+  const isInCampaign = useCharacterSheetStore(
+    (store) => !!store.character?.campaignId
+  );
 
   useEffect(() => {
     if (!isMobile && selectedTab === TABS.MOVES) {
@@ -41,6 +59,7 @@ export function TabsSection() {
         >
           {isMobile && <Tab label={"Moves"} value={TABS.MOVES} />}
           <Tab label="Assets" value={TABS.ASSETS} />
+          {!isInCampaign && <Tab label="Oracle" value={TABS.ORACLE} />}
           <Tab label="Vows" value={TABS.VOWS} />
           <Tab label="Combat" value={TABS.FRAYS} />
           <Tab label="Journeys" value={TABS.JOURNEYS} />
@@ -54,8 +73,9 @@ export function TabsSection() {
           selectedTab === TABS.ASSETS ? theme.palette.grey[100] : undefined
         }
       >
-        {selectedTab === TABS.MOVES && <MovesSection />}
+        {selectedTab === TABS.MOVES && <MovesSection stats={stats} />}
         {selectedTab === TABS.ASSETS && <AssetsSection />}
+        {selectedTab === TABS.ORACLE && <OracleSection />}
         {selectedTab === TABS.VOWS && (
           <ProgressTrackSection
             type={TRACK_TYPES.VOW}

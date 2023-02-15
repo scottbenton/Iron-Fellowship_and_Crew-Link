@@ -3,7 +3,6 @@ import { CampaignGMScreenPage } from "features/campaign-gm-screen/CampaignGMScre
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useListenToUsersCampaigns } from "./api/campaign/listenToUsersCampaigns";
 import { useListenToUsersCharacters } from "./api/characters/listenToUsersCharacters";
-import { DieRollProvider } from "./components/DieRollProvider";
 import { EmptyState } from "./components/EmptyState/EmptyState";
 import { Layout } from "./components/Layout";
 import { CampaignJoinPage } from "./features/campaign-join/CampaignJoinPage";
@@ -35,11 +34,7 @@ export function App() {
         />
         <Route
           path={paths[ROUTES.CHARACTER_SHEET]}
-          element={
-            <DieRollProvider>
-              <CharacterSheetPage />
-            </DieRollProvider>
-          }
+          element={<CharacterSheetPage />}
         />
         <Route
           path={paths[ROUTES.CAMPAIGN_SELECT]}

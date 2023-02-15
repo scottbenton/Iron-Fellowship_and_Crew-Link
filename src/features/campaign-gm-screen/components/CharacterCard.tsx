@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { StatComponent } from "features/character-sheet/components/StatComponent";
+import { StatComponent } from "components/StatComponent";
 import { getHueFromString } from "functions/getHueFromString";
 import { CharacterDocument, StatsMap } from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";

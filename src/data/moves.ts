@@ -1,18 +1,39 @@
 import jsonMoves from "./moves.json";
-import { Moves, ROLLABLES, ROLLABLE_TRACKS } from "../types/Moves.type";
+import {
+  Move,
+  MoveCategory,
+  MoveOracle,
+  Moves,
+  ROLLABLES,
+  ROLLABLE_TRACKS,
+} from "../types/Moves.type";
 import { STATS } from "../types/stats.enum";
+import jsonMoveOracles from "./move-oracles.json";
+
+const moveOracles: { [key: string]: MoveOracle } = {};
+
+jsonMoveOracles.Oracles.map((oracle) => {
+  moveOracles[oracle.Move] = {
+    table: oracle["Oracle Table"].map((table) => ({
+      chance: table.Chance,
+      description: table.Description,
+    })),
+  };
+});
 
 export const moves: Moves = jsonMoves.Categories.map((jsonCategory) => {
-  return {
+  const constructedMoves: MoveCategory = {
     categoryName: jsonCategory.Name,
     moves: jsonCategory.Moves.map((jsonMove) => {
       return {
         name: jsonMove.Name,
         text: jsonMove.Text,
         stats: getRollables(jsonMove.Stats),
+        oracle: moveOracles[jsonMove.Name],
       };
     }),
   };
+  return constructedMoves;
 });
 
 function getRollables(stats?: string[]): ROLLABLES[] | undefined {

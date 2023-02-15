@@ -25,8 +25,17 @@ Featuring a clean character sheet, campaigns with shared assets and tracks, and 
 ### Future Changes
 
 There is more to come for the Iron Fellowship.
-Note keeping, NPCs, Combat Tracking, and Oracle tables are on the backlog.
+Note keeping, NPCs, Combat Tracking, and Oracle tables are on the backlog, which you can view [here](https://github.com/users/scottbenton/projects/5).
+To suggest changes and give feedback, you can chime in on existing issues or create new ones [here](https://github.com/scottbenton/Iron-Fellowship/issues).
 Keep checking back!
+
+## Thanks
+
+Thank you to...
+
+- Everyone who has contributed code to Iron Fellowship
+- GCoulby for creating [Ironsworn Companion](https://github.com/gcoulby/IronswornCompanion), and allowing me picks his brain, use his code, and steal assets to use in this app
+- RSek for creating [Datasworn](https://github.com/rsek/datasworn), which this project uses
 
 ## Development
 
