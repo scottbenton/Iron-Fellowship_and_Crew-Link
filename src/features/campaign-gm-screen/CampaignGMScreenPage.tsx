@@ -1,5 +1,5 @@
 import { Card, Grid, Hidden, LinearProgress } from "@mui/material";
-import { MovesSection } from "features/character-sheet/components/MovesSection";
+import { MovesSection } from "components/MovesSection/MovesSection";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";

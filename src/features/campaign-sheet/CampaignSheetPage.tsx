@@ -20,7 +20,7 @@ import {
   ROUTES,
 } from "../../routes";
 import { useCampaignStore } from "../../stores/campaigns.store";
-import { Track } from "../character-sheet/components/Track";
+import { Track } from "../../components/Track";
 import { AddCharacterDialog } from "./components/AddCharacterDialog";
 import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
 import { useUserDoc } from "api/user/getUserDoc";

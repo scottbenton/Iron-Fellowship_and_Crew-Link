@@ -8,10 +8,18 @@ export enum ROLLABLE_TRACKS {
 
 export type ROLLABLES = STATS | ROLLABLE_TRACKS;
 
+export interface MoveOracle {
+  table: {
+    chance: number;
+    description: string;
+  }[];
+}
+
 export interface Move {
   name: string;
   stats?: ROLLABLES[];
   text: string;
+  oracle?: MoveOracle;
 }
 
 export interface MoveCategory {

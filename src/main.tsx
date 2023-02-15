@@ -8,6 +8,7 @@ import { ThemeProvider } from "./theme";
 import { BrowserRouter } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 import { ConfirmProvider } from "material-ui-confirm";
+import { DieRollProvider } from "components/DieRollProvider";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -20,7 +21,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
             preventDuplicate
           >
-            <App />
+            <DieRollProvider>
+              <App />
+            </DieRollProvider>
           </SnackbarProvider>
         </ConfirmProvider>
       </ThemeProvider>

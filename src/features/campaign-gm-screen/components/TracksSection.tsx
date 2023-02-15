@@ -3,7 +3,7 @@ import { useUpdateCampaignSupply } from "api/campaign/updateCampaignSupply";
 import { SectionHeading } from "components/SectionHeading";
 import { supplyTrack } from "data/defaultTracks";
 import { CampaignProgressTracks } from "features/campaign-sheet/components/CampaignProgressTracks";
-import { Track } from "features/character-sheet/components/Track";
+import { Track } from "components/Track";
 
 export interface TracksSectionProps {
   campaignId: string;

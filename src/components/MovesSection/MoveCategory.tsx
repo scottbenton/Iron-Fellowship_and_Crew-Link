@@ -7,7 +7,7 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import OpenIcon from "@mui/icons-material/ChevronRight";
-import { Move, MoveCategory as IMoveCategory } from "../../../types/Moves.type";
+import { Move, MoveCategory as IMoveCategory } from "../../types/Moves.type";
 
 export interface MoveCategoryProps {
   category: IMoveCategory;
