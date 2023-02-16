@@ -1,11 +1,10 @@
 import { CharacterNotFoundException } from "api/error/CharacterNotFoundException";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { firebaseAuth } from "config/firebase.config";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
-import { getCharacterAssetDoc } from "lib/firebase.lib";
+import { getCharacterAssetDoc } from "./_getRef";
 import { StoredAsset } from "types/Asset.type";
 
 interface AddAssetParams {

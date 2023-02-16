@@ -3,7 +3,7 @@ import { StatsMap } from "../../../types/Character.type";
 
 import { STATS } from "../../../types/stats.enum";
 import { useCharacterSheetStore } from "../characterSheet.store";
-import { StatComponent } from "./StatComponent";
+import { StatComponent } from "../../../components/StatComponent";
 
 export function StatsSection() {
   // We know character is defined at this point, hence the typecasting

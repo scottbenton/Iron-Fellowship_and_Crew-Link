@@ -16,10 +16,11 @@ import { paths, ROUTES } from "../../routes";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { useCharacterStore } from "../../stores/character.store";
 import { useCharacterSheetStore } from "./characterSheet.store";
-import { MovesSection } from "./components/MovesSection";
+import { MovesSection } from "components/MovesSection";
 import { StatsSection } from "./components/StatsSection";
 import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
+import { InitiativeButtons } from "./components/InitiativeButtons";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
@@ -28,6 +29,7 @@ export function CharacterSheetPage() {
   const loading = useCharacterStore((store) => store.loading);
 
   const character = useCharacterSheetStore((store) => store.character);
+  const supply = useCharacterSheetStore((store) => store.supply);
   const setCharacter = useCharacterSheetStore((store) => store.setCharacter);
   const setCampaign = useCharacterSheetStore((store) => store.setCampaign);
   const resetState = useCharacterSheetStore((store) => store.resetState);
@@ -82,6 +84,13 @@ export function CharacterSheetPage() {
     );
   }
 
+  const stats = {
+    ...character.stats,
+    health: character.health,
+    spirit: character.spirit,
+    supply: supply ?? 0,
+  };
+
   return (
     <>
       <Box
@@ -104,14 +113,16 @@ export function CharacterSheetPage() {
           }),
         ]}
       >
-        <Typography
-          variant={"h4"}
-          color={"white"}
-          my={1}
-          fontFamily={(theme) => theme.fontFamilyTitle}
-        >
-          {character.name}
-        </Typography>
+        <Box display={"flex"} flexDirection={"column"}>
+          <Typography
+            variant={"h4"}
+            color={"white"}
+            fontFamily={(theme) => theme.fontFamilyTitle}
+          >
+            {character.name}
+          </Typography>
+          <InitiativeButtons />
+        </Box>
         <StatsSection />
       </Box>
       <Grid
@@ -137,7 +148,7 @@ export function CharacterSheetPage() {
               },
             })}
           >
-            <MovesSection />
+            <MovesSection stats={stats} />
           </Grid>
         </Hidden>
         <Grid

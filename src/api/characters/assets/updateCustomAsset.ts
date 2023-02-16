@@ -1,8 +1,8 @@
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
-import { arrayRemove, deleteField, updateDoc } from "firebase/firestore";
+import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
-import { getCharacterAssetDoc } from "lib/firebase.lib";
+import { getCharacterAssetDoc } from "./_getRef";
 import { Asset } from "types/Asset.type";
 
 export const updateCustomAsset: ApiFunction<

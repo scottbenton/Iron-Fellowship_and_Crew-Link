@@ -3,13 +3,10 @@ import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { deleteDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { firebaseAuth } from "../../config/firebase.config";
-import {
-  getCampaignDoc,
-  getCharacterAssetDoc,
-  getCharacterDoc,
-  getCharacterTracksDoc,
-} from "../../lib/firebase.lib";
+import { getCharacterAssetDoc } from "./assets/_getRef";
 import { getCharacter } from "./getCharacter";
+import { getCharacterTracksDoc } from "./tracks/_getRef";
+import { getCharacterDoc } from "./_getRef";
 
 export const deleteCharacter: ApiFunction<string, boolean> = function (
   characterId

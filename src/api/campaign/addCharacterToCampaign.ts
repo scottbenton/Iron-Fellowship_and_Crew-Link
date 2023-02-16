@@ -2,7 +2,8 @@ import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { firebaseAuth } from "../../config/firebase.config";
 import { ApiFunction, useApiState } from "../../hooks/useApiState";
-import { getCampaignDoc, getCharacterDoc } from "../../lib/firebase.lib";
+import { getCharacterDoc } from "../characters/_getRef";
+import { getCampaignDoc } from "./_getRef";
 
 export const addCharacterToCampaign: ApiFunction<
   { characterId: string; campaignId: string },

@@ -1,6 +1,6 @@
 import { setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { getUsersDoc } from "lib/firebase.lib";
+import { getUsersDoc } from "./_getRef";
 import { UserDocument } from "types/User.type";
 
 export const updateUserDoc: ApiFunction<

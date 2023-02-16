@@ -20,6 +20,16 @@ export const lightTheme = createTheme({
     secondary: {
       main: "#ff6584",
     },
+    success: {
+      light: "#10b981",
+      main: "#059669",
+      dark: "#047857",
+    },
+    error: {
+      light: "#ef4444",
+      main: "#dc2626",
+      dark: "#b91c1c",
+    },
     background: {
       paper: "#fff",
       default: "#f4f4f5",

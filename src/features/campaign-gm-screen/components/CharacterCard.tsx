@@ -8,9 +8,13 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { StatComponent } from "features/character-sheet/components/StatComponent";
+import { StatComponent } from "components/StatComponent";
 import { getHueFromString } from "functions/getHueFromString";
-import { CharacterDocument, StatsMap } from "types/Character.type";
+import {
+  CharacterDocument,
+  INITIATIVE_STATUS,
+  StatsMap,
+} from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useListenToAssets } from "api/characters/assets/listenToAssets";
 import { useState } from "react";
@@ -19,6 +23,8 @@ import { AssetCard } from "components/AssetCard/AssetCard";
 import { assets } from "data/assets";
 import { STATS } from "types/stats.enum";
 import { useGetUserDoc, useUserDoc } from "api/user/getUserDoc";
+import { InitiativeStatusChip } from "components/InitiativeStatusChip";
+import { useUpdateCharacterInitiative } from "api/characters/updateCharacterInitiative";
 
 export interface CharacterCardProps {
   uid: string;
@@ -35,6 +41,9 @@ export function CharacterCard(props: CharacterCardProps) {
   useListenToAssets(uid, characterId, setStoredAssets);
 
   const { user } = useUserDoc(uid);
+
+  const { updateCharacterInitiative, loading: initiativeLoading } =
+    useUpdateCharacterInitiative();
 
   return (
     <Card variant={"outlined"}>
@@ -59,6 +68,22 @@ export function CharacterCard(props: CharacterCardProps) {
               {user ? user.displayName : "Loading..."}
             </Typography>
           </Box>
+        </Box>
+        <Box px={2}>
+          <InitiativeStatusChip
+            status={
+              character.initiativeStatus ?? INITIATIVE_STATUS.OUT_OF_COMBAT
+            }
+            handleStatusChange={(initiativeStatus) =>
+              updateCharacterInitiative({
+                uid,
+                characterId,
+                initiativeStatus,
+              }).catch()
+            }
+            loading={initiativeLoading}
+            variant={"outlined"}
+          />
         </Box>
         <Box display={"flex"} px={2} flexWrap={"wrap"}>
           <StatComponent

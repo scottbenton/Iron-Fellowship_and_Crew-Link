@@ -8,12 +8,10 @@ import {
   supplyTrack,
 } from "../../data/defaultTracks";
 import { ApiFunction, useApiState } from "../../hooks/useApiState";
-import {
-  getCharacterAssetDoc,
-  getUsersCharacterCollection,
-} from "../../lib/firebase.lib";
 import { StoredAsset } from "../../types/Asset.type";
 import { CharacterDocument, StatsMap } from "../../types/Character.type";
+import { getCharacterAssetDoc } from "./assets/_getRef";
+import { getUsersCharacterCollection } from "./_getRef";
 
 export const createCharacter: ApiFunction<
   {

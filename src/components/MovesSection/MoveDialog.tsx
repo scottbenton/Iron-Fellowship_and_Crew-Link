@@ -1,26 +1,28 @@
 import {
   Box,
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
-  Stack,
 } from "@mui/material";
-import { MarkdownRenderer } from "../../../components/MarkdownRenderer/MarkdownRenderer";
-import { Move, ROLLABLES, ROLLABLE_TRACKS } from "../../../types/Moves.type";
+import { MarkdownRenderer } from "../MarkdownRenderer";
+import { Move, ROLLABLES, ROLLABLE_TRACKS } from "types/Moves.type";
 import CloseIcon from "@mui/icons-material/Close";
-import { StatsMap } from "../../../types/Character.type";
-import { StatComponent } from "./StatComponent";
-import { STATS } from "../../../types/stats.enum";
+import { StatsMap } from "types/Character.type";
+import { StatComponent } from "../StatComponent";
+import { STATS } from "../../types/stats.enum";
+import { useRoller } from "components/DieRollProvider";
 
 export interface MoveDialogProps {
   move?: Move;
   handleClose: () => void;
 
-  stats: StatsMap;
-  health: number;
-  spirit: number;
-  supply: number;
+  stats?: {
+    health: number;
+    spirit: number;
+    supply: number;
+  } & StatsMap;
 }
 
 const labels: { [key in ROLLABLES]: string } = {
@@ -35,14 +37,10 @@ const labels: { [key in ROLLABLES]: string } = {
 };
 
 export function MoveDialog(props: MoveDialogProps) {
-  const { move, handleClose, stats, health, spirit, supply } = props;
+  const { move, handleClose, stats } = props;
+  const { oracle } = move || {};
 
-  const rollableValues: { [key in ROLLABLES]: number } = {
-    ...stats,
-    health,
-    spirit,
-    supply,
-  };
+  const { rollOracleTable } = useRoller();
 
   return (
     <Dialog open={!!move} onClose={() => handleClose()}>
@@ -55,17 +53,29 @@ export function MoveDialog(props: MoveDialogProps) {
         </span>
       </DialogTitle>
       <DialogContent>
-        {move?.stats && (
+        {move?.stats && stats && (
           <Box display={"flex"} flexWrap={"wrap"}>
             {move.stats.map((stat, index) => (
               <StatComponent
                 key={index}
                 label={labels[stat]}
-                value={rollableValues[stat]}
+                value={stats[stat]}
                 sx={{ mt: 1, mr: 1 }}
               />
             ))}
           </Box>
+        )}
+        {oracle && (
+          <Button
+            variant={"outlined"}
+            color={"primary"}
+            onClick={() =>
+              rollOracleTable(undefined, move?.name ?? "", oracle.table)
+            }
+            sx={{ mt: move?.stats && stats ? 1 : 0 }}
+          >
+            Roll on the Oracle Table
+          </Button>
         )}
         {move?.text && <MarkdownRenderer markdown={move?.text} />}
       </DialogContent>

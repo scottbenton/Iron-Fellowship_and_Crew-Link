@@ -2,7 +2,8 @@ import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { arrayRemove, deleteField, updateDoc } from "firebase/firestore";
 import { firebaseAuth } from "../../config/firebase.config";
 import { ApiFunction, useApiState } from "../../hooks/useApiState";
-import { getCampaignDoc, getCharacterDoc } from "../../lib/firebase.lib";
+import { getCharacterDoc } from "../characters/_getRef";
+import { getCampaignDoc } from "./_getRef";
 
 export const removeCharacterFromCampaign: ApiFunction<
   { campaignId: string; characterId: string },

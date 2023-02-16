@@ -1,6 +1,6 @@
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "../../hooks/useApiState";
-import { getCampaignDoc } from "../../lib/firebase.lib";
+import { getCampaignDoc } from "./_getRef";
 
 export const addUserToCampaign: ApiFunction<
   { campaignId: string; userId: string },

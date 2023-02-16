@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
-import { getCharacterTracksDoc } from "lib/firebase.lib";
-import { StoredAsset } from "types/Asset.type";
+import { getCharacterTracksDoc } from "./_getRef";
 import {
   convertTrackMapToArray,
   TrackWithId,
