@@ -6,7 +6,7 @@ service cloud.firestore {
       allow write, delete: if userId == request.auth.uid;
       match /{document=**} {
       	allow read: if true;
-        allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(["campaignId"])     
+        allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(["campaignId", "initiativeStatus"])     
         allow write, delete: if userId == request.auth.uid
       }
     }
