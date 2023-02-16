@@ -72,8 +72,7 @@ export function CharacterCard(props: CharacterCardProps) {
         <Box px={2}>
           <InitiativeStatusChip
             status={
-              character.initiativeStatus ??
-              INITIATIVE_STATUS.DOES_NOT_HAVE_INITIATIVE
+              character.initiativeStatus ?? INITIATIVE_STATUS.OUT_OF_COMBAT
             }
             handleStatusChange={(initiativeStatus) =>
               updateCharacterInitiative({
