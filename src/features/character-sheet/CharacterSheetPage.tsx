@@ -20,6 +20,7 @@ import { MovesSection } from "components/MovesSection";
 import { StatsSection } from "./components/StatsSection";
 import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
+import { InitiativeButtons } from "./components/InitiativeButtons";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
@@ -112,14 +113,16 @@ export function CharacterSheetPage() {
           }),
         ]}
       >
-        <Typography
-          variant={"h4"}
-          color={"white"}
-          my={1}
-          fontFamily={(theme) => theme.fontFamilyTitle}
-        >
-          {character.name}
-        </Typography>
+        <Box display={"flex"} flexDirection={"column"}>
+          <Typography
+            variant={"h4"}
+            color={"white"}
+            fontFamily={(theme) => theme.fontFamilyTitle}
+          >
+            {character.name}
+          </Typography>
+          <InitiativeButtons />
+        </Box>
         <StatsSection />
       </Box>
       <Grid

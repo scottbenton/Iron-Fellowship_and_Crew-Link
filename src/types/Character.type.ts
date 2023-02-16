@@ -6,6 +6,12 @@ export type StatsMap = {
   [key in STATS]: number;
 };
 
+export enum INITIATIVE_STATUS {
+  HAS_INITIATIVE = "initiative",
+  DOES_NOT_HAVE_INITIATIVE = "noInitiative",
+  OUT_OF_COMBAT = "outOfCombat",
+}
+
 export interface CharacterDocument {
   name: string;
   stats: StatsMap;
@@ -22,6 +28,7 @@ export interface CharacterDocument {
   debilities?: {
     [key in DEBILITIES]?: boolean;
   };
+  initiativeStatus?: INITIATIVE_STATUS;
 }
 
 export interface AssetDocument {
