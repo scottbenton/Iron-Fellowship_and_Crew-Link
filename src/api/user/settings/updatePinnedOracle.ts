@@ -1,6 +1,6 @@
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { firebaseAuth } from "config/firebase.config";
-import { arrayRemove, arrayUnion, setDoc, updateDoc } from "firebase/firestore";
+import { setDoc, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getUserOracleSettingsDoc } from "./_getRef";
 
@@ -16,6 +16,8 @@ export const updatePinnedOracle: ApiFunction<
       reject(new UserNotLoggedInException());
       return;
     }
+
+    console.debug(oracleName, pinned);
 
     updateDoc(
       getUserOracleSettingsDoc(uid),

@@ -1,4 +1,4 @@
-import { onSnapshot, Unsubscribe } from "firebase/firestore";
+import { addDoc, onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect, useState } from "react";
@@ -17,10 +17,16 @@ export function listenToOracleSettings(
       if (data) {
         onOracleSettings(data);
       } else {
+        if (uid) {
+          setDoc(getUserOracleSettingsDoc(uid), {
+            pinnedOracleSections: {},
+          });
+        }
         onOracleSettings({});
       }
     },
     (error) => {
+      console.debug(error);
       onError(error);
     }
   );
