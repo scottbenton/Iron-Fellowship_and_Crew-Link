@@ -299,7 +299,7 @@
     },
     {
       "Name": "Reveal a Danger Alternate",
-      "Move": "Reveal a Danger",
+      "Move": "Reveal a Danger (alternate version)",
       "Oracle Table": [
         {
           "Chance": 22,

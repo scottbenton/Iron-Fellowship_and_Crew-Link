@@ -21,10 +21,10 @@ export function EmptyState(props: EmptyStateProps) {
           backgroundImage: `url(${imageSrc})`,
         }}
       />
-      <Typography variant={"h4"} mt={2}>
+      <Typography variant={"h4"} mt={2} textAlign={"center"}>
         {title}
       </Typography>
-      <Typography variant={"body1"} color={"GrayText"}>
+      <Typography variant={"body1"} color={"GrayText"} textAlign={"center"}>
         {message}
       </Typography>
       {callToAction && <Box mt={2}>{callToAction}</Box>}

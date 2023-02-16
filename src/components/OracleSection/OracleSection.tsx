@@ -1,14 +1,46 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Input, InputAdornment } from "@mui/material";
 import { useRoller } from "components/DieRollProvider";
 import {
   oracleRollChanceNames,
   ORACLE_ROLL_CHANCE,
 } from "components/DieRollProvider/DieRollContext";
-import { oracles } from "data/oracles";
+import { oracles, oracleSectionMap } from "data/oracles";
 import { OracleCategory } from "./OracleCategory";
+import SearchIcon from "@mui/icons-material/Search";
+import { useFilterOracles } from "./useFilterOracles";
+import { useListenToOracleSettings } from "api/user/settings/listenToOracleSettings";
+import { Oracle } from "types/Oracles.type";
+import { useMemo } from "react";
 
 export function OracleSection() {
   const { rollOracle } = useRoller();
+
+  const { settings } = useListenToOracleSettings();
+
+  const combinedOracles = useMemo(() => {
+    const pinnedOracleNames = Object.keys(
+      settings?.pinnedOracleSections ?? {}
+    ).filter(
+      (sectionName) =>
+        settings?.pinnedOracleSections &&
+        settings.pinnedOracleSections[sectionName]
+    );
+    const pinnedOracle: Oracle | undefined =
+      pinnedOracleNames.length > 0
+        ? {
+            name: "Pinned Oracles",
+            sections: pinnedOracleNames.map(
+              (sectionName) => oracleSectionMap[sectionName]
+            ),
+          }
+        : undefined;
+
+    return pinnedOracle ? [pinnedOracle, ...oracles] : oracles;
+  }, [settings]);
+
+  const { search, filteredOracles, setSearch } =
+    useFilterOracles(combinedOracles);
+
   return (
     <>
       <Box display={"flex"} flexWrap={"wrap"} p={1}>
@@ -53,8 +85,32 @@ export function OracleSection() {
           {oracleRollChanceNames[ORACLE_ROLL_CHANCE.ALMOST_CERTAIN]}
         </Button>
       </Box>
-      {oracles.map((category) => (
-        <OracleCategory category={category} key={category.name} />
+
+      <Input
+        fullWidth
+        startAdornment={
+          <InputAdornment position={"start"}>
+            <SearchIcon sx={(theme) => ({ color: theme.palette.grey[300] })} />
+          </InputAdornment>
+        }
+        aria-label={"Filter Moves"}
+        placeholder={"Filter Moves"}
+        value={search}
+        onChange={(evt) => setSearch(evt.target.value)}
+        color={"secondary"}
+        sx={(theme) => ({
+          backgroundColor: theme.palette.primary.main,
+          color: "#fff",
+          px: 2,
+          borderBottomColor: theme.palette.primary.light,
+        })}
+      />
+      {filteredOracles.map((category) => (
+        <OracleCategory
+          category={category}
+          key={category.name}
+          pinnedCategories={settings?.pinnedOracleSections}
+        />
       ))}
     </>
   );

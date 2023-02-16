@@ -1,7 +1,7 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { deleteField, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { getCampaignDoc } from "lib/firebase.lib";
+import { getCampaignDoc } from "./_getRef";
 
 export const updateCampaignGM: ApiFunction<
   {

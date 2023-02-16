@@ -53,17 +53,16 @@ export function MoveDialog(props: MoveDialogProps) {
         </span>
       </DialogTitle>
       <DialogContent>
-        {move?.stats && (
+        {move?.stats && stats && (
           <Box display={"flex"} flexWrap={"wrap"}>
-            {stats &&
-              move.stats.map((stat, index) => (
-                <StatComponent
-                  key={index}
-                  label={labels[stat]}
-                  value={stats[stat]}
-                  sx={{ mt: 1, mr: 1 }}
-                />
-              ))}
+            {move.stats.map((stat, index) => (
+              <StatComponent
+                key={index}
+                label={labels[stat]}
+                value={stats[stat]}
+                sx={{ mt: 1, mr: 1 }}
+              />
+            ))}
           </Box>
         )}
         {oracle && (
@@ -73,7 +72,7 @@ export function MoveDialog(props: MoveDialogProps) {
             onClick={() =>
               rollOracleTable(undefined, move?.name ?? "", oracle.table)
             }
-            sx={{ mt: move?.stats ? 1 : 0 }}
+            sx={{ mt: move?.stats && stats ? 1 : 0 }}
           >
             Roll on the Oracle Table
           </Button>

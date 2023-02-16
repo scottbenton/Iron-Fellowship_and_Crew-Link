@@ -4,7 +4,7 @@ import { useCharacterSheetStore } from "features/character-sheet/characterSheet.
 import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
-import { getCharacterDoc } from "lib/firebase.lib";
+import { getCharacterDoc } from "./_getRef";
 import { DEBILITIES } from "types/debilities.enum";
 
 export const updateDebility: ApiFunction<

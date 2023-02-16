@@ -1,7 +1,7 @@
 import { getDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "../../hooks/useApiState";
-import { getCampaignDoc } from "../../lib/firebase.lib";
 import { StoredCampaign } from "../../types/Campaign.type";
+import { getCampaignDoc } from "./_getRef";
 
 export const getCampaign: ApiFunction<string, StoredCampaign> = function (
   campaignId

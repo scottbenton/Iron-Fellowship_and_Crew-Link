@@ -1,6 +1,6 @@
 import { getDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { getUsersDoc } from "lib/firebase.lib";
+import { getUsersDoc } from "./_getRef";
 import { useEffect, useState } from "react";
 import { UserDocument } from "types/User.type";
 

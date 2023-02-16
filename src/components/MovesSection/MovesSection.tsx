@@ -2,7 +2,7 @@ import { Card, Input, InputAdornment } from "@mui/material";
 import { useState } from "react";
 import { StatsMap } from "../../types/Character.type";
 import { Move } from "../../types/Moves.type";
-import useFilterMoves from "../../features/character-sheet/hooks/useFilterMoves";
+import useFilterMoves from "./useFilterMoves";
 import { MoveCategory } from "./MoveCategory";
 import { MoveDialog } from "./MoveDialog";
 import SearchIcon from "@mui/icons-material/Search";

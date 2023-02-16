@@ -16,6 +16,9 @@ service cloud.firestore {
     match /users/{userId} {
     	allow read: if true;
     	allow write: if userId == request.auth.uid;
+      match /settings/{document=**} {
+      	allow read, write, delete: if userId == request.auth.uid;
+      }
     }
     match /{document=**} {
       allow read, write: if false;

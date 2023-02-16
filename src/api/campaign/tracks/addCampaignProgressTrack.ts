@@ -2,7 +2,7 @@ import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { getSharedCampaignTracksCollection } from "lib/firebase.lib";
+import { getSharedCampaignTracksDoc } from "./_getRef";
 import { StoredTrack, TRACK_TYPES } from "types/Track.type";
 
 export const addCampaignProgressTrack: ApiFunction<
@@ -22,7 +22,7 @@ export const addCampaignProgressTrack: ApiFunction<
     }
 
     setDoc(
-      getSharedCampaignTracksCollection(campaignId),
+      getSharedCampaignTracksDoc(campaignId),
       {
         [type]: {
           [track.label + track.createdTimestamp.toString()]: track,

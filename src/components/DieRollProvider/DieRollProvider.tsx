@@ -142,6 +142,7 @@ export function DieRollProvider(props: PropsWithChildren) {
         zIndex={10000}
         bottom={(theme) => theme.spacing(2)}
         right={(theme) => theme.spacing(2)}
+        ml={2}
         display={"flex"}
         flexDirection={"column"}
         alignItems={"flex-end"}

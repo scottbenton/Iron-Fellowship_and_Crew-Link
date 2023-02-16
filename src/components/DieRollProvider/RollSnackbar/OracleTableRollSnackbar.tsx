@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { OracleTableRoll } from "../DieRollContext";
 import { D10Icon } from "assets/D10Icon";
+import { MarkdownRenderer } from "components/MarkdownRenderer";
 
 export interface OracleTableRollSnackbarProps {
   roll: OracleTableRoll;
@@ -49,7 +50,12 @@ export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
       >
         {roll.rollLabel}
       </Typography>
-      <Box display={"flex"} flexDirection={"row"} mt={expanded ? 1 : 0}>
+      <Box
+        display={"flex"}
+        alignItems={"center"}
+        flexDirection={"row"}
+        mt={expanded ? 1 : 0}
+      >
         {expanded && (
           <Box>
             <Box
@@ -83,14 +89,10 @@ export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
           flexDirection={"column"}
           alignItems={"flex-start"}
           justifyContent={"center"}
+          color={"white"}
+          maxWidth={"60ch"}
         >
-          <Typography
-            color={"white"}
-            variant={"h6"}
-            fontFamily={(theme) => theme.fontFamilyTitle}
-          >
-            {roll.result}
-          </Typography>
+          <MarkdownRenderer markdown={roll.result} inheritColor />
         </Box>
       </Box>
     </Card>
