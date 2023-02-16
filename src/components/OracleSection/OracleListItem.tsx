@@ -5,11 +5,14 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { D10Icon } from "assets/D10Icon";
 import PinIcon from "@mui/icons-material/PushPin";
 import { useState } from "react";
 import { useUpdatePinnedOracle } from "api/user/settings/updatePinnedOracle";
+import { useIsTouchDevice } from "hooks/useIsTouchDevice";
 
 export interface OracleListItemProps {
   onRollClick: () => void;
@@ -21,7 +24,17 @@ export interface OracleListItemProps {
 export function OracleListItem(props: OracleListItemProps) {
   const { text, onRollClick, onOpenClick, pinned } = props;
 
-  const isMobile = "onTouchStart" in window;
+  const isTouchDevice = useIsTouchDevice();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  if (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ||
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.platform)
+  ) {
+    // ...
+  }
 
   const [isHovering, setIsHovering] = useState<boolean>(false);
 
@@ -41,11 +54,13 @@ export function OracleListItem(props: OracleListItemProps) {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       secondaryAction={
-        isHovering || isMobile ? (
+        isHovering || isTouchDevice ? (
           <>
-            <Button color={"primary"} onClick={() => onOpenClick()}>
-              View Table
-            </Button>
+            {!isMobile && (
+              <Button color={"primary"} onClick={() => onOpenClick()}>
+                View Table
+              </Button>
+            )}
             <IconButton
               color={pinned ? "secondary" : undefined}
               onClick={() =>
