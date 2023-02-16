@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import useSearch from "hooks/useSearch";
-import { oracles } from "data/oracles";
 import { Oracle } from "types/Oracles.type";
 
-export function useFilterOracles() {
-  const { setSearch, debouncedSearch } = useSearch();
-  const [filteredOracles, setFilteredOracles] = useState(oracles);
+export function useFilterOracles(defaultOracles: Oracle[]) {
+  const { search, setSearch, debouncedSearch } = useSearch();
+  const [filteredOracles, setFilteredOracles] = useState(defaultOracles);
 
   useEffect(() => {
-    const results: Oracle[] = oracles
+    const results: Oracle[] = defaultOracles
       .filter(
         (oracleCategory) =>
           oracleCategory.name
@@ -35,7 +34,7 @@ export function useFilterOracles() {
         };
       });
     setFilteredOracles(results);
-  }, [debouncedSearch]);
+  }, [debouncedSearch, defaultOracles]);
 
-  return { setSearch, filteredOracles };
+  return { search, setSearch, filteredOracles };
 }

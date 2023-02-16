@@ -1,4 +1,9 @@
-import { JsonOracle, Oracle, OracleTable } from "types/Oracles.type";
+import {
+  JsonOracle,
+  Oracle,
+  OracleSection,
+  OracleTable,
+} from "types/Oracles.type";
 
 import jsonMoveOracles from "./move-oracles.json";
 import jsonCharacterOracles from "./oracles-character.json";
@@ -10,28 +15,34 @@ import jsonSettlementOracles from "./oracles-settlement.json";
 import jsonThreatOracles from "./oracles-threat.json";
 import jsonTurningPointOracles from "./oracles-turning-point.json";
 
+const sectionMap: { [key: string]: OracleSection } = {};
+
 export function transformOracles(jsonOracles: JsonOracle): Oracle {
   const sections: { sectionName: string; table: OracleTable }[] = [];
 
   jsonOracles.Oracles.forEach((section) => {
     if (section["Oracle Table"]) {
-      sections.push({
+      const newSection: OracleSection = {
         sectionName: section.Name,
         table: section["Oracle Table"].map((table) => ({
           chance: table.Chance,
           description: table.Description,
         })),
-      });
+      };
+      sections.push(newSection);
+      sectionMap[newSection.sectionName] = newSection;
     }
     if (section.Oracles) {
       section.Oracles.forEach((subSection) => {
-        sections.push({
+        const newSection: OracleSection = {
           sectionName: section.Name + ": " + subSection.Name,
           table: subSection["Oracle Table"].map((table) => ({
             chance: table.Chance,
             description: table.Description,
           })),
-        });
+        };
+        sections.push(newSection);
+        sectionMap[newSection.sectionName] = newSection;
       });
     }
   });
@@ -65,3 +76,4 @@ export const oracles = [
   threatOracles,
   turningPointOracles,
 ];
+export const oracleSectionMap = sectionMap;

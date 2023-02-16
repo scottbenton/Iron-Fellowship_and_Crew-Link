@@ -59,23 +59,25 @@ export function OracleItemDialog(props: OracleItemDialogProps) {
           width={"100%"}
         >
           <Box component={"thead"} bgcolor={(theme) => theme.palette.grey[200]}>
-            <Typography
-              component={"th"}
-              variant={"body2"}
-              textAlign={"left"}
-              p={1}
-              minWidth={"8ch"}
-            >
-              <b>Roll</b>
-            </Typography>
-            <Typography
-              component={"th"}
-              variant={"body2"}
-              textAlign={"left"}
-              p={1}
-            >
-              <b>Result</b>
-            </Typography>
+            <tr>
+              <Typography
+                component={"th"}
+                variant={"body2"}
+                textAlign={"left"}
+                p={1}
+                minWidth={"8ch"}
+              >
+                <b>Roll</b>
+              </Typography>
+              <Typography
+                component={"th"}
+                variant={"body2"}
+                textAlign={"left"}
+                p={1}
+              >
+                <b>Result</b>
+              </Typography>
+            </tr>
           </Box>
           <tbody>
             {table?.map((entry, index) => (

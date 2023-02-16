@@ -19,10 +19,12 @@ export type OracleTable = {
   description: string;
 }[];
 
+export type OracleSection = {
+  sectionName: string;
+  table: OracleTable;
+};
+
 export interface Oracle {
   name: string;
-  sections: {
-    sectionName: string;
-    table: OracleTable;
-  }[];
+  sections: OracleSection[];
 }
