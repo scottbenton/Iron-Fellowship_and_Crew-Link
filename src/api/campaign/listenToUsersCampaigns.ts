@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { getErrorMessage } from "../../functions/getErrorMessage";
 import { useAuth } from "../../hooks/useAuth";
 import { useSnackbar } from "../../hooks/useSnackbar";
-import { getCampaignCollection } from "../../lib/firebase.lib";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { StoredCampaign } from "../../types/Campaign.type";
+import { getCampaignCollection } from "./_getRef";
 
 export function listenToUsersCampaigns(
   uid: string | undefined,

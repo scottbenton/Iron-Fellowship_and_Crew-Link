@@ -1,7 +1,9 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { deleteDoc, deleteField, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { getCampaignDoc, getCharacterDoc } from "lib/firebase.lib";
+import { getCharacterDoc } from "../characters/_getRef";
+import { getSharedCampaignTracksDoc } from "./tracks/_getRef";
+import { getCampaignDoc } from "./_getRef";
 
 export const deleteCampaign: ApiFunction<
   { campaignId?: string; characters: { uid: string; characterId: string }[] },
@@ -31,13 +33,18 @@ export const deleteCampaign: ApiFunction<
       reject("Failed to update characters");
       return;
     }
-    deleteDoc(getCampaignDoc(campaignId))
-      .then(() => {
-        resolve(true);
-      })
-      .catch((e) => {
-        reject("Failed to delete campaign");
-      });
+
+    try {
+      const campaignDeletePromise = deleteDoc(getCampaignDoc(campaignId));
+      const campaignTrackDeletePromise = deleteDoc(
+        getSharedCampaignTracksDoc(campaignId)
+      );
+
+      await Promise.all([campaignDeletePromise, campaignTrackDeletePromise]);
+      resolve(true);
+    } catch {
+      reject("Failed to delete campaign");
+    }
   });
 };
 

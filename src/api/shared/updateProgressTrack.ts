@@ -1,6 +1,5 @@
 import { useUpdateCharacterSheetCampaignProgressTrack } from "api/campaign/tracks/updateCampaignProgressTrack";
 import { useUpdateCharacterSheetCharacterProgressTrack } from "api/characters/tracks/updateCharacterProgressTrack";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { TRACK_TYPES } from "types/Track.type";
 
 export function useCharacterSheetUpdateProgressTrack() {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import useSearch from "../../../hooks/useSearch";
-import { moves } from "../../../data/moves";
+import useSearch from "hooks/useSearch";
+import { moves } from "data/moves";
 
 function useFilterMoves() {
   const { setSearch, debouncedSearch } = useSearch();

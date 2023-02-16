@@ -1,6 +1,6 @@
 import { getDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "../../hooks/useApiState";
-import { getCharacterDoc } from "../../lib/firebase.lib";
+import { getCharacterDoc } from "./_getRef";
 import { CharacterDocument } from "../../types/Character.type";
 
 export const getCharacter: ApiFunction<

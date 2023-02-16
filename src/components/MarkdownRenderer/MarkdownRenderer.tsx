@@ -5,10 +5,11 @@ import remarkGfm from "remark-gfm";
 export interface MarkdownRendererProps {
   inlineParagraph?: boolean;
   markdown: string;
+  inheritColor?: boolean;
 }
 
 export function MarkdownRenderer(props: MarkdownRendererProps) {
-  const { inlineParagraph, markdown } = props;
+  const { inlineParagraph, markdown, inheritColor } = props;
 
   return (
     <ReactMarkdown
@@ -19,12 +20,16 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           <Typography
             variant={"body2"}
             display={inlineParagraph ? "inline" : "block"}
-            color={(theme) =>
-              inlineParagraph
-                ? theme.palette.text.secondary
-                : theme.palette.text.primary
+            color={
+              inheritColor
+                ? "inherit"
+                : (theme) =>
+                    inlineParagraph
+                      ? theme.palette.text.secondary
+                      : theme.palette.text.primary
             }
             py={inlineParagraph ? 0 : 1}
+            textAlign={"left"}
           >
             {children}
           </Typography>
@@ -33,10 +38,13 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           <Typography
             component={"li"}
             variant={"body2"}
-            color={(theme) =>
-              inlineParagraph
-                ? theme.palette.text.secondary
-                : theme.palette.text.primary
+            color={
+              inheritColor
+                ? "inherit"
+                : (theme) =>
+                    inlineParagraph
+                      ? theme.palette.text.secondary
+                      : theme.palette.text.primary
             }
           >
             {children}
@@ -70,6 +78,7 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
             variant={"body2"}
             textAlign={"left"}
             p={1}
+            minWidth={"8ch"}
           >
             <b>{children}</b>
           </Typography>

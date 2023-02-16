@@ -3,7 +3,7 @@ import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { firebaseAuth } from "config/firebase.config";
 import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { getCharacterDoc } from "lib/firebase.lib";
+import { getCharacterDoc } from "./_getRef";
 import { STATS } from "types/stats.enum";
 
 export const updateCharacterStat: ApiFunction<

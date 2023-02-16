@@ -1,83 +1,77 @@
-import {
-  List,
-  ListItemButton,
-  ListSubheader,
-  ListItemIcon,
-  ListItemText,
-  ListItem,
-} from "@mui/material";
-import { Oracle } from "types/Oracles.type";
-import { D10Icon } from "assets/D10Icon";
+import { List, ListSubheader } from "@mui/material";
+import { Oracle, OracleTable } from "types/Oracles.type";
 import { useRoller } from "components/DieRollProvider";
+import { OracleListItem } from "./OracleListItem";
+import { useState } from "react";
+import { OracleItemDialog } from "./OracleItemDialog";
 
 export interface OracleCategoryProps {
   category: Oracle;
+  pinnedCategories?: { [oracleName: string]: boolean };
 }
 
 export function OracleCategory(props: OracleCategoryProps) {
-  const { category } = props;
+  const { category, pinnedCategories } = props;
 
   const { rollOracleTable } = useRoller();
 
-  return (
-    <List disablePadding>
-      <ListSubheader
-        sx={(theme) => ({
-          backgroundColor: theme.palette.primary.light,
-          color: "white",
-          ...theme.typography.body1,
-          fontFamily: theme.fontFamilyTitle,
-        })}
-      >
-        {category.name}
-      </ListSubheader>
-      {category.sections.map((section, index) => {
-        const { sectionName, table, subSection } = section;
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [openOracleItem, setOpenOracleItem] = useState<{
+    categoryName: string;
+    name: string;
+    table: OracleTable;
+  }>();
 
-        if (table) {
+  return (
+    <>
+      <List disablePadding>
+        <ListSubheader
+          sx={(theme) => ({
+            backgroundColor: theme.palette.primary.light,
+            color: "white",
+            ...theme.typography.body1,
+            fontFamily: theme.fontFamilyTitle,
+          })}
+        >
+          {category.name}
+        </ListSubheader>
+        {category.sections.map((section, index) => {
+          const { sectionName, table } = section;
+
           return (
-            <ListItemButton
+            <OracleListItem
               key={index}
-              sx={(theme) => ({
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                "&:nth-of-type(odd)": {
-                  backgroundColor: theme.palette.action.hover,
-                },
-              })}
-              onClick={() => rollOracleTable(category.name, sectionName, table)}
-            >
-              <ListItemIcon>
-                <D10Icon />
-              </ListItemIcon>
-              <ListItemText primary={sectionName} />
-            </ListItemButton>
-          );
-        } else if (subSection) {
-          return subSection.map((subSection, index) => (
-            <ListItemButton
-              key={index}
-              onClick={() =>
-                rollOracleTable(
-                  category.name,
-                  subSection.subSectionName,
-                  subSection.table
-                )
+              text={sectionName}
+              onRollClick={() =>
+                rollOracleTable(category.name, sectionName, table)
               }
-            >
-              <ListItemIcon>
-                <D10Icon />
-              </ListItemIcon>
-              <ListItemText
-                primary={sectionName + ": " + subSection.subSectionName}
-              />
-            </ListItemButton>
-          ));
-        } else {
-          return null;
+              onOpenClick={() => {
+                setOpenOracleItem({
+                  categoryName: category.name,
+                  name: sectionName,
+                  table: table,
+                });
+                setDialogOpen(true);
+              }}
+              pinned={pinnedCategories && pinnedCategories[sectionName]}
+            />
+          );
+        })}
+      </List>
+      <OracleItemDialog
+        open={dialogOpen}
+        handleClose={() => setDialogOpen(false)}
+        name={openOracleItem?.name}
+        table={openOracleItem?.table}
+        handleRoll={() =>
+          openOracleItem &&
+          rollOracleTable(
+            openOracleItem.categoryName,
+            openOracleItem.name,
+            openOracleItem.table
+          )
         }
-      })}
-    </List>
+      />
+    </>
   );
 }

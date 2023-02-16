@@ -3,8 +3,8 @@ import { addDoc } from "firebase/firestore";
 import { firebaseAuth } from "../../config/firebase.config";
 import { supplyTrack } from "../../data/defaultTracks";
 import { ApiFunction, useApiState } from "../../hooks/useApiState";
-import { getCampaignCollection } from "../../lib/firebase.lib";
 import { StoredCampaign } from "../../types/Campaign.type";
+import { getCampaignCollection } from "./_getRef";
 
 export const createCampaign: ApiFunction<string, string> = function (
   label: string

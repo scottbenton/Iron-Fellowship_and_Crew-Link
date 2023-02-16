@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
-import { getCharacterAssetDoc } from "lib/firebase.lib";
+import { getCharacterAssetDoc } from "./_getRef";
 import { StoredAsset } from "types/Asset.type";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 

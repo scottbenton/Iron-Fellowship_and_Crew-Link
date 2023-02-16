@@ -1,11 +1,11 @@
-import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
+import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   convertTrackMapToArray,
   TrackWithId,
   useCharacterSheetStore,
 } from "features/character-sheet/characterSheet.store";
-import { getSharedCampaignTracksCollection } from "lib/firebase.lib";
+import { getSharedCampaignTracksDoc } from "./_getRef";
 import { TRACK_TYPES } from "types/Track.type";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useSnackbar } from "hooks/useSnackbar";
@@ -20,7 +20,7 @@ export function listenToCampaignProgressTracks(
   onError: (error: any) => void
 ): Unsubscribe | undefined {
   return onSnapshot(
-    getSharedCampaignTracksCollection(campaignId),
+    getSharedCampaignTracksDoc(campaignId),
     (snapshot) => {
       const data = snapshot.data();
 

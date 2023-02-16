@@ -4,7 +4,7 @@ import { useCharacterSheetStore } from "features/character-sheet/characterSheet.
 import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
-import { getCharacterTracksDoc } from "lib/firebase.lib";
+import { getCharacterTracksDoc } from "./_getRef";
 import { TRACK_TYPES } from "types/Track.type";
 
 export const updateCharacterProgressTrack: ApiFunction<

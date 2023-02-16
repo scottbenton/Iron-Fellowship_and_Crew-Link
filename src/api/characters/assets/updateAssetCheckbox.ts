@@ -4,7 +4,7 @@ import { useCharacterSheetStore } from "features/character-sheet/characterSheet.
 import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
-import { getCharacterAssetDoc } from "lib/firebase.lib";
+import { getCharacterAssetDoc } from "./_getRef";
 
 export const updateAssetCheckbox: ApiFunction<
   {

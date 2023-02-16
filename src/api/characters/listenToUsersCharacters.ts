@@ -1,12 +1,11 @@
-import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { onSnapshot, query, Unsubscribe } from "firebase/firestore";
 import { useEffect } from "react";
 import { getErrorMessage } from "../../functions/getErrorMessage";
 import { useAuth } from "../../hooks/useAuth";
 import { useSnackbar } from "../../hooks/useSnackbar";
-import { getUsersCharacterCollection } from "../../lib/firebase.lib";
 import { useCharacterStore } from "../../stores/character.store";
 import { CharacterDocument } from "../../types/Character.type";
+import { getUsersCharacterCollection } from "./_getRef";
 
 export function listenToUsersCharacters(
   uid: string | undefined,

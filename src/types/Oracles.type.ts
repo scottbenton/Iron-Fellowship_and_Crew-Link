@@ -23,10 +23,6 @@ export interface Oracle {
   name: string;
   sections: {
     sectionName: string;
-    table?: OracleTable;
-    subSection?: {
-      subSectionName: string;
-      table: OracleTable;
-    }[];
+    table: OracleTable;
   }[];
 }
