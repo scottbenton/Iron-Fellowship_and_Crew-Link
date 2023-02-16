@@ -13,6 +13,7 @@ import PinIcon from "@mui/icons-material/PushPin";
 import { useState } from "react";
 import { useUpdatePinnedOracle } from "api/user/settings/updatePinnedOracle";
 import { useIsTouchDevice } from "hooks/useIsTouchDevice";
+import TableIcon from "@mui/icons-material/ListAlt";
 
 export interface OracleListItemProps {
   onRollClick: () => void;
@@ -56,11 +57,10 @@ export function OracleListItem(props: OracleListItemProps) {
       secondaryAction={
         isHovering || isTouchDevice ? (
           <>
-            {!isMobile && (
-              <Button color={"primary"} onClick={() => onOpenClick()}>
-                View Table
-              </Button>
-            )}
+            <IconButton onClick={() => onOpenClick()}>
+              <TableIcon />
+            </IconButton>
+
             <IconButton
               color={pinned ? "secondary" : undefined}
               onClick={() =>
@@ -74,7 +74,10 @@ export function OracleListItem(props: OracleListItemProps) {
         ) : undefined
       }
     >
-      <ListItemButton onClick={() => onRollClick()}>
+      <ListItemButton
+        onClick={() => onRollClick()}
+        sx={{ pr: "96px!important" }}
+      >
         <ListItemIcon>
           <D10Icon />
         </ListItemIcon>
