@@ -93,8 +93,8 @@ export function OracleSection() {
             <SearchIcon sx={(theme) => ({ color: theme.palette.grey[300] })} />
           </InputAdornment>
         }
-        aria-label={"Filter Moves"}
-        placeholder={"Filter Moves"}
+        aria-label={"Filter Oracles"}
+        placeholder={"Filter Oracles"}
         value={search}
         onChange={(evt) => setSearch(evt.target.value)}
         color={"secondary"}
