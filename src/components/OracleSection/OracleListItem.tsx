@@ -55,14 +55,16 @@ export function OracleListItem(props: OracleListItemProps) {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       secondaryAction={
-        isHovering || isTouchDevice ? (
-          <>
+        <>
+          {(isHovering || isTouchDevice) && (
             <IconButton onClick={() => onOpenClick()}>
               <TableIcon />
             </IconButton>
+          )}
 
+          {(isHovering || isTouchDevice || pinned) && (
             <IconButton
-              color={pinned ? "secondary" : undefined}
+              color={pinned ? "primary" : "default"}
               onClick={() =>
                 updatePinnedOracle({ oracleName: text, pinned: !pinned })
               }
@@ -70,8 +72,8 @@ export function OracleListItem(props: OracleListItemProps) {
             >
               <PinIcon />
             </IconButton>
-          </>
-        ) : undefined
+          )}
+        </>
       }
     >
       <ListItemButton
