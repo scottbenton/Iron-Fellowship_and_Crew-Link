@@ -1,16 +1,42 @@
 import { Box, Card, Typography, Button } from "@mui/material";
 import { useListenToCampaignCustomMoves } from "api/campaign/settings/moves/listenToCampaignCustomMoves";
+import { useRemoveCampaignCustomMove } from "api/campaign/settings/moves/removeCampaignCustomMove";
+import { useConfirm } from "material-ui-confirm";
+import { Move } from "types/Moves.type";
 
 export interface CampaignCustomMovesProps {
   campaignId: string;
+  isGM: boolean;
 }
 
-const CampaignCustomMovesList = ({ campaignId }: CampaignCustomMovesProps) => {
+const CampaignCustomMovesList = ({
+  campaignId,
+  isGM,
+}: CampaignCustomMovesProps) => {
   const { moves } = useListenToCampaignCustomMoves(campaignId);
+  const { removeCampaignCustomMove } = useRemoveCampaignCustomMove();
+
+  const confirm = useConfirm();
+
+  const handleDeleteMove = (customMove: Move) => {
+    confirm({
+      title: "Delete Move",
+      description: "Are you sure you want to delete this custom move?",
+      confirmationText: "Delete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        removeCampaignCustomMove({ campaignId, customMove });
+      })
+      .catch();
+  };
 
   return (
     <Box>
-      {moves?.map((move, index) => (
+      {moves?.map((customMove, index) => (
         <Card
           variant={"outlined"}
           sx={{
@@ -25,21 +51,28 @@ const CampaignCustomMovesList = ({ campaignId }: CampaignCustomMovesProps) => {
               variant={"h6"}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
-              {move.name}
+              {customMove.name}
             </Typography>
-            <Typography variant={"body1"}>{move.text}</Typography>
+            <Typography variant={"body1"}>{customMove.text}</Typography>
           </Box>
-          <Box
-            display={"flex"}
-            justifyContent={"flex-end"}
-            sx={(theme) => ({
-              backgroundColor: theme.palette.grey[100],
-              color: "white",
-            })}
-          >
-            <Button>Edit</Button>
-            <Button color={"error"}>Delete</Button>
-          </Box>
+          {isGM && (
+            <Box
+              display={"flex"}
+              justifyContent={"flex-end"}
+              sx={(theme) => ({
+                backgroundColor: theme.palette.grey[100],
+                color: "white",
+              })}
+            >
+              <Button>Edit</Button>
+              <Button
+                color={"error"}
+                onClick={() => handleDeleteMove(customMove)}
+              >
+                Delete
+              </Button>
+            </Box>
+          )}
         </Card>
       ))}
     </Box>

@@ -221,9 +221,12 @@ export function CampaignSheetPage() {
         sx={{ mt: 4 }}
         breakContainer
         action={
-          <Button onClick={() => setAddCustomMoveDialogOpen(true)}>
-            Add Custom Move
-          </Button>
+          campaign.gmId &&
+          campaign.gmId === uid && (
+            <Button onClick={() => setAddCustomMoveDialogOpen(true)}>
+              Add Custom Move
+            </Button>
+          )
         }
       />
       <AddCustomMoveDialog
@@ -231,7 +234,10 @@ export function CampaignSheetPage() {
         setClose={() => setAddCustomMoveDialogOpen(false)}
         campaignId={campaignId}
       />
-      <CampaignCustomMovesList campaignId={campaignId} />
+      <CampaignCustomMovesList
+        campaignId={campaignId}
+        isGM={campaign.gmId === uid}
+      />
     </>
   );
 }
