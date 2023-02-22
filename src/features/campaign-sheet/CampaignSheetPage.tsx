@@ -25,6 +25,8 @@ import { AddCharacterDialog } from "./components/AddCharacterDialog";
 import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
 import { useUserDoc } from "api/user/getUserDoc";
 import { CampaignActionsMenu } from "./components/CampaignActionsMenu";
+import { AddCustomMoveDialog } from "./components/AddCustomMoveDialog";
+import CampaignCustomMovesList from "./components/CampaignCustomMovesList";
 
 export function CampaignSheetPage() {
   const { campaignId } = useParams();
@@ -39,6 +41,9 @@ export function CampaignSheetPage() {
   const { removeCharacterFromCampaign } = useRemoveCharacterFromCampaign();
 
   const [addCharacterDialogOpen, setAddCharacterDialogOpen] =
+    useState<boolean>(false);
+
+  const [addCustomMoveDialogOpen, setAddCustomMoveDialogOpen] =
     useState<boolean>(false);
 
   const { updateCampaignSupply } = useUpdateCampaignSupply();
@@ -210,6 +215,23 @@ export function CampaignSheetPage() {
         handleClose={() => setAddCharacterDialogOpen(false)}
         campaignId={campaignId}
       />
+
+      <SectionHeading
+        label={"Custom Moves"}
+        sx={{ mt: 4 }}
+        breakContainer
+        action={
+          <Button onClick={() => setAddCustomMoveDialogOpen(true)}>
+            Add Custom Move
+          </Button>
+        }
+      />
+      <AddCustomMoveDialog
+        open={addCustomMoveDialogOpen}
+        setClose={() => setAddCustomMoveDialogOpen(false)}
+        campaignId={campaignId}
+      />
+      <CampaignCustomMovesList campaignId={campaignId} />
     </>
   );
 }
