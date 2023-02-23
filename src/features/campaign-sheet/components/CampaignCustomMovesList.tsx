@@ -2,7 +2,9 @@ import { Box, Card, Typography, Button } from "@mui/material";
 import { useListenToCampaignCustomMoves } from "api/campaign/settings/moves/listenToCampaignCustomMoves";
 import { useRemoveCampaignCustomMove } from "api/campaign/settings/moves/removeCampaignCustomMove";
 import { useConfirm } from "material-ui-confirm";
+import { useState } from "react";
 import { Move } from "types/Moves.type";
+import { CustomMoveDialog } from "./CustomMoveDialog";
 
 export interface CampaignCustomMovesProps {
   campaignId: string;
@@ -16,7 +18,11 @@ const CampaignCustomMovesList = ({
   const { moves } = useListenToCampaignCustomMoves(campaignId);
   const { removeCampaignCustomMove } = useRemoveCampaignCustomMove();
 
+  const [editCustomMoveDialog, setEditCustomMoveDialog] = useState(false);
+
   const confirm = useConfirm();
+
+  const [currentMove, setCurrentMove] = useState<Move>();
 
   const handleDeleteMove = (customMove: Move) => {
     confirm({
@@ -64,7 +70,15 @@ const CampaignCustomMovesList = ({
                 color: "white",
               })}
             >
-              <Button>Edit</Button>
+              <Button
+                onClick={() => {
+                  setCurrentMove(customMove);
+                  setEditCustomMoveDialog(true);
+                }}
+              >
+                Edit
+              </Button>
+
               <Button
                 color={"error"}
                 onClick={() => handleDeleteMove(customMove)}
@@ -75,6 +89,12 @@ const CampaignCustomMovesList = ({
           )}
         </Card>
       ))}
+      <CustomMoveDialog
+        open={editCustomMoveDialog}
+        setClose={() => setEditCustomMoveDialog(false)}
+        campaignId={campaignId}
+        oldMove={currentMove}
+      />
     </Box>
   );
 };

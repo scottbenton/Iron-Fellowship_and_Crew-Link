@@ -10,17 +10,19 @@ import {
   TextField,
 } from "@mui/material";
 import { useAddCampaignCustomMove } from "api/campaign/settings/moves/addCampaignCustomMove";
-import { useState } from "react";
+import { useRemoveCampaignCustomMove } from "api/campaign/settings/moves/removeCampaignCustomMove";
+import { useEffect, useState } from "react";
 import { Move } from "types/Moves.type";
 
-export interface AddCustomMoveDialogProps {
+export interface CustomMoveDialogProps {
   open: boolean;
   setClose: () => void;
   campaignId: string;
+  oldMove?: Move;
 }
 
-export function AddCustomMoveDialog(props: AddCustomMoveDialogProps) {
-  const { open, setClose, campaignId } = props;
+export function CustomMoveDialog(props: CustomMoveDialogProps) {
+  const { open, setClose, campaignId, oldMove } = props;
 
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,13 +30,17 @@ export function AddCustomMoveDialog(props: AddCustomMoveDialogProps) {
   const [description, setDescription] = useState("");
 
   const { addCampaignCustomMove } = useAddCampaignCustomMove();
+  const { removeCampaignCustomMove } = useRemoveCampaignCustomMove();
 
   const handleClose = () => {
     setClose();
-    setName("");
-    setDescription("");
     setError(undefined);
   };
+
+  useEffect(() => {
+    setName(oldMove?.name || "");
+    setDescription(oldMove?.text || "");
+  }, [oldMove, open]);
 
   const handleSubmit = () => {
     if (!name) {
@@ -51,6 +57,18 @@ export function AddCustomMoveDialog(props: AddCustomMoveDialogProps) {
     };
 
     setLoading(true);
+
+    if (oldMove) {
+      removeCampaignCustomMove({
+        campaignId,
+        customMove: oldMove,
+      })
+        .then(() => handleClose())
+        .catch((e) => {
+          setError("Error removing old custom move");
+        });
+    }
+
     addCampaignCustomMove({
       campaignId,
       customMove,
@@ -59,6 +77,7 @@ export function AddCustomMoveDialog(props: AddCustomMoveDialogProps) {
       .catch((e) => {
         setError("Error adding custom move");
       });
+
     setLoading(false);
   };
 

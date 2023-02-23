@@ -25,7 +25,7 @@ import { AddCharacterDialog } from "./components/AddCharacterDialog";
 import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
 import { useUserDoc } from "api/user/getUserDoc";
 import { CampaignActionsMenu } from "./components/CampaignActionsMenu";
-import { AddCustomMoveDialog } from "./components/AddCustomMoveDialog";
+import { CustomMoveDialog } from "./components/CustomMoveDialog";
 import CampaignCustomMovesList from "./components/CampaignCustomMovesList";
 
 export function CampaignSheetPage() {
@@ -229,7 +229,7 @@ export function CampaignSheetPage() {
           )
         }
       />
-      <AddCustomMoveDialog
+      <CustomMoveDialog
         open={addCustomMoveDialogOpen}
         setClose={() => setAddCustomMoveDialogOpen(false)}
         campaignId={campaignId}
