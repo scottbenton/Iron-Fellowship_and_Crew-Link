@@ -8,6 +8,7 @@ import { MovesSection } from "components/MovesSection";
 import { useCharacterSheetStore } from "../characterSheet.store";
 import { CharacterDocument } from "types/Character.type";
 import { OracleSection } from "components/OracleSection";
+import { NotesSection } from "./NotesSection";
 
 enum TABS {
   MOVES,
@@ -17,6 +18,7 @@ enum TABS {
   JOURNEYS,
   FRAYS,
   CHARACTER,
+  NOTES,
 }
 
 export function TabsSection() {
@@ -63,6 +65,7 @@ export function TabsSection() {
           <Tab label="Vows" value={TABS.VOWS} />
           <Tab label="Combat" value={TABS.FRAYS} />
           <Tab label="Journeys" value={TABS.JOURNEYS} />
+          <Tab label="Notes" value={TABS.NOTES} />
           <Tab label="Character" value={TABS.CHARACTER} />
         </Tabs>
       </Box>
@@ -95,6 +98,7 @@ export function TabsSection() {
             typeLabel={"Journey"}
           />
         )}
+        {selectedTab === TABS.NOTES && <NotesSection />}
         {selectedTab === TABS.CHARACTER && <CharacterSection />}
       </Box>
     </Card>

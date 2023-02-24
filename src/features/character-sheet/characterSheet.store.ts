@@ -1,4 +1,6 @@
+import { Notes } from "components/Notes/Notes";
 import produce from "immer";
+import { Note } from "types/Notes.type";
 import create from "zustand";
 import { momentumTrack } from "../../data/defaultTracks";
 import { StoredAsset } from "../../types/Asset.type";
@@ -70,6 +72,10 @@ export interface CharacterSheetStore {
     frays: TrackWithId[],
     isCampaign?: boolean
   ) => void;
+
+  notes?: Note[];
+  setNotes: (notes: Note[]) => void;
+  temporarilyReorderNotes: (noteId: string, order: number) => void;
 }
 
 const initialState = {
@@ -157,6 +163,31 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
             state[TRACK_TYPES.JOURNEY].character = journeys;
             state[TRACK_TYPES.FRAY].character = frays;
           }
+        })
+      );
+    },
+
+    setNotes: (notes) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          state.notes = notes;
+        })
+      );
+    },
+
+    temporarilyReorderNotes: (noteId: string, order: number) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          if (!state.notes) return;
+
+          const noteIndex = state.notes.findIndex(
+            (note) => note.noteId === noteId
+          );
+
+          if (typeof noteIndex !== "number" || noteIndex < 0) return;
+
+          state.notes[noteIndex].order = order;
+          state.notes.sort((n1, n2) => n1.order - n2.order);
         })
       );
     },

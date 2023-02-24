@@ -21,6 +21,10 @@ import { StatsSection } from "./components/StatsSection";
 import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
 import { InitiativeButtons } from "./components/InitiativeButtons";
+import {
+  useListenToCharacterNotes,
+  useListenToCharacterSheetNotes,
+} from "api/characters/notes/listenToCharacterNotes";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
@@ -36,6 +40,7 @@ export function CharacterSheetPage() {
 
   useListenToCharacterProgressTracks();
   useListenToCampaignProgressTracksCharacterSheet();
+  useListenToCharacterSheetNotes();
 
   useEffect(() => {
     return () => {
