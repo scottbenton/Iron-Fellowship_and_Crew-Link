@@ -1,7 +1,7 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { arrayUnion, setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { getCampaignCustomMoveDoc } from "./_getRef";
+import { getCampaignCustomMovesDoc } from "./_getRef";
 import { Move } from "types/Moves.type";
 
 export const addCampaignCustomMove: ApiFunction<
@@ -20,9 +20,9 @@ export const addCampaignCustomMove: ApiFunction<
     }
 
     setDoc(
-      getCampaignCustomMoveDoc(campaignId),
+      getCampaignCustomMovesDoc(campaignId),
       {
-        moves: arrayUnion(customMove),
+        customMoves: arrayUnion(customMove),
       },
       { merge: true }
     )

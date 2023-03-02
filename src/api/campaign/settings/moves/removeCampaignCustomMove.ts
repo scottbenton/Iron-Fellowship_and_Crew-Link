@@ -1,7 +1,7 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { arrayRemove, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { getCampaignCustomMoveDoc } from "./_getRef";
+import { getCampaignCustomMovesDoc } from "./_getRef";
 import { Move } from "types/Moves.type";
 
 export const removeCampaignCustomMove: ApiFunction<
@@ -19,8 +19,8 @@ export const removeCampaignCustomMove: ApiFunction<
       return;
     }
 
-    updateDoc(getCampaignCustomMoveDoc(campaignId), {
-      moves: arrayRemove(customMove),
+    updateDoc(getCampaignCustomMovesDoc(campaignId), {
+      customMoves: arrayRemove(customMove),
     })
       .then(() => {
         resolve(true);
