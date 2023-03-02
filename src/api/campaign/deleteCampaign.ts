@@ -2,6 +2,7 @@ import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { deleteDoc, deleteField, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCharacterDoc } from "../characters/_getRef";
+import { deleteCampaignNotes } from "./notes/deleteCampaignNotes";
 import { getSharedCampaignTracksDoc } from "./tracks/_getRef";
 import { getCampaignDoc } from "./_getRef";
 
@@ -39,8 +40,13 @@ export const deleteCampaign: ApiFunction<
       const campaignTrackDeletePromise = deleteDoc(
         getSharedCampaignTracksDoc(campaignId)
       );
+      const campaignNotesDeletePromise = deleteCampaignNotes(campaignId);
 
-      await Promise.all([campaignDeletePromise, campaignTrackDeletePromise]);
+      await Promise.all([
+        campaignDeletePromise,
+        campaignTrackDeletePromise,
+        campaignNotesDeletePromise,
+      ]);
       resolve(true);
     } catch {
       reject("Failed to delete campaign");

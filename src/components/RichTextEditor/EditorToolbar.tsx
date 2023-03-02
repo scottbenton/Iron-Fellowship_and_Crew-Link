@@ -8,17 +8,38 @@ import QuoteIcon from "@mui/icons-material/FormatQuote";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import BulletListIcon from "@mui/icons-material/FormatListBulleted";
 import NumberedListIcon from "@mui/icons-material/FormatListNumbered";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useConfirm } from "material-ui-confirm";
 
 export interface EditorToolbarProps {
   editor: Editor;
+  deleteNote?: () => void;
 }
 
 export function EditorToolbar(props: EditorToolbarProps) {
-  const { editor } = props;
+  const { editor, deleteNote } = props;
+  const confirm = useConfirm();
 
   if (!editor) {
     return null;
   }
+
+  const handleDelete = () => {
+    confirm({
+      title: "Delete Note",
+      description:
+        "Are you sure you want to delete this note? This action cannot be undone.",
+      confirmationText: "Delete Note",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        deleteNote && deleteNote();
+      })
+      .catch();
+  };
 
   return (
     <Box
@@ -104,6 +125,18 @@ export function EditorToolbar(props: EditorToolbarProps) {
           </ToggleButton>
         </Tooltip>
       </ToggleButtonGroup>
+      {deleteNote && (
+        <Tooltip title={"Delete Note"} enterDelay={300}>
+          <ToggleButton
+            size={"small"}
+            value={"deleteNote"}
+            onClick={() => handleDelete()}
+            sx={{ mt: 0.5 }}
+          >
+            <DeleteIcon />
+          </ToggleButton>
+        </Tooltip>
+      )}
     </Box>
   );
 }

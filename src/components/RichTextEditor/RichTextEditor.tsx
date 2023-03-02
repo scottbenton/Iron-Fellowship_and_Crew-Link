@@ -25,10 +25,11 @@ export interface RichTextEditorProps {
     content: string;
     isBeaconRequest?: boolean;
   }) => Promise<boolean>;
+  onDelete?: (id: string) => void;
 }
 
 export function RichTextEditor(props: RichTextEditorProps) {
-  const { id, content, onSave } = props;
+  const { id, content, onSave, onDelete } = props;
   const { title, body } = content;
 
   const hasEditedRef = useRef<boolean>(false);
@@ -132,7 +133,12 @@ export function RichTextEditor(props: RichTextEditorProps) {
 
   return (
     <Box height={"100%"} display={"flex"} flexDirection={"column"}>
-      {editor && onSave && <EditorToolbar editor={editor} />}
+      {editor && onSave && (
+        <EditorToolbar
+          editor={editor}
+          deleteNote={onDelete ? () => id && onDelete(id) : undefined}
+        />
+      )}
       <Box position={"relative"}>
         <Fade in={saving}>
           <Box

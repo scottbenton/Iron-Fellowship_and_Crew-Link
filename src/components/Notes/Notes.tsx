@@ -24,6 +24,7 @@ export interface NotesProps {
     content: string;
     isBeaconRequest?: boolean;
   }) => Promise<boolean>;
+  onDelete?: (noteId: string) => void;
   condensedView?: boolean;
 }
 
@@ -36,6 +37,7 @@ export function Notes(props: NotesProps) {
     createNote,
     updateNoteOrder,
     onSave,
+    onDelete,
     condensedView,
   } = props;
 
@@ -100,6 +102,7 @@ export function Notes(props: NotesProps) {
                         })
                     : undefined
                 }
+                onDelete={onDelete}
               />
             )}
         </Box>

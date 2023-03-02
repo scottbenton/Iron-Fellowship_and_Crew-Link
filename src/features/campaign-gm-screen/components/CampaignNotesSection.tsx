@@ -2,6 +2,7 @@ import { Box, LinearProgress, useMediaQuery, useTheme } from "@mui/material";
 import { useAddCampaignNote } from "api/campaign/notes/addCampaignNote";
 import { useListenToCampaignNoteContent } from "api/campaign/notes/listenToCampaignNoteContent";
 import { useListenToCampaignNotes } from "api/campaign/notes/listenToCampaignNotes";
+import { useRemoveCampaignNote } from "api/campaign/notes/removeCampaignNote";
 import { useUpdateCampaignNote } from "api/campaign/notes/updateCampaignNote";
 import { useUpdateCampaignNoteOrder } from "api/campaign/notes/updateCampaignNoteOrder";
 import { Notes } from "components/Notes/Notes";
@@ -28,6 +29,7 @@ export function CampaignNotesSection(props: CampaignNotesSectionProps) {
   const { addCampaignNote } = useAddCampaignNote();
   const { updateCampaignNote } = useUpdateCampaignNote();
   const { updateCampaignNoteOrder } = useUpdateCampaignNoteOrder();
+  const { removeCampaignNote } = useRemoveCampaignNote();
 
   useEffect(() => {
     if (Array.isArray(notes) && notes.length > 0 && !openNoteId && !isMobile) {
@@ -62,6 +64,13 @@ export function CampaignNotesSection(props: CampaignNotesSectionProps) {
         }
         updateNoteOrder={handleNoteReorder}
         onSave={(params) => updateCampaignNote({ campaignId, ...params })}
+        onDelete={(noteId) =>
+          removeCampaignNote({ campaignId, noteId })
+            .then(() => {
+              setNoteId(undefined);
+            })
+            .catch()
+        }
         condensedView={isMobile}
       />
     </Box>

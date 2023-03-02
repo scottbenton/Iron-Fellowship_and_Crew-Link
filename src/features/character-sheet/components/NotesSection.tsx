@@ -1,6 +1,10 @@
 import { Box, LinearProgress, useMediaQuery, useTheme } from "@mui/material";
 import { useCharacterSheetAddCharacterNote } from "api/characters/notes/addCharacterNote";
 import { useListenToCharacterSheetNoteContent } from "api/characters/notes/listenToCharacterNoteContent";
+import {
+  useCharacterSheetRemoveCharacterNote,
+  useRemoveCharacterNote,
+} from "api/characters/notes/removeCharacterNote";
 import { useCharacterSheetUpdateCharacterNote } from "api/characters/notes/updateCharacterNote";
 import { useCharacterSheetUpdateCharacterNoteOrder } from "api/characters/notes/updateCharacterNoteOrder";
 import { Notes } from "components/Notes/Notes";
@@ -25,6 +29,7 @@ export function NotesSection() {
   const { updateCharacterNote } = useCharacterSheetUpdateCharacterNote();
   const { updateCharacterNoteOrder } =
     useCharacterSheetUpdateCharacterNoteOrder();
+  const { removeCharacterNote } = useCharacterSheetRemoveCharacterNote();
 
   useEffect(() => {
     if (Array.isArray(notes) && notes.length > 0 && !openNoteId && !isMobile) {
@@ -54,6 +59,13 @@ export function NotesSection() {
         updateNoteOrder={handleNoteReorder}
         onSave={updateCharacterNote}
         condensedView={isMobile}
+        onDelete={(noteId) =>
+          removeCharacterNote({ noteId })
+            .then(() => {
+              setNoteId(undefined);
+            })
+            .catch()
+        }
       />
     </Box>
   );
