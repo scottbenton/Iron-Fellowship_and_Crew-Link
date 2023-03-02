@@ -26,7 +26,7 @@ export function listenToOracleSettings(
       }
     },
     (error) => {
-      console.debug(error);
+      console.error(error);
       onError(error);
     }
   );

@@ -20,9 +20,12 @@ import { STATS } from "../../../types/stats.enum";
 import { useCharacterSheetStore } from "../characterSheet.store";
 import { ExperienceTrack } from "./ExperienceTrack";
 import { StatComponent } from "../../../components/StatComponent";
+import { useCharacterSheetUpdateShareNotesWithGMSetting } from "api/characters/updateShareNotesWithGMSetting";
 
 export function CharacterSection() {
   const { error } = useSnackbar();
+
+  const campaignId = useCharacterSheetStore((store) => store.campaignId);
 
   const bondValue = useCharacterSheetStore(
     (store) => store.character?.bonds ?? 0
@@ -47,6 +50,12 @@ export function CharacterSection() {
   const handleDebilityChange = (debility: DEBILITIES, checked: boolean) => {
     updateDebility({ debility, active: checked });
   };
+
+  const sharingNotes = useCharacterSheetStore(
+    (store) => store.character?.shareNotesWithGM
+  );
+  const { updateShareNotesWithGMSetting } =
+    useCharacterSheetUpdateShareNotesWithGMSetting();
 
   return (
     <Stack spacing={2}>
@@ -250,6 +259,22 @@ export function CharacterSection() {
                 handleStatChange(STATS.WITS, newValue),
             }}
             sx={{ mr: 2, mb: 2 }}
+          />
+        </Box>
+      )}
+      {campaignId && (
+        <Box pb={2} px={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={sharingNotes ?? false}
+                onChange={(evt, checked) =>
+                  updateShareNotesWithGMSetting(checked).catch()
+                }
+                name="Share Notes with GM"
+              />
+            }
+            label="Share notes with your GM?"
           />
         </Box>
       )}
