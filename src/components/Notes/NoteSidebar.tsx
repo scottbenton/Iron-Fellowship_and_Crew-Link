@@ -14,11 +14,18 @@ export interface NoteSidebarProps {
   openNote: (noteId: string) => void;
   createNote: () => Promise<boolean>;
   updateNoteOrder: (noteId: string, order: number) => Promise<boolean>;
+  isMobile: boolean;
 }
 
 export function NoteSidebar(props: NoteSidebarProps) {
-  const { notes, selectedNoteId, openNote, createNote, updateNoteOrder } =
-    props;
+  const {
+    notes,
+    selectedNoteId,
+    openNote,
+    createNote,
+    updateNoteOrder,
+    isMobile,
+  } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -73,8 +80,8 @@ export function NoteSidebar(props: NoteSidebarProps) {
       sx={(theme) => ({
         bgcolor: theme.palette.grey[100],
       })}
-      width={"33%"}
-      maxWidth={"250px"}
+      width={isMobile ? "100%" : "33%"}
+      maxWidth={isMobile ? undefined : "250px"}
       display={"flex"}
       flexDirection={"column"}
       justifyContent={"space-between"}

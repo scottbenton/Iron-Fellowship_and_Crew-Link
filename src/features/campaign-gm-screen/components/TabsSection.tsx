@@ -56,8 +56,8 @@ export function TabsSection(props: TabsSectionProps) {
       </Box>
       <Box
         flexGrow={1}
-        overflow={"auto"}
         sx={(theme) => ({
+          overflowY: "auto",
           backgroundColor: darkBGTabs.includes(selectedTab)
             ? theme.palette.background.default
             : "",

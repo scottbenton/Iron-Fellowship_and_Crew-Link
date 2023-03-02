@@ -1,8 +1,10 @@
-import { Box, LinearProgress, selectClasses } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import { useCharacterSheetAddCharacterNote } from "api/characters/notes/addCharacterNote";
+import { useListenToCharacterSheetNoteContent } from "api/characters/notes/listenToCharacterNoteContent";
+import { useCharacterSheetUpdateCharacterNote } from "api/characters/notes/updateCharacterNote";
 import { useCharacterSheetUpdateCharacterNoteOrder } from "api/characters/notes/updateCharacterNoteOrder";
 import { Notes } from "components/Notes/Notes";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCharacterSheetStore } from "../characterSheet.store";
 
 export function NotesSection() {
@@ -11,22 +13,23 @@ export function NotesSection() {
     (store) => store.temporarilyReorderNotes
   );
 
-  const [openNoteId, setOpenNoteId] = useState<string>();
-
+  const {
+    noteContent,
+    noteId: openNoteId,
+    setNoteId,
+  } = useListenToCharacterSheetNoteContent();
   const { addCharacterNote } = useCharacterSheetAddCharacterNote();
+  const { updateCharacterNote } = useCharacterSheetUpdateCharacterNote();
   const { updateCharacterNoteOrder } =
     useCharacterSheetUpdateCharacterNoteOrder();
 
   useEffect(() => {
     if (Array.isArray(notes) && notes.length > 0) {
-      setOpenNoteId((prevNoteId) => {
-        if (prevNoteId) return prevNoteId;
-        return notes[notes.length - 1].noteId;
-      });
+      setNoteId(notes[notes.length - 1].noteId);
     } else {
-      setOpenNoteId(undefined);
+      setNoteId(undefined);
     }
-  }, [notes]);
+  }, [notes, setNoteId]);
 
   if (!Array.isArray(notes)) {
     return <LinearProgress />;
@@ -42,9 +45,11 @@ export function NotesSection() {
       <Notes
         notes={notes}
         selectedNoteId={openNoteId}
-        openNote={(noteId) => setOpenNoteId(noteId)}
+        selectedNoteContent={noteContent}
+        openNote={(noteId) => setNoteId(noteId)}
         createNote={addCharacterNote}
         updateNoteOrder={handleNoteReorder}
+        onSave={updateCharacterNote}
       />
     </Box>
   );

@@ -1,5 +1,5 @@
 import { onSnapshot, Unsubscribe } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
@@ -16,7 +16,7 @@ export function listenToNoteContent(
   return onSnapshot(
     getCharacterNoteContentDocument(uid, characterId, noteId),
     (snapshot) => {
-      onContent(snapshot.data()?.content);
+      onContent(snapshot.data()?.content ?? "");
     },
     (error) => onError(error)
   );
@@ -25,9 +25,9 @@ export function listenToNoteContent(
 export function useListenToCharacterNoteContent(
   uid?: string,
   characterId?: string,
-  noteId?: string,
   setNoteContentExt?: (notes?: string) => void
 ) {
+  const [noteId, setNoteId] = useState<string>();
   const [noteContent, setNoteContent] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -35,7 +35,7 @@ export function useListenToCharacterNoteContent(
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
-
+    setLoading(true);
     if (uid && characterId && noteId) {
       listenToNoteContent(
         uid,
@@ -64,18 +64,30 @@ export function useListenToCharacterNoteContent(
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [uid, characterId]);
+  }, [uid, characterId, noteId]);
+
+  const handleNoteId = useCallback((newId?: string) => {
+    setNoteId((prevId) => {
+      if (newId !== prevId) {
+        setNoteContent(undefined);
+        setLoading(true);
+      }
+      return newId;
+    });
+  }, []);
 
   return {
     noteContent,
     loading,
+    noteId,
+    setNoteId: handleNoteId,
   };
 }
 
 // Connects to the character sheet store
-export function useListenToCharacterSheetNoteContent(noteId?: string) {
+export function useListenToCharacterSheetNoteContent() {
   const uid = useAuth().user?.uid;
   const campaignId = useCharacterSheetStore((store) => store.characterId);
 
-  return useListenToCharacterNoteContent(uid, campaignId, noteId);
+  return useListenToCharacterNoteContent(uid, campaignId);
 }
