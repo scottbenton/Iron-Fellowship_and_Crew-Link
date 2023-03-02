@@ -16,14 +16,15 @@ export interface NotesProps {
   selectedNoteId?: string;
   selectedNoteContent?: string;
   openNote: (noteId?: string) => void;
-  createNote: () => Promise<boolean>;
-  updateNoteOrder: (noteId: string, order: number) => Promise<boolean>;
+  createNote?: () => Promise<boolean>;
+  updateNoteOrder?: (noteId: string, order: number) => Promise<boolean>;
   onSave?: (params: {
     noteId: string;
     title: string;
     content: string;
     isBeaconRequest?: boolean;
   }) => Promise<boolean>;
+  condensedView?: boolean;
 }
 
 export function Notes(props: NotesProps) {
@@ -35,10 +36,9 @@ export function Notes(props: NotesProps) {
     createNote,
     updateNoteOrder,
     onSave,
+    condensedView,
   } = props;
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const selectedNote = notes.find((note) => note.noteId === selectedNoteId);
 
   return (
@@ -46,24 +46,23 @@ export function Notes(props: NotesProps) {
       height={"100%"}
       display={"flex"}
       width={"100%"}
-      minHeight={isMobile ? "90vh" : undefined}
+      minHeight={condensedView ? "90vh" : undefined}
     >
-      {(!isMobile || !selectedNoteId) && (
+      {(!condensedView || !selectedNoteId) && (
         <NoteSidebar
           notes={notes}
           selectedNoteId={selectedNoteId}
           openNote={openNote}
           createNote={createNote}
           updateNoteOrder={updateNoteOrder}
-          isMobile={isMobile}
+          isMobile={condensedView ?? false}
         />
       )}
-      {(!isMobile || selectedNoteId) && (
+      {(!condensedView || selectedNoteId) && (
         <Box flexGrow={1} flexShrink={0} width={0}>
-          {isMobile && selectedNote && (
+          {condensedView && selectedNote && (
             <Breadcrumbs aria-label="breadcrumb" sx={{ px: 2, py: 1 }}>
               <Link
-                component={"button"}
                 underline="hover"
                 color="inherit"
                 onClick={() => openNote()}

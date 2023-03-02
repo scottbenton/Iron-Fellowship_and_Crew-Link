@@ -29,6 +29,7 @@ export interface CharacterDocument {
     [key in DEBILITIES]?: boolean;
   };
   initiativeStatus?: INITIATIVE_STATUS;
+  shareNotesWithGM?: boolean;
 }
 
 export interface AssetDocument {

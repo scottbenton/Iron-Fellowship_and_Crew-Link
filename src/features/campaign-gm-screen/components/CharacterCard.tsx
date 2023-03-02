@@ -25,6 +25,7 @@ import { STATS } from "types/stats.enum";
 import { useGetUserDoc, useUserDoc } from "api/user/getUserDoc";
 import { InitiativeStatusChip } from "components/InitiativeStatusChip";
 import { useUpdateCharacterInitiative } from "api/characters/updateCharacterInitiative";
+import { CharacterNotesComponent } from "./CharacterNotesComponent";
 
 export interface CharacterCardProps {
   uid: string;
@@ -145,6 +146,23 @@ export function CharacterCard(props: CharacterCardProps) {
                 />
               ))}
             </Stack>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            Notes
+          </AccordionSummary>
+          <AccordionDetails>
+            {character.shareNotesWithGM ? (
+              <CharacterNotesComponent uid={uid} characterId={characterId} />
+            ) : (
+              <Typography>
+                {user?.displayName ?? "User"} has not opted-in to sharing their
+                character notes with you. They can change this under the
+                character tab on their character sheet.
+              </Typography>
+            )}
           </AccordionDetails>
         </Accordion>
       </Box>

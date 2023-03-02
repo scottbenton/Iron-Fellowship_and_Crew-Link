@@ -12,8 +12,8 @@ export interface NoteSidebarProps {
   notes: Note[];
   selectedNoteId?: string;
   openNote: (noteId: string) => void;
-  createNote: () => Promise<boolean>;
-  updateNoteOrder: (noteId: string, order: number) => Promise<boolean>;
+  createNote?: () => Promise<boolean>;
+  updateNoteOrder?: (noteId: string, order: number) => Promise<boolean>;
   isMobile: boolean;
 }
 
@@ -31,11 +31,12 @@ export function NoteSidebar(props: NoteSidebarProps) {
 
   const handleCreateNote = () => {
     setLoading(true);
-    createNote()
-      .catch()
-      .finally(() => {
-        setLoading(false);
-      });
+    createNote &&
+      createNote()
+        .catch()
+        .finally(() => {
+          setLoading(false);
+        });
   };
 
   const handleDragEnd: OnDragEndResponder = (evt) => {
@@ -72,7 +73,7 @@ export function NoteSidebar(props: NoteSidebarProps) {
       order = noteAfter.order - 1;
     }
 
-    updateNoteOrder(noteId, order).catch(() => {});
+    updateNoteOrder && updateNoteOrder(noteId, order).catch(() => {});
   };
 
   return (
@@ -95,6 +96,7 @@ export function NoteSidebar(props: NoteSidebarProps) {
                   key={note.noteId}
                   draggableId={note.noteId}
                   index={index}
+                  isDragDisabled={!updateNoteOrder}
                 >
                   {(provided, snapshot) => (
                     <ListItemButton
@@ -117,9 +119,11 @@ export function NoteSidebar(props: NoteSidebarProps) {
           )}
         </StrictModeDroppable>
       </DragDropContext>
-      <Button onClick={() => handleCreateNote()} disabled={loading}>
-        Add Note
-      </Button>
+      {createNote && (
+        <Button onClick={() => handleCreateNote()} disabled={loading}>
+          Add Note
+        </Button>
+      )}
     </Box>
   );
 }

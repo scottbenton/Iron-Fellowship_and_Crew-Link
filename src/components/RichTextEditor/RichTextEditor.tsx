@@ -30,7 +30,6 @@ export interface RichTextEditorProps {
 export function RichTextEditor(props: RichTextEditorProps) {
   const { id, content, onSave } = props;
   const { title, body } = content;
-  const readOnly = !onSave;
 
   const hasEditedRef = useRef<boolean>(false);
 
@@ -60,6 +59,7 @@ export function RichTextEditor(props: RichTextEditorProps) {
     onUpdate: () => {
       hasEditedRef.current = true;
     },
+    editable: !!onSave,
   });
 
   const editorRef = useRef<Editor | null>(null);
@@ -132,7 +132,7 @@ export function RichTextEditor(props: RichTextEditorProps) {
 
   return (
     <Box height={"100%"} display={"flex"} flexDirection={"column"}>
-      {editor && !readOnly && <EditorToolbar editor={editor} />}
+      {editor && onSave && <EditorToolbar editor={editor} />}
       <Box position={"relative"}>
         <Fade in={saving}>
           <Box
@@ -194,7 +194,7 @@ export function RichTextEditor(props: RichTextEditorProps) {
           },
         })}
       >
-        <EditorContent editor={editor} readOnly={readOnly} />
+        <EditorContent editor={editor} />
       </Box>
     </Box>
   );

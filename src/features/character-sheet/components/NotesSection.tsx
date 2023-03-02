@@ -1,4 +1,4 @@
-import { Box, LinearProgress } from "@mui/material";
+import { Box, LinearProgress, useMediaQuery, useTheme } from "@mui/material";
 import { useCharacterSheetAddCharacterNote } from "api/characters/notes/addCharacterNote";
 import { useListenToCharacterSheetNoteContent } from "api/characters/notes/listenToCharacterNoteContent";
 import { useCharacterSheetUpdateCharacterNote } from "api/characters/notes/updateCharacterNote";
@@ -8,6 +8,9 @@ import { useEffect } from "react";
 import { useCharacterSheetStore } from "../characterSheet.store";
 
 export function NotesSection() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const notes = useCharacterSheetStore((store) => store.notes);
   const temporarilyReorderNotes = useCharacterSheetStore(
     (store) => store.temporarilyReorderNotes
@@ -50,6 +53,7 @@ export function NotesSection() {
         createNote={addCharacterNote}
         updateNoteOrder={handleNoteReorder}
         onSave={updateCharacterNote}
+        condensedView={isMobile}
       />
     </Box>
   );
