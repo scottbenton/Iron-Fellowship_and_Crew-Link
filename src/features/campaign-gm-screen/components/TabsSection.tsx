@@ -7,12 +7,14 @@ import { CharacterSection } from "./CharacterSection";
 import { CampaignProgressTracks } from "features/campaign-sheet/components/CampaignProgressTracks";
 import { TracksSection } from "./TracksSection";
 import { OracleSection } from "components/OracleSection";
+import { CampaignNotesSection } from "./CampaignNotesSection";
 
 enum TABS {
   MOVES,
   CHARACTERS,
   TRACKS,
   ORACLE,
+  NOTES,
 }
 
 export interface TabsSectionProps {
@@ -52,6 +54,7 @@ export function TabsSection(props: TabsSectionProps) {
           <Tab label="Characters" value={TABS.CHARACTERS} />
           <Tab label="Tracks" value={TABS.TRACKS} />
           <Tab label="Oracle" value={TABS.ORACLE} />
+          <Tab label="Notes" value={TABS.NOTES} />
         </Tabs>
       </Box>
       <Box
@@ -71,6 +74,9 @@ export function TabsSection(props: TabsSectionProps) {
           <TracksSection campaignId={campaignId} supply={campaign.supply} />
         )}
         {selectedTab === TABS.ORACLE && <OracleSection />}
+        {selectedTab === TABS.NOTES && (
+          <CampaignNotesSection campaignId={campaignId} />
+        )}
       </Box>
     </Card>
   );

@@ -1,22 +1,19 @@
-import { CharacterNotFoundException } from "api/error/CharacterNotFoundException";
-import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { setDoc, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
 import {
-  constructCharacterNoteContentPath,
-  constructCharacterNoteDocPath,
-  getCharacterNoteContentDocument,
-  getCharacterNoteDocument,
+  constructCampaignNoteContentPath,
+  constructCampaignNoteDocPath,
+  getCampaignNoteContentDocument,
+  getCampaignNoteDocument,
 } from "./_getRef";
 import { NoteNotFoundException } from "api/error/NoteException";
 import { firebaseAuth } from "config/firebase.config";
 
-export const updateCharacterNote: ApiFunction<
+export const updateCampaignNote: ApiFunction<
   {
-    uid?: string;
-    characterId?: string;
+    campaignId?: string;
     noteId?: string;
     title: string;
     content: string;
@@ -24,16 +21,11 @@ export const updateCharacterNote: ApiFunction<
   },
   boolean
 > = function (params) {
-  const { uid, characterId, noteId, title, content, isBeaconRequest } = params;
+  const { campaignId, noteId, title, content, isBeaconRequest } = params;
 
   return new Promise((resolve, reject) => {
-    if (!uid) {
-      reject(new UserNotLoggedInException());
-      return;
-    }
-
-    if (!characterId) {
-      reject(new CharacterNotFoundException());
+    if (!campaignId) {
+      reject(new CampaignNotFoundException());
       return;
     }
 
@@ -46,16 +38,14 @@ export const updateCharacterNote: ApiFunction<
     if (isBeaconRequest) {
       const contentPath = `projects/${
         import.meta.env.VITE_FIREBASE_PROJECTID
-      }/databases/(default)/documents${constructCharacterNoteContentPath(
-        uid,
-        characterId,
+      }/databases/(default)/documents${constructCampaignNoteContentPath(
+        campaignId,
         noteId
       )}`;
       const titlePath = `projects/${
         import.meta.env.VITE_FIREBASE_PROJECTID
-      }/databases/(default)/documents${constructCharacterNoteDocPath(
-        uid,
-        characterId,
+      }/databases/(default)/documents${constructCampaignNoteDocPath(
+        campaignId,
         noteId
       )}`;
 
@@ -103,14 +93,14 @@ export const updateCharacterNote: ApiFunction<
       resolve(true);
     } else {
       const updateTitlePromise = updateDoc(
-        getCharacterNoteDocument(uid, characterId, noteId),
+        getCampaignNoteDocument(campaignId, noteId),
         {
           title,
         }
       );
 
       const updateContentPromise = setDoc(
-        getCharacterNoteContentDocument(uid, characterId, noteId),
+        getCampaignNoteContentDocument(campaignId, noteId),
         {
           content,
         }
@@ -128,28 +118,11 @@ export const updateCharacterNote: ApiFunction<
   });
 };
 
-export function useUpdateCharacterNote() {
-  const { call, loading, error } = useApiState(updateCharacterNote);
+export function useUpdateCampaignNote() {
+  const { call, loading, error } = useApiState(updateCampaignNote);
 
   return {
-    updateCharacterNote: call,
-    loading,
-    error,
-  };
-}
-
-export function useCharacterSheetUpdateCharacterNote() {
-  const uid = useAuth().user?.uid;
-  const characterId = useCharacterSheetStore((store) => store.characterId);
-
-  const { updateCharacterNote, loading, error } = useUpdateCharacterNote();
-
-  return {
-    updateCharacterNote: (params: {
-      noteId: string;
-      title: string;
-      content: string;
-    }) => updateCharacterNote({ ...params, uid, characterId }),
+    updateCampaignNote: call,
     loading,
     error,
   };

@@ -27,12 +27,12 @@ export function NotesSection() {
     useCharacterSheetUpdateCharacterNoteOrder();
 
   useEffect(() => {
-    if (Array.isArray(notes) && notes.length > 0) {
+    if (Array.isArray(notes) && notes.length > 0 && !openNoteId && !isMobile) {
       setNoteId(notes[notes.length - 1].noteId);
-    } else {
+    } else if (!Array.isArray(notes) || notes.length === 0) {
       setNoteId(undefined);
     }
-  }, [notes, setNoteId]);
+  }, [notes, setNoteId, openNoteId, isMobile]);
 
   if (!Array.isArray(notes)) {
     return <LinearProgress />;
