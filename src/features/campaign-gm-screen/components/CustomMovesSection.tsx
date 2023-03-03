@@ -4,6 +4,7 @@ import { useRemoveCampaignCustomMove } from "api/campaign/settings/moves/removeC
 import { SectionHeading } from "components/SectionHeading";
 import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
+import { useSettingsStore } from "stores/settings.store";
 import { Move } from "types/Moves.type";
 import { CustomMoveDialog } from "./CustomMoveDialog";
 
@@ -12,7 +13,11 @@ export interface CampaignCustomMovesProps {
 }
 
 const CampaignCustomMovesList = ({ campaignId }: CampaignCustomMovesProps) => {
-  const { moves } = useListenToCampaignCustomMoves(campaignId);
+  useListenToCampaignCustomMoves(campaignId);
+  const settings = useSettingsStore((store) => {
+    return store.campaigns[campaignId];
+  });
+
   const { removeCampaignCustomMove } = useRemoveCampaignCustomMove();
 
   const [addCustomMoveDialogOpen, setAddCustomMoveDialogOpen] =
@@ -54,8 +59,9 @@ const CampaignCustomMovesList = ({ campaignId }: CampaignCustomMovesProps) => {
         setClose={() => setAddCustomMoveDialogOpen(false)}
         campaignId={campaignId}
       />
+
       <Box>
-        {moves?.map((customMove, index) => (
+        {settings?.customMoves?.map((customMove, index) => (
           <Card
             variant={"outlined"}
             sx={{
@@ -101,13 +107,14 @@ const CampaignCustomMovesList = ({ campaignId }: CampaignCustomMovesProps) => {
             </Box>
           </Card>
         ))}
-        <CustomMoveDialog
-          open={editCustomMoveDialog}
-          setClose={() => setEditCustomMoveDialog(false)}
-          campaignId={campaignId}
-          oldMove={currentMove}
-        />
       </Box>
+
+      <CustomMoveDialog
+        open={editCustomMoveDialog}
+        setClose={() => setEditCustomMoveDialog(false)}
+        campaignId={campaignId}
+        oldMove={currentMove}
+      />
     </Box>
   );
 };

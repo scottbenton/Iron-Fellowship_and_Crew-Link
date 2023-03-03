@@ -1,28 +1,34 @@
-import { onSnapshot, Unsubscribe } from "firebase/firestore";
+import { onSnapshot, query, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useSnackbar } from "hooks/useSnackbar";
-import { useEffect, useState } from "react";
-import { Move } from "types/Moves.type";
-import { getCampaignCustomMoveDoc } from "./_getRef";
+import { useEffect } from "react";
+import { useSettingsStore } from "stores/settings.store";
+import { Settings } from "types/Settings.type";
+import { getCampaignCustomMovesDoc } from "./_getRef";
 
 export function listenToCampaignCustomMoves(
   campaignId: string,
-  onMoves: (moves: Move[]) => void,
+  dataHandler: {
+    onDocChange: (id: string, data: Settings) => void;
+    onLoaded: () => void;
+  },
   onError: (error: any) => void
 ) {
   return onSnapshot(
-    getCampaignCustomMoveDoc(campaignId),
+    getCampaignCustomMovesDoc(campaignId),
     (snapshot) => {
-      const data = snapshot.data();
-
-      onMoves(data?.moves);
+      if (snapshot.exists()) {
+        dataHandler.onDocChange(campaignId, snapshot.data());
+      }
+      dataHandler.onLoaded();
     },
     (error) => onError(error)
   );
 }
 
 export function useListenToCampaignCustomMoves(campaignId: string) {
-  const [moves, setMoves] = useState<Move[]>();
+  const setSettings = useSettingsStore((state) => state.setSettings);
+  const setLoading = useSettingsStore((state) => state.setLoading);
 
   const { error } = useSnackbar();
 
@@ -31,12 +37,15 @@ export function useListenToCampaignCustomMoves(campaignId: string) {
 
     listenToCampaignCustomMoves(
       campaignId,
-      (newMoves) => setMoves(newMoves),
+      {
+        onDocChange: (id, doc) => setSettings(id, doc),
+        onLoaded: () => setLoading(false),
+      },
       (err) => {
         console.error(err);
         const errorMessage = getErrorMessage(
           error,
-          "Failed to retrieve campaign custom moves"
+          "Failed to retrieve campaign settings"
         );
         error(errorMessage);
       }
@@ -46,6 +55,4 @@ export function useListenToCampaignCustomMoves(campaignId: string) {
       unsubscribe && unsubscribe();
     };
   }, [campaignId]);
-
-  return { moves };
 }

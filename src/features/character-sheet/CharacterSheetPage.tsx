@@ -148,7 +148,7 @@ export function CharacterSheetPage() {
               },
             })}
           >
-            <MovesSection stats={stats} />
+            <MovesSection stats={stats} campaignId={character.campaignId} />
           </Grid>
         </Hidden>
         <Grid

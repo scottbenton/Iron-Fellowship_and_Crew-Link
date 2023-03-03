@@ -1,4 +1,5 @@
 import { Card, Grid, Hidden, LinearProgress } from "@mui/material";
+import { useListenToCampaignCustomMoves } from "api/campaign/settings/moves/listenToCampaignCustomMoves";
 import { MovesSection } from "components/MovesSection/MovesSection";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
@@ -11,6 +12,8 @@ import { TabsSection } from "./components/TabsSection";
 export function CampaignGMScreenPage() {
   const { campaignId } = useParams();
   const uid = useAuth().user?.uid;
+
+  campaignId && useListenToCampaignCustomMoves(campaignId);
 
   const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCampaignStore((store) => store.loading);
@@ -79,7 +82,7 @@ export function CampaignGMScreenPage() {
               },
             })}
           >
-            <MovesSection />
+            <MovesSection campaignId={campaignId} />
           </Grid>
         </Hidden>
         <Grid
