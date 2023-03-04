@@ -47,7 +47,7 @@ export function StatsSection() {
           sx={{ mt: 1, mr: 4 }}
         />
       </Box>
-      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} p={0.5}>
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} pl={0.5}>
         <StatComponent label={"Health"} value={health} sx={{ mt: 1, mr: 1 }} />
         <StatComponent label={"Spirit"} value={spirit} sx={{ mt: 1, mr: 1 }} />
         <StatComponent label={"Supply"} value={supply} sx={{ mt: 1 }} />

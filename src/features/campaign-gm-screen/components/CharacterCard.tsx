@@ -10,11 +10,7 @@ import {
 } from "@mui/material";
 import { StatComponent } from "components/StatComponent";
 import { getHueFromString } from "functions/getHueFromString";
-import {
-  CharacterDocument,
-  INITIATIVE_STATUS,
-  StatsMap,
-} from "types/Character.type";
+import { CharacterDocument, INITIATIVE_STATUS } from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useListenToAssets } from "api/characters/assets/listenToAssets";
 import { useState } from "react";
@@ -26,11 +22,13 @@ import { useGetUserDoc, useUserDoc } from "api/user/getUserDoc";
 import { InitiativeStatusChip } from "components/InitiativeStatusChip";
 import { useUpdateCharacterInitiative } from "api/characters/updateCharacterInitiative";
 import { CharacterNotesComponent } from "./CharacterNotesComponent";
+import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
+import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 
 export interface CharacterCardProps {
   uid: string;
   characterId: string;
-  character: CharacterDocument;
+  character: CharacterDocumentWithPortraitUrl;
 }
 
 export function CharacterCard(props: CharacterCardProps) {
@@ -50,14 +48,14 @@ export function CharacterCard(props: CharacterCardProps) {
     <Card variant={"outlined"}>
       <Box>
         <Box display={"flex"} alignItems={"center"} px={2} pt={2} pb={1}>
-          <Avatar
-            sx={{
-              backgroundColor: `hsl(${hue}, 60%, 85%)`,
-              color: `hsl(${hue}, 80%, 20%)`,
-            }}
-          >
-            {character.name[0]}
-          </Avatar>
+          <PortraitAvatar
+            id={characterId}
+            name={character.name}
+            portraitUrl={character.portraitUrl}
+            portraitSettings={character.profileImage}
+            colorful
+            size={"medium"}
+          />
           <Box display={"flex"} flexDirection={"column"} ml={2}>
             <Typography
               variant={"h6"}
