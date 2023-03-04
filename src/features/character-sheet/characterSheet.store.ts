@@ -1,7 +1,9 @@
 import { Notes } from "components/Notes/Notes";
 import produce from "immer";
+import { getImageUrl } from "lib/storage.lib";
+import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { Note } from "types/Notes.type";
-import create from "zustand";
+import { create } from "zustand";
 import { momentumTrack } from "../../data/defaultTracks";
 import { StoredAsset } from "../../types/Asset.type";
 import { StoredCampaign } from "../../types/Campaign.type";
@@ -38,7 +40,7 @@ export const convertTrackMapToArray = (trackMap: {
 export interface CharacterSheetStore {
   resetState: () => void;
   characterId?: string;
-  character?: CharacterDocument;
+  character?: CharacterDocumentWithPortraitUrl;
 
   campaignId?: string;
   campaign?: StoredCampaign;
@@ -48,7 +50,12 @@ export interface CharacterSheetStore {
   momentumResetValue?: number;
   maxMomentum?: number;
 
-  setCharacter: (characterId?: string, character?: CharacterDocument) => void;
+  portraitUrl?: string;
+
+  setCharacter: (
+    characterId?: string,
+    character?: CharacterDocumentWithPortraitUrl
+  ) => void;
   setCampaign: (campaignId?: string, campaign?: StoredCampaign) => void;
   assets?: StoredAsset[];
   setAssets: (newAssets: StoredAsset[]) => void;

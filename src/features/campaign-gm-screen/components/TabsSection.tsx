@@ -54,7 +54,7 @@ export function TabsSection(props: TabsSectionProps) {
           <Tab label="Characters" value={TABS.CHARACTERS} />
           <Tab label="Tracks" value={TABS.TRACKS} />
           <Tab label="Oracle" value={TABS.ORACLE} />
-          <Tab label="Notes" value={TABS.NOTES} />
+          <Tab label="Notes (Beta)" value={TABS.NOTES} />
         </Tabs>
       </Box>
       <Box

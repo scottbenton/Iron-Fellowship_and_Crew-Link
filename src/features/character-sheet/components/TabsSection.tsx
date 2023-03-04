@@ -65,7 +65,7 @@ export function TabsSection() {
           <Tab label="Vows" value={TABS.VOWS} />
           <Tab label="Combat" value={TABS.FRAYS} />
           <Tab label="Journeys" value={TABS.JOURNEYS} />
-          <Tab label="Notes" value={TABS.NOTES} />
+          <Tab label="Notes (Beta)" value={TABS.NOTES} />
           <Tab label="Character" value={TABS.CHARACTER} />
         </Tabs>
       </Box>
