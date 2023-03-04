@@ -1,7 +1,7 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /users/{userId}/characters/{characterId}/{allPaths=**} {
+    match /characters/{userId}/characters/{characterId}/{allPaths=**} {
     	allow read: if request.auth.uid != null;
       allow write: if request.auth.uid == userId 
       						 && request.resource.size < 5 * 1024 * 1024
