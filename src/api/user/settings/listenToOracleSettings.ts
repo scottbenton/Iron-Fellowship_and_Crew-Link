@@ -2,6 +2,7 @@ import { addDoc, onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect, useState } from "react";
+import { useSettingsStore } from "stores/settings.store";
 import { OracleSettings } from "types/UserSettings.type";
 import { getUserOracleSettingsDoc } from "./_getRef";
 
@@ -36,22 +37,22 @@ export function useListenToOracleSettings() {
   const uid = useAuth().user?.uid;
   const { error } = useSnackbar();
 
-  const [settings, setSettings] = useState<OracleSettings>();
+  const setOracleSettings = useSettingsStore(
+    (store) => store.setOracleSettings
+  );
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
 
     if (uid) {
-      listenToOracleSettings(uid, setSettings, (err) => {
+      listenToOracleSettings(uid, setOracleSettings, (err) => {
         console.error(err);
         error("Failed to load oracle settings.");
       });
     } else {
-      setSettings(undefined);
+      setOracleSettings(undefined);
     }
 
     return () => unsubscribe && unsubscribe();
   }, [uid]);
-
-  return { settings };
 }

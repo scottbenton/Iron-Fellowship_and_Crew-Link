@@ -7,6 +7,7 @@ import { useUpdateCampaignNote } from "api/campaign/notes/updateCampaignNote";
 import { useUpdateCampaignNoteOrder } from "api/campaign/notes/updateCampaignNoteOrder";
 import { Notes } from "components/Notes/Notes";
 import { useEffect } from "react";
+import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 
 export interface CampaignNotesSectionProps {
   campaignId: string;
@@ -17,8 +18,10 @@ export function CampaignNotesSection(props: CampaignNotesSectionProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { notes, temporarilyReorderNotes } =
-    useListenToCampaignNotes(campaignId);
+  const notes = useCampaignGMScreenStore((store) => store.campaignNotes);
+  const temporarilyReorderNotes = useCampaignGMScreenStore(
+    (store) => store.temporarilyReorderNotes
+  );
 
   const {
     noteContent,
