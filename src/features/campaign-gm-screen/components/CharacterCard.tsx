@@ -24,6 +24,7 @@ import { useUpdateCharacterInitiative } from "api/characters/updateCharacterInit
 import { CharacterNotesComponent } from "./CharacterNotesComponent";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
+import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 
 export interface CharacterCardProps {
   uid: string;
@@ -34,10 +35,9 @@ export interface CharacterCardProps {
 export function CharacterCard(props: CharacterCardProps) {
   const { uid, characterId, character } = props;
 
-  const [storedAssets, setStoredAssets] = useState<StoredAsset[]>();
-  const hue = getHueFromString(characterId);
-
-  useListenToAssets(uid, characterId, setStoredAssets);
+  const storedAssets = useCampaignGMScreenStore(
+    (store) => store.characterAssets[characterId]
+  );
 
   const { user } = useUserDoc(uid);
 

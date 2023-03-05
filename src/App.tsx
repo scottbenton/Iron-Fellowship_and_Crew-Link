@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { useListenToOracleSettings } from "api/user/settings/listenToOracleSettings";
 import { CampaignGMScreenPage } from "features/campaign-gm-screen/CampaignGMScreenPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useListenToUsersCampaigns } from "./api/campaign/listenToUsersCampaigns";
@@ -17,6 +18,8 @@ import { paths, ROUTES } from "./routes";
 export function App() {
   useListenToUsersCampaigns();
   useListenToUsersCharacters();
+  useListenToOracleSettings();
+
   return (
     <Layout>
       <Routes>

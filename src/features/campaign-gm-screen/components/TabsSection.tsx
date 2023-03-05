@@ -67,9 +67,7 @@ export function TabsSection(props: TabsSectionProps) {
         })}
       >
         {selectedTab === TABS.MOVES && <MovesSection />}
-        {selectedTab === TABS.CHARACTERS && (
-          <CharacterSection campaign={campaign} campaignId={campaignId} />
-        )}
+        {selectedTab === TABS.CHARACTERS && <CharacterSection />}
         {selectedTab === TABS.TRACKS && (
           <TracksSection campaignId={campaignId} supply={campaign.supply} />
         )}

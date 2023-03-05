@@ -4,6 +4,7 @@ import { getErrorMessage } from "functions/getErrorMessage";
 import { useSnackbar } from "hooks/useSnackbar";
 import { getCampaignNoteCollection } from "./_getRef";
 import { Note } from "types/Notes.type";
+import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 
 export function listenToNotes(
   campaignId: string,
@@ -92,4 +93,37 @@ export function useListenToCampaignNotes(
     loading,
     temporarilyReorderNotes,
   };
+}
+
+export function useCampaignGMScreenListenToCampaignNotes() {
+  const { error } = useSnackbar();
+  const campaignId = useCampaignGMScreenStore((store) => store.campaignId);
+  const setNotes = useCampaignGMScreenStore((store) => store.setCampaignNotes);
+
+  useEffect(() => {
+    let unsubscribe: Unsubscribe;
+
+    if (campaignId) {
+      listenToNotes(
+        campaignId,
+        (notes) => {
+          setNotes(notes);
+        },
+        (err) => {
+          console.error(err);
+          const errorMessage = getErrorMessage(
+            error,
+            "Failed to load campaigns"
+          );
+          error(errorMessage);
+        }
+      );
+    } else {
+      setNotes([]);
+    }
+
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, [campaignId]);
 }

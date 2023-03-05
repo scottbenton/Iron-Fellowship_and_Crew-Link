@@ -11,11 +11,12 @@ import { useFilterOracles } from "./useFilterOracles";
 import { useListenToOracleSettings } from "api/user/settings/listenToOracleSettings";
 import { Oracle } from "types/Oracles.type";
 import { useMemo } from "react";
+import { useSettingsStore } from "stores/settings.store";
 
 export function OracleSection() {
   const { rollOracle } = useRoller();
 
-  const { settings } = useListenToOracleSettings();
+  const settings = useSettingsStore((store) => store.oracleSettings);
 
   const combinedOracles = useMemo(() => {
     const pinnedOracleNames = Object.keys(

@@ -9,6 +9,7 @@ import { getSharedCampaignTracksDoc } from "./_getRef";
 import { TRACK_TYPES } from "types/Track.type";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useSnackbar } from "hooks/useSnackbar";
+import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 
 export function listenToCampaignProgressTracks(
   campaignId: string,
@@ -70,6 +71,41 @@ export function useListenToCampaignProgressTracks(campaignId?: string) {
   }, [campaignId]);
 
   return { vows, journeys, frays };
+}
+
+export function useCampaignGMScreenListenToCampaignProgressTracks() {
+  const campaignId = useCampaignGMScreenStore((store) => store.campaignId);
+  const setTracks = useCampaignGMScreenStore((store) => store.setTracks);
+
+  const { error } = useSnackbar();
+
+  useEffect(() => {
+    let unsubscribe: Unsubscribe;
+    if (campaignId) {
+      listenToCampaignProgressTracks(
+        campaignId,
+        (newVows, newJourneys, newFrays) => {
+          setTracks({
+            [TRACK_TYPES.VOW]: newVows,
+            [TRACK_TYPES.JOURNEY]: newJourneys,
+            [TRACK_TYPES.FRAY]: newFrays,
+          });
+        },
+        (err) => {
+          console.error(err);
+          const errorMessage = getErrorMessage(
+            error,
+            "Failed to load campaign progress tracks"
+          );
+          error(errorMessage);
+        }
+      );
+    }
+
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, [campaignId]);
 }
 
 export function useListenToCampaignProgressTracksCharacterSheet() {

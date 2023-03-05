@@ -1,6 +1,4 @@
-import { Notes } from "components/Notes/Notes";
 import produce from "immer";
-import { getImageUrl } from "lib/storage.lib";
 import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { Note } from "types/Notes.type";
 import { create } from "zustand";
