@@ -39,7 +39,7 @@ export function CharacterCard(props: CharacterCardProps) {
     (store) => store.characterAssets[characterId]
   );
 
-  const { user } = useUserDoc(uid);
+  const user = useCampaignGMScreenStore((store) => store.players[uid]);
 
   const { updateCharacterInitiative, loading: initiativeLoading } =
     useUpdateCharacterInitiative();

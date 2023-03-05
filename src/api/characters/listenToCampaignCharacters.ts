@@ -32,7 +32,7 @@ export function listenToCampaignCharacters(params: Params): Unsubscribe[] {
     if (onCharacterUserDocument) {
       getUserDoc({ uid: character.uid })
         .then((userDoc) => {
-          onCharacterUserDocument(character.characterId, userDoc);
+          onCharacterUserDocument(character.uid, userDoc);
         })
         .catch();
     }
