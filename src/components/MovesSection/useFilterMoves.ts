@@ -8,7 +8,9 @@ function useFilterMoves(campaignId: string | undefined) {
   const [filteredMoves, setFilteredMoves] = useState(moves);
 
   const customMoves = campaignId
-    ? useSettingsStore((store) => store.campaigns[campaignId]?.customMoves)
+    ? useSettingsStore(
+        (store) => store.campaigns[campaignId]?.customMoves || []
+      )
     : [];
 
   const customMoveCategory = {
@@ -33,7 +35,7 @@ function useFilterMoves(campaignId: string | undefined) {
         };
       });
     setFilteredMoves(results);
-  }, [debouncedSearch]);
+  }, [debouncedSearch, customMoves]);
 
   return { setSearch, filteredMoves };
 }
