@@ -1,5 +1,5 @@
 import { Card, Input, InputAdornment } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StatsMap } from "../../types/Character.type";
 import { Move } from "../../types/Moves.type";
 import useFilterMoves from "./useFilterMoves";
