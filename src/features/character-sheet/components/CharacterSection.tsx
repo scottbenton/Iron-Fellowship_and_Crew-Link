@@ -7,6 +7,7 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
+  Button,
 } from "@mui/material";
 import { useCharacterSheetUpdateBonds } from "api/characters/updateBonds";
 import { useUpdateCharacterStat } from "api/characters/updateCharacterStat";
@@ -20,9 +21,15 @@ import { STATS } from "../../../types/stats.enum";
 import { useCharacterSheetStore } from "../characterSheet.store";
 import { ExperienceTrack } from "./ExperienceTrack";
 import { StatComponent } from "../../../components/StatComponent";
+import { useCharacterSheetUpdateShareNotesWithGMSetting } from "api/characters/updateShareNotesWithGMSetting";
+import { useState } from "react";
+import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
+import { useCharacterSheetUpdateCharacterPortrait } from "api/characters/updateCharacterPortrait";
 
 export function CharacterSection() {
   const { error } = useSnackbar();
+
+  const campaignId = useCharacterSheetStore((store) => store.campaignId);
 
   const bondValue = useCharacterSheetStore(
     (store) => store.character?.bonds ?? 0
@@ -48,8 +55,24 @@ export function CharacterSection() {
     updateDebility({ debility, active: checked });
   };
 
+  const sharingNotes = useCharacterSheetStore(
+    (store) => store.character?.shareNotesWithGM
+  );
+  const { updateShareNotesWithGMSetting } =
+    useCharacterSheetUpdateShareNotesWithGMSetting();
+
+  const existingPortrait = useCharacterSheetStore(
+    (store) => store.character?.portraitUrl
+  );
+  const existingPortraitSettings = useCharacterSheetStore(
+    (store) => store.character?.profileImage
+  );
+  const [portraitDialogOpen, setPortraitDialogOpen] = useState<boolean>(false);
+  const { updateCharacterPortrait } =
+    useCharacterSheetUpdateCharacterPortrait();
+
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} pb={2}>
       <SectionHeading label={"Experience"} />
       <Box px={2}>
         <ExperienceTrack />
@@ -195,7 +218,15 @@ export function CharacterSection() {
         </Box>
       )}
       {stats && (
-        <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} px={2}>
+        <Box
+          display={"flex"}
+          flexDirection={"row"}
+          flexWrap={"wrap"}
+          px={2}
+          sx={{
+            mt: "0px !important",
+          }}
+        >
           <StatComponent
             label="Edge"
             value={stats[STATS.EDGE]}
@@ -205,7 +236,7 @@ export function CharacterSection() {
               handleChange: (newValue) =>
                 handleStatChange(STATS.EDGE, newValue),
             }}
-            sx={{ mr: 2, mb: 2 }}
+            sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Heart"
@@ -216,7 +247,7 @@ export function CharacterSection() {
               handleChange: (newValue) =>
                 handleStatChange(STATS.HEART, newValue),
             }}
-            sx={{ mr: 2, mb: 2 }}
+            sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Iron"
@@ -227,7 +258,7 @@ export function CharacterSection() {
               handleChange: (newValue) =>
                 handleStatChange(STATS.IRON, newValue),
             }}
-            sx={{ mr: 2, mb: 2 }}
+            sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Shadow"
@@ -238,7 +269,7 @@ export function CharacterSection() {
               handleChange: (newValue) =>
                 handleStatChange(STATS.SHADOW, newValue),
             }}
-            sx={{ mr: 2, mb: 2 }}
+            sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Wits"
@@ -249,7 +280,44 @@ export function CharacterSection() {
               handleChange: (newValue) =>
                 handleStatChange(STATS.WITS, newValue),
             }}
-            sx={{ mr: 2, mb: 2 }}
+            sx={{ mr: 2, mt: 2 }}
+          />
+        </Box>
+      )}
+      <Box px={2}>
+        <Button
+          variant={"outlined"}
+          onClick={() => setPortraitDialogOpen(true)}
+        >
+          Upload Character Portrait
+        </Button>
+        <PortraitUploaderDialog
+          open={portraitDialogOpen}
+          handleClose={() => setPortraitDialogOpen(false)}
+          handleUpload={(image, scale, position) => {
+            return updateCharacterPortrait({
+              portrait: typeof image === "string" ? undefined : image,
+              scale,
+              position,
+            });
+          }}
+          existingPortraitFile={existingPortrait}
+          existingPortraitSettings={existingPortraitSettings}
+        />
+      </Box>
+      {campaignId && (
+        <Box px={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={sharingNotes ?? false}
+                onChange={(evt, checked) =>
+                  updateShareNotesWithGMSetting(checked).catch()
+                }
+                name="Share Notes with GM"
+              />
+            }
+            label="Share notes with your GM?"
           />
         </Box>
       )}

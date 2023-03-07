@@ -1,20 +1,15 @@
-import { Box, Grid } from "@mui/material";
-import { useListenToCampaignCharacters } from "api/characters/listenToCampaignCharacters";
-import { StoredCampaign } from "types/Campaign.type";
+import { Grid } from "@mui/material";
+import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { CharacterCard } from "./CharacterCard";
 
-export interface CharacterSectionProps {
-  campaignId: string;
-  campaign: StoredCampaign;
-}
-
-export function CharacterSection(props: CharacterSectionProps) {
-  const { campaignId, campaign } = props;
-
-  const characters = useListenToCampaignCharacters(campaignId);
+export function CharacterSection() {
+  const characters = useCampaignGMScreenStore((store) => store.characters);
+  const campaignCharacters = useCampaignGMScreenStore(
+    (store) => store.campaign?.characters
+  );
 
   const findUidFromCharacterId = (characterId: string) => {
-    const uid = campaign.characters.find((character) => {
+    const uid = campaignCharacters?.find((character) => {
       return character.characterId === characterId;
     })?.uid;
 

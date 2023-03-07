@@ -1,5 +1,6 @@
-import create from "zustand";
+import { create } from "zustand";
 import produce from "immer";
+import { OracleSettings } from "types/UserSettings.type";
 import { Settings } from "types/Settings.type";
 
 interface SettingsStore {
@@ -14,6 +15,9 @@ interface SettingsStore {
   removeSettings: (campaignId: string) => void;
   setError: (error?: string) => void;
   setLoading: (isLoading: boolean) => void;
+  
+  oracleSettings?: OracleSettings;
+  setOracleSettings: (oracleSettings?: OracleSettings) => void;
 }
 
 export const useSettingsStore = create<SettingsStore>()((set, getState) => ({
@@ -48,6 +52,13 @@ export const useSettingsStore = create<SettingsStore>()((set, getState) => ({
     set(
       produce((state: SettingsStore) => {
         state.loading = isLoading ?? false;
+      })
+    );
+  },
+  setOracleSettings: (oracleSettings) => {
+    set(
+      produce((store: SettingsStore) => {
+        store.oracleSettings = oracleSettings;
       })
     );
   },

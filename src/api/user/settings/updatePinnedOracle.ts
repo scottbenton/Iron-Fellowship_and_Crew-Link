@@ -17,8 +17,6 @@ export const updatePinnedOracle: ApiFunction<
       return;
     }
 
-    console.debug(oracleName, pinned);
-
     updateDoc(
       getUserOracleSettingsDoc(uid),
       //@ts-ignore

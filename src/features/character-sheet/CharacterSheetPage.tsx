@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Hidden,
-  LinearProgress,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Hidden, LinearProgress } from "@mui/material";
 import { useListenToCampaignProgressTracksCharacterSheet } from "api/campaign/tracks/listenToCampaignProgressTracks";
 import { useListenToCharacterProgressTracks } from "api/characters/tracks/listenToCharacterProgressTracks";
 import { useEffect } from "react";
@@ -17,10 +10,10 @@ import { useCampaignStore } from "../../stores/campaigns.store";
 import { useCharacterStore } from "../../stores/character.store";
 import { useCharacterSheetStore } from "./characterSheet.store";
 import { MovesSection } from "components/MovesSection";
-import { StatsSection } from "./components/StatsSection";
 import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
-import { InitiativeButtons } from "./components/InitiativeButtons";
+import { useListenToCharacterSheetNotes } from "api/characters/notes/listenToCharacterNotes";
+import { CharacterHeader } from "./components/CharacterHeader";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
@@ -36,6 +29,7 @@ export function CharacterSheetPage() {
 
   useListenToCharacterProgressTracks();
   useListenToCampaignProgressTracksCharacterSheet();
+  useListenToCharacterSheetNotes();
 
   useEffect(() => {
     return () => {
@@ -93,38 +87,7 @@ export function CharacterSheetPage() {
 
   return (
     <>
-      <Box
-        sx={[
-          (theme) => ({
-            position: "relative",
-            mx: -3,
-            px: 3,
-            top: theme.spacing(-3),
-            backgroundColor: theme.palette.primary.light,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            py: 0.5,
-            flexWrap: "wrap",
-            [theme.breakpoints.down("sm")]: {
-              mx: -2,
-              px: 2,
-            },
-          }),
-        ]}
-      >
-        <Box display={"flex"} flexDirection={"column"}>
-          <Typography
-            variant={"h4"}
-            color={"white"}
-            fontFamily={(theme) => theme.fontFamilyTitle}
-          >
-            {character.name}
-          </Typography>
-          <InitiativeButtons />
-        </Box>
-        <StatsSection />
-      </Box>
+      <CharacterHeader />
       <Grid
         container
         spacing={2}

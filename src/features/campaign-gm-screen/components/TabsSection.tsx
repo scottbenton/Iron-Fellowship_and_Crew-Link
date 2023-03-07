@@ -8,6 +8,7 @@ import { CampaignProgressTracks } from "features/campaign-sheet/components/Campa
 import { TracksSection } from "./TracksSection";
 import { OracleSection } from "components/OracleSection";
 import CustomMovesSection from "./CustomMovesSection";
+import { CampaignNotesSection } from "./CampaignNotesSection";
 
 enum TABS {
   MOVES,
@@ -15,6 +16,7 @@ enum TABS {
   TRACKS,
   ORACLE,
   CUSTOMMOVES,
+  NOTES,
 }
 
 export interface TabsSectionProps {
@@ -55,27 +57,28 @@ export function TabsSection(props: TabsSectionProps) {
           <Tab label="Tracks" value={TABS.TRACKS} />
           <Tab label="Oracle" value={TABS.ORACLE} />
           <Tab label="Custom Moves" value={TABS.CUSTOMMOVES} />
+          <Tab label="Notes (Beta)" value={TABS.NOTES} />
         </Tabs>
       </Box>
       <Box
         flexGrow={1}
-        overflow={"auto"}
         sx={(theme) => ({
+          overflowY: "auto",
           backgroundColor: darkBGTabs.includes(selectedTab)
             ? theme.palette.background.default
             : "",
         })}
       >
         {selectedTab === TABS.MOVES && <MovesSection />}
-        {selectedTab === TABS.CHARACTERS && (
-          <CharacterSection campaign={campaign} campaignId={campaignId} />
-        )}
+        {selectedTab === TABS.CHARACTERS && <CharacterSection />}
         {selectedTab === TABS.TRACKS && (
           <TracksSection campaignId={campaignId} supply={campaign.supply} />
         )}
         {selectedTab === TABS.ORACLE && <OracleSection />}
         {selectedTab === TABS.CUSTOMMOVES && (
           <CustomMovesSection campaignId={campaignId} />
+        {selectedTab === TABS.NOTES && (
+          <CampaignNotesSection campaignId={campaignId} />
         )}
       </Box>
     </Card>

@@ -67,7 +67,7 @@ export function StatsField() {
           handleRemainingOptionsChange={handleStatsRemainingChange}
         />
       </Box>
-      {meta.error && (
+      {meta.touched && meta.error && (
         <Typography variant={"caption"} color={"error"}>
           {meta.error}
         </Typography>

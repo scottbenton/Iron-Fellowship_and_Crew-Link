@@ -5,6 +5,7 @@ import {
   doc,
   DocumentReference,
 } from "firebase/firestore";
+import { ref } from "firebase/storage";
 import { CharacterDocument } from "types/Character.type";
 
 export function constructUsersCharacterCollectionPath(userId: string) {
@@ -13,6 +14,14 @@ export function constructUsersCharacterCollectionPath(userId: string) {
 
 export function constructCharacterDocPath(userId: string, characterId: string) {
   return `/characters/${userId}/characters/${characterId}`;
+}
+
+export function constructCharacterPortraitPath(
+  userId: string,
+  characterId: string,
+  filename: string
+) {
+  return `/characters/${userId}/characters/${characterId}/${filename}`;
 }
 
 export function getUsersCharacterCollection(userId: string) {

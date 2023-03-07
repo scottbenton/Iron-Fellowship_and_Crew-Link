@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import { StoredCampaign } from "../types/Campaign.type";
 import produce from "immer";
 

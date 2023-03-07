@@ -29,6 +29,15 @@ export interface CharacterDocument {
     [key in DEBILITIES]?: boolean;
   };
   initiativeStatus?: INITIATIVE_STATUS;
+  shareNotesWithGM?: boolean;
+  profileImage?: {
+    filename: string;
+    position: {
+      x: number;
+      y: number;
+    };
+    scale: number;
+  };
 }
 
 export interface AssetDocument {
