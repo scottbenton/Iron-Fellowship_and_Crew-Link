@@ -7,9 +7,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { constructCampaignSheetUrl, paths, ROUTES } from "routes";
 import { useCampaignStore } from "stores/campaigns.store";
 import { TabsSection } from "./components/TabsSection";
+import { useCampaignGMScreenApiCalls } from "./hooks.ts/useCampaignGMScreenApiCalls";
 
 export function CampaignGMScreenPage() {
   const { campaignId } = useParams();
+
+  useCampaignGMScreenApiCalls(campaignId);
+
   const uid = useAuth().user?.uid;
 
   const campaigns = useCampaignStore((store) => store.campaigns);

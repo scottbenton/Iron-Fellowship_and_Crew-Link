@@ -1,12 +1,14 @@
 import { ThemeContext } from "@emotion/react";
 import { Avatar, Box, Card, Grid, Typography } from "@mui/material";
+import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import { ReactNode } from "react";
+import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { getHueFromString } from "../../functions/getHueFromString";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { CharacterDocument } from "../../types/Character.type";
 
 export interface CharacterListProps {
-  characters: { [key: string]: CharacterDocument };
+  characters: { [key: string]: CharacterDocumentWithPortraitUrl };
   actions?: (characterId: string, index: number) => ReactNode;
   maxColumns?: number;
 }
@@ -21,9 +23,8 @@ export function CharacterList(props: CharacterListProps) {
   return (
     <Grid container spacing={2}>
       {Object.keys(characters).map((characterId, index) => {
-        const hue = getHueFromString(characterId);
-
-        const { name, campaignId } = characters[characterId];
+        const { name, campaignId, portraitUrl, profileImage } =
+          characters[characterId];
 
         return (
           <Grid
@@ -44,14 +45,14 @@ export function CharacterList(props: CharacterListProps) {
             >
               <Box>
                 <Box display={"flex"} alignItems={"center"} p={2}>
-                  <Avatar
-                    sx={{
-                      backgroundColor: `hsl(${hue}, 60%, 85%)`,
-                      color: `hsl(${hue}, 80%, 20%)`,
-                    }}
-                  >
-                    {name[0]}
-                  </Avatar>
+                  <PortraitAvatar
+                    id={characterId}
+                    name={name}
+                    portraitUrl={portraitUrl}
+                    portraitSettings={profileImage}
+                    size={"small"}
+                    colorful
+                  />
                   <Box display={"flex"} flexDirection={"column"} ml={2}>
                     <Typography variant={"h6"}>{name}</Typography>
 

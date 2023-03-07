@@ -5,17 +5,53 @@ import { useSnackbar } from "../../hooks/useSnackbar";
 import { getCharacterDoc } from "./_getRef";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { CharacterDocument } from "../../types/Character.type";
+import { getCharacterPortraitUrl } from "./getCharacterPortraitUrl";
+import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
+import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { UserDocument } from "types/User.type";
+import { getUserDoc } from "api/user/getUserDoc";
 
-export function listenToCampaignCharacters(
-  characterIdList: { characterId: string; uid: string }[] | undefined,
-  onDocChange: (id: string, character?: CharacterDocument) => void,
-  onError: (error: any) => void
-): Unsubscribe[] {
+interface Params {
+  characterIdList: { characterId: string; uid: string }[] | undefined;
+  onDocChange: (id: string, character?: CharacterDocument) => void;
+  onPortraitUrl: (id: string, url: string) => void;
+  onCharacterUserDocument?: (id: string, userDocument: UserDocument) => void;
+  onError: (error: any) => void;
+}
+
+export function listenToCampaignCharacters(params: Params): Unsubscribe[] {
+  const {
+    characterIdList,
+    onDocChange,
+    onPortraitUrl,
+    onCharacterUserDocument,
+    onError,
+  } = params;
+
   const unsubscribes = (characterIdList || []).map((character, index) => {
+    if (onCharacterUserDocument) {
+      getUserDoc({ uid: character.uid })
+        .then((userDoc) => {
+          onCharacterUserDocument(character.uid, userDoc);
+        })
+        .catch();
+    }
     return onSnapshot(
       getCharacterDoc(character.uid, character.characterId),
       (snapshot) => {
-        onDocChange(character.characterId, snapshot.data());
+        const characterDoc = snapshot.data();
+        onDocChange(character.characterId, characterDoc);
+        if (characterDoc?.profileImage?.filename) {
+          getCharacterPortraitUrl({
+            uid: character.uid,
+            characterId: character.characterId,
+            filename: characterDoc.profileImage.filename,
+          })
+            .then((url) => {
+              onPortraitUrl(character.characterId, url);
+            })
+            .catch();
+        }
       },
       (error) => {
         console.error(error);
@@ -32,7 +68,7 @@ export function useListenToCampaignCharacters(campaignId?: string) {
   );
 
   const [campaignCharacters, setCampaignCharacters] = useState<{
-    [id: string]: CharacterDocument;
+    [id: string]: CharacterDocumentWithPortraitUrl;
   }>({});
 
   const { error } = useSnackbar();
@@ -42,9 +78,9 @@ export function useListenToCampaignCharacters(campaignId?: string) {
     // TODO - figure out how to refactor this to remove this call to set
     // It causes a flash where all characters are removed.
     setCampaignCharacters({});
-    unsubscribes = listenToCampaignCharacters(
-      characters,
-      (id, doc) =>
+    unsubscribes = listenToCampaignCharacters({
+      characterIdList: characters,
+      onDocChange: (id, doc) =>
         setCampaignCharacters((prevCharacters) => {
           let newCharacters = { ...prevCharacters };
           if (doc) {
@@ -54,15 +90,25 @@ export function useListenToCampaignCharacters(campaignId?: string) {
           }
           return newCharacters;
         }),
-      (err) => {
+      onPortraitUrl: (id, url) => {
+        setCampaignCharacters((prevCharacters) => {
+          if (url !== prevCharacters[id].portraitUrl) {
+            let newCharacters = { ...prevCharacters };
+            newCharacters[id] = { ...prevCharacters[id], portraitUrl: url };
+            return newCharacters;
+          }
+          return prevCharacters;
+        });
+      },
+      onError: (err) => {
         console.error(err);
         const errorMessage = getErrorMessage(
           error,
           "Failed to load characters"
         );
         error(errorMessage);
-      }
-    );
+      },
+    });
 
     return () => {
       unsubscribes?.forEach((unsubscribe) => unsubscribe());
@@ -70,4 +116,52 @@ export function useListenToCampaignCharacters(campaignId?: string) {
   }, [characters]);
 
   return campaignCharacters;
+}
+
+export function useCampaignGMScreenListenToCampaignCharacters() {
+  const { error } = useSnackbar();
+
+  const campaignId = useCampaignGMScreenStore((store) => store.campaignId);
+  const characters = useCampaignStore(
+    (store) => store.campaigns[campaignId ?? ""]?.characters
+  );
+
+  const updateCharacter = useCampaignGMScreenStore(
+    (store) => store.updateCharacter
+  );
+  const removeCharacter = useCampaignGMScreenStore(
+    (store) => store.removeCharacter
+  );
+  const updateCharacterPortraitUrl = useCampaignGMScreenStore(
+    (store) => store.updateCharacterPortraitUrl
+  );
+  const updatePlayer = useCampaignGMScreenStore((store) => store.updatePlayer);
+
+  useEffect(() => {
+    let unsubscribes = listenToCampaignCharacters({
+      characterIdList: characters,
+      onDocChange: (id, doc) => {
+        if (doc) {
+          updateCharacter(id, doc);
+        } else {
+          removeCharacter(id);
+        }
+      },
+      onPortraitUrl: (id, url) => updateCharacterPortraitUrl(id, url),
+      onCharacterUserDocument: (playerId, playerDocument) =>
+        updatePlayer(playerId, playerDocument),
+      onError: (err) => {
+        console.error(err);
+        const errorMessage = getErrorMessage(
+          error,
+          "Failed to load characters"
+        );
+        error(errorMessage);
+      },
+    });
+
+    return () => {
+      unsubscribes?.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [characters]);
 }
