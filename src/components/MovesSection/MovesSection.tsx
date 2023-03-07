@@ -6,6 +6,7 @@ import useFilterMoves from "./useFilterMoves";
 import { MoveCategory } from "./MoveCategory";
 import { MoveDialog } from "./MoveDialog";
 import SearchIcon from "@mui/icons-material/Search";
+import { useListenToCampaignCustomMoves } from "api/campaign/settings/moves/listenToCampaignCustomMoves";
 
 export interface MovesSectionProps {
   stats?: {
@@ -13,14 +14,15 @@ export interface MovesSectionProps {
     spirit: number;
     supply: number;
   } & StatsMap;
+  campaignId: string | undefined;
 }
 
 export function MovesSection(props: MovesSectionProps) {
-  const { stats } = props;
+  const { stats, campaignId } = props;
+  if (campaignId) useListenToCampaignCustomMoves(campaignId);
 
   const [openMove, setOpenMove] = useState<Move>();
-
-  const { setSearch, filteredMoves } = useFilterMoves();
+  const { setSearch, filteredMoves } = useFilterMoves(campaignId);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
