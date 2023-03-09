@@ -3,7 +3,7 @@ import { Box, ButtonBase, Card, SxProps, Typography } from "@mui/material";
 import PlusIcon from "@mui/icons-material/Add";
 import MinusIcon from "@mui/icons-material/Remove";
 import { useState } from "react";
-import { useRoller } from "./DieRollProvider";
+import { useRoller } from "../providers/DieRollProvider";
 
 export interface StatComponentProps {
   label: string;
@@ -66,10 +66,12 @@ export function StatComponent(props: StatComponentProps) {
         display={"block"}
         textAlign={"center"}
         variant={"subtitle1"}
+        lineHeight={1}
         sx={(theme) => ({
           fontFamily: theme.fontFamilyTitle,
           color: theme.palette.grey[600],
           backgroundColor: theme.palette.grey[100],
+          py: 0.5,
         })}
       >
         {label}

@@ -69,7 +69,7 @@ export function TabsSection(props: TabsSectionProps) {
             : "",
         })}
       >
-        {selectedTab === TABS.MOVES && <MovesSection />}
+        {selectedTab === TABS.MOVES && <MovesSection campaignId={campaignId} />}
         {selectedTab === TABS.CHARACTERS && <CharacterSection />}
         {selectedTab === TABS.TRACKS && (
           <TracksSection campaignId={campaignId} supply={campaign.supply} />
@@ -77,6 +77,7 @@ export function TabsSection(props: TabsSectionProps) {
         {selectedTab === TABS.ORACLE && <OracleSection />}
         {selectedTab === TABS.CUSTOMMOVES && (
           <CustomMovesSection campaignId={campaignId} />
+        )}
         {selectedTab === TABS.NOTES && (
           <CampaignNotesSection campaignId={campaignId} />
         )}

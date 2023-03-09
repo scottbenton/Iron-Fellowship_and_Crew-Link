@@ -1,11 +1,8 @@
-import { ThemeContext } from "@emotion/react";
-import { Avatar, Box, Card, Grid, Typography } from "@mui/material";
+import { Box, Card, Grid, Typography } from "@mui/material";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import { ReactNode } from "react";
 import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
-import { getHueFromString } from "../../functions/getHueFromString";
 import { useCampaignStore } from "../../stores/campaigns.store";
-import { CharacterDocument } from "../../types/Character.type";
 
 export interface CharacterListProps {
   characters: { [key: string]: CharacterDocumentWithPortraitUrl };

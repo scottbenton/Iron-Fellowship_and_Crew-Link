@@ -1,6 +1,6 @@
 import { List, ListSubheader } from "@mui/material";
 import { Oracle, OracleTable } from "types/Oracles.type";
-import { useRoller } from "components/DieRollProvider";
+import { useRoller } from "providers/DieRollProvider";
 import { OracleListItem } from "./OracleListItem";
 import { useState } from "react";
 import { OracleItemDialog } from "./OracleItemDialog";

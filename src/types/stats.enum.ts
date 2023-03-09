@@ -5,3 +5,17 @@ export enum STATS {
   SHADOW = "shadow",
   WITS = "wits",
 }
+
+export enum Stat {
+  Edge = "edge",
+  Heart = "heart",
+  Iron = "iron",
+  Shadow = "shadow",
+  Wits = "wits",
+}
+
+export enum PlayerConditionMeter {
+  Health = "health",
+  Spirit = "spirit",
+  Supply = "supply",
+}
