@@ -1,6 +1,5 @@
-import { ironsworn, Move } from "dataforged";
-
-export const moveCategories = ironsworn["Move categories"];
+import type { Move } from "dataforged";
+import { ironswornMoveCategories } from "./dataforged";
 
 const categoryOrder = [
   "Adventure",
@@ -13,10 +12,10 @@ const categoryOrder = [
 const delveCategoryOrder = ["Delve", "Threat", "Failure", "Rarity"];
 
 export const orderedCategories = categoryOrder.map(
-  (categoryId) => moveCategories[categoryId]
+  (categoryId) => ironswornMoveCategories[categoryId]
 );
 export const orderedDelveCategories = delveCategoryOrder.map(
-  (categoryId) => moveCategories[categoryId]
+  (categoryId) => ironswornMoveCategories[categoryId]
 );
 
 export const allMoveCategories = [
