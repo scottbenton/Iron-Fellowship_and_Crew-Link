@@ -1,4 +1,3 @@
-import jsonMoveOracles from "./move-oracles.json";
 import { ironsworn, Move } from "dataforged";
 
 export const moveCategories = ironsworn["Move categories"];
@@ -12,16 +11,6 @@ const categoryOrder = [
   "Fate",
 ];
 const delveCategoryOrder = ["Delve", "Threat", "Failure", "Rarity"];
-
-// const moveOracles: { [key: string]: MoveOracle } = {};
-// jsonMoveOracles.Oracles.map((oracle) => {
-//   moveOracles[oracle.Move] = {
-//     table: oracle["Oracle Table"].map((table) => ({
-//       chance: table.Chance,
-//       description: table.Description,
-//     })),
-//   };
-// });
 
 export const orderedCategories = categoryOrder.map(
   (categoryId) => moveCategories[categoryId]

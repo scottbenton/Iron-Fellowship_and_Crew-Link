@@ -6,7 +6,6 @@ import {
   DocumentReference,
 } from "firebase/firestore";
 import { MoveDocument } from "types/Moves.type";
-import { Settings } from "types/Settings.type";
 
 export function constructCampaignCustomMovesDocPath(campaignId: string) {
   return `/campaigns/${campaignId}/settings/moves`;

@@ -26,9 +26,9 @@ import { useState } from "react";
 import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
 import { useCharacterSheetUpdateCharacterPortrait } from "api/characters/updateCharacterPortrait";
 import { CustomMovesSection } from "components/CustomMovesSection";
-import { useCharacterSheetAddCustomMove } from "api/characters/moves/addCharacterCustomMove";
-import { useCharacterSheetUpdateCustomMove } from "api/characters/moves/updateCampaignCustomMove";
-import { useCharacterSheetRemoveCharacterCustomMove } from "api/characters/moves/removeCharacterCustomMove";
+import { useCharacterSheetAddCustomMove } from "api/characters/customMoves/addCharacterCustomMove";
+import { useCharacterSheetUpdateCustomMove } from "api/characters/customMoves/updateCampaignCustomMove";
+import { useCharacterSheetRemoveCharacterCustomMove } from "api/characters/customMoves/removeCharacterCustomMove";
 
 export function CharacterSection() {
   const { error } = useSnackbar();

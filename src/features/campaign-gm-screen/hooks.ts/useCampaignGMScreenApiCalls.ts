@@ -1,5 +1,5 @@
 import { useCampaignGMScreenListenToCampaignNotes } from "api/campaign/notes/listenToCampaignNotes";
-import { useCampaignGMScreenListenToCampaignCustomMoves } from "api/campaign/settings/moves/listenToCampaignCustomMoves";
+import { useCampaignGMScreenListenToCampaignCustomMoves } from "api/campaign/customMoves/listenToCampaignCustomMoves";
 import { useCampaignGMScreenListenToCampaignProgressTracks } from "api/campaign/tracks/listenToCampaignProgressTracks";
 import { useCampaignGMScreenListenToCampaignAssets } from "api/characters/assets/listenToCampaignCharactersAssets";
 import { useCampaignGMScreenListenToCampaignCharacters } from "api/characters/listenToCampaignCharacters";

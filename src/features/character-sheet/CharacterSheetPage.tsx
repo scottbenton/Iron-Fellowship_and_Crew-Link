@@ -14,8 +14,8 @@ import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
 import { useListenToCharacterSheetNotes } from "api/characters/notes/listenToCharacterNotes";
 import { CharacterHeader } from "./components/CharacterHeader";
-import { useCharacterSheetListenToCampaignCustomMoves } from "api/campaign/settings/moves/listenToCampaignCustomMoves";
-import { useCharacterSheetListenToCharacterCustomMoves } from "api/characters/moves/listenToCharacterCustomMoves";
+import { useCharacterSheetListenToCampaignCustomMoves } from "api/campaign/customMoves/listenToCampaignCustomMoves";
+import { useCharacterSheetListenToCharacterCustomMoves } from "api/characters/customMoves/listenToCharacterCustomMoves";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();

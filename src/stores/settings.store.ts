@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import produce from "immer";
 import { OracleSettings } from "types/UserSettings.type";
-import { Settings } from "types/Settings.type";
 
 interface SettingsStore {
   oracleSettings?: OracleSettings;

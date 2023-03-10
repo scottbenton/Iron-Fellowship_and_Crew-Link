@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
-import { useCampaignGMScreenAddCustomMove } from "api/campaign/settings/moves/addCampaignCustomMove";
-import { useCampaignGMScreenRemoveCampaignCustomMove } from "api/campaign/settings/moves/removeCampaignCustomMove";
-import { useCampaignGMScreenUpdateCustomMove } from "api/campaign/settings/moves/updateCampaignCustomMove";
+import { useCampaignGMScreenAddCustomMove } from "api/campaign/customMoves/addCampaignCustomMove";
+import { useCampaignGMScreenRemoveCampaignCustomMove } from "api/campaign/customMoves/removeCampaignCustomMove";
+import { useCampaignGMScreenUpdateCustomMove } from "api/campaign/customMoves/updateCampaignCustomMove";
 import { CustomMovesSection } from "components/CustomMovesSection";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 
