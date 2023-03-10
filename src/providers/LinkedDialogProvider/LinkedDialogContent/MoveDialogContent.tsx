@@ -7,6 +7,7 @@ import { moveMap } from "data/moves";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { Stat, PlayerConditionMeter } from "types/stats.enum";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
+import { useCustomMoves } from "components/MovesSection/useCustomMoves";
 
 export interface MoveDialogContentProps {
   id: string;
@@ -18,7 +19,9 @@ export interface MoveDialogContentProps {
 export function MoveDialogContent(props: MoveDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
-  const move = moveMap[id];
+  const customMoves = useCustomMoves();
+
+  const move = moveMap[id] ?? customMoves?.Moves[id];
 
   const stats: MoveStats | undefined = useCharacterSheetStore((store) =>
     store.character
