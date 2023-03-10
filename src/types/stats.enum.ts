@@ -19,3 +19,16 @@ export enum PlayerConditionMeter {
   Spirit = "spirit",
   Supply = "supply",
 }
+
+export type StatKeys = keyof typeof Stat;
+export type PlayerConditionMeterKeys = keyof typeof PlayerConditionMeter;
+
+export type MoveStatKeys = Stat | PlayerConditionMeter | "companion health";
+
+export type MoveStats = {
+  [stat in StatKeys]: number;
+} & {
+  [conditionMeter in PlayerConditionMeterKeys]: number;
+} & {
+  companionHealth: { companionName: string; health: number }[];
+};

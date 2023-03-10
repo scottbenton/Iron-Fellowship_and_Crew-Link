@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useField } from "formik";
 import { useState } from "react";
-import { STATS } from "../../../types/stats.enum";
+import { Stat } from "types/stats.enum";
 import { StatDropdown } from "./StatDropdown";
 
 export function StatsField() {
@@ -37,31 +37,31 @@ export function StatsField() {
       </Typography>
       <Box mt={0.5} display={"flex"} flexWrap={"wrap"}>
         <StatDropdown
-          stat={STATS.EDGE}
+          stat={Stat.Edge}
           label={"Edge"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}
         />
         <StatDropdown
-          stat={STATS.HEART}
+          stat={Stat.Heart}
           label={"Heart"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}
         />
         <StatDropdown
-          stat={STATS.IRON}
+          stat={Stat.Iron}
           label={"Iron"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}
         />
         <StatDropdown
-          stat={STATS.SHADOW}
+          stat={Stat.Shadow}
           label={"Shadow"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}
         />
         <StatDropdown
-          stat={STATS.WITS}
+          stat={Stat.Wits}
           label={"Wits"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}

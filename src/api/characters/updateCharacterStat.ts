@@ -4,10 +4,10 @@ import { firebaseAuth } from "config/firebase.config";
 import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCharacterDoc } from "./_getRef";
-import { STATS } from "types/stats.enum";
+import { Stat } from "types/stats.enum";
 
 export const updateCharacterStat: ApiFunction<
-  { characterId?: string; stat: STATS; value: number },
+  { characterId?: string; stat: Stat; value: number },
   boolean
 > = function (params) {
   const { characterId, stat, value } = params;

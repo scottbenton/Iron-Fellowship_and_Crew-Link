@@ -5,26 +5,16 @@ import {
   doc,
   DocumentReference,
 } from "firebase/firestore";
+import { MoveDocument } from "types/Moves.type";
 import { Settings } from "types/Settings.type";
 
 export function constructCampaignCustomMovesDocPath(campaignId: string) {
-  return `/campaigns/${campaignId}/settings/settings`;
-}
-
-export function constructCampaignSettingsCollectionPath(campaignId: string) {
-  return `/campaigns/${campaignId}/settings/`;
+  return `/campaigns/${campaignId}/settings/moves`;
 }
 
 export function getCampaignCustomMovesDoc(campaignId: string) {
   return doc(
     firestore,
     constructCampaignCustomMovesDocPath(campaignId)
-  ) as DocumentReference<Settings>;
-}
-
-export function getCampaignSettingsCollection(campaignId: string) {
-  return collection(
-    firestore,
-    constructCampaignSettingsCollectionPath(campaignId)
-  ) as CollectionReference<Settings>;
+  ) as DocumentReference<MoveDocument>;
 }

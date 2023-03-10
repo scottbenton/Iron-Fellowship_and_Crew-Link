@@ -1,5 +1,6 @@
 import produce from "immer";
 import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
+import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
 import { create } from "zustand";
 import { momentumTrack } from "../../data/defaultTracks";
@@ -78,6 +79,9 @@ export interface CharacterSheetStore {
     isCampaign?: boolean
   ) => void;
 
+  customMoves?: StoredMove[];
+  setCustomMoves: (moves: StoredMove[]) => void;
+
   notes?: Note[];
   setNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
@@ -90,6 +94,9 @@ const initialState = {
   campaign: undefined,
   supply: undefined,
   assets: undefined,
+
+  customMoves: undefined,
+  notes: undefined,
 
   [TRACK_TYPES.VOW]: {},
   [TRACK_TYPES.JOURNEY]: {},
@@ -193,6 +200,14 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
 
           state.notes[noteIndex].order = order;
           state.notes.sort((n1, n2) => n1.order - n2.order);
+        })
+      );
+    },
+
+    setCustomMoves: (moves) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          state.customMoves = moves;
         })
       );
     },

@@ -1,30 +1,23 @@
-import { STATS } from "./stats.enum";
+import { MoveStatKeys } from "./stats.enum";
 
-export enum ROLLABLE_TRACKS {
-  HEALTH = "health",
-  SPIRIT = "spirit",
-  SUPPLY = "supply",
-}
-
-export type ROLLABLES = STATS | ROLLABLE_TRACKS;
-
-export interface MoveOracle {
-  table: {
-    chance: number;
-    description: string;
-  }[];
-}
-
-export interface Move {
+export interface StoredMove {
   name: string;
-  stats?: ROLLABLES[];
+  stats?: MoveStatKeys[];
   text: string;
-  oracle?: MoveOracle;
+  oracleId?: string;
 }
 
-export interface MoveCategory {
-  categoryName: string;
-  moves: Move[];
+export interface MoveDocument {
+  moves: { [moveId: string]: StoredMove };
+  moveOrder: string[];
 }
 
-export type Moves = MoveCategory[];
+export function getCustomMoveDatabaseId(moveName: string) {
+  return `custom-${moveName.toLocaleLowerCase().replaceAll(" ", "-")}`;
+}
+
+export const customMoveCategoryId = "ironsworn/moves/custom";
+
+export function getCustomMoveDataswornId(moveName: string) {
+  return `${customMoveCategoryId}/${getCustomMoveDatabaseId(moveName)}`;
+}

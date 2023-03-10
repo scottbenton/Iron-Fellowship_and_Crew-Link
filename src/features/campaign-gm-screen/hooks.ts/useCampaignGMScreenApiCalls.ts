@@ -1,4 +1,5 @@
 import { useCampaignGMScreenListenToCampaignNotes } from "api/campaign/notes/listenToCampaignNotes";
+import { useCampaignGMScreenListenToCampaignCustomMoves } from "api/campaign/settings/moves/listenToCampaignCustomMoves";
 import { useCampaignGMScreenListenToCampaignProgressTracks } from "api/campaign/tracks/listenToCampaignProgressTracks";
 import { useCampaignGMScreenListenToCampaignAssets } from "api/characters/assets/listenToCampaignCharactersAssets";
 import { useCampaignGMScreenListenToCampaignCharacters } from "api/characters/listenToCampaignCharacters";
@@ -18,6 +19,7 @@ export function useCampaignGMScreenApiCalls(campaignId?: string) {
   useCampaignGMScreenListenToCampaignAssets();
   useCampaignGMScreenListenToCampaignProgressTracks();
   useCampaignGMScreenListenToCampaignNotes();
+  useCampaignGMScreenListenToCampaignCustomMoves();
 
   useEffect(() => {
     return () => {

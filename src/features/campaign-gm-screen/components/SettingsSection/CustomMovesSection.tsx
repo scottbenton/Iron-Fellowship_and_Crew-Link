@@ -1,12 +1,10 @@
 import { Box, Card, Typography, Button } from "@mui/material";
 import { useListenToCampaignCustomMoves } from "api/campaign/settings/moves/listenToCampaignCustomMoves";
 import { useRemoveCampaignCustomMove } from "api/campaign/settings/moves/removeCampaignCustomMove";
-import { SectionHeading } from "components/SectionHeading";
 import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
 import { useSettingsStore } from "stores/settings.store";
-import { Move } from "types/Moves.type";
-import { CustomMoveDialog } from "./CustomMoveDialog";
+import { CustomMoveDialog } from "../CustomMoveDialog";
 
 export interface CampaignCustomMovesProps {
   campaignId: string;

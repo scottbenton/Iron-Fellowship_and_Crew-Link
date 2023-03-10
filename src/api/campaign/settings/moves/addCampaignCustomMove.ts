@@ -1,13 +1,14 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
-import { arrayUnion, setDoc } from "firebase/firestore";
+import { arrayUnion, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCampaignCustomMovesDoc } from "./_getRef";
-import { Move } from "types/Moves.type";
+import { getCustomMoveDatabaseId, StoredMove } from "types/Moves.type";
+import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 
 export const addCampaignCustomMove: ApiFunction<
   {
-    campaignId: string;
-    customMove: Move;
+    campaignId?: string;
+    customMove: StoredMove;
   },
   boolean
 > = function (params) {
@@ -19,13 +20,12 @@ export const addCampaignCustomMove: ApiFunction<
       return;
     }
 
-    setDoc(
-      getCampaignCustomMovesDoc(campaignId),
-      {
-        customMoves: arrayUnion(customMove),
-      },
-      { merge: true }
-    )
+    const id = getCustomMoveDatabaseId(customMove.name);
+
+    updateDoc(getCampaignCustomMovesDoc(campaignId), {
+      [`moves.${id}`]: customMove,
+      moveOrder: arrayUnion(id),
+    })
       .then(() => {
         resolve(true);
       })
@@ -41,6 +41,19 @@ export function useAddCampaignCustomMove() {
 
   return {
     addCampaignCustomMove: call,
+    loading,
+    error,
+  };
+}
+
+export function useCampaignGMScreenAddCustomMove() {
+  const { addCampaignCustomMove, loading, error } = useAddCampaignCustomMove();
+
+  const campaignId = useCampaignGMScreenStore((store) => store.campaignId);
+
+  return {
+    addCampaignCustomMove: (move: StoredMove) =>
+      addCampaignCustomMove({ campaignId, customMove: move }),
     loading,
     error,
   };

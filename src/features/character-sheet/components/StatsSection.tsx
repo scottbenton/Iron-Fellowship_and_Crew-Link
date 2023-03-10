@@ -1,7 +1,7 @@
-import { Box, Stack } from "@mui/material";
+import { Box } from "@mui/material";
 import { StatsMap } from "../../../types/Character.type";
 
-import { STATS } from "../../../types/stats.enum";
+import { Stat } from "types/stats.enum";
 import { useCharacterSheetStore } from "../characterSheet.store";
 import { StatComponent } from "../../../components/StatComponent";
 
@@ -23,27 +23,27 @@ export function StatsSection() {
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} p={0.5}>
         <StatComponent
           label={"Edge"}
-          value={stats[STATS.EDGE]}
+          value={stats[Stat.Edge]}
           sx={{ mt: 1, mr: 1 }}
         />
         <StatComponent
           label={"Heart"}
-          value={stats[STATS.HEART]}
+          value={stats[Stat.Heart]}
           sx={{ mt: 1, mr: 1 }}
         />
         <StatComponent
           label={"Iron"}
-          value={stats[STATS.IRON]}
+          value={stats[Stat.Iron]}
           sx={{ mt: 1, mr: 1 }}
         />
         <StatComponent
           label={"Shadow"}
-          value={stats[STATS.SHADOW]}
+          value={stats[Stat.Shadow]}
           sx={{ mt: 1, mr: 1 }}
         />
         <StatComponent
           label={"Wits"}
-          value={stats[STATS.WITS]}
+          value={stats[Stat.Wits]}
           sx={{ mt: 1, mr: 4 }}
         />
       </Box>
