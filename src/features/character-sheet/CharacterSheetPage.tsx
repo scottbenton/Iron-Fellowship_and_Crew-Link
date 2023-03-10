@@ -14,6 +14,8 @@ import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
 import { useListenToCharacterSheetNotes } from "api/characters/notes/listenToCharacterNotes";
 import { CharacterHeader } from "./components/CharacterHeader";
+import { useCharacterSheetListenToCampaignCustomMoves } from "api/campaign/customMoves/listenToCampaignCustomMoves";
+import { useCharacterSheetListenToCharacterCustomMoves } from "api/characters/customMoves/listenToCharacterCustomMoves";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
@@ -30,6 +32,8 @@ export function CharacterSheetPage() {
   useListenToCharacterProgressTracks();
   useListenToCampaignProgressTracksCharacterSheet();
   useListenToCharacterSheetNotes();
+  useCharacterSheetListenToCampaignCustomMoves();
+  useCharacterSheetListenToCharacterCustomMoves();
 
   useEffect(() => {
     return () => {
@@ -111,7 +115,7 @@ export function CharacterSheetPage() {
               },
             })}
           >
-            <MovesSection stats={stats} campaignId={character.campaignId} />
+            <MovesSection />
           </Grid>
         </Hidden>
         <Grid

@@ -1,9 +1,9 @@
 import { Box, Button, Input, InputAdornment } from "@mui/material";
-import { useRoller } from "components/DieRollProvider";
+import { useRoller } from "providers/DieRollProvider";
 import {
   oracleRollChanceNames,
   ORACLE_ROLL_CHANCE,
-} from "components/DieRollProvider/DieRollContext";
+} from "providers/DieRollProvider/DieRollContext";
 import { oracles, oracleSectionMap } from "data/oracles";
 import { OracleCategory } from "./OracleCategory";
 import SearchIcon from "@mui/icons-material/Search";

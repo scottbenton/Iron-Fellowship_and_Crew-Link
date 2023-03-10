@@ -1,4 +1,5 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
+import { useLinkedDialog } from "providers/LinkedDialogProvider";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -10,6 +11,8 @@ export interface MarkdownRendererProps {
 
 export function MarkdownRenderer(props: MarkdownRendererProps) {
   const { inlineParagraph, markdown, inheritColor } = props;
+
+  const { openDialog } = useLinkedDialog();
 
   return (
     <ReactMarkdown
@@ -58,7 +61,8 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
         table: ({ children }) => (
           <Box
             component={"table"}
-            mt={1}
+            mt={2}
+            mb={1}
             border={1}
             borderColor={(theme) => theme.palette.divider}
             borderRadius={(theme) => theme.shape.borderRadius}
@@ -106,6 +110,29 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
             {children}
           </Typography>
         ),
+        a: (props) => {
+          const href = props.href ?? "";
+          if (href.startsWith("ironsworn/") || href.startsWith("starforged/")) {
+            if (
+              href.startsWith("ironsworn/moves") ||
+              href.startsWith("starforged/moves")
+            ) {
+              return (
+                <Link
+                  component={"button"}
+                  sx={{ cursor: "pointer", verticalAlign: "baseline" }}
+                  color={"info.dark"}
+                  onClick={() => openDialog(href)}
+                >
+                  {props.children}
+                </Link>
+              );
+            }
+            // TODO - add handlers for this situation;
+            return <span>{props.children}</span>;
+          }
+          return <a {...props} />;
+        },
       }}
     />
   );

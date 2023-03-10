@@ -7,11 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useField } from "formik";
-import { STATS } from "../../../types/stats.enum";
+import { Stat } from "types/stats.enum";
 
 export interface StatDropdownProps {
   label: string;
-  stat: STATS;
+  stat: Stat;
 
   remainingOptions: number[];
   handleRemainingOptionsChange: (

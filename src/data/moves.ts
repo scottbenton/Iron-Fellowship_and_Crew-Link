@@ -1,62 +1,31 @@
-import jsonMoves from "./moves.json";
-import {
-  Move,
-  MoveCategory,
-  MoveOracle,
-  Moves,
-  ROLLABLES,
-  ROLLABLE_TRACKS,
-} from "../types/Moves.type";
-import { STATS } from "../types/stats.enum";
-import jsonMoveOracles from "./move-oracles.json";
+import type { Move } from "dataforged";
+import { ironswornMoveCategories } from "./dataforged";
 
-const moveOracles: { [key: string]: MoveOracle } = {};
+const categoryOrder = [
+  "Adventure",
+  "Relationship",
+  "Combat",
+  "Suffer",
+  "Quest",
+  "Fate",
+];
+const delveCategoryOrder = ["Delve", "Threat", "Failure", "Rarity"];
 
-jsonMoveOracles.Oracles.map((oracle) => {
-  moveOracles[oracle.Move] = {
-    table: oracle["Oracle Table"].map((table) => ({
-      chance: table.Chance,
-      description: table.Description,
-    })),
-  };
-});
+export const orderedCategories = categoryOrder.map(
+  (categoryId) => ironswornMoveCategories[categoryId]
+);
+export const orderedDelveCategories = delveCategoryOrder.map(
+  (categoryId) => ironswornMoveCategories[categoryId]
+);
 
-export const moves: Moves = jsonMoves.Categories.map((jsonCategory) => {
-  const constructedMoves: MoveCategory = {
-    categoryName: jsonCategory.Name,
-    moves: jsonCategory.Moves.map((jsonMove) => {
-      return {
-        name: jsonMove.Name,
-        text: jsonMove.Text,
-        stats: getRollables(jsonMove.Stats),
-        oracle: moveOracles[jsonMove.Name],
-      };
-    }),
-  };
-  return constructedMoves;
-});
+export const allMoveCategories = [
+  ...orderedCategories,
+  ...orderedDelveCategories,
+];
 
-function getRollables(stats?: string[]): ROLLABLES[] | undefined {
-  if (!stats || stats.length === 0) return undefined;
-
-  return stats.map((stat) => {
-    switch (stat) {
-      case "edge":
-        return STATS.EDGE;
-      case "heart":
-        return STATS.HEART;
-      case "iron":
-        return STATS.IRON;
-      case "shadow":
-        return STATS.SHADOW;
-      case "wits":
-        return STATS.WITS;
-      case "health":
-        return ROLLABLE_TRACKS.HEALTH;
-      case "spirit":
-        return ROLLABLE_TRACKS.SPIRIT;
-      default:
-        return ROLLABLE_TRACKS.SUPPLY;
-    }
+export const moveMap: { [key: string]: Move } = {};
+allMoveCategories.forEach((category) => {
+  Object.values(category.Moves).forEach((move) => {
+    moveMap[move.$id] = move;
   });
-}
+});

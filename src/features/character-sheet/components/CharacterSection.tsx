@@ -17,7 +17,7 @@ import { ProgressTrack } from "../../../components/ProgressTrack";
 import { SectionHeading } from "../../../components/SectionHeading";
 import { useSnackbar } from "../../../hooks/useSnackbar";
 import { DEBILITIES } from "../../../types/debilities.enum";
-import { STATS } from "../../../types/stats.enum";
+import { Stat } from "types/stats.enum";
 import { useCharacterSheetStore } from "../characterSheet.store";
 import { ExperienceTrack } from "./ExperienceTrack";
 import { StatComponent } from "../../../components/StatComponent";
@@ -25,6 +25,10 @@ import { useCharacterSheetUpdateShareNotesWithGMSetting } from "api/characters/u
 import { useState } from "react";
 import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
 import { useCharacterSheetUpdateCharacterPortrait } from "api/characters/updateCharacterPortrait";
+import { CustomMovesSection } from "components/CustomMovesSection";
+import { useCharacterSheetAddCustomMove } from "api/characters/customMoves/addCharacterCustomMove";
+import { useCharacterSheetUpdateCustomMove } from "api/characters/customMoves/updateCampaignCustomMove";
+import { useCharacterSheetRemoveCharacterCustomMove } from "api/characters/customMoves/removeCharacterCustomMove";
 
 export function CharacterSection() {
   const { error } = useSnackbar();
@@ -47,7 +51,7 @@ export function CharacterSection() {
     useCharacterSheetStore((store) => store.character?.debilities) ?? {};
   const { updateDebility } = useCharacterSheetUpdateDebility();
 
-  const handleStatChange = (stat: STATS, value: number) => {
+  const handleStatChange = (stat: Stat, value: number) => {
     return updateCharacterStat({ characterId, stat, value });
   };
 
@@ -70,6 +74,12 @@ export function CharacterSection() {
   const [portraitDialogOpen, setPortraitDialogOpen] = useState<boolean>(false);
   const { updateCharacterPortrait } =
     useCharacterSheetUpdateCharacterPortrait();
+
+  const customMoves = useCharacterSheetStore((store) => store.customMoves);
+  const { addCharacterCustomMove } = useCharacterSheetAddCustomMove();
+  const { updateCharacterCustomMove } = useCharacterSheetUpdateCustomMove();
+  const { removeCharacterCustomMove } =
+    useCharacterSheetRemoveCharacterCustomMove();
 
   return (
     <Stack spacing={2} pb={2}>
@@ -229,56 +239,53 @@ export function CharacterSection() {
         >
           <StatComponent
             label="Edge"
-            value={stats[STATS.EDGE]}
+            value={stats[Stat.Edge]}
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) =>
-                handleStatChange(STATS.EDGE, newValue),
+              handleChange: (newValue) => handleStatChange(Stat.Edge, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Heart"
-            value={stats[STATS.HEART]}
+            value={stats[Stat.Heart]}
             updateTrack={{
               min: 0,
               max: 5,
               handleChange: (newValue) =>
-                handleStatChange(STATS.HEART, newValue),
+                handleStatChange(Stat.Heart, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Iron"
-            value={stats[STATS.IRON]}
+            value={stats[Stat.Iron]}
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) =>
-                handleStatChange(STATS.IRON, newValue),
+              handleChange: (newValue) => handleStatChange(Stat.Iron, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Shadow"
-            value={stats[STATS.SHADOW]}
+            value={stats[Stat.Shadow]}
             updateTrack={{
               min: 0,
               max: 5,
               handleChange: (newValue) =>
-                handleStatChange(STATS.SHADOW, newValue),
+                handleStatChange(Stat.Shadow, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Wits"
-            value={stats[STATS.WITS]}
+            value={stats[Stat.Wits]}
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) =>
-                handleStatChange(STATS.WITS, newValue),
+              handleChange: (newValue) => handleStatChange(Stat.Wits, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
@@ -320,6 +327,14 @@ export function CharacterSection() {
             label="Share notes with your GM?"
           />
         </Box>
+      )}
+      {!campaignId && (
+        <CustomMovesSection
+          customMoves={customMoves}
+          createCustomMove={addCharacterCustomMove}
+          updateCustomMove={updateCharacterCustomMove}
+          removeCustomMove={removeCharacterCustomMove}
+        />
       )}
     </Stack>
   );

@@ -1,13 +1,12 @@
 import {
-  List,
+  Box,
   ListItem,
   ListItemButton,
-  ListSubheader,
-  Box,
   ListItemIcon,
+  ListSubheader,
 } from "@mui/material";
+import { Move, MoveCategory as IMoveCategory } from "dataforged";
 import OpenIcon from "@mui/icons-material/ChevronRight";
-import { Move, MoveCategory as IMoveCategory } from "../../types/Moves.type";
 
 export interface MoveCategoryProps {
   category: IMoveCategory;
@@ -16,8 +15,9 @@ export interface MoveCategoryProps {
 
 export function MoveCategory(props: MoveCategoryProps) {
   const { category, openMove } = props;
+
   return (
-    <List disablePadding>
+    <>
       <ListSubheader
         sx={(theme) => ({
           backgroundColor: theme.palette.primary.light,
@@ -26,9 +26,9 @@ export function MoveCategory(props: MoveCategoryProps) {
           fontFamily: theme.fontFamilyTitle,
         })}
       >
-        {category.categoryName}
+        {category.Title.Standard}
       </ListSubheader>
-      {category.moves.map((move, index) => (
+      {Object.values(category.Moves).map((move, index) => (
         <ListItem
           key={index}
           sx={(theme) => ({
@@ -52,7 +52,7 @@ export function MoveCategory(props: MoveCategoryProps) {
                 color: theme.palette.text.primary,
               })}
             >
-              {move.name}
+              {move.Title.Standard}
             </Box>
             <ListItemIcon sx={{ minWidth: "unset" }}>
               <OpenIcon />
@@ -60,6 +60,6 @@ export function MoveCategory(props: MoveCategoryProps) {
           </ListItemButton>
         </ListItem>
       ))}
-    </List>
+    </>
   );
 }

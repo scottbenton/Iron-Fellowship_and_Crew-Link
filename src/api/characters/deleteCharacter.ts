@@ -4,6 +4,7 @@ import { deleteDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { firebaseAuth } from "../../config/firebase.config";
 import { getCharacterAssetDoc } from "./assets/_getRef";
+import { getCharacterCustomMovesDoc } from "./customMoves/_getRef";
 import { getCharacter } from "./getCharacter";
 import { deleteCharacterNotes } from "./notes/deleteCharacterNotes";
 import { getCharacterTracksDoc } from "./tracks/_getRef";
@@ -31,6 +32,7 @@ export const deleteCharacter: ApiFunction<string, boolean> = function (
       promises.push(deleteDoc(getCharacterTracksDoc(uid, characterId)));
       promises.push(deleteDoc(getCharacterDoc(uid, characterId)));
       promises.push(deleteCharacterNotes(uid, characterId));
+      promises.push(deleteDoc(getCharacterCustomMovesDoc(uid, characterId)));
 
       await Promise.all(promises);
       resolve(true);

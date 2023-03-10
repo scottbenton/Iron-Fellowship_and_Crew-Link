@@ -3,6 +3,7 @@ import produce from "immer";
 import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { StoredAsset } from "types/Asset.type";
 import { StoredCampaign } from "types/Campaign.type";
+import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
 import { TRACK_TYPES } from "types/Track.type";
 import { UserDocument } from "types/User.type";
@@ -51,6 +52,9 @@ export interface CampaignGMScreenStore {
   oracleSettings?: OracleSettings;
   setOracleSettings: (oracleSettings: OracleSettings) => void;
 
+  customMoves?: StoredMove[];
+  setCustomMoves: (moves: StoredMove[]) => void;
+
   campaignNotes?: Note[];
   setCampaignNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
@@ -65,6 +69,7 @@ const initialState = {
   characterAssets: {},
   tracks: undefined,
   oracleSettings: undefined,
+  customMoves: undefined,
   campaignNotes: undefined,
 };
 
@@ -138,6 +143,14 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       set(
         produce((store: CampaignGMScreenStore) => {
           store.oracleSettings = settings;
+        })
+      );
+    },
+
+    setCustomMoves: (moves) => {
+      set(
+        produce((store: CampaignGMScreenStore) => {
+          store.customMoves = moves;
         })
       );
     },

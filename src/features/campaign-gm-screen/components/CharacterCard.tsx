@@ -2,29 +2,23 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Avatar,
   Box,
   Card,
   Stack,
   Typography,
 } from "@mui/material";
 import { StatComponent } from "components/StatComponent";
-import { getHueFromString } from "functions/getHueFromString";
-import { CharacterDocument, INITIATIVE_STATUS } from "types/Character.type";
+import { INITIATIVE_STATUS } from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useListenToAssets } from "api/characters/assets/listenToAssets";
-import { useState } from "react";
-import { StoredAsset } from "types/Asset.type";
 import { AssetCard } from "components/AssetCard/AssetCard";
 import { assets } from "data/assets";
-import { STATS } from "types/stats.enum";
-import { useGetUserDoc, useUserDoc } from "api/user/getUserDoc";
 import { InitiativeStatusChip } from "components/InitiativeStatusChip";
 import { useUpdateCharacterInitiative } from "api/characters/updateCharacterInitiative";
 import { CharacterNotesComponent } from "./CharacterNotesComponent";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
+import { Stat } from "types/stats.enum";
 
 export interface CharacterCardProps {
   uid: string;
@@ -87,31 +81,31 @@ export function CharacterCard(props: CharacterCardProps) {
         <Box display={"flex"} px={2} flexWrap={"wrap"}>
           <StatComponent
             label={"Edge"}
-            value={character.stats[STATS.EDGE]}
+            value={character.stats[Stat.Edge]}
             sx={{ mr: 1, mt: 1 }}
             disableRoll
           />
           <StatComponent
             label={"Heart"}
-            value={character.stats[STATS.HEART]}
+            value={character.stats[Stat.Heart]}
             sx={{ mr: 1, mt: 1 }}
             disableRoll
           />
           <StatComponent
             label={"Iron"}
-            value={character.stats[STATS.IRON]}
+            value={character.stats[Stat.Iron]}
             sx={{ mr: 1, mt: 1 }}
             disableRoll
           />
           <StatComponent
             label={"Shadow"}
-            value={character.stats[STATS.SHADOW]}
+            value={character.stats[Stat.Shadow]}
             sx={{ mr: 1, mt: 1 }}
             disableRoll
           />
           <StatComponent
             label={"Wits"}
-            value={character.stats[STATS.WITS]}
+            value={character.stats[Stat.Wits]}
             sx={{ mr: 1, mt: 1 }}
             disableRoll
           />

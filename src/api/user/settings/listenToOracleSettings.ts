@@ -45,7 +45,7 @@ export function useListenToOracleSettings() {
     let unsubscribe: Unsubscribe;
 
     if (uid) {
-      listenToOracleSettings(uid, setOracleSettings, (err) => {
+      unsubscribe = listenToOracleSettings(uid, setOracleSettings, (err) => {
         console.error(err);
         error("Failed to load oracle settings.");
       });
