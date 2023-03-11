@@ -72,8 +72,6 @@ export const orderedOracleCategories = oracleCategoryOrder.map(
   (oracleId) => oracleCategoryMap[oracleId]
 );
 
-console.debug(Object.keys(oracleMap));
-
 export const hiddenOracleIds: { [oracleId: string]: boolean } = {
   "ironsworn/oracles/moves/ask_the_oracle/almost_certain": true,
   "ironsworn/oracles/moves/ask_the_oracle/likely": true,

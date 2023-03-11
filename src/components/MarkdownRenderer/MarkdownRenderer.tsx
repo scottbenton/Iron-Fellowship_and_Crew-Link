@@ -119,7 +119,7 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           if (href.startsWith("ironsworn/") || href.startsWith("starforged/")) {
             if (
               href.startsWith("ironsworn/moves") ||
-              href.startsWith("starforged/moves")
+              href.startsWith("ironsworn/oracles")
             ) {
               return (
                 <Link

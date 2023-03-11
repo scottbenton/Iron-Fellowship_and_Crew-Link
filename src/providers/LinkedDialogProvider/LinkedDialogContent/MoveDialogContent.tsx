@@ -1,4 +1,4 @@
-import { DialogContent } from "@mui/material";
+import { Button, DialogContent } from "@mui/material";
 import { MarkdownRenderer } from "components/MarkdownRenderer";
 import { MoveStatRollers } from "./MoveStatRollers";
 import { MoveStats } from "components/MovesSection/MoveStats.type";
@@ -8,6 +8,8 @@ import { useCharacterSheetStore } from "features/character-sheet/characterSheet.
 import { Stat, PlayerConditionMeter } from "types/stats.enum";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { useCustomMoves } from "components/MovesSection/useCustomMoves";
+import { oracleMap } from "data/oracles";
+import { useRoller } from "providers/DieRollProvider";
 
 export interface MoveDialogContentProps {
   id: string;
@@ -19,6 +21,7 @@ export interface MoveDialogContentProps {
 export function MoveDialogContent(props: MoveDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
+  const { rollOracleTable } = useRoller();
   const customMoves = useCustomMoves();
 
   const move = moveMap[id] ?? customMoves?.Moves[id];
@@ -67,6 +70,12 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
     });
   });
 
+  const moveOracles =
+    move.Oracles?.map(
+      // Temporary fix for id mismatch in datasworn
+      (oracleId) => oracleMap[oracleId.replace("fifty-fifty", "50_50")]
+    ) ?? [];
+
   return (
     <>
       <LinkedDialogContentTitle
@@ -78,6 +87,16 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
       </LinkedDialogContentTitle>
       <DialogContent>
         <MoveStatRollers stats={stats} visibleStats={visibleStats} />
+        {moveOracles.map((oracle) => (
+          <Button
+            key={oracle.$id}
+            variant={"outlined"}
+            sx={{ mr: 1, mb: 1 }}
+            onClick={() => rollOracleTable(oracle.$id)}
+          >
+            Roll {oracle.Title.Standard.replace("Ask the Oracle: ", "")}
+          </Button>
+        ))}
 
         <MarkdownRenderer markdown={move.Text} />
       </DialogContent>

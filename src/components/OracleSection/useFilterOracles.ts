@@ -11,7 +11,6 @@ export function useFilterOracles() {
   const settings = useSettingsStore((store) => store.oracleSettings);
 
   const combinedOracles = useMemo(() => {
-    console.debug("RECOMPUTING PINNED ORACLES");
     const pinnedOracleIds = Object.keys(settings?.pinnedOracleSections ?? {});
 
     const pinnedOracleTables: { [tableId: string]: OracleTable } = {};
