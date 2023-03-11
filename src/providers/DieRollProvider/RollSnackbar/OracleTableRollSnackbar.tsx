@@ -35,13 +35,13 @@ export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
       component={ButtonBase}
       onClick={() => clearRoll()}
     >
-      {expanded && roll.oracleName && (
+      {expanded && roll.oracleCategoryName && (
         <Typography
           lineHeight={1.2}
           variant={"overline"}
           fontFamily={(theme) => theme.fontFamilyTitle}
         >
-          {roll.oracleName}
+          {roll.oracleCategoryName}
         </Typography>
       )}
       <Typography
@@ -92,7 +92,7 @@ export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
           color={"white"}
           maxWidth={"60ch"}
         >
-          <MarkdownRenderer markdown={roll.result} inheritColor />
+          <MarkdownRenderer markdown={roll.result} inheritColor disableLinks />
         </Box>
       </Box>
     </Card>

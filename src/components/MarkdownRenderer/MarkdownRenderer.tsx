@@ -7,10 +7,11 @@ export interface MarkdownRendererProps {
   inlineParagraph?: boolean;
   markdown: string;
   inheritColor?: boolean;
+  disableLinks?: boolean;
 }
 
 export function MarkdownRenderer(props: MarkdownRendererProps) {
-  const { inlineParagraph, markdown, inheritColor } = props;
+  const { inlineParagraph, markdown, inheritColor, disableLinks } = props;
 
   const { openDialog } = useLinkedDialog();
 
@@ -111,11 +112,14 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           </Typography>
         ),
         a: (props) => {
+          if (disableLinks) {
+            return <>{props.children}</>;
+          }
           const href = props.href ?? "";
           if (href.startsWith("ironsworn/") || href.startsWith("starforged/")) {
             if (
               href.startsWith("ironsworn/moves") ||
-              href.startsWith("starforged/moves")
+              href.startsWith("ironsworn/oracles")
             ) {
               return (
                 <Link

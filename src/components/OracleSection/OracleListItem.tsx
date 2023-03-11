@@ -1,12 +1,9 @@
 import {
-  Button,
   IconButton,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import { D10Icon } from "assets/D10Icon";
 import PinIcon from "@mui/icons-material/PushPin";
@@ -16,6 +13,7 @@ import { useIsTouchDevice } from "hooks/useIsTouchDevice";
 import TableIcon from "@mui/icons-material/ListAlt";
 
 export interface OracleListItemProps {
+  id: string;
   onRollClick: () => void;
   text: string;
   onOpenClick: () => void;
@@ -23,12 +21,9 @@ export interface OracleListItemProps {
 }
 
 export function OracleListItem(props: OracleListItemProps) {
-  const { text, onRollClick, onOpenClick, pinned } = props;
+  const { id, text, onRollClick, onOpenClick, pinned } = props;
 
   const isTouchDevice = useIsTouchDevice();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (
     /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ||
@@ -66,7 +61,7 @@ export function OracleListItem(props: OracleListItemProps) {
             <IconButton
               color={pinned ? "primary" : "default"}
               onClick={() =>
-                updatePinnedOracle({ oracleName: text, pinned: !pinned })
+                updatePinnedOracle({ oracleId: id, pinned: !pinned })
               }
               disabled={loading}
             >

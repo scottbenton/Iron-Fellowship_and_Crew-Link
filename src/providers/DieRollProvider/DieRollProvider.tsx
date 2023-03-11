@@ -2,10 +2,7 @@ import { Box, Fab, Slide } from "@mui/material";
 import { PropsWithChildren, useState } from "react";
 import {
   DieRollContext,
-  OracleRoll,
-  oracleRollChanceNames,
   OracleTableRoll,
-  ORACLE_ROLL_CHANCE,
   Roll,
   ROLL_RESULT,
   ROLL_TYPE,
@@ -14,18 +11,10 @@ import {
 import { TransitionGroup } from "react-transition-group";
 import ClearIcon from "@mui/icons-material/Close";
 import { RollSnackbar } from "./RollSnackbar";
-import { OracleTable } from "types/Oracles.type";
+import { oracleCategoryMap, oracleMap } from "data/oracles";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
-};
-
-const chanceCutoffs: { [key in ORACLE_ROLL_CHANCE]: number } = {
-  [ORACLE_ROLL_CHANCE.ALMOST_CERTAIN]: 10,
-  [ORACLE_ROLL_CHANCE.LIKELY]: 25,
-  [ORACLE_ROLL_CHANCE.FIFTY_FIFTY]: 50,
-  [ORACLE_ROLL_CHANCE.UNLIKELY]: 75,
-  [ORACLE_ROLL_CHANCE.SMALL_CHANCE]: 90,
 };
 
 export function DieRollProvider(props: PropsWithChildren) {
@@ -46,7 +35,7 @@ export function DieRollProvider(props: PropsWithChildren) {
     });
   };
 
-  const rollStat = (label: string, modifier?: number) => {
+  const rollStat = (label: string, modifier: number, showSnackbar = true) => {
     const challenge1 = getRoll(10);
     const challenge2 = getRoll(10);
     const action = getRoll(6);
@@ -71,49 +60,43 @@ export function DieRollProvider(props: PropsWithChildren) {
       timestamp: new Date(),
     };
 
-    addRoll(statRoll);
+    if (showSnackbar) {
+      addRoll(statRoll);
+    }
 
     return result;
   };
 
-  const rollOracle = (chance: ORACLE_ROLL_CHANCE) => {
-    const roll = getRoll(100);
-    const isSuccessful = roll > chanceCutoffs[chance];
+  const rollOracleTable = (oracleId: string, showSnackbar = true) => {
+    const oracleCategoryId = oracleId.match(
+      /ironsworn\/oracles\/[^\/]*/gm
+    )?.[0];
 
-    const oracleRoll: OracleRoll = {
-      type: ROLL_TYPE.ORACLE,
-      rollLabel: oracleRollChanceNames[chance],
-      roll,
-      result: isSuccessful ? "Yes" : "No",
-      chance,
-      timestamp: new Date(),
-    };
+    const oracle = oracleMap[oracleId];
+    const oracleCategory = oracleCategoryId
+      ? oracleCategoryMap[oracleCategoryId]
+      : undefined;
 
-    addRoll(oracleRoll);
+    if (!oracle || !oracleCategory) return undefined;
 
-    return isSuccessful;
-  };
-
-  const rollOracleTable = (
-    oracleName: string | undefined,
-    sectionName: string,
-    oracleTable: OracleTable
-  ) => {
     const roll = getRoll(100);
     const entry =
-      oracleTable.find((entry) => roll <= entry.chance)?.description ??
-      "Failed to get oracle entry.";
+      oracle.Table.find(
+        (entry) => (entry.Floor ?? 0) <= roll && roll <= (entry.Ceiling ?? 100)
+      )?.Result ?? "Failed to get oracle entry.";
 
     const oracleRoll: OracleTableRoll = {
       type: ROLL_TYPE.ORACLE_TABLE,
       roll,
       result: entry,
-      rollLabel: sectionName,
-      oracleName,
+      oracleCategoryName: oracleCategory.Title.Short,
+      rollLabel: oracle.Title.Short,
       timestamp: new Date(),
     };
 
-    addRoll(oracleRoll);
+    if (showSnackbar) {
+      addRoll(oracleRoll);
+    }
 
     return entry;
   };
@@ -133,9 +116,7 @@ export function DieRollProvider(props: PropsWithChildren) {
   };
 
   return (
-    <DieRollContext.Provider
-      value={{ rolls, rollStat, rollOracle, rollOracleTable }}
-    >
+    <DieRollContext.Provider value={{ rolls, rollStat, rollOracleTable }}>
       {children}
       <Box
         position={"fixed"}

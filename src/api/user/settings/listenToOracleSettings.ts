@@ -1,4 +1,5 @@
 import { addDoc, onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
+import { decodeDataswornId } from "functions/dataswornIdEncoder";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect, useState } from "react";
@@ -16,7 +17,17 @@ export function listenToOracleSettings(
     (snapshot) => {
       const data = snapshot.data();
       if (data) {
-        onOracleSettings(data);
+        const { pinnedOracleSections } = data;
+        const decodedPinnedOracleSections: { [key: string]: boolean } = {};
+
+        if (pinnedOracleSections) {
+          Object.keys(data.pinnedOracleSections ?? {}).forEach((pinnedId) => {
+            decodedPinnedOracleSections[decodeDataswornId(pinnedId)] =
+              pinnedOracleSections[pinnedId];
+          });
+        }
+
+        onOracleSettings({ pinnedOracleSections: decodedPinnedOracleSections });
       } else {
         if (uid) {
           setDoc(getUserOracleSettingsDoc(uid), {

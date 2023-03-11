@@ -1,5 +1,4 @@
 import { Roll, ROLL_TYPE } from "../DieRollContext";
-import { OracleRollSnackbar } from "./OracleRollSnackbar";
 import { OracleTableRollSnackbar } from "./OracleTableRollSnackbar";
 import { StatRollSnackbar } from "./StatRollSnackbar";
 
@@ -16,14 +15,6 @@ export function RollSnackbar(props: RollSnackbarProps) {
     case ROLL_TYPE.STAT:
       return (
         <StatRollSnackbar
-          roll={roll}
-          clearRoll={clearRoll}
-          expanded={isMostRecentRoll}
-        />
-      );
-    case ROLL_TYPE.ORACLE:
-      return (
-        <OracleRollSnackbar
           roll={roll}
           clearRoll={clearRoll}
           expanded={isMostRecentRoll}

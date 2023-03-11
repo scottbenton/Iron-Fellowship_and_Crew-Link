@@ -1,5 +1,4 @@
 import { createContext } from "react";
-import { OracleTable } from "types/Oracles.type";
 
 export enum ROLL_RESULT {
   HIT,
@@ -9,25 +8,8 @@ export enum ROLL_RESULT {
 
 export enum ROLL_TYPE {
   STAT,
-  ORACLE,
   ORACLE_TABLE,
 }
-
-export enum ORACLE_ROLL_CHANCE {
-  SMALL_CHANCE,
-  UNLIKELY,
-  FIFTY_FIFTY,
-  LIKELY,
-  ALMOST_CERTAIN,
-}
-
-export const oracleRollChanceNames: { [key in ORACLE_ROLL_CHANCE]: string } = {
-  [ORACLE_ROLL_CHANCE.ALMOST_CERTAIN]: "Almost Certain",
-  [ORACLE_ROLL_CHANCE.LIKELY]: "Likely",
-  [ORACLE_ROLL_CHANCE.FIFTY_FIFTY]: "50/50",
-  [ORACLE_ROLL_CHANCE.UNLIKELY]: "Unlikely",
-  [ORACLE_ROLL_CHANCE.SMALL_CHANCE]: "Small Chance",
-};
 
 export interface BaseRoll {
   type: ROLL_TYPE;
@@ -43,36 +25,30 @@ export interface StatRoll extends BaseRoll {
   result: ROLL_RESULT;
 }
 
-export interface OracleRoll extends BaseRoll {
-  type: ROLL_TYPE.ORACLE;
-  roll: number;
-  result: string;
-  chance: ORACLE_ROLL_CHANCE;
-}
-
 export interface OracleTableRoll extends BaseRoll {
   type: ROLL_TYPE.ORACLE_TABLE;
   roll: number;
   result: string;
-  oracleName?: string;
+  oracleCategoryName?: string;
 }
 
-export type Roll = StatRoll | OracleRoll | OracleTableRoll;
+export type Roll = StatRoll | OracleTableRoll;
 
 export interface IDieRollContext {
   rolls: Roll[];
-  rollStat: (rollLabel: string, modifier?: number) => ROLL_RESULT;
-  rollOracle: (rollChance: ORACLE_ROLL_CHANCE) => boolean;
+  rollStat: (
+    rollLabel: string,
+    modifier: number,
+    showSnackbar?: boolean
+  ) => ROLL_RESULT;
   rollOracleTable: (
-    oracleName: string | undefined,
-    sectionName: string,
-    oracleTable: OracleTable
-  ) => string;
+    oracleId: string,
+    showSnackbar?: boolean
+  ) => string | undefined;
 }
 
 export const DieRollContext = createContext<IDieRollContext>({
   rolls: [],
   rollStat: () => ROLL_RESULT.MISS,
-  rollOracle: () => false,
   rollOracleTable: () => "",
 });

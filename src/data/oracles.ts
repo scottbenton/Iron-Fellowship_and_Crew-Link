@@ -1,79 +1,81 @@
-import {
-  JsonOracle,
-  Oracle,
-  OracleSection,
-  OracleTable,
-} from "types/Oracles.type";
+import { ironswornOracleCategories } from "./dataforged";
+import type {
+  OracleSet,
+  OracleTable as DataforgedOracleTable,
+  Title,
+} from "dataforged";
 
-import jsonMoveOracles from "./move-oracles.json";
-import jsonCharacterOracles from "./oracles-character.json";
-import jsonMonstrosityOracles from "./oracles-monstrosity.json";
-import jsonNameOracles from "./oracles-names.json";
-import jsonPlaceOracles from "./oracles-place.json";
-import jsonPromptOracles from "./oracles-prompt.json";
-import jsonSettlementOracles from "./oracles-settlement.json";
-import jsonThreatOracles from "./oracles-threat.json";
-import jsonTurningPointOracles from "./oracles-turning-point.json";
+const oracleCategoryOrder = [
+  "ironsworn/oracles/moves",
+  "ironsworn/oracles/character",
+  "ironsworn/oracles/name",
+  "ironsworn/oracles/action_and_theme",
+  "ironsworn/oracles/combat_event",
+  "ironsworn/oracles/feature",
+  "ironsworn/oracles/place",
+  "ironsworn/oracles/settlement",
+  "ironsworn/oracles/site_name",
+  "ironsworn/oracles/site_nature",
+  "ironsworn/oracles/monstrosity",
+  "ironsworn/oracles/threat",
+  "ironsworn/oracles/trap",
+  "ironsworn/oracles/turning_point",
+];
 
-const sectionMap: { [key: string]: OracleSection } = {};
+export let oracleCategoryMap: { [categoryId: string]: OracleSet } = {};
+export let oracleMap: { [tableId: string]: DataforgedOracleTable } = {};
 
-export function transformOracles(jsonOracles: JsonOracle): Oracle {
-  const sections: { sectionName: string; table: OracleTable }[] = [];
-
-  jsonOracles.Oracles.forEach((section) => {
-    if (section["Oracle Table"]) {
-      const newSection: OracleSection = {
-        sectionName: section.Name,
-        table: section["Oracle Table"].map((table) => ({
-          chance: table.Chance,
-          description: table.Description,
-        })),
+function flattenOracleTables(
+  set: OracleSet,
+  subsetTitlePrefix?: Title
+): {
+  [tableId: string]: DataforgedOracleTable;
+} {
+  let newSetTables: { [tableId: string]: DataforgedOracleTable } = {};
+  Object.values(set.Tables ?? {}).forEach((table) => {
+    if (!subsetTitlePrefix) {
+      newSetTables[table.$id] = table;
+    } else {
+      newSetTables[table.$id] = {
+        ...table,
+        Title: {
+          $id: table.Title.$id,
+          Short: `${subsetTitlePrefix.Short}: ${table.Title.Short}`,
+          Canonical: `${subsetTitlePrefix.Canonical}: ${table.Title.Canonical}`,
+          Standard: `${subsetTitlePrefix.Standard}: ${table.Title.Standard}`,
+        },
       };
-      sections.push(newSection);
-      sectionMap[newSection.sectionName] = newSection;
-    }
-    if (section.Oracles) {
-      section.Oracles.forEach((subSection) => {
-        const newSection: OracleSection = {
-          sectionName: section.Name + ": " + subSection.Name,
-          table: subSection["Oracle Table"].map((table) => ({
-            chance: table.Chance,
-            description: table.Description,
-          })),
-        };
-        sections.push(newSection);
-        sectionMap[newSection.sectionName] = newSection;
-      });
     }
   });
 
-  const oracle: Oracle = {
-    name: jsonOracles.Title,
-    sections,
-  };
+  Object.values(set.Sets ?? {}).forEach((subSet) => {
+    newSetTables = {
+      ...newSetTables,
+      ...flattenOracleTables(subSet, subSet.Title),
+    };
+  });
 
-  return oracle;
+  return newSetTables;
 }
 
-export const moveOracles = transformOracles(jsonMoveOracles);
-export const characterOracles = transformOracles(jsonCharacterOracles);
-export const monstrosityOracles = transformOracles(jsonMonstrosityOracles);
-export const nameOracles = transformOracles(jsonNameOracles);
-export const placeOracles = transformOracles(jsonPlaceOracles);
-export const promptOracles = transformOracles(jsonPromptOracles);
-export const settlementOracles = transformOracles(jsonSettlementOracles);
-export const threatOracles = transformOracles(jsonThreatOracles);
-export const turningPointOracles = transformOracles(jsonTurningPointOracles);
+Object.values(ironswornOracleCategories).forEach((oracleCategory) => {
+  const flattenedTables = flattenOracleTables(oracleCategory);
+  oracleMap = { ...oracleMap, ...flattenedTables };
 
-export const oracles = [
-  moveOracles,
-  characterOracles,
-  monstrosityOracles,
-  nameOracles,
-  placeOracles,
-  promptOracles,
-  settlementOracles,
-  threatOracles,
-  turningPointOracles,
-];
-export const oracleSectionMap = sectionMap;
+  oracleCategoryMap[oracleCategory.$id] = {
+    ...oracleCategory,
+    Tables: flattenedTables,
+  };
+});
+
+export const orderedOracleCategories = oracleCategoryOrder.map(
+  (oracleId) => oracleCategoryMap[oracleId]
+);
+
+export const hiddenOracleIds: { [oracleId: string]: boolean } = {
+  "ironsworn/oracles/moves/ask_the_oracle/almost_certain": true,
+  "ironsworn/oracles/moves/ask_the_oracle/likely": true,
+  "ironsworn/oracles/moves/ask_the_oracle/50_50": true,
+  "ironsworn/oracles/moves/ask_the_oracle/unlikely": true,
+  "ironsworn/oracles/moves/ask_the_oracle/small_chance": true,
+};

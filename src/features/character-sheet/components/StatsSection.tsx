@@ -20,37 +20,45 @@ export function StatsSection() {
 
   return (
     <Box display={"flex"} flexWrap={"wrap"} justifyContent={"flex-start"}>
-      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} p={0.5}>
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} pl={0.5}>
         <StatComponent
           label={"Edge"}
           value={stats[Stat.Edge]}
-          sx={{ mt: 1, mr: 1 }}
+          sx={{ my: 0.5, mr: 1 }}
         />
         <StatComponent
           label={"Heart"}
           value={stats[Stat.Heart]}
-          sx={{ mt: 1, mr: 1 }}
+          sx={{ my: 0.5, mr: 1 }}
         />
         <StatComponent
           label={"Iron"}
           value={stats[Stat.Iron]}
-          sx={{ mt: 1, mr: 1 }}
+          sx={{ my: 0.5, mr: 1 }}
         />
         <StatComponent
           label={"Shadow"}
           value={stats[Stat.Shadow]}
-          sx={{ mt: 1, mr: 1 }}
+          sx={{ my: 0.5, mr: 1 }}
         />
         <StatComponent
           label={"Wits"}
           value={stats[Stat.Wits]}
-          sx={{ mt: 1, mr: 4 }}
+          sx={{ my: 0.5, mr: 4 }}
         />
       </Box>
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} pl={0.5}>
-        <StatComponent label={"Health"} value={health} sx={{ mt: 1, mr: 1 }} />
-        <StatComponent label={"Spirit"} value={spirit} sx={{ mt: 1, mr: 1 }} />
-        <StatComponent label={"Supply"} value={supply} sx={{ mt: 1 }} />
+        <StatComponent
+          label={"Health"}
+          value={health}
+          sx={{ my: 0.5, mr: 1 }}
+        />
+        <StatComponent
+          label={"Spirit"}
+          value={spirit}
+          sx={{ my: 0.5, mr: 1 }}
+        />
+        <StatComponent label={"Supply"} value={supply} sx={{ my: 0.5 }} />
       </Box>
     </Box>
   );

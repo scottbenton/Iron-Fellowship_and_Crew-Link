@@ -81,6 +81,12 @@ export function CampaignSheetPage() {
       });
   };
 
+  const getUidFromCharacterId = (characterId: string) => {
+    return Object.values(campaign.characters).find(
+      (character) => character.characterId === characterId
+    )?.uid;
+  };
+
   return (
     <>
       <PageBanner>
@@ -171,8 +177,8 @@ export function CampaignSheetPage() {
       )}
       <CharacterList
         characters={campaignCharacters}
-        actions={(characterId, index) =>
-          campaign.characters[index]?.uid === uid ? (
+        actions={(characterId) =>
+          getUidFromCharacterId(characterId) === uid ? (
             <>
               <Button
                 component={Link}

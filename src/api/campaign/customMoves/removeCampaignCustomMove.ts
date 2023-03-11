@@ -3,6 +3,7 @@ import { arrayRemove, deleteField, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCampaignCustomMovesDoc } from "./_getRef";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 export const removeCampaignCustomMove: ApiFunction<
   {
@@ -18,9 +19,9 @@ export const removeCampaignCustomMove: ApiFunction<
       reject(new CampaignNotFoundException());
       return;
     }
-
+    const encodedId = encodeDataswornId(moveId);
     updateDoc(getCampaignCustomMovesDoc(campaignId), {
-      [`moves.${moveId}`]: deleteField(),
+      [`moves.${encodedId}`]: deleteField(),
       moveOrder: arrayRemove(moveId),
     })
       .then(() => {
