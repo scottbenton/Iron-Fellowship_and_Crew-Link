@@ -87,6 +87,7 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
       </LinkedDialogContentTitle>
       <DialogContent>
         <MoveStatRollers stats={stats} visibleStats={visibleStats} />
+        <MarkdownRenderer markdown={move.Text} />
         {moveOracles.map((oracle) => (
           <Button
             key={oracle.$id}
@@ -97,8 +98,6 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
             Roll {oracle.Title.Standard.replace("Ask the Oracle: ", "")}
           </Button>
         ))}
-
-        <MarkdownRenderer markdown={move.Text} />
       </DialogContent>
     </>
   );
