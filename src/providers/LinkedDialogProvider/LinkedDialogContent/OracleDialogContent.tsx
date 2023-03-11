@@ -44,6 +44,9 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
         {oracle.Title.Short}
       </LinkedDialogContentTitle>
       <DialogContent>
+        {oracle.Description && (
+          <MarkdownRenderer markdown={oracle.Description} />
+        )}
         <Button variant={"outlined"} onClick={() => rollOracleTable(id)}>
           Roll on the Table
         </Button>
