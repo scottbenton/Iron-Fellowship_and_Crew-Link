@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   DialogActions,
-  Typography,
   Box,
   FormGroup,
   FormControl,
@@ -15,8 +14,9 @@ import {
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "components/DialogTitleWithCloseButton";
 import { Formik } from "formik";
+import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useState } from "react";
-import { getCustomMoveDatabaseId, StoredMove } from "types/Moves.type";
+import { StoredMove } from "types/Moves.type";
 import { MoveStatKeys, PlayerConditionMeter, Stat } from "types/stats.enum";
 
 type EnabledStats = {
@@ -81,6 +81,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
       Object.keys(values.enabledStats) as MoveStatKeys[]
     ).filter((key) => values.enabledStats[key]);
     const customMoveDocument: StoredMove = {
+      $id: generateCustomDataswornId("ironsworn/moves", values.name),
       name: values.name,
       text: values.description,
       stats,
@@ -98,7 +99,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
         });
     } else {
       setLoading(true);
-      updateCustomMove(getCustomMoveDatabaseId(move.name), customMoveDocument)
+      updateCustomMove(move.$id, customMoveDocument)
         .then(() => {
           setLoading(false);
           onClose();

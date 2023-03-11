@@ -2,8 +2,9 @@ import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCampaignCustomMovesDoc } from "./_getRef";
-import { getCustomMoveDatabaseId, StoredMove } from "types/Moves.type";
+import { StoredMove } from "types/Moves.type";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 export const addCampaignCustomMove: ApiFunction<
   {
@@ -20,11 +21,10 @@ export const addCampaignCustomMove: ApiFunction<
       return;
     }
 
-    const id = getCustomMoveDatabaseId(customMove.name);
-
+    const encodedId = encodeDataswornId(customMove.$id);
     updateDoc(getCampaignCustomMovesDoc(campaignId), {
-      [`moves.${id}`]: customMove,
-      moveOrder: arrayUnion(id),
+      [`moves.${encodedId}`]: customMove,
+      moveOrder: arrayUnion(encodedId),
     })
       .then(() => {
         resolve(true);

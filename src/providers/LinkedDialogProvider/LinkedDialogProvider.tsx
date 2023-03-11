@@ -90,6 +90,7 @@ export function LinkedDialogProvider(props: PropsWithChildren) {
   const { isDialogOpen, openDialogId, previousOpenDialogIds } = state;
 
   const openDialog = useCallback((id: string) => {
+    console.debug(id);
     dispatch({
       type: ACTIONS.OPEN_ID,
       id,

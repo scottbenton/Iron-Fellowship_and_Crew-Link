@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function useSearch() {
+export function useSearch() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
@@ -16,5 +16,3 @@ function useSearch() {
 
   return { search, setSearch, debouncedSearch };
 }
-
-export default useSearch;

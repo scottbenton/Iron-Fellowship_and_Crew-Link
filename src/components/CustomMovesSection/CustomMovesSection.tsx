@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
 import { useState } from "react";
-import { getCustomMoveDatabaseId, StoredMove } from "types/Moves.type";
+import { StoredMove } from "types/Moves.type";
 import { CustomMoveDialog } from "./CustomMoveDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -86,12 +86,7 @@ export function CustomMovesSection(props: CustomMovesSectionProps) {
                           <EditIcon />
                         </IconButton>
                         <IconButton
-                          onClick={() =>
-                            handleDelete(
-                              getCustomMoveDatabaseId(move.name),
-                              move
-                            )
-                          }
+                          onClick={() => handleDelete(move.$id, move)}
                         >
                           <DeleteIcon />
                         </IconButton>

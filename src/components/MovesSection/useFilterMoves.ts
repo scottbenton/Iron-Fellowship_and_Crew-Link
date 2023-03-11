@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useSearch from "hooks/useSearch";
+import { useSearch } from "hooks/useSearch";
 import { orderedCategories, orderedDelveCategories } from "data/moves";
 import { Move, MoveCategory } from "dataforged";
 import { useCustomMoves } from "./useCustomMoves";

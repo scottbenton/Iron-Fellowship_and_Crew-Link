@@ -1,12 +1,12 @@
 import { List, ListSubheader } from "@mui/material";
-import { Oracle, OracleTable } from "types/Oracles.type";
 import { useRoller } from "providers/DieRollProvider";
 import { OracleListItem } from "./OracleListItem";
-import { useState } from "react";
-import { OracleItemDialog } from "./OracleItemDialog";
+import { OracleSet } from "dataforged";
+import { useLinkedDialog } from "providers/LinkedDialogProvider";
+import { hiddenOracleIds } from "data/oracles";
 
 export interface OracleCategoryProps {
-  category: Oracle;
+  category: OracleSet;
   pinnedCategories?: { [oracleName: string]: boolean };
 }
 
@@ -14,13 +14,7 @@ export function OracleCategory(props: OracleCategoryProps) {
   const { category, pinnedCategories } = props;
 
   const { rollOracleTable } = useRoller();
-
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [openOracleItem, setOpenOracleItem] = useState<{
-    categoryName: string;
-    name: string;
-    table: OracleTable;
-  }>();
+  const { openDialog } = useLinkedDialog();
 
   return (
     <>
@@ -33,45 +27,29 @@ export function OracleCategory(props: OracleCategoryProps) {
             fontFamily: theme.fontFamilyTitle,
           })}
         >
-          {category.name}
+          {category.Title.Standard}
         </ListSubheader>
-        {category.sections.map((section, index) => {
-          const { sectionName, table } = section;
-
+        {Object.keys(category.Tables ?? {}).map((oracleId, index) => {
+          const oracle = category.Tables?.[oracleId];
+          if (hiddenOracleIds[oracleId] || !oracle) return null;
           return (
             <OracleListItem
+              id={oracleId}
               key={index}
-              text={sectionName}
-              onRollClick={() =>
-                rollOracleTable(category.name, sectionName, table)
+              text={
+                oracleId === "ironsworn/oracles/moves/reveal_a_danger_alt"
+                  ? "Reveal a Danger (Alt)"
+                  : oracle.Title.Short
               }
+              onRollClick={() => rollOracleTable(oracle.$id)}
               onOpenClick={() => {
-                setOpenOracleItem({
-                  categoryName: category.name,
-                  name: sectionName,
-                  table: table,
-                });
-                setDialogOpen(true);
+                openDialog(oracle.$id);
               }}
-              pinned={pinnedCategories && pinnedCategories[sectionName]}
+              pinned={pinnedCategories && pinnedCategories[oracle.$id]}
             />
           );
         })}
       </List>
-      <OracleItemDialog
-        open={dialogOpen}
-        handleClose={() => setDialogOpen(false)}
-        name={openOracleItem?.name}
-        table={openOracleItem?.table}
-        handleRoll={() =>
-          openOracleItem &&
-          rollOracleTable(
-            openOracleItem.categoryName,
-            openOracleItem.name,
-            openOracleItem.table
-          )
-        }
-      />
     </>
   );
 }

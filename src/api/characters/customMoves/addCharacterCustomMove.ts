@@ -1,10 +1,11 @@
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCharacterCustomMovesDoc } from "./_getRef";
-import { getCustomMoveDatabaseId, StoredMove } from "types/Moves.type";
+import { StoredMove } from "types/Moves.type";
 import { CharacterNotFoundException } from "api/error/CharacterNotFoundException";
 import { useAuth } from "hooks/useAuth";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 export const addCharacterCustomMove: ApiFunction<
   {
@@ -27,11 +28,10 @@ export const addCharacterCustomMove: ApiFunction<
       return;
     }
 
-    const id = getCustomMoveDatabaseId(customMove.name);
-
+    const encodedId = encodeDataswornId(customMove.$id);
     updateDoc(getCharacterCustomMovesDoc(uid, characterId), {
-      [`moves.${id}`]: customMove,
-      moveOrder: arrayUnion(id),
+      [`moves.${encodedId}`]: customMove,
+      moveOrder: arrayUnion(encodedId),
     })
       .then(() => {
         resolve(true);

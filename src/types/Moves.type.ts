@@ -1,6 +1,7 @@
 import { MoveStatKeys } from "./stats.enum";
 
 export interface StoredMove {
+  $id: string;
   name: string;
   stats?: MoveStatKeys[];
   text: string;
@@ -12,12 +13,4 @@ export interface MoveDocument {
   moveOrder: string[];
 }
 
-export function getCustomMoveDatabaseId(moveName: string) {
-  return `custom-${moveName.toLocaleLowerCase().replaceAll(" ", "-")}`;
-}
-
-export const customMoveCategoryId = "ironsworn/moves/custom";
-
-export function getCustomMoveDataswornId(moveName: string) {
-  return `${customMoveCategoryId}/${getCustomMoveDatabaseId(moveName)}`;
-}
+export const customMoveCatgegoryPrefix = "/ironsworn/moves/custom";

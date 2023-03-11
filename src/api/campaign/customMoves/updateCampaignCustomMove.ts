@@ -8,9 +8,10 @@ import {
 } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCampaignCustomMovesDoc } from "./_getRef";
-import { getCustomMoveDatabaseId, StoredMove } from "types/Moves.type";
+import { StoredMove } from "types/Moves.type";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { firestore } from "config/firebase.config";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 export const updateCampaignCustomMove: ApiFunction<
   {
@@ -28,17 +29,18 @@ export const updateCampaignCustomMove: ApiFunction<
       return;
     }
 
-    const id = getCustomMoveDatabaseId(customMove.name);
+    const encodedId = encodeDataswornId(customMove.$id);
+    if (moveId !== customMove.$id) {
+      const oldEncodedId = encodeDataswornId(moveId);
 
-    if (moveId !== id) {
       const batch = writeBatch(firestore);
       batch.update(getCampaignCustomMovesDoc(campaignId), {
-        [`moves.${id}`]: customMove,
-        [`moves.${moveId}`]: deleteField(),
-        moveOrder: arrayRemove(moveId),
+        [`moves.${encodedId}`]: customMove,
+        [`moves.${oldEncodedId}`]: deleteField(),
+        moveOrder: arrayRemove(oldEncodedId),
       });
       batch.update(getCampaignCustomMovesDoc(campaignId), {
-        moveOrder: arrayUnion(id),
+        moveOrder: arrayUnion(encodedId),
       });
 
       batch
@@ -52,7 +54,7 @@ export const updateCampaignCustomMove: ApiFunction<
         });
     } else {
       updateDoc(getCampaignCustomMovesDoc(campaignId), {
-        [`moves.${id}`]: customMove,
+        [`moves.${encodedId}`]: customMove,
       })
         .then(() => {
           resolve(true);

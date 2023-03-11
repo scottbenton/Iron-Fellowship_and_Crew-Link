@@ -1,16 +1,13 @@
 import { Move, MoveCategory } from "dataforged";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useEffect, useState } from "react";
 import { License, RollMethod, RollType } from "types/Datasworn";
-import {
-  customMoveCategoryId,
-  getCustomMoveDataswornId,
-  StoredMove,
-} from "types/Moves.type";
+import { customMoveCatgegoryPrefix, StoredMove } from "types/Moves.type";
 
 function convertStoredMoveToMove(storedMove: StoredMove): Move {
-  const id = getCustomMoveDataswornId(storedMove.name);
+  const id = generateCustomDataswornId("ironsworn/moves", storedMove.name);
   return {
     $id: id,
     Title: {
@@ -19,7 +16,7 @@ function convertStoredMoveToMove(storedMove: StoredMove): Move {
       Standard: storedMove.name,
       Short: storedMove.name,
     },
-    Category: customMoveCategoryId,
+    Category: "ironsworn/moves/custom",
     Display: {},
     Source: {
       Title: "Custom Move",
@@ -60,14 +57,13 @@ export function useCustomMoves() {
       const mappedCustomMoves: { [key: string]: Move } = {};
 
       customStoredMoves.forEach((storedMove) => {
-        mappedCustomMoves[getCustomMoveDataswornId(storedMove.name)] =
-          convertStoredMoveToMove(storedMove);
+        mappedCustomMoves[storedMove.$id] = convertStoredMoveToMove(storedMove);
       });
 
       setCustomMoveCategory({
-        $id: customMoveCategoryId,
+        $id: customMoveCatgegoryPrefix,
         Title: {
-          $id: `${customMoveCategoryId}/title`,
+          $id: `${customMoveCatgegoryPrefix}/title`,
           Canonical: "Custom Moves",
           Short: "Custom Moves",
           Standard: "Custom Moves",
