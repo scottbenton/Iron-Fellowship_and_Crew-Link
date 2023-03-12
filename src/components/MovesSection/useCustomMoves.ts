@@ -7,11 +7,10 @@ import { License, RollMethod, RollType } from "types/Datasworn";
 import { customMoveCategoryPrefix, StoredMove } from "types/Moves.type";
 
 function convertStoredMoveToMove(storedMove: StoredMove): Move {
-  const id = generateCustomDataswornId("ironsworn/moves", storedMove.name);
   return {
-    $id: id,
+    $id: storedMove.$id,
     Title: {
-      $id: `${id}/title`,
+      $id: `${storedMove.$id}/title`,
       Canonical: storedMove.name,
       Standard: storedMove.name,
       Short: storedMove.name,
@@ -25,10 +24,10 @@ function convertStoredMoveToMove(storedMove: StoredMove): Move {
     },
     Optional: false,
     Trigger: {
-      $id: `${id}/outcomes`,
+      $id: `${storedMove.$id}/outcomes`,
       Options: [
         {
-          $id: `${id}/trigger/options/1`,
+          $id: `${storedMove.$id}/trigger/options/1`,
           Method: RollMethod.Any,
           "Roll type": RollType.Action,
           Using: storedMove.stats ?? [],

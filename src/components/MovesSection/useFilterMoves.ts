@@ -11,17 +11,6 @@ export function useFilterMoves() {
   const [filteredMoves, setFilteredMoves] = useState(categories);
   const customMoveCategory = useCustomMoves();
 
-  // const customMoves = campaignId
-  //   ? useSettingsStore(
-  //       (store) => store.campaigns[campaignId]?.customMoves || []
-  //     )
-  //   : [];
-
-  // const customMoveCategory = {
-  //   categoryName: "Custom Moves",
-  //   moves: customMoves,
-  // };
-
   useEffect(() => {
     const results: MoveCategory[] = [];
 

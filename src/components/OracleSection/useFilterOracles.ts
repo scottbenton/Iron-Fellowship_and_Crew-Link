@@ -4,6 +4,7 @@ import type { OracleSet, OracleTable } from "dataforged";
 import { oracleMap, orderedOracleCategories } from "data/oracles";
 import { useSettingsStore } from "stores/settings.store";
 import { License } from "types/Datasworn";
+import { useCustomOracles } from "./useCustomOracles";
 
 export function useFilterOracles() {
   const { search, setSearch, debouncedSearch } = useSearch();
@@ -50,11 +51,17 @@ export function useFilterOracles() {
   }, [settings]);
 
   const [filteredOracles, setFilteredOracles] = useState(combinedOracles);
+  const customOracleCategory = useCustomOracles();
 
   useEffect(() => {
+    let allOracles = [...combinedOracles];
+    if (customOracleCategory) {
+      allOracles.push(customOracleCategory);
+    }
+
     const results: OracleSet[] = [];
 
-    combinedOracles.forEach((oracleSection) => {
+    allOracles.forEach((oracleSection) => {
       if (
         oracleSection.Title.Standard.toLocaleLowerCase().includes(
           debouncedSearch.toLocaleLowerCase()
@@ -82,7 +89,7 @@ export function useFilterOracles() {
       }
     });
     setFilteredOracles(results);
-  }, [debouncedSearch, combinedOracles]);
+  }, [debouncedSearch, combinedOracles, customOracleCategory]);
 
   return { search, setSearch, filteredOracles };
 }

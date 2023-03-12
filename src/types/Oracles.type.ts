@@ -13,4 +13,9 @@ export interface OracleDocument {
   oracleOrder: string[];
 }
 
-export const customOracleCategoryPrefix = "/ironsworn/oracles/custom";
+export const customOracleCategoryPrefix = "ironsworn/oracles/custom";
+
+export enum TableColumnType {
+  Range = "dice range",
+  String = "string",
+}

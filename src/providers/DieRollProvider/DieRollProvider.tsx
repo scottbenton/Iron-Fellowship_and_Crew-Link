@@ -12,6 +12,8 @@ import { TransitionGroup } from "react-transition-group";
 import ClearIcon from "@mui/icons-material/Close";
 import { RollSnackbar } from "./RollSnackbar";
 import { oracleCategoryMap, oracleMap } from "data/oracles";
+import { useCustomOracles } from "components/OracleSection/useCustomOracles";
+import { CustomOracleSection } from "components/CustomOraclesSection";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -19,6 +21,13 @@ const getRoll = (dieMax: number) => {
 
 export function DieRollProvider(props: PropsWithChildren) {
   const { children } = props;
+  const customOraclesSection = useCustomOracles();
+  const combinedOracleCategories = {
+    ...oracleCategoryMap,
+  };
+  if (customOraclesSection) {
+    combinedOracleCategories[customOraclesSection.$id] = customOraclesSection;
+  }
 
   const [rolls, setRolls] = useState<Roll[]>([]);
   const addRoll = (roll: Roll) => {
@@ -72,11 +81,15 @@ export function DieRollProvider(props: PropsWithChildren) {
       /ironsworn\/oracles\/[^\/]*/gm
     )?.[0];
 
-    const oracle = oracleMap[oracleId];
+    const oracle =
+      oracleMap[oracleId] ?? customOraclesSection?.Tables?.[oracleId];
+    console.debug("Oracle:", oracle);
+    console.debug("Combined Categories:", combinedOracleCategories);
     const oracleCategory = oracleCategoryId
-      ? oracleCategoryMap[oracleCategoryId]
+      ? combinedOracleCategories[oracleCategoryId]
       : undefined;
 
+    console.debug("Category:", oracleCategory);
     if (!oracle || !oracleCategory) return undefined;
 
     const roll = getRoll(100);
