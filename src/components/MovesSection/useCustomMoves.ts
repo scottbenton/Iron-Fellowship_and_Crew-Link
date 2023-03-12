@@ -4,7 +4,7 @@ import { useCharacterSheetStore } from "features/character-sheet/characterSheet.
 import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useEffect, useState } from "react";
 import { License, RollMethod, RollType } from "types/Datasworn";
-import { customMoveCatgegoryPrefix, StoredMove } from "types/Moves.type";
+import { customMoveCategoryPrefix, StoredMove } from "types/Moves.type";
 
 function convertStoredMoveToMove(storedMove: StoredMove): Move {
   const id = generateCustomDataswornId("ironsworn/moves", storedMove.name);
@@ -61,9 +61,9 @@ export function useCustomMoves() {
       });
 
       setCustomMoveCategory({
-        $id: customMoveCatgegoryPrefix,
+        $id: customMoveCategoryPrefix,
         Title: {
-          $id: `${customMoveCatgegoryPrefix}/title`,
+          $id: `${customMoveCategoryPrefix}/title`,
           Canonical: "Custom Moves",
           Short: "Custom Moves",
           Standard: "Custom Moves",

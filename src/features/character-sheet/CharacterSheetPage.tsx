@@ -16,6 +16,7 @@ import { useListenToCharacterSheetNotes } from "api/characters/notes/listenToCha
 import { CharacterHeader } from "./components/CharacterHeader";
 import { useCharacterSheetListenToCampaignCustomMoves } from "api/campaign/customMoves/listenToCampaignCustomMoves";
 import { useCharacterSheetListenToCharacterCustomMoves } from "api/characters/customMoves/listenToCharacterCustomMoves";
+import { useCharacterSheetListenToCustomOracles } from "api/user/custom-oracles/listenToCustomOracles";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
@@ -34,6 +35,7 @@ export function CharacterSheetPage() {
   useListenToCharacterSheetNotes();
   useCharacterSheetListenToCampaignCustomMoves();
   useCharacterSheetListenToCharacterCustomMoves();
+  useCharacterSheetListenToCustomOracles();
 
   useEffect(() => {
     return () => {

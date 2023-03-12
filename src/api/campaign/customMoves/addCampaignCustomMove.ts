@@ -31,7 +31,7 @@ export const addCampaignCustomMove: ApiFunction<
       })
       .catch((e) => {
         console.error(e);
-        reject("Failed to add track");
+        reject("Failed to add move");
       });
   });
 };

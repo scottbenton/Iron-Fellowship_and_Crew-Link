@@ -13,4 +13,4 @@ export interface MoveDocument {
   moveOrder: string[];
 }
 
-export const customMoveCatgegoryPrefix = "/ironsworn/moves/custom";
+export const customMoveCategoryPrefix = "/ironsworn/moves/custom";

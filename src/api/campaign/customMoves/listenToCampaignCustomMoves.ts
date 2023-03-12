@@ -43,7 +43,7 @@ export function useCampaignGMScreenListenToCampaignCustomMoves() {
         console.error(err);
         const errorMessage = getErrorMessage(
           error,
-          "Failed to retrieve campaign settings"
+          "Failed to retrieve custom moves"
         );
         error(errorMessage);
       });

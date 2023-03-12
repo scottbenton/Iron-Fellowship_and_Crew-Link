@@ -6,6 +6,7 @@ import { useCampaignGMScreenListenToCampaignCharacters } from "api/characters/li
 import { useEffect } from "react";
 import { useCampaignStore } from "stores/campaigns.store";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
+import { useCampaignGMScreenListenToCustomOracles } from "api/user/custom-oracles/listenToCustomOracles";
 
 export function useCampaignGMScreenApiCalls(campaignId?: string) {
   const campaign = useCampaignStore(
@@ -20,6 +21,7 @@ export function useCampaignGMScreenApiCalls(campaignId?: string) {
   useCampaignGMScreenListenToCampaignProgressTracks();
   useCampaignGMScreenListenToCampaignNotes();
   useCampaignGMScreenListenToCampaignCustomMoves();
+  useCampaignGMScreenListenToCustomOracles();
 
   useEffect(() => {
     return () => {
