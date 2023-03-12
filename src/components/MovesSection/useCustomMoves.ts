@@ -22,6 +22,7 @@ function convertStoredMoveToMove(storedMove: StoredMove): Move {
       Authors: ["Campaign GM"],
       License: License.None,
     },
+    Oracles: storedMove.oracleIds,
     Optional: false,
     Trigger: {
       $id: `${storedMove.$id}/outcomes`,

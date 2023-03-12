@@ -105,7 +105,7 @@ export function useCustomOracles() {
     } else {
       setCustomOracleCategory(undefined);
     }
-  }, []);
+  }, [characterSheetOracles, gmScreenOracles]);
 
   return customOracleCategory;
 }

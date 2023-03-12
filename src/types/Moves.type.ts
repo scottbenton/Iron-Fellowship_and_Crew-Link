@@ -5,7 +5,7 @@ export interface StoredMove {
   name: string;
   stats?: MoveStatKeys[];
   text: string;
-  oracleId?: string;
+  oracleIds?: string[];
 }
 
 export interface MoveDocument {

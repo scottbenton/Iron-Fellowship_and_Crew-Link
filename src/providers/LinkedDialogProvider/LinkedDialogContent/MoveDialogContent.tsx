@@ -10,6 +10,8 @@ import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { useCustomMoves } from "components/MovesSection/useCustomMoves";
 import { oracleMap } from "data/oracles";
 import { useRoller } from "providers/DieRollProvider";
+import { OracleTable } from "dataforged";
+import { useCustomOracles } from "components/OracleSection/useCustomOracles";
 
 export interface MoveDialogContentProps {
   id: string;
@@ -23,6 +25,8 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
 
   const { rollOracleTable } = useRoller();
   const customMoves = useCustomMoves();
+  const customOracles = useCustomOracles()?.Tables;
+  const allOracles = { ...oracleMap, ...customOracles };
 
   const move = moveMap[id] ?? customMoves?.Moves[id];
 
@@ -70,10 +74,10 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
     });
   });
 
-  const moveOracles =
+  const moveOracles: (OracleTable | undefined)[] =
     move.Oracles?.map(
       // Temporary fix for id mismatch in datasworn
-      (oracleId) => oracleMap[oracleId.replace("fifty-fifty", "50_50")]
+      (oracleId) => allOracles[oracleId.replace("fifty-fifty", "50_50")]
     ) ?? [];
 
   return (
@@ -88,16 +92,19 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
       <DialogContent>
         <MoveStatRollers stats={stats} visibleStats={visibleStats} />
         <MarkdownRenderer markdown={move.Text} />
-        {moveOracles.map((oracle) => (
-          <Button
-            key={oracle.$id}
-            variant={"outlined"}
-            sx={{ mr: 1, mb: 1 }}
-            onClick={() => rollOracleTable(oracle.$id)}
-          >
-            Roll {oracle.Title.Standard.replace("Ask the Oracle: ", "")}
-          </Button>
-        ))}
+        {moveOracles.map(
+          (oracle) =>
+            oracle && (
+              <Button
+                key={oracle.$id}
+                variant={"outlined"}
+                sx={{ mr: 1, mb: 1 }}
+                onClick={() => rollOracleTable(oracle.$id)}
+              >
+                Roll {oracle.Title.Standard.replace("Ask the Oracle: ", "")}
+              </Button>
+            )
+        )}
       </DialogContent>
     </>
   );

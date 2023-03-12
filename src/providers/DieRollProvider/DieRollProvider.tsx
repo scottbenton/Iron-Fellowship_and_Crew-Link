@@ -13,7 +13,6 @@ import ClearIcon from "@mui/icons-material/Close";
 import { RollSnackbar } from "./RollSnackbar";
 import { oracleCategoryMap, oracleMap } from "data/oracles";
 import { useCustomOracles } from "components/OracleSection/useCustomOracles";
-import { CustomOracleSection } from "components/CustomOraclesSection";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -83,13 +82,11 @@ export function DieRollProvider(props: PropsWithChildren) {
 
     const oracle =
       oracleMap[oracleId] ?? customOraclesSection?.Tables?.[oracleId];
-    console.debug("Oracle:", oracle);
-    console.debug("Combined Categories:", combinedOracleCategories);
+
     const oracleCategory = oracleCategoryId
       ? combinedOracleCategories[oracleCategoryId]
       : undefined;
 
-    console.debug("Category:", oracleCategory);
     if (!oracle || !oracleCategory) return undefined;
 
     const roll = getRoll(100);
