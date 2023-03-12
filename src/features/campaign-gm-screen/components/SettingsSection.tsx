@@ -3,6 +3,7 @@ import { useCampaignGMScreenAddCustomMove } from "api/campaign/customMoves/addCa
 import { useCampaignGMScreenRemoveCampaignCustomMove } from "api/campaign/customMoves/removeCampaignCustomMove";
 import { useCampaignGMScreenUpdateCustomMove } from "api/campaign/customMoves/updateCampaignCustomMove";
 import { CustomMovesSection } from "components/CustomMovesSection";
+import { CustomOracleSection } from "components/CustomOraclesSection";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 
 export function SettingsSection() {
@@ -12,15 +13,19 @@ export function SettingsSection() {
     useCampaignGMScreenRemoveCampaignCustomMove();
 
   const customMoves = useCampaignGMScreenStore((store) => store.customMoves);
+  const customOracles = useCampaignGMScreenStore(
+    (store) => store.customOracles
+  );
 
   return (
-    <Stack spacing={2} sx={{ pb: 2 }}>
+    <Stack spacing={3} sx={{ pb: 2 }}>
       <CustomMovesSection
-        createCustomMove={addCampaignCustomMove}
         customMoves={customMoves}
+        createCustomMove={addCampaignCustomMove}
         updateCustomMove={updateCampaignCustomMove}
         removeCustomMove={removeCampaignCustomMove}
       />
+      <CustomOracleSection customOracles={customOracles} />
     </Stack>
   );
 }

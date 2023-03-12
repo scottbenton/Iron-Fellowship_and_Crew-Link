@@ -1,5 +1,6 @@
 import { Box, Button, DialogContent, Typography } from "@mui/material";
 import { MarkdownRenderer } from "components/MarkdownRenderer";
+import { useCustomOracles } from "components/OracleSection/useCustomOracles";
 import { oracleMap } from "data/oracles";
 import { useRoller } from "providers/DieRollProvider";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
@@ -15,7 +16,9 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
   const { rollOracleTable } = useRoller();
-  const oracle = oracleMap[id];
+
+  const customOraclesCategory = useCustomOracles();
+  const oracle = oracleMap[id] ?? customOraclesCategory?.Tables?.[id];
 
   if (!oracle) {
     return (

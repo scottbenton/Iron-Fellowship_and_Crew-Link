@@ -4,14 +4,13 @@ import { useCharacterSheetStore } from "features/character-sheet/characterSheet.
 import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useEffect, useState } from "react";
 import { License, RollMethod, RollType } from "types/Datasworn";
-import { customMoveCatgegoryPrefix, StoredMove } from "types/Moves.type";
+import { customMoveCategoryPrefix, StoredMove } from "types/Moves.type";
 
 function convertStoredMoveToMove(storedMove: StoredMove): Move {
-  const id = generateCustomDataswornId("ironsworn/moves", storedMove.name);
   return {
-    $id: id,
+    $id: storedMove.$id,
     Title: {
-      $id: `${id}/title`,
+      $id: `${storedMove.$id}/title`,
       Canonical: storedMove.name,
       Standard: storedMove.name,
       Short: storedMove.name,
@@ -23,12 +22,13 @@ function convertStoredMoveToMove(storedMove: StoredMove): Move {
       Authors: ["Campaign GM"],
       License: License.None,
     },
+    Oracles: storedMove.oracleIds,
     Optional: false,
     Trigger: {
-      $id: `${id}/outcomes`,
+      $id: `${storedMove.$id}/outcomes`,
       Options: [
         {
-          $id: `${id}/trigger/options/1`,
+          $id: `${storedMove.$id}/trigger/options/1`,
           Method: RollMethod.Any,
           "Roll type": RollType.Action,
           Using: storedMove.stats ?? [],
@@ -61,9 +61,9 @@ export function useCustomMoves() {
       });
 
       setCustomMoveCategory({
-        $id: customMoveCatgegoryPrefix,
+        $id: customMoveCategoryPrefix,
         Title: {
-          $id: `${customMoveCatgegoryPrefix}/title`,
+          $id: `${customMoveCategoryPrefix}/title`,
           Canonical: "Custom Moves",
           Short: "Custom Moves",
           Standard: "Custom Moves",

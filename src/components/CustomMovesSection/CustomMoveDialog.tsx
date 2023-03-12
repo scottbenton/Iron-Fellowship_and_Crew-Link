@@ -11,8 +11,11 @@ import {
   FormControl,
   FormLabel,
   FormControlLabel,
+  Autocomplete,
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "components/DialogTitleWithCloseButton";
+import { useCustomOracles } from "components/OracleSection/useCustomOracles";
+import { oracleMap } from "data/oracles";
 import { Formik } from "formik";
 import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useState } from "react";
@@ -27,6 +30,7 @@ interface FormValues {
   name: string;
   description: string;
   enabledStats: EnabledStats;
+  oracleIds: string[];
 }
 
 export interface CustomMoveDialogProps {
@@ -40,6 +44,9 @@ export interface CustomMoveDialogProps {
 
 export function CustomMoveDialog(props: CustomMoveDialogProps) {
   const { open, onClose, move, createCustomMove, updateCustomMove } = props;
+
+  const oracles = useCustomOracles()?.Tables;
+  const combinedOracles = { ...oracleMap, ...oracles };
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -57,6 +64,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
       [PlayerConditionMeter.Supply]: false,
       ["companion health"]: false,
     },
+    oracleIds: move?.oracleIds ?? [],
   };
 
   move?.stats?.forEach((stat) => {
@@ -85,6 +93,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
       name: values.name,
       text: values.description,
       stats,
+      oracleIds: values.oracleIds,
     };
 
     if (!move) {
@@ -310,6 +319,24 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                     </Box>
                   </FormControl>
                 </Box>
+                <Autocomplete
+                  multiple
+                  limitTags={2}
+                  options={Object.values(combinedOracles)}
+                  getOptionLabel={(oracle) => oracle.Title.Standard}
+                  renderInput={(params) => (
+                    <TextField {...params} label={"Oracles"} />
+                  )}
+                  value={form.values.oracleIds.map(
+                    (oracleId) => combinedOracles[oracleId]
+                  )}
+                  onChange={(evt, value) => {
+                    const ids = Array.isArray(value)
+                      ? value.map((oracle) => oracle.$id)
+                      : [];
+                    form.setFieldValue("oracleIds", ids);
+                  }}
+                />
               </Stack>
             </DialogContent>
             <DialogActions>

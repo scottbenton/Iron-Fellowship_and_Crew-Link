@@ -98,7 +98,7 @@ export function CustomMovesSection(props: CustomMovesSectionProps) {
           </Card>
           <div>
             <Button
-              variant={"contained"}
+              variant={"outlined"}
               onClick={() => setIsAddMoveDialogOpen(true)}
             >
               Add Custom Move

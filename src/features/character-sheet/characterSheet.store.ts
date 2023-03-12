@@ -2,6 +2,7 @@ import produce from "immer";
 import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
+import { StoredOracle } from "types/Oracles.type";
 import { create } from "zustand";
 import { momentumTrack } from "../../data/defaultTracks";
 import { StoredAsset } from "../../types/Asset.type";
@@ -82,6 +83,9 @@ export interface CharacterSheetStore {
   customMoves?: StoredMove[];
   setCustomMoves: (moves: StoredMove[]) => void;
 
+  customOracles?: StoredOracle[];
+  setCustomOracles: (oracles: StoredOracle[]) => void;
+
   notes?: Note[];
   setNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
@@ -94,7 +98,7 @@ const initialState = {
   campaign: undefined,
   supply: undefined,
   assets: undefined,
-
+  customOracles: undefined,
   customMoves: undefined,
   notes: undefined,
 
@@ -208,6 +212,14 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
       set(
         produce((state: CharacterSheetStore) => {
           state.customMoves = moves;
+        })
+      );
+    },
+
+    setCustomOracles: (oracles) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          state.customOracles = oracles;
         })
       );
     },

@@ -29,6 +29,7 @@ import { CustomMovesSection } from "components/CustomMovesSection";
 import { useCharacterSheetAddCustomMove } from "api/characters/customMoves/addCharacterCustomMove";
 import { useCharacterSheetUpdateCustomMove } from "api/characters/customMoves/updateCampaignCustomMove";
 import { useCharacterSheetRemoveCharacterCustomMove } from "api/characters/customMoves/removeCharacterCustomMove";
+import { CustomOracleSection } from "components/CustomOraclesSection";
 
 export function CharacterSection() {
   const { error } = useSnackbar();
@@ -80,6 +81,8 @@ export function CharacterSection() {
   const { updateCharacterCustomMove } = useCharacterSheetUpdateCustomMove();
   const { removeCharacterCustomMove } =
     useCharacterSheetRemoveCharacterCustomMove();
+
+  const customOracles = useCharacterSheetStore((store) => store.customOracles);
 
   return (
     <Stack spacing={2} pb={2}>
@@ -336,6 +339,7 @@ export function CharacterSection() {
           removeCustomMove={removeCharacterCustomMove}
         />
       )}
+      {!campaignId && <CustomOracleSection customOracles={customOracles} />}
     </Stack>
   );
 }

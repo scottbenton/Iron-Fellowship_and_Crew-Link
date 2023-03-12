@@ -5,7 +5,7 @@ export interface StoredMove {
   name: string;
   stats?: MoveStatKeys[];
   text: string;
-  oracleId?: string;
+  oracleIds?: string[];
 }
 
 export interface MoveDocument {
@@ -13,4 +13,4 @@ export interface MoveDocument {
   moveOrder: string[];
 }
 
-export const customMoveCatgegoryPrefix = "/ironsworn/moves/custom";
+export const customMoveCategoryPrefix = "/ironsworn/moves/custom";

@@ -16,6 +16,10 @@ service cloud.firestore {
     match /users/{userId} {
     	allow read: if true;
     	allow write: if userId == request.auth.uid;
+      match /custom-oracles/{document=**} {
+        allow read: if true;
+        allow write, delete: if userId == request.auth.uid;
+      }
       match /settings/{document=**} {
       	allow read, write, delete: if userId == request.auth.uid;
       }

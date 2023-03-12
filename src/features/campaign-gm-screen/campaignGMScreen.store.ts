@@ -5,6 +5,7 @@ import { StoredAsset } from "types/Asset.type";
 import { StoredCampaign } from "types/Campaign.type";
 import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
+import { StoredOracle } from "types/Oracles.type";
 import { TRACK_TYPES } from "types/Track.type";
 import { UserDocument } from "types/User.type";
 import { OracleSettings } from "types/UserSettings.type";
@@ -52,6 +53,9 @@ export interface CampaignGMScreenStore {
   oracleSettings?: OracleSettings;
   setOracleSettings: (oracleSettings: OracleSettings) => void;
 
+  customOracles?: StoredOracle[];
+  setCustomOracles: (oracles: StoredOracle[]) => void;
+
   customMoves?: StoredMove[];
   setCustomMoves: (moves: StoredMove[]) => void;
 
@@ -69,6 +73,7 @@ const initialState = {
   characterAssets: {},
   tracks: undefined,
   oracleSettings: undefined,
+  customOracles: undefined,
   customMoves: undefined,
   campaignNotes: undefined,
 };
@@ -143,6 +148,14 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       set(
         produce((store: CampaignGMScreenStore) => {
           store.oracleSettings = settings;
+        })
+      );
+    },
+
+    setCustomOracles: (oracles) => {
+      set(
+        produce((store: CampaignGMScreenStore) => {
+          store.customOracles = oracles;
         })
       );
     },
