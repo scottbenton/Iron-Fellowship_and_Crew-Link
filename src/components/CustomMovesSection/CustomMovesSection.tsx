@@ -1,32 +1,22 @@
-import {
-  Box,
-  Button,
-  Card,
-  IconButton,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-} from "@mui/material";
+import { Box, Button, Card, LinearProgress, List, Stack } from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
 import { useState } from "react";
 import { StoredMove } from "types/Moves.type";
 import { CustomMoveDialog } from "./CustomMoveDialog";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
+import { useAddCustomMove } from "api/user/custom-moves/addCustomMove";
+import { useUpdateCustomMove } from "api/user/custom-moves/updateCustomMove";
+import { useRemoveCustomMove } from "api/user/custom-moves/removeCustomMove";
+import { CustomMoveListItem } from "./CustomMoveListItem";
 
 export interface CustomMovesSectionProps {
   customMoves?: StoredMove[];
-  createCustomMove: (move: StoredMove) => Promise<boolean>;
-  updateCustomMove: (moveId: string, move: StoredMove) => Promise<boolean>;
-  removeCustomMove: (moveId: string) => Promise<boolean>;
+  hiddenMoveIds?: string[];
+  showOrHideCustomMove: (moveId: string, hidden: boolean) => Promise<boolean>;
 }
 
 export function CustomMovesSection(props: CustomMovesSectionProps) {
-  const { customMoves, createCustomMove, updateCustomMove, removeCustomMove } =
-    props;
+  const { customMoves, hiddenMoveIds, showOrHideCustomMove } = props;
 
   const confirm = useConfirm();
 
@@ -36,11 +26,15 @@ export function CustomMovesSection(props: CustomMovesSectionProps) {
   const [currentlyEditingMove, setCurrentlyEditingMove] =
     useState<StoredMove>();
 
+  const { addCustomMove } = useAddCustomMove();
+  const { updateCustomMove } = useUpdateCustomMove();
+  const { removeCustomMove } = useRemoveCustomMove();
+
   const handleDelete = (moveId: string, move: StoredMove) => {
     confirm({
       title: `Delete ${move.name}`,
       description:
-        "Are you sure you want to delete this move? This cannot be undone.",
+        "Are you sure you want to delete this move? It will be deleted from ALL of your characters and campaigns. This cannot be undone.",
       confirmationText: "Delete",
       confirmationButtonProps: {
         variant: "contained",
@@ -48,50 +42,34 @@ export function CustomMovesSection(props: CustomMovesSectionProps) {
       },
     })
       .then(() => {
-        removeCustomMove(moveId).catch();
+        removeCustomMove(moveId).catch(() => {});
       })
-      .catch();
+      .catch(() => {});
   };
 
   return (
     <Box>
       <SectionHeading label={"Custom Moves"} />
-      {Array.isArray(customMoves) ? (
+      {Array.isArray(customMoves) && Array.isArray(hiddenMoveIds) ? (
         <Stack spacing={2} px={2} mt={1}>
           <Card variant={"outlined"}>
             <List disablePadding>
               {customMoves.map(
                 (move) =>
                   move && (
-                    <ListItem
-                      dense
-                      key={move.name}
-                      sx={(theme) => ({
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        "&:nth-of-type(odd)": {
-                          backgroundColor: theme.palette.action.hover,
-                        },
-                      })}
-                    >
-                      <ListItemText>{move.name}</ListItemText>
-                      <Box>
-                        <IconButton
-                          onClick={() => {
-                            setCurrentlyEditingMove(move);
-                            setIsAddMoveDialogOpen(true);
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => handleDelete(move.$id, move)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Box>
-                    </ListItem>
+                    <CustomMoveListItem
+                      key={move.$id}
+                      move={move}
+                      isVisible={!hiddenMoveIds.includes(move.$id)}
+                      handleEdit={() => {
+                        setCurrentlyEditingMove(move);
+                        setIsAddMoveDialogOpen(true);
+                      }}
+                      handleVisibilityToggle={(isVisible) =>
+                        showOrHideCustomMove(move.$id, !isVisible)
+                      }
+                      handleDelete={() => handleDelete(move.$id, move)}
+                    />
                   )
               )}
             </List>
@@ -114,7 +92,7 @@ export function CustomMovesSection(props: CustomMovesSectionProps) {
           setIsAddMoveDialogOpen(false);
           setCurrentlyEditingMove(undefined);
         }}
-        createCustomMove={createCustomMove}
+        createCustomMove={addCustomMove}
         updateCustomMove={updateCustomMove}
         move={currentlyEditingMove}
       />

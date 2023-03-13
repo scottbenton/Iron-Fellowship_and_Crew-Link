@@ -3,6 +3,7 @@ import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
 import { StoredOracle } from "types/Oracles.type";
+import { CharacterSettingsDoc } from "types/Settings.type";
 import { create } from "zustand";
 import { momentumTrack } from "../../data/defaultTracks";
 import { StoredAsset } from "../../types/Asset.type";
@@ -89,6 +90,9 @@ export interface CharacterSheetStore {
   notes?: Note[];
   setNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
+
+  characterSettings?: CharacterSettingsDoc;
+  setCharacterSettings: (settings: CharacterSettingsDoc) => void;
 }
 
 const initialState = {
@@ -101,6 +105,7 @@ const initialState = {
   customOracles: undefined,
   customMoves: undefined,
   notes: undefined,
+  characterSettings: undefined,
 
   [TRACK_TYPES.VOW]: {},
   [TRACK_TYPES.JOURNEY]: {},
@@ -220,6 +225,14 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
       set(
         produce((state: CharacterSheetStore) => {
           state.customOracles = oracles;
+        })
+      );
+    },
+
+    setCharacterSettings: (settings) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          state.characterSettings = settings;
         })
       );
     },

@@ -1,27 +1,29 @@
+import { listenToCustomMoves } from "api/user/custom-moves/listenToCustomMoves";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
+import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";
-import { StoredMove } from "types/Moves.type";
-import { getCampaignCustomMovesDoc } from "./_getRef";
+import { useCampaignStore } from "stores/campaigns.store";
+import { CampaignSettingsDoc } from "types/Settings.type";
+import { getCampaignSettingsDoc } from "./_getRef";
 
-export function listenToCampaignCustomMoves(
+export function listenToCampaignSettings(
   campaignId: string,
-  onCustomMoves: (moves: StoredMove[]) => void,
+  onSettings: (settings: CampaignSettingsDoc) => void,
   onError: (error: any) => void
 ) {
   return onSnapshot(
-    getCampaignCustomMovesDoc(campaignId),
+    getCampaignSettingsDoc(campaignId),
     (snapshot) => {
       if (snapshot.exists()) {
-        const data = snapshot.data();
-        onCustomMoves(data.moveOrder.map((moveId) => data.moves[moveId]));
+        onSettings(snapshot.data());
       } else {
-        setDoc(getCampaignCustomMovesDoc(campaignId), {
-          moves: {},
-          moveOrder: [],
+        setDoc(getCampaignSettingsDoc(campaignId), {
+          hiddenCustomMoveIds: [],
+          hiddenCustomOraclesIds: [],
         });
       }
     },
@@ -29,9 +31,11 @@ export function listenToCampaignCustomMoves(
   );
 }
 
-export function useCampaignGMScreenListenToCampaignCustomMoves() {
+export function useCampaignGMScreenListenToCampaignSettings() {
   const campaignId = useCampaignGMScreenStore((store) => store.campaignId);
-  const setMoves = useCampaignGMScreenStore((store) => store.setCustomMoves);
+  const setSettings = useCampaignGMScreenStore(
+    (store) => store.setCampaignSettings
+  );
 
   const { error } = useSnackbar();
 
@@ -39,11 +43,11 @@ export function useCampaignGMScreenListenToCampaignCustomMoves() {
     let unsubscribe: Unsubscribe;
 
     if (campaignId) {
-      unsubscribe = listenToCampaignCustomMoves(campaignId, setMoves, (err) => {
+      unsubscribe = listenToCampaignSettings(campaignId, setSettings, (err) => {
         console.error(err);
         const errorMessage = getErrorMessage(
           error,
-          "Failed to retrieve custom moves"
+          "Failed to retrieve campaign settings"
         );
         error(errorMessage);
       });
@@ -55,9 +59,11 @@ export function useCampaignGMScreenListenToCampaignCustomMoves() {
   }, [campaignId]);
 }
 
-export function useCharacterSheetListenToCampaignCustomMoves() {
+export function useCharacterSheetListenToCampaignSettings() {
   const campaignId = useCharacterSheetStore((store) => store.campaignId);
-  const setMoves = useCharacterSheetStore((store) => store.setCustomMoves);
+  const setSettings = useCharacterSheetStore(
+    (store) => store.setCharacterSettings
+  );
 
   const { error } = useSnackbar();
 
@@ -65,7 +71,7 @@ export function useCharacterSheetListenToCampaignCustomMoves() {
     let unsubscribe: Unsubscribe;
 
     if (campaignId) {
-      unsubscribe = listenToCampaignCustomMoves(campaignId, setMoves, (err) => {
+      unsubscribe = listenToCampaignSettings(campaignId, setSettings, (err) => {
         console.error(err);
         const errorMessage = getErrorMessage(
           error,

@@ -38,7 +38,7 @@ export function EditorToolbar(props: EditorToolbarProps) {
       .then(() => {
         deleteNote && deleteNote();
       })
-      .catch();
+      .catch(() => {});
   };
 
   return (

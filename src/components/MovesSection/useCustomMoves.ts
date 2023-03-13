@@ -43,21 +43,35 @@ export function useCustomMoves() {
   const campaignCustomMoves = useCampaignGMScreenStore(
     (store) => store.customMoves
   );
+  const hiddenCampaignMoveIds = useCampaignGMScreenStore(
+    (store) => store.campaignSettings?.hiddenCustomMoveIds
+  );
 
   const characterSheetCustomMoves = useCharacterSheetStore(
     (store) => store.customMoves
+  );
+  const hiddenCharacterMoveIds = useCharacterSheetStore(
+    (store) => store.characterSettings?.hiddenCustomMoveIds
   );
 
   const [customMoveCategory, setCustomMoveCategory] = useState<MoveCategory>();
 
   useEffect(() => {
-    const customStoredMoves = campaignCustomMoves || characterSheetCustomMoves;
+    const customStoredMoves = campaignCustomMoves ?? characterSheetCustomMoves;
+    const hiddenMoveIds = hiddenCampaignMoveIds ?? hiddenCharacterMoveIds;
 
-    if (customStoredMoves && customStoredMoves.length > 0) {
+    if (
+      customStoredMoves &&
+      customStoredMoves.length > 0 &&
+      Array.isArray(hiddenMoveIds)
+    ) {
       const mappedCustomMoves: { [key: string]: Move } = {};
 
       customStoredMoves.forEach((storedMove) => {
-        mappedCustomMoves[storedMove.$id] = convertStoredMoveToMove(storedMove);
+        if (!hiddenMoveIds.includes(storedMove.$id)) {
+          mappedCustomMoves[storedMove.$id] =
+            convertStoredMoveToMove(storedMove);
+        }
       });
 
       setCustomMoveCategory({
@@ -81,7 +95,12 @@ export function useCustomMoves() {
     } else {
       setCustomMoveCategory(undefined);
     }
-  }, [campaignCustomMoves, characterSheetCustomMoves]);
+  }, [
+    campaignCustomMoves,
+    characterSheetCustomMoves,
+    hiddenCampaignMoveIds,
+    hiddenCharacterMoveIds,
+  ]);
 
   return customMoveCategory;
 }

@@ -4,25 +4,24 @@ import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";
-import { StoredMove } from "types/Moves.type";
-import { getCharacterCustomMovesDoc } from "./_getRef";
+import { CharacterSettingsDoc } from "types/Settings.type";
+import { getCharacterSettingsDoc } from "./_getRef";
 
-export function listenToCharacterCustomMoves(
+export function listenToCharacterSettings(
   uid: string,
   characterId: string,
-  onCustomMoves: (moves: StoredMove[]) => void,
+  onSettings: (settings: CharacterSettingsDoc) => void,
   onError: (error: any) => void
 ) {
   return onSnapshot(
-    getCharacterCustomMovesDoc(uid, characterId),
+    getCharacterSettingsDoc(uid, characterId),
     (snapshot) => {
       if (snapshot.exists()) {
-        const data = snapshot.data();
-        onCustomMoves(data.moveOrder.map((moveId) => data.moves[moveId]));
+        onSettings(snapshot.data());
       } else {
-        setDoc(getCharacterCustomMovesDoc(uid, characterId), {
-          moves: {},
-          moveOrder: [],
+        setDoc(getCharacterSettingsDoc(uid, characterId), {
+          hiddenCustomMoveIds: [],
+          hiddenCustomOraclesIds: [],
         });
       }
     },
@@ -30,27 +29,28 @@ export function listenToCharacterCustomMoves(
   );
 }
 
-export function useCharacterSheetListenToCharacterCustomMoves() {
+export function useCharacterSheetListenToCharacterSettings() {
   const uid = useAuth().user?.uid;
-  const campaignId = useCharacterSheetStore((store) => store.campaignId);
   const characterId = useCharacterSheetStore((store) => store.characterId);
-  const setMoves = useCharacterSheetStore((store) => store.setCustomMoves);
+  const setSettings = useCharacterSheetStore(
+    (store) => store.setCharacterSettings
+  );
 
   const { error } = useSnackbar();
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
 
-    if (uid && characterId && !campaignId) {
-      unsubscribe = listenToCharacterCustomMoves(
+    if (uid && characterId) {
+      unsubscribe = listenToCharacterSettings(
         uid,
         characterId,
-        setMoves,
+        setSettings,
         (err) => {
           console.error(err);
           const errorMessage = getErrorMessage(
             error,
-            "Failed to retrieve campaign settings"
+            "Failed to retrieve character settings"
           );
           error(errorMessage);
         }
@@ -60,5 +60,5 @@ export function useCharacterSheetListenToCharacterCustomMoves() {
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [uid, campaignId, characterId]);
+  }, [uid, characterId]);
 }

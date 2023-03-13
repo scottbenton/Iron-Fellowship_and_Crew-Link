@@ -20,6 +20,16 @@ export function useFilterMoves() {
     }
 
     allCategories.forEach((category) => {
+      if (
+        category.Title.Standard.toLocaleLowerCase().includes(
+          debouncedSearch.toLocaleLowerCase()
+        ) &&
+        Object.keys(category.Moves).length > 0
+      ) {
+        results.push(category);
+        return;
+      }
+
       let Moves: { [key: string]: Move } = {};
 
       Object.keys(category.Moves).forEach((moveId) => {

@@ -72,7 +72,7 @@ export function CampaignNotesSection(props: CampaignNotesSectionProps) {
             .then(() => {
               setNoteId(undefined);
             })
-            .catch()
+            .catch(() => {})
         }
         condensedView={isMobile}
       />

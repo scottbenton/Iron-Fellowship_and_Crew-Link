@@ -6,6 +6,7 @@ import { StoredCampaign } from "types/Campaign.type";
 import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
 import { StoredOracle } from "types/Oracles.type";
+import { CampaignSettingsDoc } from "types/Settings.type";
 import { TRACK_TYPES } from "types/Track.type";
 import { UserDocument } from "types/User.type";
 import { OracleSettings } from "types/UserSettings.type";
@@ -62,6 +63,9 @@ export interface CampaignGMScreenStore {
   campaignNotes?: Note[];
   setCampaignNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
+
+  campaignSettings?: CampaignSettingsDoc;
+  setCampaignSettings: (settings: CampaignSettingsDoc) => void;
 }
 
 const initialState = {
@@ -76,6 +80,7 @@ const initialState = {
   customOracles: undefined,
   customMoves: undefined,
   campaignNotes: undefined,
+  campaignSettings: undefined,
 };
 
 export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
@@ -189,6 +194,14 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
 
           store.campaignNotes[noteIndex].order = order;
           store.campaignNotes.sort((n1, n2) => n1.order - n2.order);
+        })
+      );
+    },
+
+    setCampaignSettings: (settings) => {
+      set(
+        produce((store: CampaignGMScreenStore) => {
+          store.campaignSettings = settings;
         })
       );
     },

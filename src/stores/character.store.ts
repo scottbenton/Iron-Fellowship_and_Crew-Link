@@ -55,7 +55,7 @@ export const useCharacterStore = create<CharacterStore>()((set, getState) => ({
             })
           );
         })
-        .catch();
+        .catch(() => {});
     }
   },
 

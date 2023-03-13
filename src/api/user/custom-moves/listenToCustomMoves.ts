@@ -7,40 +7,36 @@ import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";
 import { useCampaignStore } from "stores/campaigns.store";
-import { StoredOracle } from "types/Oracles.type";
-import { getUsersCustomOracleDoc } from "./_getRef";
+import { StoredMove } from "types/Moves.type";
+import { getUserCustomMovesDoc } from "./_getRef";
 
-export function listenToCustomOracles(
+export function listenToCustomMoves(
   uid: string,
-  onCustomOracles: (oracles: StoredOracle[]) => void,
+  onCustomMoves: (moves: StoredMove[]) => void,
   onError: (error: any) => void
 ) {
   return onSnapshot(
-    getUsersCustomOracleDoc(uid),
+    getUserCustomMovesDoc(uid),
     (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data();
-        onCustomOracles(
-          data.oracleOrder.map((oracleId) => data.oracles[oracleId])
-        );
+        onCustomMoves(data.moveOrder.map((moveId) => data.moves[moveId]));
       } else if (uid === firebaseAuth.currentUser?.uid) {
-        setDoc(getUsersCustomOracleDoc(uid), {
-          oracles: {},
-          oracleOrder: [],
+        setDoc(getUserCustomMovesDoc(uid), {
+          moves: {},
+          moveOrder: [],
         });
       } else {
-        onCustomOracles([]);
+        onCustomMoves([]);
       }
     },
     (error) => onError(error)
   );
 }
 
-export function useCampaignGMScreenListenToCustomOracles() {
+export function useCampaignGMScreenListenToCustomMoves() {
   const uid = useAuth().user?.uid;
-  const setOracles = useCampaignGMScreenStore(
-    (store) => store.setCustomOracles
-  );
+  const setMoves = useCampaignGMScreenStore((store) => store.setCustomMoves);
 
   const { error } = useSnackbar();
 
@@ -48,11 +44,11 @@ export function useCampaignGMScreenListenToCustomOracles() {
     let unsubscribe: Unsubscribe;
 
     if (uid) {
-      unsubscribe = listenToCustomOracles(uid, setOracles, (err) => {
+      unsubscribe = listenToCustomMoves(uid, setMoves, (err) => {
         console.error(err);
         const errorMessage = getErrorMessage(
           error,
-          "Failed to retrieve custom oracles"
+          "Failed to retrieve custom moves"
         );
         error(errorMessage);
       });
@@ -64,7 +60,7 @@ export function useCampaignGMScreenListenToCustomOracles() {
   }, [uid]);
 }
 
-export function useCharacterSheetListenToCustomOracles() {
+export function useCharacterSheetListenToCustomMoves() {
   const campaignId = useCharacterSheetStore((store) => store.campaignId);
   const gmUid = useCampaignStore((store) =>
     campaignId ? store.campaigns[campaignId]?.gmId : undefined
@@ -73,22 +69,27 @@ export function useCharacterSheetListenToCustomOracles() {
 
   const uid = campaignId ? gmUid : userId;
 
-  const setOracles = useCharacterSheetStore((store) => store.setCustomOracles);
+  const setMoves = useCharacterSheetStore((store) => store.setCustomMoves);
 
   const { error } = useSnackbar();
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
-
     if (uid) {
-      unsubscribe = listenToCustomOracles(uid, setOracles, (err) => {
-        console.error(err);
-        const errorMessage = getErrorMessage(
-          error,
-          "Failed to retrieve custom oracles"
-        );
-        error(errorMessage);
-      });
+      unsubscribe = listenToCustomMoves(
+        uid,
+        (moves) => {
+          setMoves(moves);
+        },
+        (err) => {
+          console.error(err);
+          const errorMessage = getErrorMessage(
+            error,
+            "Failed to retrieve custom moves"
+          );
+          error(errorMessage);
+        }
+      );
     }
 
     return () => {
