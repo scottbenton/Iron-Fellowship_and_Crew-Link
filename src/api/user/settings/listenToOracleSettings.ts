@@ -1,8 +1,8 @@
-import { addDoc, onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
+import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { decodeDataswornId } from "functions/dataswornIdEncoder";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSettingsStore } from "stores/settings.store";
 import { OracleSettings } from "types/UserSettings.type";
 import { getUserOracleSettingsDoc } from "./_getRef";

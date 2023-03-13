@@ -72,7 +72,7 @@ export function CharacterCard(props: CharacterCardProps) {
                 uid,
                 characterId,
                 initiativeStatus,
-              }).catch()
+              }).catch(() => {})
             }
             loading={initiativeLoading}
             variant={"outlined"}

@@ -20,6 +20,10 @@ service cloud.firestore {
         allow read: if true;
         allow write, delete: if userId == request.auth.uid;
       }
+      match /custom-moves/{document=**} {
+        allow read: if true;
+        allow write, delete: if userId == request.auth.uid;
+      }
       match /settings/{document=**} {
       	allow read, write, delete: if userId == request.auth.uid;
       }

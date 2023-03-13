@@ -1,5 +1,4 @@
 import { useCampaignGMScreenListenToCampaignNotes } from "api/campaign/notes/listenToCampaignNotes";
-import { useCampaignGMScreenListenToCampaignCustomMoves } from "api/campaign/customMoves/listenToCampaignCustomMoves";
 import { useCampaignGMScreenListenToCampaignProgressTracks } from "api/campaign/tracks/listenToCampaignProgressTracks";
 import { useCampaignGMScreenListenToCampaignAssets } from "api/characters/assets/listenToCampaignCharactersAssets";
 import { useCampaignGMScreenListenToCampaignCharacters } from "api/characters/listenToCampaignCharacters";
@@ -7,6 +6,8 @@ import { useEffect } from "react";
 import { useCampaignStore } from "stores/campaigns.store";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { useCampaignGMScreenListenToCustomOracles } from "api/user/custom-oracles/listenToCustomOracles";
+import { useCampaignGMScreenListenToCustomMoves } from "api/user/custom-moves/listenToCustomMoves";
+import { useCampaignGMScreenListenToCampaignSettings } from "api/campaign/settings/listenToCampaignSettings";
 
 export function useCampaignGMScreenApiCalls(campaignId?: string) {
   const campaign = useCampaignStore(
@@ -20,8 +21,9 @@ export function useCampaignGMScreenApiCalls(campaignId?: string) {
   useCampaignGMScreenListenToCampaignAssets();
   useCampaignGMScreenListenToCampaignProgressTracks();
   useCampaignGMScreenListenToCampaignNotes();
-  useCampaignGMScreenListenToCampaignCustomMoves();
+  useCampaignGMScreenListenToCustomMoves();
   useCampaignGMScreenListenToCustomOracles();
+  useCampaignGMScreenListenToCampaignSettings();
 
   useEffect(() => {
     return () => {

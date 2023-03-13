@@ -33,7 +33,7 @@ export function NoteSidebar(props: NoteSidebarProps) {
     setLoading(true);
     createNote &&
       createNote()
-        .catch()
+        .catch(() => {})
         .finally(() => {
           setLoading(false);
         });

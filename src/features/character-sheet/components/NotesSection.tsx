@@ -64,7 +64,7 @@ export function NotesSection() {
             .then(() => {
               setNoteId(undefined);
             })
-            .catch()
+            .catch(() => {})
         }
       />
     </Box>

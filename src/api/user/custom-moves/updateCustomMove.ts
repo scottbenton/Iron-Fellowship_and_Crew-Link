@@ -1,3 +1,4 @@
+import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import {
   arrayRemove,
   arrayUnion,
@@ -6,25 +7,23 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { getCharacterCustomMovesDoc } from "./_getRef";
+import { getUserCustomMovesDoc } from "./_getRef";
 import { StoredMove } from "types/Moves.type";
+import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { firestore } from "config/firebase.config";
-import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { CharacterNotFoundException } from "api/error/CharacterNotFoundException";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
-import { useAuth } from "hooks/useAuth";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
+import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
+import { useAuth } from "hooks/useAuth";
 
-export const updateCharacterCustomMove: ApiFunction<
+export const updateCustomMove: ApiFunction<
   {
     uid?: string;
-    characterId?: string;
     moveId: string;
     customMove: StoredMove;
   },
   boolean
 > = function (params) {
-  const { uid, characterId, moveId, customMove } = params;
+  const { uid, moveId, customMove } = params;
 
   return new Promise((resolve, reject) => {
     if (!uid) {
@@ -32,21 +31,17 @@ export const updateCharacterCustomMove: ApiFunction<
       return;
     }
 
-    if (!characterId) {
-      reject(new CharacterNotFoundException());
-      return;
-    }
-
     const encodedId = encodeDataswornId(customMove.$id);
     if (moveId !== customMove.$id) {
       const oldEncodedId = encodeDataswornId(moveId);
+
       const batch = writeBatch(firestore);
-      batch.update(getCharacterCustomMovesDoc(uid, characterId), {
+      batch.update(getUserCustomMovesDoc(uid), {
         [`moves.${encodedId}`]: customMove,
         [`moves.${oldEncodedId}`]: deleteField(),
         moveOrder: arrayRemove(oldEncodedId),
       });
-      batch.update(getCharacterCustomMovesDoc(uid, characterId), {
+      batch.update(getUserCustomMovesDoc(uid), {
         moveOrder: arrayUnion(encodedId),
       });
 
@@ -57,10 +52,10 @@ export const updateCharacterCustomMove: ApiFunction<
         })
         .catch((err) => {
           console.error(err);
-          reject("Failed to update custom campaign move");
+          reject("Failed to update custom move");
         });
     } else {
-      updateDoc(getCharacterCustomMovesDoc(uid, characterId), {
+      updateDoc(getUserCustomMovesDoc(uid), {
         [`moves.${encodedId}`]: customMove,
       })
         .then(() => {
@@ -68,32 +63,20 @@ export const updateCharacterCustomMove: ApiFunction<
         })
         .catch((e) => {
           console.error(e);
-          reject("Failed to add track");
+          reject("Failed to update custom move");
         });
     }
   });
 };
 
-export function useUpdateCharacterCustomMove() {
-  const { call, loading, error } = useApiState(updateCharacterCustomMove);
-
-  return {
-    updateCharacterCustomMove: call,
-    loading,
-    error,
-  };
-}
-
-export function useCharacterSheetUpdateCustomMove() {
-  const { updateCharacterCustomMove, loading, error } =
-    useUpdateCharacterCustomMove();
+export function useUpdateCustomMove() {
+  const { call, loading, error } = useApiState(updateCustomMove);
 
   const uid = useAuth().user?.uid;
-  const characterId = useCharacterSheetStore((store) => store.characterId);
 
   return {
-    updateCharacterCustomMove: (moveId: string, move: StoredMove) =>
-      updateCharacterCustomMove({ uid, characterId, moveId, customMove: move }),
+    updateCustomMove: (moveId: string, customMove: StoredMove) =>
+      call({ uid, moveId, customMove }),
     loading,
     error,
   };

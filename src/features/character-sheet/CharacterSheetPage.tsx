@@ -14,16 +14,19 @@ import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
 import { useListenToCharacterSheetNotes } from "api/characters/notes/listenToCharacterNotes";
 import { CharacterHeader } from "./components/CharacterHeader";
-import { useCharacterSheetListenToCampaignCustomMoves } from "api/campaign/customMoves/listenToCampaignCustomMoves";
-import { useCharacterSheetListenToCharacterCustomMoves } from "api/characters/customMoves/listenToCharacterCustomMoves";
 import { useCharacterSheetListenToCustomOracles } from "api/user/custom-oracles/listenToCustomOracles";
+import {
+  useCampaignGMScreenListenToCustomMoves,
+  useCharacterSheetListenToCustomMoves,
+} from "api/user/custom-moves/listenToCustomMoves";
+import { useCharacterSheetListenToCampaignSettings } from "api/campaign/settings/listenToCampaignSettings";
+import { useCharacterSheetListenToCharacterSettings } from "api/characters/settings/listenToCampaignSettings";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
   const characters = useCharacterStore((store) => store.characters);
   const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCharacterStore((store) => store.loading);
-
   const character = useCharacterSheetStore((store) => store.character);
   const supply = useCharacterSheetStore((store) => store.supply);
   const setCharacter = useCharacterSheetStore((store) => store.setCharacter);
@@ -33,9 +36,11 @@ export function CharacterSheetPage() {
   useListenToCharacterProgressTracks();
   useListenToCampaignProgressTracksCharacterSheet();
   useListenToCharacterSheetNotes();
-  useCharacterSheetListenToCampaignCustomMoves();
-  useCharacterSheetListenToCharacterCustomMoves();
+  useCampaignGMScreenListenToCustomMoves();
+  useCharacterSheetListenToCustomMoves();
   useCharacterSheetListenToCustomOracles();
+  useCharacterSheetListenToCampaignSettings();
+  useCharacterSheetListenToCharacterSettings();
 
   useEffect(() => {
     return () => {

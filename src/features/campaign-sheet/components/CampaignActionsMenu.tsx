@@ -49,7 +49,7 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
         .then(() => {
           handleMenuClose();
         })
-        .catch();
+        .catch(() => {});
     });
   };
 

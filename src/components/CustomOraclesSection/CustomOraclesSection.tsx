@@ -19,13 +19,19 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useUpdateCustomOracle } from "api/user/custom-oracles/updateCustomOracle";
 import { useRemoveCustomOracle } from "api/user/custom-oracles/removeCustomOracle";
 import { useConfirm } from "material-ui-confirm";
+import { CustomOraclesListItem } from "./CustomOraclesListItem";
 
 export interface CustomOracleSectionProps {
   customOracles?: StoredOracle[];
+  hiddenOracleIds?: string[];
+  showOrHideCustomOracle: (
+    oracleId: string,
+    hidden: boolean
+  ) => Promise<boolean>;
 }
 
 export function CustomOracleSection(props: CustomOracleSectionProps) {
-  const { customOracles } = props;
+  const { customOracles, hiddenOracleIds, showOrHideCustomOracle } = props;
 
   const confirm = useConfirm();
 
@@ -42,7 +48,7 @@ export function CustomOracleSection(props: CustomOracleSectionProps) {
     confirm({
       title: `Delete ${oracle.name}`,
       description:
-        "Are you sure you want to delete this oracle? This cannot be undone.",
+        "Are you sure you want to delete this oracle? It will be deleted from ALL of your characters and campaigns. This cannot be undone.",
       confirmationText: "Delete",
       confirmationButtonProps: {
         variant: "contained",
@@ -50,47 +56,31 @@ export function CustomOracleSection(props: CustomOracleSectionProps) {
       },
     })
       .then(() => {
-        removeCustomOracle(oracleId).catch();
+        removeCustomOracle(oracleId).catch(() => {});
       })
-      .catch();
+      .catch(() => {});
   };
   return (
     <Box>
       <SectionHeading label={"Custom Oracles"} />
-      {Array.isArray(customOracles) ? (
+      {Array.isArray(customOracles) && Array.isArray(hiddenOracleIds) ? (
         <Stack spacing={2} px={2} mt={1}>
           <Card variant={"outlined"}>
             <List disablePadding>
               {customOracles.map((oracle) => (
-                <ListItem
-                  dense
-                  key={oracle.name}
-                  sx={(theme) => ({
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    "&:nth-of-type(odd)": {
-                      backgroundColor: theme.palette.action.hover,
-                    },
-                  })}
-                >
-                  <ListItemText>{oracle.name}</ListItemText>
-                  <Box>
-                    <IconButton
-                      onClick={() => {
-                        setCurrentlyEditingOracle(oracle);
-                        setIsAddOracleDialogOpen(true);
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => handleDelete(oracle.$id, oracle)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-                </ListItem>
+                <CustomOraclesListItem
+                  key={oracle.$id}
+                  oracle={oracle}
+                  isVisible={!hiddenOracleIds.includes(oracle.$id)}
+                  handleEdit={() => {
+                    setCurrentlyEditingOracle(oracle);
+                    setIsAddOracleDialogOpen(true);
+                  }}
+                  handleDelete={() => handleDelete(oracle.$id, oracle)}
+                  handleVisibilityToggle={(isVisible) =>
+                    showOrHideCustomOracle(oracle.$id, !isVisible)
+                  }
+                />
               ))}
             </List>
           </Card>

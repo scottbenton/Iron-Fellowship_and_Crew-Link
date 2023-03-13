@@ -71,16 +71,30 @@ export function useCustomOracles() {
     (store) => store.customOracles
   );
 
+  const hiddenCampaignOracleIds = useCampaignGMScreenStore(
+    (store) => store.campaignSettings?.hiddenCustomOraclesIds
+  );
+  const hiddenCharacterOracleIds = useCharacterSheetStore(
+    (store) => store.characterSettings?.hiddenCustomOraclesIds
+  );
+
   const [customOracleCategory, setCustomOracleCategory] = useState<OracleSet>();
 
   useEffect(() => {
     const customStoredOracles = gmScreenOracles ?? characterSheetOracles;
+    const hiddenOracleIds = hiddenCampaignOracleIds ?? hiddenCharacterOracleIds;
 
-    if (customStoredOracles && customStoredOracles.length > 0) {
+    if (
+      customStoredOracles &&
+      customStoredOracles.length > 0 &&
+      Array.isArray(hiddenOracleIds)
+    ) {
       const mappedCustomOracles: { [key: string]: OracleTable } = {};
 
       customStoredOracles.forEach((oracle) => {
-        mappedCustomOracles[oracle.$id] = convertStoredOracleToOracle(oracle);
+        if (!hiddenOracleIds.includes(oracle.$id)) {
+          mappedCustomOracles[oracle.$id] = convertStoredOracleToOracle(oracle);
+        }
       });
 
       setCustomOracleCategory({
@@ -105,7 +119,12 @@ export function useCustomOracles() {
     } else {
       setCustomOracleCategory(undefined);
     }
-  }, [characterSheetOracles, gmScreenOracles]);
+  }, [
+    characterSheetOracles,
+    gmScreenOracles,
+    hiddenCampaignOracleIds,
+    hiddenCharacterOracleIds,
+  ]);
 
   return customOracleCategory;
 }

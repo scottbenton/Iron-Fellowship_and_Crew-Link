@@ -34,7 +34,7 @@ export function listenToCampaignCharacters(params: Params): Unsubscribe[] {
         .then((userDoc) => {
           onCharacterUserDocument(character.uid, userDoc);
         })
-        .catch();
+        .catch(() => {});
     }
     return onSnapshot(
       getCharacterDoc(character.uid, character.characterId),
@@ -50,7 +50,7 @@ export function listenToCampaignCharacters(params: Params): Unsubscribe[] {
             .then((url) => {
               onPortraitUrl(character.characterId, url);
             })
-            .catch();
+            .catch(() => {});
         }
       },
       (error) => {

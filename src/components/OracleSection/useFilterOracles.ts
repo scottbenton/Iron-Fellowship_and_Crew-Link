@@ -65,7 +65,8 @@ export function useFilterOracles() {
       if (
         oracleSection.Title.Standard.toLocaleLowerCase().includes(
           debouncedSearch.toLocaleLowerCase()
-        )
+        ) &&
+        Object.keys(oracleSection.Tables ?? {}).length > 0
       ) {
         results.push(oracleSection);
         return;

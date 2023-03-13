@@ -25,7 +25,7 @@ export function CampaignJoinPage() {
 
   const handleJoinCampaign = () => {
     if (campaignId && uid) {
-      addUserToCampaign({ campaignId, userId: uid }).catch();
+      addUserToCampaign({ campaignId, userId: uid }).catch(() => {});
     }
   };
 

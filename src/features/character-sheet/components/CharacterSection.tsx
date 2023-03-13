@@ -26,10 +26,9 @@ import { useState } from "react";
 import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
 import { useCharacterSheetUpdateCharacterPortrait } from "api/characters/updateCharacterPortrait";
 import { CustomMovesSection } from "components/CustomMovesSection";
-import { useCharacterSheetAddCustomMove } from "api/characters/customMoves/addCharacterCustomMove";
-import { useCharacterSheetUpdateCustomMove } from "api/characters/customMoves/updateCampaignCustomMove";
-import { useCharacterSheetRemoveCharacterCustomMove } from "api/characters/customMoves/removeCharacterCustomMove";
 import { CustomOracleSection } from "components/CustomOraclesSection";
+import { useCharacterSheetShowOrHideCustomMove } from "api/characters/settings/showOrHideCustomMove copy";
+import { useCharacterSheetShowOrHideCustomOracle } from "api/characters/settings/showOrHideCustomOracle";
 
 export function CharacterSection() {
   const { error } = useSnackbar();
@@ -77,13 +76,16 @@ export function CharacterSection() {
     useCharacterSheetUpdateCharacterPortrait();
 
   const customMoves = useCharacterSheetStore((store) => store.customMoves);
-  const { addCharacterCustomMove } = useCharacterSheetAddCustomMove();
-  const { updateCharacterCustomMove } = useCharacterSheetUpdateCustomMove();
-  const { removeCharacterCustomMove } =
-    useCharacterSheetRemoveCharacterCustomMove();
+  const hiddenMoveIds = useCharacterSheetStore(
+    (store) => store.characterSettings?.hiddenCustomMoveIds
+  );
+  const { showOrHideCustomMove } = useCharacterSheetShowOrHideCustomMove();
 
   const customOracles = useCharacterSheetStore((store) => store.customOracles);
-
+  const hiddenOracleIds = useCharacterSheetStore(
+    (store) => store.characterSettings?.hiddenCustomOraclesIds
+  );
+  const { showOrHideCustomOracle } = useCharacterSheetShowOrHideCustomOracle();
   return (
     <Stack spacing={2} pb={2}>
       <SectionHeading label={"Experience"} />
@@ -322,7 +324,7 @@ export function CharacterSection() {
               <Checkbox
                 checked={sharingNotes ?? false}
                 onChange={(evt, checked) =>
-                  updateShareNotesWithGMSetting(checked).catch()
+                  updateShareNotesWithGMSetting(checked).catch(() => {})
                 }
                 name="Share Notes with GM"
               />
@@ -334,12 +336,17 @@ export function CharacterSection() {
       {!campaignId && (
         <CustomMovesSection
           customMoves={customMoves}
-          createCustomMove={addCharacterCustomMove}
-          updateCustomMove={updateCharacterCustomMove}
-          removeCustomMove={removeCharacterCustomMove}
+          hiddenMoveIds={hiddenMoveIds}
+          showOrHideCustomMove={showOrHideCustomMove}
         />
       )}
-      {!campaignId && <CustomOracleSection customOracles={customOracles} />}
+      {!campaignId && (
+        <CustomOracleSection
+          customOracles={customOracles}
+          hiddenOracleIds={hiddenOracleIds}
+          showOrHideCustomOracle={showOrHideCustomOracle}
+        />
+      )}
     </Stack>
   );
 }
