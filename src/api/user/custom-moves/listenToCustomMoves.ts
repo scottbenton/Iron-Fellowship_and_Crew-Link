@@ -1,3 +1,4 @@
+import { firebaseAuth } from "config/firebase.config";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
@@ -20,11 +21,13 @@ export function listenToCustomMoves(
       if (snapshot.exists()) {
         const data = snapshot.data();
         onCustomMoves(data.moveOrder.map((moveId) => data.moves[moveId]));
-      } else {
+      } else if (uid === firebaseAuth.currentUser?.uid) {
         setDoc(getUserCustomMovesDoc(uid), {
           moves: {},
           moveOrder: [],
         });
+      } else {
+        onCustomMoves([]);
       }
     },
     (error) => onError(error)
@@ -72,16 +75,21 @@ export function useCharacterSheetListenToCustomMoves() {
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
-
     if (uid) {
-      unsubscribe = listenToCustomMoves(uid, setMoves, (err) => {
-        console.error(err);
-        const errorMessage = getErrorMessage(
-          error,
-          "Failed to retrieve custom moves"
-        );
-        error(errorMessage);
-      });
+      unsubscribe = listenToCustomMoves(
+        uid,
+        (moves) => {
+          setMoves(moves);
+        },
+        (err) => {
+          console.error(err);
+          const errorMessage = getErrorMessage(
+            error,
+            "Failed to retrieve custom moves"
+          );
+          error(errorMessage);
+        }
+      );
     }
 
     return () => {

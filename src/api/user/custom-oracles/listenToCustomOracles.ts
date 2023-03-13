@@ -28,6 +28,8 @@ export function listenToCustomOracles(
           oracles: {},
           oracleOrder: [],
         });
+      } else {
+        onCustomOracles([]);
       }
     },
     (error) => onError(error)

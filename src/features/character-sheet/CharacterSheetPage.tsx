@@ -15,10 +15,7 @@ import { TracksSection } from "./components/TracksSection";
 import { useListenToCharacterSheetNotes } from "api/characters/notes/listenToCharacterNotes";
 import { CharacterHeader } from "./components/CharacterHeader";
 import { useCharacterSheetListenToCustomOracles } from "api/user/custom-oracles/listenToCustomOracles";
-import {
-  useCampaignGMScreenListenToCustomMoves,
-  useCharacterSheetListenToCustomMoves,
-} from "api/user/custom-moves/listenToCustomMoves";
+import { useCharacterSheetListenToCustomMoves } from "api/user/custom-moves/listenToCustomMoves";
 import { useCharacterSheetListenToCampaignSettings } from "api/campaign/settings/listenToCampaignSettings";
 import { useCharacterSheetListenToCharacterSettings } from "api/characters/settings/listenToCampaignSettings";
 
@@ -36,7 +33,6 @@ export function CharacterSheetPage() {
   useListenToCharacterProgressTracks();
   useListenToCampaignProgressTracksCharacterSheet();
   useListenToCharacterSheetNotes();
-  useCampaignGMScreenListenToCustomMoves();
   useCharacterSheetListenToCustomMoves();
   useCharacterSheetListenToCustomOracles();
   useCharacterSheetListenToCampaignSettings();

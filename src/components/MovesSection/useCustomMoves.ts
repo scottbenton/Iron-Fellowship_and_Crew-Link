@@ -57,8 +57,8 @@ export function useCustomMoves() {
   const [customMoveCategory, setCustomMoveCategory] = useState<MoveCategory>();
 
   useEffect(() => {
-    const customStoredMoves = campaignCustomMoves || characterSheetCustomMoves;
-    const hiddenMoveIds = hiddenCampaignMoveIds || hiddenCharacterMoveIds;
+    const customStoredMoves = campaignCustomMoves ?? characterSheetCustomMoves;
+    const hiddenMoveIds = hiddenCampaignMoveIds ?? hiddenCharacterMoveIds;
 
     if (
       customStoredMoves &&
