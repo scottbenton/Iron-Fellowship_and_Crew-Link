@@ -9,27 +9,21 @@ import {
   Typography,
 } from "@mui/material";
 import { StatComponent } from "components/StatComponent";
-import { getHueFromString } from "functions/getHueFromString";
 import { CharacterDocument, INITIATIVE_STATUS } from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useListenToAssets } from "api/characters/assets/listenToAssets";
-import { useState } from "react";
-import { StoredAsset } from "types/Asset.type";
 import { AssetCard } from "components/AssetCard/AssetCard";
 import { assets } from "data/assets";
 import { STATS } from "types/stats.enum";
-import { useGetUserDoc, useUserDoc } from "api/user/getUserDoc";
 import { InitiativeStatusChip } from "components/InitiativeStatusChip";
 import { useUpdateCharacterInitiative } from "api/characters/updateCharacterInitiative";
 import { CharacterNotesComponent } from "./CharacterNotesComponent";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
-import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 
 export interface CharacterCardProps {
   uid: string;
   characterId: string;
-  character: CharacterDocumentWithPortraitUrl;
+  character: CharacterDocument;
 }
 
 export function CharacterCard(props: CharacterCardProps) {
@@ -49,9 +43,10 @@ export function CharacterCard(props: CharacterCardProps) {
       <Box>
         <Box display={"flex"} alignItems={"center"} px={2} pt={2} pb={1}>
           <PortraitAvatar
-            id={characterId}
+            uid={uid}
+            characterId={characterId}
+            filename={character.profileImage?.filename}
             name={character.name}
-            portraitUrl={character.portraitUrl}
             portraitSettings={character.profileImage}
             colorful
             size={"medium"}

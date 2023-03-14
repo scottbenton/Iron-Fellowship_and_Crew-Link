@@ -1,8 +1,8 @@
 import { TrackWithId } from "features/character-sheet/characterSheet.store";
 import produce from "immer";
-import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { StoredAsset } from "types/Asset.type";
 import { StoredCampaign } from "types/Campaign.type";
+import { CharacterDocument } from "types/Character.type";
 import { Note } from "types/Notes.type";
 import { TRACK_TYPES } from "types/Track.type";
 import { UserDocument } from "types/User.type";
@@ -22,17 +22,10 @@ export interface CampaignGMScreenStore {
   updatePlayer: (playerId: string, doc: UserDocument) => void;
 
   characters: {
-    [characterId: string]: CharacterDocumentWithPortraitUrl;
+    [characterId: string]: CharacterDocument;
   };
-  updateCharacter: (
-    characterId: string,
-    character: CharacterDocumentWithPortraitUrl
-  ) => void;
+  updateCharacter: (characterId: string, character: CharacterDocument) => void;
   removeCharacter: (characterId: string) => void;
-  updateCharacterPortraitUrl: (
-    characterId: string,
-    portraitUrl: string
-  ) => void;
 
   characterAssets: { [characterId: string]: StoredAsset[] };
   setCharacterAssets: (characterId: string, assets: StoredAsset[]) => void;
@@ -106,13 +99,6 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       set(
         produce((store: CampaignGMScreenStore) => {
           delete store.characters[characterId];
-        })
-      );
-    },
-    updateCharacterPortraitUrl: (characterId, portraitUrl) => {
-      set(
-        produce((store: CampaignGMScreenStore) => {
-          store.characters[characterId].portraitUrl = portraitUrl;
         })
       );
     },

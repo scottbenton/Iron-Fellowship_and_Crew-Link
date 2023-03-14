@@ -61,9 +61,6 @@ export function CharacterSection() {
   const { updateShareNotesWithGMSetting } =
     useCharacterSheetUpdateShareNotesWithGMSetting();
 
-  const existingPortrait = useCharacterSheetStore(
-    (store) => store.character?.portraitUrl
-  );
   const existingPortraitSettings = useCharacterSheetStore(
     (store) => store.character?.profileImage
   );
@@ -301,7 +298,6 @@ export function CharacterSection() {
               position,
             });
           }}
-          existingPortraitFile={existingPortrait}
           existingPortraitSettings={existingPortraitSettings}
         />
       </Box>

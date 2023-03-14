@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
+import { useAuth } from "hooks/useAuth";
 import { useCharacterSheetStore } from "../characterSheet.store";
 import { InitiativeButtons } from "./InitiativeButtons";
 import { StatsSection } from "./StatsSection";
@@ -7,14 +8,13 @@ import { StatsSection } from "./StatsSection";
 export interface CharacterHeaderProps {}
 
 export function CharacterHeader(props: CharacterHeaderProps) {
+  const uid = useAuth().user?.uid ?? "";
+
   const characterId = useCharacterSheetStore(
     (store) => store.characterId ?? ""
   );
   const characterName = useCharacterSheetStore(
     (store) => store.character?.name
-  );
-  const characterPortraitUrl = useCharacterSheetStore(
-    (store) => store.character?.portraitUrl
   );
   const characterPortraitSettings = useCharacterSheetStore(
     (store) => store.character?.profileImage
@@ -43,9 +43,10 @@ export function CharacterHeader(props: CharacterHeaderProps) {
     >
       <Box display={"flex"} alignItems={"center"}>
         <PortraitAvatar
-          id={characterId}
+          uid={uid}
+          characterId={characterId}
+          filename={characterPortraitSettings?.filename}
           name={characterName}
-          portraitUrl={characterPortraitUrl}
           portraitSettings={characterPortraitSettings}
         />
         <Box display={"flex"} flexDirection={"column"} marginLeft={1}>
