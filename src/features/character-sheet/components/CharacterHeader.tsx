@@ -8,7 +8,7 @@ import { StatsSection } from "./StatsSection";
 export interface CharacterHeaderProps {}
 
 export function CharacterHeader(props: CharacterHeaderProps) {
-  const uid = useAuth().user?.uid ?? "";
+  const uid = useCharacterSheetStore((store) => store.character?.uid ?? "");
 
   const characterId = useCharacterSheetStore(
     (store) => store.characterId ?? ""

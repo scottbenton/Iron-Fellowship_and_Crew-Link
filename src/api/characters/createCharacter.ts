@@ -28,6 +28,7 @@ export const createCharacter: ApiFunction<
       throw new UserNotLoggedInException();
     }
     const character: CharacterDocument = {
+      uid: uid,
       name: name,
       stats: stats,
       health: healthTrack.startingValue,

@@ -13,6 +13,7 @@ export enum INITIATIVE_STATUS {
 }
 
 export interface CharacterDocument {
+  uid: string;
   name: string;
   stats: StatsMap;
   health: number;

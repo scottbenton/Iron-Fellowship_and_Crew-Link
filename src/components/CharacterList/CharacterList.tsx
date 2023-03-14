@@ -20,7 +20,7 @@ export function CharacterList(props: CharacterListProps) {
   return (
     <Grid container spacing={2}>
       {Object.keys(characters).map((characterId, index) => {
-        const { name, campaignId, profileImage } = characters[characterId];
+        const { name, campaignId, profileImage, uid } = characters[characterId];
 
         return (
           <Grid
@@ -42,8 +42,9 @@ export function CharacterList(props: CharacterListProps) {
               <Box>
                 <Box display={"flex"} alignItems={"center"} p={2}>
                   <PortraitAvatar
-                    uid={""}
+                    uid={uid}
                     characterId={characterId}
+                    filename={profileImage?.filename}
                     name={name}
                     portraitSettings={profileImage}
                     size={"small"}
