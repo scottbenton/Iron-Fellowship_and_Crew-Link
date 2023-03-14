@@ -15,16 +15,22 @@ import {
 } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { Track } from "../Track";
-import { Asset, StoredAsset } from "../../types/Asset.type";
+import { StoredAsset } from "../../types/Asset.type";
+import {
+  Asset,
+  AssetAlterPropertiesConditionMeter,
+  ConditionMeter,
+} from "dataforged";
 import { MarkdownRenderer } from "../MarkdownRenderer/MarkdownRenderer";
 import { AssetCardField } from "./AssetCardField";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import { CreateCustomAsset } from "../AssetCardDialog/CreateCustomAsset";
 import { useSnackbar } from "../../hooks/useSnackbar";
+import { assetMap, assetTypeLabels } from "data/assets";
 
 export interface AssetCardProps {
-  asset: Asset;
+  assetId: string;
   storedAsset?: StoredAsset;
 
   readOnly?: boolean;
@@ -35,7 +41,6 @@ export interface AssetCardProps {
   handleAbilityCheck?: (index: number, checked: boolean) => void;
   handleInputChange?: (label: string, value: string) => Promise<boolean>;
   handleTrackValueChange?: (num: number) => Promise<boolean>;
-  handleMultiFieldTrackValueChange?: (value: string) => void;
 
   handleCustomAssetUpdate?: (asset: Asset) => Promise<boolean>;
 
@@ -44,7 +49,7 @@ export interface AssetCardProps {
 
 export function AssetCard(props: AssetCardProps) {
   const {
-    asset,
+    assetId,
     storedAsset,
     readOnly,
     hideTracks,
@@ -53,25 +58,32 @@ export function AssetCard(props: AssetCardProps) {
     handleAbilityCheck,
     handleInputChange,
     handleTrackValueChange,
-    handleMultiFieldTrackValueChange,
     handleDeleteClick,
     handleCustomAssetUpdate,
   } = props;
+
+  const asset = storedAsset?.customAsset ?? assetMap[assetId];
 
   const { error } = useSnackbar();
 
   const [editCustomAssetDialogOpen, setEditCustomAssetDialogOpen] =
     useState<boolean>(false);
 
-  let alternateHealthMax: number | undefined;
-  asset.abilities.forEach((ability) => {
-    if (ability.alterTrack) {
-      alternateHealthMax = ability.alterTrack.max;
+  let alternateConditionMeterProperties:
+    | AssetAlterPropertiesConditionMeter
+    | undefined;
+
+  asset.Abilities.forEach((ability) => {
+    if (ability["Alter properties"]) {
+      alternateConditionMeterProperties =
+        ability["Alter properties"]?.["Condition meter"];
     }
   });
 
-  const companionHealthMax = alternateHealthMax ?? asset.track?.max;
-  const isCustom = asset.id.startsWith("custom-");
+  const conditionMeter = asset["Condition meter"]
+    ? { ...asset["Condition meter"], ...alternateConditionMeterProperties }
+    : undefined;
+  const isCustom = asset.$id.startsWith("ironsworn/assets/custom/");
 
   const onCustomAssetUpdate = (asset: Asset) => {
     if (handleCustomAssetUpdate) {
@@ -103,7 +115,7 @@ export function AssetCard(props: AssetCardProps) {
           })}
         >
           <Typography fontFamily={(theme) => theme.fontFamilyTitle}>
-            {isCustom && "Custom"} {asset.type}
+            {isCustom && "Custom"} {assetTypeLabels[asset["Asset type"]]}
           </Typography>
           <Box>
             {isCustom && handleCustomAssetUpdate && (
@@ -131,34 +143,29 @@ export function AssetCard(props: AssetCardProps) {
             variant={"h5"}
             fontFamily={(theme) => theme.fontFamilyTitle}
           >
-            {asset.name}
+            {asset.Title.Standard}
           </Typography>
-          {asset.description && (
-            <Typography variant={"body2"} color={"GrayText"}>
-              {asset.description}
-            </Typography>
+          {asset.Requirement && (
+            <MarkdownRenderer markdown={asset.Requirement} />
           )}
-          {asset.inputs &&
-            asset.inputs.length > 0 &&
-            asset.inputs?.map((field, index) => (
-              <AssetCardField
-                key={index}
-                label={field}
-                value={storedAsset?.inputs?.[field]}
-                disabled={readOnly || !handleInputChange}
-                onChange={(value) => {
-                  if (handleInputChange) {
-                    return handleInputChange(field, value);
-                  }
-                  return new Promise((res, reject) =>
-                    reject("HandleInputChange is undefined")
-                  );
-                }}
-              />
-            ))}
-
+          {Object.values(asset.Inputs ?? {}).map((field, index) => (
+            <AssetCardField
+              key={field.$id}
+              field={field}
+              value={storedAsset?.inputs?.[field.$id]}
+              onChange={(value) => {
+                if (handleInputChange) {
+                  return handleInputChange(field.$id, value);
+                }
+                return new Promise((res, reject) =>
+                  reject("HandleInputChange is undefined")
+                );
+              }}
+              disabled={readOnly || !handleInputChange}
+            />
+          ))}
           <Box flexGrow={1}>
-            {asset.abilities.map((ability, index) => (
+            {asset.Abilities.map((ability, index) => (
               <Box
                 display={"flex"}
                 alignItems={"flex-start"}
@@ -167,40 +174,39 @@ export function AssetCard(props: AssetCardProps) {
               >
                 <Checkbox
                   checked={
-                    ability.startsEnabled ??
+                    ability.Enabled ??
                     storedAsset?.enabledAbilities[index] ??
                     false
                   }
-                  disabled={
-                    ability.startsEnabled || readOnly || !handleAbilityCheck
-                  }
+                  disabled={ability.Enabled || readOnly || !handleAbilityCheck}
                   onChange={(evt) =>
                     handleAbilityCheck &&
                     handleAbilityCheck(index, evt.target.checked)
                   }
+                  sx={{ p: 0.5 }}
                 />
                 <Box key={index}>
-                  {ability.name && (
+                  {ability.Label && (
                     <Typography display={"inline"} variant={"body2"}>
-                      <b>{ability.name}: </b>
+                      <b>{ability.Label}: </b>
                     </Typography>
                   )}
-                  <MarkdownRenderer markdown={ability.text} inlineParagraph />
+                  <MarkdownRenderer markdown={ability.Text} inlineParagraph />
                 </Box>
               </Box>
             ))}
           </Box>
+
           {!hideTracks &&
             storedAsset &&
-            asset.track &&
-            companionHealthMax &&
+            conditionMeter &&
             typeof storedAsset.trackValue === "number" && (
               <Track
                 sx={{ mt: 1 }}
-                label={asset.track.name}
-                value={storedAsset.trackValue ?? companionHealthMax}
+                label={conditionMeter.Label}
+                value={storedAsset.trackValue ?? conditionMeter.Max}
                 min={0}
-                max={asset.track.startingValue ?? companionHealthMax}
+                max={conditionMeter.Value ?? conditionMeter.Max}
                 disabled={readOnly || !handleTrackValueChange}
                 onChange={(newValue) =>
                   new Promise((resolve, reject) => {
@@ -219,38 +225,6 @@ export function AssetCard(props: AssetCardProps) {
                 }
               />
             )}
-          {!hideTracks && storedAsset && asset.multiFieldTrack && (
-            <Box display={"flex"} flexDirection={"column"}>
-              <Typography
-                component={"label"}
-                variant={"subtitle1"}
-                fontFamily={(theme) => theme.fontFamilyTitle}
-                color={(theme) => theme.palette.text.secondary}
-              >
-                {asset.multiFieldTrack.name}
-              </Typography>
-              <ToggleButtonGroup
-                exclusive
-                disabled={readOnly || !handleMultiFieldTrackValueChange}
-                value={storedAsset?.multiFieldTrackValue ?? ""}
-                onChange={(evt, value) =>
-                  handleMultiFieldTrackValueChange &&
-                  handleMultiFieldTrackValueChange(value)
-                }
-                sx={{ display: "flex", width: "100%" }}
-              >
-                {asset.multiFieldTrack.options.map((option, index) => (
-                  <ToggleButton
-                    key={index}
-                    value={option}
-                    sx={{ py: 0, px: 1, flexGrow: 1 }}
-                  >
-                    {option}
-                  </ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-            </Box>
-          )}
         </Box>
         {actions && (
           <Box
@@ -286,10 +260,10 @@ export function AssetCard(props: AssetCardProps) {
           </Box>
         </DialogTitle>
         <DialogContent>
-          <CreateCustomAsset
+          {/* <CreateCustomAsset
             handleSelect={onCustomAssetUpdate}
             startingAsset={asset}
-          />
+          /> */}
         </DialogContent>
       </Dialog>
     </>

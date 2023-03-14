@@ -3,7 +3,7 @@ import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
 import { getCharacterAssetDoc } from "./_getRef";
-import { Asset } from "types/Asset.type";
+import { Asset } from "dataforged";
 
 export const updateCustomAsset: ApiFunction<
   {

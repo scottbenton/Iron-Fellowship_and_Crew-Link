@@ -8,3 +8,7 @@ export const ironswornMoveCategories = (
 export const ironswornOracleCategories = (
   (ironsworn as any).default as Ironsworn
 )["Oracle sets"];
+
+export const ironswornAssetCategories = (
+  (ironsworn as any).default as Ironsworn
+)["Asset types"];

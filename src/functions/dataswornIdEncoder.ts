@@ -1,3 +1,5 @@
+import { assetTypeToIdMap, AssetType } from "types/Asset.type";
+
 export function encodeDataswornId(id: string) {
   return encodeURIComponent(id);
 }
@@ -10,11 +12,25 @@ export function generateCustomDataswornId(
   idPrefix: string,
   idContents: string
 ) {
-  const sanitizedId = idContents.replaceAll(" ", "_").replaceAll("/", "");
+  return `${idPrefix}/custom/${encodeContents(idContents)}`;
+}
+
+export function generateAssetDataswornId(
+  assetGroup: AssetType,
+  idContents: string
+) {
+  return `${assetTypeToIdMap[assetGroup]}/${encodeContents(idContents)}`;
+}
+
+export function encodeContents(content: string) {
+  const sanitizedId = content
+    .replaceAll(" ", "_")
+    .replaceAll("/", "")
+    .toLocaleLowerCase();
 
   if (!sanitizedId) {
     throw new Error("Failed to generate custom id");
   }
 
-  return `${idPrefix}/custom/${sanitizedId}`;
+  return sanitizedId;
 }

@@ -10,8 +10,7 @@ import { useCharacterSheetUpdateCustomAsset } from "api/characters/assets/update
 import { useState } from "react";
 import { AssetCard } from "../../../components/AssetCard/AssetCard";
 import { AssetCardDialog } from "../../../components/AssetCardDialog";
-import { assets } from "../../../data/assets";
-import { Asset, StoredAsset } from "../../../types/Asset.type";
+import { StoredAsset } from "../../../types/Asset.type";
 import { useCharacterSheetStore } from "../characterSheet.store";
 
 import { useConfirm } from "material-ui-confirm";
@@ -31,36 +30,8 @@ export function AssetsSection() {
 
   const [isAssetDialogOpen, setIsAssetDialogOpen] = useState<boolean>(false);
 
-  const handleAssetAdd = (asset: Asset) => {
-    const assetId = asset.id;
-
-    let inputs: StoredAsset["inputs"];
-    asset.inputs?.forEach((input) => {
-      if (!inputs) {
-        inputs = {};
-      }
-      inputs[input] = "";
-    });
-
-    const storedAsset: StoredAsset = {
-      id: assetId,
-      enabledAbilities: asset.abilities.map(
-        (ability) => ability.startsEnabled ?? false
-      ),
-    };
-
-    if (inputs) {
-      storedAsset.inputs = inputs;
-    }
-    if (asset.track) {
-      storedAsset.trackValue = asset.track.startingValue ?? asset.track.max;
-    }
-
-    if (assetId.startsWith("custom-")) {
-      storedAsset.customAsset = asset;
-    }
-
-    addAsset(storedAsset).finally(() => {
+  const handleAssetAdd = (asset: StoredAsset) => {
+    addAsset(asset).finally(() => {
       setIsAssetDialogOpen(false);
     });
   };
@@ -105,7 +76,7 @@ export function AssetsSection() {
           sx={{ display: "flex", justifyContent: "center" }}
         >
           <AssetCard
-            asset={storedAsset.customAsset ?? assets[storedAsset.id]}
+            assetId={storedAsset.id}
             storedAsset={storedAsset}
             handleInputChange={(label, value) =>
               updateAssetInput({
@@ -128,9 +99,6 @@ export function AssetsSection() {
             }
             handleTrackValueChange={(value) =>
               updateAssetTrack({ assetId: storedAsset.id, value })
-            }
-            handleMultiFieldTrackValueChange={(value) =>
-              updateAssetMultiTrack({ assetId: storedAsset.id, value })
             }
             handleDeleteClick={() => handleClick(storedAsset.id)}
             handleCustomAssetUpdate={(asset) =>

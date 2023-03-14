@@ -2,7 +2,6 @@ import { Button, DialogContent } from "@mui/material";
 import { MarkdownRenderer } from "components/MarkdownRenderer";
 import { MoveStatRollers } from "./MoveStatRollers";
 import { MoveStats } from "components/MovesSection/MoveStats.type";
-import { assets } from "data/assets";
 import { moveMap } from "data/moves";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { Stat, PlayerConditionMeter } from "types/stats.enum";
@@ -12,6 +11,7 @@ import { oracleMap } from "data/oracles";
 import { useRoller } from "providers/DieRollProvider";
 import { OracleTable } from "dataforged";
 import { useCustomOracles } from "components/OracleSection/useCustomOracles";
+import { assetMap } from "data/assets";
 
 export interface MoveDialogContentProps {
   id: string;
@@ -45,7 +45,7 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
             store.assets
               ?.filter((asset) => asset.trackValue !== undefined)
               .map((asset) => ({
-                companionName: asset.inputs?.name ?? assets[asset.id].name,
+                companionName: assetMap[asset.id].Title.Short,
                 health: asset.trackValue ?? 0,
               })) ?? [],
         }

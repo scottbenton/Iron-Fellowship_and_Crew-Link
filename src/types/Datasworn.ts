@@ -45,3 +45,22 @@ export enum RollType {
   Action = "action roll",
   Progress = "progress roll",
 }
+
+export enum InputType {
+  /**
+   * @see {@link InputText}
+   */
+  Text = "text",
+  /**
+   * @see {@link InputSelect}
+   */
+  Select = "select",
+  /**
+   * @see {@link InputNumber}
+   */
+  Number = "number",
+  /**
+   * @see {@link InputClock}
+   */
+  Clock = "clock",
+}
