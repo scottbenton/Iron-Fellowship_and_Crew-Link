@@ -1,5 +1,4 @@
 import produce from "immer";
-import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
 import { StoredOracle } from "types/Oracles.type";
@@ -41,7 +40,7 @@ export const convertTrackMapToArray = (trackMap: {
 export interface CharacterSheetStore {
   resetState: () => void;
   characterId?: string;
-  character?: CharacterDocumentWithPortraitUrl;
+  character?: CharacterDocument;
 
   campaignId?: string;
   campaign?: StoredCampaign;
@@ -51,12 +50,7 @@ export interface CharacterSheetStore {
   momentumResetValue?: number;
   maxMomentum?: number;
 
-  portraitUrl?: string;
-
-  setCharacter: (
-    characterId?: string,
-    character?: CharacterDocumentWithPortraitUrl
-  ) => void;
+  setCharacter: (characterId?: string, character?: CharacterDocument) => void;
   setCampaign: (campaignId?: string, campaign?: StoredCampaign) => void;
   assets?: StoredAsset[];
   setAssets: (newAssets: StoredAsset[]) => void;

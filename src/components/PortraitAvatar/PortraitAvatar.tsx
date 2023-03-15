@@ -1,7 +1,9 @@
 import { Translate } from "@mui/icons-material";
 import { Box, Typography, TypographyVariant, Skeleton } from "@mui/material";
+import { useListenToCharacterPortraitUrl } from "api/characters/getCharacterPortraitUrl";
 import { getHueFromString } from "functions/getHueFromString";
 import { useState } from "react";
+import { useCharacterPortraitStore } from "stores/characterPortrait.store";
 
 type AvatarSizes = "small" | "medium" | "large";
 
@@ -18,10 +20,11 @@ const variants: { [key in AvatarSizes]: TypographyVariant } = {
 };
 
 export interface PortraitAvatarProps {
-  id: string;
+  uid: string;
+  characterId: string;
   name?: string;
-  portraitUrl?: string;
   portraitSettings?: {
+    filename: string;
     position: {
       x: number;
       y: number;
@@ -34,13 +37,18 @@ export interface PortraitAvatarProps {
 
 export function PortraitAvatar(props: PortraitAvatarProps) {
   const {
-    id,
+    uid,
+    characterId,
     name,
-    portraitUrl,
     portraitSettings,
     colorful,
     size = "medium",
   } = props;
+
+  useListenToCharacterPortraitUrl(uid, characterId, portraitSettings?.filename);
+  const portraitUrl: string | undefined = useCharacterPortraitStore(
+    (store) => store.portraitUrls[characterId]
+  );
 
   const [isTaller, setIsTaller] = useState<boolean>(true);
 
@@ -54,7 +62,7 @@ export function PortraitAvatar(props: PortraitAvatarProps) {
   const scale = portraitSettings?.scale ?? 1;
 
   const shouldShowColor = colorful && !portraitUrl;
-  const hue = getHueFromString(id);
+  const hue = getHueFromString(characterId);
 
   return (
     <Box

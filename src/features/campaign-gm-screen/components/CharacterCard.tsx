@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { StatComponent } from "components/StatComponent";
-import { INITIATIVE_STATUS } from "types/Character.type";
+import { CharacterDocument, INITIATIVE_STATUS } from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AssetCard } from "components/AssetCard/AssetCard";
 import { assets } from "data/assets";
@@ -16,14 +16,13 @@ import { InitiativeStatusChip } from "components/InitiativeStatusChip";
 import { useUpdateCharacterInitiative } from "api/characters/updateCharacterInitiative";
 import { CharacterNotesComponent } from "./CharacterNotesComponent";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
-import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { Stat } from "types/stats.enum";
 
 export interface CharacterCardProps {
   uid: string;
   characterId: string;
-  character: CharacterDocumentWithPortraitUrl;
+  character: CharacterDocument;
 }
 
 export function CharacterCard(props: CharacterCardProps) {
@@ -43,9 +42,9 @@ export function CharacterCard(props: CharacterCardProps) {
       <Box>
         <Box display={"flex"} alignItems={"center"} px={2} pt={2} pb={1}>
           <PortraitAvatar
-            id={characterId}
+            uid={uid}
+            characterId={characterId}
             name={character.name}
-            portraitUrl={character.portraitUrl}
             portraitSettings={character.profileImage}
             colorful
             size={"medium"}
