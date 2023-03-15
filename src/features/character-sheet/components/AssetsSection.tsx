@@ -4,7 +4,6 @@ import { useListenToCharacterSheetAssets } from "api/characters/assets/listenToA
 import { useCharacterSheetRemoveAsset } from "api/characters/assets/removeAsset";
 import { useCharacterSheetUpdateAssetCheckbox } from "api/characters/assets/updateAssetCheckbox";
 import { useCharacterSheetUpdateAssetInput } from "api/characters/assets/updateAssetInput";
-import { useCharacterSheetUpdateAssetMultiTrack } from "api/characters/assets/updateAssetMultiTrack";
 import { useCharacterSheetUpdateAssetTrack } from "api/characters/assets/updateAssetTrack";
 import { useCharacterSheetUpdateCustomAsset } from "api/characters/assets/updateCustomAsset";
 import { useState } from "react";
@@ -24,7 +23,6 @@ export function AssetsSection() {
   const { updateAssetInput } = useCharacterSheetUpdateAssetInput();
   const { updateAssetCheckbox } = useCharacterSheetUpdateAssetCheckbox();
   const { updateAssetTrack } = useCharacterSheetUpdateAssetTrack();
-  const { updateAssetMultiTrack } = useCharacterSheetUpdateAssetMultiTrack();
 
   const { updateCustomAsset } = useCharacterSheetUpdateCustomAsset();
 

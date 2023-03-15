@@ -13,4 +13,3 @@ Object.values(ironswornAssetCategories).forEach((category) => {
 });
 
 export const assetGroups = Object.values(ironswornAssetCategories);
-assetGroups.map((group) => console.debug(group.$id));

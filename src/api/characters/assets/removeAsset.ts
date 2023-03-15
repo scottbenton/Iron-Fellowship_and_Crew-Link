@@ -2,6 +2,7 @@ import { CharacterNotFoundException } from "api/error/CharacterNotFoundException
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { arrayRemove, deleteField, updateDoc } from "firebase/firestore";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
 import { getCharacterAssetDoc } from "./_getRef";
@@ -26,10 +27,12 @@ export const removeAsset: ApiFunction<
       return;
     }
 
+    const encodedId = encodeDataswornId(assetId);
+
     //@ts-ignore
     updateDoc(getCharacterAssetDoc(uid, characterId), {
-      assetOrder: arrayRemove(assetId),
-      [`assets.${assetId}`]: deleteField(),
+      assetOrder: arrayRemove(encodedId),
+      [`assets.${encodedId}`]: deleteField(),
     })
       .then(() => {
         resolve(true);

@@ -38,7 +38,7 @@ export function AssetCardField(props: AssetCardFieldProps) {
         variant={"standard"}
         fullWidth
         disabled={disabled}
-        onChange={(evt) => onChange && onChange(evt.currentTarget.value)}
+        onChange={(evt) => onChange && onChange(evt.target.value)}
       >
         {Object.values(field.Options).map((option) => (
           <MenuItem key={option.$id} value={option.$id}>

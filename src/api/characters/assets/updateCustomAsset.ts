@@ -4,6 +4,7 @@ import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
 import { getCharacterAssetDoc } from "./_getRef";
 import { Asset } from "dataforged";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 export const updateCustomAsset: ApiFunction<
   {
@@ -25,9 +26,12 @@ export const updateCustomAsset: ApiFunction<
       reject("Character not found");
       return;
     }
+
+    const encodedId = encodeDataswornId(assetId);
+
     //@ts-ignore
     updateDoc(getCharacterAssetDoc(uid, characterId), {
-      [`assets.${assetId}.customAsset`]: asset,
+      [`assets.${encodedId}.customAsset`]: asset,
     })
       .then(() => {
         resolve(true);

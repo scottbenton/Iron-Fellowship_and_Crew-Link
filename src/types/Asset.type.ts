@@ -70,11 +70,11 @@ export interface StoredAsset {
   enabledAbilities: {
     [index: number]: boolean;
   };
-  inputs?: {
+  inputs: {
     [label: string]: string;
-  };
-  trackValue?: number;
-  customAsset?: DataforgedAsset;
+  } | null;
+  trackValue: number | null;
+  customAsset: DataforgedAsset | null;
 }
 
 export function getAssetType(assetType?: string): AssetType | undefined {

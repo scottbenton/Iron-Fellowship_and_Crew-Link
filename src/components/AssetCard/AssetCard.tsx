@@ -7,20 +7,13 @@ import {
   DialogTitle,
   IconButton,
   SxProps,
-  TextField,
   Theme,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { Track } from "../Track";
 import { StoredAsset } from "../../types/Asset.type";
-import {
-  Asset,
-  AssetAlterPropertiesConditionMeter,
-  ConditionMeter,
-} from "dataforged";
+import { Asset, AssetAlterPropertiesConditionMeter } from "dataforged";
 import { MarkdownRenderer } from "../MarkdownRenderer/MarkdownRenderer";
 import { AssetCardField } from "./AssetCardField";
 import CloseIcon from "@mui/icons-material/Close";
@@ -28,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { CreateCustomAsset } from "../AssetCardDialog/CreateCustomAsset";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { assetMap, assetTypeLabels } from "data/assets";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 export interface AssetCardProps {
   assetId: string;
@@ -62,12 +56,14 @@ export function AssetCard(props: AssetCardProps) {
     handleCustomAssetUpdate,
   } = props;
 
-  const asset = storedAsset?.customAsset ?? assetMap[assetId];
-
   const { error } = useSnackbar();
 
   const [editCustomAssetDialogOpen, setEditCustomAssetDialogOpen] =
     useState<boolean>(false);
+  const asset = storedAsset?.customAsset ?? assetMap[assetId];
+  const isCustom = !!storedAsset?.customAsset;
+
+  if (!asset) return null;
 
   let alternateConditionMeterProperties:
     | AssetAlterPropertiesConditionMeter
@@ -83,7 +79,6 @@ export function AssetCard(props: AssetCardProps) {
   const conditionMeter = asset["Condition meter"]
     ? { ...asset["Condition meter"], ...alternateConditionMeterProperties }
     : undefined;
-  const isCustom = asset.$id.startsWith("ironsworn/assets/custom/");
 
   const onCustomAssetUpdate = (asset: Asset) => {
     if (handleCustomAssetUpdate) {
@@ -152,10 +147,10 @@ export function AssetCard(props: AssetCardProps) {
             <AssetCardField
               key={field.$id}
               field={field}
-              value={storedAsset?.inputs?.[field.$id]}
+              value={storedAsset?.inputs?.[encodeDataswornId(field.$id)]}
               onChange={(value) => {
                 if (handleInputChange) {
-                  return handleInputChange(field.$id, value);
+                  return handleInputChange(encodeDataswornId(field.$id), value);
                 }
                 return new Promise((res, reject) =>
                   reject("HandleInputChange is undefined")
@@ -174,8 +169,7 @@ export function AssetCard(props: AssetCardProps) {
               >
                 <Checkbox
                   checked={
-                    ability.Enabled ??
-                    storedAsset?.enabledAbilities[index] ??
+                    (ability.Enabled || storedAsset?.enabledAbilities[index]) ??
                     false
                   }
                   disabled={ability.Enabled || readOnly || !handleAbilityCheck}
@@ -203,10 +197,13 @@ export function AssetCard(props: AssetCardProps) {
             typeof storedAsset.trackValue === "number" && (
               <Track
                 sx={{ mt: 1 }}
-                label={conditionMeter.Label}
+                label={conditionMeter.Label.replace(
+                  "companion health",
+                  "health"
+                )}
                 value={storedAsset.trackValue ?? conditionMeter.Max}
-                min={0}
-                max={conditionMeter.Value ?? conditionMeter.Max}
+                min={conditionMeter.Min}
+                max={conditionMeter.Max}
                 disabled={readOnly || !handleTrackValueChange}
                 onChange={(newValue) =>
                   new Promise((resolve, reject) => {
@@ -260,10 +257,10 @@ export function AssetCard(props: AssetCardProps) {
           </Box>
         </DialogTitle>
         <DialogContent>
-          {/* <CreateCustomAsset
+          <CreateCustomAsset
             handleSelect={onCustomAssetUpdate}
             startingAsset={asset}
-          /> */}
+          />
         </DialogContent>
       </Dialog>
     </>

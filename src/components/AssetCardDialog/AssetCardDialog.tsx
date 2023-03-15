@@ -18,29 +18,7 @@ import { Asset } from "dataforged";
 import { AssetCard } from "../AssetCard/AssetCard";
 import { CreateCustomAsset } from "./CreateCustomAsset";
 import { MarkdownRenderer } from "components/MarkdownRenderer";
-
-// const assetGroups = [
-//   {
-//     name: "Companions",
-//     description: "Living creatures to assist you on your journey.",
-//     assets: companions,
-//   },
-//   {
-//     name: "Paths",
-//     description: "Skills gained from your character's background.",
-//     assets: paths,
-//   },
-//   {
-//     name: "Combat Talents",
-//     description: "Is your character an expert at fighting with any weapons?",
-//     assets: combatTalents,
-//   },
-//   {
-//     name: "Rituals",
-//     description: "What magic does your character have access to?",
-//     assets: rituals,
-//   },
-// ];
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 export interface AssetCardDialogProps {
   open: boolean;
@@ -54,33 +32,29 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
 
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const onAssetSelect = (asset: Asset) => {
+  const onAssetSelect = (asset: Asset, isCustom?: boolean) => {
     const inputs: { [key: string]: string } = {};
 
     Object.values(asset.Inputs ?? {}).forEach((input) => {
-      inputs[input.$id] = "";
+      inputs[encodeDataswornId(input.$id)] = "";
     });
 
     const storedAsset: StoredAsset = {
       id: asset.$id,
       enabledAbilities: {
-        0: false,
-        1: false,
-        2: false,
+        0: asset.Abilities[0].Enabled,
+        1: asset.Abilities[1].Enabled,
+        2: asset.Abilities[2].Enabled,
       },
-      inputs: inputs,
+      inputs: Object.keys(inputs).length > 0 ? inputs : null,
       trackValue:
-        asset?.["Condition meter"]?.Value ?? asset?.["Condition meter"]?.Max,
-      customAsset: asset.$id.startsWith("ironsworn/assets/custom")
-        ? asset
-        : undefined,
+        asset?.["Condition meter"]?.Value ??
+        asset?.["Condition meter"]?.Max ??
+        null,
+      customAsset: isCustom ? asset : null,
     };
 
     handleAssetSelection(storedAsset);
-  };
-
-  const handleCustomAssetCreation = (asset: Asset) => {
-    console.debug(asset);
   };
 
   return (
@@ -115,7 +89,7 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
                         readOnly
                         actions={
                           <Button
-                            onClick={() => console.debug(asset)}
+                            onClick={() => onAssetSelect(asset)}
                             disabled={loading}
                           >
                             Select
@@ -129,7 +103,7 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
             </>
           ) : (
             <CreateCustomAsset
-              handleSelect={(asset) => handleCustomAssetCreation(asset)}
+              handleSelect={(asset) => onAssetSelect(asset, true)}
             />
           )}
         </Box>

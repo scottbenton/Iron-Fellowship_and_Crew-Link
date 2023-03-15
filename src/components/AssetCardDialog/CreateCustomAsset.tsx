@@ -1,21 +1,18 @@
 import { Box, Button, Grid, MenuItem, Stack, TextField } from "@mui/material";
-import { useSnackbar } from "../../hooks/useSnackbar";
 import type { Asset, InputSelectOption } from "dataforged";
 import { InputType, License } from "types/Datasworn";
 import {
   AssetType,
   assetTypeToIdMap,
   getAssetType,
-  StoredAsset,
 } from "../../types/Asset.type";
 import { SectionHeading } from "../SectionHeading";
-import { FieldArray, Formik, getIn, yupToFormErrors } from "formik";
+import { FieldArray, Formik, getIn } from "formik";
 import * as Yup from "yup";
 import { NumberField } from "components/NumberField";
 import {
   encodeContents,
   generateAssetDataswornId,
-  generateCustomDataswornId,
 } from "functions/dataswornIdEncoder";
 
 export interface CreateCustomAssetProps {
@@ -177,13 +174,12 @@ function convertFormValuesToAsset(values: FormValues) {
       Standard: values.name,
       Canonical: values.name,
     },
-    Inputs: inputs,
     Display: {},
     "Asset type": assetCategoryId,
     Usage: {
       Shared: false,
     },
-    Requirement: values.description || undefined,
+    Requirement: values.description || "",
     Source: {
       Title: "Custom Asset",
       Authors: [],
@@ -192,42 +188,46 @@ function convertFormValuesToAsset(values: FormValues) {
     Abilities: [
       {
         $id: `${assetId}/1`,
-        Label: values.ability1Name || undefined,
+        Label: values.ability1Name || "",
         Text: values.ability1Description,
         Enabled: false,
       },
       {
         $id: `${assetId}/2`,
-        Label: values.ability2Name || undefined,
+        Label: values.ability2Name || "",
         Text: values.ability2Description,
         Enabled: false,
       },
       {
         $id: `${assetId}/3`,
-        Label: values.ability3Name || undefined,
+        Label: values.ability3Name || "",
         Text: values.ability3Description,
         Enabled: false,
       },
     ],
-    "Condition meter": values.track
-      ? {
-          $id: `${assetId}/condition_meter`,
-          Label: values.track.label,
-          Min: values.track.min,
-          Max: values.track.max,
-          Value: values.track.startingValue,
-          Rollable: false,
-          Conditions: [],
-        }
-      : undefined,
   };
+
+  if (values.track) {
+    asset["Condition meter"] = {
+      $id: `${assetId}/condition_meter`,
+      Label: values.track.label,
+      Min: values.track.min,
+      Max: values.track.max,
+      Value: values.track.startingValue,
+      Rollable: false,
+      Conditions: [],
+    };
+  }
+
+  if (inputs) {
+    asset.Inputs = inputs;
+  }
 
   return asset;
 }
 
 export function CreateCustomAsset(props: CreateCustomAssetProps) {
   const { handleSelect, startingAsset } = props;
-  const { error } = useSnackbar();
 
   const initialValues = convertAssetToFormValue(startingAsset);
 
@@ -285,7 +285,7 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                 <TextField
                   name={"description"}
                   label={"Description"}
-                  value={form.values.description}
+                  value={form.values.description ?? ""}
                   onChange={(evt) => form.handleChange(evt)}
                   error={form.touched.description && !!form.errors.description}
                   helperText={

@@ -1,5 +1,6 @@
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { addDoc, setDoc } from "firebase/firestore";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { firebaseAuth } from "../../config/firebase.config";
 import {
   healthTrack,
@@ -40,8 +41,9 @@ export const createCharacter: ApiFunction<
     const assetOrder: string[] = [];
     let assetsMap: { [key: string]: StoredAsset } = {};
     assets.map((asset) => {
-      assetOrder.push(asset.id);
-      assetsMap[asset.id] = asset;
+      const encodedId = encodeDataswornId(asset.id);
+      assetOrder.push(encodedId);
+      assetsMap[encodedId] = asset;
     });
 
     addDoc(getUsersCharacterCollection(uid), character)

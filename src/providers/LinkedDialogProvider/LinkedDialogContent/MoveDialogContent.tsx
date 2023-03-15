@@ -43,7 +43,10 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
           [PlayerConditionMeter.Supply]: store.supply ?? 0,
           companionHealth:
             store.assets
-              ?.filter((asset) => asset.trackValue !== undefined)
+              ?.filter(
+                (asset) =>
+                  asset.trackValue !== null && asset.trackValue !== undefined
+              )
               .map((asset) => ({
                 companionName: assetMap[asset.id].Title.Short,
                 health: asset.trackValue ?? 0,
