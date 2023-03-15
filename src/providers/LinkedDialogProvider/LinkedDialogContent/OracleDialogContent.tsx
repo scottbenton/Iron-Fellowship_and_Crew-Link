@@ -17,8 +17,8 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
 
   const { rollOracleTable } = useRoller();
 
-  const customOraclesCategory = useCustomOracles();
-  const oracle = oracleMap[id] ?? customOraclesCategory?.Tables?.[id];
+  const { allCustomOracleMap } = useCustomOracles();
+  const oracle = oracleMap[id] ?? allCustomOracleMap?.[id];
 
   if (!oracle) {
     return (

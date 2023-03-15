@@ -20,12 +20,12 @@ const getRoll = (dieMax: number) => {
 
 export function DieRollProvider(props: PropsWithChildren) {
   const { children } = props;
-  const customOraclesSection = useCustomOracles();
+  const { allCustomOracleMap, customOracleCategory } = useCustomOracles();
   const combinedOracleCategories = {
     ...oracleCategoryMap,
   };
-  if (customOraclesSection) {
-    combinedOracleCategories[customOraclesSection.$id] = customOraclesSection;
+  if (customOracleCategory) {
+    combinedOracleCategories[customOracleCategory.$id] = customOracleCategory;
   }
 
   const [rolls, setRolls] = useState<Roll[]>([]);
@@ -80,8 +80,7 @@ export function DieRollProvider(props: PropsWithChildren) {
       /ironsworn\/oracles\/[^\/]*/gm
     )?.[0];
 
-    const oracle =
-      oracleMap[oracleId] ?? customOraclesSection?.Tables?.[oracleId];
+    const oracle = oracleMap[oracleId] ?? allCustomOracleMap?.[oracleId];
 
     const oracleCategory = oracleCategoryId
       ? combinedOracleCategories[oracleCategoryId]

@@ -9,7 +9,7 @@ import { useCustomOracles } from "./useCustomOracles";
 export function useFilterOracles() {
   const { search, setSearch, debouncedSearch } = useSearch();
 
-  const customOracleCategory = useCustomOracles();
+  const { customOracleCategory } = useCustomOracles();
   const settings = useSettingsStore((store) => store.oracleSettings);
 
   const combinedOracles = useMemo(() => {

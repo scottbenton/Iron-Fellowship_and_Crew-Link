@@ -1,4 +1,4 @@
-import { OracleSet, OracleTable, OracleTableRow } from "dataforged";
+import type { OracleSet, OracleTable, OracleTableRow } from "dataforged";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { useEffect, useState } from "react";
@@ -79,6 +79,9 @@ export function useCustomOracles() {
   );
 
   const [customOracleCategory, setCustomOracleCategory] = useState<OracleSet>();
+  const [allCustomOracleMap, setAllCustomOracleMap] = useState<{
+    [oracleId: string]: OracleTable;
+  }>();
 
   useEffect(() => {
     const customStoredOracles = gmScreenOracles ?? characterSheetOracles;
@@ -90,11 +93,14 @@ export function useCustomOracles() {
       Array.isArray(hiddenOracleIds)
     ) {
       const mappedCustomOracles: { [key: string]: OracleTable } = {};
+      const mappedCustomOraclesWithHidden: { [key: string]: OracleTable } = {};
 
       customStoredOracles.forEach((oracle) => {
+        const convertedOracle = convertStoredOracleToOracle(oracle);
         if (!hiddenOracleIds.includes(oracle.$id)) {
-          mappedCustomOracles[oracle.$id] = convertStoredOracleToOracle(oracle);
+          mappedCustomOracles[oracle.$id] = convertedOracle;
         }
+        mappedCustomOraclesWithHidden[oracle.$id] = convertedOracle;
       });
 
       setCustomOracleCategory({
@@ -116,8 +122,10 @@ export function useCustomOracles() {
         },
         Tables: mappedCustomOracles,
       });
+      setAllCustomOracleMap(mappedCustomOraclesWithHidden);
     } else {
       setCustomOracleCategory(undefined);
+      setAllCustomOracleMap(undefined);
     }
   }, [
     characterSheetOracles,
@@ -126,5 +134,5 @@ export function useCustomOracles() {
     hiddenCharacterOracleIds,
   ]);
 
-  return customOracleCategory;
+  return { customOracleCategory, allCustomOracleMap };
 }

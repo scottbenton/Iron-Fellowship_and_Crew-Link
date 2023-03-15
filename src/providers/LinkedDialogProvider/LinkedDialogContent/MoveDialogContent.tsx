@@ -25,8 +25,8 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
 
   const { rollOracleTable } = useRoller();
   const customMoves = useCustomMoves();
-  const customOracles = useCustomOracles()?.Tables;
-  const allOracles = { ...oracleMap, ...customOracles };
+  const { allCustomOracleMap } = useCustomOracles();
+  const allOracles = { ...oracleMap, ...allCustomOracleMap };
 
   const move = moveMap[id] ?? customMoves?.Moves[id];
 
