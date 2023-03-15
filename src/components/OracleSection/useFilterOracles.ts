@@ -9,6 +9,7 @@ import { useCustomOracles } from "./useCustomOracles";
 export function useFilterOracles() {
   const { search, setSearch, debouncedSearch } = useSearch();
 
+  const customOracleCategory = useCustomOracles();
   const settings = useSettingsStore((store) => store.oracleSettings);
 
   const combinedOracles = useMemo(() => {
@@ -18,7 +19,8 @@ export function useFilterOracles() {
 
     pinnedOracleIds.forEach((oracleId) => {
       if (settings?.pinnedOracleSections?.[oracleId]) {
-        pinnedOracleTables[oracleId] = oracleMap[oracleId];
+        pinnedOracleTables[oracleId] =
+          oracleMap[oracleId] ?? customOracleCategory?.Tables?.[oracleId];
       }
     });
 
@@ -51,7 +53,6 @@ export function useFilterOracles() {
   }, [settings]);
 
   const [filteredOracles, setFilteredOracles] = useState(combinedOracles);
-  const customOracleCategory = useCustomOracles();
 
   useEffect(() => {
     let allOracles = [...combinedOracles];
