@@ -2,6 +2,7 @@ import { CharacterNotFoundException } from "api/error/CharacterNotFoundException
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { updateDoc } from "firebase/firestore";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
 import { getCharacterAssetDoc } from "./_getRef";
@@ -16,6 +17,7 @@ export const updateAssetTrack: ApiFunction<
   boolean
 > = function (params) {
   const { uid, characterId, assetId, value } = params;
+
   return new Promise((resolve, reject) => {
     if (!uid) {
       reject(new UserNotLoggedInException());
@@ -26,16 +28,18 @@ export const updateAssetTrack: ApiFunction<
       return;
     }
 
+    const encodedId = encodeDataswornId(assetId);
+
     //@ts-ignore
     updateDoc(getCharacterAssetDoc(uid, characterId), {
-      [`assets.${assetId}.trackValue`]: value,
+      [`assets.${encodedId}.trackValue`]: value,
     })
       .then(() => {
         resolve(true);
       })
       .catch((e) => {
         console.error(e);
-        reject("Error updating asset value");
+        reject("Error updating asset track");
       });
   });
 };

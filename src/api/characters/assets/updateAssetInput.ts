@@ -2,6 +2,7 @@ import { CharacterNotFoundException } from "api/error/CharacterNotFoundException
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { updateDoc } from "firebase/firestore";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
 import { getCharacterAssetDoc } from "./_getRef";
@@ -26,16 +27,18 @@ export const updateAssetInput: ApiFunction<
       reject(new CharacterNotFoundException());
       return;
     }
+    const encodedId = encodeDataswornId(assetId);
+
     //@ts-ignore
     updateDoc(getCharacterAssetDoc(uid, characterId), {
-      [`assets.${assetId}.inputs.${inputLabel}`]: inputValue,
+      [`assets.${encodedId}.inputs.${inputLabel}`]: inputValue,
     })
       .then(() => {
         resolve(true);
       })
       .catch((e) => {
         console.error(e);
-        reject("Error updating asset label");
+        reject("Error updating asset input");
       });
   });
 };

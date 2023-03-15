@@ -17,7 +17,7 @@ import { CharacterHeader } from "./components/CharacterHeader";
 import { useCharacterSheetListenToCustomOracles } from "api/user/custom-oracles/listenToCustomOracles";
 import { useCharacterSheetListenToCustomMoves } from "api/user/custom-moves/listenToCustomMoves";
 import { useCharacterSheetListenToCampaignSettings } from "api/campaign/settings/listenToCampaignSettings";
-import { useCharacterSheetListenToCharacterSettings } from "api/characters/settings/listenToCampaignSettings";
+import { useCharacterSheetListenToCharacterSettings } from "api/characters/settings/listenToCharacterSettings";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();

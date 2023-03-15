@@ -37,6 +37,7 @@
     "remark-gfm": "^3.0.1",
     "vite-plugin-svgr": "^2.4.0",
     "vite-tsconfig-paths": "^4.0.5",
+    "yup": "^1.0.2",
     "zustand": "^4.2.0"
   },
   "devDependencies": {

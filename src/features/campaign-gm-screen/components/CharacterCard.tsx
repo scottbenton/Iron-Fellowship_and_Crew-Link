@@ -11,7 +11,6 @@ import { StatComponent } from "components/StatComponent";
 import { CharacterDocument, INITIATIVE_STATUS } from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AssetCard } from "components/AssetCard/AssetCard";
-import { assets } from "data/assets";
 import { InitiativeStatusChip } from "components/InitiativeStatusChip";
 import { useUpdateCharacterInitiative } from "api/characters/updateCharacterInitiative";
 import { CharacterNotesComponent } from "./CharacterNotesComponent";
@@ -133,7 +132,7 @@ export function CharacterCard(props: CharacterCardProps) {
                 <AssetCard
                   key={index}
                   storedAsset={storedAsset}
-                  asset={storedAsset.customAsset ?? assets[storedAsset.id]}
+                  assetId={storedAsset.id}
                 />
               ))}
             </Stack>
