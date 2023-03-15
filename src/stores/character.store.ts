@@ -1,17 +1,10 @@
-import { getCharacterPortraitUrl } from "api/characters/getCharacterPortraitUrl";
-import { firebaseAuth } from "config/firebase.config";
-import { getDownloadURL } from "firebase/storage";
 import produce from "immer";
 import { create } from "zustand";
 import { CharacterDocument } from "../types/Character.type";
 
-export interface CharacterDocumentWithPortraitUrl extends CharacterDocument {
-  portraitUrl?: string;
-}
-
 interface CharacterStore {
   characters: {
-    [key: string]: CharacterDocumentWithPortraitUrl;
+    [key: string]: CharacterDocument;
   };
   error?: string;
   loading: boolean;
@@ -41,22 +34,6 @@ export const useCharacterStore = create<CharacterStore>()((set, getState) => ({
         state.loading = false;
       })
     );
-    const state = getState();
-    const uid = firebaseAuth.currentUser?.uid;
-    const oldUrl = state.characters[characterId].portraitUrl;
-    const oldFilename = state.characters[characterId].profileImage?.filename;
-    const newFilename = character.profileImage?.filename;
-    if (uid && newFilename && (!oldUrl || oldFilename !== newFilename)) {
-      getCharacterPortraitUrl({ uid, characterId, filename: newFilename })
-        .then((url) => {
-          set(
-            produce((state: CharacterStore) => {
-              state.characters[characterId].portraitUrl = url;
-            })
-          );
-        })
-        .catch(() => {});
-    }
   },
 
   removeCharacter: (characterId) => {

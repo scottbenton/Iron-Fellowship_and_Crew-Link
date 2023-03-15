@@ -5,8 +5,6 @@ import { useSnackbar } from "../../hooks/useSnackbar";
 import { getCharacterDoc } from "./_getRef";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { CharacterDocument } from "../../types/Character.type";
-import { getCharacterPortraitUrl } from "./getCharacterPortraitUrl";
-import { CharacterDocumentWithPortraitUrl } from "stores/character.store";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { UserDocument } from "types/User.type";
 import { getUserDoc } from "api/user/getUserDoc";
@@ -14,19 +12,13 @@ import { getUserDoc } from "api/user/getUserDoc";
 interface Params {
   characterIdList: { characterId: string; uid: string }[] | undefined;
   onDocChange: (id: string, character?: CharacterDocument) => void;
-  onPortraitUrl: (id: string, url: string) => void;
   onCharacterUserDocument?: (id: string, userDocument: UserDocument) => void;
   onError: (error: any) => void;
 }
 
 export function listenToCampaignCharacters(params: Params): Unsubscribe[] {
-  const {
-    characterIdList,
-    onDocChange,
-    onPortraitUrl,
-    onCharacterUserDocument,
-    onError,
-  } = params;
+  const { characterIdList, onDocChange, onCharacterUserDocument, onError } =
+    params;
 
   const unsubscribes = (characterIdList || []).map((character, index) => {
     if (onCharacterUserDocument) {
@@ -41,17 +33,6 @@ export function listenToCampaignCharacters(params: Params): Unsubscribe[] {
       (snapshot) => {
         const characterDoc = snapshot.data();
         onDocChange(character.characterId, characterDoc);
-        if (characterDoc?.profileImage?.filename) {
-          getCharacterPortraitUrl({
-            uid: character.uid,
-            characterId: character.characterId,
-            filename: characterDoc.profileImage.filename,
-          })
-            .then((url) => {
-              onPortraitUrl(character.characterId, url);
-            })
-            .catch(() => {});
-        }
       },
       (error) => {
         console.error(error);
@@ -68,7 +49,7 @@ export function useListenToCampaignCharacters(campaignId?: string) {
   );
 
   const [campaignCharacters, setCampaignCharacters] = useState<{
-    [id: string]: CharacterDocumentWithPortraitUrl;
+    [id: string]: CharacterDocument;
   }>({});
 
   const { error } = useSnackbar();
@@ -90,16 +71,6 @@ export function useListenToCampaignCharacters(campaignId?: string) {
           }
           return newCharacters;
         }),
-      onPortraitUrl: (id, url) => {
-        setCampaignCharacters((prevCharacters) => {
-          if (url !== prevCharacters[id].portraitUrl) {
-            let newCharacters = { ...prevCharacters };
-            newCharacters[id] = { ...prevCharacters[id], portraitUrl: url };
-            return newCharacters;
-          }
-          return prevCharacters;
-        });
-      },
       onError: (err) => {
         console.error(err);
         const errorMessage = getErrorMessage(
@@ -132,9 +103,6 @@ export function useCampaignGMScreenListenToCampaignCharacters() {
   const removeCharacter = useCampaignGMScreenStore(
     (store) => store.removeCharacter
   );
-  const updateCharacterPortraitUrl = useCampaignGMScreenStore(
-    (store) => store.updateCharacterPortraitUrl
-  );
   const updatePlayer = useCampaignGMScreenStore((store) => store.updatePlayer);
 
   useEffect(() => {
@@ -147,7 +115,6 @@ export function useCampaignGMScreenListenToCampaignCharacters() {
           removeCharacter(id);
         }
       },
-      onPortraitUrl: (id, url) => updateCharacterPortraitUrl(id, url),
       onCharacterUserDocument: (playerId, playerDocument) =>
         updatePlayer(playerId, playerDocument),
       onError: (err) => {
