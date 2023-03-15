@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormControlLabel,
   Autocomplete,
+  Alert,
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "components/DialogTitleWithCloseButton";
 import { useCustomOracles } from "components/OracleSection/useCustomOracles";
@@ -21,6 +22,7 @@ import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useState } from "react";
 import { StoredMove } from "types/Moves.type";
 import { MoveStatKeys, PlayerConditionMeter, Stat } from "types/stats.enum";
+import type { OracleTable } from "dataforged";
 
 type EnabledStats = {
   [stat in MoveStatKeys]: boolean;
@@ -45,10 +47,11 @@ export interface CustomMoveDialogProps {
 export function CustomMoveDialog(props: CustomMoveDialogProps) {
   const { open, onClose, move, createCustomMove, updateCustomMove } = props;
 
-  const oracles = useCustomOracles()?.Tables;
-  const combinedOracles = { ...oracleMap, ...oracles };
+  const { allCustomOracleMap } = useCustomOracles();
+  const combinedOracles = { ...oracleMap, ...allCustomOracleMap };
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [oracleMissingError, setOracleMissingError] = useState<boolean>(false);
 
   const initialValues: FormValues = {
     name: move?.name ?? "",
@@ -117,6 +120,29 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
           setLoading(false);
         });
     }
+  };
+
+  const getOraclesFromIds = (oracleIds: string[]) => {
+    const oracles: OracleTable[] = [];
+    oracleIds.forEach((id) => {
+      const oracle = combinedOracles[id];
+      if (oracle) {
+        oracles.push(oracle);
+      }
+    });
+
+    return oracles;
+  };
+
+  const isMissingOracle = (oracleIds: string[]) => {
+    let isMissingOracle: boolean = false;
+    oracleIds.forEach((id) => {
+      if (!combinedOracles[id]) {
+        isMissingOracle = true;
+      }
+    });
+
+    return isMissingOracle;
   };
 
   return (
@@ -327,9 +353,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                   renderInput={(params) => (
                     <TextField {...params} label={"Oracles"} />
                   )}
-                  value={form.values.oracleIds.map(
-                    (oracleId) => combinedOracles[oracleId]
-                  )}
+                  value={getOraclesFromIds(form.values.oracleIds)}
                   onChange={(evt, value) => {
                     const ids = Array.isArray(value)
                       ? value.map((oracle) => oracle.$id)
@@ -337,6 +361,12 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                     form.setFieldValue("oracleIds", ids);
                   }}
                 />
+                {isMissingOracle(form.values.oracleIds) && (
+                  <Alert severity={"warning"}>
+                    This move had an attached oracle that is no longer
+                    available.
+                  </Alert>
+                )}{" "}
               </Stack>
             </DialogContent>
             <DialogActions>
