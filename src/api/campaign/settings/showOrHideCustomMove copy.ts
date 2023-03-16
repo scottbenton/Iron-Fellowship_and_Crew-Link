@@ -1,6 +1,6 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
-import { arrayRemove, arrayUnion, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCampaignSettingsDoc } from "./_getRef";
 
@@ -20,9 +20,13 @@ export const showOrHideCustomMove: ApiFunction<
       return;
     }
 
-    updateDoc(getCampaignSettingsDoc(campaignId), {
-      hiddenCustomMoveIds: hidden ? arrayUnion(moveId) : arrayRemove(moveId),
-    })
+    setDoc(
+      getCampaignSettingsDoc(campaignId),
+      {
+        hiddenCustomMoveIds: hidden ? arrayUnion(moveId) : arrayRemove(moveId),
+      },
+      { merge: true }
+    )
       .then(() => resolve(true))
       .catch((e) => {
         console.error(e);

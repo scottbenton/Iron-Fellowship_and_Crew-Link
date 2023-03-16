@@ -1,7 +1,7 @@
 import { CharacterNotFoundException } from "api/error/CharacterNotFoundException";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
-import { arrayRemove, arrayUnion, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
 import { getCharacterSettingsDoc } from "./_getRef";
@@ -27,11 +27,15 @@ export const showOrHideCustomOracle: ApiFunction<
       return;
     }
 
-    updateDoc(getCharacterSettingsDoc(uid, characterId), {
-      hiddenCustomOraclesIds: hidden
-        ? arrayUnion(oracleId)
-        : arrayRemove(oracleId),
-    })
+    setDoc(
+      getCharacterSettingsDoc(uid, characterId),
+      {
+        hiddenCustomOraclesIds: hidden
+          ? arrayUnion(oracleId)
+          : arrayRemove(oracleId),
+      },
+      { merge: true }
+    )
       .then(() => resolve(true))
       .catch((e) => {
         console.error(e);

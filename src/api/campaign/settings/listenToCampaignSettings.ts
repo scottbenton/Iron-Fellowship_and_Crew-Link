@@ -1,12 +1,9 @@
-import { listenToCustomMoves } from "api/user/custom-moves/listenToCustomMoves";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
-import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
+import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
-import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";
-import { useCampaignStore } from "stores/campaigns.store";
 import { CampaignSettingsDoc } from "types/Settings.type";
 import { getCampaignSettingsDoc } from "./_getRef";
 
@@ -18,14 +15,11 @@ export function listenToCampaignSettings(
   return onSnapshot(
     getCampaignSettingsDoc(campaignId),
     (snapshot) => {
-      if (snapshot.exists()) {
-        onSettings(snapshot.data());
-      } else {
-        setDoc(getCampaignSettingsDoc(campaignId), {
-          hiddenCustomMoveIds: [],
-          hiddenCustomOraclesIds: [],
-        });
-      }
+      onSettings({
+        ...snapshot.data(),
+        hiddenCustomMoveIds: [],
+        hiddenCustomOraclesIds: [],
+      });
     },
     (error) => onError(error)
   );

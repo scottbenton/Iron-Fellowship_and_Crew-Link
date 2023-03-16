@@ -1,5 +1,5 @@
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
-import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
+import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";
@@ -16,14 +16,11 @@ export function listenToCharacterSettings(
   return onSnapshot(
     getCharacterSettingsDoc(uid, characterId),
     (snapshot) => {
-      if (snapshot.exists()) {
-        onSettings(snapshot.data());
-      } else {
-        setDoc(getCharacterSettingsDoc(uid, characterId), {
-          hiddenCustomMoveIds: [],
-          hiddenCustomOraclesIds: [],
-        });
-      }
+      onSettings({
+        hiddenCustomMoveIds: [],
+        hiddenCustomOraclesIds: [],
+        ...snapshot.data(),
+      });
     },
     (error) => onError(error)
   );
