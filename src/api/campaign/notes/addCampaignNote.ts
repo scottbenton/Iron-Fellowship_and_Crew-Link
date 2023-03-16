@@ -8,7 +8,7 @@ export const addCampaignNote: ApiFunction<
     campaignId?: string;
     order: number;
   },
-  boolean
+  string
 > = function (params) {
   const { campaignId, order } = params;
 
@@ -22,8 +22,8 @@ export const addCampaignNote: ApiFunction<
       order,
       title: "New Page",
     })
-      .then(() => {
-        resolve(true);
+      .then((doc) => {
+        resolve(doc.id);
       })
       .catch((e) => {
         console.error(e);
