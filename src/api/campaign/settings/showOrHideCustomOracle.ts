@@ -1,6 +1,6 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
-import { arrayRemove, arrayUnion, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCampaignSettingsDoc } from "./_getRef";
 
@@ -20,11 +20,15 @@ export const showOrHideCustomOracle: ApiFunction<
       return;
     }
 
-    updateDoc(getCampaignSettingsDoc(campaignId), {
-      hiddenCustomOraclesIds: hidden
-        ? arrayUnion(oracleId)
-        : arrayRemove(oracleId),
-    })
+    setDoc(
+      getCampaignSettingsDoc(campaignId),
+      {
+        hiddenCustomOraclesIds: hidden
+          ? arrayUnion(oracleId)
+          : arrayRemove(oracleId),
+      },
+      { merge: true }
+    )
       .then(() => resolve(true))
       .catch((e) => {
         console.error(e);

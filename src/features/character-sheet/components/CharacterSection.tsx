@@ -27,7 +27,7 @@ import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
 import { useCharacterSheetUpdateCharacterPortrait } from "api/characters/updateCharacterPortrait";
 import { CustomMovesSection } from "components/CustomMovesSection";
 import { CustomOracleSection } from "components/CustomOraclesSection";
-import { useCharacterSheetShowOrHideCustomMove } from "api/characters/settings/showOrHideCustomMove copy";
+import { useCharacterSheetShowOrHideCustomMove } from "api/characters/settings/showOrHideCustomMove";
 import { useCharacterSheetShowOrHideCustomOracle } from "api/characters/settings/showOrHideCustomOracle";
 
 export function CharacterSection() {
