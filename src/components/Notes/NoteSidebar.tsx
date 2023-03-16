@@ -12,7 +12,7 @@ export interface NoteSidebarProps {
   notes: Note[];
   selectedNoteId?: string;
   openNote: (noteId: string) => void;
-  createNote?: () => Promise<boolean>;
+  createNote?: () => Promise<string>;
   updateNoteOrder?: (noteId: string, order: number) => Promise<boolean>;
   isMobile: boolean;
 }
@@ -33,6 +33,9 @@ export function NoteSidebar(props: NoteSidebarProps) {
     setLoading(true);
     createNote &&
       createNote()
+        .then((noteId) => {
+          openNote(noteId);
+        })
         .catch(() => {})
         .finally(() => {
           setLoading(false);

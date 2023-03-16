@@ -53,6 +53,30 @@ export function StatComponent(props: StatComponentProps) {
           display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
+          transition: theme.transitions.create(
+            ["background-color", "border-color"],
+            { duration: theme.transitions.duration.shorter }
+          ),
+          "&>h6": {
+            transition: theme.transitions.create(
+              ["background-color", "color"],
+              { duration: theme.transitions.duration.shorter }
+            ),
+            backgroundColor: theme.palette.grey[100],
+            color: theme.palette.grey[600],
+            fontFamily: theme.fontFamilyTitle,
+            py: 0.5,
+          },
+          "&:hover":
+            updateTrack || disableRoll
+              ? {}
+              : {
+                  "&>h6": {
+                    backgroundColor: theme.palette.grey[300],
+                    color: theme.palette.grey[800],
+                  },
+                  borderColor: theme.palette.secondary.main,
+                },
         }),
 
         ...(Array.isArray(sx) ? sx : [sx]),
@@ -67,12 +91,6 @@ export function StatComponent(props: StatComponentProps) {
         textAlign={"center"}
         variant={"subtitle1"}
         lineHeight={1}
-        sx={(theme) => ({
-          fontFamily: theme.fontFamilyTitle,
-          color: theme.palette.grey[600],
-          backgroundColor: theme.palette.grey[100],
-          py: 0.5,
-        })}
       >
         {label}
       </Typography>
