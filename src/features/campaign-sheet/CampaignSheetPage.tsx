@@ -176,6 +176,7 @@ export function CampaignSheetPage() {
         />
       )}
       <CharacterList
+        usePlayerNameAsSecondaryText
         characters={campaignCharacters}
         actions={(characterId) =>
           getUidFromCharacterId(characterId) === uid ? (

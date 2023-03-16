@@ -19,11 +19,6 @@ export interface CampaignGMScreenStore {
   campaign?: StoredCampaign;
   setCampaign: (campaignId: string, campaign?: StoredCampaign) => void;
 
-  players: {
-    [uid: string]: UserDocument;
-  };
-  updatePlayer: (playerId: string, doc: UserDocument) => void;
-
   characters: {
     [characterId: string]: CharacterDocument;
   };
@@ -89,15 +84,6 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
         produce((store: CampaignGMScreenStore) => {
           store.campaignId = campaignId;
           store.campaign = campaign;
-        })
-      );
-    },
-
-    players: {},
-    updatePlayer: (playerId, player) => {
-      set(
-        produce((store: CampaignGMScreenStore) => {
-          store.players[playerId] = player;
         })
       );
     },

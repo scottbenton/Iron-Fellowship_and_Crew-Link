@@ -17,6 +17,7 @@ import { CharacterNotesComponent } from "./CharacterNotesComponent";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { Stat } from "types/stats.enum";
+import { useMiscDataStore } from "stores/miscData.store";
 
 export interface CharacterCardProps {
   uid: string;
@@ -31,7 +32,7 @@ export function CharacterCard(props: CharacterCardProps) {
     (store) => store.characterAssets[characterId]
   );
 
-  const user = useCampaignGMScreenStore((store) => store.players[uid]);
+  const user = useMiscDataStore((store) => store.userDocs[uid]);
 
   const { updateCharacterInitiative, loading: initiativeLoading } =
     useUpdateCharacterInitiative();
