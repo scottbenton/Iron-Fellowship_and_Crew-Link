@@ -1,7 +1,7 @@
 import { ApiFunction } from "hooks/useApiState";
 import { getImageUrl } from "lib/storage.lib";
 import { useEffect } from "react";
-import { useCharacterPortraitStore } from "stores/characterPortrait.store";
+import { useMiscDataStore } from "stores/miscData.store";
 import { constructCharacterPortraitPath } from "./_getRef";
 
 export const getCharacterPortraitUrl: ApiFunction<
@@ -28,7 +28,7 @@ export function useListenToCharacterPortraitUrl(
   characterId: string,
   filename?: string
 ) {
-  const setUrl = useCharacterPortraitStore((store) => store.setPortraitUrl);
+  const setUrl = useMiscDataStore((store) => store.setPortraitUrl);
 
   useEffect(() => {
     if (filename) {
