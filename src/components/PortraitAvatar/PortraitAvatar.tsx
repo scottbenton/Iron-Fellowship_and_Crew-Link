@@ -3,7 +3,7 @@ import { Box, Typography, TypographyVariant, Skeleton } from "@mui/material";
 import { useListenToCharacterPortraitUrl } from "api/characters/getCharacterPortraitUrl";
 import { getHueFromString } from "functions/getHueFromString";
 import { useState } from "react";
-import { useCharacterPortraitStore } from "stores/characterPortrait.store";
+import { useMiscDataStore } from "stores/miscData.store";
 
 type AvatarSizes = "small" | "medium" | "large";
 
@@ -22,9 +22,9 @@ const variants: { [key in AvatarSizes]: TypographyVariant } = {
 export interface PortraitAvatarProps {
   uid: string;
   characterId: string;
-  filename?: string;
   name?: string;
   portraitSettings?: {
+    filename: string;
     position: {
       x: number;
       y: number;
@@ -39,15 +39,14 @@ export function PortraitAvatar(props: PortraitAvatarProps) {
   const {
     uid,
     characterId,
-    filename,
     name,
     portraitSettings,
     colorful,
     size = "medium",
   } = props;
 
-  useListenToCharacterPortraitUrl(uid, characterId, filename);
-  const portraitUrl: string | undefined = useCharacterPortraitStore(
+  useListenToCharacterPortraitUrl(uid, characterId, portraitSettings?.filename);
+  const portraitUrl: string | undefined = useMiscDataStore(
     (store) => store.portraitUrls[characterId]
   );
 

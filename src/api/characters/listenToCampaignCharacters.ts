@@ -8,6 +8,7 @@ import { CharacterDocument } from "../../types/Character.type";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { UserDocument } from "types/User.type";
 import { getUserDoc } from "api/user/getUserDoc";
+import { useMiscDataStore } from "stores/miscData.store";
 
 interface Params {
   characterIdList: { characterId: string; uid: string }[] | undefined;
@@ -26,7 +27,7 @@ export function listenToCampaignCharacters(params: Params): Unsubscribe[] {
         .then((userDoc) => {
           onCharacterUserDocument(character.uid, userDoc);
         })
-        .catch();
+        .catch(() => {});
     }
     return onSnapshot(
       getCharacterDoc(character.uid, character.characterId),
@@ -52,6 +53,8 @@ export function useListenToCampaignCharacters(campaignId?: string) {
     [id: string]: CharacterDocument;
   }>({});
 
+  const setUserDoc = useMiscDataStore((store) => store.setUserDoc);
+
   const { error } = useSnackbar();
 
   useEffect(() => {
@@ -71,6 +74,8 @@ export function useListenToCampaignCharacters(campaignId?: string) {
           }
           return newCharacters;
         }),
+      onCharacterUserDocument: (playerId, playerDocument) =>
+        setUserDoc(playerId, playerDocument),
       onError: (err) => {
         console.error(err);
         const errorMessage = getErrorMessage(
@@ -103,7 +108,7 @@ export function useCampaignGMScreenListenToCampaignCharacters() {
   const removeCharacter = useCampaignGMScreenStore(
     (store) => store.removeCharacter
   );
-  const updatePlayer = useCampaignGMScreenStore((store) => store.updatePlayer);
+  const setUserDoc = useMiscDataStore((store) => store.setUserDoc);
 
   useEffect(() => {
     let unsubscribes = listenToCampaignCharacters({
@@ -116,7 +121,7 @@ export function useCampaignGMScreenListenToCampaignCharacters() {
         }
       },
       onCharacterUserDocument: (playerId, playerDocument) =>
-        updatePlayer(playerId, playerDocument),
+        setUserDoc(playerId, playerDocument),
       onError: (err) => {
         console.error(err);
         const errorMessage = getErrorMessage(

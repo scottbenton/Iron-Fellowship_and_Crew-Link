@@ -45,7 +45,6 @@ export function CharacterHeader(props: CharacterHeaderProps) {
         <PortraitAvatar
           uid={uid}
           characterId={characterId}
-          filename={characterPortraitSettings?.filename}
           name={characterName}
           portraitSettings={characterPortraitSettings}
         />

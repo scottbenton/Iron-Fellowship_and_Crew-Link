@@ -21,6 +21,7 @@
     "@tiptap/pm": "^2.0.0-beta.218",
     "@tiptap/react": "^2.0.0-beta.218",
     "@tiptap/starter-kit": "^2.0.0-beta.218",
+    "dataforged": "^2.0.0-2",
     "firebase": "^9.17.1",
     "formik": "^2.2.9",
     "immer": "^9.0.17",
@@ -36,6 +37,7 @@
     "remark-gfm": "^3.0.1",
     "vite-plugin-svgr": "^2.4.0",
     "vite-tsconfig-paths": "^4.0.5",
+    "yup": "^1.0.2",
     "zustand": "^4.2.0"
   },
   "devDependencies": {

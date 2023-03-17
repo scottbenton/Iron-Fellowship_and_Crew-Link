@@ -6,6 +6,9 @@ import MoreIcon from "@mui/icons-material/MoreHoriz";
 import { useUpdateCampaignGM } from "api/campaign/updateCampaignGM";
 import { useDeleteCampaign } from "api/campaign/deleteCampaign";
 import { useConfirm } from "material-ui-confirm";
+import { useLeaveCampaign } from "api/campaign/leaveCampaign";
+import { useNavigate } from "react-router-dom";
+import { paths, ROUTES } from "routes";
 
 export interface CampaignActionsMenuProps {
   campaignId: string;
@@ -17,6 +20,7 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
   const { gmId } = campaign;
   const uid = useAuth().user?.uid;
   const confirm = useConfirm();
+  const navigate = useNavigate();
 
   const [menuParent, setMenuParent] = useState<HTMLElement>();
 
@@ -49,13 +53,34 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
         .then(() => {
           handleMenuClose();
         })
-        .catch();
+        .catch(() => {});
     });
   };
 
-  if (uid && uid !== gmId) {
-    return null;
-  }
+  const { leaveCampaign } = useLeaveCampaign();
+  const handleLeaveCampaign = () => {
+    confirm({
+      title: "Leave Campaign",
+      description: "Are you sure you want to leave this campaign?",
+      confirmationText: "Leave",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        leaveCampaign({ campaign, campaignId, uid })
+          .then(() => {
+            handleMenuClose();
+            navigate(paths[ROUTES.CAMPAIGN_SELECT]);
+          })
+          .catch(() => {});
+      })
+      .catch(() => {});
+  };
+
+  const isGm = uid && uid === gmId;
+
   return (
     <>
       <IconButton
@@ -70,8 +95,17 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
         <MoreIcon />
       </IconButton>
       <Menu anchorEl={menuParent} open={!!menuParent} onClose={handleMenuClose}>
-        <MenuItem onClick={() => removeCurrentGM()}>Step Down as GM</MenuItem>
-        <MenuItem onClick={() => handleDeleteCampaign()}>End Campaign</MenuItem>
+        {isGm && (
+          <MenuItem onClick={() => removeCurrentGM()}>Step Down as GM</MenuItem>
+        )}
+        <MenuItem onClick={() => handleLeaveCampaign()}>
+          Leave Campaign
+        </MenuItem>
+        {isGm && (
+          <MenuItem onClick={() => handleDeleteCampaign()}>
+            End Campaign
+          </MenuItem>
+        )}
       </Menu>
     </>
   );

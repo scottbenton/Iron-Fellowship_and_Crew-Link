@@ -74,7 +74,7 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
     if (file) {
       setLoading(true);
       handleUpload(file, scale, position)
-        .catch()
+        .catch(() => {})
         .finally(() => {
           setLoading(false);
           handleClose();

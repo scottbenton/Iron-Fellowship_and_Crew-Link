@@ -16,7 +16,7 @@ export const updateCampaignNote: ApiFunction<
     campaignId?: string;
     noteId?: string;
     title: string;
-    content: string;
+    content?: string;
     isBeaconRequest?: boolean;
   },
   boolean
@@ -51,25 +51,27 @@ export const updateCampaignNote: ApiFunction<
 
       const token = (firebaseAuth.currentUser?.toJSON() as any).stsTokenManager
         .accessToken;
-      fetch(
-        `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=content`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name: contentPath,
-            fields: {
-              content: {
-                stringValue: content,
-              },
+      if (content) {
+        fetch(
+          `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=content`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
-          }),
-          keepalive: true,
-        }
-      ).catch((e) => console.error(e));
+            body: JSON.stringify({
+              name: contentPath,
+              fields: {
+                content: {
+                  stringValue: content,
+                },
+              },
+            }),
+            keepalive: true,
+          }
+        ).catch((e) => console.error(e));
+      }
       fetch(
         `https://firestore.googleapis.com/v1/${titlePath}?updateMask.fieldPaths=title`,
         {
@@ -92,21 +94,22 @@ export const updateCampaignNote: ApiFunction<
 
       resolve(true);
     } else {
-      const updateTitlePromise = updateDoc(
-        getCampaignNoteDocument(campaignId, noteId),
-        {
+      const promises: Promise<any>[] = [];
+      promises.push(
+        updateDoc(getCampaignNoteDocument(campaignId, noteId), {
           title,
-        }
+        })
       );
 
-      const updateContentPromise = setDoc(
-        getCampaignNoteContentDocument(campaignId, noteId),
-        {
-          content,
-        }
-      );
+      if (content) {
+        promises.push(
+          setDoc(getCampaignNoteContentDocument(campaignId, noteId), {
+            content,
+          })
+        );
+      }
 
-      Promise.all([updateTitlePromise, updateContentPromise])
+      Promise.all(promises)
         .then(() => {
           resolve(true);
         })

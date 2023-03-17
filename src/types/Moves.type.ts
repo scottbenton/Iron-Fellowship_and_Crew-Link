@@ -1,30 +1,16 @@
-import { STATS } from "./stats.enum";
+import { MoveStatKeys } from "./stats.enum";
 
-export enum ROLLABLE_TRACKS {
-  HEALTH = "health",
-  SPIRIT = "spirit",
-  SUPPLY = "supply",
-}
-
-export type ROLLABLES = STATS | ROLLABLE_TRACKS;
-
-export interface MoveOracle {
-  table: {
-    chance: number;
-    description: string;
-  }[];
-}
-
-export interface Move {
+export interface StoredMove {
+  $id: string;
   name: string;
-  stats?: ROLLABLES[];
+  stats?: MoveStatKeys[];
   text: string;
-  oracle?: MoveOracle;
+  oracleIds?: string[];
 }
 
-export interface MoveCategory {
-  categoryName: string;
-  moves: Move[];
+export interface MoveDocument {
+  moves: { [moveId: string]: StoredMove };
+  moveOrder: string[];
 }
 
-export type Moves = MoveCategory[];
+export const customMoveCategoryPrefix = "/ironsworn/moves/custom";

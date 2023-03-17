@@ -2,8 +2,11 @@ import { TrackWithId } from "features/character-sheet/characterSheet.store";
 import produce from "immer";
 import { StoredAsset } from "types/Asset.type";
 import { StoredCampaign } from "types/Campaign.type";
+import { StoredMove } from "types/Moves.type";
 import { CharacterDocument } from "types/Character.type";
 import { Note } from "types/Notes.type";
+import { StoredOracle } from "types/Oracles.type";
+import { CampaignSettingsDoc } from "types/Settings.type";
 import { TRACK_TYPES } from "types/Track.type";
 import { UserDocument } from "types/User.type";
 import { OracleSettings } from "types/UserSettings.type";
@@ -15,11 +18,6 @@ export interface CampaignGMScreenStore {
   campaignId?: string;
   campaign?: StoredCampaign;
   setCampaign: (campaignId: string, campaign?: StoredCampaign) => void;
-
-  players: {
-    [uid: string]: UserDocument;
-  };
-  updatePlayer: (playerId: string, doc: UserDocument) => void;
 
   characters: {
     [characterId: string]: CharacterDocument;
@@ -44,9 +42,18 @@ export interface CampaignGMScreenStore {
   oracleSettings?: OracleSettings;
   setOracleSettings: (oracleSettings: OracleSettings) => void;
 
+  customOracles?: StoredOracle[];
+  setCustomOracles: (oracles: StoredOracle[]) => void;
+
+  customMoves?: StoredMove[];
+  setCustomMoves: (moves: StoredMove[]) => void;
+
   campaignNotes?: Note[];
   setCampaignNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
+
+  campaignSettings?: CampaignSettingsDoc;
+  setCampaignSettings: (settings: CampaignSettingsDoc) => void;
 }
 
 const initialState = {
@@ -58,7 +65,10 @@ const initialState = {
   characterAssets: {},
   tracks: undefined,
   oracleSettings: undefined,
+  customOracles: undefined,
+  customMoves: undefined,
   campaignNotes: undefined,
+  campaignSettings: undefined,
 };
 
 export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
@@ -74,15 +84,6 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
         produce((store: CampaignGMScreenStore) => {
           store.campaignId = campaignId;
           store.campaign = campaign;
-        })
-      );
-    },
-
-    players: {},
-    updatePlayer: (playerId, player) => {
-      set(
-        produce((store: CampaignGMScreenStore) => {
-          store.players[playerId] = player;
         })
       );
     },
@@ -128,6 +129,22 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       );
     },
 
+    setCustomOracles: (oracles) => {
+      set(
+        produce((store: CampaignGMScreenStore) => {
+          store.customOracles = oracles;
+        })
+      );
+    },
+
+    setCustomMoves: (moves) => {
+      set(
+        produce((store: CampaignGMScreenStore) => {
+          store.customMoves = moves;
+        })
+      );
+    },
+
     setCampaignNotes: (notes) => {
       set(
         produce((store: CampaignGMScreenStore) => {
@@ -149,6 +166,14 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
 
           store.campaignNotes[noteIndex].order = order;
           store.campaignNotes.sort((n1, n2) => n1.order - n2.order);
+        })
+      );
+    },
+
+    setCampaignSettings: (settings) => {
+      set(
+        produce((store: CampaignGMScreenStore) => {
+          store.campaignSettings = settings;
         })
       );
     },

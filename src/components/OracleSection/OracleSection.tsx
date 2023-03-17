@@ -1,46 +1,29 @@
 import { Box, Button, Input, InputAdornment } from "@mui/material";
-import { useRoller } from "components/DieRollProvider";
-import {
-  oracleRollChanceNames,
-  ORACLE_ROLL_CHANCE,
-} from "components/DieRollProvider/DieRollContext";
-import { oracles, oracleSectionMap } from "data/oracles";
+import { useRoller } from "providers/DieRollProvider";
 import { OracleCategory } from "./OracleCategory";
 import SearchIcon from "@mui/icons-material/Search";
 import { useFilterOracles } from "./useFilterOracles";
-import { useListenToOracleSettings } from "api/user/settings/listenToOracleSettings";
-import { Oracle } from "types/Oracles.type";
-import { useMemo } from "react";
 import { useSettingsStore } from "stores/settings.store";
 
+/**
+ * 
+ * "ironsworn/oracles/moves/ask_the_oracle/almost_certain"
+​
+26: "ironsworn/oracles/moves/ask_the_oracle/likely"
+​
+27: "ironsworn/oracles/moves/ask_the_oracle/50_50"
+​
+28: "ironsworn/oracles/moves/ask_the_oracle/unlikely"
+​
+29: "ironsworn/oracles/moves/ask_the_oracle/small_chance"
+ */
+
 export function OracleSection() {
-  const { rollOracle } = useRoller();
+  const { rollOracleTable } = useRoller();
 
   const settings = useSettingsStore((store) => store.oracleSettings);
 
-  const combinedOracles = useMemo(() => {
-    const pinnedOracleNames = Object.keys(
-      settings?.pinnedOracleSections ?? {}
-    ).filter(
-      (sectionName) =>
-        settings?.pinnedOracleSections &&
-        settings.pinnedOracleSections[sectionName]
-    );
-    const pinnedOracle: Oracle | undefined =
-      pinnedOracleNames.length > 0
-        ? {
-            name: "Pinned Oracles",
-            sections: pinnedOracleNames.map(
-              (sectionName) => oracleSectionMap[sectionName]
-            ),
-          }
-        : undefined;
-
-    return pinnedOracle ? [pinnedOracle, ...oracles] : oracles;
-  }, [settings]);
-
-  const { search, filteredOracles, setSearch } =
-    useFilterOracles(combinedOracles);
+  const { search, filteredOracles, setSearch } = useFilterOracles();
 
   return (
     <>
@@ -49,41 +32,55 @@ export function OracleSection() {
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
           color={"primary"}
-          onClick={() => rollOracle(ORACLE_ROLL_CHANCE.SMALL_CHANCE)}
+          onClick={() =>
+            rollOracleTable(
+              "ironsworn/oracles/moves/ask_the_oracle/small_chance"
+            )
+          }
         >
-          {oracleRollChanceNames[ORACLE_ROLL_CHANCE.SMALL_CHANCE]}
+          Small Chance
         </Button>
         <Button
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
           color={"primary"}
-          onClick={() => rollOracle(ORACLE_ROLL_CHANCE.UNLIKELY)}
+          onClick={() =>
+            rollOracleTable("ironsworn/oracles/moves/ask_the_oracle/unlikely")
+          }
         >
-          {oracleRollChanceNames[ORACLE_ROLL_CHANCE.UNLIKELY]}
+          Unlikely
         </Button>
         <Button
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
           color={"primary"}
-          onClick={() => rollOracle(ORACLE_ROLL_CHANCE.FIFTY_FIFTY)}
+          onClick={() =>
+            rollOracleTable("ironsworn/oracles/moves/ask_the_oracle/50_50")
+          }
         >
-          {oracleRollChanceNames[ORACLE_ROLL_CHANCE.FIFTY_FIFTY]}
+          50/50
         </Button>
         <Button
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
           color={"primary"}
-          onClick={() => rollOracle(ORACLE_ROLL_CHANCE.LIKELY)}
+          onClick={() =>
+            rollOracleTable("ironsworn/oracles/moves/ask_the_oracle/likely")
+          }
         >
-          {oracleRollChanceNames[ORACLE_ROLL_CHANCE.LIKELY]}
+          Likely
         </Button>
         <Button
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
           color={"primary"}
-          onClick={() => rollOracle(ORACLE_ROLL_CHANCE.ALMOST_CERTAIN)}
+          onClick={() =>
+            rollOracleTable(
+              "ironsworn/oracles/moves/ask_the_oracle/almost_certain"
+            )
+          }
         >
-          {oracleRollChanceNames[ORACLE_ROLL_CHANCE.ALMOST_CERTAIN]}
+          Almost Certain
         </Button>
       </Box>
 
@@ -109,7 +106,7 @@ export function OracleSection() {
       {filteredOracles.map((category) => (
         <OracleCategory
           category={category}
-          key={category.name}
+          key={category.Title.Standard}
           pinnedCategories={settings?.pinnedOracleSections}
         />
       ))}

@@ -11,39 +11,20 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { companions, paths, combatTalents, rituals } from "../../data/assets";
-import { Asset } from "../../types/Asset.type";
+// import { companions, paths, combatTalents, rituals } from "../../data/assets";
+import { assetGroups } from "data/assets";
+import { StoredAsset } from "../../types/Asset.type";
+import { Asset } from "dataforged";
 import { AssetCard } from "../AssetCard/AssetCard";
 import { CreateCustomAsset } from "./CreateCustomAsset";
-
-const assetGroups = [
-  {
-    name: "Companions",
-    description: "Living creatures to assist you on your journey.",
-    assets: companions,
-  },
-  {
-    name: "Paths",
-    description: "Skills gained from your character's background.",
-    assets: paths,
-  },
-  {
-    name: "Combat Talents",
-    description: "Is your character an expert at fighting with any weapons?",
-    assets: combatTalents,
-  },
-  {
-    name: "Rituals",
-    description: "What magic does your character have access to?",
-    assets: rituals,
-  },
-];
+import { MarkdownRenderer } from "components/MarkdownRenderer";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 export interface AssetCardDialogProps {
   open: boolean;
   loading?: boolean;
   handleClose: () => void;
-  handleAssetSelection: (asset: Asset) => void;
+  handleAssetSelection: (asset: StoredAsset) => void;
 }
 
 export function AssetCardDialog(props: AssetCardDialogProps) {
@@ -51,8 +32,33 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
 
   const [selectedTab, setSelectedTab] = useState(0);
 
+  const onAssetSelect = (asset: Asset, isCustom?: boolean) => {
+    const inputs: { [key: string]: string } = {};
+
+    Object.values(asset.Inputs ?? {}).forEach((input) => {
+      inputs[encodeDataswornId(input.$id)] = "";
+    });
+
+    const storedAsset: StoredAsset = {
+      id: asset.$id,
+      enabledAbilities: {
+        0: asset.Abilities[0].Enabled,
+        1: asset.Abilities[1].Enabled,
+        2: asset.Abilities[2].Enabled,
+      },
+      inputs: Object.keys(inputs).length > 0 ? inputs : null,
+      trackValue:
+        asset?.["Condition meter"]?.Value ??
+        asset?.["Condition meter"]?.Max ??
+        null,
+      customAsset: isCustom ? asset : null,
+    };
+
+    handleAssetSelection(storedAsset);
+  };
+
   return (
-    <Dialog open={open} onClose={() => handleClose()} maxWidth={"md"}>
+    <Dialog open={open} onClose={() => handleClose()} maxWidth={"md"} fullWidth>
       <DialogTitle>Select an asset</DialogTitle>
       <DialogContent>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -62,8 +68,8 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
             variant={"scrollable"}
             scrollButtons={"auto"}
           >
-            {assetGroups.map((group, index) => (
-              <Tab label={group.name} key={index} />
+            {Object.values(assetGroups).map((group, index) => (
+              <Tab label={group.Title.Standard} key={index} />
             ))}
             <Tab label={"custom"} />
           </Tabs>
@@ -71,31 +77,33 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
         <Box py={1}>
           {selectedTab < assetGroups.length ? (
             <>
-              <Typography color={"GrayText"}>
-                {assetGroups[selectedTab].description}
-              </Typography>
+              <MarkdownRenderer
+                markdown={assetGroups[selectedTab].Description}
+              />
               <Grid container spacing={1} mt={2}>
-                {assetGroups[selectedTab].assets.map((asset, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
-                    <AssetCard
-                      asset={asset}
-                      readOnly
-                      actions={
-                        <Button
-                          onClick={() => handleAssetSelection(asset)}
-                          disabled={loading}
-                        >
-                          Select
-                        </Button>
-                      }
-                    />
-                  </Grid>
-                ))}
+                {Object.values(assetGroups[selectedTab].Assets).map(
+                  (asset, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <AssetCard
+                        assetId={asset.$id}
+                        readOnly
+                        actions={
+                          <Button
+                            onClick={() => onAssetSelect(asset)}
+                            disabled={loading}
+                          >
+                            Select
+                          </Button>
+                        }
+                      />
+                    </Grid>
+                  )
+                )}
               </Grid>
             </>
           ) : (
             <CreateCustomAsset
-              handleSelect={(asset) => handleAssetSelection(asset)}
+              handleSelect={(asset) => onAssetSelect(asset, true)}
             />
           )}
         </Box>

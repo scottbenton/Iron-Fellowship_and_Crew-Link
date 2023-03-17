@@ -1,8 +1,7 @@
-import { onSnapshot, Unsubscribe } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { Unsubscribe } from "firebase/firestore";
+import { useEffect } from "react";
 import { getErrorMessage } from "../../../functions/getErrorMessage";
 import { useSnackbar } from "../../../hooks/useSnackbar";
-import { getCharacterAssetDoc } from "./_getRef";
 import { useCampaignStore } from "../../../stores/campaigns.store";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 import { StoredAsset } from "types/Asset.type";

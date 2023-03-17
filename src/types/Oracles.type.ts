@@ -1,30 +1,21 @@
-export interface JsonOracleTable {
-  Chance: number;
-  Description: string;
-}
-export interface JsonOracle {
-  Title: string;
-  Oracles: {
-    Name: string;
-    "Oracle Table"?: JsonOracleTable[];
-    Oracles?: {
-      Name: string;
-      "Oracle Table": JsonOracleTable[];
-    }[];
+export interface StoredOracle {
+  $id: string;
+  name: string;
+  text: string;
+  table: {
+    roll: number;
+    result: string;
   }[];
 }
 
-export type OracleTable = {
-  chance: number;
-  description: string;
-}[];
+export interface OracleDocument {
+  oracles: { [moveId: string]: StoredOracle };
+  oracleOrder: string[];
+}
 
-export type OracleSection = {
-  sectionName: string;
-  table: OracleTable;
-};
+export const customOracleCategoryPrefix = "ironsworn/oracles/custom";
 
-export interface Oracle {
-  name: string;
-  sections: OracleSection[];
+export enum TableColumnType {
+  Range = "dice range",
+  String = "string",
 }

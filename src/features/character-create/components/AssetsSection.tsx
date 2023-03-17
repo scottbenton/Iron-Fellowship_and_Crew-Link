@@ -1,9 +1,8 @@
 import { Grid, Stack, Typography } from "@mui/material";
-import { assets } from "../../../data/assets";
 import { AssetCard } from "../../../components/AssetCard/AssetCard";
 import { AddAssetCard } from "./AddAssetCard";
 import { useState } from "react";
-import { Asset, StoredAsset } from "../../../types/Asset.type";
+import { StoredAsset } from "../../../types/Asset.type";
 import { AssetCardDialog } from "../../../components/AssetCardDialog";
 import { SectionHeading } from "../../../components/SectionHeading";
 import { useField } from "formik";
@@ -15,38 +14,11 @@ export function AssetsSection() {
   const [currentlySelectingAssetIndex, setCurrentlySelectingAssetIndex] =
     useState<number>();
 
-  const selectAsset = (asset: Asset) => {
-    const assetId = asset.id;
+  const selectAsset = (asset: StoredAsset) => {
     if (typeof currentlySelectingAssetIndex === "number") {
       const newAssets = [...field.value];
 
-      let inputs: StoredAsset["inputs"];
-      asset.inputs?.forEach((input) => {
-        if (!inputs) {
-          inputs = {};
-        }
-        inputs[input] = "";
-      });
-
-      const storedAsset: StoredAsset = {
-        id: assetId,
-        enabledAbilities: asset.abilities.map(
-          (ability) => ability.startsEnabled ?? false
-        ),
-      };
-
-      if (inputs) {
-        storedAsset.inputs = inputs;
-      }
-      if (asset.track) {
-        storedAsset.trackValue = asset.track.startingValue ?? asset.track.max;
-      }
-
-      if (assetId.startsWith("custom-")) {
-        storedAsset.customAsset = asset;
-      }
-
-      newAssets[currentlySelectingAssetIndex] = storedAsset;
+      newAssets[currentlySelectingAssetIndex] = asset;
 
       handlers.setValue(newAssets as AssetArrayType);
     }
@@ -92,7 +64,8 @@ export function AssetsSection() {
             >
               {storedAsset ? (
                 <AssetCard
-                  asset={storedAsset.customAsset ?? assets[storedAsset.id]}
+                  assetId={storedAsset.id}
+                  storedAsset={storedAsset}
                   sx={{
                     // maxWidth: 380,
                     minHeight: 450,

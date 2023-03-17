@@ -1,4 +1,4 @@
-import { Card, Grid, Hidden, LinearProgress } from "@mui/material";
+import { Grid, Hidden, LinearProgress } from "@mui/material";
 import { MovesSection } from "components/MovesSection/MovesSection";
 import { useAuth } from "hooks/useAuth";
 import { useSnackbar } from "hooks/useSnackbar";

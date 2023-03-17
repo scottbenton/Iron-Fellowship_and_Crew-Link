@@ -8,7 +8,7 @@ import {
   constructCharacterSheetUrl,
 } from "../../routes";
 import { StoredAsset } from "../../types/Asset.type";
-import { STATS } from "../../types/stats.enum";
+import { Stat } from "../../types/stats.enum";
 import { AssetsSection } from "./components/AssetsSection";
 import { StatsField } from "./components/StatsField";
 import { StatsMap } from "../../types/Character.type";
@@ -23,7 +23,7 @@ export type AssetArrayType = [
 
 type CharacterCreateFormValues = {
   name: string;
-  stats: { [key in STATS]: number | undefined };
+  stats: { [key in Stat]: number | undefined };
   assets: AssetArrayType;
 };
 
@@ -43,11 +43,11 @@ export function CharacterCreatePage() {
     }
 
     if (
-      !values.stats[STATS.EDGE] ||
-      !values.stats[STATS.IRON] ||
-      !values.stats[STATS.HEART] ||
-      !values.stats[STATS.SHADOW] ||
-      !values.stats[STATS.WITS]
+      !values.stats[Stat.Edge] ||
+      !values.stats[Stat.Iron] ||
+      !values.stats[Stat.Heart] ||
+      !values.stats[Stat.Shadow] ||
+      !values.stats[Stat.Wits]
     ) {
       errors.stats = "Stats are required";
     }
@@ -85,11 +85,11 @@ export function CharacterCreatePage() {
         initialValues={{
           name: "",
           stats: {
-            [STATS.EDGE]: undefined,
-            [STATS.HEART]: undefined,
-            [STATS.IRON]: undefined,
-            [STATS.SHADOW]: undefined,
-            [STATS.WITS]: undefined,
+            [Stat.Edge]: undefined,
+            [Stat.Heart]: undefined,
+            [Stat.Iron]: undefined,
+            [Stat.Shadow]: undefined,
+            [Stat.Wits]: undefined,
           },
           assets: [undefined, undefined, undefined],
         }}

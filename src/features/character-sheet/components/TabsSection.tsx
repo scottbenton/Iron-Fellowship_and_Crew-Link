@@ -76,7 +76,7 @@ export function TabsSection() {
           selectedTab === TABS.ASSETS ? theme.palette.grey[100] : undefined
         }
       >
-        {selectedTab === TABS.MOVES && <MovesSection stats={stats} />}
+        {selectedTab === TABS.MOVES && <MovesSection />}
         {selectedTab === TABS.ASSETS && <AssetsSection />}
         {selectedTab === TABS.ORACLE && <OracleSection />}
         {selectedTab === TABS.VOWS && (

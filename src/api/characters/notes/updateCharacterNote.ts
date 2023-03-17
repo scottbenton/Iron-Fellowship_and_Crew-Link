@@ -19,7 +19,7 @@ export const updateCharacterNote: ApiFunction<
     characterId?: string;
     noteId?: string;
     title: string;
-    content: string;
+    content?: string;
     isBeaconRequest?: boolean;
   },
   boolean
@@ -61,25 +61,27 @@ export const updateCharacterNote: ApiFunction<
 
       const token = (firebaseAuth.currentUser?.toJSON() as any).stsTokenManager
         .accessToken;
-      fetch(
-        `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=content`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name: contentPath,
-            fields: {
-              content: {
-                stringValue: content,
-              },
+      if (content) {
+        fetch(
+          `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=content`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
-          }),
-          keepalive: true,
-        }
-      ).catch((e) => console.error(e));
+            body: JSON.stringify({
+              name: contentPath,
+              fields: {
+                content: {
+                  stringValue: content,
+                },
+              },
+            }),
+            keepalive: true,
+          }
+        ).catch((e) => console.error(e));
+      }
       fetch(
         `https://firestore.googleapis.com/v1/${titlePath}?updateMask.fieldPaths=title`,
         {
@@ -102,21 +104,23 @@ export const updateCharacterNote: ApiFunction<
 
       resolve(true);
     } else {
-      const updateTitlePromise = updateDoc(
-        getCharacterNoteDocument(uid, characterId, noteId),
-        {
+      const promises: Promise<any>[] = [];
+
+      promises.push(
+        updateDoc(getCharacterNoteDocument(uid, characterId, noteId), {
           title,
-        }
+        })
       );
 
-      const updateContentPromise = setDoc(
-        getCharacterNoteContentDocument(uid, characterId, noteId),
-        {
-          content,
-        }
-      );
+      if (content) {
+        promises.push(
+          setDoc(getCharacterNoteContentDocument(uid, characterId, noteId), {
+            content,
+          })
+        );
+      }
 
-      Promise.all([updateTitlePromise, updateContentPromise])
+      Promise.all(promises)
         .then(() => {
           resolve(true);
         })
@@ -148,7 +152,7 @@ export function useCharacterSheetUpdateCharacterNote() {
     updateCharacterNote: (params: {
       noteId: string;
       title: string;
-      content: string;
+      content?: string;
     }) => updateCharacterNote({ ...params, uid, characterId }),
     loading,
     error,

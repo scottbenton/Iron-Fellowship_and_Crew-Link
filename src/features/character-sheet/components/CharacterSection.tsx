@@ -17,7 +17,7 @@ import { ProgressTrack } from "../../../components/ProgressTrack";
 import { SectionHeading } from "../../../components/SectionHeading";
 import { useSnackbar } from "../../../hooks/useSnackbar";
 import { DEBILITIES } from "../../../types/debilities.enum";
-import { STATS } from "../../../types/stats.enum";
+import { Stat } from "types/stats.enum";
 import { useCharacterSheetStore } from "../characterSheet.store";
 import { ExperienceTrack } from "./ExperienceTrack";
 import { StatComponent } from "../../../components/StatComponent";
@@ -25,6 +25,10 @@ import { useCharacterSheetUpdateShareNotesWithGMSetting } from "api/characters/u
 import { useState } from "react";
 import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
 import { useCharacterSheetUpdateCharacterPortrait } from "api/characters/updateCharacterPortrait";
+import { CustomMovesSection } from "components/CustomMovesSection";
+import { CustomOracleSection } from "components/CustomOraclesSection";
+import { useCharacterSheetShowOrHideCustomMove } from "api/characters/settings/showOrHideCustomMove";
+import { useCharacterSheetShowOrHideCustomOracle } from "api/characters/settings/showOrHideCustomOracle";
 
 export function CharacterSection() {
   const { error } = useSnackbar();
@@ -47,7 +51,7 @@ export function CharacterSection() {
     useCharacterSheetStore((store) => store.character?.debilities) ?? {};
   const { updateDebility } = useCharacterSheetUpdateDebility();
 
-  const handleStatChange = (stat: STATS, value: number) => {
+  const handleStatChange = (stat: Stat, value: number) => {
     return updateCharacterStat({ characterId, stat, value });
   };
 
@@ -68,6 +72,17 @@ export function CharacterSection() {
   const { updateCharacterPortrait } =
     useCharacterSheetUpdateCharacterPortrait();
 
+  const customMoves = useCharacterSheetStore((store) => store.customMoves);
+  const hiddenMoveIds = useCharacterSheetStore(
+    (store) => store.characterSettings?.hiddenCustomMoveIds
+  );
+  const { showOrHideCustomMove } = useCharacterSheetShowOrHideCustomMove();
+
+  const customOracles = useCharacterSheetStore((store) => store.customOracles);
+  const hiddenOracleIds = useCharacterSheetStore(
+    (store) => store.characterSettings?.hiddenCustomOraclesIds
+  );
+  const { showOrHideCustomOracle } = useCharacterSheetShowOrHideCustomOracle();
   return (
     <Stack spacing={2} pb={2}>
       <SectionHeading label={"Experience"} />
@@ -226,56 +241,53 @@ export function CharacterSection() {
         >
           <StatComponent
             label="Edge"
-            value={stats[STATS.EDGE]}
+            value={stats[Stat.Edge]}
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) =>
-                handleStatChange(STATS.EDGE, newValue),
+              handleChange: (newValue) => handleStatChange(Stat.Edge, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Heart"
-            value={stats[STATS.HEART]}
+            value={stats[Stat.Heart]}
             updateTrack={{
               min: 0,
               max: 5,
               handleChange: (newValue) =>
-                handleStatChange(STATS.HEART, newValue),
+                handleStatChange(Stat.Heart, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Iron"
-            value={stats[STATS.IRON]}
+            value={stats[Stat.Iron]}
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) =>
-                handleStatChange(STATS.IRON, newValue),
+              handleChange: (newValue) => handleStatChange(Stat.Iron, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Shadow"
-            value={stats[STATS.SHADOW]}
+            value={stats[Stat.Shadow]}
             updateTrack={{
               min: 0,
               max: 5,
               handleChange: (newValue) =>
-                handleStatChange(STATS.SHADOW, newValue),
+                handleStatChange(Stat.Shadow, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Wits"
-            value={stats[STATS.WITS]}
+            value={stats[Stat.Wits]}
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) =>
-                handleStatChange(STATS.WITS, newValue),
+              handleChange: (newValue) => handleStatChange(Stat.Wits, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
@@ -308,7 +320,7 @@ export function CharacterSection() {
               <Checkbox
                 checked={sharingNotes ?? false}
                 onChange={(evt, checked) =>
-                  updateShareNotesWithGMSetting(checked).catch()
+                  updateShareNotesWithGMSetting(checked).catch(() => {})
                 }
                 name="Share Notes with GM"
               />
@@ -316,6 +328,20 @@ export function CharacterSection() {
             label="Share notes with your GM?"
           />
         </Box>
+      )}
+      {!campaignId && (
+        <CustomMovesSection
+          customMoves={customMoves}
+          hiddenMoveIds={hiddenMoveIds}
+          showOrHideCustomMove={showOrHideCustomMove}
+        />
+      )}
+      {!campaignId && (
+        <CustomOracleSection
+          customOracles={customOracles}
+          hiddenOracleIds={hiddenOracleIds}
+          showOrHideCustomOracle={showOrHideCustomOracle}
+        />
       )}
     </Stack>
   );

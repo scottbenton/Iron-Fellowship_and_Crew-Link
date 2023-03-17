@@ -6,6 +6,7 @@ import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "hooks/useAuth";
 import { getCharacterAssetDoc } from "./_getRef";
 import { StoredAsset } from "types/Asset.type";
+import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 interface AddAssetParams {
   uid?: string;
@@ -26,10 +27,11 @@ export const addAsset: ApiFunction<AddAssetParams, boolean> = function (
       reject(new CharacterNotFoundException());
       return;
     }
+    const encodedId = encodeDataswornId(asset.id);
     // @ts-ignore
     updateDoc(getCharacterAssetDoc(uid, characterId), {
-      assetOrder: arrayUnion(asset.id),
-      [`assets.${asset.id}`]: asset,
+      assetOrder: arrayUnion(encodedId),
+      [`assets.${encodedId}`]: asset,
     })
       .then(() => {
         resolve(true);

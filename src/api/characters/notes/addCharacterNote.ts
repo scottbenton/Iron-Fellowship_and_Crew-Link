@@ -12,7 +12,7 @@ export const addCharacterNote: ApiFunction<
     characterId?: string;
     order: number;
   },
-  boolean
+  string
 > = function (params) {
   const { uid, characterId, order } = params;
 
@@ -31,8 +31,8 @@ export const addCharacterNote: ApiFunction<
       order,
       title: "New Page",
     })
-      .then(() => {
-        resolve(true);
+      .then((doc) => {
+        resolve(doc.id);
       })
       .catch((e) => {
         console.error(e);

@@ -1,9 +1,9 @@
 import { StoredAsset } from "./Asset.type";
 import { DEBILITIES } from "./debilities.enum";
-import { STATS } from "./stats.enum";
+import { Stat } from "./stats.enum";
 
 export type StatsMap = {
-  [key in STATS]: number;
+  [key in Stat]: number;
 };
 
 export enum INITIATIVE_STATUS {
