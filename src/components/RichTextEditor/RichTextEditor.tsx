@@ -22,7 +22,7 @@ export interface RichTextEditorProps {
   onSave?: (params: {
     id?: string;
     title: string;
-    content: string;
+    content?: string;
     isBeaconRequest?: boolean;
   }) => Promise<boolean>;
   onDelete?: (id: string) => void;
@@ -37,7 +37,7 @@ export function RichTextEditor(props: RichTextEditorProps) {
   const [saving, setSaving] = useState<boolean>(false);
 
   const [contentWithHeading, setContentWithHeading] = useState<string>(
-    `<h1>${title}</h1>${body || "<p></p>"}`
+    `<h1>${title}</h1>${body}`
   );
 
   const editor = useEditor({
@@ -76,7 +76,7 @@ export function RichTextEditor(props: RichTextEditorProps) {
         const title = titleContent?.[1];
         const content = htmlContent.replace(titleRegex, "");
 
-        if (title && content) {
+        if (title) {
           setSaving(true);
           hasEditedRef.current = false;
           onSave({

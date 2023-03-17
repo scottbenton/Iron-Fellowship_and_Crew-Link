@@ -21,7 +21,7 @@ export interface NotesProps {
   onSave?: (params: {
     noteId: string;
     title: string;
-    content: string;
+    content?: string;
     isBeaconRequest?: boolean;
   }) => Promise<boolean>;
   onDelete?: (noteId: string) => void;
