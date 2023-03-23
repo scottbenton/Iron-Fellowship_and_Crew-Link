@@ -4,6 +4,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { AUTH_STATE, useAuth } from "../../hooks/useAuth";
 import { useContinueUrl } from "../../hooks/useContinueUrl";
 import { paths, ROUTES } from "../../routes";
+import { Footer } from "./Footer";
 import { Header } from "./Header";
 
 export interface LayoutProps extends PropsWithChildren {}
@@ -43,10 +44,14 @@ export function Layout(props: LayoutProps) {
           py: 3,
           backgroundColor: theme.palette.background.paper,
           flexGrow: 1,
+          [theme.breakpoints.down("sm")]: {
+            paddingBottom: 7,
+          },
         })}
       >
         {children}
       </Container>
+      <Footer />
     </Box>
   );
 }

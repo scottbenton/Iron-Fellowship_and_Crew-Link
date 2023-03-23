@@ -20,6 +20,7 @@ import { HeaderMenu } from "./HeaderMenu";
 
 import CharacterIcon from "@mui/icons-material/Person";
 import CampaignIcon from "@mui/icons-material/Groups";
+import WorldIcon from "@mui/icons-material/Public";
 
 export function Header() {
   const theme = useTheme();
@@ -87,6 +88,20 @@ export function Header() {
                   >
                     Campaigns
                   </Button>
+                  <Button
+                    component={Link}
+                    to={paths[ROUTES.WORLD_SELECT]}
+                    sx={{
+                      color: "white",
+                      ml: 1,
+                      "&:hover": {
+                        backgroundColor: theme.palette.primary.dark,
+                      },
+                    }}
+                    endIcon={<WorldIcon />}
+                  >
+                    Worlds
+                  </Button>
                 </>
               </Hidden>
               <HeaderMenu />
@@ -95,29 +110,6 @@ export function Header() {
             <LoginButton />
           )}
         </Toolbar>
-        {authState === AUTH_STATE.AUTHENTICATED && (
-          <Hidden smUp>
-            <Tabs
-              variant={"fullWidth"}
-              textColor={"inherit"}
-              value={selectedTab}
-              indicatorColor={"secondary"}
-            >
-              <Tab
-                label={"Characters"}
-                value={"character"}
-                component={Link}
-                to={paths[ROUTES.CHARACTER_SELECT]}
-              />
-              <Tab
-                label={"Campaigns"}
-                value={"campaign"}
-                component={Link}
-                to={paths[ROUTES.CAMPAIGN_SELECT]}
-              />
-            </Tabs>
-          </Hidden>
-        )}
       </Container>
     </AppBar>
   );

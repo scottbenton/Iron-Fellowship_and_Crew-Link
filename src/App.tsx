@@ -1,6 +1,9 @@
 import { Button } from "@mui/material";
 import { useListenToOracleSettings } from "api/user/settings/listenToOracleSettings";
 import { CampaignGMScreenPage } from "features/campaign-gm-screen/CampaignGMScreenPage";
+import { WorldCreatePage } from "features/world-create/WorldCreatePage";
+import { WorldSelectPage } from "features/world-select/WorldSelectPage";
+import { WorldSheetPage } from "features/world-sheet/WorldSheetPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useListenToUsersCampaigns } from "./api/campaign/listenToUsersCampaigns";
 import { useListenToUsersCharacters } from "./api/characters/listenToUsersCharacters";
@@ -55,6 +58,15 @@ export function App() {
           path={paths[ROUTES.CAMPAIGN_GM_SCREEN]}
           element={<CampaignGMScreenPage />}
         />
+        <Route
+          path={paths[ROUTES.WORLD_SELECT]}
+          element={<WorldSelectPage />}
+        />
+        <Route
+          path={paths[ROUTES.WORLD_CREATE]}
+          element={<WorldCreatePage />}
+        />
+        <Route path={paths[ROUTES.WORLD_SHEET]} element={<WorldSheetPage />} />
         <Route
           path={paths[ROUTES.LOGIN]}
           element={
