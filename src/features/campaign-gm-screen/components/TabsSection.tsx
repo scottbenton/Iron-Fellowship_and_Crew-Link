@@ -8,6 +8,7 @@ import { TracksSection } from "./TracksSection";
 import { OracleSection } from "components/OracleSection";
 import { CampaignNotesSection } from "./CampaignNotesSection";
 import { SettingsSection } from "./SettingsSection";
+import { WorldSection } from "./WorldSection";
 
 enum TABS {
   MOVES,
@@ -16,6 +17,7 @@ enum TABS {
   ORACLE,
   NOTES,
   SETTINGS,
+  WORLD,
 }
 
 export interface TabsSectionProps {
@@ -56,6 +58,7 @@ export function TabsSection(props: TabsSectionProps) {
           <Tab label="Tracks" value={TABS.TRACKS} />
           <Tab label="Oracle" value={TABS.ORACLE} />
           <Tab label="Notes (Beta)" value={TABS.NOTES} />
+          <Tab label="World" value={TABS.WORLD} />
           <Tab label="Settings" value={TABS.SETTINGS} />
         </Tabs>
       </Box>
@@ -77,6 +80,7 @@ export function TabsSection(props: TabsSectionProps) {
         {selectedTab === TABS.NOTES && (
           <CampaignNotesSection campaignId={campaignId} />
         )}
+        {selectedTab === TABS.WORLD && <WorldSection />}
         {selectedTab === TABS.SETTINGS && <SettingsSection />}
       </Box>
     </Card>

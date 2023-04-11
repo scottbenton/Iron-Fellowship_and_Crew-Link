@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import { useListenToOracleSettings } from "api/user/settings/listenToOracleSettings";
+import { useListenToUsersWorlds } from "api/worlds/listenToUsersWorlds";
 import { CampaignGMScreenPage } from "features/campaign-gm-screen/CampaignGMScreenPage";
 import { WorldCreatePage } from "features/world-create/WorldCreatePage";
 import { WorldSelectPage } from "features/world-select/WorldSelectPage";
@@ -22,6 +23,7 @@ export function App() {
   useListenToUsersCampaigns();
   useListenToUsersCharacters();
   useListenToOracleSettings();
+  useListenToUsersWorlds();
 
   return (
     <Layout>

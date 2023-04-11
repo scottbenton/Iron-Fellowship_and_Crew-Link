@@ -14,6 +14,7 @@ import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { constructWorldSheetUrl, paths, ROUTES } from "../../routes";
 import AddWorldIcon from "@mui/icons-material/Add";
 import { useWorldsStore } from "stores/worlds.store";
+import { useAuth } from "hooks/useAuth";
 
 export function WorldSelectPage() {
   const worlds = useWorldsStore((store) => store.worlds);
@@ -23,6 +24,8 @@ export function WorldSelectPage() {
     )
   );
   const loading = useWorldsStore((store) => store.loading);
+
+  const uid = useAuth().user?.uid;
 
   if (loading) {
     return (
@@ -36,6 +39,8 @@ export function WorldSelectPage() {
       />
     );
   }
+
+  if (!uid) return null;
 
   return (
     <>
@@ -86,7 +91,10 @@ export function WorldSelectPage() {
                 <Card variant={"outlined"}>
                   <CardActionArea
                     component={Link}
-                    to={constructWorldSheetUrl(worldId)}
+                    to={constructWorldSheetUrl(
+                      worlds[worldId].authorId,
+                      worldId
+                    )}
                     sx={{ p: 2 }}
                   >
                     <Box display={"flex"} alignItems={"center"}>

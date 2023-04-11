@@ -26,7 +26,7 @@ export const paths: { [key in ROUTES]: string } = {
   [ROUTES.CAMPAIGN_GM_SCREEN]: `/${CAMPAIGN_PREFIX}/:campaignId/gm-screen`,
   [ROUTES.WORLD_SELECT]: `/${WORLD_PREFIX}`,
   [ROUTES.WORLD_CREATE]: `/${WORLD_PREFIX}/create`,
-  [ROUTES.WORLD_SHEET]: `/${WORLD_PREFIX}/:worldId`,
+  [ROUTES.WORLD_SHEET]: `/${WORLD_PREFIX}/:userId/:worldId`,
   [ROUTES.LOGIN]: `/login`,
 };
 
@@ -50,6 +50,6 @@ export function constructCharacterCreateInCampaignUrl(campaignId: string) {
   return paths[ROUTES.CHARACTER_CREATE] + "?campaignId=" + campaignId;
 }
 
-export function constructWorldSheetUrl(worldId: string) {
-  return `/${WORLD_PREFIX}/${worldId}`;
+export function constructWorldSheetUrl(userId: string, worldId: string) {
+  return `/${WORLD_PREFIX}/${userId}/${worldId}`;
 }

@@ -153,6 +153,7 @@ export function useCharacterSheetUpdateCharacterNote() {
       noteId: string;
       title: string;
       content?: string;
+      isBeaconRequest?: boolean;
     }) => updateCharacterNote({ ...params, uid, characterId }),
     loading,
     error,
