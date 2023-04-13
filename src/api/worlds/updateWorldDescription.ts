@@ -1,7 +1,7 @@
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { constructWorldDocPath, getWorldDoc } from "./_getRef";
 import { firebaseAuth } from "config/firebase.config";
 
@@ -17,9 +17,7 @@ export const updateWorldDescription: ApiFunction<
   const { uid, worldId, description, isBeaconRequest } = params;
 
   return new Promise((resolve, reject) => {
-    console.debug(uid);
     if (!uid) {
-      console.debug("USER ID NOT FOUND", params);
       reject(new UserNotLoggedInException());
       return;
     }
@@ -73,13 +71,14 @@ export const updateWorldDescription: ApiFunction<
 export function useUpdateWorldDescription() {
   const uid = useAuth().user?.uid;
   const { call, loading, error } = useApiState(updateWorldDescription);
-  console.debug(uid);
   return {
     updateWorldDescription: (
       worldId: string,
       description: string,
       isBeaconRequest?: boolean
-    ) => call({ uid, worldId, description, isBeaconRequest }),
+    ) => {
+      return call({ uid, worldId, description, isBeaconRequest });
+    },
     loading,
     error,
   };

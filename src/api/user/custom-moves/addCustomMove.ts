@@ -4,7 +4,7 @@ import { getUserCustomMovesDoc } from "./_getRef";
 import { StoredMove } from "types/Moves.type";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 
 export const addCustomMove: ApiFunction<
   {

@@ -17,7 +17,7 @@ import {
   ROUTES,
   WORLD_PREFIX,
 } from "routes";
-import { AUTH_STATE, useAuth } from "hooks/useAuth";
+import { AUTH_STATE, useAuth } from "providers/AuthProvider";
 
 enum ROUTE_TYPES {
   CHARACTER,
@@ -27,7 +27,7 @@ enum ROUTE_TYPES {
 
 export function Footer() {
   const { pathname } = useLocation();
-  const { authState } = useAuth();
+  const { state } = useAuth();
 
   const [selectedTab, setSelectedTab] = useState<ROUTE_TYPES | undefined>(
     ROUTE_TYPES.CHARACTER
@@ -45,7 +45,7 @@ export function Footer() {
     }
   }, [pathname]);
 
-  if (authState !== AUTH_STATE.AUTHENTICATED) return null;
+  if (state !== AUTH_STATE.AUTHENTICATED) return null;
 
   return (
     <Hidden smUp>

@@ -3,7 +3,7 @@ import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { getCharacterAssetDoc } from "./_getRef";
 import { StoredAsset } from "types/Asset.type";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";

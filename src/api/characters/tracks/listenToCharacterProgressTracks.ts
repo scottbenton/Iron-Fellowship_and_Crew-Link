@@ -1,7 +1,7 @@
 import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { getErrorMessage } from "functions/getErrorMessage";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "hooks/useSnackbar";
 import { getCharacterTracksDoc } from "./_getRef";
 import {

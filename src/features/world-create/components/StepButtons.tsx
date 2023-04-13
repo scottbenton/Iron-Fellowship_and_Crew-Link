@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import { useCreateWorld } from "api/worlds/createWorld";
 import { truths } from "data/truths";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useNavigate } from "react-router-dom";
 import { constructWorldSheetUrl } from "routes";

@@ -4,29 +4,34 @@ import {
   Card,
   CardActionArea,
   Container,
-  Dialog,
   Divider,
   LinearProgress,
   Stack,
   Typography,
 } from "@mui/material";
-import { useCampaignGMScreenUpdateCampaignWorld } from "api/campaign/updateCampaignWorld";
+import { useCharacterSheetUpdateCharacterWorld } from "api/characters/updateCharacterWorld";
+import { useGetWorld } from "api/worlds/getWorld";
 import { EmptyState } from "components/EmptyState/EmptyState";
-import { SectionHeading } from "components/SectionHeading";
 import { WorldSheet } from "components/WorldSheet";
-import { useConfirm } from "material-ui-confirm";
+import { useAuth } from "providers/AuthProvider";
 import { Link } from "react-router-dom";
 import { paths, ROUTES } from "routes";
 import { useWorldsStore } from "stores/worlds.store";
-import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
+import { useCharacterSheetStore } from "../characterSheet.store";
 
 export function WorldSection() {
-  const confirm = useConfirm();
+  const uid = useAuth().user?.uid;
 
-  const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
-  const world = useWorldsStore((store) =>
-    worldId ? store.worlds[worldId] : undefined
-  );
+  const campaignId = useCharacterSheetStore((store) => store.campaignId);
+  const worldId = useCharacterSheetStore((store) => store.worldId);
+  const worldOwnerId = useCharacterSheetStore((store) => store.worldOwnerId);
+  const world = useCharacterSheetStore((store) => store.world);
+
+  const canEdit = !campaignId && uid === worldOwnerId;
+
+  const { updateCharacterWorld, loading: updateCharacterWorldLoading } =
+    useCharacterSheetUpdateCharacterWorld();
+
   const worldIds = useWorldsStore((store) =>
     Object.keys(store.worlds).sort((w1, w2) =>
       store.worlds[w2].name.localeCompare(store.worlds[w1].name)
@@ -34,46 +39,37 @@ export function WorldSection() {
   );
   const worlds = useWorldsStore((store) => store.worlds);
 
-  const { updateCampaignWorld, loading: updateCampaignWorldLoading } =
-    useCampaignGMScreenUpdateCampaignWorld();
-
-  const handleWorldRemove = () => {
-    confirm({
-      title: `Remove ${world?.name}`,
-      description:
-        "Are you sure you want to remove this world from the campaign? You will not be able to access locations or NPCs until you add another world.",
-      confirmationText: "Remove",
-      confirmationButtonProps: {
-        variant: "contained",
-        color: "error",
-      },
-    })
-      .then(() => {
-        updateCampaignWorld(undefined).catch(() => {});
-      })
-      .catch(() => {});
-  };
-
   return (
     <Box>
       {worldId && world && (
         <Container sx={{ pb: 2 }}>
-          <Box
-            sx={{
-              py: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography variant={"h6"}>{world.name}</Typography>
-            <Button onClick={() => handleWorldRemove()}>Remove World</Button>
-          </Box>
-          <WorldSheet worldId={worldId} world={world} canEdit />
+          {canEdit && (
+            <Box
+              sx={{
+                py: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant={"h6"}>{world.name}</Typography>
+              <Button
+                onClick={() => updateCharacterWorld(undefined).catch(() => {})}
+              >
+                Remove World
+              </Button>
+            </Box>
+          )}
+          <WorldSheet
+            worldId={worldId}
+            world={world}
+            canEdit={canEdit}
+            hideCampaignHints
+          />
         </Container>
       )}
       {worldId && !world && <LinearProgress />}
-      {!worldId && !world && (
+      {!worldId && !world && !campaignId && (
         <>
           {worldIds.length > 0 ? (
             <Stack spacing={2} sx={{ p: 2 }}>
@@ -87,9 +83,11 @@ export function WorldSection() {
               {worldIds.map((worldId) => (
                 <Card variant={"outlined"} key={worldId}>
                   <CardActionArea
-                    onClick={() => updateCampaignWorld(worldId)}
+                    onClick={() =>
+                      updateCharacterWorld(worldId).catch(() => {})
+                    }
                     sx={{ p: 2 }}
-                    disabled={updateCampaignWorldLoading}
+                    disabled={updateCharacterWorldLoading}
                   >
                     {worlds[worldId].name}
                   </CardActionArea>
@@ -105,7 +103,7 @@ export function WorldSection() {
                   variant={"contained"}
                   component={Link}
                   to={paths[ROUTES.WORLD_CREATE]}
-                  disabled={updateCampaignWorldLoading}
+                  disabled={updateCharacterWorldLoading}
                 >
                   Create a new World
                 </Button>
@@ -116,7 +114,7 @@ export function WorldSection() {
               imageSrc={"/assets/nature.svg"}
               title={"No Worlds Found"}
               message={
-                "Worlds allow you to share locations, NPCs, and world truths in your campaigns."
+                "Worlds allow you to view locations, NPCs, and world truths in your character sheet."
               }
               callToAction={
                 <Button
@@ -131,6 +129,13 @@ export function WorldSection() {
             />
           )}
         </>
+      )}
+      {!worldId && !world && campaignId && (
+        <EmptyState
+          imageSrc={"/assets/nature.svg"}
+          title={"No World Found"}
+          message={"Your GM has not yet added a world to this campaign."}
+        />
       )}
     </Box>
   );

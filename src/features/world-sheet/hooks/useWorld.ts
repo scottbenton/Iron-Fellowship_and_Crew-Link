@@ -1,5 +1,5 @@
 import { useGetWorld } from "api/worlds/getWorld";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useWorldsStore } from "stores/worlds.store";

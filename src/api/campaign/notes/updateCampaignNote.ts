@@ -1,7 +1,7 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { setDoc, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import {
   constructCampaignNoteContentPath,
   constructCampaignNoteDocPath,

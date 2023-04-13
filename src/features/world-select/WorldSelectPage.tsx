@@ -14,7 +14,7 @@ import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { constructWorldSheetUrl, paths, ROUTES } from "../../routes";
 import AddWorldIcon from "@mui/icons-material/Add";
 import { useWorldsStore } from "stores/worlds.store";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 
 export function WorldSelectPage() {
   const worlds = useWorldsStore((store) => store.worlds);

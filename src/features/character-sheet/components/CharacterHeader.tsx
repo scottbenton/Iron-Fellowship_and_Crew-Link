@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { useCharacterSheetStore } from "../characterSheet.store";
 import { InitiativeButtons } from "./InitiativeButtons";
 import { StatsSection } from "./StatsSection";

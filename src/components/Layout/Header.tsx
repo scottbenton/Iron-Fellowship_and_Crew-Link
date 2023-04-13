@@ -11,7 +11,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import { AUTH_STATE, useAuth } from "../../hooks/useAuth";
+import { AUTH_STATE, useAuth } from "../../providers/AuthProvider";
 import { CAMPAIGN_PREFIX, CHARACTER_PREFIX, paths, ROUTES } from "../../routes";
 import { LoginButton } from "./LoginButton";
 import { ReactComponent as IronFellowshipLogo } from "./iron-fellowship-logo.svg";
@@ -24,7 +24,7 @@ import WorldIcon from "@mui/icons-material/Public";
 
 export function Header() {
   const theme = useTheme();
-  const { authState } = useAuth();
+  const { state } = useAuth();
 
   const path = useLocation().pathname;
 
@@ -57,7 +57,7 @@ export function Header() {
               Iron Fellowship
             </Typography>
           </Box>
-          {authState === AUTH_STATE.AUTHENTICATED ? (
+          {state === AUTH_STATE.AUTHENTICATED ? (
             <Box>
               <Hidden smDown>
                 <>

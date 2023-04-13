@@ -1,7 +1,7 @@
 import { onSnapshot, query, Unsubscribe } from "firebase/firestore";
 import { useEffect } from "react";
 import { getErrorMessage } from "../../functions/getErrorMessage";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../providers/AuthProvider";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { useCharacterStore } from "../../stores/character.store";
 import { CharacterDocument } from "../../types/Character.type";

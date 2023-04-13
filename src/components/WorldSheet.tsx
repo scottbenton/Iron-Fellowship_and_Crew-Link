@@ -1,4 +1,4 @@
-import { Alert, Grid } from "@mui/material";
+import { Alert, Grid, Typography } from "@mui/material";
 import { useUpdateWorldDescription } from "api/worlds/updateWorldDescription";
 import { truthIds } from "data/truths";
 import { TruthCard } from "features/world-sheet/components/TruthCard";
@@ -11,22 +11,32 @@ export interface WorldSheetProps {
   worldId: string;
   world: World;
   canEdit: boolean;
+  hideCampaignHints?: boolean;
 }
 
 export function WorldSheet(props: WorldSheetProps) {
-  const { worldId, world, canEdit } = props;
+  const { worldId, world, canEdit, hideCampaignHints } = props;
 
   const { updateWorldDescription } = useUpdateWorldDescription();
 
   return (
     <>
-      {canEdit && <WorldNameSection worldId={worldId} worldName={world.name} />}
+      {canEdit ? (
+        <WorldNameSection worldId={worldId} worldName={world.name} />
+      ) : (
+        <Typography
+          variant={"h5"}
+          sx={(theme) => ({ py: 2, fontFamily: theme.fontFamilyTitle })}
+        >
+          {world.name}
+        </Typography>
+      )}
       <SectionHeading
         breakContainer
         label={"World Truths"}
         sx={{ mt: canEdit ? 4 : 0 }}
       />
-      {canEdit && (
+      {canEdit && !hideCampaignHints && (
         <Alert severity={"info"} sx={{ mt: 2 }}>
           If you add this world to a campaign, the world truths will be shared
           with your players, but the quest starters will not.
@@ -49,7 +59,7 @@ export function WorldSheet(props: WorldSheetProps) {
         label={"World Description"}
         sx={{ mt: 4, mb: 2 }}
       />
-      {canEdit && (
+      {canEdit && !hideCampaignHints && (
         <Alert severity={"info"} sx={{ mb: 2 }}>
           If you add this world to your campaign, this information will be
           shared with your players.
