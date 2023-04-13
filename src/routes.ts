@@ -6,11 +6,15 @@ export enum ROUTES {
   CAMPAIGN_SHEET,
   CAMPAIGN_JOIN,
   CAMPAIGN_GM_SCREEN,
+  WORLD_SELECT,
+  WORLD_CREATE,
+  WORLD_SHEET,
   LOGIN,
 }
 
 export const CHARACTER_PREFIX = "characters";
 export const CAMPAIGN_PREFIX = "campaigns";
+export const WORLD_PREFIX = "worlds";
 
 export const paths: { [key in ROUTES]: string } = {
   [ROUTES.CHARACTER_SELECT]: `/${CHARACTER_PREFIX}`,
@@ -20,6 +24,9 @@ export const paths: { [key in ROUTES]: string } = {
   [ROUTES.CAMPAIGN_SHEET]: `/${CAMPAIGN_PREFIX}/:campaignId`,
   [ROUTES.CAMPAIGN_JOIN]: `/${CAMPAIGN_PREFIX}/:campaignId/join`,
   [ROUTES.CAMPAIGN_GM_SCREEN]: `/${CAMPAIGN_PREFIX}/:campaignId/gm-screen`,
+  [ROUTES.WORLD_SELECT]: `/${WORLD_PREFIX}`,
+  [ROUTES.WORLD_CREATE]: `/${WORLD_PREFIX}/create`,
+  [ROUTES.WORLD_SHEET]: `/${WORLD_PREFIX}/:userId/:worldId`,
   [ROUTES.LOGIN]: `/login`,
 };
 
@@ -41,4 +48,8 @@ export function constructCampaignGMScreenUrl(campaignId: string) {
 
 export function constructCharacterCreateInCampaignUrl(campaignId: string) {
   return paths[ROUTES.CHARACTER_CREATE] + "?campaignId=" + campaignId;
+}
+
+export function constructWorldSheetUrl(userId: string, worldId: string) {
+  return `/${WORLD_PREFIX}/${userId}/${worldId}`;
 }

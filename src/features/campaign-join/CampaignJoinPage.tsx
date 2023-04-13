@@ -5,7 +5,7 @@ import { useCampaignStore } from "stores/campaigns.store";
 import { useAddUserToCampaign } from "../../api/campaign/addUserToCampaign";
 import { useGetCampaign } from "../../api/campaign/getCampaign";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../providers/AuthProvider";
 import { constructCampaignSheetUrl, paths, ROUTES } from "../../routes";
 
 export function CampaignJoinPage() {

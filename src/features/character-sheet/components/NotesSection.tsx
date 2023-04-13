@@ -1,10 +1,7 @@
 import { Box, LinearProgress, useMediaQuery, useTheme } from "@mui/material";
 import { useCharacterSheetAddCharacterNote } from "api/characters/notes/addCharacterNote";
 import { useListenToCharacterSheetNoteContent } from "api/characters/notes/listenToCharacterNoteContent";
-import {
-  useCharacterSheetRemoveCharacterNote,
-  useRemoveCharacterNote,
-} from "api/characters/notes/removeCharacterNote";
+import { useCharacterSheetRemoveCharacterNote } from "api/characters/notes/removeCharacterNote";
 import { useCharacterSheetUpdateCharacterNote } from "api/characters/notes/updateCharacterNote";
 import { useCharacterSheetUpdateCharacterNoteOrder } from "api/characters/notes/updateCharacterNoteOrder";
 import { Notes } from "components/Notes/Notes";

@@ -3,7 +3,7 @@ import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGM
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";
 import { useCampaignStore } from "stores/campaigns.store";

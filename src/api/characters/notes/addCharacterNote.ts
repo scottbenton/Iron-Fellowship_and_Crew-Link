@@ -3,7 +3,7 @@ import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { addDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { getCharacterNoteCollection } from "./_getRef";
 
 export const addCharacterNote: ApiFunction<

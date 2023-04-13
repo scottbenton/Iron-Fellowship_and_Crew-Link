@@ -13,7 +13,7 @@ import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGM
 import { firestore } from "config/firebase.config";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 
 export const updateCustomMove: ApiFunction<
   {

@@ -4,7 +4,7 @@ import { useCharacterSheetStore } from "features/character-sheet/characterSheet.
 import { arrayRemove, deleteField, updateDoc } from "firebase/firestore";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { getCharacterAssetDoc } from "./_getRef";
 
 export const removeAsset: ApiFunction<

@@ -10,7 +10,7 @@ import { firestore } from "config/firebase.config";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { StoredOracle } from "types/Oracles.type";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { getUsersCustomOracleDoc } from "./_getRef";
 
 export const updateCustomOracle: ApiFunction<

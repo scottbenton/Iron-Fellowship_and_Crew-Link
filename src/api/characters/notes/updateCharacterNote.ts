@@ -3,7 +3,7 @@ import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { setDoc, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import {
   constructCharacterNoteContentPath,
   constructCharacterNoteDocPath,
@@ -153,6 +153,7 @@ export function useCharacterSheetUpdateCharacterNote() {
       noteId: string;
       title: string;
       content?: string;
+      isBeaconRequest?: boolean;
     }) => updateCharacterNote({ ...params, uid, characterId }),
     loading,
     error,

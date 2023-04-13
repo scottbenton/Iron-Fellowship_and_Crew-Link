@@ -130,12 +130,12 @@ export function CharacterSelectPage() {
             <Fab
               component={Link}
               to={paths[ROUTES.CHARACTER_CREATE]}
-              color={"primary"}
-              sx={{
+              color={"secondary"}
+              sx={(theme) => ({
                 position: "fixed",
-                bottom: 16,
-                right: 16,
-              }}
+                bottom: theme.spacing(9),
+                right: theme.spacing(2),
+              })}
             >
               <AddCharacterIcon />
             </Fab>

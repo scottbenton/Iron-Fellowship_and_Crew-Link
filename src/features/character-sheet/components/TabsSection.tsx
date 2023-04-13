@@ -9,6 +9,7 @@ import { useCharacterSheetStore } from "../characterSheet.store";
 import { CharacterDocument } from "types/Character.type";
 import { OracleSection } from "components/OracleSection";
 import { NotesSection } from "./NotesSection";
+import { WorldSection } from "./WorldSection";
 
 enum TABS {
   MOVES,
@@ -19,6 +20,7 @@ enum TABS {
   FRAYS,
   CHARACTER,
   NOTES,
+  WORLD,
 }
 
 export function TabsSection() {
@@ -26,16 +28,6 @@ export function TabsSection() {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.ASSETS);
-
-  const stats = useCharacterSheetStore((store) => {
-    const character = store.character as CharacterDocument;
-    return {
-      ...character.stats,
-      health: character.health,
-      spirit: character.spirit,
-      supply: store.supply ?? 0,
-    };
-  });
 
   const isInCampaign = useCharacterSheetStore(
     (store) => !!store.character?.campaignId
@@ -66,6 +58,7 @@ export function TabsSection() {
           <Tab label="Combat" value={TABS.FRAYS} />
           <Tab label="Journeys" value={TABS.JOURNEYS} />
           <Tab label="Notes (Beta)" value={TABS.NOTES} />
+          <Tab label={"World"} value={TABS.WORLD} />
           <Tab label="Character" value={TABS.CHARACTER} />
         </Tabs>
       </Box>
@@ -99,6 +92,7 @@ export function TabsSection() {
           />
         )}
         {selectedTab === TABS.NOTES && <NotesSection />}
+        {selectedTab === TABS.WORLD && <WorldSection />}
         {selectedTab === TABS.CHARACTER && <CharacterSection />}
       </Box>
     </Card>

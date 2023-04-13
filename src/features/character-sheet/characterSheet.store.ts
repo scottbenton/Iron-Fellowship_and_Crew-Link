@@ -3,6 +3,7 @@ import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
 import { StoredOracle } from "types/Oracles.type";
 import { CharacterSettingsDoc } from "types/Settings.type";
+import { World } from "types/World.type";
 import { create } from "zustand";
 import { momentumTrack } from "../../data/defaultTracks";
 import { StoredAsset } from "../../types/Asset.type";
@@ -45,6 +46,10 @@ export interface CharacterSheetStore {
   campaignId?: string;
   campaign?: StoredCampaign;
 
+  worldId?: string;
+  worldOwnerId?: string;
+  world?: World;
+
   supply?: number;
 
   momentumResetValue?: number;
@@ -52,6 +57,8 @@ export interface CharacterSheetStore {
 
   setCharacter: (characterId?: string, character?: CharacterDocument) => void;
   setCampaign: (campaignId?: string, campaign?: StoredCampaign) => void;
+  setWorld: (worldOwnerId?: string, worldId?: string, world?: World) => void;
+
   assets?: StoredAsset[];
   setAssets: (newAssets: StoredAsset[]) => void;
 
@@ -142,6 +149,16 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
           if (!store.campaignId) {
             store.supply = character?.supply;
           }
+        })
+      );
+    },
+
+    setWorld: (worldOwnerId, worldId, world) => {
+      set(
+        produce((store: CharacterSheetStore) => {
+          store.worldId = worldId;
+          store.worldOwnerId = worldOwnerId;
+          store.world = world;
         })
       );
     },

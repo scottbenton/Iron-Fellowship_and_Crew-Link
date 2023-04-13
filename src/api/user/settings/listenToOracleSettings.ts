@@ -1,6 +1,6 @@
 import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { decodeDataswornId } from "functions/dataswornIdEncoder";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";
 import { useSettingsStore } from "stores/settings.store";

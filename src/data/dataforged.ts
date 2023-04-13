@@ -12,3 +12,7 @@ export const ironswornOracleCategories = (
 export const ironswornAssetCategories = (
   (ironsworn as any).default as Ironsworn
 )["Asset types"];
+
+export const ironswornWorldTruths = ((ironsworn as any).default as Ironsworn)[
+  "Setting truths"
+];

@@ -1,20 +1,14 @@
-import { useUpdateUserDoc } from "api/user/updateUserDoc";
+import { updateUserDoc } from "api/user/updateUserDoc";
+import { firebaseAuth } from "config/firebase.config";
 import { onAuthStateChanged, UserInfo } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { UserDocument } from "types/User.type";
-import { firebaseAuth } from "../config/firebase.config";
+import { AuthContext, AUTH_STATE } from "./AuthContext";
 
-export enum AUTH_STATE {
-  LOADING,
-  UNAUTHENTICATED,
-  AUTHENTICATED,
-}
-
-export function useAuth() {
+export function AuthProvider(props: PropsWithChildren) {
+  const { children } = props;
   const [authState, setAuthState] = useState<AUTH_STATE>(AUTH_STATE.LOADING);
   const [user, setUser] = useState<UserInfo>();
-
-  const { updateUserDoc } = useUpdateUserDoc();
 
   useEffect(() => {
     onAuthStateChanged(
@@ -41,5 +35,9 @@ export function useAuth() {
     );
   }, []);
 
-  return { authState, user };
+  return (
+    <AuthContext.Provider value={{ user, state: authState }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

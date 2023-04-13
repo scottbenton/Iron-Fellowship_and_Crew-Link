@@ -3,7 +3,7 @@ import { arrayRemove, deleteField, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getUsersCustomOracleDoc } from "./_getRef";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 
 export const removeCustomOracle: ApiFunction<
   {

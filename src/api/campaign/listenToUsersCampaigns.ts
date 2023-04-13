@@ -1,7 +1,7 @@
 import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
 import { useEffect } from "react";
 import { getErrorMessage } from "../../functions/getErrorMessage";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { StoredCampaign } from "../../types/Campaign.type";

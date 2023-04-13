@@ -1,5 +1,5 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { useState } from "react";
 import { StoredCampaign } from "types/Campaign.type";
 import MoreIcon from "@mui/icons-material/MoreHoriz";

@@ -4,7 +4,7 @@ import {
   TRACK_KEYS,
   useCharacterSheetStore,
 } from "features/character-sheet/characterSheet.store";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 
 export function useUpdateCharacterSheetTrack() {
   const characterId = useCharacterSheetStore((store) => store.characterId);

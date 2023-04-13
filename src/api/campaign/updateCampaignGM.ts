@@ -17,9 +17,17 @@ export const updateCampaignGM: ApiFunction<
       return;
     }
 
-    updateDoc(getCampaignDoc(campaignId), {
-      gmId: gmId ?? deleteField(),
-    })
+    updateDoc(
+      getCampaignDoc(campaignId),
+      gmId
+        ? {
+            gmId: gmId,
+          }
+        : {
+            gmId: deleteField(),
+            worldId: deleteField(),
+          }
+    )
       .then(() => {
         resolve(true);
       })

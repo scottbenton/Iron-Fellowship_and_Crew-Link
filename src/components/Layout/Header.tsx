@@ -11,7 +11,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import { AUTH_STATE, useAuth } from "../../hooks/useAuth";
+import { AUTH_STATE, useAuth } from "../../providers/AuthProvider";
 import { CAMPAIGN_PREFIX, CHARACTER_PREFIX, paths, ROUTES } from "../../routes";
 import { LoginButton } from "./LoginButton";
 import { ReactComponent as IronFellowshipLogo } from "./iron-fellowship-logo.svg";
@@ -20,10 +20,11 @@ import { HeaderMenu } from "./HeaderMenu";
 
 import CharacterIcon from "@mui/icons-material/Person";
 import CampaignIcon from "@mui/icons-material/Groups";
+import WorldIcon from "@mui/icons-material/Public";
 
 export function Header() {
   const theme = useTheme();
-  const { authState } = useAuth();
+  const { state } = useAuth();
 
   const path = useLocation().pathname;
 
@@ -56,7 +57,7 @@ export function Header() {
               Iron Fellowship
             </Typography>
           </Box>
-          {authState === AUTH_STATE.AUTHENTICATED ? (
+          {state === AUTH_STATE.AUTHENTICATED ? (
             <Box>
               <Hidden smDown>
                 <>
@@ -87,6 +88,20 @@ export function Header() {
                   >
                     Campaigns
                   </Button>
+                  <Button
+                    component={Link}
+                    to={paths[ROUTES.WORLD_SELECT]}
+                    sx={{
+                      color: "white",
+                      ml: 1,
+                      "&:hover": {
+                        backgroundColor: theme.palette.primary.dark,
+                      },
+                    }}
+                    endIcon={<WorldIcon />}
+                  >
+                    Worlds
+                  </Button>
                 </>
               </Hidden>
               <HeaderMenu />
@@ -95,29 +110,6 @@ export function Header() {
             <LoginButton />
           )}
         </Toolbar>
-        {authState === AUTH_STATE.AUTHENTICATED && (
-          <Hidden smUp>
-            <Tabs
-              variant={"fullWidth"}
-              textColor={"inherit"}
-              value={selectedTab}
-              indicatorColor={"secondary"}
-            >
-              <Tab
-                label={"Characters"}
-                value={"character"}
-                component={Link}
-                to={paths[ROUTES.CHARACTER_SELECT]}
-              />
-              <Tab
-                label={"Campaigns"}
-                value={"campaign"}
-                component={Link}
-                to={paths[ROUTES.CAMPAIGN_SELECT]}
-              />
-            </Tabs>
-          </Hidden>
-        )}
       </Container>
     </AppBar>
   );
