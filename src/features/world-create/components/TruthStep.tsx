@@ -1,22 +1,9 @@
-import {
-  Box,
-  Button,
-  Card,
-  Grid,
-  Stack,
-  StepButton,
-  StepContent,
-  StepLabel,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { StepButton, StepContent, StepLabel, Typography } from "@mui/material";
 import { TruthClassic } from "dataforged";
 import { TRUTH_IDS } from "types/World.type";
 import { getCustomTruthId, useWorldCreateStore } from "../worldCreate.store";
 import { StepButtons } from "./StepButtons";
-import CheckIcon from "@mui/icons-material/CheckCircle";
 import { TruthChooser } from "components/TruthChooser";
-import { useEffect, useRef } from "react";
 
 export interface TruthStepProps {
   truth: TruthClassic;
@@ -26,12 +13,7 @@ export interface TruthStepProps {
 export function TruthStep(props: TruthStepProps) {
   const { truth, index } = props;
 
-  const stepButtonRef = useRef<HTMLButtonElement>(null);
-
-  const openStepIndex = useWorldCreateStore((store) => store.currentStep);
-
   const truthId = truth.$id as TRUTH_IDS;
-  const customTruthId = getCustomTruthId(truthId);
 
   const selectedOption = useWorldCreateStore(
     (store) => store.truths[truthId]?.id
@@ -57,16 +39,9 @@ export function TruthStep(props: TruthStepProps) {
     (store) => store.setCustomWorldTruthQuestStarter
   );
 
-  useEffect(() => {
-    if (openStepIndex === index) {
-      stepButtonRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [index, openStepIndex]);
-
   return (
     <>
       <StepButton
-        ref={stepButtonRef}
         onClick={() => setOpenStep(index)}
         optional={
           stepState.touched &&

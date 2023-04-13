@@ -28,6 +28,16 @@ export const updateCampaignWorld: ApiFunction<
   });
 };
 
+export function useUpdateCampaignWorld() {
+  const { call, loading } = useApiState(updateCampaignWorld);
+
+  return {
+    updateCampaignWorld: (campaignId: string, worldId?: string) =>
+      call({ campaignId, worldId }),
+    loading,
+  };
+}
+
 export function useCampaignGMScreenUpdateCampaignWorld() {
   const campaignId = useCampaignGMScreenStore((store) => store.campaignId);
 

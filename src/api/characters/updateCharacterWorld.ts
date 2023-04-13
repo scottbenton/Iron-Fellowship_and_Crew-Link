@@ -34,7 +34,18 @@ export const updateCharacterWorld: ApiFunction<
       });
   });
 };
+export function useUpdateCharacterWorld() {
+  const { call, loading } = useApiState(updateCharacterWorld);
 
+  return {
+    updateCharacterWorld: (params: {
+      uid?: string;
+      characterId: string;
+      worldId?: string;
+    }) => call(params),
+    loading,
+  };
+}
 export function useCharacterSheetUpdateCharacterWorld() {
   const uid = useAuth().user?.uid;
   const characterId = useCharacterSheetStore((store) => store.characterId);
