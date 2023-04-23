@@ -31,10 +31,34 @@ export function WorldSheet(props: WorldSheetProps) {
           {world.name}
         </Typography>
       )}
+      {(canEdit || world.description) && (
+        <>
+          <SectionHeading
+            breakContainer
+            label={"World Description"}
+            sx={{ mt: canEdit ? 4 : 0, mb: 2 }}
+          />
+          {canEdit && !hideCampaignHints && (
+            <Alert severity={"info"} sx={{ mb: 2 }}>
+              If you add this world to your campaign, this information will be
+              shared with your players.
+            </Alert>
+          )}
+          <RichTextEditorNoTitle
+            content={world.description ?? ""}
+            onSave={
+              canEdit
+                ? ({ content, isBeaconRequest }) =>
+                    updateWorldDescription(worldId, content, isBeaconRequest)
+                : undefined
+            }
+          />
+        </>
+      )}
       <SectionHeading
         breakContainer
         label={"World Truths"}
-        sx={{ mt: canEdit ? 4 : 0 }}
+        sx={{ mt: canEdit ? 4 : 2 }}
       />
       {canEdit && !hideCampaignHints && (
         <Alert severity={"info"} sx={{ mt: 2 }}>
@@ -54,26 +78,6 @@ export function WorldSheet(props: WorldSheetProps) {
           </Grid>
         ))}
       </Grid>
-      <SectionHeading
-        breakContainer
-        label={"World Description"}
-        sx={{ mt: 4, mb: 2 }}
-      />
-      {canEdit && !hideCampaignHints && (
-        <Alert severity={"info"} sx={{ mb: 2 }}>
-          If you add this world to your campaign, this information will be
-          shared with your players.
-        </Alert>
-      )}
-      <RichTextEditorNoTitle
-        content={world.description ?? ""}
-        onSave={
-          canEdit
-            ? ({ content, isBeaconRequest }) =>
-                updateWorldDescription(worldId, content, isBeaconRequest)
-            : undefined
-        }
-      />
     </>
   );
 }

@@ -1,4 +1,9 @@
 import produce from "immer";
+import {
+  GMLocationDocument,
+  LocationDocument,
+  StoredLocation,
+} from "types/Locations.type";
 import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
 import { StoredOracle } from "types/Oracles.type";
@@ -38,6 +43,10 @@ export const convertTrackMapToArray = (trackMap: {
     });
 };
 
+export type LocationDocumentWithGMProperties = LocationDocument & {
+  gmProperties?: GMLocationDocument;
+};
+
 export interface CharacterSheetStore {
   resetState: () => void;
   characterId?: string;
@@ -49,6 +58,19 @@ export interface CharacterSheetStore {
   worldId?: string;
   worldOwnerId?: string;
   world?: World;
+
+  locations: {
+    [key: string]: LocationDocumentWithGMProperties;
+  };
+  updateLocation: (locationId: string, location: LocationDocument) => void;
+  updateLocationGMProperties: (
+    locationId: string,
+    locationGMProperties: GMLocationDocument
+  ) => void;
+  removeLocation: (locationId: string) => void;
+  clearLocations: () => void;
+  openLocationId?: string;
+  setOpenLocationId: (locationId?: string) => void;
 
   supply?: number;
 
@@ -107,6 +129,9 @@ const initialState = {
   customMoves: undefined,
   notes: undefined,
   characterSettings: undefined,
+
+  locations: {},
+  openLocationId: undefined,
 
   [TRACK_TYPES.VOW]: {},
   [TRACK_TYPES.JOURNEY]: {},
@@ -244,6 +269,47 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
       set(
         produce((state: CharacterSheetStore) => {
           state.characterSettings = settings;
+        })
+      );
+    },
+
+    updateLocation: (locationId, location) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          const { gmProperties } = state.locations[locationId] ?? {};
+          state.locations[locationId] = { gmProperties, ...location };
+        })
+      );
+    },
+
+    updateLocationGMProperties: (locationId, locationGMProperties) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          state.locations[locationId].gmProperties = locationGMProperties;
+        })
+      );
+    },
+
+    removeLocation: (locationId: string) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          delete state.locations[locationId];
+        })
+      );
+    },
+
+    clearLocations: () => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          state.locations = {};
+        })
+      );
+    },
+
+    setOpenLocationId: (locationId) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          state.openLocationId = locationId;
         })
       );
     },

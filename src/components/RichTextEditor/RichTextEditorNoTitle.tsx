@@ -135,6 +135,8 @@ export function RichTextEditorNoTitle(props: RichTextEditorNoTitleProps) {
             height: "100%",
             overflowX: "hidden",
             minHeight: onSave ? "300px" : 0,
+            display: "flex",
+            flexDirection: "column",
           },
           ".ProseMirror": {
             height: "100%",
@@ -143,6 +145,7 @@ export function RichTextEditorNoTitle(props: RichTextEditorNoTitleProps) {
             borderColor: "transparent",
             wordBreak: "break-word",
             maxWidth: "100%",
+            flexGrow: 1,
 
             "&>*": {
               maxWidth: "100%",

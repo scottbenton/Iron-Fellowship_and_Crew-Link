@@ -6,10 +6,11 @@ import { ProgressTrackSection } from "./ProgressTrackSection";
 import { CharacterSection } from "./CharacterSection";
 import { MovesSection } from "components/MovesSection";
 import { useCharacterSheetStore } from "../characterSheet.store";
-import { CharacterDocument } from "types/Character.type";
 import { OracleSection } from "components/OracleSection";
 import { NotesSection } from "./NotesSection";
 import { WorldSection } from "./WorldSection";
+import { LocationsSection } from "components/Locations";
+import { useAuth } from "providers/AuthProvider";
 
 enum TABS {
   MOVES,
@@ -21,6 +22,7 @@ enum TABS {
   CHARACTER,
   NOTES,
   WORLD,
+  LOCATIONS,
 }
 
 export function TabsSection() {
@@ -31,6 +33,24 @@ export function TabsSection() {
 
   const isInCampaign = useCharacterSheetStore(
     (store) => !!store.character?.campaignId
+  );
+
+  const uid = useAuth().user?.uid;
+
+  const isSinglePlayer = useCharacterSheetStore((store) => !store.campaignId);
+  const worldId = useCharacterSheetStore((store) =>
+    store.campaignId ? store.campaign?.worldId : store.character?.worldId
+  );
+  const worldOwnerId = useCharacterSheetStore((store) =>
+    store.campaignId ? store.campaign?.gmId : uid
+  );
+
+  const locations = useCharacterSheetStore((store) => store.locations);
+  const openLocationId = useCharacterSheetStore(
+    (store) => store.openLocationId
+  );
+  const setOpenLocationId = useCharacterSheetStore(
+    (store) => store.setOpenLocationId
   );
 
   useEffect(() => {
@@ -59,6 +79,7 @@ export function TabsSection() {
           <Tab label="Journeys" value={TABS.JOURNEYS} />
           <Tab label="Notes (Beta)" value={TABS.NOTES} />
           <Tab label={"World"} value={TABS.WORLD} />
+          <Tab label={"Locations"} value={TABS.LOCATIONS} />
           <Tab label="Character" value={TABS.CHARACTER} />
         </Tabs>
       </Box>
@@ -93,6 +114,17 @@ export function TabsSection() {
         )}
         {selectedTab === TABS.NOTES && <NotesSection />}
         {selectedTab === TABS.WORLD && <WorldSection />}
+        {selectedTab === TABS.LOCATIONS && (
+          <LocationsSection
+            worldId={worldId}
+            worldOwnerId={worldOwnerId}
+            isCharacterSheet
+            isSinglePlayer={isSinglePlayer}
+            locations={locations}
+            openLocationId={openLocationId}
+            setOpenLocationId={setOpenLocationId}
+          />
+        )}
         {selectedTab === TABS.CHARACTER && <CharacterSection />}
       </Box>
     </Card>

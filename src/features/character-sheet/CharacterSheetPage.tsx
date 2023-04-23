@@ -19,6 +19,7 @@ import { useCharacterSheetListenToCustomMoves } from "api/user/custom-moves/list
 import { useCharacterSheetListenToCampaignSettings } from "api/campaign/settings/listenToCampaignSettings";
 import { useCharacterSheetListenToCharacterSettings } from "api/characters/settings/listenToCharacterSettings";
 import { useCharacterSheetListenToWorld } from "api/worlds/listenToWorld";
+import { useCharacterSheetListenToLocations } from "api/worlds/locations/listenToLocations";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
@@ -26,7 +27,6 @@ export function CharacterSheetPage() {
   const campaigns = useCampaignStore((store) => store.campaigns);
   const loading = useCharacterStore((store) => store.loading);
   const character = useCharacterSheetStore((store) => store.character);
-  const supply = useCharacterSheetStore((store) => store.supply);
   const setCharacter = useCharacterSheetStore((store) => store.setCharacter);
   const setCampaign = useCharacterSheetStore((store) => store.setCampaign);
   const resetState = useCharacterSheetStore((store) => store.resetState);
@@ -39,6 +39,7 @@ export function CharacterSheetPage() {
   useCharacterSheetListenToCampaignSettings();
   useCharacterSheetListenToCharacterSettings();
   useCharacterSheetListenToWorld();
+  useCharacterSheetListenToLocations();
 
   useEffect(() => {
     return () => {
@@ -86,13 +87,6 @@ export function CharacterSheetPage() {
       />
     );
   }
-
-  const stats = {
-    ...character.stats,
-    health: character.health,
-    spirit: character.spirit,
-    supply: supply ?? 0,
-  };
 
   return (
     <>
