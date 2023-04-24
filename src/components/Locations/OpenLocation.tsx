@@ -30,6 +30,7 @@ import { useUpdateLocationGMProperties } from "api/worlds/locations/updateLocati
 import { DebouncedOracleInput } from "./DebouncedOracleInput";
 import { LocationDocumentWithGMProperties } from "features/character-sheet/characterSheet.store";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
+import { useUpdateLocationNotes } from "api/worlds/locations/updateLocationNotes";
 
 export interface OpenLocationProps {
   worldOwnerId: string;
@@ -59,6 +60,7 @@ export function OpenLocation(props: OpenLocationProps) {
   const { updateLocation, loading } = useUpdateLocation();
   const { updateLocationGMProperties } = useUpdateLocationGMProperties();
   const { deleteLocation } = useDeleteLocation();
+  const { updateLocationNotes } = useUpdateLocationNotes();
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const initialLoadRef = useRef<boolean>(true);
@@ -250,6 +252,14 @@ export function OpenLocation(props: OpenLocationProps) {
                 <RtcRichTextEditor
                   documentId={`iron-fellowship-${worldOwnerId}-${locationId}`}
                   documentPassword={worldId}
+                  onSave={(notes) =>
+                    updateLocationNotes({
+                      worldOwnerId,
+                      worldId,
+                      locationId,
+                      notes,
+                    })
+                  }
                 />
               </Grid>
             </>

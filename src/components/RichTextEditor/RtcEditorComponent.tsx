@@ -13,13 +13,13 @@ import { getHSLFromString } from "functions/getHueFromString";
 export interface RtcRichTextEditorProps {
   provider: WebrtcProvider;
   doc: Y.Doc;
+  saving: boolean;
 }
 
 export function RtcEditorComponent(props: RtcRichTextEditorProps) {
-  const { provider, doc } = props;
+  const { provider, doc, saving } = props;
 
   const user = useAuth().user;
-  const [saving, setSaving] = useState<boolean>(false);
 
   const editor = useEditor({
     extensions: [

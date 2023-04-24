@@ -9,6 +9,7 @@ import {
 import {
   GMLocationDocument,
   LocationDocument,
+  LocationNotesDocument,
   StoredLocation,
 } from "types/Locations.type";
 
@@ -32,14 +33,6 @@ export function constructPrivateDetailsLocationDocPath(
   return (
     constructLocationDocPath(uid, worldId, locationId) + `/private/details`
   );
-}
-
-export function constructPrivateNotesLocationDocPath(
-  uid: string,
-  worldId: string,
-  locationId: string
-) {
-  return constructLocationDocPath(uid, worldId, locationId) + `/private/notes`;
 }
 
 export function constructPublicNotesLocationDocPath(
@@ -79,17 +72,6 @@ export function getPrivateDetailsLocationDoc(
   ) as DocumentReference<GMLocationDocument>;
 }
 
-export function getPrivateNotesLocationDoc(
-  uid: string,
-  worldId: string,
-  locationId: string
-) {
-  return doc(
-    firestore,
-    constructPrivateNotesLocationDocPath(uid, worldId, locationId)
-  );
-}
-
 export function getPublicNotesLocationDoc(
   uid: string,
   worldId: string,
@@ -98,7 +80,7 @@ export function getPublicNotesLocationDoc(
   return doc(
     firestore,
     constructPublicNotesLocationDocPath(uid, worldId, locationId)
-  );
+  ) as DocumentReference<LocationNotesDocument>;
 }
 
 export function convertToDatabase(

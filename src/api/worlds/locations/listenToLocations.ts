@@ -8,6 +8,7 @@ import {
   convertFromDatabase,
   getLocationCollection,
   getPrivateDetailsLocationDoc,
+  getPublicNotesLocationDoc,
 } from "./_getRef";
 import { GMLocationDocument } from "types/Locations.type";
 import { firebaseAuth } from "config/firebase.config";
@@ -22,6 +23,7 @@ export function listenToLocations(
     locationId: string,
     gmProperties: GMLocationDocument
   ) => void,
+  updateLocationNotes: (locationId: string, notes: string) => void,
   removeLocation: (locationId: string) => void,
   onError: (error: string) => void
 ): Unsubscribe[] {
@@ -35,26 +37,44 @@ export function listenToLocations(
           if (change.type === "removed") {
             removeLocation(change.doc.id);
           } else {
-            if (change.type === "added" && uid === worldOwnerId) {
+            if (change.type === "added") {
+              if (uid === worldOwnerId) {
+                unsubscribes.push(
+                  onSnapshot(
+                    getPrivateDetailsLocationDoc(
+                      worldOwnerId,
+                      worldId,
+                      change.doc.id
+                    ),
+                    (doc) => {
+                      const privateLocationDetails = doc.data();
+                      if (privateLocationDetails) {
+                        updateLocationGMProperties(
+                          change.doc.id,
+                          privateLocationDetails
+                        );
+                      }
+                    },
+                    (error) => {
+                      console.error(error);
+                      onError("Failed to get locations");
+                    }
+                  )
+                );
+              }
               unsubscribes.push(
                 onSnapshot(
-                  getPrivateDetailsLocationDoc(
+                  getPublicNotesLocationDoc(
                     worldOwnerId,
                     worldId,
                     change.doc.id
                   ),
                   (doc) => {
-                    const privateLocationDetails = doc.data();
-                    if (privateLocationDetails) {
-                      updateLocationGMProperties(
-                        change.doc.id,
-                        privateLocationDetails
-                      );
+                    const noteDoc = doc.data();
+
+                    if (noteDoc) {
+                      updateLocationNotes(change.doc.id, noteDoc.notes);
                     }
-                  },
-                  (error) => {
-                    console.error(error);
-                    onError("Failed to get locations");
                   }
                 )
               );
@@ -90,6 +110,9 @@ export function useCharacterSheetListenToLocations() {
   const updateLocationGMProperties = useCharacterSheetStore(
     (store) => store.updateLocationGMProperties
   );
+  const updateLocationNotes = useCharacterSheetStore(
+    (store) => store.updateLocationNotes
+  );
   const removeLocation = useCharacterSheetStore(
     (store) => store.removeLocation
   );
@@ -106,6 +129,7 @@ export function useCharacterSheetListenToLocations() {
         worldId,
         updateLocation,
         updateLocationGMProperties,
+        updateLocationNotes,
         removeLocation,
         (err) => error(err)
       );

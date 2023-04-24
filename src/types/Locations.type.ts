@@ -20,12 +20,5 @@ export interface GMLocationDocument {
 }
 
 export interface LocationNotesDocument {
-  notes: Uint8Array;
+  notes: string;
 }
-
-// const yDoc = new Y.Doc();
-// const template = Y.encodeStateAsUpdateV2(yDoc);
-
-// const doc: LocationNotesDocument = {
-//   notes: template,
-// };

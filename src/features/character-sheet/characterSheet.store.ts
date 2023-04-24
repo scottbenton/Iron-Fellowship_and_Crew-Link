@@ -45,6 +45,7 @@ export const convertTrackMapToArray = (trackMap: {
 
 export type LocationDocumentWithGMProperties = LocationDocument & {
   gmProperties?: GMLocationDocument;
+  notes?: string;
 };
 
 export interface CharacterSheetStore {
@@ -67,6 +68,7 @@ export interface CharacterSheetStore {
     locationId: string,
     locationGMProperties: GMLocationDocument
   ) => void;
+  updateLocationNotes: (locationId: string, notes: string) => void;
   removeLocation: (locationId: string) => void;
   clearLocations: () => void;
   openLocationId?: string;
@@ -286,6 +288,14 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
       set(
         produce((state: CharacterSheetStore) => {
           state.locations[locationId].gmProperties = locationGMProperties;
+        })
+      );
+    },
+
+    updateLocationNotes: (locationId, notes) => {
+      set(
+        produce((state: CharacterSheetStore) => {
+          state.locations[locationId].notes = notes;
         })
       );
     },
