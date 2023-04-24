@@ -1,11 +1,12 @@
 import { SxProps } from "@mui/material";
 import { TextFieldWithOracle } from "components/TextFieldWithOracle/TextFieldWithOracle";
+import { useDebouncedState } from "hooks/useDebouncedState";
 import { useRoller } from "providers/DieRollProvider";
 import { RefObject } from "react";
 
 export interface LocationNameInputProps {
-  name: string;
-  setName: (name: string) => void;
+  initialName: string;
+  updateName: (name: string) => void;
   inputRef: RefObject<HTMLInputElement>;
 }
 
@@ -23,7 +24,12 @@ const oracleTables = [
 ];
 
 export function LocationNameInput(props: LocationNameInputProps) {
-  const { name, setName, inputRef } = props;
+  const { initialName, updateName, inputRef } = props;
+
+  const [nameValue, setNameValue] = useDebouncedState<string>(
+    (newName) => updateName(newName),
+    initialName
+  );
 
   const { rollOracleTable } = useRoller();
 
@@ -43,9 +49,9 @@ export function LocationNameInput(props: LocationNameInputProps) {
   return (
     <TextFieldWithOracle
       inputRef={inputRef}
-      value={name}
+      value={nameValue}
       placeholder={"Location Name"}
-      onChange={setName}
+      onChange={setNameValue}
       getOracleValue={handleGetOracleValue}
       fullWidth
       variant={"standard"}

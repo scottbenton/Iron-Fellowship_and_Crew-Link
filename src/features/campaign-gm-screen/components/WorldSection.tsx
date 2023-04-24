@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { useCampaignGMScreenUpdateCampaignWorld } from "api/campaign/updateCampaignWorld";
 import { EmptyState } from "components/EmptyState/EmptyState";
-import { SectionHeading } from "components/SectionHeading";
 import { WorldSheet } from "components/WorldSheet";
 import { useConfirm } from "material-ui-confirm";
 import { Link } from "react-router-dom";

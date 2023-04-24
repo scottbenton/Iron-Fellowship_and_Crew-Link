@@ -7,13 +7,14 @@ import { useState } from "react";
 import { useCreateLocation } from "api/worlds/locations/createLocation";
 import { LocationDocument } from "types/Locations.type";
 import { OpenLocation } from "./OpenLocation";
+import { LocationDocumentWithGMProperties } from "features/character-sheet/characterSheet.store";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;
   worldId?: string;
   isCharacterSheet?: boolean;
   isSinglePlayer?: boolean;
-  locations: { [key: string]: LocationDocument };
+  locations: { [key: string]: LocationDocumentWithGMProperties };
   openLocationId?: string;
   setOpenLocationId: (locationId?: string) => void;
 }

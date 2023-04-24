@@ -18,3 +18,14 @@ export interface GMLocationDocument {
   locationFeatures?: string;
   notes?: string;
 }
+
+export interface LocationNotesDocument {
+  notes: Uint8Array;
+}
+
+// const yDoc = new Y.Doc();
+// const template = Y.encodeStateAsUpdateV2(yDoc);
+
+// const doc: LocationNotesDocument = {
+//   notes: template,
+// };

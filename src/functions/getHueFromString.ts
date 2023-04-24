@@ -5,3 +5,12 @@ export function getHueFromString(str: string = "") {
   }
   return hash % 360;
 }
+
+export function getHSLFromString(
+  str: string = "",
+  saturation: number,
+  lightness: number
+) {
+  const hue = getHueFromString(str);
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}

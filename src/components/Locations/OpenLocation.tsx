@@ -26,12 +26,16 @@ import { useDebouncedState } from "hooks/useDebouncedState";
 import { LocationNameInput } from "./LocationNameInput";
 import { useRoller } from "providers/DieRollProvider";
 import { useAuth } from "providers/AuthProvider";
+import { useUpdateLocationGMProperties } from "api/worlds/locations/updateLocationGMProperties";
+import { DebouncedOracleInput } from "./DebouncedOracleInput";
+import { LocationDocumentWithGMProperties } from "features/character-sheet/characterSheet.store";
+import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 
 export interface OpenLocationProps {
   worldOwnerId: string;
   worldId: string;
   locationId: string;
-  location: LocationDocument;
+  location: LocationDocumentWithGMProperties;
   closeLocation: () => void;
   isSinglePlayer?: boolean;
 }
@@ -53,32 +57,11 @@ export function OpenLocation(props: OpenLocationProps) {
   const isWorldOwner = worldOwnerId === uid;
 
   const { updateLocation, loading } = useUpdateLocation();
+  const { updateLocationGMProperties } = useUpdateLocationGMProperties();
   const { deleteLocation } = useDeleteLocation();
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const initialLoadRef = useRef<boolean>(true);
-
-  const [nameValue, setNameValue] = useDebouncedState<string>(
-    (newName) =>
-      updateLocation({
-        worldOwnerId,
-        worldId,
-        locationId,
-        location: { name: newName },
-      }).catch(() => {}),
-    location.name
-  );
-
-  const [descriptorValue, setDescriptorValue] = useDebouncedState<string>(
-    (newName) =>
-      updateLocation({
-        worldOwnerId,
-        worldId,
-        locationId,
-        location: { name: newName },
-      }).catch(() => {}),
-    location.name
-  );
 
   useLayoutEffect(() => {
     if (initialLoadRef.current && nameInputRef.current) {
@@ -126,71 +109,135 @@ export function OpenLocation(props: OpenLocationProps) {
         </IconButton>
         <LocationNameInput
           inputRef={nameInputRef}
-          name={nameValue}
-          setName={setNameValue}
+          initialName={location.name}
+          updateName={(newName) =>
+            updateLocation({
+              worldOwnerId,
+              worldId,
+              locationId,
+              location: { name: newName },
+            }).catch(() => {})
+          }
         />
         <IconButton onClick={() => handleLocationDelete()}>
           <DeleteIcon />
         </IconButton>
       </Box>
       <Container>
-        <Grid container spacing={2} sx={{ mb: 1 }}>
-          <Grid item xs={12}>
-            <SectionHeading
-              label={"GM Only (Not shared with players)"}
-              breakContainer
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField label={"Description"} fullWidth />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField label={"Trouble"} fullWidth />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField label={"Location Features"} fullWidth />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={6}
-            sx={{ alignItems: "center", display: "flex" }}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value={!location.hiddenFromPlayers}
-                  onChange={(evt, value) =>
-                    updateLocation({
+        <Grid
+          container
+          spacing={2}
+          sx={{ mb: 2, mt: isSinglePlayer || !isWorldOwner ? 0 : -2 }}
+        >
+          {isWorldOwner && (
+            <>
+              {!isSinglePlayer && (
+                <Grid item xs={12}>
+                  <SectionHeading
+                    label={"GM Only (Not shared with players)"}
+                    breakContainer
+                  />
+                </Grid>
+              )}
+              <Grid item xs={12} md={6}>
+                <DebouncedOracleInput
+                  label={"Description"}
+                  initialValue={location?.gmProperties?.descriptor ?? ""}
+                  updateValue={(descriptor) =>
+                    updateLocationGMProperties({
                       worldOwnerId,
                       worldId,
                       locationId,
-                      location: { hiddenFromPlayers: !value },
+                      locationGMProperties: { descriptor },
                     }).catch(() => {})
                   }
-                />
-              }
-              label="Visible to Players"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <RichTextEditorNoTitle
-              content={""}
-              onSave={() => new Promise((resolve, reject) => resolve(true))}
-            />
-          </Grid>
-          {!isSinglePlayer && (
-            <>
-              <Grid item xs={12}>
-                <SectionHeading
-                  label={
-                    location.hiddenFromPlayers
-                      ? "Public Notes (Once shared with players)"
-                      : "Public Notes (Shared with players)"
-                  }
-                  breakContainer
+                  oracleTableId="ironsworn/oracles/place/descriptor"
                 />
               </Grid>
+              <Grid item xs={12} md={6}>
+                <DebouncedOracleInput
+                  label={"Trouble"}
+                  initialValue={location?.gmProperties?.trouble ?? ""}
+                  updateValue={(trouble) => {
+                    updateLocationGMProperties({
+                      worldOwnerId,
+                      worldId,
+                      locationId,
+                      locationGMProperties: { trouble },
+                    });
+                  }}
+                  oracleTableId={"ironsworn/oracles/settlement/trouble"}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <DebouncedOracleInput
+                  label={"Location Features"}
+                  initialValue={location?.gmProperties?.locationFeatures ?? ""}
+                  updateValue={(locationFeatures) => {
+                    updateLocationGMProperties({
+                      worldOwnerId,
+                      worldId,
+                      locationId,
+                      locationGMProperties: { locationFeatures },
+                    }).catch(() => {});
+                  }}
+                  oracleTableId={"ironsworn/oracles/place/location"}
+                />
+              </Grid>
+              {!isSinglePlayer && (
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  sx={{ alignItems: "center", display: "flex" }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        value={!location.hiddenFromPlayers}
+                        onChange={(evt, value) =>
+                          updateLocation({
+                            worldOwnerId,
+                            worldId,
+                            locationId,
+                            location: { hiddenFromPlayers: !value },
+                          }).catch(() => {})
+                        }
+                      />
+                    }
+                    label="Visible to Players"
+                  />
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                <RichTextEditorNoTitle
+                  content={location.gmProperties?.notes ?? ""}
+                  onSave={({ content }) =>
+                    updateLocationGMProperties({
+                      worldOwnerId,
+                      worldId,
+                      locationId,
+                      locationGMProperties: { notes: content },
+                    })
+                  }
+                />
+              </Grid>
+            </>
+          )}
+          {!isSinglePlayer && (
+            <>
+              {isWorldOwner && (
+                <Grid item xs={12}>
+                  <SectionHeading
+                    label={
+                      location.hiddenFromPlayers
+                        ? "Public Notes (Once shared with players)"
+                        : "Public Notes (Shared with players)"
+                    }
+                    breakContainer
+                  />
+                </Grid>
+              )}
               {location.hiddenFromPlayers && (
                 <Grid item xs={12}>
                   <Alert severity="warning">
@@ -200,9 +247,9 @@ export function OpenLocation(props: OpenLocationProps) {
                 </Grid>
               )}
               <Grid item xs={12}>
-                <RichTextEditorNoTitle
-                  content={""}
-                  onSave={() => new Promise((resolve, reject) => resolve(true))}
+                <RtcRichTextEditor
+                  documentId={`iron-fellowship-${worldOwnerId}-${locationId}`}
+                  documentPassword={worldId}
                 />
               </Grid>
             </>
