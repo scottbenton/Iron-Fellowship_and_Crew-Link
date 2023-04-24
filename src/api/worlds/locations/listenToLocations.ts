@@ -1,6 +1,6 @@
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { Unsubscribe } from "firebase/auth";
-import { onSnapshot } from "firebase/firestore";
+import { Bytes, onSnapshot } from "firebase/firestore";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";
 import { LocationDocument } from "types/Locations.type";
@@ -23,7 +23,7 @@ export function listenToLocations(
     locationId: string,
     gmProperties: GMLocationDocument
   ) => void,
-  updateLocationNotes: (locationId: string, notes: string) => void,
+  updateLocationNotes: (locationId: string, notes: Uint8Array | null) => void,
   removeLocation: (locationId: string) => void,
   onError: (error: string) => void
 ): Unsubscribe[] {
@@ -72,8 +72,13 @@ export function listenToLocations(
                   (doc) => {
                     const noteDoc = doc.data();
 
-                    if (noteDoc) {
-                      updateLocationNotes(change.doc.id, noteDoc.notes);
+                    if (noteDoc?.notes) {
+                      updateLocationNotes(
+                        change.doc.id,
+                        noteDoc.notes.toUint8Array()
+                      );
+                    } else {
+                      updateLocationNotes(change.doc.id, null);
                     }
                   }
                 )

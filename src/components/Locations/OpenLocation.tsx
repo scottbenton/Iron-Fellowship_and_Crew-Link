@@ -249,18 +249,21 @@ export function OpenLocation(props: OpenLocationProps) {
                 </Grid>
               )}
               <Grid item xs={12}>
-                <RtcRichTextEditor
-                  documentId={`iron-fellowship-${worldOwnerId}-${locationId}`}
-                  documentPassword={worldId}
-                  onSave={(notes) =>
-                    updateLocationNotes({
-                      worldOwnerId,
-                      worldId,
-                      locationId,
-                      notes,
-                    })
-                  }
-                />
+                {(location.notes || location.notes === null) && (
+                  <RtcRichTextEditor
+                    documentId={`iron-fellowship-${worldOwnerId}-${locationId}`}
+                    documentPassword={worldId}
+                    onSave={(notes) =>
+                      updateLocationNotes({
+                        worldOwnerId,
+                        worldId,
+                        locationId,
+                        notes,
+                      })
+                    }
+                    initialValue={location.notes || undefined}
+                  />
+                )}
               </Grid>
             </>
           )}

@@ -45,7 +45,7 @@ export const convertTrackMapToArray = (trackMap: {
 
 export type LocationDocumentWithGMProperties = LocationDocument & {
   gmProperties?: GMLocationDocument;
-  notes?: string;
+  notes?: Uint8Array | null;
 };
 
 export interface CharacterSheetStore {
@@ -68,7 +68,7 @@ export interface CharacterSheetStore {
     locationId: string,
     locationGMProperties: GMLocationDocument
   ) => void;
-  updateLocationNotes: (locationId: string, notes: string) => void;
+  updateLocationNotes: (locationId: string, notes: Uint8Array | null) => void;
   removeLocation: (locationId: string) => void;
   clearLocations: () => void;
   openLocationId?: string;

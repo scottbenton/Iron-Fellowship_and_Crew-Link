@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase/firestore";
+import { Bytes, Timestamp } from "firebase/firestore";
 
 export interface StoredLocation {
   name: string;
@@ -20,5 +20,5 @@ export interface GMLocationDocument {
 }
 
 export interface LocationNotesDocument {
-  notes: string;
+  notes: Bytes;
 }

@@ -8,7 +8,11 @@ import * as Y from "yjs";
 import { Editor } from "./Editor";
 import { EditorToolbar } from "./EditorToolbar";
 import { useAuth } from "providers/AuthProvider";
-import { getHSLFromString } from "functions/getHueFromString";
+import {
+  getHSLFromString,
+  getHueFromString,
+  hslToHex,
+} from "functions/getHueFromString";
 
 export interface RtcRichTextEditorProps {
   provider: WebrtcProvider;
@@ -31,7 +35,9 @@ export function RtcEditorComponent(props: RtcRichTextEditorProps) {
         provider: provider,
         user: {
           name: user?.displayName ?? "Unknown User",
-          color: user ? getHSLFromString(user.uid, 70, 80) : "#d0d0d0",
+          color: user
+            ? hslToHex(getHueFromString(user.uid), 70, 80)
+            : "#d0d0d0",
         },
       }),
     ],
@@ -43,7 +49,7 @@ export function RtcEditorComponent(props: RtcRichTextEditorProps) {
       outlined
       editable
       editor={editor}
-      saving={false}
+      saving={saving}
       toolbar={editor && <EditorToolbar editor={editor} />}
     />
   );

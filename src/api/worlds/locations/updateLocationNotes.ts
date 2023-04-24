@@ -1,4 +1,4 @@
-import { setDoc } from "firebase/firestore";
+import { Bytes, setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getPublicNotesLocationDoc } from "./_getRef";
 
@@ -6,7 +6,7 @@ interface Params {
   worldOwnerId: string;
   worldId: string;
   locationId: string;
-  notes: string;
+  notes: Uint8Array;
 }
 
 export const updateLocationNotes: ApiFunction<Params, boolean> = (params) => {
@@ -15,7 +15,7 @@ export const updateLocationNotes: ApiFunction<Params, boolean> = (params) => {
   return new Promise((resolve, reject) => {
     setDoc(
       getPublicNotesLocationDoc(worldOwnerId, worldId, locationId),
-      { notes },
+      { notes: Bytes.fromUint8Array(notes) },
       { merge: true }
     )
       .then(() => {
