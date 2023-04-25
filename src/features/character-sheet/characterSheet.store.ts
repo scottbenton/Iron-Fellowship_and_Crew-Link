@@ -278,8 +278,8 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
     updateLocation: (locationId, location) => {
       set(
         produce((state: CharacterSheetStore) => {
-          const { gmProperties } = state.locations[locationId] ?? {};
-          state.locations[locationId] = { gmProperties, ...location };
+          const { gmProperties, notes } = state.locations[locationId] ?? {};
+          state.locations[locationId] = { gmProperties, notes, ...location };
         })
       );
     },

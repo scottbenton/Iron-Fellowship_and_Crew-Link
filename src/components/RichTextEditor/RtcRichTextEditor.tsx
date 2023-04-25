@@ -51,7 +51,10 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
 
   useEffect(() => {
     return () => {
+      console.debug("DESTROYING PROVIDER AND YDOC");
+      console.debug(provider);
       yDoc?.destroy();
+      provider?.disconnect();
       provider?.destroy();
     };
   }, [provider, yDoc]);
