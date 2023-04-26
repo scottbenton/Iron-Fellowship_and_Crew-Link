@@ -1,36 +1,28 @@
 import {
   Alert,
-  AlertTitle,
   Box,
   Checkbox,
   Container,
   FormControlLabel,
   Grid,
   IconButton,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
 } from "@mui/material";
-import { LocationDocument } from "types/Locations.type";
 import BackIcon from "@mui/icons-material/ChevronLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { useUpdateLocation } from "api/worlds/locations/updateLocation";
 import { useDeleteLocation } from "api/worlds/locations/deleteLocation";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/SectionHeading";
 import { RichTextEditorNoTitle } from "components/RichTextEditor";
-import { TextFieldWithOracle } from "components/TextFieldWithOracle/TextFieldWithOracle";
-import { useDebouncedState } from "hooks/useDebouncedState";
 import { LocationNameInput } from "./LocationNameInput";
 import { useRoller } from "providers/DieRollProvider";
 import { useAuth } from "providers/AuthProvider";
 import { useUpdateLocationGMProperties } from "api/worlds/locations/updateLocationGMProperties";
 import { DebouncedOracleInput } from "./DebouncedOracleInput";
-import { LocationDocumentWithGMProperties } from "features/character-sheet/characterSheet.store";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 import { useUpdateLocationNotes } from "api/worlds/locations/updateLocationNotes";
+import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
 
 export interface OpenLocationProps {
   worldOwnerId: string;
@@ -253,12 +245,13 @@ export function OpenLocation(props: OpenLocationProps) {
                   <RtcRichTextEditor
                     documentId={`iron-fellowship-${worldOwnerId}-${locationId}`}
                     documentPassword={worldId}
-                    onSave={(notes) =>
+                    onSave={(notes, isBeaconRequest) =>
                       updateLocationNotes({
                         worldOwnerId,
                         worldId,
                         locationId,
                         notes,
+                        isBeacon: isBeaconRequest,
                       })
                     }
                     initialValue={location.notes || undefined}

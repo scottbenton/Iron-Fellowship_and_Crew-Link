@@ -5,9 +5,8 @@ import { EmptyState } from "components/EmptyState/EmptyState";
 import { AddLocationDialog } from "./AddLocationDialog";
 import { useState } from "react";
 import { useCreateLocation } from "api/worlds/locations/createLocation";
-import { LocationDocument } from "types/Locations.type";
 import { OpenLocation } from "./OpenLocation";
-import { LocationDocumentWithGMProperties } from "features/character-sheet/characterSheet.store";
+import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;

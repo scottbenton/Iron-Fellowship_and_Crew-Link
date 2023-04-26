@@ -15,6 +15,11 @@ import { StoredAsset } from "../../types/Asset.type";
 import { StoredCampaign } from "../../types/Campaign.type";
 import { CharacterDocument } from "../../types/Character.type";
 import { StoredTrack, TRACK_TYPES } from "../../types/Track.type";
+import {
+  LocationStoreProperties,
+  initialLocationState,
+  locationStore,
+} from "stores/sharedLocationStore";
 
 export type TRACK_KEYS = "health" | "spirit" | "supply" | "momentum";
 
@@ -43,12 +48,7 @@ export const convertTrackMapToArray = (trackMap: {
     });
 };
 
-export type LocationDocumentWithGMProperties = LocationDocument & {
-  gmProperties?: GMLocationDocument;
-  notes?: Uint8Array | null;
-};
-
-export interface CharacterSheetStore {
+export type CharacterSheetStore = {
   resetState: () => void;
   characterId?: string;
   character?: CharacterDocument;
@@ -59,20 +59,6 @@ export interface CharacterSheetStore {
   worldId?: string;
   worldOwnerId?: string;
   world?: World;
-
-  locations: {
-    [key: string]: LocationDocumentWithGMProperties;
-  };
-  updateLocation: (locationId: string, location: LocationDocument) => void;
-  updateLocationGMProperties: (
-    locationId: string,
-    locationGMProperties: GMLocationDocument
-  ) => void;
-  updateLocationNotes: (locationId: string, notes: Uint8Array | null) => void;
-  removeLocation: (locationId: string) => void;
-  clearLocations: () => void;
-  openLocationId?: string;
-  setOpenLocationId: (locationId?: string) => void;
 
   supply?: number;
 
@@ -118,7 +104,7 @@ export interface CharacterSheetStore {
 
   characterSettings?: CharacterSettingsDoc;
   setCharacterSettings: (settings: CharacterSettingsDoc) => void;
-}
+} & LocationStoreProperties;
 
 const initialState = {
   characterId: undefined,
@@ -132,8 +118,7 @@ const initialState = {
   notes: undefined,
   characterSettings: undefined,
 
-  locations: {},
-  openLocationId: undefined,
+  ...initialLocationState,
 
   [TRACK_TYPES.VOW]: {},
   [TRACK_TYPES.JOURNEY]: {},
@@ -275,53 +260,6 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
       );
     },
 
-    updateLocation: (locationId, location) => {
-      set(
-        produce((state: CharacterSheetStore) => {
-          const { gmProperties, notes } = state.locations[locationId] ?? {};
-          state.locations[locationId] = { gmProperties, notes, ...location };
-        })
-      );
-    },
-
-    updateLocationGMProperties: (locationId, locationGMProperties) => {
-      set(
-        produce((state: CharacterSheetStore) => {
-          state.locations[locationId].gmProperties = locationGMProperties;
-        })
-      );
-    },
-
-    updateLocationNotes: (locationId, notes) => {
-      set(
-        produce((state: CharacterSheetStore) => {
-          state.locations[locationId].notes = notes;
-        })
-      );
-    },
-
-    removeLocation: (locationId: string) => {
-      set(
-        produce((state: CharacterSheetStore) => {
-          delete state.locations[locationId];
-        })
-      );
-    },
-
-    clearLocations: () => {
-      set(
-        produce((state: CharacterSheetStore) => {
-          state.locations = {};
-        })
-      );
-    },
-
-    setOpenLocationId: (locationId) => {
-      set(
-        produce((state: CharacterSheetStore) => {
-          state.openLocationId = locationId;
-        })
-      );
-    },
+    ...locationStore(set),
   })
 );

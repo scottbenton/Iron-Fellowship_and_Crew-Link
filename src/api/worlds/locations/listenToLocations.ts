@@ -1,6 +1,6 @@
 import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
 import { Unsubscribe } from "firebase/auth";
-import { Bytes, onSnapshot } from "firebase/firestore";
+import { Bytes, onSnapshot, query, where } from "firebase/firestore";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";
 import { LocationDocument } from "types/Locations.type";
@@ -11,8 +11,8 @@ import {
   getPublicNotesLocationDoc,
 } from "./_getRef";
 import { GMLocationDocument } from "types/Locations.type";
-import { firebaseAuth } from "config/firebase.config";
 import { useAuth } from "providers/AuthProvider";
+import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
 
 export function listenToLocations(
   uid: string | undefined,
@@ -29,16 +29,23 @@ export function listenToLocations(
 ): Unsubscribe[] {
   const unsubscribes: Unsubscribe[] = [];
 
+  const locationCollectionRef = getLocationCollection(worldOwnerId, worldId);
+  const isWorldOwner = uid === worldOwnerId;
   unsubscribes.push(
     onSnapshot(
-      getLocationCollection(worldOwnerId, worldId),
+      isWorldOwner
+        ? locationCollectionRef
+        : query(
+            locationCollectionRef,
+            where("hiddenFromPlayers", "!=", "true")
+          ),
       (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "removed") {
             removeLocation(change.doc.id);
           } else {
             if (change.type === "added") {
-              if (uid === worldOwnerId) {
+              if (isWorldOwner) {
                 unsubscribes.push(
                   onSnapshot(
                     getPrivateDetailsLocationDoc(
@@ -122,6 +129,55 @@ export function useCharacterSheetListenToLocations() {
     (store) => store.removeLocation
   );
   const clearLocations = useCharacterSheetStore(
+    (store) => store.clearLocations
+  );
+
+  useEffect(() => {
+    let unsubscribes: Unsubscribe[];
+    if (worldId && worldOwnerId) {
+      unsubscribes = listenToLocations(
+        uid,
+        worldOwnerId,
+        worldId,
+        updateLocation,
+        updateLocationGMProperties,
+        updateLocationNotes,
+        removeLocation,
+        (err) => error(err)
+      );
+    } else {
+      clearLocations();
+    }
+
+    return () => {
+      unsubscribes?.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [uid, worldId, worldOwnerId]);
+}
+
+export function useCampaignGMScreenListenToLocations() {
+  const { error } = useSnackbar();
+
+  const uid = useAuth().user?.uid;
+
+  const worldOwnerId = useCampaignGMScreenStore(
+    (store) => store.campaign?.gmId
+  );
+  const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
+
+  const updateLocation = useCampaignGMScreenStore(
+    (store) => store.updateLocation
+  );
+  const updateLocationGMProperties = useCampaignGMScreenStore(
+    (store) => store.updateLocationGMProperties
+  );
+  const updateLocationNotes = useCampaignGMScreenStore(
+    (store) => store.updateLocationNotes
+  );
+  const removeLocation = useCampaignGMScreenStore(
+    (store) => store.removeLocation
+  );
+  const clearLocations = useCampaignGMScreenStore(
     (store) => store.clearLocations
   );
 

@@ -9,6 +9,8 @@ import { OracleSection } from "components/OracleSection";
 import { CampaignNotesSection } from "./CampaignNotesSection";
 import { SettingsSection } from "./SettingsSection";
 import { WorldSection } from "./WorldSection";
+import { LocationsSection } from "components/Locations";
+import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 
 enum TABS {
   MOVES,
@@ -18,6 +20,7 @@ enum TABS {
   NOTES,
   SETTINGS,
   WORLD,
+  LOCATIONS,
 }
 
 export interface TabsSectionProps {
@@ -41,6 +44,18 @@ export function TabsSection(props: TabsSectionProps) {
     }
   }, [selectedTab, isMobile]);
 
+  const locations = useCampaignGMScreenStore((store) => store.locations);
+  const openLocationId = useCampaignGMScreenStore(
+    (store) => store.openLocationId
+  );
+  const setOpenLocationId = useCampaignGMScreenStore(
+    (store) => store.setOpenLocationId
+  );
+  const worldOwnerId = useCampaignGMScreenStore(
+    (store) => store.campaign?.gmId
+  );
+  const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
+
   return (
     <Card
       variant={"outlined"}
@@ -59,6 +74,7 @@ export function TabsSection(props: TabsSectionProps) {
           <Tab label="Oracle" value={TABS.ORACLE} />
           <Tab label="Notes (Beta)" value={TABS.NOTES} />
           <Tab label="World" value={TABS.WORLD} />
+          <Tab label="Locations" value={TABS.LOCATIONS} />
           <Tab label="Settings" value={TABS.SETTINGS} />
         </Tabs>
       </Box>
@@ -81,6 +97,15 @@ export function TabsSection(props: TabsSectionProps) {
           <CampaignNotesSection campaignId={campaignId} />
         )}
         {selectedTab === TABS.WORLD && <WorldSection />}
+        {selectedTab === TABS.LOCATIONS && (
+          <LocationsSection
+            worldOwnerId={worldOwnerId}
+            worldId={worldId}
+            locations={locations}
+            openLocationId={openLocationId}
+            setOpenLocationId={setOpenLocationId}
+          />
+        )}
         {selectedTab === TABS.SETTINGS && <SettingsSection />}
       </Box>
     </Card>

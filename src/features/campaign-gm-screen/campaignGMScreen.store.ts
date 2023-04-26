@@ -8,11 +8,15 @@ import { Note } from "types/Notes.type";
 import { StoredOracle } from "types/Oracles.type";
 import { CampaignSettingsDoc } from "types/Settings.type";
 import { TRACK_TYPES } from "types/Track.type";
-import { UserDocument } from "types/User.type";
 import { OracleSettings } from "types/UserSettings.type";
 import { create } from "zustand";
+import {
+  LocationStoreProperties,
+  initialLocationState,
+  locationStore,
+} from "stores/sharedLocationStore";
 
-export interface CampaignGMScreenStore {
+export type CampaignGMScreenStore = {
   resetState: () => void;
 
   campaignId?: string;
@@ -54,7 +58,7 @@ export interface CampaignGMScreenStore {
 
   campaignSettings?: CampaignSettingsDoc;
   setCampaignSettings: (settings: CampaignSettingsDoc) => void;
-}
+} & LocationStoreProperties;
 
 const initialState = {
   campaignId: undefined,
@@ -69,10 +73,14 @@ const initialState = {
   customMoves: undefined,
   campaignNotes: undefined,
   campaignSettings: undefined,
+
+  ...initialLocationState,
 };
 
 export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
   (set, getState) => ({
+    ...initialState,
+
     resetState: () =>
       set({
         ...getState(),
@@ -88,7 +96,6 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       );
     },
 
-    characters: {},
     updateCharacter: (characterId, character) => {
       set(
         produce((store: CampaignGMScreenStore) => {
@@ -104,7 +111,6 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       );
     },
 
-    characterAssets: {},
     setCharacterAssets: (characterId, assets) => {
       set(
         produce((store: CampaignGMScreenStore) => {
@@ -177,5 +183,7 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
         })
       );
     },
+
+    ...locationStore(set),
   })
 );

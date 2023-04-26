@@ -12,8 +12,8 @@ import { CampaignProgressTracks } from "./components/CampaignProgressTracks";
 import { CampaignSheetHeader } from "./components/CampaignSheetHeader";
 import { CharacterSection } from "./components/CharacterSection";
 import { TracksSection } from "./components/TracksSection";
-import { WorldSheet } from "components/WorldSheet";
 import { useWorldsStore } from "stores/worlds.store";
+import { WorldSection } from "./components/WorldSection";
 
 enum TABS {
   WORLD,
@@ -52,7 +52,6 @@ export function CampaignSheetPage() {
   }
 
   const campaign = campaigns[campaignId];
-  const world = campaign.worldId ? worlds[campaign.worldId] : undefined;
 
   return (
     <>
@@ -84,8 +83,8 @@ export function CampaignSheetPage() {
           <Tab value={TABS.TRACKS} label={"Tracks"} />
         </Tabs>
       )}
-      {campaign.worldId && openTab === TABS.WORLD && world && (
-        <WorldSheet worldId={campaign.worldId} world={world} canEdit={false} />
+      {campaign.worldId && campaign.gmId && openTab === TABS.WORLD && (
+        <WorldSection worldId={campaign.worldId} worldOwnerId={campaign.gmId} />
       )}
       {(!campaign.worldId || openTab === TABS.TRACKS) && (
         <TracksSection
