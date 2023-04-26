@@ -1,4 +1,11 @@
-import { Box, Button, LinearProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  LinearProgress,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { useUpdateCampaignWorld } from "api/campaign/updateCampaignWorld";
 import { useUpdateCharacterWorld } from "api/characters/updateCharacterWorld";
 import { useDeleteWorld } from "api/worlds/deleteWorld";
@@ -12,9 +19,19 @@ import { paths, ROUTES } from "routes";
 import { useCampaignStore } from "stores/campaigns.store";
 import { useCharacterStore } from "stores/character.store";
 import { useWorld } from "./hooks/useWorld";
+import { useState } from "react";
+import { LocationsSection } from "components/Locations";
+import { useListenToLocations } from "api/worlds/locations/listenToLocations";
+
+export enum TABS {
+  DETAILS,
+  LOCATIONS,
+}
 
 export function WorldSheetPage() {
-  const { worldId, world, canEdit, isLoading } = useWorld();
+  const [selectedTab, setSelectedTab] = useState<TABS>(TABS.DETAILS);
+
+  const { worldOwnerId, worldId, world, canEdit, isLoading } = useWorld();
 
   const { error } = useSnackbar();
   const confirm = useConfirm();
@@ -28,6 +45,9 @@ export function WorldSheetPage() {
   const { updateCampaignWorld } = useUpdateCampaignWorld();
 
   const { deleteWorld } = useDeleteWorld();
+
+  const { locations } = useListenToLocations(worldOwnerId, worldId);
+  const [openLocationId, setOpenLocationId] = useState<string>();
 
   if (isLoading) {
     return <LinearProgress />;
@@ -110,7 +130,26 @@ export function WorldSheetPage() {
           </Button>
         </Box>
       </PageBanner>
-      <WorldSheet worldId={worldId} world={world} canEdit={canEdit} />
+      <Tabs
+        value={selectedTab}
+        onChange={(evt, value) => setSelectedTab(value)}
+        centered
+      >
+        <Tab label={"World Details"} value={TABS.DETAILS} />
+        <Tab label="Locations" value={TABS.LOCATIONS} />
+      </Tabs>
+      {selectedTab === TABS.DETAILS && (
+        <WorldSheet worldId={worldId} world={world} canEdit={canEdit} />
+      )}
+      {selectedTab === TABS.LOCATIONS && (
+        <LocationsSection
+          locations={locations}
+          openLocationId={openLocationId}
+          setOpenLocationId={setOpenLocationId}
+          worldOwnerId={worldOwnerId}
+          worldId={worldId}
+        />
+      )}
     </>
   );
 }

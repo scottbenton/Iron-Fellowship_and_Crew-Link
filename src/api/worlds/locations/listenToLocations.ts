@@ -2,7 +2,7 @@ import { useCharacterSheetStore } from "features/character-sheet/characterSheet.
 import { Unsubscribe } from "firebase/auth";
 import { Bytes, onSnapshot, query, where } from "firebase/firestore";
 import { useSnackbar } from "hooks/useSnackbar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LocationDocument } from "types/Locations.type";
 import {
   convertFromDatabase,
@@ -13,6 +13,7 @@ import {
 import { GMLocationDocument } from "types/Locations.type";
 import { useAuth } from "providers/AuthProvider";
 import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
 
 export function listenToLocations(
   uid: string | undefined,
@@ -106,6 +107,62 @@ export function listenToLocations(
   );
 
   return unsubscribes;
+}
+
+export function useListenToLocations(worldOwnerId?: string, worldId?: string) {
+  const { error } = useSnackbar();
+  const uid = useAuth().user?.uid;
+
+  const [locations, setLocations] = useState<{
+    [key: string]: LocationDocumentWithGMProperties;
+  }>({});
+
+  useEffect(() => {
+    let unsubscribes: Unsubscribe[];
+    if (worldId && worldOwnerId) {
+      unsubscribes = listenToLocations(
+        uid,
+        worldOwnerId,
+        worldId,
+        (locationId, location) =>
+          setLocations((prevLocations) => {
+            let newLocations = { ...prevLocations };
+            const prevLocation = newLocations[locationId];
+            newLocations[locationId] = { ...prevLocation, ...location };
+            return newLocations;
+          }),
+        (locationId, gmProperties) =>
+          setLocations((prevLocations) => {
+            let newLocations = { ...prevLocations };
+            const prevLocation = newLocations[locationId];
+            newLocations[locationId] = { ...prevLocation, gmProperties };
+            return newLocations;
+          }),
+        (locationId, notes) =>
+          setLocations((prevLocations) => {
+            let newLocations = { ...prevLocations };
+            const prevLocation = newLocations[locationId];
+            newLocations[locationId] = { ...prevLocation, notes };
+            return newLocations;
+          }),
+        (locationId) =>
+          setLocations((prevLocations) => {
+            let newLocations = { ...prevLocations };
+            delete newLocations[locationId];
+            return newLocations;
+          }),
+        (err) => error(err)
+      );
+    } else {
+      setLocations({});
+    }
+
+    return () => {
+      unsubscribes?.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [uid, worldId, worldOwnerId]);
+
+  return { locations };
 }
 
 export function useCharacterSheetListenToLocations() {

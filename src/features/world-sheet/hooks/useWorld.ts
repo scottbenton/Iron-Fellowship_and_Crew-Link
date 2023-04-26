@@ -26,6 +26,7 @@ export function useWorld() {
   }, [isAdmin, uid, userId, worldId]);
 
   return {
+    worldOwnerId: userId,
     worldId,
     world: isAdmin ? (worldId ? worlds[worldId] : undefined) : readOnlyWorld,
     isLoading: isAdmin ? areUsersWorldsLoading : readOnlyWorldLoading,

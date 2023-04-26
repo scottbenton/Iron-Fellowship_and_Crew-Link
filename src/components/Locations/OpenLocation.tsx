@@ -19,6 +19,10 @@ import { LocationNameInput } from "./LocationNameInput";
 import { useRoller } from "providers/DieRollProvider";
 import { useAuth } from "providers/AuthProvider";
 import { useUpdateLocationGMProperties } from "api/worlds/locations/updateLocationGMProperties";
+import {
+  updateLocationGMNotes,
+  useUpdateLocationGMNotes,
+} from "api/worlds/locations/updateLocationGMNotes";
 import { DebouncedOracleInput } from "./DebouncedOracleInput";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 import { useUpdateLocationNotes } from "api/worlds/locations/updateLocationNotes";
@@ -51,6 +55,7 @@ export function OpenLocation(props: OpenLocationProps) {
 
   const { updateLocation, loading } = useUpdateLocation();
   const { updateLocationGMProperties } = useUpdateLocationGMProperties();
+  const { updateLocationGMNotes } = useUpdateLocationGMNotes();
   const { deleteLocation } = useDeleteLocation();
   const { updateLocationNotes } = useUpdateLocationNotes();
 
@@ -117,7 +122,12 @@ export function OpenLocation(props: OpenLocationProps) {
           <DeleteIcon />
         </IconButton>
       </Box>
-      <Container>
+      <Box
+        sx={(theme) => ({
+          px: 2,
+          [theme.breakpoints.up("md")]: { px: 3 },
+        })}
+      >
         <Grid
           container
           spacing={2}
@@ -206,12 +216,13 @@ export function OpenLocation(props: OpenLocationProps) {
               <Grid item xs={12}>
                 <RichTextEditorNoTitle
                   content={location.gmProperties?.notes ?? ""}
-                  onSave={({ content }) =>
-                    updateLocationGMProperties({
+                  onSave={({ content, isBeaconRequest }) =>
+                    updateLocationGMNotes({
                       worldOwnerId,
                       worldId,
                       locationId,
-                      locationGMProperties: { notes: content },
+                      notes: content,
+                      isBeacon: isBeaconRequest,
                     })
                   }
                 />
@@ -261,7 +272,7 @@ export function OpenLocation(props: OpenLocationProps) {
             </>
           )}
         </Grid>
-      </Container>
+      </Box>
     </Box>
   );
 }
