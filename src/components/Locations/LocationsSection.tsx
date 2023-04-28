@@ -1,12 +1,20 @@
-import { Button, Card, CardActionArea, Grid } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  Grid,
+  Input,
+  InputAdornment,
+} from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { EmptyState } from "components/EmptyState/EmptyState";
-import { AddLocationDialog } from "./AddLocationDialog";
-import { useState } from "react";
 import { useCreateLocation } from "api/worlds/locations/createLocation";
 import { OpenLocation } from "./OpenLocation";
 import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
+import { useFilterLocations } from "./useFilterLocations";
+import SearchIcon from "@mui/icons-material/Search";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;
@@ -32,8 +40,8 @@ export function LocationsSection(props: LocationsSectionProps) {
   const { createLocation, loading: createLocationLoading } =
     useCreateLocation();
 
-  const [addLocationDialogOpen, setAddLocationDialogOpen] =
-    useState<boolean>(false);
+  const { search, setSearch, filteredLocations } =
+    useFilterLocations(locations);
 
   if (!worldId || !worldOwnerId) {
     return (
@@ -49,7 +57,7 @@ export function LocationsSection(props: LocationsSectionProps) {
     );
   }
 
-  const sortedLocations = Object.keys(locations).sort(
+  const sortedLocations = Object.keys(filteredLocations).sort(
     (l1, l2) =>
       locations[l2].updatedDate.getUTCMilliseconds() -
       locations[l1].updatedDate.getUTCMilliseconds()
@@ -71,27 +79,65 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   return (
     <>
-      <SectionHeading
-        label={"Locations"}
-        action={
-          <Button
-            endIcon={<AddLocationIcon />}
-            onClick={() =>
-              createLocation(worldOwnerId, worldId)
-                .catch(() => {})
-                .then((locationId) => {
-                  if (locationId) {
-                    setOpenLocationId(locationId);
-                  }
-                })
-            }
-            disabled={createLocationLoading}
-          >
-            Add Location
-          </Button>
-        }
-      />
-      <Grid container spacing={2} sx={{ p: 2 }}>
+      <Box
+        sx={(theme) => ({
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          px: 2,
+          [theme.breakpoints.up("md")]: {
+            px: 3,
+          },
+          py: 0.5,
+          borderWidth: 0,
+          borderBottomWidth: 1,
+          borderColor: theme.palette.divider,
+          borderStyle: "solid",
+        })}
+      >
+        <Input
+          fullWidth
+          startAdornment={
+            <InputAdornment position={"start"}>
+              <SearchIcon
+                sx={(theme) => ({ color: theme.palette.grey[300] })}
+              />
+            </InputAdornment>
+          }
+          aria-label={"Filter Locations"}
+          placeholder={"Filter Locations"}
+          value={search}
+          onChange={(evt) => setSearch(evt.currentTarget.value)}
+          color={"secondary"}
+          sx={(theme) => ({
+            mr: 2,
+            flexGrow: 1,
+          })}
+        />
+        <Button
+          endIcon={<AddLocationIcon />}
+          onClick={() =>
+            createLocation(worldOwnerId, worldId)
+              .catch(() => {})
+              .then((locationId) => {
+                if (locationId) {
+                  setOpenLocationId(locationId);
+                }
+              })
+          }
+          disabled={createLocationLoading}
+          sx={{ flexShrink: 0 }}
+        >
+          Add Location
+        </Button>
+      </Box>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          p: 2,
+        }}
+      >
         {sortedLocations.map((locationId) => (
           <Grid item xs={12} md={6} lg={4} key={locationId}>
             <Card variant={"outlined"}>
@@ -105,10 +151,6 @@ export function LocationsSection(props: LocationsSectionProps) {
           </Grid>
         ))}
       </Grid>
-      <AddLocationDialog
-        open={addLocationDialogOpen}
-        onClose={() => setAddLocationDialogOpen(false)}
-      />
     </>
   );
 }

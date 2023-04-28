@@ -19,10 +19,7 @@ import { LocationNameInput } from "./LocationNameInput";
 import { useRoller } from "providers/DieRollProvider";
 import { useAuth } from "providers/AuthProvider";
 import { useUpdateLocationGMProperties } from "api/worlds/locations/updateLocationGMProperties";
-import {
-  updateLocationGMNotes,
-  useUpdateLocationGMNotes,
-} from "api/worlds/locations/updateLocationGMNotes";
+import { useUpdateLocationGMNotes } from "api/worlds/locations/updateLocationGMNotes";
 import { DebouncedOracleInput } from "./DebouncedOracleInput";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 import { useUpdateLocationNotes } from "api/worlds/locations/updateLocationNotes";
@@ -50,7 +47,9 @@ export function OpenLocation(props: OpenLocationProps) {
   const confirm = useConfirm();
   const { rollOracleTable } = useRoller();
 
-  const uid = useAuth().user?.uid;
+  const { user, isPremium } = useAuth();
+  const uid = user?.uid;
+
   const isWorldOwner = worldOwnerId === uid;
 
   const { updateLocation, loading } = useUpdateLocation();
@@ -122,6 +121,7 @@ export function OpenLocation(props: OpenLocationProps) {
           <DeleteIcon />
         </IconButton>
       </Box>
+      {isPremium && "PREMIUM"}
       <Box
         sx={(theme) => ({
           px: 2,

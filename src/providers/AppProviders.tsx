@@ -10,25 +10,25 @@ import { AuthProvider } from "./AuthProvider";
 export function AppProviders(props: PropsWithChildren) {
   const { children } = props;
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <ThemeProvider>
-          <ConfirmProvider>
-            <SnackbarProvider
-              maxSnack={3}
-              autoHideDuration={5000}
-              anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-              preventDuplicate
-            >
+    <ThemeProvider>
+      <ConfirmProvider>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={5000}
+          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+          preventDuplicate
+        >
+          <AuthProvider>
+            <BrowserRouter>
               <DieRollProvider>
                 <LinkedDialogProvider>
                   <>{children}</>
                 </LinkedDialogProvider>
               </DieRollProvider>
-            </SnackbarProvider>
-          </ConfirmProvider>
-        </ThemeProvider>
-      </BrowserRouter>
-    </AuthProvider>
+            </BrowserRouter>
+          </AuthProvider>
+        </SnackbarProvider>
+      </ConfirmProvider>
+    </ThemeProvider>
   );
 }
