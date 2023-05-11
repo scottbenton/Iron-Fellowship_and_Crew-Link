@@ -15,7 +15,8 @@ service cloud.firestore {
     }
     match /users/{userId} {
     	allow read: if true;
-    	allow write: if userId == request.auth.uid;
+    	allow write: if userId == request.auth.uid && !request.resource.data.diff(resource.data).affectedKeys().hasAny(["isPremium"]);
+
       match /custom-oracles/{document=**} {
         allow read: if true;
         allow write, delete: if userId == request.auth.uid;
