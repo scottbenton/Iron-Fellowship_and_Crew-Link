@@ -3,7 +3,7 @@ import { MarkdownRenderer } from "components/MarkdownRenderer";
 import { MoveStatRollers } from "./MoveStatRollers";
 import { MoveStats } from "components/MovesSection/MoveStats.type";
 import { moveMap } from "data/moves";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { Stat, PlayerConditionMeter } from "types/stats.enum";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { useCustomMoves } from "components/MovesSection/useCustomMoves";

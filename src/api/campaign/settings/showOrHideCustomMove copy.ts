@@ -1,5 +1,5 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 import { arrayRemove, arrayUnion, setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCampaignSettingsDoc } from "./_getRef";

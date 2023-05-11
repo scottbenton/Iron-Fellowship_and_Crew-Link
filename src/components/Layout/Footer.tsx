@@ -2,7 +2,6 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   Hidden,
-  Paper,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -11,10 +10,10 @@ import CampaignIcon from "@mui/icons-material/Groups";
 import WorldIcon from "@mui/icons-material/Public";
 import { Link, useLocation } from "react-router-dom";
 import {
+  BASE_ROUTES,
+  basePaths,
   CAMPAIGN_PREFIX,
   CHARACTER_PREFIX,
-  paths,
-  ROUTES,
   WORLD_PREFIX,
 } from "routes";
 import { AUTH_STATE, useAuth } from "providers/AuthProvider";
@@ -70,19 +69,19 @@ export function Footer() {
       >
         <BottomNavigationAction
           component={Link}
-          to={paths[ROUTES.CHARACTER_SELECT]}
+          to={basePaths[BASE_ROUTES.CHARACTER]}
           label={"Characters"}
           icon={<CharacterIcon />}
         />
         <BottomNavigationAction
           component={Link}
-          to={paths[ROUTES.CAMPAIGN_SELECT]}
+          to={basePaths[BASE_ROUTES.CAMPAIGN]}
           label={"Campaigns"}
           icon={<CampaignIcon />}
         />
         <BottomNavigationAction
           component={Link}
-          to={paths[ROUTES.WORLD_SELECT]}
+          to={basePaths[BASE_ROUTES.WORLD]}
           label={"Worlds"}
           icon={<WorldIcon />}
         />

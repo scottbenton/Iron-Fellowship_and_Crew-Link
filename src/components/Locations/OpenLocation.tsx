@@ -47,7 +47,7 @@ export function OpenLocation(props: OpenLocationProps) {
   const confirm = useConfirm();
   const { rollOracleTable } = useRoller();
 
-  const { user, isPremium } = useAuth();
+  const { user } = useAuth();
   const uid = user?.uid;
 
   const isWorldOwner = worldOwnerId === uid;
@@ -97,9 +97,8 @@ export function OpenLocation(props: OpenLocationProps) {
         display={"flex"}
         alignItems={"center"}
         sx={(theme) => ({
-          backgroundColor: theme.palette.background.default,
           px: 1,
-          py: 0.5,
+          py: 1,
         })}
       >
         <IconButton onClick={() => closeLocation()}>
@@ -121,9 +120,9 @@ export function OpenLocation(props: OpenLocationProps) {
           <DeleteIcon />
         </IconButton>
       </Box>
-      {isPremium && "PREMIUM"}
       <Box
         sx={(theme) => ({
+          mt: 1,
           px: 2,
           [theme.breakpoints.up("md")]: { px: 3 },
         })}
@@ -136,12 +135,17 @@ export function OpenLocation(props: OpenLocationProps) {
           {isWorldOwner && (
             <>
               {!isSinglePlayer && (
-                <Grid item xs={12}>
-                  <SectionHeading
-                    label={"GM Only (Not shared with players)"}
-                    breakContainer
-                  />
-                </Grid>
+                <>
+                  <Grid item xs={12}>
+                    <SectionHeading label={"GM Only"} breakContainer />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Alert severity={"info"}>
+                      Information in this section will not be shared with your
+                      players.
+                    </Alert>
+                  </Grid>
+                </>
               )}
               <Grid item xs={12} md={6}>
                 <DebouncedOracleInput
@@ -198,13 +202,13 @@ export function OpenLocation(props: OpenLocationProps) {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        value={!location.hiddenFromPlayers}
+                        checked={location.sharedWithPlayers ?? false}
                         onChange={(evt, value) =>
                           updateLocation({
                             worldOwnerId,
                             worldId,
                             locationId,
-                            location: { hiddenFromPlayers: !value },
+                            location: { sharedWithPlayers: value },
                           }).catch(() => {})
                         }
                       />
@@ -232,18 +236,27 @@ export function OpenLocation(props: OpenLocationProps) {
           {!isSinglePlayer && (
             <>
               {isWorldOwner && (
-                <Grid item xs={12}>
-                  <SectionHeading
-                    label={
-                      location.hiddenFromPlayers
-                        ? "Public Notes (Once shared with players)"
-                        : "Public Notes (Shared with players)"
-                    }
-                    breakContainer
-                  />
-                </Grid>
+                <>
+                  <Grid item xs={12}>
+                    <SectionHeading
+                      label={
+                        location.sharedWithPlayers
+                          ? "Public Notes (Shared with players)"
+                          : "Public Notes (Once shared with players)"
+                      }
+                      breakContainer
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Alert severity={"info"}>
+                      Notes in this section will only be visible to characters
+                      in campaigns. Singleplayer notes should go in the above
+                      section.
+                    </Alert>
+                  </Grid>
+                </>
               )}
-              {location.hiddenFromPlayers && (
+              {!location.sharedWithPlayers && (
                 <Grid item xs={12}>
                   <Alert severity="warning">
                     These notes are not yet visible to players because this

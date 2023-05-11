@@ -1,6 +1,5 @@
 import { PropsWithChildren } from "react";
 import { ThemeProvider } from "./ThemeProvider";
-import { BrowserRouter } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 import { ConfirmProvider } from "material-ui-confirm";
 import { DieRollProvider } from "providers/DieRollProvider";
@@ -19,13 +18,11 @@ export function AppProviders(props: PropsWithChildren) {
           preventDuplicate
         >
           <AuthProvider>
-            <BrowserRouter>
-              <DieRollProvider>
-                <LinkedDialogProvider>
-                  <>{children}</>
-                </LinkedDialogProvider>
-              </DieRollProvider>
-            </BrowserRouter>
+            <DieRollProvider>
+              <LinkedDialogProvider>
+                <>{children}</>
+              </LinkedDialogProvider>
+            </DieRollProvider>
           </AuthProvider>
         </SnackbarProvider>
       </ConfirmProvider>

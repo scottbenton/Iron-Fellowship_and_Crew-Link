@@ -27,7 +27,6 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
     (notes: Uint8Array, isBeaconRequest?: boolean) => {
       setHasUnsavedChanges(false);
       setSaving(true);
-      console.debug("SAVING");
       onSave(notes, isBeaconRequest)
         .catch(() => {})
         .finally(() => {
@@ -42,7 +41,6 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
       provider?.roomName !== documentId &&
       documentId !== lastUpdatedRef.current
     ) {
-      console.debug("CREATING NEW PROVIDER");
       lastUpdatedRef.current = documentId;
 
       const yDoc = new Y.Doc();

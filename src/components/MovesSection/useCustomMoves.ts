@@ -1,6 +1,6 @@
 import { Move, MoveCategory } from "dataforged";
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useEffect, useState } from "react";
 import { License, RollMethod, RollType } from "types/Datasworn";

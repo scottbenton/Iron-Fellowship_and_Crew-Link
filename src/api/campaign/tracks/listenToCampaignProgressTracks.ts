@@ -4,12 +4,12 @@ import {
   convertTrackMapToArray,
   TrackWithId,
   useCharacterSheetStore,
-} from "features/character-sheet/characterSheet.store";
+} from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { getSharedCampaignTracksDoc } from "./_getRef";
 import { TRACK_TYPES } from "types/Track.type";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useSnackbar } from "hooks/useSnackbar";
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 
 export function listenToCampaignProgressTracks(
   campaignId: string,

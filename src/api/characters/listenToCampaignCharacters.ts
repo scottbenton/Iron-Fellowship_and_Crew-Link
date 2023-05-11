@@ -5,7 +5,7 @@ import { useSnackbar } from "../../hooks/useSnackbar";
 import { getCharacterDoc } from "./_getRef";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { CharacterDocument } from "../../types/Character.type";
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 import { UserDocument } from "types/User.type";
 import { getUserDoc } from "api/user/getUserDoc";
 import { useMiscDataStore } from "stores/miscData.store";

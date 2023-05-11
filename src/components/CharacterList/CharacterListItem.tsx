@@ -11,11 +11,17 @@ export interface CharacterListItemProps {
   character: CharacterDocument;
   actions?: (characterId: string) => ReactNode;
   usePlayerNameAsSecondaryText?: boolean;
+  raised?: boolean;
 }
 
 export function CharacterListItem(props: CharacterListItemProps) {
-  const { characterId, character, actions, usePlayerNameAsSecondaryText } =
-    props;
+  const {
+    characterId,
+    character,
+    actions,
+    usePlayerNameAsSecondaryText,
+    raised,
+  } = props;
   const { name, profileImage, campaignId, uid } = character;
 
   const campaign = useCampaignStore((store) =>
@@ -28,16 +34,18 @@ export function CharacterListItem(props: CharacterListItemProps) {
 
   return (
     <Card
-      variant={"outlined"}
+      variant={raised ? "elevation" : "outlined"}
       sx={{
         height: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        overflow: "hidden",
       }}
+      elevation={raised ? 2 : undefined}
     >
       <Box>
-        <Box display={"flex"} alignItems={"center"} p={2}>
+        <Box display={"flex"} alignItems={"flex-start"} p={2}>
           <PortraitAvatar
             uid={uid}
             characterId={characterId}
@@ -47,12 +55,14 @@ export function CharacterListItem(props: CharacterListItemProps) {
             colorful
           />
           <Box display={"flex"} flexDirection={"column"} ml={2}>
-            <Typography variant={"h6"}>{name}</Typography>
+            <Typography variant={"h6"} lineHeight={1.25}>
+              {name}
+            </Typography>
 
             {usePlayerNameAsSecondaryText && (
               <Typography
                 variant={"subtitle2"}
-                mt={-1}
+                // mt={-1}
                 color={(theme) => theme.palette.text.secondary}
               >
                 {userDoc ? userDoc.displayName : "Loading"}
@@ -62,7 +72,7 @@ export function CharacterListItem(props: CharacterListItemProps) {
             {!usePlayerNameAsSecondaryText && campaignId ? (
               <Typography
                 variant={"subtitle2"}
-                mt={-1}
+                // mt={-1}
                 color={(theme) => theme.palette.text.secondary}
               >
                 {campaign ? campaign.name : "Campaign: Loading"}

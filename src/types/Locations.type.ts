@@ -8,7 +8,7 @@ export interface StoredLocation {
 
 export interface LocationDocument {
   name: string;
-  hiddenFromPlayers?: boolean;
+  sharedWithPlayers?: boolean;
   updatedDate: Date;
 }
 

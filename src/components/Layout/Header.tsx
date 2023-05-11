@@ -4,15 +4,18 @@ import {
   Button,
   Container,
   Hidden,
-  Tab,
-  Tabs,
   Toolbar,
   Typography,
   useTheme,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import { AUTH_STATE, useAuth } from "../../providers/AuthProvider";
-import { CAMPAIGN_PREFIX, CHARACTER_PREFIX, paths, ROUTES } from "../../routes";
+import {
+  BASE_ROUTES,
+  basePaths,
+  CAMPAIGN_PREFIX,
+  CHARACTER_PREFIX,
+} from "../../routes";
 import { LoginButton } from "./LoginButton";
 import { ReactComponent as IronFellowshipLogo } from "./iron-fellowship-logo.svg";
 import { useEffect, useState } from "react";
@@ -63,7 +66,7 @@ export function Header() {
                 <>
                   <Button
                     component={Link}
-                    to={paths[ROUTES.CHARACTER_SELECT]}
+                    to={basePaths[BASE_ROUTES.CHARACTER]}
                     sx={{
                       color: "white",
                       "&:hover": {
@@ -76,7 +79,7 @@ export function Header() {
                   </Button>
                   <Button
                     component={Link}
-                    to={paths[ROUTES.CAMPAIGN_SELECT]}
+                    to={basePaths[BASE_ROUTES.CAMPAIGN]}
                     sx={{
                       color: "white",
                       ml: 1,
@@ -90,7 +93,7 @@ export function Header() {
                   </Button>
                   <Button
                     component={Link}
-                    to={paths[ROUTES.WORLD_SELECT]}
+                    to={basePaths[BASE_ROUTES.WORLD]}
                     sx={{
                       color: "white",
                       ml: 1,

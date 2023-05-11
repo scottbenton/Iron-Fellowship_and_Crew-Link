@@ -1,4 +1,4 @@
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { Unsubscribe } from "firebase/auth";
 import { Bytes, onSnapshot, query, where } from "firebase/firestore";
 import { useSnackbar } from "hooks/useSnackbar";
@@ -12,7 +12,7 @@ import {
 } from "./_getRef";
 import { GMLocationDocument } from "types/Locations.type";
 import { useAuth } from "providers/AuthProvider";
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
 
 export function listenToLocations(
@@ -36,10 +36,7 @@ export function listenToLocations(
     onSnapshot(
       isWorldOwner
         ? locationCollectionRef
-        : query(
-            locationCollectionRef,
-            where("hiddenFromPlayers", "!=", "true")
-          ),
+        : query(locationCollectionRef, where("sharedWithPlayers", "==", true)),
       (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "removed") {

@@ -1,11 +1,11 @@
 import { Alert, Grid, Typography } from "@mui/material";
 import { useUpdateWorldDescription } from "api/worlds/updateWorldDescription";
 import { truthIds } from "data/truths";
-import { TruthCard } from "features/world-sheet/components/TruthCard";
-import { WorldNameSection } from "features/world-sheet/components/WorldNameSection";
 import { TRUTH_IDS, World } from "types/World.type";
 import { RichTextEditorNoTitle } from "./RichTextEditor";
 import { SectionHeading } from "./SectionHeading";
+import { WorldNameSection } from "pages/World/WorldSheetPage/components/WorldNameSection";
+import { TruthCard } from "pages/World/WorldSheetPage/components/TruthCard";
 
 export interface WorldSheetProps {
   worldId: string;

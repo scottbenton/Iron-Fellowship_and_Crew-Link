@@ -6,6 +6,7 @@ import {
   Grid,
   Input,
   InputAdornment,
+  Typography,
 } from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
@@ -24,6 +25,8 @@ export interface LocationsSectionProps {
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openLocationId?: string;
   setOpenLocationId: (locationId?: string) => void;
+  emphasizeButton?: boolean;
+  showHiddenTag?: boolean;
 }
 
 export function LocationsSection(props: LocationsSectionProps) {
@@ -35,6 +38,8 @@ export function LocationsSection(props: LocationsSectionProps) {
     locations,
     openLocationId,
     setOpenLocationId,
+    emphasizeButton,
+    showHiddenTag,
   } = props;
 
   const { createLocation, loading: createLocationLoading } =
@@ -59,8 +64,8 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   const sortedLocations = Object.keys(filteredLocations).sort(
     (l1, l2) =>
-      locations[l2].updatedDate.getUTCMilliseconds() -
-      locations[l1].updatedDate.getUTCMilliseconds()
+      filteredLocations[l2].updatedDate.getUTCMilliseconds() -
+      filteredLocations[l1].updatedDate.getUTCMilliseconds()
   );
   const openLocation = openLocationId && locations[openLocationId];
 
@@ -93,6 +98,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           borderBottomWidth: 1,
           borderColor: theme.palette.divider,
           borderStyle: "solid",
+          backgroundColor: theme.palette.background.paper,
         })}
       >
         <Input
@@ -115,6 +121,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           })}
         />
         <Button
+          variant={emphasizeButton ? "contained" : "text"}
           endIcon={<AddLocationIcon />}
           onClick={() =>
             createLocation(worldOwnerId, worldId)
@@ -145,7 +152,14 @@ export function LocationsSection(props: LocationsSectionProps) {
                 onClick={() => setOpenLocationId(locationId)}
                 sx={{ p: 2 }}
               >
-                {locations[locationId].name}
+                <Typography>{filteredLocations[locationId].name}</Typography>
+                {showHiddenTag && (
+                  <Typography variant={"caption"} color={"textSecondary"}>
+                    {filteredLocations[locationId].sharedWithPlayers
+                      ? "Visible"
+                      : "Hidden"}
+                  </Typography>
+                )}
               </CardActionArea>
             </Card>
           </Grid>

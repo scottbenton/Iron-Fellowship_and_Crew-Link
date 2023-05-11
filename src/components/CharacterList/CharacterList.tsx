@@ -8,11 +8,17 @@ export interface CharacterListProps {
   actions?: (characterId: string, index: number) => ReactNode;
   maxColumns?: number;
   usePlayerNameAsSecondaryText?: boolean;
+  raised?: boolean;
 }
 
 export function CharacterList(props: CharacterListProps) {
-  const { characters, actions, maxColumns, usePlayerNameAsSecondaryText } =
-    props;
+  const {
+    characters,
+    actions,
+    maxColumns,
+    usePlayerNameAsSecondaryText,
+    raised,
+  } = props;
 
   const minGridValue = maxColumns ? 12 / maxColumns : 4;
 
@@ -33,6 +39,7 @@ export function CharacterList(props: CharacterListProps) {
               actions ? (characterId) => actions(characterId, index) : undefined
             }
             usePlayerNameAsSecondaryText={usePlayerNameAsSecondaryText}
+            raised={raised}
           />
         </Grid>
       ))}

@@ -6,7 +6,7 @@ import { useAuth } from "../../providers/AuthProvider";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { useWorldsStore } from "stores/worlds.store";
 import { decodeWorld, getWorldCollection, getWorldDoc } from "./_getRef";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { string } from "yup";
 
 export function listenToWorld(
@@ -61,7 +61,7 @@ export function useListenToWorld(worldOwnerId?: string, worldId?: string) {
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [uid, worldOwnerId, worldId]);
+  }, [uid, worldOwnerId, worldId, worlds]);
 
   return { world };
 }
