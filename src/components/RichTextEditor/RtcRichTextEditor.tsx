@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { WebrtcProvider } from "y-webrtc";
-import { Buffer } from "buffer";
 import * as Y from "yjs";
 
 import { RtcEditorComponent } from "./RtcEditorComponent";
