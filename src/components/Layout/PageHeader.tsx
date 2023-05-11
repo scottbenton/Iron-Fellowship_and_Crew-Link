@@ -19,10 +19,6 @@ export function PageHeader(props: PageHeaderProps) {
         mb: -4,
         width: "100vw",
         backgroundColor: theme.palette.primary.main,
-        borderWidth: 0,
-        borderTopWidth: 1,
-        borderStyle: "solid",
-        borderColor: theme.palette.divider,
       })}
     >
       <Container
