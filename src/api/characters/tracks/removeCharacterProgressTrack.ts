@@ -1,6 +1,6 @@
 import { CharacterNotFoundException } from "api/error/CharacterNotFoundException";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { deleteField, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "providers/AuthProvider";

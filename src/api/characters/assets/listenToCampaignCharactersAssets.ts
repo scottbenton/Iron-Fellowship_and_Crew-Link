@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { getErrorMessage } from "../../../functions/getErrorMessage";
 import { useSnackbar } from "../../../hooks/useSnackbar";
 import { useCampaignStore } from "../../../stores/campaigns.store";
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 import { StoredAsset } from "types/Asset.type";
 import { listenToAssets } from "./listenToAssets";
 

@@ -1,17 +1,15 @@
-import { Box, Container, LinearProgress } from "@mui/material";
-import { PropsWithChildren, useEffect } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Box, LinearProgress } from "@mui/material";
+import { Outlet, useLocation } from "react-router-dom";
 import { AUTH_STATE, useAuth } from "../../providers/AuthProvider";
-import { useContinueUrl } from "../../hooks/useContinueUrl";
-import { paths, ROUTES } from "../../routes";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
+import { useEffect } from "react";
+import { useContinueUrl } from "hooks/useContinueUrl";
+import { BASE_ROUTES, basePaths } from "routes";
 
-export interface LayoutProps extends PropsWithChildren {}
+export interface LayoutProps {}
 
 export function Layout(props: LayoutProps) {
-  const { children } = props;
-
   const { pathname } = useLocation();
   const { state } = useAuth();
 
@@ -19,38 +17,26 @@ export function Layout(props: LayoutProps) {
 
   useEffect(() => {
     if (
-      pathname !== paths[ROUTES.LOGIN] &&
+      pathname !== basePaths[BASE_ROUTES.LOGIN] &&
       state === AUTH_STATE.UNAUTHENTICATED
     ) {
-      redirectWithContinueUrl(paths[ROUTES.LOGIN]);
+      redirectWithContinueUrl(basePaths[BASE_ROUTES.LOGIN]);
     } else if (
-      pathname === paths[ROUTES.LOGIN] &&
+      pathname === basePaths[BASE_ROUTES.LOGIN] &&
       state === AUTH_STATE.AUTHENTICATED
     ) {
-      navigateToContinueURL(paths[ROUTES.CHARACTER_SELECT]);
+      navigateToContinueURL(basePaths[BASE_ROUTES.CHARACTER]);
     }
   }, [pathname, state]);
 
   if (state === AUTH_STATE.LOADING) {
-    return <LinearProgress />;
+    return <LinearProgress color={"secondary"} />;
   }
 
   return (
     <Box minHeight={"100vh"} display={"flex"} flexDirection={"column"}>
       <Header />
-      <Container
-        maxWidth={"xl"}
-        sx={(theme) => ({
-          py: 3,
-          backgroundColor: theme.palette.background.paper,
-          flexGrow: 1,
-          [theme.breakpoints.down("sm")]: {
-            paddingBottom: 7,
-          },
-        })}
-      >
-        {children}
-      </Container>
+      <Outlet />
       <Footer />
     </Box>
   );

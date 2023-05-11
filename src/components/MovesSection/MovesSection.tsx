@@ -1,4 +1,4 @@
-import { Card, Input, InputAdornment } from "@mui/material";
+import { Box, Card, Input, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { MoveCategory } from "./MoveCategory";
 import { useFilterMoves } from "./useFilterMoves";
@@ -10,7 +10,7 @@ export function MovesSection() {
   const { openDialog } = useLinkedDialog();
 
   return (
-    <Card variant={"outlined"} sx={{ height: "100%", overflow: "auto" }}>
+    <Card variant={"outlined"} sx={{ height: "100%" }}>
       <Input
         fullWidth
         startAdornment={
@@ -30,15 +30,17 @@ export function MovesSection() {
         })}
       />
 
-      {filteredMoves.map((category, index) => (
-        <MoveCategory
-          key={index}
-          category={category}
-          openMove={(move) => {
-            openDialog(move.$id);
-          }}
-        />
-      ))}
+      <Box sx={{ overflow: "auto", height: "100%" }}>
+        {filteredMoves.map((category, index) => (
+          <MoveCategory
+            key={index}
+            category={category}
+            openMove={(move) => {
+              openDialog(move.$id);
+            }}
+          />
+        ))}
+      </Box>
     </Card>
   );
 }

@@ -40,7 +40,7 @@ export function HeaderMenu() {
         <MenuItem
           onClick={() => {
             setMenuOpen(false);
-            logout();
+            logout().then(() => window.location.reload());
           }}
         >
           Logout

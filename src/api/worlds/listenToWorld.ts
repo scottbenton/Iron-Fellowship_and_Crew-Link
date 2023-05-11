@@ -6,7 +6,8 @@ import { useAuth } from "../../providers/AuthProvider";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { useWorldsStore } from "stores/worlds.store";
 import { decodeWorld, getWorldCollection, getWorldDoc } from "./_getRef";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
+import { string } from "yup";
 
 export function listenToWorld(
   uid: string | undefined,
@@ -32,24 +33,35 @@ export function listenToWorld(
   );
 }
 
-export function useListenToWorld(uid: string, worldId: string) {
+export function useListenToWorld(worldOwnerId?: string, worldId?: string) {
   const [world, setWorld] = useState<World>();
+
+  const uid = useAuth().user?.uid;
+  const worlds = useWorldsStore((store) => store.worlds);
 
   const { error } = useSnackbar();
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
 
-    listenToWorld(uid, worldId, setWorld, (err) => {
-      console.error(err);
-      const errorMessage = getErrorMessage(error, "Failed to load worlds");
-      error(errorMessage);
-    });
+    setWorld(undefined);
+
+    if (worldOwnerId && worldId) {
+      if (worldOwnerId === uid) {
+        setWorld(worlds[worldId]);
+      } else {
+        listenToWorld(worldOwnerId, worldId, setWorld, (err) => {
+          console.error(err);
+          const errorMessage = getErrorMessage(error, "Failed to load worlds");
+          error(errorMessage);
+        });
+      }
+    }
 
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [uid, worldId]);
+  }, [uid, worldOwnerId, worldId, worlds]);
 
   return { world };
 }

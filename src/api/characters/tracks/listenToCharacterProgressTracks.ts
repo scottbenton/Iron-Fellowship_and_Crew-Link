@@ -8,7 +8,7 @@ import {
   convertTrackMapToArray,
   TrackWithId,
   useCharacterSheetStore,
-} from "features/character-sheet/characterSheet.store";
+} from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { TRACK_TYPES } from "types/Track.type";
 
 export function listenToCharacterProgressTracks(

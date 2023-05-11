@@ -3,7 +3,7 @@ import { useUpdateCharacterTrack } from "api/characters/updateCharacterTrack";
 import {
   TRACK_KEYS,
   useCharacterSheetStore,
-} from "features/character-sheet/characterSheet.store";
+} from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { useAuth } from "providers/AuthProvider";
 
 export function useUpdateCharacterSheetTrack() {

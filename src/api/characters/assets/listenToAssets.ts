@@ -5,7 +5,7 @@ import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "hooks/useSnackbar";
 import { getCharacterAssetDoc } from "./_getRef";
 import { StoredAsset } from "types/Asset.type";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 
 export function listenToAssets(
   uid: string,

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { truthMap } from "data/truths";
 import CheckIcon from "@mui/icons-material/Check";
-import { getCustomTruthId } from "features/world-create/worldCreate.store";
+import { getCustomTruthId } from "pages/World/WorldCreatePage/worldCreate.store";
 
 export interface TruthChooserProps {
   truthId: string;

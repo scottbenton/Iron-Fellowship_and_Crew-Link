@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { TrackWithId } from "../features/character-sheet/characterSheet.store";
+import { TrackWithId } from "../pages/Character/CharacterSheetPage/characterSheet.store";
 import { StoredTrack } from "../types/Track.type";
 import { AddTrackDialog } from "./AddTrackDialog/AddTrackDialog";
 import { ProgressTrack } from "./ProgressTrack/ProgressTrack";

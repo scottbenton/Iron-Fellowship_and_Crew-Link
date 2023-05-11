@@ -93,6 +93,7 @@ export function PortraitAvatar(props: PortraitAvatarProps) {
             sizes[size] / 2
           }px - 4px), calc(${marginTop}% + ${sizes[size] / 2}px - 4px))`,
         },
+        flexShrink: 0,
       })}
     >
       {portraitUrl ? (

@@ -1,4 +1,4 @@
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "providers/AuthProvider";

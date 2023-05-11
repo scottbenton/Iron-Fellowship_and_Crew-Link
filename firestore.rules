@@ -27,6 +27,22 @@ service cloud.firestore {
       match /settings/{document=**} {
       	allow read, write, delete: if userId == request.auth.uid;
       }
+      match /worlds/{worldId} {
+      	allow read: if true;
+        allow write: if userId == request.auth.uid;
+        match /locations/{locationId} {
+        	allow read, create, update: if true;
+          allow delete: if userId == request.auth.uid;
+          
+          match /private/{gmNotes} {
+          	allow read, write: if userId == request.auth.uid;
+          }
+          match /public/{notes} {
+          	allow read, create, update: if true;
+            allow delete: if userId == request.auth.uid;
+          }
+        }
+      }
     }
     match /{document=**} {
       allow read, write: if false;

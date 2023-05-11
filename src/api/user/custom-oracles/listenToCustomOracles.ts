@@ -1,6 +1,6 @@
 import { firebaseAuth } from "config/firebase.config";
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "providers/AuthProvider";

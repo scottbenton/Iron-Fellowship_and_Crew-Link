@@ -65,25 +65,27 @@ export function CustomOracleSection(props: CustomOracleSectionProps) {
       <SectionHeading label={"Custom Oracles"} />
       {Array.isArray(customOracles) && Array.isArray(hiddenOracleIds) ? (
         <Stack spacing={2} px={2} mt={1}>
-          <Card variant={"outlined"}>
-            <List disablePadding>
-              {customOracles.map((oracle) => (
-                <CustomOraclesListItem
-                  key={oracle.$id}
-                  oracle={oracle}
-                  isVisible={!hiddenOracleIds.includes(oracle.$id)}
-                  handleEdit={() => {
-                    setCurrentlyEditingOracle(oracle);
-                    setIsAddOracleDialogOpen(true);
-                  }}
-                  handleDelete={() => handleDelete(oracle.$id, oracle)}
-                  handleVisibilityToggle={(isVisible) =>
-                    showOrHideCustomOracle(oracle.$id, !isVisible)
-                  }
-                />
-              ))}
-            </List>
-          </Card>
+          {customOracles.length > 0 && (
+            <Card variant={"outlined"}>
+              <List disablePadding>
+                {customOracles.map((oracle) => (
+                  <CustomOraclesListItem
+                    key={oracle.$id}
+                    oracle={oracle}
+                    isVisible={!hiddenOracleIds.includes(oracle.$id)}
+                    handleEdit={() => {
+                      setCurrentlyEditingOracle(oracle);
+                      setIsAddOracleDialogOpen(true);
+                    }}
+                    handleDelete={() => handleDelete(oracle.$id, oracle)}
+                    handleVisibilityToggle={(isVisible) =>
+                      showOrHideCustomOracle(oracle.$id, !isVisible)
+                    }
+                  />
+                ))}
+              </List>
+            </Card>
+          )}
           <div>
             <Button
               variant={"outlined"}
