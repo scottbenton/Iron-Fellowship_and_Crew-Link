@@ -49,83 +49,83 @@ export function WorldSelectPage() {
 
   return (
     <>
-      {!worldIds || worldIds.length === 0 ? (
-        <EmptyState
-          imageSrc="/assets/nature.svg"
-          title={"No Worlds"}
-          message={"Create your first world to get started"}
-          callToAction={
+      <PageHeader
+        label={"Your Worlds"}
+        actions={
+          <Hidden smDown>
             <Button
               component={Link}
               to={constructWorldPath(WORLD_ROUTES.CREATE)}
               variant={"contained"}
+              color={"secondary"}
               endIcon={<AddWorldIcon />}
             >
               Create a World
             </Button>
-          }
-        />
-      ) : (
-        <>
-          <PageHeader
-            label={"Your Worlds"}
-            actions={
-              <Hidden smDown>
-                <Button
-                  component={Link}
-                  to={constructWorldPath(WORLD_ROUTES.CREATE)}
-                  variant={"contained"}
-                  color={"secondary"}
-                  endIcon={<AddWorldIcon />}
-                >
-                  Create a World
-                </Button>
-              </Hidden>
+          </Hidden>
+        }
+      />
+      <PageContent isPaper={!worldIds || worldIds.length === 0}>
+        {!worldIds || worldIds.length === 0 ? (
+          <EmptyState
+            imageSrc="/assets/nature.svg"
+            title={"Create your First World"}
+            message={
+              "Worlds allow you to share location notes and truths across multiple characters or campaigns."
             }
-          />
-          <PageContent>
-            <Grid container spacing={2}>
-              {worldIds.map((worldId, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card elevation={2}>
-                    <CardActionArea
-                      component={Link}
-                      to={constructWorldSheetPath(
-                        worlds[worldId].authorId,
-                        worldId
-                      )}
-                      sx={{ p: 2 }}
-                    >
-                      <Box display={"flex"} alignItems={"center"}>
-                        <Typography variant={"h6"}>
-                          {worlds[worldId].name}
-                        </Typography>
-                      </Box>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-            <Hidden smUp>
-              <Box height={80} />
-            </Hidden>
-            <Hidden smUp>
-              <Fab
+            callToAction={
+              <Button
                 component={Link}
                 to={constructWorldPath(WORLD_ROUTES.CREATE)}
-                color={"secondary"}
-                sx={(theme) => ({
-                  position: "fixed",
-                  bottom: theme.spacing(9),
-                  right: theme.spacing(2),
-                })}
+                variant={"contained"}
+                endIcon={<AddWorldIcon />}
               >
-                <AddWorldIcon />
-              </Fab>
-            </Hidden>
-          </PageContent>
-        </>
-      )}
+                Create a World
+              </Button>
+            }
+          />
+        ) : (
+          <Grid container spacing={2}>
+            {worldIds.map((worldId, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card elevation={2}>
+                  <CardActionArea
+                    component={Link}
+                    to={constructWorldSheetPath(
+                      worlds[worldId].authorId,
+                      worldId
+                    )}
+                    sx={{ p: 2 }}
+                  >
+                    <Box display={"flex"} alignItems={"center"}>
+                      <Typography variant={"h6"}>
+                        {worlds[worldId].name}
+                      </Typography>
+                    </Box>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+        <Hidden smUp>
+          <Box height={80} />
+        </Hidden>
+        <Hidden smUp>
+          <Fab
+            component={Link}
+            to={constructWorldPath(WORLD_ROUTES.CREATE)}
+            color={"secondary"}
+            sx={(theme) => ({
+              position: "fixed",
+              bottom: theme.spacing(9),
+              right: theme.spacing(2),
+            })}
+          >
+            <AddWorldIcon />
+          </Fab>
+        </Hidden>
+      </PageContent>
     </>
   );
 }

@@ -48,7 +48,10 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
                   asset.trackValue !== null && asset.trackValue !== undefined
               )
               .map((asset) => ({
-                companionName: assetMap[asset.id].Title.Short,
+                companionName:
+                  asset.customAsset?.Title.Short ??
+                  assetMap[asset.id]?.Title.Short ??
+                  "Unknown",
                 health: asset.trackValue ?? 0,
               })) ?? [],
         }

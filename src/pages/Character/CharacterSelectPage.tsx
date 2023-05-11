@@ -84,12 +84,16 @@ export function CharacterSelectPage() {
           </Hidden>
         }
       />
-      <PageContent>
+      <PageContent
+        isPaper={!characters || Object.keys(characters).length === 0}
+      >
         {!characters || Object.keys(characters).length === 0 ? (
           <EmptyState
             imageSrc="/assets/nature.svg"
-            title={"No Characters"}
-            message={"Create your first character to get started"}
+            title={"Create your First Character"}
+            message={
+              "Get started on your journey with our digital character sheet"
+            }
             callToAction={
               <Button
                 component={Link}

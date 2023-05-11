@@ -53,64 +53,64 @@ export function CampaignSelectPage() {
 
   return (
     <>
-      {campaigns.length === 0 ? (
-        <EmptyState
-          imageSrc="/assets/nature.svg"
-          title={"No Campaigns"}
-          message={"Create your first campaign to get started"}
-          callToAction={
+      <PageHeader
+        label={"Your Campaigns"}
+        actions={
+          <Hidden smDown>
             <Button
               onClick={() => setCreateCampaignDialogOpen(true)}
+              color={"secondary"}
               variant={"contained"}
               endIcon={<CreateCampaignIcon />}
             >
               Create a Campaign
             </Button>
-          }
-        />
-      ) : (
-        <>
-          <PageHeader
-            label={"Your Campaigns"}
-            actions={
-              <Hidden smDown>
-                <Button
-                  onClick={() => setCreateCampaignDialogOpen(true)}
-                  color={"secondary"}
-                  variant={"contained"}
-                  endIcon={<CreateCampaignIcon />}
-                >
-                  Create a Campaign
-                </Button>
-              </Hidden>
+          </Hidden>
+        }
+      />
+      <PageContent isPaper={campaigns.length === 0}>
+        {campaigns.length === 0 ? (
+          <EmptyState
+            imageSrc="/assets/nature.svg"
+            title={"Create your First Campaign"}
+            message={
+              "Campaigns allow you to share tracks, worlds, and more between GMs and players"
+            }
+            callToAction={
+              <Button
+                onClick={() => setCreateCampaignDialogOpen(true)}
+                variant={"contained"}
+                endIcon={<CreateCampaignIcon />}
+              >
+                Create a Campaign
+              </Button>
             }
           />
-          <PageContent>
-            <Grid container spacing={2}>
-              {campaigns.map((campaignId, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card elevation={2}>
-                    <CardActionArea
-                      component={Link}
-                      to={constructCampaignSheetPath(
-                        campaignId,
-                        CAMPAIGN_ROUTES.SHEET
-                      )}
-                      sx={{ p: 2 }}
-                    >
-                      <Box display={"flex"} alignItems={"center"}>
-                        <Typography variant={"h6"}>
-                          {campaignMap[campaignId].name}
-                        </Typography>
-                      </Box>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </PageContent>
-        </>
-      )}
+        ) : (
+          <Grid container spacing={2}>
+            {campaigns.map((campaignId, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card elevation={2}>
+                  <CardActionArea
+                    component={Link}
+                    to={constructCampaignSheetPath(
+                      campaignId,
+                      CAMPAIGN_ROUTES.SHEET
+                    )}
+                    sx={{ p: 2 }}
+                  >
+                    <Box display={"flex"} alignItems={"center"}>
+                      <Typography variant={"h6"}>
+                        {campaignMap[campaignId].name}
+                      </Typography>
+                    </Box>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </PageContent>
 
       <Hidden smUp>
         <Box height={80} />

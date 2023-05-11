@@ -109,7 +109,9 @@ export function TabsSection(props: TabsSectionProps) {
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.LOCATIONS}
-        greyBackground={!openLocationId}
+        greyBackground={
+          !openLocationId && worldOwnerId && worldId ? true : false
+        }
       >
         <LocationsSection
           worldOwnerId={worldOwnerId}

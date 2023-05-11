@@ -112,7 +112,7 @@ export function WorldSection() {
           ) : (
             <EmptyState
               imageSrc={"/assets/nature.svg"}
-              title={"No Worlds Found"}
+              title={"Create your World"}
               message={
                 "Worlds allow you to view locations, NPCs, and world truths in your character sheet."
               }
