@@ -1,9 +1,15 @@
 import produce from "immer";
 import { GMLocationDocument, LocationDocument } from "types/Locations.type";
+import { GMNPCDocument, NPCDocument } from "types/NPCs.type";
 import { StoreApi } from "zustand";
 
 export type LocationDocumentWithGMProperties = LocationDocument & {
   gmProperties?: GMLocationDocument;
+  notes?: Uint8Array | null;
+};
+
+export type NPC = NPCDocument & {
+  gmProperties?: GMNPCDocument;
   notes?: Uint8Array | null;
 };
 
@@ -21,11 +27,28 @@ export interface LocationStoreProperties {
   clearLocations: () => void;
   openLocationId?: string;
   setOpenLocationId: (locationId?: string) => void;
+
+  npcs: {
+    [key: string]: NPC;
+  };
+  updateNPC: (npcId: string, npc: NPCDocument) => void;
+  updateNPCGMProperties: (
+    npcId: string,
+    npcGMProperties: GMNPCDocument
+  ) => void;
+  updateNPCNotes: (npcId: string, notes: Uint8Array | null) => void;
+  removeNPC: (npcId: string) => void;
+  clearNPCs: () => void;
+  openNPCId?: string;
+  setOpenNPCId: (npcId?: string) => void;
 }
 
 export const initialLocationState = {
   locations: {},
   openLocationId: undefined,
+
+  npcs: {},
+  openNPCId: undefined,
 };
 
 export const locationStore = (
@@ -79,6 +102,55 @@ export const locationStore = (
     set(
       produce((state: LocationStoreProperties) => {
         state.openLocationId = locationId;
+      })
+    );
+  },
+
+  updateNPC: (npcId: string, npc: NPCDocument) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        const { gmProperties, notes } = state.npcs[npcId] ?? {};
+        state.npcs[npcId] = { gmProperties, notes, ...npc };
+      })
+    );
+  },
+
+  updateNPCGMProperties: (npcId: string, npcGMProperties: GMNPCDocument) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.npcs[npcId].gmProperties = npcGMProperties;
+      })
+    );
+  },
+
+  updateNPCNotes: (npcId: string, notes: Uint8Array | null) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.npcs[npcId].notes = notes;
+      })
+    );
+  },
+
+  removeNPC: (npcId: string) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        delete state.npcs[npcId];
+      })
+    );
+  },
+
+  clearNPCs: () => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.npcs = {};
+      })
+    );
+  },
+
+  setOpenNPCId: (npcId?: string) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.openNPCId = npcId;
       })
     );
   },

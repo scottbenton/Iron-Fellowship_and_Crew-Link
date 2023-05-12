@@ -30,6 +30,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 export enum TABS {
   DETAILS = "details",
   LOCATIONS = "locations",
+  NPCS = "npcs",
 }
 
 export function WorldSheetPage() {
@@ -137,6 +138,7 @@ export function WorldSheetPage() {
           >
             <StyledTab value={TABS.DETAILS} label={"World Details"} />
             <StyledTab value={TABS.LOCATIONS} label={"Locations"} />
+            <StyledTab value={TABS.NPCS} label={"NPCs"} />
           </StyledTabs>
         </BreakContainer>
         {selectedTab === TABS.DETAILS && (
@@ -155,6 +157,7 @@ export function WorldSheetPage() {
             />
           </BreakContainer>
         )}
+        {selectedTab === TABS.NPCS && <>NPCS</>}
       </PageContent>
     </>
   );

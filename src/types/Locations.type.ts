@@ -2,7 +2,7 @@ import { Bytes, Timestamp } from "firebase/firestore";
 
 export interface StoredLocation {
   name: string;
-  hiddenFromPlayers?: boolean;
+  sharedWithPlayers?: boolean;
   updatedTimestamp: Timestamp;
 }
 
