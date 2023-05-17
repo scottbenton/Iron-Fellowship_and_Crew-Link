@@ -26,6 +26,8 @@ import { WORLD_ROUTES, constructWorldPath } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { StyledTab, StyledTabs } from "components/StyledTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { NPCSection } from "components/NPCSection";
+import { useListenToNPCs } from "api/worlds/npcs/listenToNPCs";
 
 export enum TABS {
   DETAILS = "details",
@@ -60,11 +62,14 @@ export function WorldSheetPage() {
   const { locations } = useListenToLocations(worldOwnerId, worldId);
   const [openLocationId, setOpenLocationId] = useState<string>();
 
+  const { npcs } = useListenToNPCs(worldOwnerId, worldId);
+  const [openNPCId, setOpenNPCId] = useState<string>();
+
   if (isLoading) {
     return <LinearProgress />;
   }
 
-  if (!world || !worldId) {
+  if (!world || !worldId || !worldOwnerId) {
     return null;
   }
 
@@ -157,7 +162,18 @@ export function WorldSheetPage() {
             />
           </BreakContainer>
         )}
-        {selectedTab === TABS.NPCS && <>NPCS</>}
+        {selectedTab === TABS.NPCS && (
+          <BreakContainer>
+            <NPCSection
+              worldOwnerId={worldOwnerId}
+              worldId={worldId}
+              locations={locations}
+              npcs={npcs}
+              openNPCId={openNPCId}
+              setOpenNPCId={setOpenNPCId}
+            />
+          </BreakContainer>
+        )}
       </PageContent>
     </>
   );

@@ -42,19 +42,19 @@ export function CharacterListItem(props: CharacterListItemProps) {
         justifyContent: "space-between",
         overflow: "hidden",
       }}
-      elevation={raised ? 2 : undefined}
+      elevation={3}
     >
-      <Box>
+      <Box display={"flex"}>
         <Box display={"flex"} alignItems={"flex-start"} p={2}>
           <PortraitAvatar
             uid={uid}
             characterId={characterId}
             name={name}
             portraitSettings={profileImage}
-            size={"small"}
+            size={"medium"}
             colorful
           />
-          <Box display={"flex"} flexDirection={"column"} ml={2}>
+          <Box display={"flex"} flexDirection={"column"} ml={2} pt={1}>
             <Typography variant={"h6"} lineHeight={1.25}>
               {name}
             </Typography>

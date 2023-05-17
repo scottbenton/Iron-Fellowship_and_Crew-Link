@@ -13,67 +13,50 @@ import {
   NPCNotesDocument,
 } from "types/NPCs.type";
 
-export function constructNPCCollectionPath(uid: string, worldId: string) {
-  return `/users/${uid}/worlds/${worldId}/npcs`;
+export function constructNPCCollectionPath(worldId: string) {
+  return `/worlds/${worldId}/npcs`;
 }
 
-export function constructNPCDocPath(
-  uid: string,
-  worldId: string,
-  npcId: string
-) {
-  return `/users/${uid}/worlds/${worldId}/npcs/${npcId}`;
+export function constructNPCDocPath(worldId: string, npcId: string) {
+  return `/worlds/${worldId}/npcs/${npcId}`;
 }
 
 export function constructPrivateDetailsNPCDocPath(
-  uid: string,
   worldId: string,
   npcId: string
 ) {
-  return constructNPCDocPath(uid, worldId, npcId) + `/private/details`;
+  return constructNPCDocPath(worldId, npcId) + `/private/details`;
 }
 
-export function constructPublicNotesNPCDocPath(
-  uid: string,
-  worldId: string,
-  npcId: string
-) {
-  return constructNPCDocPath(uid, worldId, npcId) + `/public/notes`;
+export function constructPublicNotesNPCDocPath(worldId: string, npcId: string) {
+  return constructNPCDocPath(worldId, npcId) + `/public/notes`;
 }
 
-export function getNPCCollection(uid: string, worldId: string) {
+export function getNPCCollection(worldId: string) {
   return collection(
     firestore,
-    constructNPCCollectionPath(uid, worldId)
+    constructNPCCollectionPath(worldId)
   ) as CollectionReference<NPCDocumentFirestore>;
 }
 
-export function getNPCDoc(uid: string, worldId: string, npcId: string) {
+export function getNPCDoc(worldId: string, npcId: string) {
   return doc(
     firestore,
-    constructNPCDocPath(uid, worldId, npcId)
+    constructNPCDocPath(worldId, npcId)
   ) as DocumentReference<NPCDocumentFirestore>;
 }
 
-export function getPrivateDetailsNPCDoc(
-  uid: string,
-  worldId: string,
-  npcId: string
-) {
+export function getPrivateDetailsNPCDoc(worldId: string, npcId: string) {
   return doc(
     firestore,
-    constructPrivateDetailsNPCDocPath(uid, worldId, npcId)
+    constructPrivateDetailsNPCDocPath(worldId, npcId)
   ) as DocumentReference<GMNPCDocument>;
 }
 
-export function getPublicNotesNPCDoc(
-  uid: string,
-  worldId: string,
-  npcId: string
-) {
+export function getPublicNotesNPCDoc(worldId: string, npcId: string) {
   return doc(
     firestore,
-    constructPublicNotesNPCDocPath(uid, worldId, npcId)
+    constructPublicNotesNPCDocPath(worldId, npcId)
   ) as DocumentReference<NPCNotesDocument>;
 }
 

@@ -15,14 +15,13 @@ interface Params {
 }
 
 export const updateNPCGMNotes: ApiFunction<Params, boolean> = (params) => {
-  const { worldOwnerId, worldId, npcId, notes, isBeacon } = params;
+  const { worldId, npcId, notes, isBeacon } = params;
 
   return new Promise((resolve, reject) => {
     if (isBeacon) {
       const contentPath = `projects/${
         import.meta.env.VITE_FIREBASE_PROJECTID
       }/databases/(default)/documents${constructPrivateDetailsNPCDocPath(
-        worldOwnerId,
         worldId,
         npcId
       )}`;
@@ -54,7 +53,7 @@ export const updateNPCGMNotes: ApiFunction<Params, boolean> = (params) => {
       resolve(true);
     } else {
       setDoc(
-        getPrivateDetailsNPCDoc(worldOwnerId, worldId, npcId),
+        getPrivateDetailsNPCDoc(worldId, npcId),
         { notes: notes },
         { merge: true }
       )

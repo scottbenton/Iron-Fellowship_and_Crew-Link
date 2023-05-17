@@ -1,9 +1,8 @@
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { addDoc } from "firebase/firestore";
-import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "providers/AuthProvider";
-import { EncodedWorld, Truth, TRUTH_IDS, World } from "types/World.type";
+import { World } from "types/World.type";
 import { encodeWorld, getWorldCollection } from "./_getRef";
 
 export const createWorld: ApiFunction<
@@ -16,7 +15,7 @@ export const createWorld: ApiFunction<
       return;
     }
 
-    addDoc(getWorldCollection(uid), encodeWorld(world))
+    addDoc(getWorldCollection(), encodeWorld(world))
       .then((doc) => {
         resolve(doc.id);
       })

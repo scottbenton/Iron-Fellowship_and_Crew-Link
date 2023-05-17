@@ -2,20 +2,13 @@ import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { addDoc, Timestamp } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getNPCCollection } from "./_getRef";
+import { NPC_SPECIES } from "types/NPCs.type";
 
-export const createNPC: ApiFunction<
-  { uid?: string; worldId: string },
-  string
-> = (params) => {
-  const { uid, worldId } = params;
+export const createNPC: ApiFunction<string, string> = (worldId) => {
   return new Promise((resolve, reject) => {
-    if (!uid) {
-      reject(new UserNotLoggedInException());
-      return;
-    }
-
-    addDoc(getNPCCollection(uid, worldId), {
+    addDoc(getNPCCollection(worldId), {
       name: "New NPC",
+      species: NPC_SPECIES.IRONLANDER,
       updatedTimestamp: Timestamp.now(),
     })
       .then((doc) => {
@@ -32,7 +25,7 @@ export function useCreateNPC() {
   const { call, ...rest } = useApiState(createNPC);
 
   return {
-    createNPC: (uid: string, worldId: string) => call({ uid, worldId }),
+    createNPC: (worldId: string) => call(worldId),
     ...rest,
   };
 }

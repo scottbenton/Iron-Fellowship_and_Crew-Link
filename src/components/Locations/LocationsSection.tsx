@@ -64,8 +64,8 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   const sortedLocations = Object.keys(filteredLocations).sort(
     (l1, l2) =>
-      filteredLocations[l2].updatedDate.getUTCMilliseconds() -
-      filteredLocations[l1].updatedDate.getUTCMilliseconds()
+      filteredLocations[l2].updatedDate.getTime() -
+      filteredLocations[l1].updatedDate.getTime()
   );
   const openLocation = openLocationId && locations[openLocationId];
 
@@ -90,9 +90,6 @@ export function LocationsSection(props: LocationsSectionProps) {
           alignItems: "center",
           justifyContent: "space-between",
           px: 2,
-          [theme.breakpoints.up("md")]: {
-            px: 3,
-          },
           py: 0.5,
           borderWidth: 0,
           borderBottomWidth: 1,
@@ -124,7 +121,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           variant={emphasizeButton ? "contained" : "text"}
           endIcon={<AddLocationIcon />}
           onClick={() =>
-            createLocation(worldOwnerId, worldId)
+            createLocation(worldId)
               .catch(() => {})
               .then((locationId) => {
                 if (locationId) {

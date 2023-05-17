@@ -4,7 +4,6 @@ import { GMLocationDocument } from "types/Locations.type";
 import { getPrivateDetailsLocationDoc } from "./_getRef";
 
 interface Params {
-  worldOwnerId: string;
   worldId: string;
   locationId: string;
   locationGMProperties: Partial<GMLocationDocument>;
@@ -13,11 +12,11 @@ interface Params {
 export const updateLocationGMProperties: ApiFunction<Params, boolean> = (
   params
 ) => {
-  const { worldOwnerId, worldId, locationId, locationGMProperties } = params;
+  const { worldId, locationId, locationGMProperties } = params;
 
   return new Promise((resolve, reject) => {
     setDoc(
-      getPrivateDetailsLocationDoc(worldOwnerId, worldId, locationId),
+      getPrivateDetailsLocationDoc(worldId, locationId),
       locationGMProperties,
       { merge: true }
     )

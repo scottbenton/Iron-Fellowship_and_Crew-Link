@@ -1,4 +1,4 @@
-import { colors, createTheme } from "@mui/material";
+import { TypeBackground, colors, createTheme } from "@mui/material";
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -7,6 +7,10 @@ declare module "@mui/material/styles" {
   // allow configuration using `createTheme`
   interface ThemeOptions {
     fontFamilyTitle: string;
+  }
+
+  interface TypeBackground {
+    background: TypeBackground["default"];
   }
 }
 
@@ -33,6 +37,7 @@ export const lightTheme = createTheme({
     background: {
       paper: "#fff",
       default: "#f4f4f5",
+      background: "#e4e4e7",
     },
     grey: {
       [50]: "#fafafa",

@@ -20,6 +20,7 @@ import {
   constructWorldSheetPath,
 } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
+import { WorldCard } from "./components/WorldCard";
 
 export function WorldSelectPage() {
   const worlds = useWorldsStore((store) => store.worlds);
@@ -88,22 +89,7 @@ export function WorldSelectPage() {
           <Grid container spacing={2}>
             {worldIds.map((worldId, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card elevation={2}>
-                  <CardActionArea
-                    component={Link}
-                    to={constructWorldSheetPath(
-                      worlds[worldId].authorId,
-                      worldId
-                    )}
-                    sx={{ p: 2 }}
-                  >
-                    <Box display={"flex"} alignItems={"center"}>
-                      <Typography variant={"h6"}>
-                        {worlds[worldId].name}
-                      </Typography>
-                    </Box>
-                  </CardActionArea>
-                </Card>
+                <WorldCard worldId={worldId} world={worlds[worldId]} />
               </Grid>
             ))}
           </Grid>

@@ -13,6 +13,40 @@ service cloud.firestore {
     match /campaigns/{document=**} {
     	allow read, write, delete: if true;
     }
+    match /worlds/{worldId} {
+    	allow read: if true;
+      allow write: if request.auth.uid == resource.data.ownerId;
+      
+      function checkIsOwner() {
+      	let world = get(/databases/$(database)/documents/worlds/$(worldId)).data;
+        return world.ownerId == request.auth.uid;
+      }
+      
+      match /locations/{locationId} {
+     		allow read, create, update: if true;
+        allow delete: if checkIsOwner();
+          
+        match /private/{gmNotes} {
+        	allow read, write: if checkIsOwner();
+        }
+        match /public/{notes} {
+        	allow read, create, update: if true;
+          allow delete: if checkIsOwner();
+        }
+      }
+      match /npcs/{locationId} {
+        allow read, create, update: if true;
+        allow delete: if checkIsOwner();
+          
+        match /private/{gmNotes} {
+        	allow read, write: if checkIsOwner();
+        }
+        match /public/{notes} {
+        	allow read, create, update: if true;
+          allow delete: if checkIsOwner();
+        }
+      }
+    }
     match /users/{userId} {
     	allow read: if true;
     	allow write: if userId == request.auth.uid && !request.resource.data.diff(resource.data).affectedKeys().hasAny(["isPremium"]);
@@ -27,22 +61,6 @@ service cloud.firestore {
       }
       match /settings/{document=**} {
       	allow read, write, delete: if userId == request.auth.uid;
-      }
-      match /worlds/{worldId} {
-      	allow read: if true;
-        allow write: if userId == request.auth.uid;
-        match /locations/{locationId} {
-        	allow read, create, update: if true;
-          allow delete: if userId == request.auth.uid;
-          
-          match /private/{gmNotes} {
-          	allow read, write: if userId == request.auth.uid;
-          }
-          match /public/{notes} {
-          	allow read, create, update: if true;
-            allow delete: if userId == request.auth.uid;
-          }
-        }
       }
     }
     match /{document=**} {

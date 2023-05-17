@@ -7,23 +7,18 @@ import {
 } from "./_getRef";
 
 interface Params {
-  worldOwnerId: string;
   worldId: string;
   locationId: string;
 }
 
 export const deleteLocation: ApiFunction<Params, boolean> = (params) => {
-  const { worldOwnerId, worldId, locationId } = params;
+  const { worldId, locationId } = params;
 
   return new Promise((resolve, reject) => {
     let promises: Promise<any>[] = [];
-    promises.push(deleteDoc(getLocationDoc(worldOwnerId, worldId, locationId)));
-    promises.push(
-      deleteDoc(getPrivateDetailsLocationDoc(worldOwnerId, worldId, locationId))
-    );
-    promises.push(
-      deleteDoc(getPublicNotesLocationDoc(worldOwnerId, worldId, locationId))
-    );
+    promises.push(deleteDoc(getLocationDoc(worldId, locationId)));
+    promises.push(deleteDoc(getPrivateDetailsLocationDoc(worldId, locationId)));
+    promises.push(deleteDoc(getPublicNotesLocationDoc(worldId, locationId)));
 
     Promise.all(promises)
       .then(() => resolve(true))

@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { truthMap } from "data/truths";
-import CheckIcon from "@mui/icons-material/Check";
+import CheckIcon from "@mui/icons-material/CheckCircle";
 import { getCustomTruthId } from "pages/World/WorldCreatePage/worldCreate.store";
 
 export interface TruthChooserProps {

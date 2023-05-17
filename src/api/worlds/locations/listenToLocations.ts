@@ -30,7 +30,7 @@ export function listenToLocations(
 ): Unsubscribe[] {
   const unsubscribes: Unsubscribe[] = [];
 
-  const locationCollectionRef = getLocationCollection(worldOwnerId, worldId);
+  const locationCollectionRef = getLocationCollection(worldId);
   const isWorldOwner = uid === worldOwnerId;
   unsubscribes.push(
     onSnapshot(
@@ -46,11 +46,7 @@ export function listenToLocations(
               if (isWorldOwner) {
                 unsubscribes.push(
                   onSnapshot(
-                    getPrivateDetailsLocationDoc(
-                      worldOwnerId,
-                      worldId,
-                      change.doc.id
-                    ),
+                    getPrivateDetailsLocationDoc(worldId, change.doc.id),
                     (doc) => {
                       const privateLocationDetails = doc.data();
                       if (privateLocationDetails) {
@@ -69,11 +65,7 @@ export function listenToLocations(
               }
               unsubscribes.push(
                 onSnapshot(
-                  getPublicNotesLocationDoc(
-                    worldOwnerId,
-                    worldId,
-                    change.doc.id
-                  ),
+                  getPublicNotesLocationDoc(worldId, change.doc.id),
                   (doc) => {
                     const noteDoc = doc.data();
 

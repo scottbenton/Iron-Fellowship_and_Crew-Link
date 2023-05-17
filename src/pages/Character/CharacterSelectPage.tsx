@@ -91,9 +91,7 @@ export function CharacterSelectPage() {
           <EmptyState
             imageSrc="/assets/nature.svg"
             title={"Create your First Character"}
-            message={
-              "Get started on your journey with our digital character sheet"
-            }
+            message={"Get started on your journey by creating a new character."}
             callToAction={
               <Button
                 component={Link}

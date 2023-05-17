@@ -7,7 +7,6 @@ import {
 import { firebaseAuth } from "config/firebase.config";
 
 interface Params {
-  worldOwnerId: string;
   worldId: string;
   locationId: string;
   notes: string;
@@ -15,14 +14,13 @@ interface Params {
 }
 
 export const updateLocationGMNotes: ApiFunction<Params, boolean> = (params) => {
-  const { worldOwnerId, worldId, locationId, notes, isBeacon } = params;
+  const { worldId, locationId, notes, isBeacon } = params;
 
   return new Promise((resolve, reject) => {
     if (isBeacon) {
       const contentPath = `projects/${
         import.meta.env.VITE_FIREBASE_PROJECTID
       }/databases/(default)/documents${constructPrivateDetailsLocationDocPath(
-        worldOwnerId,
         worldId,
         locationId
       )}`;
@@ -54,7 +52,7 @@ export const updateLocationGMNotes: ApiFunction<Params, boolean> = (params) => {
       resolve(true);
     } else {
       setDoc(
-        getPrivateDetailsLocationDoc(worldOwnerId, worldId, locationId),
+        getPrivateDetailsLocationDoc(worldId, locationId),
         { notes: notes },
         { merge: true }
       )

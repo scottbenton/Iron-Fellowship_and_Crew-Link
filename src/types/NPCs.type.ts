@@ -1,18 +1,20 @@
 import { Bytes, Timestamp } from "firebase/firestore";
 
 export enum NPC_SPECIES {
-  IRONLANDER,
-  ELF,
-  GIANT,
-  VAROU,
-  TROLL,
+  IRONLANDER = "ironlander",
+  ELF = "elf",
+  GIANT = "giant",
+  VAROU = "varou",
+  TROLL = "troll",
+  OTHER = "other",
 }
 
 export interface NPCDocument {
-  species?: NPC_SPECIES;
   name: string;
+  species: NPC_SPECIES;
   lastLocationId?: string;
   imageFilename?: string;
+  sharedWithPlayers?: boolean;
   updatedDate: Date;
 }
 

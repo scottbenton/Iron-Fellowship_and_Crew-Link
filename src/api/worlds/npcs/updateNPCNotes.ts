@@ -4,7 +4,6 @@ import { constructNPCDocPath, getPublicNotesNPCDoc } from "./_getRef";
 import { firebaseAuth } from "config/firebase.config";
 
 interface Params {
-  worldOwnerId: string;
   worldId: string;
   npcId: string;
   notes: Uint8Array;
@@ -12,17 +11,13 @@ interface Params {
 }
 
 export const updateNPCNotes: ApiFunction<Params, boolean> = (params) => {
-  const { worldOwnerId, worldId, npcId, notes, isBeacon } = params;
+  const { worldId, npcId, notes, isBeacon } = params;
 
   return new Promise((resolve, reject) => {
     if (isBeacon) {
       const contentPath = `projects/${
         import.meta.env.VITE_FIREBASE_PROJECTID
-      }/databases/(default)/documents${constructNPCDocPath(
-        worldOwnerId,
-        worldId,
-        npcId
-      )}`;
+      }/databases/(default)/documents${constructNPCDocPath(worldId, npcId)}`;
 
       const token = (firebaseAuth.currentUser?.toJSON() as any).stsTokenManager
         .accessToken;
@@ -51,7 +46,7 @@ export const updateNPCNotes: ApiFunction<Params, boolean> = (params) => {
       resolve(true);
     } else {
       setDoc(
-        getPublicNotesNPCDoc(worldOwnerId, worldId, npcId),
+        getPublicNotesNPCDoc(worldId, npcId),
         { notes: Bytes.fromUint8Array(notes) },
         { merge: true }
       )

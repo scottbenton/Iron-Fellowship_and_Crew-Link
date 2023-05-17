@@ -7,23 +7,18 @@ import {
 } from "./_getRef";
 
 interface Params {
-  worldOwnerId: string;
   worldId: string;
   npcId: string;
 }
 
 export const deleteNPC: ApiFunction<Params, boolean> = (params) => {
-  const { worldOwnerId, worldId, npcId } = params;
+  const { worldId, npcId } = params;
 
   return new Promise((resolve, reject) => {
     let promises: Promise<any>[] = [];
-    promises.push(deleteDoc(getNPCDoc(worldOwnerId, worldId, npcId)));
-    promises.push(
-      deleteDoc(getPrivateDetailsNPCDoc(worldOwnerId, worldId, npcId))
-    );
-    promises.push(
-      deleteDoc(getPublicNotesNPCDoc(worldOwnerId, worldId, npcId))
-    );
+    promises.push(deleteDoc(getNPCDoc(worldId, npcId)));
+    promises.push(deleteDoc(getPrivateDetailsNPCDoc(worldId, npcId)));
+    promises.push(deleteDoc(getPublicNotesNPCDoc(worldId, npcId)));
 
     Promise.all(promises)
       .then(() => resolve(true))

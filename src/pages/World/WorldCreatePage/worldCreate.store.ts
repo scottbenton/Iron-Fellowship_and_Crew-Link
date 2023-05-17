@@ -202,7 +202,7 @@ export const useWorldCreateStore = create<WorldCreateStore>()(
               const world: World = {
                 name: state.name,
                 truths: truths,
-                authorId: firebaseAuth.currentUser?.uid ?? "",
+                ownerId: firebaseAuth.currentUser?.uid ?? "",
               };
               resolve(world);
             }

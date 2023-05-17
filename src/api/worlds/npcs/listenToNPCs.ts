@@ -27,7 +27,7 @@ export function listenToNPCs(
 ): Unsubscribe[] {
   const unsubscribes: Unsubscribe[] = [];
 
-  const npcCollectionRef = getNPCCollection(worldOwnerId, worldId);
+  const npcCollectionRef = getNPCCollection(worldId);
   const isWorldOwner = uid === worldOwnerId;
   unsubscribes.push(
     onSnapshot(
@@ -43,11 +43,7 @@ export function listenToNPCs(
               if (isWorldOwner) {
                 unsubscribes.push(
                   onSnapshot(
-                    getPrivateDetailsNPCDoc(
-                      worldOwnerId,
-                      worldId,
-                      change.doc.id
-                    ),
+                    getPrivateDetailsNPCDoc(worldId, change.doc.id),
                     (doc) => {
                       const privateNPCDetails = doc.data();
                       if (privateNPCDetails) {
@@ -63,7 +59,7 @@ export function listenToNPCs(
               }
               unsubscribes.push(
                 onSnapshot(
-                  getPublicNotesNPCDoc(worldOwnerId, worldId, change.doc.id),
+                  getPublicNotesNPCDoc(worldId, change.doc.id),
                   (doc) => {
                     const noteDoc = doc.data();
 
