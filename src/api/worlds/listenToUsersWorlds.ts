@@ -86,8 +86,8 @@ export function useListenToUsersWorlds() {
       }
     );
 
-    campaignWorlds.map((worldId) => {
-      listenToWorld(
+    unsubscribes = campaignWorlds.map((worldId) => {
+      return listenToWorld(
         worldId,
         (world) => (world ? setWorld(worldId, world) : removeWorld(worldId)),
         (err) => {
@@ -100,6 +100,7 @@ export function useListenToUsersWorlds() {
 
     return () => {
       unsubscribe && unsubscribe();
+      unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
   }, [uid, campaignWorlds]);
 }

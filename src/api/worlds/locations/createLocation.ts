@@ -3,13 +3,15 @@ import { addDoc, serverTimestamp, Timestamp } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getLocationCollection } from "./_getRef";
 
-export const createLocation: ApiFunction<{ worldId: string }, string> = (
-  params
-) => {
+export const createLocation: ApiFunction<
+  { worldId: string; shared?: boolean },
+  string
+> = (params) => {
   const { worldId } = params;
   return new Promise((resolve, reject) => {
     addDoc(getLocationCollection(worldId), {
       name: "New Location",
+      sharedWithPlayers: true,
       updatedTimestamp: Timestamp.now(),
     })
       .then((doc) => {

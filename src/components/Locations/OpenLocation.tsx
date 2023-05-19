@@ -45,16 +45,6 @@ export function OpenLocation(props: OpenLocationProps) {
     isSinglePlayer,
   } = props;
 
-  const [isConstrained, setIsConstrained] = useState<boolean>(true);
-  const [hasMaxHeight, setHasMaxHeight] = useState<boolean>(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsConstrained((prev) => !prev);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
   const confirm = useConfirm();
   const { rollOracleTable } = useRoller();
 
@@ -106,15 +96,15 @@ export function OpenLocation(props: OpenLocationProps) {
     <Box>
       <Card
         sx={{
-          maxWidth: isConstrained ? 700 : undefined,
+          maxWidth: 700,
           mx: "auto",
         }}
       >
         <Box
           sx={{
-            aspectRatio: !isConstrained && hasMaxHeight ? undefined : "16/9",
+            aspectRatio: "16/9",
             maxWidth: "100%",
-            height: !isConstrained && hasMaxHeight ? 300 : "100%",
+            height: "100%",
             width: "100%",
             overflow: "hidden",
             backgroundImage: 'url("/assets/test/PlagueVillage.png")',

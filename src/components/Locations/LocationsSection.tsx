@@ -4,6 +4,7 @@ import {
   Card,
   CardActionArea,
   Grid,
+  Hidden,
   Input,
   InputAdornment,
   Typography,
@@ -16,6 +17,7 @@ import { OpenLocation } from "./OpenLocation";
 import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
 import { useFilterLocations } from "./useFilterLocations";
 import SearchIcon from "@mui/icons-material/Search";
+import { useAuth } from "providers/AuthProvider";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;
@@ -41,6 +43,8 @@ export function LocationsSection(props: LocationsSectionProps) {
     emphasizeButton,
     showHiddenTag,
   } = props;
+
+  const isWorldOwner = useAuth().user?.uid === worldOwnerId;
 
   const { createLocation, loading: createLocationLoading } =
     useCreateLocation();
@@ -71,14 +75,19 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   if (openLocationId && openLocation) {
     return (
-      <OpenLocation
-        worldId={worldId}
-        worldOwnerId={worldOwnerId}
-        location={openLocation}
-        locationId={openLocationId}
-        closeLocation={() => setOpenLocationId(undefined)}
-        isSinglePlayer={isSinglePlayer}
-      />
+      <Box display={"flex"} alignItems={"stretch"}>
+        <Hidden smDown>
+          <Box>Sidebar</Box>
+        </Hidden>
+        <OpenLocation
+          worldId={worldId}
+          worldOwnerId={worldOwnerId}
+          location={openLocation}
+          locationId={openLocationId}
+          closeLocation={() => setOpenLocationId(undefined)}
+          isSinglePlayer={isSinglePlayer}
+        />
+      </Box>
     );
   }
 
