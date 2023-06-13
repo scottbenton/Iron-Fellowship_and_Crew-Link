@@ -6,11 +6,13 @@ import { StoreApi } from "zustand";
 export type LocationDocumentWithGMProperties = LocationDocument & {
   gmProperties?: GMLocationDocument;
   notes?: Uint8Array | null;
+  imageUrls?: string[];
 };
 
 export type NPC = NPCDocument & {
   gmProperties?: GMNPCDocument;
   notes?: Uint8Array | null;
+  imageUrls?: string[];
 };
 
 export interface LocationStoreProperties {
@@ -23,6 +25,11 @@ export interface LocationStoreProperties {
     locationGMProperties: GMLocationDocument
   ) => void;
   updateLocationNotes: (locationId: string, notes: Uint8Array | null) => void;
+  addLocationImageURL: (
+    locationId: string,
+    imageIndex: string,
+    url: string
+  ) => void;
   removeLocation: (locationId: string) => void;
   clearLocations: () => void;
   openLocationId?: string;
@@ -78,6 +85,21 @@ export const locationStore = (
     set(
       produce((state: LocationStoreProperties) => {
         state.locations[locationId].notes = notes;
+      })
+    );
+  },
+
+  addLocationImageURL: (
+    locationId: string,
+    imageIndex: number,
+    url: string
+  ) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        if (!Array.isArray(state.locations[locationId].imageUrls)) {
+          state.locations[locationId].imageUrls = [];
+        }
+        (state.locations[locationId].imageUrls as string[])[imageIndex] = url;
       })
     );
   },

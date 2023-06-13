@@ -10,6 +10,7 @@ export interface LocationDocument {
   name: string;
   sharedWithPlayers?: boolean;
   updatedDate: Date;
+  imageFilenames?: string[];
 }
 
 export interface GMLocationDocument {

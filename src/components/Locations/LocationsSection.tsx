@@ -7,6 +7,10 @@ import {
   Hidden,
   Input,
   InputAdornment,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
   Typography,
 } from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
@@ -75,10 +79,22 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   if (openLocationId && openLocation) {
     return (
-      <Box display={"flex"} alignItems={"stretch"}>
+      <Box display={"flex"} alignItems={"stretch"} maxHeight={"100%"}>
         <Hidden smDown>
-          <Box>Sidebar</Box>
+          <Box overflow={"auto"} flexGrow={1}>
+            <List>
+              {sortedLocations.map((locationId) => (
+                <ListItemButton
+                  key={locationId}
+                  selected={locationId === openLocationId}
+                >
+                  <ListItemText primary={locations[locationId].name} />
+                </ListItemButton>
+              ))}
+            </List>
+          </Box>
         </Hidden>
+
         <OpenLocation
           worldId={worldId}
           worldOwnerId={worldOwnerId}

@@ -93,11 +93,10 @@ export function OpenLocation(props: OpenLocationProps) {
   };
 
   return (
-    <Box>
+    <Box overflow={"auto"}>
       <Card
         sx={{
           maxWidth: 700,
-          mx: "auto",
         }}
       >
         <Box
