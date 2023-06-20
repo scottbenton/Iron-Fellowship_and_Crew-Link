@@ -34,7 +34,15 @@ export function Layout(props: LayoutProps) {
   }
 
   return (
-    <Box minHeight={"100vh"} display={"flex"} flexDirection={"column"}>
+    <Box
+      minHeight={"100vh"}
+      display={"flex"}
+      flexDirection={"column"}
+      sx={(theme) => ({
+        overflowX: "hidden",
+        backgroundColor: theme.palette.background.background,
+      })}
+    >
       <Header />
       <Outlet />
       <Footer />

@@ -10,17 +10,12 @@ import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/chara
 import { string } from "yup";
 
 export function listenToWorld(
-  uid: string | undefined,
   worldId: string,
   onDocChange: (data?: World) => void,
   onError: (error: any) => void
 ) {
-  if (!uid) {
-    return;
-  }
-
   return onSnapshot(
-    getWorldDoc(uid, worldId),
+    getWorldDoc(worldId),
     (snapshot) => {
       const encodedWorld = snapshot.data();
       if (encodedWorld) {
@@ -50,7 +45,7 @@ export function useListenToWorld(worldOwnerId?: string, worldId?: string) {
       if (worldOwnerId === uid) {
         setWorld(worlds[worldId]);
       } else {
-        listenToWorld(worldOwnerId, worldId, setWorld, (err) => {
+        listenToWorld(worldId, setWorld, (err) => {
           console.error(err);
           const errorMessage = getErrorMessage(error, "Failed to load worlds");
           error(errorMessage);
@@ -89,7 +84,6 @@ export function useCharacterSheetListenToWorld() {
       setWorld(worldOwnerId, worldId, usersWorld);
     } else if (worldOwnerId !== uid && worldId) {
       unsubscribe = listenToWorld(
-        worldOwnerId,
         worldId,
         (world) => setWorld(worldOwnerId, worldId, world),
         (err) => {

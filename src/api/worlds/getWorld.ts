@@ -1,20 +1,11 @@
 import { getDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "../../hooks/useApiState";
 import { decodeWorld, getWorldDoc } from "./_getRef";
-import { World, Truth, TRUTH_IDS } from "types/World.type";
-import { decodeDataswornId } from "functions/dataswornIdEncoder";
+import { World } from "types/World.type";
 
-export const getWorld: ApiFunction<
-  {
-    uid: string;
-    worldId: string;
-  },
-  World
-> = function (params) {
+export const getWorld: ApiFunction<string, World> = function (worldId) {
   return new Promise((resolve, reject) => {
-    const { uid, worldId } = params;
-
-    getDoc(getWorldDoc(uid, worldId))
+    getDoc(getWorldDoc(worldId))
       .then((doc) => {
         const data = doc.data();
 

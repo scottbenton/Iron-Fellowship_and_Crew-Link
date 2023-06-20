@@ -15,6 +15,7 @@ export function PageContent(props: PageContentProps) {
       maxWidth={"xl"}
       sx={[
         (theme) => ({
+          position: "relative",
           // borderRadius: 8,
           borderRadius: isPaper && !viewHeight ? theme.shape.borderRadius : 0,
           borderBottomLeftRadius: 0,
@@ -25,6 +26,8 @@ export function PageContent(props: PageContentProps) {
             paddingBottom: 9,
           },
           pb: 2,
+          display: "flex",
+          flexDirection: "column",
         }),
         viewHeight
           ? (theme) => ({

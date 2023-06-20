@@ -2,9 +2,10 @@ import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/chara
 import { Unsubscribe } from "firebase/auth";
 import { Bytes, onSnapshot, query, where } from "firebase/firestore";
 import { useSnackbar } from "hooks/useSnackbar";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LocationDocument } from "types/Locations.type";
 import {
+  constructLocationImagePath,
   convertFromDatabase,
   getLocationCollection,
   getPrivateDetailsLocationDoc,
@@ -14,6 +15,8 @@ import { GMLocationDocument } from "types/Locations.type";
 import { useAuth } from "providers/AuthProvider";
 import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
+import { getImageUrl } from "lib/storage.lib";
+import { useWorldSheetStore } from "pages/World/WorldSheetPage/worldSheet.store";
 
 export function listenToLocations(
   uid: string | undefined,
@@ -30,7 +33,7 @@ export function listenToLocations(
 ): Unsubscribe[] {
   const unsubscribes: Unsubscribe[] = [];
 
-  const locationCollectionRef = getLocationCollection(worldOwnerId, worldId);
+  const locationCollectionRef = getLocationCollection(worldId);
   const isWorldOwner = uid === worldOwnerId;
   unsubscribes.push(
     onSnapshot(
@@ -46,11 +49,7 @@ export function listenToLocations(
               if (isWorldOwner) {
                 unsubscribes.push(
                   onSnapshot(
-                    getPrivateDetailsLocationDoc(
-                      worldOwnerId,
-                      worldId,
-                      change.doc.id
-                    ),
+                    getPrivateDetailsLocationDoc(worldId, change.doc.id),
                     (doc) => {
                       const privateLocationDetails = doc.data();
                       if (privateLocationDetails) {
@@ -69,11 +68,7 @@ export function listenToLocations(
               }
               unsubscribes.push(
                 onSnapshot(
-                  getPublicNotesLocationDoc(
-                    worldOwnerId,
-                    worldId,
-                    change.doc.id
-                  ),
+                  getPublicNotesLocationDoc(worldId, change.doc.id),
                   (doc) => {
                     const noteDoc = doc.data();
 
@@ -114,6 +109,40 @@ export function useListenToLocations(worldOwnerId?: string, worldId?: string) {
     [key: string]: LocationDocumentWithGMProperties;
   }>({});
 
+  const updateLocationAndLoadImage = useCallback(
+    (locationId: string, location: LocationDocument) => {
+      setLocations((prevLocations) => {
+        let newLocations = { ...prevLocations };
+        const prevLocation = newLocations[locationId];
+        newLocations[locationId] = { ...prevLocation, ...location };
+        return newLocations;
+      });
+      setLocations((prevLocations) => {
+        const newLocations = { ...prevLocations };
+        const prevLocation = newLocations[locationId];
+        newLocations[locationId] = { ...prevLocation, ...location };
+        return newLocations;
+      });
+
+      const imageUrl = location.imageFilenames?.[0];
+
+      if (worldId && imageUrl) {
+        getImageUrl(
+          constructLocationImagePath(worldId, locationId, imageUrl)
+        ).then((url) => {
+          setLocations((prevLocations) => {
+            const newLocations = { ...prevLocations };
+            const newLocation = { ...newLocations[locationId] };
+            newLocation.imageUrls = [url];
+            newLocations[locationId] = newLocation;
+            return newLocations;
+          });
+        });
+      }
+    },
+    [worldId]
+  );
+
   useEffect(() => {
     let unsubscribes: Unsubscribe[];
     if (worldId && worldOwnerId) {
@@ -122,12 +151,7 @@ export function useListenToLocations(worldOwnerId?: string, worldId?: string) {
         worldOwnerId,
         worldId,
         (locationId, location) =>
-          setLocations((prevLocations) => {
-            let newLocations = { ...prevLocations };
-            const prevLocation = newLocations[locationId];
-            newLocations[locationId] = { ...prevLocation, ...location };
-            return newLocations;
-          }),
+          updateLocationAndLoadImage(locationId, location),
         (locationId, gmProperties) =>
           setLocations((prevLocations) => {
             let newLocations = { ...prevLocations };
@@ -173,6 +197,9 @@ export function useCharacterSheetListenToLocations() {
   const updateLocation = useCharacterSheetStore(
     (store) => store.updateLocation
   );
+  const updateLocationImageUrl = useCharacterSheetStore(
+    (store) => store.addLocationImageURL
+  );
   const updateLocationGMProperties = useCharacterSheetStore(
     (store) => store.updateLocationGMProperties
   );
@@ -186,6 +213,21 @@ export function useCharacterSheetListenToLocations() {
     (store) => store.clearLocations
   );
 
+  const updateLocationAndLoadImage = useCallback(
+    (locationId: string, location: LocationDocument) => {
+      updateLocation(locationId, location, (filename: string) => {
+        if (worldId) {
+          getImageUrl(
+            constructLocationImagePath(worldId, locationId, filename)
+          ).then((url) => {
+            updateLocationImageUrl(locationId, 0, url);
+          });
+        }
+      });
+    },
+    [updateLocation, updateLocationImageUrl, worldId]
+  );
+
   useEffect(() => {
     let unsubscribes: Unsubscribe[];
     if (worldId && worldOwnerId) {
@@ -193,7 +235,7 @@ export function useCharacterSheetListenToLocations() {
         uid,
         worldOwnerId,
         worldId,
-        updateLocation,
+        updateLocationAndLoadImage,
         updateLocationGMProperties,
         updateLocationNotes,
         removeLocation,
@@ -222,6 +264,9 @@ export function useCampaignGMScreenListenToLocations() {
   const updateLocation = useCampaignGMScreenStore(
     (store) => store.updateLocation
   );
+  const updateLocationImageUrl = useCampaignGMScreenStore(
+    (store) => store.addLocationImageURL
+  );
   const updateLocationGMProperties = useCampaignGMScreenStore(
     (store) => store.updateLocationGMProperties
   );
@@ -235,6 +280,21 @@ export function useCampaignGMScreenListenToLocations() {
     (store) => store.clearLocations
   );
 
+  const updateLocationAndLoadImage = useCallback(
+    (locationId: string, location: LocationDocument) => {
+      updateLocation(locationId, location, (filename: string) => {
+        if (worldId) {
+          getImageUrl(
+            constructLocationImagePath(worldId, locationId, filename)
+          ).then((url) => {
+            updateLocationImageUrl(locationId, 0, url);
+          });
+        }
+      });
+    },
+    [updateLocation, updateLocationImageUrl, worldId]
+  );
+
   useEffect(() => {
     let unsubscribes: Unsubscribe[];
     if (worldId && worldOwnerId) {
@@ -242,7 +302,66 @@ export function useCampaignGMScreenListenToLocations() {
         uid,
         worldOwnerId,
         worldId,
-        updateLocation,
+        updateLocationAndLoadImage,
+        updateLocationGMProperties,
+        updateLocationNotes,
+        removeLocation,
+        (err) => error(err)
+      );
+    } else {
+      clearLocations();
+    }
+
+    return () => {
+      unsubscribes?.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [uid, worldId, worldOwnerId]);
+}
+
+export function useWorldSheetListenToLocations(
+  worldOwnerId: string | undefined,
+  worldId: string | undefined
+) {
+  const { error } = useSnackbar();
+
+  const uid = useAuth().user?.uid;
+
+  const updateLocation = useWorldSheetStore((store) => store.updateLocation);
+  const updateLocationImageUrl = useWorldSheetStore(
+    (store) => store.addLocationImageURL
+  );
+  const updateLocationGMProperties = useWorldSheetStore(
+    (store) => store.updateLocationGMProperties
+  );
+  const updateLocationNotes = useWorldSheetStore(
+    (store) => store.updateLocationNotes
+  );
+  const removeLocation = useWorldSheetStore((store) => store.removeLocation);
+  const clearLocations = useWorldSheetStore((store) => store.clearLocations);
+
+  const updateLocationAndLoadImage = useCallback(
+    (locationId: string, location: LocationDocument) => {
+      updateLocation(locationId, location, (filename: string) => {
+        if (worldId) {
+          getImageUrl(
+            constructLocationImagePath(worldId, locationId, filename)
+          ).then((url) => {
+            updateLocationImageUrl(locationId, 0, url);
+          });
+        }
+      });
+    },
+    [updateLocation, updateLocationImageUrl, worldId]
+  );
+
+  useEffect(() => {
+    let unsubscribes: Unsubscribe[];
+    if (worldId && worldOwnerId) {
+      unsubscribes = listenToLocations(
+        uid,
+        worldOwnerId,
+        worldId,
+        updateLocationAndLoadImage,
         updateLocationGMProperties,
         updateLocationNotes,
         removeLocation,

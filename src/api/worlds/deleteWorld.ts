@@ -1,22 +1,10 @@
-import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { deleteDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { useAuth } from "providers/AuthProvider";
 import { getWorldDoc } from "./_getRef";
 
-export const deleteWorld: ApiFunction<
-  { uid?: string; worldId: string },
-  boolean
-> = (params) => {
-  const { uid, worldId } = params;
-
+export const deleteWorld: ApiFunction<string, boolean> = (worldId) => {
   return new Promise((resolve, reject) => {
-    if (!uid) {
-      reject(new UserNotLoggedInException());
-      return;
-    }
-
-    deleteDoc(getWorldDoc(uid, worldId))
+    deleteDoc(getWorldDoc(worldId))
       .then(() => {
         resolve(true);
       })
@@ -28,11 +16,10 @@ export const deleteWorld: ApiFunction<
 };
 
 export function useDeleteWorld() {
-  const uid = useAuth().user?.uid;
   const { call, ...rest } = useApiState(deleteWorld);
 
   return {
-    deleteWorld: (worldId: string) => call({ uid, worldId }),
+    deleteWorld: (worldId: string) => call(worldId),
     ...rest,
   };
 }

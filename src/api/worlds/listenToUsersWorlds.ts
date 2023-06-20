@@ -1,11 +1,20 @@
-import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
 import { useEffect } from "react";
-import { World } from "types/World.type";
+import { EncodedWorld, World } from "types/World.type";
 import { getErrorMessage } from "../../functions/getErrorMessage";
 import { useAuth } from "../../providers/AuthProvider";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { useWorldsStore } from "stores/worlds.store";
 import { decodeWorld, getWorldCollection } from "./_getRef";
+import { useCharacterStore } from "stores/character.store";
+import { useCampaignStore } from "stores/campaigns.store";
+import {
+  onSnapshot,
+  query,
+  Unsubscribe,
+  where,
+  Query,
+} from "firebase/firestore";
+import { listenToWorld } from "./listenToWorld";
 
 export function listenToUsersWorlds(
   uid: string | undefined,
@@ -19,12 +28,9 @@ export function listenToUsersWorlds(
   if (!uid) {
     return;
   }
-  const worldQuery = query(
-    getWorldCollection(uid),
-    where("authorId", "==", uid)
-  );
+
   return onSnapshot(
-    worldQuery,
+    query(getWorldCollection(), where("ownerId", "==", uid ?? "")),
     (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "removed") {
@@ -43,16 +49,28 @@ export function listenToUsersWorlds(
 }
 
 export function useListenToUsersWorlds() {
+  const uid = useAuth().user?.uid;
+
+  const campaignWorlds = useCampaignStore((store) => {
+    const worldIds: string[] = [];
+
+    Object.values(store.campaigns).map((campaign) => {
+      if (campaign.worldId && campaign.gmId !== uid) {
+        worldIds.push(campaign.worldId);
+      }
+    });
+    return Array.from(new Set(worldIds));
+  });
+
   const setWorld = useWorldsStore((state) => state.setWorld);
   const removeWorld = useWorldsStore((state) => state.removeWorld);
   const setLoading = useWorldsStore((state) => state.setLoading);
 
   const { error } = useSnackbar();
 
-  const uid = useAuth().user?.uid;
-
   useEffect(() => {
     let unsubscribe: Unsubscribe;
+    let unsubscribes: Unsubscribe[];
 
     listenToUsersWorlds(
       uid,
@@ -68,8 +86,21 @@ export function useListenToUsersWorlds() {
       }
     );
 
+    unsubscribes = campaignWorlds.map((worldId) => {
+      return listenToWorld(
+        worldId,
+        (world) => (world ? setWorld(worldId, world) : removeWorld(worldId)),
+        (err) => {
+          console.error(err);
+          const errorMessage = getErrorMessage(error, "Failed to load worlds");
+          error(errorMessage);
+        }
+      );
+    });
+
     return () => {
       unsubscribe && unsubscribe();
+      unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  }, [uid]);
+  }, [uid, campaignWorlds]);
 }

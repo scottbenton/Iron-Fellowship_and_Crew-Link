@@ -4,18 +4,14 @@ import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getLocationCollection } from "./_getRef";
 
 export const createLocation: ApiFunction<
-  { uid?: string; worldId: string },
+  { worldId: string; shared?: boolean },
   string
 > = (params) => {
-  const { uid, worldId } = params;
+  const { worldId } = params;
   return new Promise((resolve, reject) => {
-    if (!uid) {
-      reject(new UserNotLoggedInException());
-      return;
-    }
-
-    addDoc(getLocationCollection(uid, worldId), {
+    addDoc(getLocationCollection(worldId), {
       name: "New Location",
+      sharedWithPlayers: true,
       updatedTimestamp: Timestamp.now(),
     })
       .then((doc) => {
@@ -32,7 +28,7 @@ export function useCreateLocation() {
   const { call, ...rest } = useApiState(createLocation);
 
   return {
-    createLocation: (uid: string, worldId: string) => call({ uid, worldId }),
+    createLocation: (worldId: string) => call({ worldId }),
     ...rest,
   };
 }

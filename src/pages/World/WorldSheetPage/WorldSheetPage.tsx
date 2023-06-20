@@ -18,18 +18,25 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCampaignStore } from "stores/campaigns.store";
 import { useCharacterStore } from "stores/character.store";
 import { useWorld } from "./hooks/useWorld";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LocationsSection } from "components/Locations";
-import { useListenToLocations } from "api/worlds/locations/listenToLocations";
+import {
+  useListenToLocations,
+  useWorldSheetListenToLocations,
+} from "api/worlds/locations/listenToLocations";
 import { BreakContainer } from "components/BreakContainer";
 import { WORLD_ROUTES, constructWorldPath } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { StyledTab, StyledTabs } from "components/StyledTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { NPCSection } from "components/NPCSection";
+import { useListenToNPCs } from "api/worlds/npcs/listenToNPCs";
+import { useWorldSheetStore } from "./worldSheet.store";
 
 export enum TABS {
   DETAILS = "details",
   LOCATIONS = "locations",
+  NPCS = "npcs",
 }
 
 export function WorldSheetPage() {
@@ -56,14 +63,25 @@ export function WorldSheetPage() {
 
   const { deleteWorld } = useDeleteWorld();
 
-  const { locations } = useListenToLocations(worldOwnerId, worldId);
-  const [openLocationId, setOpenLocationId] = useState<string>();
+  useWorldSheetListenToLocations(worldOwnerId, worldId);
+  const locations = useWorldSheetStore((store) => store.locations);
+  const openLocationId = useWorldSheetStore((store) => store.openLocationId);
+  const setOpenLocationId = useWorldSheetStore(
+    (store) => store.setOpenLocationId
+  );
+  const resetState = useWorldSheetStore((store) => store.resetState);
+
+  useEffect(() => {
+    return () => {
+      resetState();
+    };
+  }, []);
 
   if (isLoading) {
     return <LinearProgress />;
   }
 
-  if (!world || !worldId) {
+  if (!world || !worldId || !worldOwnerId) {
     return null;
   }
 
@@ -137,13 +155,19 @@ export function WorldSheetPage() {
           >
             <StyledTab value={TABS.DETAILS} label={"World Details"} />
             <StyledTab value={TABS.LOCATIONS} label={"Locations"} />
+            {/* <StyledTab value={TABS.NPCS} label={"NPCs"} /> */}
           </StyledTabs>
         </BreakContainer>
         {selectedTab === TABS.DETAILS && (
           <WorldSheet worldId={worldId} world={world} canEdit={canEdit} />
         )}
         {selectedTab === TABS.LOCATIONS && (
-          <BreakContainer>
+          <BreakContainer
+            sx={(theme) => ({
+              backgroundColor: theme.palette.background.default,
+              flexGrow: 1,
+            })}
+          >
             <LocationsSection
               locations={locations}
               openLocationId={openLocationId}
@@ -155,6 +179,18 @@ export function WorldSheetPage() {
             />
           </BreakContainer>
         )}
+        {/* {selectedTab === TABS.NPCS && (
+          <BreakContainer>
+            <NPCSection
+              worldOwnerId={worldOwnerId}
+              worldId={worldId}
+              locations={locations}
+              npcs={npcs}
+              openNPCId={openNPCId}
+              setOpenNPCId={setOpenNPCId}
+            />
+          </BreakContainer>
+        )} */}
       </PageContent>
     </>
   );

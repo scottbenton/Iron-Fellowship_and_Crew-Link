@@ -17,6 +17,7 @@ import {
   StyledTab,
   ContainedTabPanel,
 } from "components/StyledTabs";
+import { NPCSection } from "components/NPCSection";
 
 enum TABS {
   MOVES = "moves",
@@ -29,6 +30,7 @@ enum TABS {
   NOTES = "notes",
   WORLD = "world",
   LOCATIONS = "location",
+  NPCS = "npcs",
 }
 
 export function TabsSection() {
@@ -70,6 +72,10 @@ export function TabsSection() {
     (store) => store.setOpenLocationId
   );
 
+  const npcs = useCharacterSheetStore((store) => store.npcs);
+  const openNPCId = useCharacterSheetStore((store) => store.openNPCId);
+  const setOpenNPCId = useCharacterSheetStore((store) => store.setOpenNPCId);
+
   useEffect(() => {
     if (!isMobile && selectedTab === TABS.MOVES) {
       setSelectedTab(TABS.ASSETS);
@@ -94,6 +100,7 @@ export function TabsSection() {
         <StyledTab label="Notes" value={TABS.NOTES} />
         <StyledTab label={"World"} value={TABS.WORLD} />
         <StyledTab label={"Locations"} value={TABS.LOCATIONS} />
+        {/* <StyledTab label={"NPCs"} value={TABS.NPCS} /> */}
         <StyledTab label="Character" value={TABS.CHARACTER} />
       </StyledTabs>
       <ContainedTabPanel isVisible={selectedTab === TABS.MOVES}>
@@ -133,7 +140,7 @@ export function TabsSection() {
       <ContainedTabPanel
         isVisible={selectedTab === TABS.LOCATIONS}
         greyBackground={
-          !openLocationId && worldId && worldOwnerId ? true : false
+          true || (!openLocationId && worldId && worldOwnerId) ? true : false
         }
       >
         <LocationsSection
@@ -145,6 +152,21 @@ export function TabsSection() {
           openLocationId={openLocationId}
           setOpenLocationId={setOpenLocationId}
           showHiddenTag={worldOwnerId === uid}
+        />
+      </ContainedTabPanel>
+      <ContainedTabPanel
+        isVisible={selectedTab === TABS.NPCS}
+        greyBackground={
+          true || (!openLocationId && worldId && worldOwnerId) ? true : false
+        }
+      >
+        <NPCSection
+          worldId={worldId ?? ""}
+          worldOwnerId={worldOwnerId ?? ""}
+          npcs={npcs}
+          locations={locations}
+          openNPCId={openNPCId}
+          setOpenNPCId={setOpenNPCId}
         />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.CHARACTER}>

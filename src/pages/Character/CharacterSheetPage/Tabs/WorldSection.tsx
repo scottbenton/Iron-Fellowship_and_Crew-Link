@@ -33,9 +33,11 @@ export function WorldSection() {
     useCharacterSheetUpdateCharacterWorld();
 
   const worldIds = useWorldsStore((store) =>
-    Object.keys(store.worlds).sort((w1, w2) =>
-      store.worlds[w2].name.localeCompare(store.worlds[w1].name)
-    )
+    Object.keys(store.worlds)
+      .filter((w) => store.worlds[w].ownerId === uid)
+      .sort((w1, w2) =>
+        store.worlds[w2].name.localeCompare(store.worlds[w1].name)
+      )
   );
   const worlds = useWorldsStore((store) => store.worlds);
 

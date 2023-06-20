@@ -17,6 +17,7 @@ import { useCampaignStore } from "stores/campaigns.store";
 import { CreateCampaignDialog } from "./components/CreateCampaignDialog";
 import CreateCampaignIcon from "@mui/icons-material/GroupAdd";
 import { PageContent, PageHeader } from "components/Layout";
+import { CampaignCard } from "./components/CampaignCard";
 
 export function CampaignSelectPage() {
   const campaigns = useCampaignStore((store) =>
@@ -90,22 +91,10 @@ export function CampaignSelectPage() {
           <Grid container spacing={2}>
             {campaigns.map((campaignId, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card elevation={2}>
-                  <CardActionArea
-                    component={Link}
-                    to={constructCampaignSheetPath(
-                      campaignId,
-                      CAMPAIGN_ROUTES.SHEET
-                    )}
-                    sx={{ p: 2 }}
-                  >
-                    <Box display={"flex"} alignItems={"center"}>
-                      <Typography variant={"h6"}>
-                        {campaignMap[campaignId].name}
-                      </Typography>
-                    </Box>
-                  </CardActionArea>
-                </Card>
+                <CampaignCard
+                  campaignId={campaignId}
+                  campaign={campaignMap[campaignId]}
+                />
               </Grid>
             ))}
           </Grid>

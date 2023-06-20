@@ -4,7 +4,6 @@ import { LocationDocument } from "types/Locations.type";
 import { convertToDatabase, getLocationDoc } from "./_getRef";
 
 interface LocationParams {
-  worldOwnerId: string;
   worldId: string;
   locationId: string;
   location: Partial<LocationDocument>;
@@ -13,13 +12,10 @@ interface LocationParams {
 export const updateLocation: ApiFunction<LocationParams, boolean> = (
   params
 ) => {
-  const { worldOwnerId, worldId, locationId, location } = params;
+  const { worldId, locationId, location } = params;
 
   return new Promise((resolve, reject) => {
-    updateDoc(
-      getLocationDoc(worldOwnerId, worldId, locationId),
-      convertToDatabase(location)
-    )
+    updateDoc(getLocationDoc(worldId, locationId), convertToDatabase(location))
       .then(() => {
         resolve(true);
       })

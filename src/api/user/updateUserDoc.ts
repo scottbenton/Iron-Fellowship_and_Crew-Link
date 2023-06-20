@@ -9,7 +9,7 @@ export const updateUserDoc: ApiFunction<
 > = function (params) {
   const { uid, user } = params;
   return new Promise((resolve, reject) => {
-    setDoc(getUsersDoc(uid), user)
+    setDoc(getUsersDoc(uid), user, { merge: true })
       .then(() => {
         resolve(true);
       })

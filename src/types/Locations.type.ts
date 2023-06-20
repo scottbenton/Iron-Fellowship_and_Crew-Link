@@ -2,14 +2,16 @@ import { Bytes, Timestamp } from "firebase/firestore";
 
 export interface StoredLocation {
   name: string;
-  hiddenFromPlayers?: boolean;
+  sharedWithPlayers?: boolean;
   updatedTimestamp: Timestamp;
+  imageFilenames?: string[];
 }
 
 export interface LocationDocument {
   name: string;
   sharedWithPlayers?: boolean;
   updatedDate: Date;
+  imageFilenames?: string[];
 }
 
 export interface GMLocationDocument {

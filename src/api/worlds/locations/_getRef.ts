@@ -13,73 +13,71 @@ import {
   StoredLocation,
 } from "types/Locations.type";
 
-export function constructLocationsPath(uid: string, worldId: string) {
-  return `/users/${uid}/worlds/${worldId}/locations`;
+export function constructLocationsPath(worldId: string) {
+  return `/worlds/${worldId}/locations`;
 }
 
-export function constructLocationDocPath(
-  uid: string,
-  worldId: string,
-  locationId: string
-) {
-  return `/users/${uid}/worlds/${worldId}/locations/${locationId}`;
+export function constructLocationDocPath(worldId: string, locationId: string) {
+  return `/worlds/${worldId}/locations/${locationId}`;
 }
 
 export function constructPrivateDetailsLocationDocPath(
-  uid: string,
   worldId: string,
   locationId: string
 ) {
-  return (
-    constructLocationDocPath(uid, worldId, locationId) + `/private/details`
-  );
+  return constructLocationDocPath(worldId, locationId) + `/private/details`;
 }
 
 export function constructPublicNotesLocationDocPath(
-  uid: string,
   worldId: string,
   locationId: string
 ) {
-  return constructLocationDocPath(uid, worldId, locationId) + `/public/notes`;
+  return constructLocationDocPath(worldId, locationId) + `/public/notes`;
 }
 
-export function getLocationCollection(uid: string, worldId: string) {
+export function constructLocationImagesPath(
+  worldId: string,
+  locationId: string
+) {
+  return `/worlds/${worldId}/locations/${locationId}`;
+}
+
+export function constructLocationImagePath(
+  worldId: string,
+  locationId: string,
+  filename: string
+) {
+  return `/worlds/${worldId}/locations/${locationId}/${filename}`;
+}
+
+export function getLocationCollection(worldId: string) {
   return collection(
     firestore,
-    constructLocationsPath(uid, worldId)
+    constructLocationsPath(worldId)
   ) as CollectionReference<StoredLocation>;
 }
 
-export function getLocationDoc(
-  uid: string,
-  worldId: string,
-  locationId: string
-) {
+export function getLocationDoc(worldId: string, locationId: string) {
   return doc(
     firestore,
-    constructLocationDocPath(uid, worldId, locationId)
+    constructLocationDocPath(worldId, locationId)
   ) as DocumentReference<StoredLocation>;
 }
 
 export function getPrivateDetailsLocationDoc(
-  uid: string,
   worldId: string,
   locationId: string
 ) {
   return doc(
     firestore,
-    constructPrivateDetailsLocationDocPath(uid, worldId, locationId)
+    constructPrivateDetailsLocationDocPath(worldId, locationId)
   ) as DocumentReference<GMLocationDocument>;
 }
 
-export function getPublicNotesLocationDoc(
-  uid: string,
-  worldId: string,
-  locationId: string
-) {
+export function getPublicNotesLocationDoc(worldId: string, locationId: string) {
   return doc(
     firestore,
-    constructPublicNotesLocationDocPath(uid, worldId, locationId)
+    constructPublicNotesLocationDocPath(worldId, locationId)
   ) as DocumentReference<LocationNotesDocument>;
 }
 

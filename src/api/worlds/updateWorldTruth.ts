@@ -7,18 +7,13 @@ import { Truth } from "types/World.type";
 import { getWorldDoc } from "./_getRef";
 
 export const updateWorldTruth: ApiFunction<
-  { uid?: string; worldId: string; truthId: string; truth: Truth },
+  { worldId: string; truthId: string; truth: Truth },
   boolean
 > = (params) => {
-  const { uid, worldId, truthId, truth } = params;
+  const { worldId, truthId, truth } = params;
 
   return new Promise((resolve, reject) => {
-    if (!uid) {
-      reject(new UserNotLoggedInException());
-      return;
-    }
-
-    updateDoc(getWorldDoc(uid, worldId), {
+    updateDoc(getWorldDoc(worldId), {
       [`truths.${encodeDataswornId(truthId)}`]: truth,
     })
       .then(() => {
@@ -34,11 +29,9 @@ export const updateWorldTruth: ApiFunction<
 export function useUpdateWorldTruth() {
   const { call, loading, error } = useApiState(updateWorldTruth);
 
-  const uid = useAuth().user?.uid;
-
   return {
     updateWorldTruth: (worldId: string, truthId: string, truth: Truth) =>
-      call({ uid, worldId, truthId, truth }),
+      call({ worldId, truthId, truth }),
     loading,
     error,
   };

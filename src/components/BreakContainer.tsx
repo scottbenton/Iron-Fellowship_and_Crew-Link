@@ -1,8 +1,8 @@
-import { Box, Paper, SxProps } from "@mui/material";
+import { Box, Paper, SxProps, Theme } from "@mui/material";
 import { PropsWithChildren } from "react";
 
 export interface BreakContainer extends PropsWithChildren {
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 export function BreakContainer(props: BreakContainer) {

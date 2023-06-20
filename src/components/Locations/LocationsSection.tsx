@@ -4,11 +4,14 @@ import {
   Card,
   CardActionArea,
   Grid,
+  Hidden,
   Input,
   InputAdornment,
+  List,
+  ListItemButton,
+  ListItemText,
   Typography,
 } from "@mui/material";
-import { SectionHeading } from "components/SectionHeading";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import { useCreateLocation } from "api/worlds/locations/createLocation";
@@ -16,6 +19,9 @@ import { OpenLocation } from "./OpenLocation";
 import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
 import { useFilterLocations } from "./useFilterLocations";
 import SearchIcon from "@mui/icons-material/Search";
+import { useAuth } from "providers/AuthProvider";
+import { useUserDoc } from "api/user/getUserDoc";
+import AddPhotoIcon from "@mui/icons-material/Photo";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;
@@ -42,6 +48,9 @@ export function LocationsSection(props: LocationsSectionProps) {
     showHiddenTag,
   } = props;
 
+  const isWorldOwner = useAuth().user?.uid === worldOwnerId;
+  const isWorldOwnerPremium = useUserDoc(worldOwnerId).user?.isPremium ?? false;
+
   const { createLocation, loading: createLocationLoading } =
     useCreateLocation();
 
@@ -64,21 +73,54 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   const sortedLocations = Object.keys(filteredLocations).sort(
     (l1, l2) =>
-      filteredLocations[l2].updatedDate.getUTCMilliseconds() -
-      filteredLocations[l1].updatedDate.getUTCMilliseconds()
+      filteredLocations[l2].updatedDate.getTime() -
+      filteredLocations[l1].updatedDate.getTime()
   );
   const openLocation = openLocationId && locations[openLocationId];
 
   if (openLocationId && openLocation) {
     return (
-      <OpenLocation
-        worldId={worldId}
-        worldOwnerId={worldOwnerId}
-        location={openLocation}
-        locationId={openLocationId}
-        closeLocation={() => setOpenLocationId(undefined)}
-        isSinglePlayer={isSinglePlayer}
-      />
+      <Box
+        display={"flex"}
+        alignItems={"stretch"}
+        maxHeight={"100%"}
+        height={"100%"}
+      >
+        <Hidden smDown>
+          <Box overflow={"auto"} flexGrow={1} minWidth={200} maxWidth={400}>
+            <List>
+              {sortedLocations.map((locationId) => (
+                <ListItemButton
+                  key={locationId}
+                  selected={locationId === openLocationId}
+                  onClick={() => setOpenLocationId(locationId)}
+                >
+                  <ListItemText
+                    primary={locations[locationId].name}
+                    secondary={
+                      !isSinglePlayer &&
+                      isWorldOwner &&
+                      (!locations[locationId].sharedWithPlayers
+                        ? "Hidden"
+                        : "Shared")
+                    }
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Box>
+        </Hidden>
+
+        <OpenLocation
+          worldId={worldId}
+          worldOwnerId={worldOwnerId}
+          location={openLocation}
+          locationId={openLocationId}
+          closeLocation={() => setOpenLocationId(undefined)}
+          isWorldOwnerPremium={isWorldOwnerPremium}
+          isSinglePlayer={isSinglePlayer}
+        />
+      </Box>
     );
   }
 
@@ -90,9 +132,6 @@ export function LocationsSection(props: LocationsSectionProps) {
           alignItems: "center",
           justifyContent: "space-between",
           px: 2,
-          [theme.breakpoints.up("md")]: {
-            px: 3,
-          },
           py: 0.5,
           borderWidth: 0,
           borderBottomWidth: 1,
@@ -124,7 +163,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           variant={emphasizeButton ? "contained" : "text"}
           endIcon={<AddLocationIcon />}
           onClick={() =>
-            createLocation(worldOwnerId, worldId)
+            createLocation(worldId)
               .catch(() => {})
               .then((locationId) => {
                 if (locationId) {
@@ -148,18 +187,45 @@ export function LocationsSection(props: LocationsSectionProps) {
         {sortedLocations.map((locationId) => (
           <Grid item xs={12} md={6} lg={4} key={locationId}>
             <Card variant={"outlined"}>
-              <CardActionArea
-                onClick={() => setOpenLocationId(locationId)}
-                sx={{ p: 2 }}
-              >
-                <Typography>{filteredLocations[locationId].name}</Typography>
-                {showHiddenTag && (
-                  <Typography variant={"caption"} color={"textSecondary"}>
-                    {filteredLocations[locationId].sharedWithPlayers
-                      ? "Visible"
-                      : "Hidden"}
-                  </Typography>
+              <CardActionArea onClick={() => setOpenLocationId(locationId)}>
+                {isWorldOwnerPremium && (
+                  <Box
+                    sx={(theme) => ({
+                      aspectRatio: "16/9",
+                      maxWidth: "100%",
+                      height: "100%",
+                      width: "100%",
+                      overflow: "hidden",
+                      backgroundImage: `url("${filteredLocations[locationId].imageUrls?.[0]}")`,
+                      backgroundColor: theme.palette.grey[300],
+                      backgroundSize: "cover",
+                      backgroundPosition: "center center",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    })}
+                  >
+                    {!filteredLocations[locationId].imageUrls?.length && (
+                      <AddPhotoIcon
+                        sx={(theme) => ({
+                          width: 30,
+                          height: 30,
+                          color: theme.palette.grey[500],
+                        })}
+                      />
+                    )}
+                  </Box>
                 )}
+                <Box p={2}>
+                  <Typography>{filteredLocations[locationId].name}</Typography>
+                  {showHiddenTag && (
+                    <Typography variant={"caption"} color={"textSecondary"}>
+                      {filteredLocations[locationId].sharedWithPlayers
+                        ? "Visible"
+                        : "Hidden"}
+                    </Typography>
+                  )}
+                </Box>
               </CardActionArea>
             </Card>
           </Grid>

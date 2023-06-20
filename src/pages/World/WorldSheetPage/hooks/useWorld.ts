@@ -20,10 +20,10 @@ export function useWorld() {
   } = useGetWorld();
 
   useEffect(() => {
-    if (!isAdmin && uid && userId && worldId) {
-      getWorld({ uid: userId, worldId }).catch(() => {});
+    if (!isAdmin && uid && worldId) {
+      getWorld(worldId).catch(() => {});
     }
-  }, [isAdmin, uid, userId, worldId]);
+  }, [isAdmin, uid, worldId]);
 
   return {
     worldOwnerId: userId,

@@ -11,25 +11,25 @@ import {
 } from "functions/dataswornIdEncoder";
 import { EncodedWorld, Truth, TRUTH_IDS, World } from "types/World.type";
 
-export function constructWorldsPath(uid: string) {
-  return `/users/${uid}/worlds`;
+export function constructWorldsPath() {
+  return `/worlds`;
 }
 
-export function constructWorldDocPath(uid: string, worldId: string) {
-  return `/users/${uid}/worlds/${worldId}`;
+export function constructWorldDocPath(worldId: string) {
+  return `/worlds/${worldId}`;
 }
 
-export function getWorldCollection(uid: string) {
+export function getWorldCollection() {
   return collection(
     firestore,
-    constructWorldsPath(uid)
+    constructWorldsPath()
   ) as CollectionReference<EncodedWorld>;
 }
 
-export function getWorldDoc(uid: string, worldId: string) {
+export function getWorldDoc(worldId: string) {
   return doc(
     firestore,
-    constructWorldDocPath(uid, worldId)
+    constructWorldDocPath(worldId)
   ) as DocumentReference<EncodedWorld>;
 }
 

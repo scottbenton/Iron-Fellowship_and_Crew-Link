@@ -3,28 +3,32 @@ import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getUsersDoc } from "./_getRef";
 import { useEffect, useState } from "react";
 import { UserDocument } from "types/User.type";
+import { useMiscDataStore } from "stores/miscData.store";
 
-export const getUserDoc: ApiFunction<{ uid: string }, UserDocument> = function (
-  params
-) {
-  const { uid } = params;
+export const getUserDoc: ApiFunction<{ uid?: string }, UserDocument> =
+  function (params) {
+    const { uid } = params;
 
-  return new Promise((resolve, reject) => {
-    getDoc(getUsersDoc(uid))
-      .then((snapshot) => {
-        const user = snapshot.data();
-        if (user) {
-          resolve(user);
-        } else {
-          reject("User not found.");
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        reject("Failed to load user.");
-      });
-  });
-};
+    return new Promise((resolve, reject) => {
+      if (!uid) {
+        throw new Error("User ID not found");
+        return;
+      }
+      getDoc(getUsersDoc(uid))
+        .then((snapshot) => {
+          const user: UserDocument | undefined = snapshot.data();
+          if (user) {
+            resolve(user);
+          } else {
+            reject("User not found.");
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+          reject("Failed to load user.");
+        });
+    });
+  };
 
 export function useGetUserDoc() {
   const { call, data, loading, error } = useApiState(getUserDoc);
@@ -38,26 +42,22 @@ export function useGetUserDoc() {
 }
 
 export function useUserDoc(userId?: string) {
-  const { getUserDoc, loading } = useGetUserDoc();
-
-  const [user, setUser] = useState<UserDocument>();
+  const user = useMiscDataStore((store) => store.userDocs[userId ?? ""]);
+  const setStoreUserDoc = useMiscDataStore((store) => store.setUserDoc);
+  const { getUserDoc, loading, data } = useGetUserDoc();
 
   useEffect(() => {
-    if (userId) {
-      getUserDoc({ uid: userId })
-        .then((doc) => {
-          setUser(doc);
-        })
-        .catch(() => {
-          setUser(undefined);
-        });
-    } else {
-      setUser(undefined);
-    }
+    getUserDoc({ uid: userId });
   }, [userId]);
 
+  useEffect(() => {
+    if (userId && data) {
+      setStoreUserDoc(userId, data);
+    }
+  }, [userId, data]);
+
   return {
-    user,
+    user: data ?? user,
     loading,
   };
 }

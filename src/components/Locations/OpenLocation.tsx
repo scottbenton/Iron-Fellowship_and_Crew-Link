@@ -2,7 +2,6 @@ import {
   Alert,
   Box,
   Checkbox,
-  Container,
   FormControlLabel,
   Grid,
   IconButton,
@@ -16,14 +15,15 @@ import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/SectionHeading";
 import { RichTextEditorNoTitle } from "components/RichTextEditor";
 import { LocationNameInput } from "./LocationNameInput";
-import { useRoller } from "providers/DieRollProvider";
 import { useAuth } from "providers/AuthProvider";
 import { useUpdateLocationGMProperties } from "api/worlds/locations/updateLocationGMProperties";
 import { useUpdateLocationGMNotes } from "api/worlds/locations/updateLocationGMNotes";
-import { DebouncedOracleInput } from "./DebouncedOracleInput";
+import { DebouncedOracleInput } from "../DebouncedOracleInput";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 import { useUpdateLocationNotes } from "api/worlds/locations/updateLocationNotes";
 import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
+import { ImageUploader } from "components/ImageUploader/ImageUploader";
+import { useUploadLocationImage } from "api/worlds/locations/uploadLocationImage";
 
 export interface OpenLocationProps {
   worldOwnerId: string;
@@ -31,6 +31,7 @@ export interface OpenLocationProps {
   locationId: string;
   location: LocationDocumentWithGMProperties;
   closeLocation: () => void;
+  isWorldOwnerPremium?: boolean;
   isSinglePlayer?: boolean;
 }
 
@@ -41,11 +42,11 @@ export function OpenLocation(props: OpenLocationProps) {
     locationId,
     location,
     closeLocation,
+    isWorldOwnerPremium,
     isSinglePlayer,
   } = props;
 
   const confirm = useConfirm();
-  const { rollOracleTable } = useRoller();
 
   const { user } = useAuth();
   const uid = user?.uid;
@@ -57,6 +58,7 @@ export function OpenLocation(props: OpenLocationProps) {
   const { updateLocationGMNotes } = useUpdateLocationGMNotes();
   const { deleteLocation } = useDeleteLocation();
   const { updateLocationNotes } = useUpdateLocationNotes();
+  const { uploadLocationImage } = useUploadLocationImage();
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const initialLoadRef = useRef<boolean>(true);
@@ -82,7 +84,7 @@ export function OpenLocation(props: OpenLocationProps) {
       },
     })
       .then(() => {
-        deleteLocation({ worldOwnerId, worldId, locationId })
+        deleteLocation({ worldId, locationId })
           .catch(() => {})
           .then(() => {
             closeLocation();
@@ -92,7 +94,21 @@ export function OpenLocation(props: OpenLocationProps) {
   };
 
   return (
-    <Box>
+    <Box
+      overflow={"auto"}
+      bgcolor={(theme) => theme.palette.background.paper}
+      width={"100%"}
+    >
+      {isWorldOwnerPremium && (
+        <ImageUploader
+          title={location.name}
+          src={location.imageUrls?.[0]}
+          handleFileUpload={(image) =>
+            uploadLocationImage({ worldId, locationId, image }).catch(() => {})
+          }
+          handleClose={closeLocation}
+        />
+      )}
       <Box
         display={"flex"}
         alignItems={"center"}
@@ -109,7 +125,6 @@ export function OpenLocation(props: OpenLocationProps) {
           initialName={location.name}
           updateName={(newName) =>
             updateLocation({
-              worldOwnerId,
               worldId,
               locationId,
               location: { name: newName },
@@ -153,7 +168,6 @@ export function OpenLocation(props: OpenLocationProps) {
                   initialValue={location?.gmProperties?.descriptor ?? ""}
                   updateValue={(descriptor) =>
                     updateLocationGMProperties({
-                      worldOwnerId,
                       worldId,
                       locationId,
                       locationGMProperties: { descriptor },
@@ -168,7 +182,6 @@ export function OpenLocation(props: OpenLocationProps) {
                   initialValue={location?.gmProperties?.trouble ?? ""}
                   updateValue={(trouble) => {
                     updateLocationGMProperties({
-                      worldOwnerId,
                       worldId,
                       locationId,
                       locationGMProperties: { trouble },
@@ -183,7 +196,6 @@ export function OpenLocation(props: OpenLocationProps) {
                   initialValue={location?.gmProperties?.locationFeatures ?? ""}
                   updateValue={(locationFeatures) => {
                     updateLocationGMProperties({
-                      worldOwnerId,
                       worldId,
                       locationId,
                       locationGMProperties: { locationFeatures },
@@ -205,7 +217,6 @@ export function OpenLocation(props: OpenLocationProps) {
                         checked={location.sharedWithPlayers ?? false}
                         onChange={(evt, value) =>
                           updateLocation({
-                            worldOwnerId,
                             worldId,
                             locationId,
                             location: { sharedWithPlayers: value },
@@ -222,7 +233,6 @@ export function OpenLocation(props: OpenLocationProps) {
                   content={location.gmProperties?.notes ?? ""}
                   onSave={({ content, isBeaconRequest }) =>
                     updateLocationGMNotes({
-                      worldOwnerId,
                       worldId,
                       locationId,
                       notes: content,
@@ -239,19 +249,15 @@ export function OpenLocation(props: OpenLocationProps) {
                 <>
                   <Grid item xs={12}>
                     <SectionHeading
-                      label={
-                        location.sharedWithPlayers
-                          ? "Public Notes (Shared with players)"
-                          : "Public Notes (Once shared with players)"
-                      }
+                      label={"GM & Player Notes"}
                       breakContainer
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <Alert severity={"info"}>
-                      Notes in this section will only be visible to characters
-                      in campaigns. Singleplayer notes should go in the above
-                      section.
+                      Notes in this section will only be visible to gms &
+                      players in campaigns. Notes for singleplayer games should
+                      go in the above section.
                     </Alert>
                   </Grid>
                 </>
@@ -271,7 +277,6 @@ export function OpenLocation(props: OpenLocationProps) {
                     documentPassword={worldId}
                     onSave={(notes, isBeaconRequest) =>
                       updateLocationNotes({
-                        worldOwnerId,
                         worldId,
                         locationId,
                         notes,
