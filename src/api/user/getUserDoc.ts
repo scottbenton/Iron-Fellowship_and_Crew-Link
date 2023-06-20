@@ -47,7 +47,9 @@ export function useUserDoc(userId?: string) {
   const { getUserDoc, loading, data } = useGetUserDoc();
 
   useEffect(() => {
-    getUserDoc({ uid: userId });
+    if (userId) {
+      getUserDoc({ uid: userId });
+    }
   }, [userId]);
 
   useEffect(() => {

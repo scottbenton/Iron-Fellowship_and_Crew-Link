@@ -7,11 +7,9 @@ export interface StoredLocation {
   imageFilenames?: string[];
 }
 
-export interface LocationDocument {
-  name: string;
-  sharedWithPlayers?: boolean;
+export interface LocationDocument
+  extends Omit<StoredLocation, "updatedTimestamp"> {
   updatedDate: Date;
-  imageFilenames?: string[];
 }
 
 export interface GMLocationDocument {

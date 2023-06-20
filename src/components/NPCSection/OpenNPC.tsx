@@ -18,6 +18,8 @@ import { useUpdateNPC } from "api/worlds/npcs/updateNPC";
 import { useDeleteNPC } from "api/worlds/npcs/deleteNPC";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
+import { ImageUploader } from "components/ImageUploader/ImageUploader";
+import { useUploadNPCImage } from "api/worlds/npcs/uploadNPCImage";
 
 const isConstrained = false;
 const hasMaxHeight = true;
@@ -65,6 +67,7 @@ export function OpenNPC(props: OpenNPCProps) {
 
   const { updateNPC } = useUpdateNPC();
   const { deleteNPC } = useDeleteNPC();
+  const { uploadNPCImage } = useUploadNPCImage();
 
   const handleUpdateNPC = (doc: Partial<NPCDocument>) => {
     updateNPC({
@@ -96,18 +99,23 @@ export function OpenNPC(props: OpenNPCProps) {
   };
 
   return (
-    <Box>
-      <Box
-        sx={{
-          aspectRatio: !isConstrained && hasMaxHeight ? undefined : "16/9",
-          maxWidth: "100%",
-          height: !isConstrained && hasMaxHeight ? 300 : "100%",
-          width: "100%",
-          overflow: "hidden",
-          backgroundImage: 'url("/assets/test/Fionae.png")',
-          backgroundSize: "",
-          backgroundPosition: "center center",
-        }}
+    <Box
+      sx={(theme) => ({
+        backgroundColor: theme.palette.background.paper,
+        height: "100%",
+      })}
+    >
+      <ImageUploader
+        src={npc.imageUrls?.[0]}
+        title={npc.name}
+        handleClose={() => closeNPC()}
+        handleFileUpload={(image) =>
+          uploadNPCImage({
+            worldId,
+            npcId,
+            image,
+          }).catch(() => {})
+        }
       />
       <Box
         display={"flex"}
@@ -119,7 +127,6 @@ export function OpenNPC(props: OpenNPCProps) {
           borderBottomWidth: 1,
           borderColor: theme.palette.divider,
           borderStyle: "solid",
-          backgroundColor: theme.palette.background.paper,
         })}
       >
         <IconButton onClick={() => closeNPC()}>

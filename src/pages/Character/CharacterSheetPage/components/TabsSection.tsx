@@ -100,7 +100,7 @@ export function TabsSection() {
         <StyledTab label="Notes" value={TABS.NOTES} />
         <StyledTab label={"World"} value={TABS.WORLD} />
         <StyledTab label={"Locations"} value={TABS.LOCATIONS} />
-        {/* <StyledTab label={"NPCs"} value={TABS.NPCS} /> */}
+        <StyledTab label={"NPCs"} value={TABS.NPCS} />
         <StyledTab label="Character" value={TABS.CHARACTER} />
       </StyledTabs>
       <ContainedTabPanel isVisible={selectedTab === TABS.MOVES}>
@@ -157,7 +157,7 @@ export function TabsSection() {
       <ContainedTabPanel
         isVisible={selectedTab === TABS.NPCS}
         greyBackground={
-          true || (!openLocationId && worldId && worldOwnerId) ? true : false
+          true || (!openNPCId && worldId && worldOwnerId) ? true : false
         }
       >
         <NPCSection
@@ -172,21 +172,6 @@ export function TabsSection() {
       <ContainedTabPanel isVisible={selectedTab === TABS.CHARACTER}>
         <CharacterSection />
       </ContainedTabPanel>
-      {/* 
-          {selectedTab === TABS.NOTES && <NotesSection />}
-          {selectedTab === TABS.WORLD && <WorldSection />}
-          {selectedTab === TABS.LOCATIONS && (
-            <LocationsSection
-              worldId={worldId}
-              worldOwnerId={worldOwnerId}
-              isCharacterSheet
-              isSinglePlayer={isSinglePlayer}
-              locations={locations}
-              openLocationId={openLocationId}
-              setOpenLocationId={setOpenLocationId}
-            />
-          )}
-          {selectedTab === TABS.CHARACTER && <CharacterSection />} */}
     </Card>
   );
 }

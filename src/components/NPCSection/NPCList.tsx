@@ -1,8 +1,9 @@
-import { Card, CardActionArea, Grid, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, Grid, Typography } from "@mui/material";
 import {
   LocationDocumentWithGMProperties,
   NPC,
 } from "stores/sharedLocationStore";
+import { NPCItem } from "./NPCItem";
 
 export interface NPCListProps {
   npcs: { [key: string]: NPC };
@@ -21,11 +22,11 @@ export function NPCList(props: NPCListProps) {
     <Grid container sx={{ p: 2 }} spacing={2}>
       {sortedNPCs.map((npcId) => (
         <Grid item xs={12} sm={6} md={4} key={npcId}>
-          <Card variant={"outlined"}>
-            <CardActionArea onClick={() => openNPC(npcId)} sx={{ p: 2 }}>
-              <Typography>{npcs[npcId].name}</Typography>
-            </CardActionArea>
-          </Card>
+          <NPCItem
+            npc={npcs[npcId]}
+            locations={locations}
+            openNPC={() => openNPC(npcId)}
+          />
         </Grid>
       ))}
     </Grid>

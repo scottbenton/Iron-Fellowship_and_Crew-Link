@@ -13,7 +13,7 @@ export interface NPCDocument {
   name: string;
   species: NPC_SPECIES;
   lastLocationId?: string;
-  imageFilename?: string;
+  imageFilenames?: string[];
   sharedWithPlayers?: boolean;
   updatedDate: Date;
 }

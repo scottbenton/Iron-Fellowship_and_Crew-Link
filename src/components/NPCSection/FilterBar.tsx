@@ -30,13 +30,14 @@ export function FilterBar(props: FilterBarProps) {
       spacing={2}
       display={"flex"}
       alignItems={"center"}
-      sx={{
+      sx={(theme) => ({
         px: 2,
         py: 1,
         borderBottomWidth: 1,
         borderBottomStyle: "solid",
         borderColor: "divider",
-      }}
+        backgroundColor: theme.palette.background.paper,
+      })}
     >
       <Input
         fullWidth

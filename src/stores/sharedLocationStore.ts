@@ -38,20 +38,27 @@ export interface LocationStoreProperties {
   ) => void;
   removeLocation: (locationId: string) => void;
   clearLocations: () => void;
+
   openLocationId?: string;
   setOpenLocationId: (locationId?: string) => void;
 
   npcs: {
     [key: string]: NPC;
   };
-  updateNPC: (npcId: string, npc: NPCDocument) => void;
+  updateNPC: (
+    npcId: string,
+    npc: NPCDocument,
+    loadNPCImage: (filename: string) => void
+  ) => void;
   updateNPCGMProperties: (
     npcId: string,
     npcGMProperties: GMNPCDocument
   ) => void;
   updateNPCNotes: (npcId: string, notes: Uint8Array | null) => void;
+  addNPCImageURL: (npcId: string, imageIndex: number, url: string) => void;
   removeNPC: (npcId: string) => void;
   clearNPCs: () => void;
+
   openNPCId?: string;
   setOpenNPCId: (npcId?: string) => void;
 }
@@ -152,11 +159,22 @@ export const locationStore = (
     );
   },
 
-  updateNPC: (npcId: string, npc: NPCDocument) => {
+  updateNPC: (
+    npcId: string,
+    npc: NPCDocument,
+    loadNPCImage: (filename: string) => void
+  ) => {
     set(
       produce((state: LocationStoreProperties) => {
-        const { gmProperties, notes } = state.npcs[npcId] ?? {};
-        state.npcs[npcId] = { gmProperties, notes, ...npc };
+        const { gmProperties, notes, imageUrls } = state.npcs[npcId] ?? {};
+        state.npcs[npcId] = { gmProperties, notes, imageUrls, ...npc };
+
+        const previousImageFilename = state.npcs[npcId]?.imageUrls?.[0];
+        const newImageFilename = npc.imageFilenames?.[0];
+
+        if (previousImageFilename !== newImageFilename && newImageFilename) {
+          loadNPCImage(newImageFilename);
+        }
       })
     );
   },
@@ -173,6 +191,17 @@ export const locationStore = (
     set(
       produce((state: LocationStoreProperties) => {
         state.npcs[npcId].notes = notes;
+      })
+    );
+  },
+
+  addNPCImageURL: (npcId: string, imageIndex: number, url: string) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        if (!Array.isArray(state.npcs[npcId].imageUrls)) {
+          state.npcs[npcId].imageUrls = [];
+        }
+        (state.npcs[npcId].imageUrls as string[])[imageIndex] = url;
       })
     );
   },

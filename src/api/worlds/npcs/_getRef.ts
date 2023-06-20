@@ -32,6 +32,18 @@ export function constructPublicNotesNPCDocPath(worldId: string, npcId: string) {
   return constructNPCDocPath(worldId, npcId) + `/public/notes`;
 }
 
+export function constructNPCImagesPath(worldId: string, npcId: string) {
+  return `/worlds/${worldId}/npcs/${npcId}`;
+}
+
+export function constructNPCImagePath(
+  worldId: string,
+  npcId: string,
+  filename: string
+) {
+  return `/worlds/${worldId}/npcs/${npcId}/${filename}`;
+}
+
 export function getNPCCollection(worldId: string) {
   return collection(
     firestore,
