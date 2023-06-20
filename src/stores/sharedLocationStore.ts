@@ -1,4 +1,6 @@
+import { constructLocationImagePath } from "api/worlds/locations/_getRef";
 import produce from "immer";
+import { getImageUrl } from "lib/storage.lib";
 import { GMLocationDocument, LocationDocument } from "types/Locations.type";
 import { GMNPCDocument, NPCDocument } from "types/NPCs.type";
 import { StoreApi } from "zustand";
@@ -19,7 +21,11 @@ export interface LocationStoreProperties {
   locations: {
     [key: string]: LocationDocumentWithGMProperties;
   };
-  updateLocation: (locationId: string, location: LocationDocument) => void;
+  updateLocation: (
+    locationId: string,
+    location: LocationDocument,
+    loadLocationImage: (filename: string) => void
+  ) => void;
   updateLocationGMProperties: (
     locationId: string,
     locationGMProperties: GMLocationDocument
@@ -27,7 +33,7 @@ export interface LocationStoreProperties {
   updateLocationNotes: (locationId: string, notes: Uint8Array | null) => void;
   addLocationImageURL: (
     locationId: string,
-    imageIndex: string,
+    imageIndex: number,
     url: string
   ) => void;
   removeLocation: (locationId: string) => void;
@@ -61,11 +67,29 @@ export const initialLocationState = {
 export const locationStore = (
   set: StoreApi<LocationStoreProperties>["setState"]
 ) => ({
-  updateLocation: (locationId: string, location: LocationDocument) => {
+  updateLocation: (
+    locationId: string,
+    location: LocationDocument,
+    loadLocationImage: (filename: string) => void
+  ) => {
     set(
       produce((state: LocationStoreProperties) => {
-        const { gmProperties, notes } = state.locations[locationId] ?? {};
-        state.locations[locationId] = { gmProperties, notes, ...location };
+        const { gmProperties, notes, imageUrls } =
+          state.locations[locationId] ?? {};
+        state.locations[locationId] = {
+          gmProperties,
+          notes,
+          imageUrls,
+          ...location,
+        };
+
+        const previousImageFilename =
+          state.locations[locationId]?.imageUrls?.[0];
+        const newImageFilename = location.imageFilenames?.[0];
+
+        if (previousImageFilename !== newImageFilename && newImageFilename) {
+          loadLocationImage(newImageFilename);
+        }
       })
     );
   },

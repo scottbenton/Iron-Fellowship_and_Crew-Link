@@ -8,12 +8,10 @@ import {
   Input,
   InputAdornment,
   List,
-  ListItem,
   ListItemButton,
   ListItemText,
   Typography,
 } from "@mui/material";
-import { SectionHeading } from "components/SectionHeading";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import { useCreateLocation } from "api/worlds/locations/createLocation";
@@ -22,6 +20,8 @@ import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
 import { useFilterLocations } from "./useFilterLocations";
 import SearchIcon from "@mui/icons-material/Search";
 import { useAuth } from "providers/AuthProvider";
+import { useUserDoc } from "api/user/getUserDoc";
+import AddPhotoIcon from "@mui/icons-material/Photo";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;
@@ -49,6 +49,7 @@ export function LocationsSection(props: LocationsSectionProps) {
   } = props;
 
   const isWorldOwner = useAuth().user?.uid === worldOwnerId;
+  const isWorldOwnerPremium = useUserDoc(worldOwnerId).user?.isPremium ?? false;
 
   const { createLocation, loading: createLocationLoading } =
     useCreateLocation();
@@ -79,16 +80,31 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   if (openLocationId && openLocation) {
     return (
-      <Box display={"flex"} alignItems={"stretch"} maxHeight={"100%"}>
+      <Box
+        display={"flex"}
+        alignItems={"stretch"}
+        maxHeight={"100%"}
+        height={"100%"}
+      >
         <Hidden smDown>
-          <Box overflow={"auto"} flexGrow={1}>
+          <Box overflow={"auto"} flexGrow={1} minWidth={200} maxWidth={400}>
             <List>
               {sortedLocations.map((locationId) => (
                 <ListItemButton
                   key={locationId}
                   selected={locationId === openLocationId}
+                  onClick={() => setOpenLocationId(locationId)}
                 >
-                  <ListItemText primary={locations[locationId].name} />
+                  <ListItemText
+                    primary={locations[locationId].name}
+                    secondary={
+                      !isSinglePlayer &&
+                      isWorldOwner &&
+                      (!locations[locationId].sharedWithPlayers
+                        ? "Hidden"
+                        : "Shared")
+                    }
+                  />
                 </ListItemButton>
               ))}
             </List>
@@ -101,6 +117,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           location={openLocation}
           locationId={openLocationId}
           closeLocation={() => setOpenLocationId(undefined)}
+          isWorldOwnerPremium={isWorldOwnerPremium}
           isSinglePlayer={isSinglePlayer}
         />
       </Box>
@@ -170,18 +187,45 @@ export function LocationsSection(props: LocationsSectionProps) {
         {sortedLocations.map((locationId) => (
           <Grid item xs={12} md={6} lg={4} key={locationId}>
             <Card variant={"outlined"}>
-              <CardActionArea
-                onClick={() => setOpenLocationId(locationId)}
-                sx={{ p: 2 }}
-              >
-                <Typography>{filteredLocations[locationId].name}</Typography>
-                {showHiddenTag && (
-                  <Typography variant={"caption"} color={"textSecondary"}>
-                    {filteredLocations[locationId].sharedWithPlayers
-                      ? "Visible"
-                      : "Hidden"}
-                  </Typography>
+              <CardActionArea onClick={() => setOpenLocationId(locationId)}>
+                {isWorldOwnerPremium && (
+                  <Box
+                    sx={(theme) => ({
+                      aspectRatio: "16/9",
+                      maxWidth: "100%",
+                      height: "100%",
+                      width: "100%",
+                      overflow: "hidden",
+                      backgroundImage: `url("${filteredLocations[locationId].imageUrls?.[0]}")`,
+                      backgroundColor: theme.palette.grey[300],
+                      backgroundSize: "cover",
+                      backgroundPosition: "center center",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    })}
+                  >
+                    {!filteredLocations[locationId].imageUrls?.length && (
+                      <AddPhotoIcon
+                        sx={(theme) => ({
+                          width: 30,
+                          height: 30,
+                          color: theme.palette.grey[500],
+                        })}
+                      />
+                    )}
+                  </Box>
                 )}
+                <Box p={2}>
+                  <Typography>{filteredLocations[locationId].name}</Typography>
+                  {showHiddenTag && (
+                    <Typography variant={"caption"} color={"textSecondary"}>
+                      {filteredLocations[locationId].sharedWithPlayers
+                        ? "Visible"
+                        : "Hidden"}
+                    </Typography>
+                  )}
+                </Box>
               </CardActionArea>
             </Card>
           </Grid>

@@ -26,6 +26,8 @@ export function PageContent(props: PageContentProps) {
             paddingBottom: 9,
           },
           pb: 2,
+          display: "flex",
+          flexDirection: "column",
         }),
         viewHeight
           ? (theme) => ({

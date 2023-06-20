@@ -17,18 +17,22 @@ import { Link } from "react-router-dom";
 import { useWorldsStore } from "stores/worlds.store";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { WORLD_ROUTES, constructWorldPath } from "pages/World/routes";
+import { useAuth } from "providers/AuthProvider";
 
 export function WorldSection() {
   const confirm = useConfirm();
+  const uid = useAuth().user?.uid;
 
   const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
   const world = useWorldsStore((store) =>
     worldId ? store.worlds[worldId] : undefined
   );
   const worldIds = useWorldsStore((store) =>
-    Object.keys(store.worlds).sort((w1, w2) =>
-      store.worlds[w2].name.localeCompare(store.worlds[w1].name)
-    )
+    Object.keys(store.worlds)
+      .filter((w) => store.worlds[w].ownerId === uid)
+      .sort((w1, w2) =>
+        store.worlds[w2].name.localeCompare(store.worlds[w1].name)
+      )
   );
   const worlds = useWorldsStore((store) => store.worlds);
 

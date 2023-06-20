@@ -22,8 +22,6 @@ export function NPCSection(props: NPCSectionProps) {
 
   const { search, setSearch, filteredNPCs } = useFilterNPCs(locations, npcs);
 
-  console.debug(filteredNPCs);
-
   const openNPC = openNPCId ? npcs[openNPCId] : undefined;
 
   if (openNPCId && openNPC) {

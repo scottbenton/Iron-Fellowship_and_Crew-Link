@@ -4,6 +4,7 @@ export interface StoredLocation {
   name: string;
   sharedWithPlayers?: boolean;
   updatedTimestamp: Timestamp;
+  imageFilenames?: string[];
 }
 
 export interface LocationDocument {

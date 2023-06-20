@@ -35,6 +35,21 @@ export function constructPublicNotesLocationDocPath(
   return constructLocationDocPath(worldId, locationId) + `/public/notes`;
 }
 
+export function constructLocationImagesPath(
+  worldId: string,
+  locationId: string
+) {
+  return `/worlds/${worldId}/locations/${locationId}`;
+}
+
+export function constructLocationImagePath(
+  worldId: string,
+  locationId: string,
+  filename: string
+) {
+  return `/worlds/${worldId}/locations/${locationId}/${filename}`;
+}
+
 export function getLocationCollection(worldId: string) {
   return collection(
     firestore,
