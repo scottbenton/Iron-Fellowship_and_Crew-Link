@@ -1,6 +1,9 @@
 import {
+  Alert,
   Autocomplete,
   Box,
+  Checkbox,
+  FormControlLabel,
   Grid,
   IconButton,
   MenuItem,
@@ -20,6 +23,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
 import { useUploadNPCImage } from "api/worlds/npcs/uploadNPCImage";
+import { SectionHeading } from "components/SectionHeading";
+import { useAuth } from "providers/AuthProvider";
+import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
+import { useUpdateNPCNotes } from "api/worlds/npcs/updateNPCNotes";
+import { TextFieldWithOracle } from "components/TextFieldWithOracle/TextFieldWithOracle";
+import { useUpdateNPCGMProperties } from "api/worlds/npcs/updateNPCGMProperties";
+import { useUpdateNPCGMNotes } from "api/worlds/npcs/updateNPCGMNotes";
+import { RichTextEditorNoTitle } from "components/RichTextEditor";
 
 const isConstrained = false;
 const hasMaxHeight = true;
@@ -31,6 +42,8 @@ export interface OpenNPCProps {
   locations: { [key: string]: LocationDocumentWithGMProperties };
   npc: NPC;
   closeNPC: () => void;
+  isWorldOwnerPremium?: boolean;
+  isSinglePlayer?: boolean;
 }
 
 const nameOracles: { [key in NPC_SPECIES]: string | string[] } = {
@@ -49,7 +62,18 @@ const nameOracles: { [key in NPC_SPECIES]: string | string[] } = {
 };
 
 export function OpenNPC(props: OpenNPCProps) {
-  const { worldOwnerId, worldId, npcId, locations, npc, closeNPC } = props;
+  const {
+    worldOwnerId,
+    worldId,
+    npcId,
+    locations,
+    npc,
+    closeNPC,
+    isSinglePlayer,
+  } = props;
+  const uid = useAuth().user?.uid;
+
+  const isWorldOwner = worldOwnerId === uid;
 
   const confirm = useConfirm();
 
@@ -68,6 +92,9 @@ export function OpenNPC(props: OpenNPCProps) {
   const { updateNPC } = useUpdateNPC();
   const { deleteNPC } = useDeleteNPC();
   const { uploadNPCImage } = useUploadNPCImage();
+  const { updateNPCGMProperties } = useUpdateNPCGMProperties();
+  const { updateNPCGMNotes } = useUpdateNPCGMNotes();
+  const { updateNPCNotes } = useUpdateNPCNotes();
 
   const handleUpdateNPC = (doc: Partial<NPCDocument>) => {
     updateNPC({
@@ -100,9 +127,9 @@ export function OpenNPC(props: OpenNPCProps) {
 
   return (
     <Box
+      overflow={"auto"}
       sx={(theme) => ({
         backgroundColor: theme.palette.background.paper,
-        height: "100%",
       })}
     >
       <ImageUploader
@@ -123,10 +150,6 @@ export function OpenNPC(props: OpenNPCProps) {
         sx={(theme) => ({
           px: 2,
           py: 1,
-          borderWidth: 0,
-          borderBottomWidth: 1,
-          borderColor: theme.palette.divider,
-          borderStyle: "solid",
         })}
       >
         <IconButton onClick={() => closeNPC()}>
@@ -145,43 +168,223 @@ export function OpenNPC(props: OpenNPCProps) {
           <DeleteIcon />
         </IconButton>
       </Box>
-      <Grid container spacing={2} sx={{ p: 2, mt: 1 }}>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            select
-            label={"Species"}
-            value={npc.species}
-            onChange={(evt) =>
-              handleUpdateNPC({
-                species: (evt.target.value ??
-                  NPC_SPECIES.IRONLANDER) as NPC_SPECIES,
-              })
-            }
-            fullWidth
-          >
-            <MenuItem value={NPC_SPECIES.IRONLANDER}>Ironlander</MenuItem>
-            <MenuItem value={NPC_SPECIES.ELF}>Elf</MenuItem>
-            <MenuItem value={NPC_SPECIES.GIANT}>Giant</MenuItem>
-            <MenuItem value={NPC_SPECIES.VAROU}>Varou</MenuItem>
-            <MenuItem value={NPC_SPECIES.TROLL}>Troll</MenuItem>
-            <MenuItem value={NPC_SPECIES.OTHER}>Other</MenuItem>
-          </TextField>
+      <Box
+        sx={(theme) => ({
+          mt: 1,
+          px: 2,
+          [theme.breakpoints.up("md")]: { px: 3 },
+        })}
+      >
+        <Grid container spacing={2} sx={{ mb: 2 }}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              select
+              label={"Species"}
+              value={npc.species}
+              onChange={(evt) =>
+                handleUpdateNPC({
+                  species: (evt.target.value ??
+                    NPC_SPECIES.IRONLANDER) as NPC_SPECIES,
+                })
+              }
+              fullWidth
+            >
+              <MenuItem value={NPC_SPECIES.IRONLANDER}>Ironlander</MenuItem>
+              <MenuItem value={NPC_SPECIES.ELF}>Elf</MenuItem>
+              <MenuItem value={NPC_SPECIES.GIANT}>Giant</MenuItem>
+              <MenuItem value={NPC_SPECIES.VAROU}>Varou</MenuItem>
+              <MenuItem value={NPC_SPECIES.TROLL}>Troll</MenuItem>
+              <MenuItem value={NPC_SPECIES.OTHER}>Other</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Autocomplete
+              options={Object.keys(locations)}
+              getOptionLabel={(locationId) => locations[locationId]?.name ?? ""}
+              autoHighlight
+              defaultValue={npc.lastLocationId ?? ""}
+              onChange={(evt, value) =>
+                handleUpdateNPC({ lastLocationId: value ?? "" })
+              }
+              renderInput={(props) => (
+                <TextField {...props} label={"Location"} fullWidth />
+              )}
+            />
+          </Grid>
+          {isWorldOwner && (
+            <>
+              {!isSinglePlayer && (
+                <>
+                  <Grid item xs={12}>
+                    <SectionHeading label={"GM Only"} breakContainer />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Alert severity={"info"}>
+                      Information in this section will not be shared with your
+                      players.
+                    </Alert>
+                  </Grid>
+                </>
+              )}
+              <Grid item xs={12} sm={6}>
+                <DebouncedOracleInput
+                  label={"Descriptor"}
+                  initialValue={npc?.gmProperties?.descriptor ?? ""}
+                  updateValue={(descriptor) =>
+                    updateNPCGMProperties({
+                      worldId,
+                      npcId,
+                      npcGMProperties: { descriptor },
+                    }).catch(() => {})
+                  }
+                  oracleTableId="ironsworn/oracles/character/descriptor"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DebouncedOracleInput
+                  label={"Role"}
+                  initialValue={npc?.gmProperties?.role ?? ""}
+                  updateValue={(role) =>
+                    updateNPCGMProperties({
+                      worldId,
+                      npcId,
+                      npcGMProperties: { role },
+                    }).catch(() => {})
+                  }
+                  oracleTableId="ironsworn/oracles/character/role"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DebouncedOracleInput
+                  label={"Disposition"}
+                  initialValue={npc?.gmProperties?.disposition ?? ""}
+                  updateValue={(disposition) =>
+                    updateNPCGMProperties({
+                      worldId,
+                      npcId,
+                      npcGMProperties: { disposition },
+                    }).catch(() => {})
+                  }
+                  oracleTableId="ironsworn/oracles/character/disposition"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DebouncedOracleInput
+                  label={"Activity"}
+                  initialValue={npc?.gmProperties?.activity ?? ""}
+                  updateValue={(activity) =>
+                    updateNPCGMProperties({
+                      worldId,
+                      npcId,
+                      npcGMProperties: { activity },
+                    }).catch(() => {})
+                  }
+                  oracleTableId="ironsworn/oracles/character/activity"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DebouncedOracleInput
+                  label={"Goal"}
+                  initialValue={npc?.gmProperties?.goal ?? ""}
+                  updateValue={(goal) =>
+                    updateNPCGMProperties({
+                      worldId,
+                      npcId,
+                      npcGMProperties: { goal },
+                    }).catch(() => {})
+                  }
+                  oracleTableId="ironsworn/oracles/character/goal"
+                />
+              </Grid>
+              {!isSinglePlayer && (
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  sx={{ alignItems: "center", display: "flex" }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={npc.sharedWithPlayers ?? false}
+                        onChange={(evt, value) =>
+                          updateNPC({
+                            worldId,
+                            npcId,
+                            npc: { sharedWithPlayers: value },
+                          }).catch(() => {})
+                        }
+                      />
+                    }
+                    label="Visible to Players"
+                  />
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                <RichTextEditorNoTitle
+                  id={npcId}
+                  content={npc.gmProperties?.notes ?? ""}
+                  onSave={({ content, isBeaconRequest }) =>
+                    updateNPCGMNotes({
+                      worldId,
+                      npcId,
+                      notes: content,
+                      isBeacon: isBeaconRequest,
+                    })
+                  }
+                />
+              </Grid>
+            </>
+          )}
+          {!isSinglePlayer && (
+            <>
+              {isWorldOwner && (
+                <>
+                  <Grid item xs={12}>
+                    <SectionHeading
+                      label={"GM & Player Notes"}
+                      breakContainer
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Alert severity={"info"}>
+                      Notes in this section will only be visible to gms &
+                      players in campaigns. Notes for singleplayer games should
+                      go in the above section.
+                    </Alert>
+                  </Grid>
+                </>
+              )}
+              {!npc.sharedWithPlayers && (
+                <Grid item xs={12}>
+                  <Alert severity="warning">
+                    These notes are not yet visible to players because this
+                    location is hidden from them.
+                  </Alert>
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                {(npc.notes || npc.notes === null) && (
+                  <RtcRichTextEditor
+                    documentId={`iron-fellowship-${worldOwnerId}-${npcId}`}
+                    documentPassword={worldId}
+                    onSave={(notes, isBeaconRequest) =>
+                      updateNPCNotes({
+                        worldId,
+                        npcId,
+                        notes,
+                        isBeacon: isBeaconRequest,
+                      })
+                    }
+                    initialValue={npc.notes || undefined}
+                  />
+                )}
+              </Grid>
+            </>
+          )}
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Autocomplete
-            options={Object.keys(locations)}
-            getOptionLabel={(locationId) => locations[locationId]?.name ?? ""}
-            autoHighlight
-            defaultValue={npc.lastLocationId ?? ""}
-            onChange={(evt, value) =>
-              handleUpdateNPC({ lastLocationId: value ?? "" })
-            }
-            renderInput={(props) => (
-              <TextField {...props} label={"Location"} fullWidth />
-            )}
-          />
-        </Grid>
-      </Grid>
+      </Box>
     </Box>
   );
 }

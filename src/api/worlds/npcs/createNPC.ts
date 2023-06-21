@@ -9,6 +9,7 @@ export const createNPC: ApiFunction<string, string> = (worldId) => {
     addDoc(getNPCCollection(worldId), {
       name: "New NPC",
       species: NPC_SPECIES.IRONLANDER,
+      sharedWithPlayers: true,
       updatedTimestamp: Timestamp.now(),
     })
       .then((doc) => {

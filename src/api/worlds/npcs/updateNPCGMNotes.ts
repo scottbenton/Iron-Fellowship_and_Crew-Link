@@ -7,7 +7,6 @@ import {
 import { firebaseAuth } from "config/firebase.config";
 
 interface Params {
-  worldOwnerId: string;
   worldId: string;
   npcId: string;
   notes: string;

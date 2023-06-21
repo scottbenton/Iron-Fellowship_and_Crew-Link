@@ -167,6 +167,7 @@ export function TabsSection() {
           locations={locations}
           openNPCId={openNPCId}
           setOpenNPCId={setOpenNPCId}
+          isSinglePlayer={isSinglePlayer}
         />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.CHARACTER}>

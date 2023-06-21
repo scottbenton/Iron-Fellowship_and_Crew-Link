@@ -27,8 +27,7 @@ export interface GMNPCDocument {
   role?: string;
   descriptor?: string;
   disposition?: string;
-  conversation?: string;
-  knowledge?: string;
+  activity?: string;
   notes?: string;
 }
 
