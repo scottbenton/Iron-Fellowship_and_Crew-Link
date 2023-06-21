@@ -40,12 +40,14 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
       provider?.roomName !== documentId &&
       documentId !== lastUpdatedRef.current
     ) {
+      console.debug(provider?.roomName, documentId, lastUpdatedRef.current);
       lastUpdatedRef.current = documentId;
 
       const yDoc = new Y.Doc();
-      if (initialValueRef.current) {
-        Y.applyUpdate(yDoc, initialValueRef.current);
+      if (initialValue) {
+        Y.applyUpdate(yDoc, initialValue);
       }
+
       yDoc.on("update", (message, origin) => {
         if (!origin.peerId) {
           setHasUnsavedChanges(true);
@@ -92,6 +94,8 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
       }
     };
   }, [hasUnsavedChanges, yDoc, handleSave]);
+
+  useEffect(() => {}, [handleSave]);
 
   useEffect(() => {
     return () => {

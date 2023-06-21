@@ -3,7 +3,6 @@ import StarterKit from "@tiptap/starter-kit";
 
 import Document from "@tiptap/extension-document";
 import Placeholder from "@tiptap/extension-placeholder";
-import { Box, Fade } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EditorToolbar } from "./EditorToolbar";
 import { Editor } from "./Editor";

@@ -230,6 +230,7 @@ export function OpenLocation(props: OpenLocationProps) {
               )}
               <Grid item xs={12}>
                 <RichTextEditorNoTitle
+                  id={locationId}
                   content={location.gmProperties?.notes ?? ""}
                   onSave={({ content, isBeaconRequest }) =>
                     updateLocationGMNotes({
