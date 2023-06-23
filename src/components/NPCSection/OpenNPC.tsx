@@ -202,7 +202,7 @@ export function OpenNPC(props: OpenNPCProps) {
               options={Object.keys(locations)}
               getOptionLabel={(locationId) => locations[locationId]?.name ?? ""}
               autoHighlight
-              defaultValue={npc.lastLocationId ?? ""}
+              value={npc.lastLocationId ?? null}
               onChange={(evt, value) =>
                 handleUpdateNPC({ lastLocationId: value ?? "" })
               }
@@ -367,12 +367,13 @@ export function OpenNPC(props: OpenNPCProps) {
               <Grid item xs={12}>
                 {(npc.notes || npc.notes === null) && (
                   <RtcRichTextEditor
-                    documentId={`iron-fellowship-${worldOwnerId}-${npcId}`}
+                    id={npcId}
+                    roomPrefix={`iron-fellowship-${worldOwnerId}-`}
                     documentPassword={worldId}
-                    onSave={(notes, isBeaconRequest) =>
+                    onSave={(documentId, notes, isBeaconRequest) =>
                       updateNPCNotes({
                         worldId,
-                        npcId,
+                        npcId: documentId,
                         notes,
                         isBeacon: isBeaconRequest,
                       })

@@ -11,6 +11,7 @@ export const createNPC: ApiFunction<string, string> = (worldId) => {
       species: NPC_SPECIES.IRONLANDER,
       sharedWithPlayers: true,
       updatedTimestamp: Timestamp.now(),
+      createdTimestamp: Timestamp.now(),
     })
       .then((doc) => {
         resolve(doc.id);

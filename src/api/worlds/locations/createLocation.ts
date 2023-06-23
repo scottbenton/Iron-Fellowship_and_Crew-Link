@@ -13,6 +13,7 @@ export const createLocation: ApiFunction<
       name: "New Location",
       sharedWithPlayers: true,
       updatedTimestamp: Timestamp.now(),
+      createdTimestamp: Timestamp.now(),
     })
       .then((doc) => {
         resolve(doc.id);

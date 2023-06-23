@@ -16,10 +16,13 @@ export interface NPCDocument {
   imageFilenames?: string[];
   sharedWithPlayers?: boolean;
   updatedDate: Date;
+  createdDate: Date;
 }
 
-export interface NPCDocumentFirestore extends Omit<NPCDocument, "updatedDate"> {
+export interface NPCDocumentFirestore
+  extends Omit<NPCDocument, "updatedDate" | "createdDate"> {
   updatedTimestamp: Timestamp;
+  createdTimestamp: Timestamp;
 }
 
 export interface GMNPCDocument {

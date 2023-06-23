@@ -84,18 +84,26 @@ export function getPublicNotesLocationDoc(worldId: string, locationId: string) {
 export function convertToDatabase(
   location: Partial<LocationDocument>
 ): Partial<StoredLocation> {
-  const { updatedDate, ...restLocation } = location;
-  return {
+  const { updatedDate, createdDate, ...restLocation } = location;
+  const newLocation: Partial<StoredLocation> = {
     updatedTimestamp: Timestamp.now(),
     ...restLocation,
   };
+
+  if (createdDate) {
+    newLocation.createdTimestamp = Timestamp.fromDate(createdDate);
+  }
+
+  return newLocation;
 }
+
 export function convertFromDatabase(
   location: StoredLocation
 ): LocationDocument {
-  const { updatedTimestamp, ...restLocation } = location;
+  const { updatedTimestamp, createdTimestamp, ...restLocation } = location;
   return {
     updatedDate: updatedTimestamp.toDate(),
+    createdDate: createdTimestamp.toDate(),
     ...restLocation,
   };
 }

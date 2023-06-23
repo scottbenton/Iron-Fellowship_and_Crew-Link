@@ -73,8 +73,8 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   const sortedLocations = Object.keys(filteredLocations).sort(
     (l1, l2) =>
-      filteredLocations[l2].updatedDate.getTime() -
-      filteredLocations[l1].updatedDate.getTime()
+      filteredLocations[l2].createdDate.getTime() -
+      filteredLocations[l1].createdDate.getTime()
   );
   const openLocation = openLocationId && locations[openLocationId];
 

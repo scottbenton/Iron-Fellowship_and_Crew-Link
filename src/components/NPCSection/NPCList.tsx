@@ -6,17 +6,14 @@ import {
 import { NPCItem } from "./NPCItem";
 
 export interface NPCListProps {
+  sortedNPCs: string[];
   npcs: { [key: string]: NPC };
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openNPC: (npcId: string) => void;
 }
 
 export function NPCList(props: NPCListProps) {
-  const { npcs, locations, openNPC } = props;
-
-  const sortedNPCs = Object.keys(npcs).sort((n1, n2) => {
-    return npcs[n2].updatedDate.getTime() - npcs[n1].updatedDate.getTime();
-  });
+  const { sortedNPCs, npcs, locations, openNPC } = props;
 
   return (
     <Grid container sx={{ p: 2 }} spacing={2}>

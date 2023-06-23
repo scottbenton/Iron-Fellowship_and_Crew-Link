@@ -75,16 +75,23 @@ export function getPublicNotesNPCDoc(worldId: string, npcId: string) {
 export function convertToDatabase(
   npc: Partial<NPCDocument>
 ): Partial<NPCDocumentFirestore> {
-  const { updatedDate, ...restNPC } = npc;
-  return {
+  const { updatedDate, createdDate, ...restNPC } = npc;
+  const newNPC: Partial<NPCDocumentFirestore> = {
     updatedTimestamp: Timestamp.now(),
     ...restNPC,
   };
+
+  if (createdDate) {
+    newNPC.createdTimestamp = Timestamp.fromDate(createdDate);
+  }
+
+  return newNPC;
 }
 export function convertFromDatabase(npc: NPCDocumentFirestore): NPCDocument {
-  const { updatedTimestamp, ...restNPC } = npc;
+  const { updatedTimestamp, createdTimestamp, ...restNPC } = npc;
   return {
     updatedDate: updatedTimestamp.toDate(),
+    createdDate: createdTimestamp.toDate(),
     ...restNPC,
   };
 }

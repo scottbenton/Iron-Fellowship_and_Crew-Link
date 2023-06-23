@@ -37,8 +37,8 @@ export function NPCSection(props: NPCSectionProps) {
 
   const sortedNPCs = Object.keys(filteredNPCs).sort(
     (l1, l2) =>
-      filteredNPCs[l2].updatedDate.getTime() -
-      filteredNPCs[l1].updatedDate.getTime()
+      filteredNPCs[l2].createdDate.getTime() -
+      filteredNPCs[l1].createdDate.getTime()
   );
 
   const openNPC = openNPCId ? npcs[openNPCId] : undefined;
@@ -97,6 +97,7 @@ export function NPCSection(props: NPCSectionProps) {
         openNPC={setOpenNPCId}
       />
       <NPCList
+        sortedNPCs={sortedNPCs}
         npcs={filteredNPCs}
         locations={locations}
         openNPC={setOpenNPCId}
