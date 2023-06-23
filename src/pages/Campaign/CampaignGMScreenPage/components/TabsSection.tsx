@@ -17,6 +17,7 @@ import {
   StyledTab,
   ContainedTabPanel,
 } from "components/StyledTabs";
+import { NPCSection } from "components/NPCSection";
 
 enum TABS {
   MOVES = "moves",
@@ -27,6 +28,7 @@ enum TABS {
   SETTINGS = "settings",
   WORLD = "world",
   LOCATIONS = "locations",
+  NPCS = "npcs",
 }
 
 export interface TabsSectionProps {
@@ -62,6 +64,11 @@ export function TabsSection(props: TabsSectionProps) {
   const setOpenLocationId = useCampaignGMScreenStore(
     (store) => store.setOpenLocationId
   );
+
+  const npcs = useCampaignGMScreenStore((store) => store.npcs);
+  const openNPCId = useCampaignGMScreenStore((store) => store.openNPCId);
+  const setOpenNPCId = useCampaignGMScreenStore((store) => store.setOpenNPCId);
+
   const worldOwnerId = useCampaignGMScreenStore(
     (store) => store.campaign?.gmId
   );
@@ -83,6 +90,7 @@ export function TabsSection(props: TabsSectionProps) {
         <StyledTab label="Notes" value={TABS.NOTES} />
         <StyledTab label="World" value={TABS.WORLD} />
         <StyledTab label="Locations" value={TABS.LOCATIONS} />
+        <StyledTab label="NPCs" value={TABS.NPCS} />
         <StyledTab label="Settings" value={TABS.SETTINGS} />
       </StyledTabs>
       <ContainedTabPanel isVisible={selectedTab === TABS.MOVES}>
@@ -120,6 +128,21 @@ export function TabsSection(props: TabsSectionProps) {
           openLocationId={openLocationId}
           setOpenLocationId={setOpenLocationId}
           showHiddenTag
+        />
+      </ContainedTabPanel>
+      <ContainedTabPanel
+        isVisible={selectedTab === TABS.NPCS}
+        greyBackground={
+          true || (!openNPCId && worldId && worldOwnerId) ? true : false
+        }
+      >
+        <NPCSection
+          worldOwnerId={worldOwnerId ?? ""}
+          worldId={worldId ?? ""}
+          locations={locations}
+          npcs={npcs}
+          openNPCId={openNPCId}
+          setOpenNPCId={setOpenNPCId}
         />
       </ContainedTabPanel>
 

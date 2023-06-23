@@ -132,7 +132,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           alignItems: "center",
           justifyContent: "space-between",
           px: 2,
-          py: 0.5,
+          py: 1,
           borderWidth: 0,
           borderBottomWidth: 1,
           borderColor: theme.palette.divider,
