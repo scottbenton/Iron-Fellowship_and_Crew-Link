@@ -4,14 +4,14 @@ export interface StoredLocation {
   name: string;
   sharedWithPlayers?: boolean;
   updatedTimestamp: Timestamp;
+  createdTimestamp: Timestamp;
   imageFilenames?: string[];
 }
 
-export interface LocationDocument {
-  name: string;
-  sharedWithPlayers?: boolean;
+export interface LocationDocument
+  extends Omit<StoredLocation, "updatedTimestamp" | "createdTimestamp"> {
   updatedDate: Date;
-  imageFilenames?: string[];
+  createdDate: Date;
 }
 
 export interface GMLocationDocument {

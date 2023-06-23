@@ -9,6 +9,7 @@ import { useCampaignGMScreenListenToCustomOracles } from "api/user/custom-oracle
 import { useCampaignGMScreenListenToCustomMoves } from "api/user/custom-moves/listenToCustomMoves";
 import { useCampaignGMScreenListenToCampaignSettings } from "api/campaign/settings/listenToCampaignSettings";
 import { useCampaignGMScreenListenToLocations } from "api/worlds/locations/listenToLocations";
+import { useCampaignGMScreenListenToNPCs } from "api/worlds/npcs/listenToNPCs";
 
 export function useCampaignGMScreenApiCalls(campaignId?: string) {
   const campaign = useCampaignStore(
@@ -26,6 +27,7 @@ export function useCampaignGMScreenApiCalls(campaignId?: string) {
   useCampaignGMScreenListenToCustomOracles();
   useCampaignGMScreenListenToCampaignSettings();
   useCampaignGMScreenListenToLocations();
+  useCampaignGMScreenListenToNPCs();
 
   useEffect(() => {
     return () => {

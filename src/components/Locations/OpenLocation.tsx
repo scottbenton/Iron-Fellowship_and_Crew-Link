@@ -230,6 +230,7 @@ export function OpenLocation(props: OpenLocationProps) {
               )}
               <Grid item xs={12}>
                 <RichTextEditorNoTitle
+                  id={locationId}
                   content={location.gmProperties?.notes ?? ""}
                   onSave={({ content, isBeaconRequest }) =>
                     updateLocationGMNotes({
@@ -273,12 +274,13 @@ export function OpenLocation(props: OpenLocationProps) {
               <Grid item xs={12}>
                 {(location.notes || location.notes === null) && (
                   <RtcRichTextEditor
-                    documentId={`iron-fellowship-${worldOwnerId}-${locationId}`}
+                    id={locationId}
+                    roomPrefix={`iron-fellowship-${worldOwnerId}-`}
                     documentPassword={worldId}
-                    onSave={(notes, isBeaconRequest) =>
+                    onSave={(id, notes, isBeaconRequest) =>
                       updateLocationNotes({
                         worldId,
-                        locationId,
+                        locationId: id,
                         notes,
                         isBeacon: isBeaconRequest,
                       })

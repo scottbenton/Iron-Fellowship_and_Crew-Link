@@ -5,28 +5,35 @@ import * as Y from "yjs";
 import { RtcEditorComponent } from "./RtcEditorComponent";
 
 export interface RtcRichTextEditorProps {
-  documentId: string;
+  id: string;
+  roomPrefix: string;
   documentPassword: string;
-  onSave: (notes: Uint8Array, isBeaconRequest?: boolean) => Promise<boolean>;
+  onSave: (
+    documentId: string,
+    notes: Uint8Array,
+    isBeaconRequest?: boolean
+  ) => Promise<boolean>;
   initialValue?: Uint8Array;
 }
 
 export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
-  const { documentId, documentPassword, onSave, initialValue } = props;
+  const { id, roomPrefix, documentPassword, onSave, initialValue } = props;
 
   const [yDoc, setYDoc] = useState<Y.Doc>();
   const [provider, setProvider] = useState<WebrtcProvider>();
-  const lastUpdatedRef = useRef<string>();
+
+  const hasUnsavedChangesRef = useRef<boolean>(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
-  const initialValueRef = useRef<Uint8Array | undefined>(initialValue);
 
   const [saving, setSaving] = useState<boolean>(false);
 
+  // TODO - call save whenever the document ID changes
   const handleSave = useCallback(
-    (notes: Uint8Array, isBeaconRequest?: boolean) => {
+    (idToPass: string, notes: Uint8Array, isBeaconRequest?: boolean) => {
       setHasUnsavedChanges(false);
+      hasUnsavedChangesRef.current = false;
       setSaving(true);
-      onSave(notes, isBeaconRequest)
+      onSave(idToPass, notes, isBeaconRequest)
         .catch(() => {})
         .finally(() => {
           setSaving(false);
@@ -36,35 +43,47 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
   );
 
   useEffect(() => {
-    if (
-      provider?.roomName !== documentId &&
-      documentId !== lastUpdatedRef.current
-    ) {
-      lastUpdatedRef.current = documentId;
-
-      const yDoc = new Y.Doc();
-      if (initialValueRef.current) {
-        Y.applyUpdate(yDoc, initialValueRef.current);
-      }
-      yDoc.on("update", (message, origin) => {
-        if (!origin.peerId) {
-          setHasUnsavedChanges(true);
-        }
-      });
-      setProvider(
-        new WebrtcProvider(documentId, yDoc, {
-          password: documentPassword,
-        })
-      );
-      setYDoc(yDoc);
+    const roomName = roomPrefix + id;
+    // Recreate our yDoc and Provider
+    const newYDoc = new Y.Doc();
+    if (initialValue) {
+      Y.applyUpdate(newYDoc, initialValue);
     }
-  }, [documentId, documentPassword, provider]);
 
+    // Add update listener
+    newYDoc?.on("update", (message, origin) => {
+      // Only on changes we make, to prevent overcrowding our backend
+      if (!origin.peerId) {
+        setHasUnsavedChanges(true);
+        hasUnsavedChangesRef.current = true;
+      }
+    });
+
+    const newProvider = new WebrtcProvider(roomName, newYDoc, {
+      password: documentPassword,
+    });
+
+    setProvider(newProvider);
+    setYDoc(newYDoc);
+    setHasUnsavedChanges(false);
+    setSaving(false);
+    hasUnsavedChangesRef.current = false;
+
+    return () => {
+      if (hasUnsavedChangesRef.current && newYDoc) {
+        handleSave(id, Y.encodeStateAsUpdate(newYDoc));
+      }
+      newYDoc?.destroy();
+      newProvider?.destroy();
+    };
+  }, [roomPrefix, id, handleSave]);
+
+  // Handle save on page unload
   useEffect(() => {
     const onUnloadFunction = () => {
-      if (hasUnsavedChanges && yDoc) {
-        handleSave(Y.encodeStateAsUpdate(yDoc), true);
-
+      if (hasUnsavedChangesRef.current && yDoc) {
+        console.debug("SAVING FOR ID", id);
+        handleSave(id, Y.encodeStateAsUpdate(yDoc), true);
         // Delay closing because firefox does not support keep-alive
         // NOTE - this is a bad way of handling this, but I can't find a better way to check support for keep alive
         if (navigator.userAgent?.includes("Mozilla")) {
@@ -73,32 +92,26 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
         }
       }
     };
+    window.addEventListener("beforeunload", onUnloadFunction);
 
+    return () => {
+      window.removeEventListener("beforeunload", onUnloadFunction);
+    };
+  }, [handleSave, yDoc, id]);
+
+  useEffect(() => {
     let timeout: NodeJS.Timeout;
     if (yDoc && hasUnsavedChanges) {
       timeout = setTimeout(() => {
         const changes = Y.encodeStateAsUpdate(yDoc);
-        handleSave(changes);
+        handleSave(id, changes);
       }, 30 * 1000);
     }
 
-    window.addEventListener("beforeunload", onUnloadFunction);
     return () => {
       clearTimeout(timeout);
-      window.removeEventListener("beforeunload", onUnloadFunction);
-      if (yDoc && hasUnsavedChanges) {
-        const notes = Y.encodeStateAsUpdate(yDoc);
-        handleSave(notes);
-      }
     };
-  }, [hasUnsavedChanges, yDoc, handleSave]);
-
-  useEffect(() => {
-    return () => {
-      provider?.destroy();
-      yDoc?.destroy();
-    };
-  }, [provider, yDoc]);
+  }, [yDoc, hasUnsavedChanges, handleSave, id]);
 
   if (!yDoc || !provider) {
     return null;

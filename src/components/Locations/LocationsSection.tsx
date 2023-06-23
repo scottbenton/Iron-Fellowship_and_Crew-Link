@@ -73,8 +73,8 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   const sortedLocations = Object.keys(filteredLocations).sort(
     (l1, l2) =>
-      filteredLocations[l2].updatedDate.getTime() -
-      filteredLocations[l1].updatedDate.getTime()
+      filteredLocations[l2].createdDate.getTime() -
+      filteredLocations[l1].createdDate.getTime()
   );
   const openLocation = openLocationId && locations[openLocationId];
 
@@ -132,7 +132,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           alignItems: "center",
           justifyContent: "space-between",
           px: 2,
-          py: 0.5,
+          py: 1,
           borderWidth: 0,
           borderBottomWidth: 1,
           borderColor: theme.palette.divider,

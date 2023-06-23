@@ -16,6 +16,9 @@ import {
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
 import { constructCharacterSheetPath } from "../routes";
+import { TextFieldWithOracle } from "components/TextFieldWithOracle/TextFieldWithOracle";
+import { useRoller } from "providers/DieRollProvider";
+import { useCallback } from "react";
 
 export type AssetArrayType = [
   StoredAsset | undefined,
@@ -29,13 +32,24 @@ type CharacterCreateFormValues = {
   assets: AssetArrayType;
 };
 
+const nameOracles = [
+  "ironsworn/oracles/name/ironlander/a",
+  "ironsworn/oracles/name/ironlander/b",
+];
+
 export function CharacterCreatePage() {
   const campaignId = useSearchParams()[0].get("campaignId");
 
   const navigate = useNavigate();
+  const { rollOracleTable } = useRoller();
 
   const { addCharacterToCampaign } = useAddCharacterToCampaignMutation();
   const { createCharacter, loading } = useCreateCharacter();
+
+  const handleOracleRoll = useCallback(() => {
+    const oracleIndex = Math.floor(Math.random() * nameOracles.length);
+    return rollOracleTable(nameOracles[oracleIndex], false);
+  }, [rollOracleTable]);
 
   const validate = (values: CharacterCreateFormValues) => {
     const errors: { [key in keyof CharacterCreateFormValues]?: string } = {};
@@ -105,11 +119,12 @@ export function CharacterCreatePage() {
             <form onSubmit={form.handleSubmit}>
               <SectionHeading breakContainer label={"Character Details"} />
               <div>
-                <TextField
+                <TextFieldWithOracle
+                  getOracleValue={() => handleOracleRoll() ?? ""}
                   label={"Name"}
                   name={"name"}
                   value={form.values.name}
-                  onChange={form.handleChange}
+                  onChange={(value) => form.setFieldValue("name", value)}
                   error={form.touched.name && !!form.errors.name}
                   helperText={form.touched.name && form.errors.name}
                   sx={{ maxWidth: 350, mt: 2 }}

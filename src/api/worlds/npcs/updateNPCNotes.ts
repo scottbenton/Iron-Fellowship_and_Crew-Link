@@ -1,6 +1,9 @@
 import { Bytes, setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { constructNPCDocPath, getPublicNotesNPCDoc } from "./_getRef";
+import {
+  constructPublicNotesNPCDocPath,
+  getPublicNotesNPCDoc,
+} from "./_getRef";
 import { firebaseAuth } from "config/firebase.config";
 
 interface Params {
@@ -17,7 +20,10 @@ export const updateNPCNotes: ApiFunction<Params, boolean> = (params) => {
     if (isBeacon) {
       const contentPath = `projects/${
         import.meta.env.VITE_FIREBASE_PROJECTID
-      }/databases/(default)/documents${constructNPCDocPath(worldId, npcId)}`;
+      }/databases/(default)/documents${constructPublicNotesNPCDocPath(
+        worldId,
+        npcId
+      )}`;
 
       const token = (firebaseAuth.currentUser?.toJSON() as any).stsTokenManager
         .accessToken;
@@ -34,7 +40,7 @@ export const updateNPCNotes: ApiFunction<Params, boolean> = (params) => {
               name: contentPath,
               fields: {
                 notes: {
-                  stringValue: notes,
+                  bytesValue: Bytes.fromUint8Array(notes).toBase64(),
                 },
               },
             }),

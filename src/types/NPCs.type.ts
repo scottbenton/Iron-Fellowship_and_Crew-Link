@@ -13,13 +13,16 @@ export interface NPCDocument {
   name: string;
   species: NPC_SPECIES;
   lastLocationId?: string;
-  imageFilename?: string;
+  imageFilenames?: string[];
   sharedWithPlayers?: boolean;
   updatedDate: Date;
+  createdDate: Date;
 }
 
-export interface NPCDocumentFirestore extends Omit<NPCDocument, "updatedDate"> {
+export interface NPCDocumentFirestore
+  extends Omit<NPCDocument, "updatedDate" | "createdDate"> {
   updatedTimestamp: Timestamp;
+  createdTimestamp: Timestamp;
 }
 
 export interface GMNPCDocument {
@@ -27,8 +30,7 @@ export interface GMNPCDocument {
   role?: string;
   descriptor?: string;
   disposition?: string;
-  conversation?: string;
-  knowledge?: string;
+  activity?: string;
   notes?: string;
 }
 

@@ -9,7 +9,6 @@ import {
 import { useUpdateCampaignWorld } from "api/campaign/updateCampaignWorld";
 import { useUpdateCharacterWorld } from "api/characters/updateCharacterWorld";
 import { useDeleteWorld } from "api/worlds/deleteWorld";
-import { PageBanner } from "components/Layout/PageBanner";
 import { WorldSheet } from "components/WorldSheet";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useConfirm } from "material-ui-confirm";
@@ -20,18 +19,15 @@ import { useCharacterStore } from "stores/character.store";
 import { useWorld } from "./hooks/useWorld";
 import { useEffect, useState } from "react";
 import { LocationsSection } from "components/Locations";
-import {
-  useListenToLocations,
-  useWorldSheetListenToLocations,
-} from "api/worlds/locations/listenToLocations";
+import { useWorldSheetListenToLocations } from "api/worlds/locations/listenToLocations";
 import { BreakContainer } from "components/BreakContainer";
 import { WORLD_ROUTES, constructWorldPath } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { StyledTab, StyledTabs } from "components/StyledTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { NPCSection } from "components/NPCSection";
-import { useListenToNPCs } from "api/worlds/npcs/listenToNPCs";
 import { useWorldSheetStore } from "./worldSheet.store";
+import { useWorldSheetListenToNPCs } from "api/worlds/npcs/listenToNPCs";
 
 export enum TABS {
   DETAILS = "details",
@@ -69,6 +65,12 @@ export function WorldSheetPage() {
   const setOpenLocationId = useWorldSheetStore(
     (store) => store.setOpenLocationId
   );
+
+  useWorldSheetListenToNPCs(worldOwnerId, worldId);
+  const npcs = useWorldSheetStore((store) => store.npcs);
+  const openNPCId = useWorldSheetStore((store) => store.openNPCId);
+  const setOpenNPCId = useWorldSheetStore((store) => store.setOpenNPCId);
+
   const resetState = useWorldSheetStore((store) => store.resetState);
 
   useEffect(() => {
@@ -155,7 +157,7 @@ export function WorldSheetPage() {
           >
             <StyledTab value={TABS.DETAILS} label={"World Details"} />
             <StyledTab value={TABS.LOCATIONS} label={"Locations"} />
-            {/* <StyledTab value={TABS.NPCS} label={"NPCs"} /> */}
+            <StyledTab value={TABS.NPCS} label={"NPCs"} />
           </StyledTabs>
         </BreakContainer>
         {selectedTab === TABS.DETAILS && (
@@ -179,8 +181,13 @@ export function WorldSheetPage() {
             />
           </BreakContainer>
         )}
-        {/* {selectedTab === TABS.NPCS && (
-          <BreakContainer>
+        {selectedTab === TABS.NPCS && (
+          <BreakContainer
+            sx={(theme) => ({
+              backgroundColor: theme.palette.background.default,
+              flexGrow: 1,
+            })}
+          >
             <NPCSection
               worldOwnerId={worldOwnerId}
               worldId={worldId}
@@ -190,7 +197,7 @@ export function WorldSheetPage() {
               setOpenNPCId={setOpenNPCId}
             />
           </BreakContainer>
-        )} */}
+        )}
       </PageContent>
     </>
   );

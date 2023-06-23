@@ -1,6 +1,9 @@
 import { Bytes, setDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { constructLocationDocPath, getPublicNotesLocationDoc } from "./_getRef";
+import {
+  constructPublicNotesLocationDocPath,
+  getPublicNotesLocationDoc,
+} from "./_getRef";
 import { firebaseAuth } from "config/firebase.config";
 
 interface Params {
@@ -17,7 +20,7 @@ export const updateLocationNotes: ApiFunction<Params, boolean> = (params) => {
     if (isBeacon) {
       const contentPath = `projects/${
         import.meta.env.VITE_FIREBASE_PROJECTID
-      }/databases/(default)/documents${constructLocationDocPath(
+      }/databases/(default)/documents${constructPublicNotesLocationDocPath(
         worldId,
         locationId
       )}`;
@@ -37,7 +40,7 @@ export const updateLocationNotes: ApiFunction<Params, boolean> = (params) => {
               name: contentPath,
               fields: {
                 notes: {
-                  stringValue: notes,
+                  bytesValue: Bytes.fromUint8Array(notes).toBase64(),
                 },
               },
             }),

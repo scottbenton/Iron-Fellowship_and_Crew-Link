@@ -2,9 +2,10 @@ import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/chara
 import { Unsubscribe } from "firebase/auth";
 import { Bytes, onSnapshot, query, where } from "firebase/firestore";
 import { useSnackbar } from "hooks/useSnackbar";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NPCDocument } from "types/NPCs.type";
 import {
+  constructNPCImagePath,
   convertFromDatabase,
   getNPCCollection,
   getPrivateDetailsNPCDoc,
@@ -14,6 +15,8 @@ import { GMNPCDocument } from "types/NPCs.type";
 import { useAuth } from "providers/AuthProvider";
 import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 import { NPC } from "stores/sharedLocationStore";
+import { getImageUrl } from "lib/storage.lib";
+import { useWorldSheetStore } from "pages/World/WorldSheetPage/worldSheet.store";
 
 export function listenToNPCs(
   uid: string | undefined,
@@ -97,6 +100,40 @@ export function useListenToNPCs(worldOwnerId?: string, worldId?: string) {
     [key: string]: NPC;
   }>({});
 
+  const updateNPCAndLoadImage = useCallback(
+    (npcId: string, npc: NPCDocument) => {
+      setNPCs((prevNPCs) => {
+        let newNPCs = { ...prevNPCs };
+        const prevNPC = newNPCs[npcId];
+        newNPCs[npcId] = { ...prevNPC, ...npc };
+        return newNPCs;
+      });
+      setNPCs((prevNPCs) => {
+        const newNPCs = { ...prevNPCs };
+        const prevNPC = newNPCs[npcId];
+        newNPCs[npcId] = { ...prevNPC, ...npc };
+        return newNPCs;
+      });
+
+      const imageUrl = npc.imageFilenames?.[0];
+
+      if (worldId && imageUrl) {
+        getImageUrl(constructNPCImagePath(worldId, npcId, imageUrl)).then(
+          (url) => {
+            setNPCs((prevNPCs) => {
+              const newNPCs = { ...prevNPCs };
+              const newNPC = { ...newNPCs[npcId] };
+              newNPC.imageUrls = [url];
+              newNPCs[npcId] = newNPC;
+              return newNPCs;
+            });
+          }
+        );
+      }
+    },
+    [worldId]
+  );
+
   useEffect(() => {
     let unsubscribes: Unsubscribe[];
     if (worldId && worldOwnerId) {
@@ -104,13 +141,7 @@ export function useListenToNPCs(worldOwnerId?: string, worldId?: string) {
         uid,
         worldOwnerId,
         worldId,
-        (npcId, npc) =>
-          setNPCs((prevNPCs) => {
-            let newNPCs = { ...prevNPCs };
-            const prevNPC = newNPCs[npcId];
-            newNPCs[npcId] = { ...prevNPC, ...npc };
-            return newNPCs;
-          }),
+        (npcId, npc) => updateNPCAndLoadImage(npcId, npc),
         (npcId, gmProperties) =>
           setNPCs((prevNPCs) => {
             let newNPCs = { ...prevNPCs };
@@ -154,6 +185,9 @@ export function useCharacterSheetListenToNPCs() {
   const worldId = useCharacterSheetStore((store) => store.worldId);
 
   const updateNPC = useCharacterSheetStore((store) => store.updateNPC);
+  const updateNPCImageUrl = useCharacterSheetStore(
+    (store) => store.addNPCImageURL
+  );
   const updateNPCGMProperties = useCharacterSheetStore(
     (store) => store.updateNPCGMProperties
   );
@@ -163,6 +197,21 @@ export function useCharacterSheetListenToNPCs() {
   const removeNPC = useCharacterSheetStore((store) => store.removeNPC);
   const clearNPCs = useCharacterSheetStore((store) => store.clearNPCs);
 
+  const updateNPCAndLoadImage = useCallback(
+    (npcId: string, npc: NPCDocument) => {
+      updateNPC(npcId, npc, (filename: string) => {
+        if (worldId) {
+          getImageUrl(constructNPCImagePath(worldId, npcId, filename)).then(
+            (url) => {
+              updateNPCImageUrl(npcId, 0, url);
+            }
+          );
+        }
+      });
+    },
+    [updateNPC, updateNPCImageUrl, worldId]
+  );
+
   useEffect(() => {
     let unsubscribes: Unsubscribe[];
     if (worldId && worldOwnerId) {
@@ -170,7 +219,7 @@ export function useCharacterSheetListenToNPCs() {
         uid,
         worldOwnerId,
         worldId,
-        updateNPC,
+        updateNPCAndLoadImage,
         updateNPCGMProperties,
         updateNPCNotes,
         removeNPC,
@@ -197,6 +246,9 @@ export function useCampaignGMScreenListenToNPCs() {
   const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
 
   const updateNPC = useCampaignGMScreenStore((store) => store.updateNPC);
+  const updateNPCImageUrl = useCampaignGMScreenStore(
+    (store) => store.addNPCImageURL
+  );
   const updateNPCGMProperties = useCampaignGMScreenStore(
     (store) => store.updateNPCGMProperties
   );
@@ -206,6 +258,21 @@ export function useCampaignGMScreenListenToNPCs() {
   const removeNPC = useCampaignGMScreenStore((store) => store.removeNPC);
   const clearNPCs = useCampaignGMScreenStore((store) => store.clearNPCs);
 
+  const updateNPCAndLoadImage = useCallback(
+    (npcId: string, npc: NPCDocument) => {
+      updateNPC(npcId, npc, (filename: string) => {
+        if (worldId) {
+          getImageUrl(constructNPCImagePath(worldId, npcId, filename)).then(
+            (url) => {
+              updateNPCImageUrl(npcId, 0, url);
+            }
+          );
+        }
+      });
+    },
+    [updateNPC, updateNPCImageUrl, worldId]
+  );
+
   useEffect(() => {
     let unsubscribes: Unsubscribe[];
     if (worldId && worldOwnerId) {
@@ -213,7 +280,62 @@ export function useCampaignGMScreenListenToNPCs() {
         uid,
         worldOwnerId,
         worldId,
-        updateNPC,
+        updateNPCAndLoadImage,
+        updateNPCGMProperties,
+        updateNPCNotes,
+        removeNPC,
+        (err) => error(err)
+      );
+    } else {
+      clearNPCs();
+    }
+
+    return () => {
+      unsubscribes?.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [uid, worldId, worldOwnerId]);
+}
+
+export function useWorldSheetListenToNPCs(
+  worldOwnerId: string | undefined,
+  worldId: string | undefined
+) {
+  const { error } = useSnackbar();
+
+  const uid = useAuth().user?.uid;
+
+  const updateNPC = useWorldSheetStore((store) => store.updateNPC);
+  const updateNPCImageUrl = useWorldSheetStore((store) => store.addNPCImageURL);
+  const updateNPCGMProperties = useWorldSheetStore(
+    (store) => store.updateNPCGMProperties
+  );
+  const updateNPCNotes = useWorldSheetStore((store) => store.updateNPCNotes);
+  const removeNPC = useWorldSheetStore((store) => store.removeNPC);
+  const clearNPCs = useWorldSheetStore((store) => store.clearNPCs);
+
+  const updateNPCAndLoadImage = useCallback(
+    (npcId: string, npc: NPCDocument) => {
+      updateNPC(npcId, npc, (filename: string) => {
+        if (worldId) {
+          getImageUrl(constructNPCImagePath(worldId, npcId, filename)).then(
+            (url) => {
+              updateNPCImageUrl(npcId, 0, url);
+            }
+          );
+        }
+      });
+    },
+    [updateNPC, updateNPCImageUrl, worldId]
+  );
+
+  useEffect(() => {
+    let unsubscribes: Unsubscribe[];
+    if (worldId && worldOwnerId) {
+      unsubscribes = listenToNPCs(
+        uid,
+        worldOwnerId,
+        worldId,
+        updateNPCAndLoadImage,
         updateNPCGMProperties,
         updateNPCNotes,
         removeNPC,

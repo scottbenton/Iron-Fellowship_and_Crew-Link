@@ -25,14 +25,17 @@ export function RichTextEditorNoTitle(props: RichTextEditorNoTitleProps) {
 
   const [saving, setSaving] = useState<boolean>(false);
 
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content,
-    onUpdate: () => {
-      hasEditedRef.current = true;
+  const editor = useEditor(
+    {
+      extensions: [StarterKit],
+      content,
+      onUpdate: () => {
+        hasEditedRef.current = true;
+      },
+      editable: !!onSave,
     },
-    editable: !!onSave,
-  });
+    [id]
+  );
 
   const editorRef = useRef<TTEditor | null>(null);
 
