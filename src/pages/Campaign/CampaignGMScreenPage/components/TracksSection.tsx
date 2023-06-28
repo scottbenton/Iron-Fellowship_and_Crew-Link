@@ -52,6 +52,7 @@ export function TracksSection(props: TracksSectionProps) {
       <div>
         <ProgressTrackList
           tracks={vows}
+          trackType={TRACK_TYPES.VOW}
           typeLabel={"Shared Vow"}
           handleAdd={(newTrack) =>
             addCampaignProgressTrack({
@@ -78,6 +79,7 @@ export function TracksSection(props: TracksSectionProps) {
         />
         <ProgressTrackList
           tracks={frays}
+          trackType={TRACK_TYPES.FRAY}
           typeLabel={"Shared Combat Track"}
           handleAdd={(newTrack) =>
             addCampaignProgressTrack({
@@ -104,6 +106,7 @@ export function TracksSection(props: TracksSectionProps) {
         />
         <ProgressTrackList
           tracks={journeys}
+          trackType={TRACK_TYPES.JOURNEY}
           typeLabel={"Shared Journey"}
           handleAdd={(newTrack) =>
             addCampaignProgressTrack({

@@ -30,6 +30,7 @@ export function ProgressTrackSection(props: ProgressTrackSectionProps) {
     <Box>
       {Array.isArray(tracks.campaign) && (
         <ProgressTrackList
+          trackType={type}
           tracks={tracks.campaign}
           typeLabel={`Campaign ${typeLabel}`}
           handleAdd={(newTrack) =>
@@ -46,6 +47,7 @@ export function ProgressTrackSection(props: ProgressTrackSectionProps) {
       {((Array.isArray(tracks.campaign) && showPersonalIfInCampaign) ||
         !Array.isArray(tracks.campaign)) && (
         <ProgressTrackList
+          trackType={type}
           tracks={tracks.character}
           typeLabel={`Character ${typeLabel}`}
           handleAdd={(newTrack) =>
