@@ -82,7 +82,6 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
   useEffect(() => {
     const onUnloadFunction = () => {
       if (hasUnsavedChangesRef.current && yDoc) {
-        console.debug("SAVING FOR ID", id);
         handleSave(id, Y.encodeStateAsUpdate(yDoc), true);
         // Delay closing because firefox does not support keep-alive
         // NOTE - this is a bad way of handling this, but I can't find a better way to check support for keep alive

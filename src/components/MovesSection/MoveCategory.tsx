@@ -30,6 +30,7 @@ export function MoveCategory(props: MoveCategoryProps) {
       </ListSubheader>
       {Object.values(category.Moves).map((move, index) => (
         <ListItem
+          id={move.$id}
           key={index}
           sx={(theme) => ({
             "&:nth-of-type(odd)": {

@@ -24,6 +24,7 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
     <>
       <ProgressTrackList
         tracks={vows}
+        trackType={TRACK_TYPES.VOW}
         typeLabel={"Shared Vow"}
         handleAdd={(newTrack) =>
           addCampaignProgressTrack({
@@ -51,6 +52,7 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
       />
       <ProgressTrackList
         tracks={frays}
+        trackType={TRACK_TYPES.FRAY}
         typeLabel={"Shared Combat Track"}
         handleAdd={(newTrack) =>
           addCampaignProgressTrack({
@@ -78,6 +80,7 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
       />
       <ProgressTrackList
         tracks={journeys}
+        trackType={TRACK_TYPES.JOURNEY}
         typeLabel={"Shared Journey"}
         handleAdd={(newTrack) =>
           addCampaignProgressTrack({
