@@ -6,11 +6,11 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { ROLL_RESULT, StatRoll } from "../DieRollContext";
+import { ROLL_RESULT, StatRoll } from "types/DieRolls.type";
 import { D6Icon } from "assets/D6Icon";
 import { D10Icon } from "assets/D10Icon";
 
-const getRollResultLabel = (result: ROLL_RESULT) => {
+export const getRollResultLabel = (result: ROLL_RESULT) => {
   switch (result) {
     case ROLL_RESULT.HIT:
       return "Strong Hit";

@@ -4,11 +4,13 @@ export enum CHARACTER_ROUTES {
   CREATE,
   SHEET,
   SELECT,
+  CARD,
 }
 
 export const characterPaths: { [key in CHARACTER_ROUTES]: string } = {
   [CHARACTER_ROUTES.CREATE]: "create",
   [CHARACTER_ROUTES.SHEET]: ":characterId",
+  [CHARACTER_ROUTES.CARD]: ":userId/:characterId/card",
   [CHARACTER_ROUTES.SELECT]: "",
 };
 

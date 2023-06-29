@@ -6,7 +6,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { OracleTableRoll } from "../DieRollContext";
+import { OracleTableRoll } from "types/DieRolls.type";
 import { D10Icon } from "assets/D10Icon";
 import { MarkdownRenderer } from "components/MarkdownRenderer";
 

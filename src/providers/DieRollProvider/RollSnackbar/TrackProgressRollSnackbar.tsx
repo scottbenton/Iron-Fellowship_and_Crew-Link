@@ -1,5 +1,5 @@
 import { Box, ButtonBase, Card, Divider, Typography } from "@mui/material";
-import { ROLL_RESULT, TrackProgressRoll } from "../DieRollContext";
+import { ROLL_RESULT, TrackProgressRoll } from "types/DieRolls.type";
 import { D10Icon } from "assets/D10Icon";
 
 const getRollResultLabel = (result: ROLL_RESULT) => {

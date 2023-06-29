@@ -1,20 +1,21 @@
 import { Box, Fab, Slide } from "@mui/material";
 import { PropsWithChildren, useState } from "react";
+import { DieRollContext } from "./DieRollContext";
 import {
-  DieRollContext,
   OracleTableRoll,
   Roll,
   ROLL_RESULT,
   ROLL_TYPE,
   StatRoll,
   TrackProgressRoll,
-} from "./DieRollContext";
+} from "types/DieRolls.type";
 import { TransitionGroup } from "react-transition-group";
 import ClearIcon from "@mui/icons-material/Close";
 import { RollSnackbar } from "./RollSnackbar";
 import { oracleCategoryMap, oracleMap } from "data/oracles";
 import { useCustomOracles } from "components/OracleSection/useCustomOracles";
 import { TRACK_TYPES } from "types/Track.type";
+import { useAddCharacterRoll } from "api/characters/rolls/addCharacterRoll";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -22,6 +23,8 @@ const getRoll = (dieMax: number) => {
 
 export function DieRollProvider(props: PropsWithChildren) {
   const { children } = props;
+  const { addCharacterRoll } = useAddCharacterRoll();
+
   const { allCustomOracleMap, customOracleCategory } = useCustomOracles();
   const combinedOracleCategories = {
     ...oracleCategoryMap,
@@ -69,6 +72,8 @@ export function DieRollProvider(props: PropsWithChildren) {
       rollLabel: label,
       timestamp: new Date(),
     };
+
+    addCharacterRoll(statRoll)?.catch(() => {});
 
     if (showSnackbar) {
       addRoll(statRoll);
@@ -140,6 +145,8 @@ export function DieRollProvider(props: PropsWithChildren) {
     };
 
     addRoll(trackProgressRoll);
+
+    addCharacterRoll(trackProgressRoll)?.catch(() => {});
 
     return result;
   };
