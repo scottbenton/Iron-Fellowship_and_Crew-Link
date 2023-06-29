@@ -1,4 +1,4 @@
-import { Roll, ROLL_TYPE } from "../DieRollContext";
+import { Roll, ROLL_TYPE } from "types/DieRolls.type";
 import { OracleTableRollSnackbar } from "./OracleTableRollSnackbar";
 import { StatRollSnackbar } from "./StatRollSnackbar";
 import { TrackProgressRollSnackbar } from "./TrackProgressRollSnackbar";

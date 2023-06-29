@@ -5,18 +5,20 @@ import { getHueFromString } from "functions/getHueFromString";
 import { useState } from "react";
 import { useMiscDataStore } from "stores/miscData.store";
 
-type AvatarSizes = "small" | "medium" | "large";
+type AvatarSizes = "small" | "medium" | "large" | "huge";
 
 const sizes: { [key in AvatarSizes]: number } = {
   small: 40,
   medium: 60,
   large: 80,
+  huge: 200,
 };
 
 const variants: { [key in AvatarSizes]: TypographyVariant } = {
   small: "h6",
   medium: "h5",
   large: "h4",
+  huge: "h1",
 };
 
 export interface PortraitAvatarProps {
@@ -33,6 +35,8 @@ export interface PortraitAvatarProps {
   };
   size?: AvatarSizes;
   colorful?: boolean;
+  rounded?: boolean;
+  darkBorder?: boolean;
 }
 
 export function PortraitAvatar(props: PortraitAvatarProps) {
@@ -43,6 +47,8 @@ export function PortraitAvatar(props: PortraitAvatarProps) {
     portraitSettings,
     colorful,
     size = "medium",
+    darkBorder,
+    rounded,
   } = props;
 
   useListenToCharacterPortraitUrl(uid, characterId, portraitSettings?.filename);
@@ -64,6 +70,8 @@ export function PortraitAvatar(props: PortraitAvatarProps) {
   const shouldShowColor = colorful && !portraitUrl;
   const hue = getHueFromString(characterId);
 
+  const borderWidth = size === "huge" ? 12 : 2;
+
   return (
     <Box
       width={sizes[size]}
@@ -79,20 +87,25 @@ export function PortraitAvatar(props: PortraitAvatarProps) {
         display: portraitUrl ? "block" : "flex",
         alignItems: "center",
         justifyContent: "center",
-        borderWidth: 2,
+        borderWidth,
         borderStyle: "solid",
         borderColor: shouldShowColor
           ? `hsl(${hue}, 60%, 40%)`
+          : darkBorder
+          ? theme.palette.grey[700]
           : theme.palette.grey[400],
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: rounded ? "100%" : theme.shape.borderRadius,
         "&>img": {
           width: isTaller ? `${100 * scale}%` : "auto",
           height: isTaller ? "auto" : `${100 * scale}%`,
           position: "relative",
           transform: `translate(calc(${marginLeft}% + ${
             sizes[size] / 2
-          }px - 4px), calc(${marginTop}% + ${sizes[size] / 2}px - 4px))`,
+          }px - ${borderWidth}px), calc(${marginTop}% + ${
+            sizes[size] / 2
+          }px - ${borderWidth}px))`,
         },
+        zIndex: 2,
         flexShrink: 0,
       })}
     >

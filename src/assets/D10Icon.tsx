@@ -3,18 +3,22 @@ import { SvgIcon, SvgIconProps } from "@mui/material";
 export interface D10IconProps extends SvgIconProps {}
 
 export function D10Icon(props: D10IconProps) {
+  const { sx, ...rest } = props;
   return (
     <SvgIcon
       viewBox="0 0 512 512"
-      sx={{
-        width: 24,
-        height: 24,
-        strokeLinejoin: "round",
-        strokeWidth: 16,
-        stroke: "currentcolor",
-      }}
+      sx={[
+        {
+          width: 24,
+          height: 24,
+          strokeLinejoin: "round",
+          strokeWidth: 16,
+          stroke: "currentcolor",
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       color={"inherit"}
-      {...props}
+      {...rest}
     >
       <g transform="translate(0)">
         <path
