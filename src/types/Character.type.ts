@@ -39,6 +39,7 @@ export interface CharacterDocument {
     };
     scale: number;
   };
+  worldId?: string;
 }
 
 export interface AssetDocument {

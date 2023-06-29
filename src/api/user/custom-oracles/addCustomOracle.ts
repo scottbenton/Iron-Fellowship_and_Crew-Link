@@ -1,12 +1,12 @@
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { StoredMove } from "types/Moves.type";
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { StoredOracle } from "types/Oracles.type";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { getUsersCustomOracleDoc } from "./_getRef";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 
 export const addCustomOracle: ApiFunction<
   {

@@ -2,7 +2,7 @@ import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { getCampaignNoteDocument } from "./_getRef";
 import { NoteNotFoundException } from "api/error/NoteException";
 

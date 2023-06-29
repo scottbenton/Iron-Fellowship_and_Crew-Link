@@ -52,28 +52,30 @@ export function CustomMovesSection(props: CustomMovesSectionProps) {
       <SectionHeading label={"Custom Moves"} />
       {Array.isArray(customMoves) && Array.isArray(hiddenMoveIds) ? (
         <Stack spacing={2} px={2} mt={1}>
-          <Card variant={"outlined"}>
-            <List disablePadding>
-              {customMoves.map(
-                (move) =>
-                  move && (
-                    <CustomMoveListItem
-                      key={move.$id}
-                      move={move}
-                      isVisible={!hiddenMoveIds.includes(move.$id)}
-                      handleEdit={() => {
-                        setCurrentlyEditingMove(move);
-                        setIsAddMoveDialogOpen(true);
-                      }}
-                      handleVisibilityToggle={(isVisible) =>
-                        showOrHideCustomMove(move.$id, !isVisible)
-                      }
-                      handleDelete={() => handleDelete(move.$id, move)}
-                    />
-                  )
-              )}
-            </List>
-          </Card>
+          {customMoves.length > 0 && (
+            <Card variant={"outlined"}>
+              <List disablePadding>
+                {customMoves.map(
+                  (move) =>
+                    move && (
+                      <CustomMoveListItem
+                        key={move.$id}
+                        move={move}
+                        isVisible={!hiddenMoveIds.includes(move.$id)}
+                        handleEdit={() => {
+                          setCurrentlyEditingMove(move);
+                          setIsAddMoveDialogOpen(true);
+                        }}
+                        handleVisibilityToggle={(isVisible) =>
+                          showOrHideCustomMove(move.$id, !isVisible)
+                        }
+                        handleDelete={() => handleDelete(move.$id, move)}
+                      />
+                    )
+                )}
+              </List>
+            </Card>
+          )}
           <div>
             <Button
               variant={"outlined"}

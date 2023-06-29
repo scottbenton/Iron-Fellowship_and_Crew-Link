@@ -2,7 +2,7 @@ import { arrayRemove, deleteField, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getUserCustomMovesDoc } from "./_getRef";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 
 export const removeCustomMove: ApiFunction<

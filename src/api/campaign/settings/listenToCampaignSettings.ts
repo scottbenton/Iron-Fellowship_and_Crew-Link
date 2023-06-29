@@ -1,5 +1,5 @@
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useSnackbar } from "hooks/useSnackbar";

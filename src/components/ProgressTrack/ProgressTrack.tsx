@@ -3,12 +3,16 @@ import { useEffect, useState } from "react";
 import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
 import PlusIcon from "@mui/icons-material/Add";
-import { DIFFICULTY } from "../../types/Track.type";
+import { DIFFICULTY, TRACK_TYPES } from "../../types/Track.type";
 import CompleteIcon from "@mui/icons-material/Check";
-
+import DieIcon from "@mui/icons-material/Casino";
 import { useConfirm } from "material-ui-confirm";
+import { useRoller } from "providers/DieRollProvider";
+import { useLinkedDialog } from "providers/LinkedDialogProvider";
+import { moveMap } from "data/moves";
 
 export interface ProgressTracksProps {
+  trackType?: TRACK_TYPES;
   label?: string;
   difficulty?: DIFFICULTY;
   description?: string;
@@ -17,6 +21,12 @@ export interface ProgressTracksProps {
   onValueChange?: (value: number) => void;
   onDelete?: () => void;
 }
+
+const trackMoveIds: { [key in TRACK_TYPES]: string } = {
+  [TRACK_TYPES.VOW]: "ironsworn/moves/quest/fulfill_your_vow",
+  [TRACK_TYPES.JOURNEY]: "ironsworn/moves/adventure/reach_your_destination",
+  [TRACK_TYPES.FRAY]: "ironsworn/moves/combat/end_the_fight",
+};
 
 const getDifficultyLabel = (difficulty: DIFFICULTY): string => {
   switch (difficulty) {
@@ -52,6 +62,7 @@ const getDifficultyStep = (difficulty?: DIFFICULTY): number => {
 
 export function ProgressTrack(props: ProgressTracksProps) {
   const {
+    trackType,
     label,
     description,
     difficulty,
@@ -60,6 +71,10 @@ export function ProgressTrack(props: ProgressTracksProps) {
     onValueChange,
     onDelete,
   } = props;
+
+  const { rollTrackProgress } = useRoller();
+  const { openDialog } = useLinkedDialog();
+  const move = trackType ? moveMap[trackMoveIds[trackType]] : undefined;
 
   const [checks, setChecks] = useState<number[]>([]);
 
@@ -71,7 +86,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   const confirm = useConfirm();
 
-  const handleClick = () => {
+  const handleDeleteClick = () => {
     confirm({
       title: "Complete Track",
       description: "Are you sure you want to complete this track?",
@@ -85,6 +100,17 @@ export function ProgressTrack(props: ProgressTracksProps) {
         handleDelete();
       })
       .catch(() => {});
+  };
+
+  const handleRollClick = () => {
+    if (trackType) {
+      openDialog(trackMoveIds[trackType]);
+      rollTrackProgress(
+        trackType,
+        label || "",
+        Math.min(Math.floor(value / 4), 10)
+      );
+    }
   };
 
   useEffect(() => {
@@ -214,12 +240,22 @@ export function ProgressTrack(props: ProgressTracksProps) {
       </Box>
       {onDelete && (
         <Button
-          onClick={handleClick}
+          onClick={handleDeleteClick}
           endIcon={<CompleteIcon />}
+          variant={"outlined"}
+          sx={{ mt: 2, mr: 1 }}
+        >
+          Complete Track
+        </Button>
+      )}
+      {trackType && (
+        <Button
+          onClick={handleRollClick}
+          endIcon={<DieIcon />}
           variant={"outlined"}
           sx={{ mt: 2 }}
         >
-          Complete Track
+          Roll {move?.Title.Short}
         </Button>
       )}
     </Box>

@@ -1,11 +1,11 @@
-import { Editor, EditorContent, useEditor } from "@tiptap/react";
+import { Editor as TTEditor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import Document from "@tiptap/extension-document";
 import Placeholder from "@tiptap/extension-placeholder";
-import { Box, Fade } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EditorToolbar } from "./EditorToolbar";
+import { Editor } from "./Editor";
 
 const AUTOSAVE_INTERVAL_SECONDS = 30;
 
@@ -63,7 +63,7 @@ export function RichTextEditor(props: RichTextEditorProps) {
     editable: !!onSave,
   });
 
-  const editorRef = useRef<Editor | null>(null);
+  const editorRef = useRef<TTEditor | null>(null);
 
   const handleSave = useCallback(
     (isBeaconRequest?: boolean) => {
@@ -132,76 +132,19 @@ export function RichTextEditor(props: RichTextEditorProps) {
   }, []);
 
   return (
-    <Box height={"100%"} display={"flex"} flexDirection={"column"}>
-      {editor && onSave && (
-        <EditorToolbar
-          editor={editor}
-          deleteNote={onDelete ? () => id && onDelete(id) : undefined}
-        />
-      )}
-      <Box position={"relative"}>
-        <Fade in={saving}>
-          <Box
-            position={"absolute"}
-            top={(theme) => theme.spacing(1)}
-            right={(theme) => theme.spacing(1)}
-            bgcolor={(theme) => theme.palette.grey[600]}
-            color={"white"}
-            borderRadius={(theme) => theme.shape.borderRadius}
-            px={0.5}
-          >
-            Saving...
-          </Box>
-        </Fade>
-      </Box>
-      <Box
-        p={2}
-        flexGrow={1}
-        sx={(theme) => ({
-          overflowY: "auto",
-          ">div": {
-            height: "100%",
-            overflowX: "hidden",
-          },
-          ".ProseMirror": {
-            height: "100%",
-            borderWidth: 1,
-            borderStyle: "solid",
-            borderColor: "transparent",
-            wordBreak: "break-word",
-            maxWidth: "100%",
-
-            "&>*": {
-              maxWidth: "100%",
-              width: "65ch",
-            },
-
-            "&:focus": {
-              outline: "none",
-            },
-            "&.is-empty::before": {
-              content: "attr(data-placeholder)",
-              float: "left",
-              color: theme.palette.grey[400],
-              pointerEvents: "none",
-              height: 0,
-            },
-            "&.ProseMirror>:first-of-type": {
-              marginTop: 0,
-            },
-          },
-          blockquote: {
-            borderLeft: `3px solid ${theme.palette.divider}`,
-            paddingLeft: 0.5,
-            marginX: 2,
-          },
-          hr: {
-            color: theme.palette.divider,
-          },
-        })}
-      >
-        <EditorContent editor={editor} />
-      </Box>
-    </Box>
+    <Editor
+      editor={editor}
+      editable={!!onSave}
+      saving={saving}
+      toolbar={
+        editor &&
+        onSave && (
+          <EditorToolbar
+            editor={editor}
+            deleteNote={onDelete ? () => id && onDelete(id) : undefined}
+          />
+        )
+      }
+    />
   );
 }

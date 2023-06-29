@@ -1,6 +1,6 @@
 import { Avatar, ButtonBase, Menu, MenuItem } from "@mui/material";
 import { useRef, useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../providers/AuthProvider";
 import { logout } from "../../lib/auth.lib";
 
 const getInitials = (name: string) => {
@@ -40,7 +40,7 @@ export function HeaderMenu() {
         <MenuItem
           onClick={() => {
             setMenuOpen(false);
-            logout();
+            logout().then(() => window.location.reload());
           }}
         >
           Logout

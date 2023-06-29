@@ -1,14 +1,14 @@
 import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { getErrorMessage } from "functions/getErrorMessage";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "hooks/useSnackbar";
 import { getCharacterTracksDoc } from "./_getRef";
 import {
   convertTrackMapToArray,
   TrackWithId,
   useCharacterSheetStore,
-} from "features/character-sheet/characterSheet.store";
+} from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { TRACK_TYPES } from "types/Track.type";
 
 export function listenToCharacterProgressTracks(

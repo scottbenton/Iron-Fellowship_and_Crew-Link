@@ -1,18 +1,21 @@
 import { Box, Fab, Slide } from "@mui/material";
 import { PropsWithChildren, useState } from "react";
+import { DieRollContext } from "./DieRollContext";
 import {
-  DieRollContext,
   OracleTableRoll,
   Roll,
   ROLL_RESULT,
   ROLL_TYPE,
   StatRoll,
-} from "./DieRollContext";
+  TrackProgressRoll,
+} from "types/DieRolls.type";
 import { TransitionGroup } from "react-transition-group";
 import ClearIcon from "@mui/icons-material/Close";
 import { RollSnackbar } from "./RollSnackbar";
 import { oracleCategoryMap, oracleMap } from "data/oracles";
 import { useCustomOracles } from "components/OracleSection/useCustomOracles";
+import { TRACK_TYPES } from "types/Track.type";
+import { useAddCharacterRoll } from "api/characters/rolls/addCharacterRoll";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -20,6 +23,8 @@ const getRoll = (dieMax: number) => {
 
 export function DieRollProvider(props: PropsWithChildren) {
   const { children } = props;
+  const { addCharacterRoll } = useAddCharacterRoll();
+
   const { allCustomOracleMap, customOracleCategory } = useCustomOracles();
   const combinedOracleCategories = {
     ...oracleCategoryMap,
@@ -68,6 +73,8 @@ export function DieRollProvider(props: PropsWithChildren) {
       timestamp: new Date(),
     };
 
+    addCharacterRoll(statRoll)?.catch(() => {});
+
     if (showSnackbar) {
       addRoll(statRoll);
     }
@@ -110,6 +117,40 @@ export function DieRollProvider(props: PropsWithChildren) {
     return entry;
   };
 
+  const rollTrackProgress = (
+    trackType: TRACK_TYPES,
+    trackLabel: string,
+    trackProgress: number
+  ) => {
+    const challenge1 = getRoll(10);
+    const challenge2 = getRoll(10);
+
+    let result: ROLL_RESULT = ROLL_RESULT.WEAK_HIT;
+    if (trackProgress > challenge1 && trackProgress > challenge2) {
+      result = ROLL_RESULT.HIT;
+      // Strong Hit
+    } else if (trackProgress <= challenge1 && trackProgress <= challenge2) {
+      result = ROLL_RESULT.MISS;
+    }
+
+    const trackProgressRoll: TrackProgressRoll = {
+      type: ROLL_TYPE.TRACK_PROGRESS,
+      rollLabel: trackLabel,
+      timestamp: new Date(),
+      challenge1,
+      challenge2,
+      trackProgress,
+      trackType,
+      result,
+    };
+
+    addRoll(trackProgressRoll);
+
+    addCharacterRoll(trackProgressRoll)?.catch(() => {});
+
+    return result;
+  };
+
   const clearRolls = () => {
     setRolls([]);
   };
@@ -125,7 +166,9 @@ export function DieRollProvider(props: PropsWithChildren) {
   };
 
   return (
-    <DieRollContext.Provider value={{ rolls, rollStat, rollOracleTable }}>
+    <DieRollContext.Provider
+      value={{ rolls, rollStat, rollOracleTable, rollTrackProgress }}
+    >
       {children}
       <Box
         position={"fixed"}

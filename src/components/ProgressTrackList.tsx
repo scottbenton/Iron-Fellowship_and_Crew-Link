@@ -1,11 +1,12 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { TrackWithId } from "../features/character-sheet/characterSheet.store";
-import { StoredTrack } from "../types/Track.type";
+import { TrackWithId } from "../pages/Character/CharacterSheetPage/characterSheet.store";
+import { StoredTrack, TRACK_TYPES } from "../types/Track.type";
 import { AddTrackDialog } from "./AddTrackDialog/AddTrackDialog";
 import { ProgressTrack } from "./ProgressTrack/ProgressTrack";
 import { SectionHeading } from "./SectionHeading";
 
 export interface ProgressTrackListProps {
+  trackType: TRACK_TYPES;
   tracks?: TrackWithId[];
   typeLabel: string;
   handleAdd: (newTrack: StoredTrack) => Promise<boolean>;
@@ -17,6 +18,7 @@ export interface ProgressTrackListProps {
 export function ProgressTrackList(props: ProgressTrackListProps) {
   const {
     tracks,
+    trackType,
     typeLabel,
     handleAdd,
     handleUpdateValue,
@@ -54,6 +56,7 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
           tracks.map((track, index) => (
             <ProgressTrack
               key={index}
+              trackType={trackType}
               label={track.label}
               description={track.description}
               difficulty={track.difficulty}

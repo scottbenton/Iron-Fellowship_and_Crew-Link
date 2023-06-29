@@ -4,7 +4,7 @@ import { getErrorMessage } from "functions/getErrorMessage";
 import { useSnackbar } from "hooks/useSnackbar";
 import { getCampaignNoteCollection } from "./_getRef";
 import { Note } from "types/Notes.type";
-import { useCampaignGMScreenStore } from "features/campaign-gm-screen/campaignGMScreen.store";
+import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 
 export function listenToNotes(
   campaignId: string,

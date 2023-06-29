@@ -4,15 +4,18 @@ import {
   Button,
   Container,
   Hidden,
-  Tab,
-  Tabs,
   Toolbar,
   Typography,
   useTheme,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import { AUTH_STATE, useAuth } from "../../hooks/useAuth";
-import { CAMPAIGN_PREFIX, CHARACTER_PREFIX, paths, ROUTES } from "../../routes";
+import { AUTH_STATE, useAuth } from "../../providers/AuthProvider";
+import {
+  BASE_ROUTES,
+  basePaths,
+  CAMPAIGN_PREFIX,
+  CHARACTER_PREFIX,
+} from "../../routes";
 import { LoginButton } from "./LoginButton";
 import { ReactComponent as IronFellowshipLogo } from "./iron-fellowship-logo.svg";
 import { useEffect, useState } from "react";
@@ -20,10 +23,11 @@ import { HeaderMenu } from "./HeaderMenu";
 
 import CharacterIcon from "@mui/icons-material/Person";
 import CampaignIcon from "@mui/icons-material/Groups";
+import WorldIcon from "@mui/icons-material/Public";
 
 export function Header() {
   const theme = useTheme();
-  const { authState } = useAuth();
+  const { state } = useAuth();
 
   const path = useLocation().pathname;
 
@@ -56,13 +60,13 @@ export function Header() {
               Iron Fellowship
             </Typography>
           </Box>
-          {authState === AUTH_STATE.AUTHENTICATED ? (
+          {state === AUTH_STATE.AUTHENTICATED ? (
             <Box>
               <Hidden smDown>
                 <>
                   <Button
                     component={Link}
-                    to={paths[ROUTES.CHARACTER_SELECT]}
+                    to={basePaths[BASE_ROUTES.CHARACTER]}
                     sx={{
                       color: "white",
                       "&:hover": {
@@ -75,7 +79,7 @@ export function Header() {
                   </Button>
                   <Button
                     component={Link}
-                    to={paths[ROUTES.CAMPAIGN_SELECT]}
+                    to={basePaths[BASE_ROUTES.CAMPAIGN]}
                     sx={{
                       color: "white",
                       ml: 1,
@@ -87,6 +91,20 @@ export function Header() {
                   >
                     Campaigns
                   </Button>
+                  <Button
+                    component={Link}
+                    to={basePaths[BASE_ROUTES.WORLD]}
+                    sx={{
+                      color: "white",
+                      ml: 1,
+                      "&:hover": {
+                        backgroundColor: theme.palette.primary.dark,
+                      },
+                    }}
+                    endIcon={<WorldIcon />}
+                  >
+                    Worlds
+                  </Button>
                 </>
               </Hidden>
               <HeaderMenu />
@@ -95,29 +113,6 @@ export function Header() {
             <LoginButton />
           )}
         </Toolbar>
-        {authState === AUTH_STATE.AUTHENTICATED && (
-          <Hidden smUp>
-            <Tabs
-              variant={"fullWidth"}
-              textColor={"inherit"}
-              value={selectedTab}
-              indicatorColor={"secondary"}
-            >
-              <Tab
-                label={"Characters"}
-                value={"character"}
-                component={Link}
-                to={paths[ROUTES.CHARACTER_SELECT]}
-              />
-              <Tab
-                label={"Campaigns"}
-                value={"campaign"}
-                component={Link}
-                to={paths[ROUTES.CAMPAIGN_SELECT]}
-              />
-            </Tabs>
-          </Hidden>
-        )}
       </Container>
     </AppBar>
   );

@@ -4,4 +4,5 @@ export interface StoredCampaign {
   characters: { uid: string; characterId: string }[];
   supply: number;
   gmId?: string;
+  worldId?: string;
 }

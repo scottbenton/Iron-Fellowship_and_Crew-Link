@@ -38,6 +38,7 @@ export function OracleListItem(props: OracleListItemProps) {
 
   return (
     <ListItem
+      id={id}
       disablePadding
       sx={(theme) => ({
         "&:nth-of-type(odd)": {

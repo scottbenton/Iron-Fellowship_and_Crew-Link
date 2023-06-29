@@ -1,10 +1,10 @@
 import { CharacterNotFoundException } from "api/error/CharacterNotFoundException";
 import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { useCharacterSheetStore } from "features/character-sheet/characterSheet.store";
+import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { updateDoc } from "firebase/firestore";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { useAuth } from "hooks/useAuth";
+import { useAuth } from "providers/AuthProvider";
 import { getCharacterAssetDoc } from "./_getRef";
 
 export const updateAssetInput: ApiFunction<
