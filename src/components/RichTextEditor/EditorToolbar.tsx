@@ -49,6 +49,10 @@ export function EditorToolbar(props: EditorToolbarProps) {
       px={2}
       pt={0.5}
       pb={1}
+      position={"sticky"}
+      top={0}
+      bgcolor={(theme) => theme.palette.background.paper}
+      zIndex={2}
     >
       <TextTypeDropdown editor={editor} sx={{ mt: 0.5 }} />
       <ToggleButtonGroup sx={{ mr: 1, mt: 0.5 }}>

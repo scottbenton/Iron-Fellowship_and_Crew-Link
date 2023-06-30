@@ -49,7 +49,8 @@ export function LocationsSection(props: LocationsSectionProps) {
   } = props;
 
   const isWorldOwner = useAuth().user?.uid === worldOwnerId;
-  const isWorldOwnerPremium = useUserDoc(worldOwnerId).user?.isPremium ?? false;
+  const isWorldOwnerPremium =
+    useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
 
   const { createLocation, loading: createLocationLoading } =
     useCreateLocation();

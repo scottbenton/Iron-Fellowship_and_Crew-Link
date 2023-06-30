@@ -14,7 +14,7 @@ export function StyledTabs(props: StyledTabsProps) {
       }}
       TabScrollButtonProps={{
         sx: {
-          height: "100%",
+          alignSelf: "stretch",
         },
       }}
       sx={(theme) => ({

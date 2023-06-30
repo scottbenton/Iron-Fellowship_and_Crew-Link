@@ -20,7 +20,7 @@ export function StatsSection() {
 
   return (
     <Box display={"flex"} flexWrap={"wrap"} justifyContent={"flex-start"}>
-      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} pl={0.5}>
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
         <StatComponent
           label={"Edge"}
           value={stats[Stat.Edge]}

@@ -9,6 +9,7 @@ import { OpenNPC } from "./OpenNPC";
 import { Box, Hidden, List, ListItemButton, ListItemText } from "@mui/material";
 import { useAuth } from "providers/AuthProvider";
 import { EmptyState } from "components/EmptyState/EmptyState";
+import { useUserDoc } from "api/user/getUserDoc";
 
 export interface NPCSectionProps {
   worldOwnerId: string;
@@ -33,6 +34,8 @@ export function NPCSection(props: NPCSectionProps) {
 
   const uid = useAuth().user?.uid;
   const isWorldOwner = worldOwnerId === uid;
+
+  const canUsePhotos = useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
 
   const { search, setSearch, filteredNPCs } = useFilterNPCs(locations, npcs);
 
