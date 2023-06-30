@@ -12,7 +12,7 @@ import {
   constructCampaignPath,
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
-import { PageContent } from "components/Layout";
+import { PageContent, PageHeader } from "components/Layout";
 
 export function CampaignGMScreenPage() {
   const { campaignId } = useParams();
@@ -64,44 +64,49 @@ export function CampaignGMScreenPage() {
   const campaign = campaigns[campaignId];
 
   return (
-    <PageContent isPaper>
-      <Grid
-        container
-        spacing={2}
-        display={"flex"}
-        sx={(theme) => ({
-          [theme.breakpoints.up("md")]: {
-            height: "100vh",
-            overflow: "hidden",
-          },
-          py: 2,
-        })}
-      >
-        <Hidden mdDown>
+    <>
+      <PageHeader />
+      <PageContent isPaper>
+        <Grid
+          container
+          spacing={2}
+          display={"flex"}
+          sx={(theme) => ({
+            [theme.breakpoints.up("md")]: {
+              height: "100vh",
+              overflow: "hidden",
+            },
+            py: 2,
+          })}
+        >
+          <Hidden mdDown>
+            <Grid
+              item
+              xs={12}
+              md={4}
+              lg={3}
+              sx={(theme) => ({
+                [theme.breakpoints.up("md")]: {
+                  height: "100%",
+                },
+              })}
+            >
+              <MovesSection />
+            </Grid>
+          </Hidden>
           <Grid
             item
             xs={12}
-            md={4}
-            lg={3}
+            md={8}
+            lg={9}
             sx={(theme) => ({
-              [theme.breakpoints.up("md")]: {
-                height: "100%",
-              },
+              [theme.breakpoints.up("md")]: { height: "100%" },
             })}
           >
-            <MovesSection />
+            <TabsSection campaign={campaign} campaignId={campaignId} />
           </Grid>
-        </Hidden>
-        <Grid
-          item
-          xs={12}
-          md={8}
-          lg={9}
-          sx={(theme) => ({ [theme.breakpoints.up("md")]: { height: "100%" } })}
-        >
-          <TabsSection campaign={campaign} campaignId={campaignId} />
         </Grid>
-      </Grid>
-    </PageContent>
+      </PageContent>
+    </>
   );
 }

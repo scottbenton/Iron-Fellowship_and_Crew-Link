@@ -27,7 +27,6 @@ import { SectionHeading } from "components/SectionHeading";
 import { useAuth } from "providers/AuthProvider";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 import { useUpdateNPCNotes } from "api/worlds/npcs/updateNPCNotes";
-import { TextFieldWithOracle } from "components/TextFieldWithOracle/TextFieldWithOracle";
 import { useUpdateNPCGMProperties } from "api/worlds/npcs/updateNPCGMProperties";
 import { useUpdateNPCGMNotes } from "api/worlds/npcs/updateNPCGMNotes";
 import { RichTextEditorNoTitle } from "components/RichTextEditor";
@@ -44,6 +43,7 @@ export interface OpenNPCProps {
   closeNPC: () => void;
   isWorldOwnerPremium?: boolean;
   isSinglePlayer?: boolean;
+  canUseImages: boolean;
 }
 
 const nameOracles: { [key in NPC_SPECIES]: string | string[] } = {
@@ -70,6 +70,7 @@ export function OpenNPC(props: OpenNPCProps) {
     npc,
     closeNPC,
     isSinglePlayer,
+    canUseImages,
   } = props;
   const uid = useAuth().user?.uid;
 
@@ -132,18 +133,20 @@ export function OpenNPC(props: OpenNPCProps) {
         backgroundColor: theme.palette.background.paper,
       })}
     >
-      <ImageUploader
-        src={npc.imageUrls?.[0]}
-        title={npc.name}
-        handleClose={() => closeNPC()}
-        handleFileUpload={(image) =>
-          uploadNPCImage({
-            worldId,
-            npcId,
-            image,
-          }).catch(() => {})
-        }
-      />
+      {canUseImages && (
+        <ImageUploader
+          src={npc.imageUrls?.[0]}
+          title={npc.name}
+          handleClose={() => closeNPC()}
+          handleFileUpload={(image) =>
+            uploadNPCImage({
+              worldId,
+              npcId,
+              image,
+            }).catch(() => {})
+          }
+        />
+      )}
       <Box
         display={"flex"}
         alignItems={"center"}

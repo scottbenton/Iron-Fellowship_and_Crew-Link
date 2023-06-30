@@ -26,7 +26,11 @@ export function Editor(props: EditorProps) {
               borderColor: theme.palette.divider,
               borderRadius: theme.shape.borderRadius,
             }
-          : {}
+          : {
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+            }
       }
     >
       {toolbar}

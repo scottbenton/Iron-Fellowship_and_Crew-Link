@@ -3,7 +3,7 @@ import { Border } from "assets/Border";
 import React, { PropsWithChildren } from "react";
 
 export interface PageHeaderProps extends PropsWithChildren {
-  label: string;
+  label?: string;
   subLabel?: string;
   actions?: React.ReactNode;
 }
@@ -11,14 +11,16 @@ export interface PageHeaderProps extends PropsWithChildren {
 export function PageHeader(props: PageHeaderProps) {
   const { label, subLabel, actions, children } = props;
 
+  const isEmpty = !label && !subLabel && !actions && !children;
+
   return (
     <>
       <Box
         sx={(theme) => ({
           color: theme.palette.primary.contrastText,
-          pt: 4,
+          pt: isEmpty ? 0 : 4,
           pb: 12,
-          mb: -12,
+          mb: isEmpty ? -18 : -12,
           width: "100vw",
           backgroundColor: theme.palette.primary.main,
         })}
@@ -37,13 +39,15 @@ export function PageHeader(props: PageHeaderProps) {
           ) : (
             <>
               <Box>
-                <Typography
-                  variant={"h4"}
-                  component={"h1"}
-                  fontFamily={(theme) => theme.fontFamilyTitle}
-                >
-                  {label}
-                </Typography>
+                {label && (
+                  <Typography
+                    variant={"h4"}
+                    component={"h1"}
+                    fontFamily={(theme) => theme.fontFamilyTitle}
+                  >
+                    {label}
+                  </Typography>
+                )}
                 {subLabel && (
                   <Typography
                     variant={"h6"}
@@ -67,7 +71,7 @@ export function PageHeader(props: PageHeaderProps) {
         sx={(theme) => ({
           backgroundImage: 'url("/assets/border.svg")',
           position: "relative",
-          top: theme.spacing(12),
+          top: theme.spacing(isEmpty ? 18 : 12),
           mt: "-1px",
           mx: -2,
           transform: "rotate(180deg)",

@@ -29,16 +29,21 @@ import { CustomMovesSection } from "components/CustomMovesSection";
 import { CustomOracleSection } from "components/CustomOraclesSection";
 import { useCharacterSheetShowOrHideCustomMove } from "api/characters/settings/showOrHideCustomMove";
 import { useCharacterSheetShowOrHideCustomOracle } from "api/characters/settings/showOrHideCustomOracle";
+import { constructCharacterCardUrl } from "pages/Character/routes";
+import { useAuth } from "providers/AuthProvider";
 
 export function CharacterSection() {
   const { error } = useSnackbar();
 
+  const uid = useAuth().user?.uid ?? "";
+  const characterId = useCharacterSheetStore((store) => store.characterId);
   const campaignId = useCharacterSheetStore((store) => store.campaignId);
+
+  const { success } = useSnackbar();
 
   const bondValue = useCharacterSheetStore(
     (store) => store.character?.bonds ?? 0
   );
-  const characterId = useCharacterSheetStore((store) => store.characterId);
   const { updateBonds } = useCharacterSheetUpdateBonds();
 
   const stats = useCharacterSheetStore((store) => store.character?.stats);
@@ -83,6 +88,21 @@ export function CharacterSection() {
     (store) => store.characterSettings?.hiddenCustomOraclesIds
   );
   const { showOrHideCustomOracle } = useCharacterSheetShowOrHideCustomOracle();
+
+  const copyLinkToClipboard = () => {
+    navigator.clipboard
+      .writeText(
+        window.location.origin +
+          constructCharacterCardUrl(uid, characterId ?? "")
+      )
+      .then(() => {
+        success("Copied Link to Clipboard");
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
   return (
     <Stack spacing={2} pb={2}>
       <SectionHeading label={"Experience"} />
@@ -343,6 +363,12 @@ export function CharacterSection() {
           showOrHideCustomOracle={showOrHideCustomOracle}
         />
       )}
+      <SectionHeading label={"Misc"} />
+      <Box px={2}>
+        <Button onClick={() => copyLinkToClipboard()}>
+          Copy link to card overlay url
+        </Button>
+      </Box>
     </Stack>
   );
 }

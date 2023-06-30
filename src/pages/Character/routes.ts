@@ -31,3 +31,7 @@ export function constructCharacterCreateInCampaignUrl(campaignId: string) {
     characterPaths[CHARACTER_ROUTES.CREATE]
   }?campaignId=${campaignId}`;
 }
+
+export function constructCharacterCardUrl(uid: string, characterId: string) {
+  return `${basePaths[BASE_ROUTES.CHARACTER]}/${uid}/${characterId}/card`;
+}
