@@ -24,6 +24,7 @@ import { HeaderMenu } from "./HeaderMenu";
 import CharacterIcon from "@mui/icons-material/Person";
 import CampaignIcon from "@mui/icons-material/Groups";
 import WorldIcon from "@mui/icons-material/Public";
+import CheckIcon from "@mui/icons-material/Person2"
 
 export function Header() {
   const theme = useTheme();
@@ -64,6 +65,24 @@ export function Header() {
             <Box>
               <Hidden smDown>
                 <>
+                  <Button
+                    // 点击的时候切换css样式到dark mode
+                    onClick={() => {
+                        let container = document.getElementById("container");
+                        if(container) {
+                          container.style.backgroundColor = "#000000";
+                        }
+                    }}
+                    sx={{
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: theme.palette.primary.dark,
+                      },
+                    }}
+                    endIcon={<CharacterIcon />}
+                  >
+                    DarK mode
+                  </Button>
                   <Button
                     component={Link}
                     to={basePaths[BASE_ROUTES.CHARACTER]}
