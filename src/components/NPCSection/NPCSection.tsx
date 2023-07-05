@@ -35,7 +35,7 @@ export function NPCSection(props: NPCSectionProps) {
   const uid = useAuth().user?.uid;
   const isWorldOwner = worldOwnerId === uid;
 
-  const canUsePhotos = useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
+  const canUseImages = useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
 
   const { search, setSearch, filteredNPCs } = useFilterNPCs(locations, npcs);
 
@@ -100,6 +100,7 @@ export function NPCSection(props: NPCSectionProps) {
           locations={locations}
           closeNPC={() => setOpenNPCId()}
           isSinglePlayer={isSinglePlayer}
+          canUseImages={canUseImages}
         />
       </Box>
     );
@@ -119,6 +120,7 @@ export function NPCSection(props: NPCSectionProps) {
         npcs={filteredNPCs}
         locations={locations}
         openNPC={setOpenNPCId}
+        canUseImages={canUseImages}
       />
     </>
   );

@@ -4,17 +4,16 @@ import {
   NPC,
 } from "stores/sharedLocationStore";
 import PhotoIcon from "@mui/icons-material/Photo";
-import { useAuth } from "providers/AuthProvider";
 
 export interface NPCItemProps {
   npc: NPC;
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openNPC: () => void;
-  showPhoto: boolean;
+  canUseImages: boolean;
 }
 
 export function NPCItem(props: NPCItemProps) {
-  const { npc, locations, openNPC, showPhoto } = props;
+  const { npc, locations, openNPC, canUseImages } = props;
 
   const npcLocation = npc.lastLocationId
     ? locations[npc.lastLocationId]
@@ -42,10 +41,11 @@ export function NPCItem(props: NPCItemProps) {
         })}
       >
         <Box display={"flex"} alignItems={"start"}>
-          {showPhoto && (
+          {canUseImages && (
             <Box
               id={"portrait"}
               sx={(theme) => ({
+                marginRight: 1,
                 borderWidth: 2,
                 borderColor: theme.palette.divider,
                 borderStyle: "solid",
@@ -71,7 +71,7 @@ export function NPCItem(props: NPCItemProps) {
               )}
             </Box>
           )}
-          <Box marginLeft={1}>
+          <Box>
             <Typography>{npc.name}</Typography>
             {npcLocation && (
               <Typography variant={"caption"} color={"textSecondary"}>
