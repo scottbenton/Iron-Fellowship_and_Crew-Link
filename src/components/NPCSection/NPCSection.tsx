@@ -10,6 +10,7 @@ import { Box, Hidden, List, ListItemButton, ListItemText } from "@mui/material";
 import { useAuth } from "providers/AuthProvider";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import { useUserDoc } from "api/user/getUserDoc";
+import { WorldEmptyState } from "components/WorldEmptyState";
 
 export interface NPCSectionProps {
   worldOwnerId: string;
@@ -19,6 +20,7 @@ export interface NPCSectionProps {
   openNPCId?: string;
   setOpenNPCId: (npcId?: string) => void;
   isSinglePlayer?: boolean;
+  showHiddenTag?: boolean;
 }
 
 export function NPCSection(props: NPCSectionProps) {
@@ -30,26 +32,19 @@ export function NPCSection(props: NPCSectionProps) {
     openNPCId,
     setOpenNPCId,
     isSinglePlayer,
+    showHiddenTag,
   } = props;
 
   const uid = useAuth().user?.uid;
   const isWorldOwner = worldOwnerId === uid;
 
-  const canUsePhotos = useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
+  const canUseImages = useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
 
   const { search, setSearch, filteredNPCs } = useFilterNPCs(locations, npcs);
 
   if (!worldId || !worldOwnerId) {
     return (
-      <EmptyState
-        imageSrc="/assets/nature.svg"
-        title={"No World Found"}
-        message={
-          isSinglePlayer
-            ? 'Add a world in the "World" tab to allow you to add and view npcs.'
-            : "No world found. Your GM can add a world to the campaign in the GM Screen."
-        }
-      />
+      <WorldEmptyState isMultiplayer={!isSinglePlayer} isGM={isWorldOwner} />
     );
   }
 
@@ -83,6 +78,7 @@ export function NPCSection(props: NPCSectionProps) {
                     secondary={
                       !isSinglePlayer &&
                       isWorldOwner &&
+                      showHiddenTag &&
                       (!npcs[npcId].sharedWithPlayers ? "Hidden" : "Shared")
                     }
                   />
@@ -100,6 +96,7 @@ export function NPCSection(props: NPCSectionProps) {
           locations={locations}
           closeNPC={() => setOpenNPCId()}
           isSinglePlayer={isSinglePlayer}
+          canUseImages={canUseImages}
         />
       </Box>
     );
@@ -119,6 +116,8 @@ export function NPCSection(props: NPCSectionProps) {
         npcs={filteredNPCs}
         locations={locations}
         openNPC={setOpenNPCId}
+        canUseImages={canUseImages}
+        showHiddenTag={showHiddenTag}
       />
     </>
   );

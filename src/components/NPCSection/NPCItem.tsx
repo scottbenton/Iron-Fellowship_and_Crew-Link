@@ -4,17 +4,18 @@ import {
   NPC,
 } from "stores/sharedLocationStore";
 import PhotoIcon from "@mui/icons-material/Photo";
-import { useAuth } from "providers/AuthProvider";
+import HiddenIcon from "@mui/icons-material/VisibilityOff";
 
 export interface NPCItemProps {
   npc: NPC;
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openNPC: () => void;
-  showPhoto: boolean;
+  canUseImages: boolean;
+  showHiddenTag?: boolean;
 }
 
 export function NPCItem(props: NPCItemProps) {
-  const { npc, locations, openNPC, showPhoto } = props;
+  const { npc, locations, openNPC, canUseImages, showHiddenTag } = props;
 
   const npcLocation = npc.lastLocationId
     ? locations[npc.lastLocationId]
@@ -42,10 +43,11 @@ export function NPCItem(props: NPCItemProps) {
         })}
       >
         <Box display={"flex"} alignItems={"start"}>
-          {showPhoto && (
+          {canUseImages && (
             <Box
               id={"portrait"}
               sx={(theme) => ({
+                marginRight: 1,
                 borderWidth: 2,
                 borderColor: theme.palette.divider,
                 borderStyle: "solid",
@@ -71,12 +73,22 @@ export function NPCItem(props: NPCItemProps) {
               )}
             </Box>
           )}
-          <Box marginLeft={1}>
-            <Typography>{npc.name}</Typography>
-            {npcLocation && (
-              <Typography variant={"caption"} color={"textSecondary"}>
-                {npcLocation.name}
-              </Typography>
+          <Box
+            display={"flex"}
+            alignItems={"flex-start"}
+            justifyContent={"space-between"}
+            flexGrow={1}
+          >
+            <Box>
+              <Typography>{npc.name}</Typography>
+              {npcLocation && (
+                <Typography variant={"caption"} color={"textSecondary"}>
+                  {npcLocation.name}
+                </Typography>
+              )}
+            </Box>
+            {!npc.sharedWithPlayers && showHiddenTag && (
+              <HiddenIcon color={"action"} />
             )}
           </Box>
         </Box>

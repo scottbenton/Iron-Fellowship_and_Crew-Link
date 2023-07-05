@@ -195,6 +195,7 @@ export function WorldSheetPage() {
               npcs={npcs}
               openNPCId={openNPCId}
               setOpenNPCId={setOpenNPCId}
+              showHiddenTag
             />
           </BreakContainer>
         )}

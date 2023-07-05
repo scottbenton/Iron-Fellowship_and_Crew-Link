@@ -117,9 +117,7 @@ export function TabsSection(props: TabsSectionProps) {
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.LOCATIONS}
-        greyBackground={
-          true || (!openLocationId && worldId && worldOwnerId) ? true : false
-        }
+        greyBackground={worldId && worldOwnerId ? true : false}
       >
         <LocationsSection
           worldOwnerId={worldOwnerId}
@@ -132,9 +130,7 @@ export function TabsSection(props: TabsSectionProps) {
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.NPCS}
-        greyBackground={
-          true || (!openNPCId && worldId && worldOwnerId) ? true : false
-        }
+        greyBackground={worldId && worldOwnerId ? true : false}
       >
         <NPCSection
           worldOwnerId={worldOwnerId ?? ""}
@@ -143,6 +139,7 @@ export function TabsSection(props: TabsSectionProps) {
           npcs={npcs}
           openNPCId={openNPCId}
           setOpenNPCId={setOpenNPCId}
+          showHiddenTag
         />
       </ContainedTabPanel>
 

@@ -73,6 +73,7 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
       if (hasUnsavedChangesRef.current && newYDoc) {
         handleSave(id, Y.encodeStateAsUpdate(newYDoc));
       }
+      newProvider.disconnect();
       newYDoc?.destroy();
       newProvider?.destroy();
     };
