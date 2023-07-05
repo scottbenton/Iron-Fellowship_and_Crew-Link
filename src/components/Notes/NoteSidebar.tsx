@@ -93,7 +93,11 @@ export function NoteSidebar(props: NoteSidebarProps) {
       <DragDropContext onDragEnd={handleDragEnd}>
         <StrictModeDroppable droppableId={"notes-sidebar-list"}>
           {(provided, snapshot) => (
-            <List {...provided.droppableProps} ref={provided.innerRef}>
+            <List
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              sx={{ overflowY: "auto" }}
+            >
               {notes.map((note, index) => (
                 <Draggable
                   key={note.noteId}
@@ -123,9 +127,18 @@ export function NoteSidebar(props: NoteSidebarProps) {
         </StrictModeDroppable>
       </DragDropContext>
       {createNote && (
-        <Button onClick={() => handleCreateNote()} disabled={loading}>
-          Add Note
-        </Button>
+        <Box bgcolor={(theme) => theme.palette.grey[300]}>
+          <Button
+            onClick={() => handleCreateNote()}
+            disabled={loading}
+            sx={(theme) => ({
+              borderRadius: 0,
+              width: "100%",
+            })}
+          >
+            Add Notes Page
+          </Button>
+        </Box>
       )}
     </Box>
   );

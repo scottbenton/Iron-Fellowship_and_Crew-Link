@@ -61,7 +61,13 @@ export function Notes(props: NotesProps) {
         />
       )}
       {(!condensedView || selectedNoteId) && (
-        <Box flexGrow={1} flexShrink={0} width={0}>
+        <Box
+          flexGrow={1}
+          flexShrink={0}
+          width={0}
+          minHeight={"100%"}
+          sx={{ overflowY: "auto" }}
+        >
           {condensedView && selectedNote && (
             <Breadcrumbs aria-label="breadcrumb" sx={{ px: 2, py: 1 }}>
               <Link

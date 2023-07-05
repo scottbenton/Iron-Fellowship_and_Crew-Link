@@ -42,7 +42,7 @@ export function CharacterListItem(props: CharacterListItemProps) {
         justifyContent: "space-between",
         overflow: "hidden",
       }}
-      elevation={3}
+      elevation={raised ? 3 : 0}
     >
       <Box display={"flex"}>
         <Box display={"flex"} alignItems={"flex-start"} p={2}>

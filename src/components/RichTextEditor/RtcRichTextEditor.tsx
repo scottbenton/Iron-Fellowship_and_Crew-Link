@@ -27,7 +27,6 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
 
   const [saving, setSaving] = useState<boolean>(false);
 
-  // TODO - call save whenever the document ID changes
   const handleSave = useCallback(
     (idToPass: string, notes: Uint8Array, isBeaconRequest?: boolean) => {
       setHasUnsavedChanges(false);
@@ -61,6 +60,7 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
 
     const newProvider = new WebrtcProvider(roomName, newYDoc, {
       password: documentPassword,
+      signaling: ["wss://y-webrtc-signalling-server.onrender.com"],
     });
 
     setProvider(newProvider);
@@ -73,6 +73,7 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
       if (hasUnsavedChangesRef.current && newYDoc) {
         handleSave(id, Y.encodeStateAsUpdate(newYDoc));
       }
+      newProvider.disconnect();
       newYDoc?.destroy();
       newProvider?.destroy();
     };

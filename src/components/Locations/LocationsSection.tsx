@@ -22,6 +22,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useAuth } from "providers/AuthProvider";
 import { useUserDoc } from "api/user/getUserDoc";
 import AddPhotoIcon from "@mui/icons-material/Photo";
+import { WorldEmptyState } from "components/WorldEmptyState";
+import HiddenIcon from "@mui/icons-material/VisibilityOff";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;
@@ -39,7 +41,6 @@ export function LocationsSection(props: LocationsSectionProps) {
   const {
     worldOwnerId,
     worldId,
-    isCharacterSheet,
     isSinglePlayer,
     locations,
     openLocationId,
@@ -49,7 +50,8 @@ export function LocationsSection(props: LocationsSectionProps) {
   } = props;
 
   const isWorldOwner = useAuth().user?.uid === worldOwnerId;
-  const isWorldOwnerPremium = useUserDoc(worldOwnerId).user?.isPremium ?? false;
+  const isWorldOwnerPremium =
+    useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
 
   const { createLocation, loading: createLocationLoading } =
     useCreateLocation();
@@ -59,15 +61,7 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   if (!worldId || !worldOwnerId) {
     return (
-      <EmptyState
-        imageSrc="/assets/nature.svg"
-        title={"No World Found"}
-        message={
-          isSinglePlayer
-            ? 'Add a world in the "World" tab to allow you to add and view locations.'
-            : "No world found. Your GM can add a world to the campaign in the GM Screen."
-        }
-      />
+      <WorldEmptyState isMultiplayer={!isSinglePlayer} isGM={isWorldOwner} />
     );
   }
 
@@ -216,15 +210,21 @@ export function LocationsSection(props: LocationsSectionProps) {
                     )}
                   </Box>
                 )}
-                <Box p={2}>
-                  <Typography>{filteredLocations[locationId].name}</Typography>
-                  {showHiddenTag && (
-                    <Typography variant={"caption"} color={"textSecondary"}>
-                      {filteredLocations[locationId].sharedWithPlayers
-                        ? "Visible"
-                        : "Hidden"}
+                <Box
+                  p={2}
+                  flexGrow={1}
+                  display={"flex"}
+                  alignItems={"flex-start"}
+                  justifyContent={"space-between"}
+                >
+                  <Box>
+                    <Typography>
+                      {filteredLocations[locationId].name}
                     </Typography>
-                  )}
+                  </Box>
+
+                  {!filteredLocations[locationId].sharedWithPlayers &&
+                    showHiddenTag && <HiddenIcon color={"action"} />}
                 </Box>
               </CardActionArea>
             </Card>
