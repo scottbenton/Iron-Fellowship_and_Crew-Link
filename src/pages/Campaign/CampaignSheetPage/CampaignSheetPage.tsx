@@ -13,6 +13,8 @@ import { BreakContainer } from "components/BreakContainer";
 import { TracksSection } from "./components/TracksSection";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import { StyledTabs, StyledTab } from "components/StyledTabs";
+import { WorldEmptyState } from "components/WorldEmptyState";
+import { useAuth } from "providers/AuthProvider";
 
 enum TABS {
   CHARACTER = "characters",
@@ -25,6 +27,7 @@ export function CampaignSheetPage() {
 
   const { error } = useSnackbar();
   const navigate = useNavigate();
+  const uid = useAuth().user?.uid;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
@@ -87,13 +90,7 @@ export function CampaignSheetPage() {
                 worldOwnerId={campaign.gmId}
               />
             ) : (
-              <EmptyState
-                title="No World Found"
-                message={
-                  "Your GM can add a world to this campaign from the GM screen. Adding a world will allow for locations to be used."
-                }
-                imageSrc={"/assets/nature.svg"}
-              />
+              <WorldEmptyState isGM={uid === campaign.gmId} isMultiplayer />
             )}
           </>
         )}

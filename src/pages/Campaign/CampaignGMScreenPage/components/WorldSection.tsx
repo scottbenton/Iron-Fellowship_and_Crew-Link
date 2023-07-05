@@ -18,6 +18,7 @@ import { useWorldsStore } from "stores/worlds.store";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { WORLD_ROUTES, constructWorldPath } from "pages/World/routes";
 import { useAuth } from "providers/AuthProvider";
+import { WorldEmptyState } from "components/WorldEmptyState";
 
 export function WorldSection() {
   const confirm = useConfirm();
@@ -35,6 +36,7 @@ export function WorldSection() {
       )
   );
   const worlds = useWorldsStore((store) => store.worlds);
+  const sortedWorlds = worldIds.map((worldId) => worlds[worldId]);
 
   const { updateCampaignWorld, loading: updateCampaignWorldLoading } =
     useCampaignGMScreenUpdateCampaignWorld();
@@ -76,63 +78,16 @@ export function WorldSection() {
       )}
       {worldId && !world && <LinearProgress />}
       {!worldId && !world && (
-        <>
-          {worldIds.length > 0 ? (
-            <Stack spacing={2} sx={{ p: 2 }}>
-              <Typography
-                sx={{ mb: 1 }}
-                color={(theme) => theme.palette.text.secondary}
-              >
-                Add an existing world
-              </Typography>
-
-              {worldIds.map((worldId) => (
-                <Card variant={"outlined"} key={worldId}>
-                  <CardActionArea
-                    onClick={() => updateCampaignWorld(worldId)}
-                    sx={{ p: 2 }}
-                    disabled={updateCampaignWorldLoading}
-                  >
-                    {worlds[worldId].name}
-                  </CardActionArea>
-                </Card>
-              ))}
-              <Divider sx={{ my: 3 }}>OR</Divider>
-              <Box
-                display={"flex"}
-                alignItems={"center"}
-                justifyContent={"center"}
-              >
-                <Button
-                  variant={"contained"}
-                  component={Link}
-                  to={constructWorldPath(WORLD_ROUTES.CREATE)}
-                  disabled={updateCampaignWorldLoading}
-                >
-                  Create a new World
-                </Button>
-              </Box>
-            </Stack>
-          ) : (
-            <EmptyState
-              imageSrc={"/assets/nature.svg"}
-              title={"No Worlds Found"}
-              message={
-                "Worlds allow you to share locations, NPCs, and world truths in your campaigns."
-              }
-              callToAction={
-                <Button
-                  variant={"contained"}
-                  color={"primary"}
-                  component={Link}
-                  to={constructWorldPath(WORLD_ROUTES.CREATE)}
-                >
-                  Create a World
-                </Button>
-              }
-            />
-          )}
-        </>
+        <WorldEmptyState
+          isGM
+          isMultiplayer
+          isOnWorldTab
+          worldsToChooseFrom={sortedWorlds}
+          onChooseWorld={(worldIndex) =>
+            updateCampaignWorld(worldIds[worldIndex])
+          }
+          worldUpdateLoading={updateCampaignWorldLoading}
+        />
       )}
     </Box>
   );

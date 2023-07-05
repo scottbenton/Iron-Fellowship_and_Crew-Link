@@ -139,9 +139,7 @@ export function TabsSection() {
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.LOCATIONS}
-        greyBackground={
-          true || (!openLocationId && worldId && worldOwnerId) ? true : false
-        }
+        greyBackground={worldId && worldOwnerId ? true : false}
       >
         <LocationsSection
           worldId={worldId}
@@ -156,9 +154,7 @@ export function TabsSection() {
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.NPCS}
-        greyBackground={
-          true || (!openNPCId && worldId && worldOwnerId) ? true : false
-        }
+        greyBackground={worldId && worldOwnerId ? true : false}
       >
         <NPCSection
           worldId={worldId ?? ""}

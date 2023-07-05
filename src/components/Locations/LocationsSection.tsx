@@ -22,6 +22,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useAuth } from "providers/AuthProvider";
 import { useUserDoc } from "api/user/getUserDoc";
 import AddPhotoIcon from "@mui/icons-material/Photo";
+import { WorldEmptyState } from "components/WorldEmptyState";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;
@@ -39,7 +40,6 @@ export function LocationsSection(props: LocationsSectionProps) {
   const {
     worldOwnerId,
     worldId,
-    isCharacterSheet,
     isSinglePlayer,
     locations,
     openLocationId,
@@ -60,15 +60,7 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   if (!worldId || !worldOwnerId) {
     return (
-      <EmptyState
-        imageSrc="/assets/nature.svg"
-        title={"No World Found"}
-        message={
-          isSinglePlayer
-            ? 'Add a world in the "World" tab to allow you to add and view locations.'
-            : "No world found. Your GM can add a world to the campaign in the GM Screen."
-        }
-      />
+      <WorldEmptyState isMultiplayer={!isSinglePlayer} isGM={isWorldOwner} />
     );
   }
 
