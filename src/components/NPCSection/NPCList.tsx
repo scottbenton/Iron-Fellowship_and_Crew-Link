@@ -11,10 +11,12 @@ export interface NPCListProps {
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openNPC: (npcId: string) => void;
   canUseImages: boolean;
+  showHiddenTag?: boolean;
 }
 
 export function NPCList(props: NPCListProps) {
-  const { sortedNPCs, npcs, locations, canUseImages, openNPC } = props;
+  const { sortedNPCs, npcs, locations, canUseImages, openNPC, showHiddenTag } =
+    props;
 
   return (
     <Grid container sx={{ p: 2 }} spacing={2}>
@@ -25,6 +27,7 @@ export function NPCList(props: NPCListProps) {
             locations={locations}
             openNPC={() => openNPC(npcId)}
             canUseImages={canUseImages}
+            showHiddenTag={showHiddenTag}
           />
         </Grid>
       ))}

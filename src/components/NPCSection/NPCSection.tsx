@@ -20,6 +20,7 @@ export interface NPCSectionProps {
   openNPCId?: string;
   setOpenNPCId: (npcId?: string) => void;
   isSinglePlayer?: boolean;
+  showHiddenTag?: boolean;
 }
 
 export function NPCSection(props: NPCSectionProps) {
@@ -31,6 +32,7 @@ export function NPCSection(props: NPCSectionProps) {
     openNPCId,
     setOpenNPCId,
     isSinglePlayer,
+    showHiddenTag,
   } = props;
 
   const uid = useAuth().user?.uid;
@@ -76,6 +78,7 @@ export function NPCSection(props: NPCSectionProps) {
                     secondary={
                       !isSinglePlayer &&
                       isWorldOwner &&
+                      showHiddenTag &&
                       (!npcs[npcId].sharedWithPlayers ? "Hidden" : "Shared")
                     }
                   />
@@ -114,6 +117,7 @@ export function NPCSection(props: NPCSectionProps) {
         locations={locations}
         openNPC={setOpenNPCId}
         canUseImages={canUseImages}
+        showHiddenTag={showHiddenTag}
       />
     </>
   );

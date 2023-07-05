@@ -149,7 +149,7 @@ export function TabsSection() {
           locations={locations}
           openLocationId={openLocationId}
           setOpenLocationId={setOpenLocationId}
-          showHiddenTag={worldOwnerId === uid}
+          showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
         />
       </ContainedTabPanel>
       <ContainedTabPanel
@@ -164,6 +164,7 @@ export function TabsSection() {
           openNPCId={openNPCId}
           setOpenNPCId={setOpenNPCId}
           isSinglePlayer={isSinglePlayer}
+          showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
         />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.CHARACTER}>

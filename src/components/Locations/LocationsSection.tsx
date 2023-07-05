@@ -23,6 +23,7 @@ import { useAuth } from "providers/AuthProvider";
 import { useUserDoc } from "api/user/getUserDoc";
 import AddPhotoIcon from "@mui/icons-material/Photo";
 import { WorldEmptyState } from "components/WorldEmptyState";
+import HiddenIcon from "@mui/icons-material/VisibilityOff";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;
@@ -209,15 +210,21 @@ export function LocationsSection(props: LocationsSectionProps) {
                     )}
                   </Box>
                 )}
-                <Box p={2}>
-                  <Typography>{filteredLocations[locationId].name}</Typography>
-                  {showHiddenTag && (
-                    <Typography variant={"caption"} color={"textSecondary"}>
-                      {filteredLocations[locationId].sharedWithPlayers
-                        ? "Visible"
-                        : "Hidden"}
+                <Box
+                  p={2}
+                  flexGrow={1}
+                  display={"flex"}
+                  alignItems={"flex-start"}
+                  justifyContent={"space-between"}
+                >
+                  <Box>
+                    <Typography>
+                      {filteredLocations[locationId].name}
                     </Typography>
-                  )}
+                  </Box>
+
+                  {!filteredLocations[locationId].sharedWithPlayers &&
+                    showHiddenTag && <HiddenIcon color={"action"} />}
                 </Box>
               </CardActionArea>
             </Card>

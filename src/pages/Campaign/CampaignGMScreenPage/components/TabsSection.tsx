@@ -139,6 +139,7 @@ export function TabsSection(props: TabsSectionProps) {
           npcs={npcs}
           openNPCId={openNPCId}
           setOpenNPCId={setOpenNPCId}
+          showHiddenTag
         />
       </ContainedTabPanel>
 

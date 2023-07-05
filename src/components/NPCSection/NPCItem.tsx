@@ -4,16 +4,18 @@ import {
   NPC,
 } from "stores/sharedLocationStore";
 import PhotoIcon from "@mui/icons-material/Photo";
+import HiddenIcon from "@mui/icons-material/VisibilityOff";
 
 export interface NPCItemProps {
   npc: NPC;
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openNPC: () => void;
   canUseImages: boolean;
+  showHiddenTag?: boolean;
 }
 
 export function NPCItem(props: NPCItemProps) {
-  const { npc, locations, openNPC, canUseImages } = props;
+  const { npc, locations, openNPC, canUseImages, showHiddenTag } = props;
 
   const npcLocation = npc.lastLocationId
     ? locations[npc.lastLocationId]
@@ -71,12 +73,22 @@ export function NPCItem(props: NPCItemProps) {
               )}
             </Box>
           )}
-          <Box>
-            <Typography>{npc.name}</Typography>
-            {npcLocation && (
-              <Typography variant={"caption"} color={"textSecondary"}>
-                {npcLocation.name}
-              </Typography>
+          <Box
+            display={"flex"}
+            alignItems={"flex-start"}
+            justifyContent={"space-between"}
+            flexGrow={1}
+          >
+            <Box>
+              <Typography>{npc.name}</Typography>
+              {npcLocation && (
+                <Typography variant={"caption"} color={"textSecondary"}>
+                  {npcLocation.name}
+                </Typography>
+              )}
+            </Box>
+            {!npc.sharedWithPlayers && showHiddenTag && (
+              <HiddenIcon color={"action"} />
             )}
           </Box>
         </Box>
