@@ -29,6 +29,7 @@ import { WorldSelectPage } from "pages/World/WorldSelectPage";
 import { WORLD_ROUTES, worldPaths } from "pages/World/routes";
 import { WorldSheetPage } from "pages/World/WorldSheetPage";
 import { CharacterCardPage } from "pages/Character/CharacterCardPage";
+import { SignupPage } from "pages/Authentication/SignupPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -94,6 +95,10 @@ const router = createBrowserRouter(
         </Route>
         <Route>
           <Route path={basePaths[BASE_ROUTES.LOGIN]} element={<LoginPage />} />
+          <Route
+            path={basePaths[BASE_ROUTES.SIGNUP]}
+            element={<SignupPage />}
+          />
         </Route>
       </Route>
       <Route
