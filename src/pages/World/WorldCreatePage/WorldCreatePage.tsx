@@ -1,5 +1,4 @@
 import { Alert, Step, Stepper } from "@mui/material";
-import { PageBanner } from "components/Layout/PageBanner";
 import { truths } from "data/truths";
 import { WorldBasicsStep } from "./components/WorldBasicsStep";
 import { TruthStep } from "./components/TruthStep";
