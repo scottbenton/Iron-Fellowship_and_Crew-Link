@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Hidden,
+  Stack,
   Toolbar,
   Typography,
   useTheme,
@@ -16,7 +17,6 @@ import {
   CAMPAIGN_PREFIX,
   CHARACTER_PREFIX,
 } from "../../routes";
-import { LoginButton } from "./LoginButton";
 import { ReactComponent as IronFellowshipLogo } from "./iron-fellowship-logo.svg";
 import { useEffect, useState } from "react";
 import { HeaderMenu } from "./HeaderMenu";
@@ -110,7 +110,23 @@ export function Header() {
               <HeaderMenu />
             </Box>
           ) : (
-            <LoginButton />
+            <Stack direction={"row"} spacing={1}>
+              <Button
+                color={"secondary"}
+                component={Link}
+                to={basePaths[BASE_ROUTES.LOGIN]}
+              >
+                Login
+              </Button>
+              <Button
+                variant={"contained"}
+                color={"secondary"}
+                component={Link}
+                to={basePaths[BASE_ROUTES.SIGNUP]}
+              >
+                Create Account
+              </Button>
+            </Stack>
           )}
         </Toolbar>
       </Container>

@@ -21,7 +21,7 @@ export function HeaderMenu() {
 
   if (!user) return null;
 
-  const initials = getInitials(user.displayName ?? "");
+  const initials = getInitials(user.displayName ?? "User");
 
   return (
     <>
