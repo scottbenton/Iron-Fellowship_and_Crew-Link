@@ -1,6 +1,9 @@
 import { storage } from "config/firebase.config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
+export const MAX_FILE_SIZE = 5 * 1024 * 1024;
+export const MAX_FILE_SIZE_LABEL = "5 MB";
+
 export function uploadImage(path: string, image: File): Promise<boolean> {
   return new Promise((resolve, reject) => {
     const imageRef = ref(storage, `${path}/${image.name}`);

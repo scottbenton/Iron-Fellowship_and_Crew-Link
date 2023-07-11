@@ -13,7 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
-import { EmptyState } from "components/EmptyState/EmptyState";
 import { useCreateLocation } from "api/worlds/locations/createLocation";
 import { OpenLocation } from "./OpenLocation";
 import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
@@ -24,6 +23,7 @@ import { useUserDoc } from "api/user/getUserDoc";
 import AddPhotoIcon from "@mui/icons-material/Photo";
 import { WorldEmptyState } from "components/WorldEmptyState";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
+import { FilterBar } from "components/FilterBar";
 
 export interface LocationsSectionProps {
   worldOwnerId?: string;
@@ -33,7 +33,6 @@ export interface LocationsSectionProps {
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openLocationId?: string;
   setOpenLocationId: (locationId?: string) => void;
-  emphasizeButton?: boolean;
   showHiddenTag?: boolean;
 }
 
@@ -45,7 +44,6 @@ export function LocationsSection(props: LocationsSectionProps) {
     locations,
     openLocationId,
     setOpenLocationId,
-    emphasizeButton,
     showHiddenTag,
   } = props;
 
@@ -120,57 +118,31 @@ export function LocationsSection(props: LocationsSectionProps) {
 
   return (
     <>
-      <Box
-        sx={(theme) => ({
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          px: 2,
-          py: 1,
-          borderWidth: 0,
-          borderBottomWidth: 1,
-          borderColor: theme.palette.divider,
-          borderStyle: "solid",
-          backgroundColor: theme.palette.background.paper,
-        })}
-      >
-        <Input
-          fullWidth
-          startAdornment={
-            <InputAdornment position={"start"}>
-              <SearchIcon
-                sx={(theme) => ({ color: theme.palette.grey[300] })}
-              />
-            </InputAdornment>
-          }
-          aria-label={"Filter Locations"}
-          placeholder={"Filter Locations"}
-          value={search}
-          onChange={(evt) => setSearch(evt.currentTarget.value)}
-          color={"secondary"}
-          sx={(theme) => ({
-            mr: 2,
-            flexGrow: 1,
-          })}
-        />
-        <Button
-          variant={emphasizeButton ? "contained" : "text"}
-          endIcon={<AddLocationIcon />}
-          onClick={() =>
-            createLocation(worldId)
-              .catch(() => {})
-              .then((locationId) => {
-                if (locationId) {
-                  setOpenLocationId(locationId);
-                }
-              })
-          }
-          disabled={createLocationLoading}
-          sx={{ flexShrink: 0 }}
-        >
-          Add Location
-        </Button>
-      </Box>
+      <FilterBar
+        search={search}
+        setSearch={setSearch}
+        action={
+          <Button
+            variant={"contained"}
+            endIcon={<AddLocationIcon />}
+            onClick={() =>
+              createLocation(worldId)
+                .catch(() => {})
+                .then((locationId) => {
+                  if (locationId) {
+                    setOpenLocationId(locationId);
+                  }
+                })
+            }
+            disabled={createLocationLoading}
+            sx={{ flexShrink: 0 }}
+          >
+            Add Location
+          </Button>
+        }
+        searchPlaceholder={"Search by name"}
+      />
+
       <Grid
         container
         spacing={2}

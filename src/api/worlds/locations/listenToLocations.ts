@@ -117,12 +117,6 @@ export function useListenToLocations(worldOwnerId?: string, worldId?: string) {
         newLocations[locationId] = { ...prevLocation, ...location };
         return newLocations;
       });
-      setLocations((prevLocations) => {
-        const newLocations = { ...prevLocations };
-        const prevLocation = newLocations[locationId];
-        newLocations[locationId] = { ...prevLocation, ...location };
-        return newLocations;
-      });
 
       const imageUrl = location.imageFilenames?.[0];
 

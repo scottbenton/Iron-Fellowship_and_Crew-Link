@@ -1,6 +1,10 @@
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { constructNPCImagesPath, getNPCDoc } from "./_getRef";
-import { uploadImage } from "lib/storage.lib";
+import {
+  MAX_FILE_SIZE,
+  MAX_FILE_SIZE_LABEL,
+  uploadImage,
+} from "lib/storage.lib";
 import { updateDoc } from "firebase/firestore";
 
 export const uploadNPCImage: ApiFunction<
@@ -11,6 +15,11 @@ export const uploadNPCImage: ApiFunction<
 
   return new Promise((resolve, reject) => {
     const filename = image.name;
+
+    if (image.size > MAX_FILE_SIZE) {
+      reject(`Image must be smaller than ${MAX_FILE_SIZE_LABEL} in size.`);
+      return;
+    }
 
     uploadImage(constructNPCImagesPath(worldId, npcId), image)
       .then(() => {

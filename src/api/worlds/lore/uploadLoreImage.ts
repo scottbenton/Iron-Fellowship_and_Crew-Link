@@ -1,5 +1,5 @@
 import { ApiFunction, useApiState } from "hooks/useApiState";
-import { constructLocationImagesPath, getLocationDoc } from "./_getRef";
+import { constructLoreImagesPath, getLoreDoc } from "./_getRef";
 import {
   MAX_FILE_SIZE,
   MAX_FILE_SIZE_LABEL,
@@ -7,11 +7,11 @@ import {
 } from "lib/storage.lib";
 import { updateDoc } from "firebase/firestore";
 
-export const uploadLocationImage: ApiFunction<
-  { worldId: string; locationId: string; image: File },
+export const uploadLoreImage: ApiFunction<
+  { worldId: string; loreId: string; image: File },
   boolean
 > = (params) => {
-  const { worldId, locationId, image } = params;
+  const { worldId, loreId, image } = params;
 
   return new Promise((resolve, reject) => {
     const filename = image.name;
@@ -21,9 +21,9 @@ export const uploadLocationImage: ApiFunction<
       return;
     }
 
-    uploadImage(constructLocationImagesPath(worldId, locationId), image)
+    uploadImage(constructLoreImagesPath(worldId, loreId), image)
       .then(() => {
-        updateDoc(getLocationDoc(worldId, locationId), {
+        updateDoc(getLoreDoc(worldId, loreId), {
           imageFilenames: [filename],
         })
           .then(() => {
@@ -41,11 +41,11 @@ export const uploadLocationImage: ApiFunction<
   });
 };
 
-export function useUploadLocationImage() {
-  const { call, ...rest } = useApiState(uploadLocationImage);
+export function useUploadLoreImage() {
+  const { call, ...rest } = useApiState(uploadLoreImage);
 
   return {
-    uploadLocationImage: call,
+    uploadLoreImage: call,
     ...rest,
   };
 }
