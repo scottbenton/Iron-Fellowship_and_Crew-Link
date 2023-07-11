@@ -32,7 +32,6 @@ export function listenToLastCharacterRoll(
     ),
     (snapshot) => {
       const rolls = snapshot.docs;
-      console.debug(rolls);
 
       if (rolls.length > 0) {
         onRoll(rolls[0].data());
@@ -58,15 +57,10 @@ export function useListenToLastCharacterRoll(
         uid,
         characterId,
         (roll) => {
-          console.debug(roll);
           if (!firstRollRef.current) {
-            console.debug("FIRST ROLL REF WAS UNDEFINED, SETTING IT NOW");
             firstRollRef.current = roll;
           } else if (!areRollsEqual(firstRollRef.current, roll)) {
-            console.debug("ROLL WAS NOT EQUAL", firstRollRef.current, roll);
             setLastRoll(roll);
-          } else {
-            console.debug("ROLL WAS EQUAL");
           }
         },
         (err) => {

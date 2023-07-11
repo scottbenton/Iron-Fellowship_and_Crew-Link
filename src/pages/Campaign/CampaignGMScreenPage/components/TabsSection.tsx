@@ -18,6 +18,7 @@ import {
   ContainedTabPanel,
 } from "components/StyledTabs";
 import { NPCSection } from "components/NPCSection";
+import { LoreSection } from "components/Lore";
 
 enum TABS {
   MOVES = "moves",
@@ -29,6 +30,7 @@ enum TABS {
   WORLD = "world",
   LOCATIONS = "locations",
   NPCS = "npcs",
+  LORE = "lore",
 }
 
 export interface TabsSectionProps {
@@ -69,6 +71,12 @@ export function TabsSection(props: TabsSectionProps) {
   const openNPCId = useCampaignGMScreenStore((store) => store.openNPCId);
   const setOpenNPCId = useCampaignGMScreenStore((store) => store.setOpenNPCId);
 
+  const lore = useCampaignGMScreenStore((store) => store.lore);
+  const openLoreId = useCampaignGMScreenStore((store) => store.openLoreId);
+  const setOpenLoreId = useCampaignGMScreenStore(
+    (store) => store.setOpenLoreId
+  );
+
   const worldOwnerId = useCampaignGMScreenStore(
     (store) => store.campaign?.gmId
   );
@@ -91,6 +99,7 @@ export function TabsSection(props: TabsSectionProps) {
         <StyledTab label="World" value={TABS.WORLD} />
         <StyledTab label="Locations" value={TABS.LOCATIONS} />
         <StyledTab label="NPCs" value={TABS.NPCS} />
+        <StyledTab label="Lore" value={TABS.LORE} />
         <StyledTab label="Settings" value={TABS.SETTINGS} />
       </StyledTabs>
       <ContainedTabPanel isVisible={selectedTab === TABS.MOVES}>
@@ -142,7 +151,19 @@ export function TabsSection(props: TabsSectionProps) {
           showHiddenTag
         />
       </ContainedTabPanel>
-
+      <ContainedTabPanel
+        isVisible={selectedTab === TABS.LORE}
+        greyBackground={worldId && worldOwnerId ? true : false}
+      >
+        <LoreSection
+          worldOwnerId={worldOwnerId ?? ""}
+          worldId={worldId ?? ""}
+          lore={lore}
+          openLoreId={openLoreId}
+          setOpenLoreId={setOpenLoreId}
+          showHiddenTag
+        />
+      </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.SETTINGS}>
         <SettingsSection />
       </ContainedTabPanel>

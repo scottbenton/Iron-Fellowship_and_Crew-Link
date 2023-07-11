@@ -28,11 +28,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { NPCSection } from "components/NPCSection";
 import { useWorldSheetStore } from "./worldSheet.store";
 import { useWorldSheetListenToNPCs } from "api/worlds/npcs/listenToNPCs";
+import { useWorldSheetListenToLore } from "api/worlds/lore/listenToLore";
+import { LoreSection } from "components/Lore";
 
 export enum TABS {
   DETAILS = "details",
   LOCATIONS = "locations",
   NPCS = "npcs",
+  LORE = "lore",
 }
 
 export function WorldSheetPage() {
@@ -70,6 +73,11 @@ export function WorldSheetPage() {
   const npcs = useWorldSheetStore((store) => store.npcs);
   const openNPCId = useWorldSheetStore((store) => store.openNPCId);
   const setOpenNPCId = useWorldSheetStore((store) => store.setOpenNPCId);
+
+  useWorldSheetListenToLore(worldOwnerId, worldId);
+  const lore = useWorldSheetStore((store) => store.lore);
+  const openLoreId = useWorldSheetStore((store) => store.openLoreId);
+  const setOpenLoreId = useWorldSheetStore((store) => store.setOpenLoreId);
 
   const resetState = useWorldSheetStore((store) => store.resetState);
 
@@ -158,6 +166,7 @@ export function WorldSheetPage() {
             <StyledTab value={TABS.DETAILS} label={"World Details"} />
             <StyledTab value={TABS.LOCATIONS} label={"Locations"} />
             <StyledTab value={TABS.NPCS} label={"NPCs"} />
+            <StyledTab value={TABS.LORE} label={"Lore"} />
           </StyledTabs>
         </BreakContainer>
         {selectedTab === TABS.DETAILS && (
@@ -176,7 +185,6 @@ export function WorldSheetPage() {
               setOpenLocationId={setOpenLocationId}
               worldOwnerId={worldOwnerId}
               worldId={worldId}
-              emphasizeButton
               showHiddenTag
             />
           </BreakContainer>
@@ -195,6 +203,23 @@ export function WorldSheetPage() {
               npcs={npcs}
               openNPCId={openNPCId}
               setOpenNPCId={setOpenNPCId}
+              showHiddenTag
+            />
+          </BreakContainer>
+        )}
+        {selectedTab === TABS.LORE && (
+          <BreakContainer
+            sx={(theme) => ({
+              backgroundColor: theme.palette.background.default,
+              flexGrow: 1,
+            })}
+          >
+            <LoreSection
+              worldOwnerId={worldOwnerId}
+              worldId={worldId}
+              lore={lore}
+              openLoreId={openLoreId}
+              setOpenLoreId={setOpenLoreId}
               showHiddenTag
             />
           </BreakContainer>

@@ -22,6 +22,7 @@ import { useCharacterSheetListenToLocations } from "api/worlds/locations/listenT
 import { CHARACTER_ROUTES, characterPaths } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { useCharacterSheetListenToNPCs } from "api/worlds/npcs/listenToNPCs";
+import { useCharacterSheetListenToLore } from "api/worlds/lore/listenToLore";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
@@ -43,6 +44,7 @@ export function CharacterSheetPage() {
   useCharacterSheetListenToWorld();
   useCharacterSheetListenToLocations();
   useCharacterSheetListenToNPCs();
+  useCharacterSheetListenToLore();
 
   useEffect(() => {
     return () => {
