@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import BackIcon from "@mui/icons-material/ChevronLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/SectionHeading";
 import { RichTextEditorNoTitle } from "components/RichTextEditor";
@@ -55,6 +55,13 @@ export function OpenLore(props: OpenLoreProps) {
   const uid = user?.uid;
 
   const isWorldOwner = worldOwnerId === uid;
+
+  const [loreName, setLoreName] = useState<string>(lore.name);
+
+  const initialLoreName = lore.name;
+  useEffect(() => {
+    setLoreName(initialLoreName);
+  }, [initialLoreName]);
 
   const { updateLore } = useUpdateLore();
   const { updateLoreGMProperties } = useUpdateLoreGMProperties();
@@ -133,6 +140,8 @@ export function OpenLore(props: OpenLoreProps) {
               lore: { name: evt.currentTarget.value },
             })
           }
+          value={loreName}
+          onChange={(evt) => setLoreName(evt.currentTarget.value)}
           fullWidth
           variant={"standard"}
           placeholder="Lore Title"
