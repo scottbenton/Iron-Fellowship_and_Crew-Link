@@ -41,7 +41,7 @@ export function LoreTagsAutocomplete(props: LoreTagsAutocompleteProps) {
           (option) => inputValue === option.title
         );
         if (inputValue !== "" && !isExisting) {
-          filtered.push({ title: `Add ${inputValue}`, inputValue });
+          filtered.push({ title: `New Tag: ${inputValue}`, inputValue });
         }
 
         return filtered;
@@ -49,6 +49,7 @@ export function LoreTagsAutocomplete(props: LoreTagsAutocompleteProps) {
       multiple
       options={mappedTagList}
       includeInputInList
+      noOptionsText={"Type a name for your new tag"}
       renderOption={(props, option) => <li {...props}>{option.title}</li>}
       value={tags?.map((tag) => ({ title: tag, inputValue: tag })) ?? []}
       onChange={(evt, newValue) => handleTagsChange(newValue)}
