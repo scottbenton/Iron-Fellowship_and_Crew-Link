@@ -18,6 +18,7 @@ import {
   ContainedTabPanel,
 } from "components/StyledTabs";
 import { NPCSection } from "components/NPCSection";
+import { LoreSection } from "components/Lore";
 
 enum TABS {
   MOVES = "moves",
@@ -31,6 +32,7 @@ enum TABS {
   WORLD = "world",
   LOCATIONS = "location",
   NPCS = "npcs",
+  LORE = "lore",
 }
 
 export function TabsSection() {
@@ -76,6 +78,10 @@ export function TabsSection() {
   const openNPCId = useCharacterSheetStore((store) => store.openNPCId);
   const setOpenNPCId = useCharacterSheetStore((store) => store.setOpenNPCId);
 
+  const lore = useCharacterSheetStore((store) => store.lore);
+  const openLoreId = useCharacterSheetStore((store) => store.openLoreId);
+  const setOpenLoreId = useCharacterSheetStore((store) => store.setOpenLoreId);
+
   useEffect(() => {
     if (!isMobile && selectedTab === TABS.MOVES) {
       setSelectedTab(TABS.ASSETS);
@@ -101,6 +107,7 @@ export function TabsSection() {
         <StyledTab label={"World"} value={TABS.WORLD} />
         <StyledTab label={"Locations"} value={TABS.LOCATIONS} />
         <StyledTab label={"NPCs"} value={TABS.NPCS} />
+        <StyledTab label={"Lore"} value={TABS.LORE} />
         <StyledTab label="Character" value={TABS.CHARACTER} />
       </StyledTabs>
       <ContainedTabPanel isVisible={selectedTab === TABS.MOVES}>
@@ -163,6 +170,20 @@ export function TabsSection() {
           locations={locations}
           openNPCId={openNPCId}
           setOpenNPCId={setOpenNPCId}
+          isSinglePlayer={isSinglePlayer}
+          showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
+        />
+      </ContainedTabPanel>
+      <ContainedTabPanel
+        isVisible={selectedTab === TABS.LORE}
+        greyBackground={worldId && worldOwnerId ? true : false}
+      >
+        <LoreSection
+          worldId={worldId ?? ""}
+          worldOwnerId={worldOwnerId ?? ""}
+          lore={lore}
+          openLoreId={openLoreId}
+          setOpenLoreId={setOpenLoreId}
           isSinglePlayer={isSinglePlayer}
           showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
         />

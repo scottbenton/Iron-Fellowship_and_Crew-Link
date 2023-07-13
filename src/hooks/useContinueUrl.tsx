@@ -6,11 +6,9 @@ export function useContinueUrl() {
   const [searchParams] = useSearchParams();
 
   const redirectWithContinueUrl = useCallback(
-    (nextPath: string) => {
-      const pathname = window.location.pathname;
-
+    (nextPath: string, currentPath: string) => {
       const params = new URLSearchParams();
-      params.append("continue", pathname);
+      params.append("continue", currentPath);
 
       navigate(nextPath + "?" + params.toString());
     },

@@ -3,6 +3,7 @@ export enum BASE_ROUTES {
   CAMPAIGN,
   WORLD,
   LOGIN,
+  SIGNUP,
 }
 
 export const CHARACTER_PREFIX = "characters";
@@ -14,7 +15,13 @@ export const basePaths: { [key in BASE_ROUTES]: string } = {
   [BASE_ROUTES.CAMPAIGN]: "/campaigns",
   [BASE_ROUTES.WORLD]: "/worlds",
   [BASE_ROUTES.LOGIN]: "/login",
+  [BASE_ROUTES.SIGNUP]: "/join",
 };
+
+export const unauthenticatedPaths = [
+  basePaths[BASE_ROUTES.LOGIN],
+  basePaths[BASE_ROUTES.SIGNUP],
+];
 
 export function constructRedirectUrlWithContinueParam(
   redirectPath: string,

@@ -10,6 +10,7 @@ import { useCampaignGMScreenListenToCustomMoves } from "api/user/custom-moves/li
 import { useCampaignGMScreenListenToCampaignSettings } from "api/campaign/settings/listenToCampaignSettings";
 import { useCampaignGMScreenListenToLocations } from "api/worlds/locations/listenToLocations";
 import { useCampaignGMScreenListenToNPCs } from "api/worlds/npcs/listenToNPCs";
+import { useCampaignGMScreenListenToLore } from "api/worlds/lore/listenToLore";
 
 export function useCampaignGMScreenApiCalls(campaignId?: string) {
   const campaign = useCampaignStore(
@@ -28,6 +29,7 @@ export function useCampaignGMScreenApiCalls(campaignId?: string) {
   useCampaignGMScreenListenToCampaignSettings();
   useCampaignGMScreenListenToLocations();
   useCampaignGMScreenListenToNPCs();
+  useCampaignGMScreenListenToLore();
 
   useEffect(() => {
     return () => {

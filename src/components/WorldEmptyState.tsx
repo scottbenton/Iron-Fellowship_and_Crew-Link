@@ -72,7 +72,7 @@ export function WorldEmptyState(props: WorldEmptyStateProps) {
           message={
             isMultiplayer && !isGM
               ? "No world found. Your GM can add a world to the campaign in the GM Screen."
-              : `Worlds allow you to share locations, NPCs, and world truths across different campaigns and characters.${
+              : `Worlds allow you to share locations, NPCs, and world truths across different campaigns and characters. ${
                   !isOnWorldTab
                     ? `You can add a world from the world tab ${
                         isMultiplayer

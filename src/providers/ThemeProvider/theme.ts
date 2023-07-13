@@ -36,12 +36,12 @@ export const lightTheme = createTheme({
     },
     background: {
       paper: "#fff",
-      default: "#f4f4f5",
+      default: "#f4f4f6",
       background: "#e4e4e7",
     },
     grey: {
       [50]: "#fafafa",
-      [100]: "#f4f4f5",
+      [100]: "#f4f4f6",
       [200]: "#e4e4e7",
       [300]: "#d4d4d8",
       [400]: "#a1a1aa",

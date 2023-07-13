@@ -1,23 +1,15 @@
 import {
   Box,
   Button,
-  Card,
-  CardActionArea,
   Container,
-  Divider,
   LinearProgress,
-  Stack,
   Typography,
 } from "@mui/material";
 import { useCharacterSheetUpdateCharacterWorld } from "api/characters/updateCharacterWorld";
-import { EmptyState } from "components/EmptyState/EmptyState";
 import { WorldSheet } from "components/WorldSheet";
 import { useAuth } from "providers/AuthProvider";
-import { Link } from "react-router-dom";
-// import { paths, ROUTES } from "routes";
 import { useWorldsStore } from "stores/worlds.store";
 import { useCharacterSheetStore } from "../characterSheet.store";
-import { WORLD_ROUTES, constructWorldPath } from "pages/World/routes";
 import { WorldEmptyState } from "components/WorldEmptyState";
 
 export function WorldSection() {

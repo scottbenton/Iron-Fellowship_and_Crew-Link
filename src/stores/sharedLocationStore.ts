@@ -2,6 +2,7 @@ import { constructLocationImagePath } from "api/worlds/locations/_getRef";
 import produce from "immer";
 import { getImageUrl } from "lib/storage.lib";
 import { GMLocationDocument, LocationDocument } from "types/Locations.type";
+import { GMLoreDocument, LoreDocument } from "types/Lore.type";
 import { GMNPCDocument, NPCDocument } from "types/NPCs.type";
 import { StoreApi } from "zustand";
 
@@ -13,6 +14,12 @@ export type LocationDocumentWithGMProperties = LocationDocument & {
 
 export type NPC = NPCDocument & {
   gmProperties?: GMNPCDocument;
+  notes?: Uint8Array | null;
+  imageUrls?: string[];
+};
+
+export type Lore = LoreDocument & {
+  gmProperties: GMLoreDocument;
   notes?: Uint8Array | null;
   imageUrls?: string[];
 };
@@ -61,6 +68,26 @@ export interface LocationStoreProperties {
 
   openNPCId?: string;
   setOpenNPCId: (npcId?: string) => void;
+
+  lore: {
+    [key: string]: Lore;
+  };
+  updateLore: (
+    loreId: string,
+    lore: LoreDocument,
+    loadLoreImage: (filename: string) => void
+  ) => void;
+  updateLoreGMProperties: (
+    loreId: string,
+    loreGMProperties: GMLoreDocument
+  ) => void;
+  updateLoreNotes: (loreId: string, lore: Uint8Array | null) => void;
+  addLoreImageURL: (loreId: string, imageIndex: number, url: string) => void;
+  removeLore: (loreId: string) => void;
+  clearLore: () => void;
+
+  openLoreId?: string;
+  setOpenLoreId: (loreId?: string) => void;
 }
 
 export const initialLocationState = {
@@ -69,6 +96,9 @@ export const initialLocationState = {
 
   npcs: {},
   openNPCId: undefined,
+
+  lore: {},
+  openLoreId: undefined,
 };
 
 export const locationStore = (
@@ -226,6 +256,80 @@ export const locationStore = (
     set(
       produce((state: LocationStoreProperties) => {
         state.openNPCId = npcId;
+      })
+    );
+  },
+
+  updateLore: (
+    loreId: string,
+    lore: LoreDocument,
+    loadLoreImage: (filename: string) => void
+  ) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        const { gmProperties, notes, imageUrls } = state.lore[loreId] ?? {};
+        state.lore[loreId] = { gmProperties, notes, imageUrls, ...lore };
+
+        const previousImageFilename = state.lore[loreId]?.imageUrls?.[0];
+        const newImageFilename = lore.imageFilenames?.[0];
+
+        if (previousImageFilename !== newImageFilename && newImageFilename) {
+          loadLoreImage(newImageFilename);
+        }
+      })
+    );
+  },
+
+  updateLoreGMProperties: (
+    loreId: string,
+    loreGMProperties: GMLoreDocument
+  ) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.lore[loreId].gmProperties = loreGMProperties;
+      })
+    );
+  },
+
+  updateLoreNotes: (loreId: string, notes: Uint8Array | null) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.lore[loreId].notes = notes;
+      })
+    );
+  },
+
+  addLoreImageURL: (loreId: string, imageIndex: number, url: string) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        if (!Array.isArray(state.lore[loreId].imageUrls)) {
+          state.lore[loreId].imageUrls = [];
+        }
+        (state.lore[loreId].imageUrls as string[])[imageIndex] = url;
+      })
+    );
+  },
+
+  removeLore: (loreId: string) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        delete state.lore[loreId];
+      })
+    );
+  },
+
+  clearLore: () => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.lore = {};
+      })
+    );
+  },
+
+  setOpenLoreId: (loreId?: string) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.openLoreId = loreId;
       })
     );
   },

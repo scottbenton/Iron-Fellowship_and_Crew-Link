@@ -2,15 +2,23 @@ import {
   LocationDocumentWithGMProperties,
   NPC,
 } from "stores/sharedLocationStore";
-import { FilterBar } from "./FilterBar";
+import { FilterBar } from "components/FilterBar";
 import { NPCList } from "./NPCList";
 import { useFilterNPCs } from "./useFilterNPCs";
 import { OpenNPC } from "./OpenNPC";
-import { Box, Hidden, List, ListItemButton, ListItemText } from "@mui/material";
+import {
+  Box,
+  Button,
+  Hidden,
+  List,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 import { useAuth } from "providers/AuthProvider";
-import { EmptyState } from "components/EmptyState/EmptyState";
 import { useUserDoc } from "api/user/getUserDoc";
 import { WorldEmptyState } from "components/WorldEmptyState";
+import { useCreateNPC } from "api/worlds/npcs/createNPC";
+import AddNPCIcon from "@mui/icons-material/PersonAdd";
 
 export interface NPCSectionProps {
   worldOwnerId: string;
@@ -41,6 +49,8 @@ export function NPCSection(props: NPCSectionProps) {
   const canUseImages = useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
 
   const { search, setSearch, filteredNPCs } = useFilterNPCs(locations, npcs);
+
+  const { createNPC, loading } = useCreateNPC();
 
   if (!worldId || !worldOwnerId) {
     return (
@@ -105,11 +115,24 @@ export function NPCSection(props: NPCSectionProps) {
   return (
     <>
       <FilterBar
-        worldOwnerId={worldOwnerId}
-        worldId={worldId}
         search={search}
         setSearch={setSearch}
-        openNPC={setOpenNPCId}
+        action={
+          <Button
+            variant={"contained"}
+            disabled={loading}
+            sx={{ flexShrink: 0 }}
+            endIcon={<AddNPCIcon />}
+            onClick={() =>
+              createNPC(worldId)
+                .then((npcId) => setOpenNPCId(npcId))
+                .catch(() => {})
+            }
+          >
+            Add NPC
+          </Button>
+        }
+        searchPlaceholder="Search by name or location"
       />
       <NPCList
         sortedNPCs={sortedNPCs}
