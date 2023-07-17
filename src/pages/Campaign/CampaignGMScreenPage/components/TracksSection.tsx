@@ -10,6 +10,7 @@ import { useRemoveCampaignProgressTrack } from "api/campaign/tracks/removeCampai
 import { TRACK_TYPES } from "types/Track.type";
 import { TrackWithId } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { ProgressTrackList } from "components/ProgressTrackList";
+import { useUpdateCharacterProgressTrack } from "api/characters/tracks/updateCharacterProgressTrack";
 
 export interface TracksSectionProps {
   campaignId: string;
@@ -23,6 +24,11 @@ export function TracksSection(props: TracksSectionProps) {
   const tracks: { [key in TRACK_TYPES]?: TrackWithId[] } =
     useCampaignGMScreenStore((store) => store.tracks) ?? {};
 
+  const characterTracks = useCampaignGMScreenStore(
+    (store) => store.characterTracks
+  );
+  const characters = useCampaignGMScreenStore((store) => store.characters);
+
   const vows = tracks[TRACK_TYPES.VOW];
   const journeys = tracks[TRACK_TYPES.JOURNEY];
   const frays = tracks[TRACK_TYPES.FRAY];
@@ -30,6 +36,7 @@ export function TracksSection(props: TracksSectionProps) {
   const { addCampaignProgressTrack } = useAddCampaignProgressTrack();
   const { updateCampaignProgressTrack } = useUpdateCampaignProgressTrack();
   const { removeCampaignProgressTrack } = useRemoveCampaignProgressTrack();
+  const { updateCharacterProgressTrack } = useUpdateCharacterProgressTrack();
 
   return (
     <Stack spacing={2}>
@@ -50,33 +57,6 @@ export function TracksSection(props: TracksSectionProps) {
         }
       />
       <div>
-        <ProgressTrackList
-          tracks={vows}
-          trackType={TRACK_TYPES.VOW}
-          typeLabel={"Shared Vow"}
-          handleAdd={(newTrack) =>
-            addCampaignProgressTrack({
-              campaignId,
-              type: TRACK_TYPES.VOW,
-              track: newTrack,
-            })
-          }
-          handleUpdateValue={(trackId, value) =>
-            updateCampaignProgressTrack({
-              campaignId,
-              type: TRACK_TYPES.VOW,
-              trackId,
-              value,
-            })
-          }
-          handleDeleteTrack={(trackId) =>
-            removeCampaignProgressTrack({
-              campaignId,
-              type: TRACK_TYPES.VOW,
-              id: trackId,
-            })
-          }
-        />
         <ProgressTrackList
           tracks={frays}
           trackType={TRACK_TYPES.FRAY}
@@ -100,6 +80,33 @@ export function TracksSection(props: TracksSectionProps) {
             removeCampaignProgressTrack({
               campaignId,
               type: TRACK_TYPES.FRAY,
+              id: trackId,
+            })
+          }
+        />
+        <ProgressTrackList
+          tracks={vows}
+          trackType={TRACK_TYPES.VOW}
+          typeLabel={"Shared Vow"}
+          handleAdd={(newTrack) =>
+            addCampaignProgressTrack({
+              campaignId,
+              type: TRACK_TYPES.VOW,
+              track: newTrack,
+            })
+          }
+          handleUpdateValue={(trackId, value) =>
+            updateCampaignProgressTrack({
+              campaignId,
+              type: TRACK_TYPES.VOW,
+              trackId,
+              value,
+            })
+          }
+          handleDeleteTrack={(trackId) =>
+            removeCampaignProgressTrack({
+              campaignId,
+              type: TRACK_TYPES.VOW,
               id: trackId,
             })
           }
@@ -131,6 +138,27 @@ export function TracksSection(props: TracksSectionProps) {
             })
           }
         />
+        {Object.keys(characterTracks).map((characterId) => (
+          <div key={characterId}>
+            {characters[characterId] &&
+              characterTracks[characterId]?.[TRACK_TYPES.VOW]?.length > 0 && (
+                <ProgressTrackList
+                  tracks={characterTracks[characterId][TRACK_TYPES.VOW]}
+                  trackType={TRACK_TYPES.VOW}
+                  typeLabel={characters[characterId].name + "'s Vow"}
+                  handleUpdateValue={(trackId, value) =>
+                    updateCharacterProgressTrack({
+                      uid: characters[characterId].uid,
+                      characterId: characterId,
+                      type: TRACK_TYPES.VOW,
+                      trackId,
+                      value,
+                    })
+                  }
+                />
+              )}
+          </div>
+        ))}
       </div>
     </Stack>
   );

@@ -11,6 +11,7 @@ import { useCampaignGMScreenListenToCampaignSettings } from "api/campaign/settin
 import { useCampaignGMScreenListenToLocations } from "api/worlds/locations/listenToLocations";
 import { useCampaignGMScreenListenToNPCs } from "api/worlds/npcs/listenToNPCs";
 import { useCampaignGMScreenListenToLore } from "api/worlds/lore/listenToLore";
+import { useCampaignGMScreenListenToCampaignCharacterProgressTracks } from "api/characters/tracks/listenToCampaignCharacterProgressTracks";
 
 export function useCampaignGMScreenApiCalls(campaignId?: string) {
   const campaign = useCampaignStore(
@@ -22,6 +23,7 @@ export function useCampaignGMScreenApiCalls(campaignId?: string) {
 
   useCampaignGMScreenListenToCampaignCharacters();
   useCampaignGMScreenListenToCampaignAssets();
+  useCampaignGMScreenListenToCampaignCharacterProgressTracks();
   useCampaignGMScreenListenToCampaignProgressTracks();
   useCampaignGMScreenListenToCampaignNotes();
   useCampaignGMScreenListenToCustomMoves();

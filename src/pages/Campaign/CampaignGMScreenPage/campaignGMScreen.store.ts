@@ -32,6 +32,22 @@ export type CampaignGMScreenStore = {
   characterAssets: { [characterId: string]: StoredAsset[] };
   setCharacterAssets: (characterId: string, assets: StoredAsset[]) => void;
 
+  characterTracks: {
+    [characterId: string]: {
+      [TRACK_TYPES.VOW]: TrackWithId[];
+      [TRACK_TYPES.JOURNEY]: TrackWithId[];
+      [TRACK_TYPES.FRAY]: TrackWithId[];
+    };
+  };
+  setCharacterTracks: (
+    characterId: string,
+    tracks: {
+      [TRACK_TYPES.VOW]: TrackWithId[];
+      [TRACK_TYPES.JOURNEY]: TrackWithId[];
+      [TRACK_TYPES.FRAY]: TrackWithId[];
+    }
+  ) => void;
+
   tracks?: {
     [TRACK_TYPES.VOW]: TrackWithId[];
     [TRACK_TYPES.JOURNEY]: TrackWithId[];
@@ -67,6 +83,7 @@ const initialState = {
   players: {},
   characters: {},
   characterAssets: {},
+  characterTracks: {},
   tracks: undefined,
   oracleSettings: undefined,
   customOracles: undefined,
@@ -115,6 +132,21 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       set(
         produce((store: CampaignGMScreenStore) => {
           store.characterAssets[characterId] = assets;
+        })
+      );
+    },
+
+    setCharacterTracks: (
+      characterId: string,
+      tracks: {
+        [TRACK_TYPES.VOW]: TrackWithId[];
+        [TRACK_TYPES.JOURNEY]: TrackWithId[];
+        [TRACK_TYPES.FRAY]: TrackWithId[];
+      }
+    ) => {
+      set(
+        produce((store: CampaignGMScreenStore) => {
+          store.characterTracks[characterId] = tracks;
         })
       );
     },

@@ -187,6 +187,8 @@ export function ProgressTrack(props: ProgressTracksProps) {
               "&:hover": {
                 backgroundColor: theme.palette.primary.main,
               },
+              borderTopLeftRadius: theme.shape.borderRadius,
+              borderBottomLeftRadius: theme.shape.borderRadius,
             })}
           >
             <MinusIcon />
@@ -206,11 +208,8 @@ export function ProgressTrack(props: ProgressTracksProps) {
                 borderWidth: 1,
                 borderStyle: "solid",
                 borderColor: "transparent",
-                borderLeftColor: theme.palette.divider,
-
-                "&:last-of-type": {
-                  borderRightColor: theme.palette.divider,
-                },
+                borderLeftColor:
+                  index !== 0 ? theme.palette.divider : undefined,
               })}
             >
               <ProgressTrackTick value={value} key={index} />
@@ -232,6 +231,9 @@ export function ProgressTrack(props: ProgressTracksProps) {
               "&:hover": {
                 backgroundColor: theme.palette.primary.main,
               },
+
+              borderTopRightRadius: theme.shape.borderRadius,
+              borderBottomRightRadius: theme.shape.borderRadius,
             })}
           >
             <PlusIcon />

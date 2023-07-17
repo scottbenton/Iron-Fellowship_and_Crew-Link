@@ -4,14 +4,15 @@ import { StoredTrack, TRACK_TYPES } from "../types/Track.type";
 import { AddTrackDialog } from "./AddTrackDialog/AddTrackDialog";
 import { ProgressTrack } from "./ProgressTrack/ProgressTrack";
 import { SectionHeading } from "./SectionHeading";
+import { EmptyState } from "./EmptyState/EmptyState";
 
 export interface ProgressTrackListProps {
   trackType: TRACK_TYPES;
   tracks?: TrackWithId[];
   typeLabel: string;
-  handleAdd: (newTrack: StoredTrack) => Promise<boolean>;
+  handleAdd?: (newTrack: StoredTrack) => Promise<boolean>;
   handleUpdateValue: (trackId: string, value: number) => Promise<boolean>;
-  handleDeleteTrack: (trackId: string) => Promise<boolean>;
+  handleDeleteTrack?: (trackId: string) => Promise<boolean>;
   headingBreakContainer?: boolean;
 }
 
@@ -31,13 +32,15 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
       <SectionHeading
         label={`${typeLabel}s`}
         action={
-          <AddTrackDialog
-            trackTypeName={`${typeLabel}`}
-            handleTrackAdd={(track) => handleAdd(track)}
-            buttonProps={{
-              variant: "text",
-            }}
-          />
+          handleAdd && (
+            <AddTrackDialog
+              trackTypeName={`${typeLabel}`}
+              handleTrackAdd={(track) => handleAdd(track)}
+              buttonProps={{
+                variant: "text",
+              }}
+            />
+          )
         }
         breakContainer={headingBreakContainer}
       />
@@ -52,7 +55,7 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
           },
         })}
       >
-        {Array.isArray(tracks) &&
+        {Array.isArray(tracks) && tracks.length > 0 ? (
           tracks.map((track, index) => (
             <ProgressTrack
               key={index}
@@ -62,12 +65,19 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
               difficulty={track.difficulty}
               value={track.value}
               onValueChange={(value) => handleUpdateValue(track.id, value)}
-              onDelete={() => {
-                handleDeleteTrack(track.id);
-              }}
+              onDelete={
+                handleDeleteTrack
+                  ? () => {
+                      handleDeleteTrack(track.id);
+                    }
+                  : undefined
+              }
               max={40}
             />
-          ))}
+          ))
+        ) : (
+          <EmptyState message={`No ${typeLabel}s found`} />
+        )}
       </Stack>
     </>
   );

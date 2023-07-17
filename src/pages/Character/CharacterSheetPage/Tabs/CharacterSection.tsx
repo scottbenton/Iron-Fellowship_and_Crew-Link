@@ -9,17 +9,14 @@ import {
   Checkbox,
   Button,
 } from "@mui/material";
-import { useCharacterSheetUpdateBonds } from "api/characters/updateBonds";
 import { useUpdateCharacterStat } from "api/characters/updateCharacterStat";
 import { useCharacterSheetUpdateDebility } from "api/characters/updateDebility";
 import { useCharacterSheetUpdateName } from "api/characters/updateName";
-import { ProgressTrack } from "components/ProgressTrack";
 import { SectionHeading } from "components/SectionHeading";
 import { useSnackbar } from "hooks/useSnackbar";
 import { DEBILITIES } from "types/debilities.enum";
 import { Stat } from "types/stats.enum";
 import { useCharacterSheetStore } from "../characterSheet.store";
-import { ExperienceTrack } from "../components/ExperienceTrack";
 import { StatComponent } from "components/StatComponent";
 import { useCharacterSheetUpdateShareNotesWithGMSetting } from "api/characters/updateShareNotesWithGMSetting";
 import { useState } from "react";
@@ -33,18 +30,11 @@ import { constructCharacterCardUrl } from "pages/Character/routes";
 import { useAuth } from "providers/AuthProvider";
 
 export function CharacterSection() {
-  const { error } = useSnackbar();
-
   const uid = useAuth().user?.uid ?? "";
   const characterId = useCharacterSheetStore((store) => store.characterId);
   const campaignId = useCharacterSheetStore((store) => store.campaignId);
 
   const { success } = useSnackbar();
-
-  const bondValue = useCharacterSheetStore(
-    (store) => store.character?.bonds ?? 0
-  );
-  const { updateBonds } = useCharacterSheetUpdateBonds();
 
   const stats = useCharacterSheetStore((store) => store.character?.stats);
   const { updateCharacterStat } = useUpdateCharacterStat();
@@ -105,19 +95,6 @@ export function CharacterSection() {
 
   return (
     <Stack spacing={2} pb={2}>
-      <SectionHeading label={"Experience"} />
-      <Box px={2}>
-        <ExperienceTrack />
-      </Box>
-      <SectionHeading label={"Bonds"} />
-      <Box px={2}>
-        <ProgressTrack
-          value={bondValue}
-          max={40}
-          onValueChange={(value) => updateBonds(value)}
-        />
-      </Box>
-
       <SectionHeading label={"Debilities"} />
       <Box px={2}>
         <Box
