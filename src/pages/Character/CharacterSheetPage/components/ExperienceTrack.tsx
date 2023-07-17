@@ -32,31 +32,27 @@ export function ExperienceTrack() {
 
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
-      <Box width={24 * 15} mr={2}>
+      <Box mr={2}>
         {new Array(spentExp).fill(undefined).map((key, index) => (
-          <SpentIcon key={index} color={"action"} />
+          <SpentIcon key={index} color={"action"} fontSize={"small"} />
         ))}
         {new Array(earnedExp - spentExp).fill(undefined).map((key, index) => (
-          <EarnedIcon key={index} color={"action"} />
+          <EarnedIcon key={index} color={"action"} fontSize={"small"} />
         ))}
         {new Array(totalExp - earnedExp).fill(undefined).map((key, index) => (
-          <EmptyIcon key={index} color={"action"} />
+          <EmptyIcon key={index} color={"action"} fontSize={"small"} />
         ))}
       </Box>
-      <Box
-        display={"flex"}
-        flexDirection={"column"}
-        justifyContent={"space-between"}
-      >
+      <Box display={"flex"} flexWrap={"wrap"}>
         <ExperienceButtons
           handleAdd={() => handleEarnedExperienceChange(earnedExp + 1)}
           handleSubtract={() => handleEarnedExperienceChange(earnedExp - 1)}
-          label={"Add Exp"}
+          label={"Add Experience"}
         />
         <ExperienceButtons
           handleAdd={() => handleSpentExperienceChange(spentExp + 1)}
           handleSubtract={() => handleSpentExperienceChange(spentExp - 1)}
-          label={"Spend Exp"}
+          label={"Spend Experience"}
         />
       </Box>
     </Box>

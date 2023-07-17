@@ -33,7 +33,7 @@ export const addCharacterProgressTrack: ApiFunction<
       getCharacterTracksDoc(uid, characterId),
       {
         [type]: {
-          [track.label + track.createdTimestamp.toString()]: track,
+          [track.label + track.createdTimestamp.toMillis()]: track,
         },
       },
       { merge: true }

@@ -19,11 +19,13 @@ import {
 } from "components/StyledTabs";
 import { NPCSection } from "components/NPCSection";
 import { LoreSection } from "components/Lore";
+import { TracksSection } from "../Tabs/TracksSection";
 
 enum TABS {
   MOVES = "moves",
   ASSETS = "assets",
   ORACLE = "oracle",
+  TRACKS = "tracks",
   VOWS = "vows",
   JOURNEYS = "journeys",
   FRAYS = "frays",
@@ -100,9 +102,10 @@ export function TabsSection() {
         {isMobile && <StyledTab label={"Moves"} value={TABS.MOVES} />}
         <StyledTab label="Assets" value={TABS.ASSETS} />
         {!isInCampaign && <StyledTab label="Oracle" value={TABS.ORACLE} />}
-        <StyledTab label="Vows" value={TABS.VOWS} />
+        <StyledTab label="Tracks" value={TABS.TRACKS} />
+        {/* <StyledTab label="Vows" value={TABS.VOWS} />
         <StyledTab label="Combat" value={TABS.FRAYS} />
-        <StyledTab label="Journeys" value={TABS.JOURNEYS} />
+        <StyledTab label="Journeys" value={TABS.JOURNEYS} /> */}
         <StyledTab label="Notes" value={TABS.NOTES} />
         <StyledTab label={"World"} value={TABS.WORLD} />
         <StyledTab label={"Locations"} value={TABS.LOCATIONS} />
@@ -118,6 +121,9 @@ export function TabsSection() {
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.ORACLE}>
         <OracleSection />
+      </ContainedTabPanel>
+      <ContainedTabPanel isVisible={selectedTab === TABS.TRACKS}>
+        <TracksSection />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.VOWS}>
         <ProgressTrackSection

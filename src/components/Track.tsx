@@ -82,19 +82,22 @@ export function Track(props: TrackProps) {
             width: "100%",
             display: "flex",
           },
-          label
-            ? {
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-              }
-            : {},
         ]}
       >
-        {numbers.map((num) => (
+        {numbers.map((num, index) => (
           <ToggleButton
             key={num}
             value={num}
-            sx={{ py: 0, px: 0.5, flexGrow: 1 }}
+            sx={[
+              { py: 0, px: 0.5, flexGrow: 1 },
+              label && index === 0
+                ? {
+                    borderTopLeftRadius: 0,
+                    borderBottomLeftRadius: 0,
+                    borderLeftWidth: 0,
+                  }
+                : {},
+            ]}
           >
             {num > 0 && "+"}
             {num}
