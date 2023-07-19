@@ -29,6 +29,7 @@
     "immer": "^9.0.17",
     "material-ui-confirm": "^3.0.8",
     "notistack": "^2.0.8",
+    "posthog-js": "^1.71.0",
     "react": "^18.2.0",
     "react-avatar-editor": "^13.0.0",
     "react-beautiful-dnd": "^13.1.1",

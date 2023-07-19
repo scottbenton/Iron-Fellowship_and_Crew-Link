@@ -25,6 +25,8 @@ export type Lore = LoreDocument & {
 };
 
 export interface LocationStoreProperties {
+  doAnyDocsHaveImages: boolean;
+
   locations: {
     [key: string]: LocationDocumentWithGMProperties;
   };
@@ -91,6 +93,8 @@ export interface LocationStoreProperties {
 }
 
 export const initialLocationState = {
+  doAnyDocsHaveImages: false,
+
   locations: {},
   openLocationId: undefined,
 
@@ -125,6 +129,7 @@ export const locationStore = (
         const newImageFilename = location.imageFilenames?.[0];
 
         if (previousImageFilename !== newImageFilename && newImageFilename) {
+          state.doAnyDocsHaveImages = true;
           loadLocationImage(newImageFilename);
         }
       })
@@ -203,6 +208,7 @@ export const locationStore = (
         const newImageFilename = npc.imageFilenames?.[0];
 
         if (previousImageFilename !== newImageFilename && newImageFilename) {
+          state.doAnyDocsHaveImages = true;
           loadNPCImage(newImageFilename);
         }
       })
@@ -274,6 +280,7 @@ export const locationStore = (
         const newImageFilename = lore.imageFilenames?.[0];
 
         if (previousImageFilename !== newImageFilename && newImageFilename) {
+          state.doAnyDocsHaveImages = true;
           loadLoreImage(newImageFilename);
         }
       })

@@ -62,6 +62,10 @@ export function WorldSheetPage() {
 
   const { deleteWorld } = useDeleteWorld();
 
+  const doAnyDocsHaveImages = useWorldSheetStore(
+    (store) => store.doAnyDocsHaveImages
+  );
+
   useWorldSheetListenToLocations(worldOwnerId, worldId);
   const locations = useWorldSheetStore((store) => store.locations);
   const openLocationId = useWorldSheetStore((store) => store.openLocationId);
@@ -180,6 +184,7 @@ export function WorldSheetPage() {
             })}
           >
             <LocationsSection
+              doAnyDocsHaveImages={doAnyDocsHaveImages}
               locations={locations}
               openLocationId={openLocationId}
               setOpenLocationId={setOpenLocationId}
@@ -197,6 +202,7 @@ export function WorldSheetPage() {
             })}
           >
             <NPCSection
+              doAnyDocsHaveImages={doAnyDocsHaveImages}
               worldOwnerId={worldOwnerId}
               worldId={worldId}
               locations={locations}
@@ -215,6 +221,7 @@ export function WorldSheetPage() {
             })}
           >
             <LoreSection
+              doAnyDocsHaveImages={doAnyDocsHaveImages}
               worldOwnerId={worldOwnerId}
               worldId={worldId}
               lore={lore}

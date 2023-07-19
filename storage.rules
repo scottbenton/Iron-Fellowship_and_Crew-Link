@@ -2,11 +2,30 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     match /characters/{userId}/characters/{characterId}/{allPaths=**} {
-    	allow read: if request.auth.uid != null;
+    	allow read;
       allow write: if request.auth.uid == userId 
       						 && request.resource.size < 5 * 1024 * 1024
                    && request.resource.contentType.matches('image/.*');
-
+    }
+    match /worlds/{worldId}{
+    	match /locations/{locationId}/{allPaths=**} {
+        allow read: if request.auth.uid != null;
+        allow write: if request.auth.uid != null
+                     && request.resource.size < 5 * 1024 * 1024
+                     && request.resource.contentType.matches('image/.*');
+    	}
+			match /npcs/{npcId}/{allPaths=**} {
+        allow read: if request.auth.uid != null;
+        allow write: if request.auth.uid != null
+                     && request.resource.size < 5 * 1024 * 1024
+                     && request.resource.contentType.matches('image/.*');
+    	}
+			match /lore/{loreId}/{allPaths=**} {
+        allow read: if request.auth.uid != null;
+        allow write: if request.auth.uid != null
+                     && request.resource.size < 5 * 1024 * 1024
+                     && request.resource.contentType.matches('image/.*');
+    	}
     }
     match /{allPaths=**} {
       allow read, write: if false;

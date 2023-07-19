@@ -59,6 +59,10 @@ export function TabsSection(props: TabsSectionProps) {
     }
   }, [selectedTab, isMobile]);
 
+  const doAnyDocsHaveImages = useCampaignGMScreenStore(
+    (store) => store.doAnyDocsHaveImages
+  );
+
   const locations = useCampaignGMScreenStore((store) => store.locations);
   const openLocationId = useCampaignGMScreenStore(
     (store) => store.openLocationId
@@ -129,6 +133,7 @@ export function TabsSection(props: TabsSectionProps) {
         greyBackground={worldId && worldOwnerId ? true : false}
       >
         <LocationsSection
+          doAnyDocsHaveImages={doAnyDocsHaveImages}
           worldOwnerId={worldOwnerId}
           worldId={worldId}
           locations={locations}
@@ -142,6 +147,7 @@ export function TabsSection(props: TabsSectionProps) {
         greyBackground={worldId && worldOwnerId ? true : false}
       >
         <NPCSection
+          doAnyDocsHaveImages={doAnyDocsHaveImages}
           worldOwnerId={worldOwnerId ?? ""}
           worldId={worldId ?? ""}
           locations={locations}
@@ -156,6 +162,7 @@ export function TabsSection(props: TabsSectionProps) {
         greyBackground={worldId && worldOwnerId ? true : false}
       >
         <LoreSection
+          doAnyDocsHaveImages={doAnyDocsHaveImages}
           worldOwnerId={worldOwnerId ?? ""}
           worldId={worldId ?? ""}
           lore={lore}

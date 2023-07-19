@@ -56,16 +56,16 @@ export function TabsSection() {
 
   const uid = useAuth().user?.uid;
 
-  const characterId = useCharacterSheetStore(
-    (store) => store.characterId ?? ""
-  );
-
   const isSinglePlayer = useCharacterSheetStore((store) => !store.campaignId);
   const worldId = useCharacterSheetStore((store) =>
     store.campaignId ? store.campaign?.worldId : store.character?.worldId
   );
   const worldOwnerId = useCharacterSheetStore((store) =>
     store.campaignId ? store.campaign?.gmId : uid
+  );
+
+  const doAnyDocsHaveImages = useCharacterSheetStore(
+    (store) => store.doAnyDocsHaveImages
   );
 
   const locations = useCharacterSheetStore((store) => store.locations);
@@ -155,6 +155,7 @@ export function TabsSection() {
         greyBackground={worldId && worldOwnerId ? true : false}
       >
         <LocationsSection
+          doAnyDocsHaveImages={doAnyDocsHaveImages}
           worldId={worldId}
           worldOwnerId={worldOwnerId}
           isCharacterSheet
@@ -170,6 +171,7 @@ export function TabsSection() {
         greyBackground={worldId && worldOwnerId ? true : false}
       >
         <NPCSection
+          doAnyDocsHaveImages={doAnyDocsHaveImages}
           worldId={worldId ?? ""}
           worldOwnerId={worldOwnerId ?? ""}
           npcs={npcs}
@@ -185,6 +187,7 @@ export function TabsSection() {
         greyBackground={worldId && worldOwnerId ? true : false}
       >
         <LoreSection
+          doAnyDocsHaveImages={doAnyDocsHaveImages}
           worldId={worldId ?? ""}
           worldOwnerId={worldOwnerId ?? ""}
           lore={lore}

@@ -10,6 +10,7 @@ on:
 
 jobs:
   get_variables:
+    name: "Get Variables"
     runs-on: ubuntu-latest
     outputs:
       issue_number: ${{ steps.setVariables.outputs.issue_number }}
@@ -47,6 +48,7 @@ jobs:
           echo "branch_name=$(<./branch_name)" >> $GITHUB_OUTPUT &
           echo "repository=$(<./repository)" >> $GITHUB_OUTPUT
   build_and_preview:
+    name: "Deploy to Firebase Hosting"
     runs-on: ubuntu-latest
     needs: get_variables
     env:
@@ -73,6 +75,7 @@ jobs:
           channelId: preview-${{ needs.get_variables.outputs.issue_number }}
 
   comment_preview_url:
+    name: "Comment Preview URL on PR"
     runs-on: ubuntu-latest
     needs:
       - get_variables
