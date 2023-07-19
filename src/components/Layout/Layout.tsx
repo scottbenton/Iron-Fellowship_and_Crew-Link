@@ -14,6 +14,7 @@ import {
 } from "firebase/auth";
 import { completeMagicLinkSignupIfPresent } from "lib/auth.lib";
 import { useSnackbar } from "hooks/useSnackbar";
+import { sendPageViewEvent } from "config/posthog.config";
 
 export interface LayoutProps {}
 
@@ -38,6 +39,10 @@ export function Layout(props: LayoutProps) {
       navigateToContinueURL(basePaths[BASE_ROUTES.CHARACTER]);
     }
   }, [pathname, state]);
+
+  useEffect(() => {
+    sendPageViewEvent();
+  }, [pathname]);
 
   useEffect(() => {
     if (previousMagicLinkPathnameChecked.current !== pathname) {

@@ -5,8 +5,6 @@ import {
   CardActionArea,
   Grid,
   Hidden,
-  Input,
-  InputAdornment,
   List,
   ListItemButton,
   ListItemText,
@@ -17,15 +15,15 @@ import { useCreateLocation } from "api/worlds/locations/createLocation";
 import { OpenLocation } from "./OpenLocation";
 import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
 import { useFilterLocations } from "./useFilterLocations";
-import SearchIcon from "@mui/icons-material/Search";
 import { useAuth } from "providers/AuthProvider";
-import { useUserDoc } from "api/user/getUserDoc";
 import AddPhotoIcon from "@mui/icons-material/Photo";
 import { WorldEmptyState } from "components/WorldEmptyState";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
 import { FilterBar } from "components/FilterBar";
+import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 
 export interface LocationsSectionProps {
+  doAnyDocsHaveImages: boolean;
   worldOwnerId?: string;
   worldId?: string;
   isCharacterSheet?: boolean;
@@ -38,6 +36,7 @@ export interface LocationsSectionProps {
 
 export function LocationsSection(props: LocationsSectionProps) {
   const {
+    doAnyDocsHaveImages,
     worldOwnerId,
     worldId,
     isSinglePlayer,
@@ -48,8 +47,9 @@ export function LocationsSection(props: LocationsSectionProps) {
   } = props;
 
   const isWorldOwner = useAuth().user?.uid === worldOwnerId;
-  const isWorldOwnerPremium =
-    useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
+
+  const userCanUploadImages = useCanUploadWorldImages();
+  const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
 
   const { createLocation, loading: createLocationLoading } =
     useCreateLocation();
@@ -109,7 +109,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           location={openLocation}
           locationId={openLocationId}
           closeLocation={() => setOpenLocationId(undefined)}
-          isWorldOwnerPremium={isWorldOwnerPremium}
+          canShowImages={canShowImages}
           isSinglePlayer={isSinglePlayer}
         />
       </Box>
@@ -154,7 +154,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           <Grid item xs={12} md={6} lg={4} key={locationId}>
             <Card variant={"outlined"}>
               <CardActionArea onClick={() => setOpenLocationId(locationId)}>
-                {isWorldOwnerPremium && (
+                {canShowImages && (
                   <Box
                     sx={(theme) => ({
                       aspectRatio: "16/9",

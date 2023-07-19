@@ -15,10 +15,10 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useAuth } from "providers/AuthProvider";
-import { useUserDoc } from "api/user/getUserDoc";
 import { WorldEmptyState } from "components/WorldEmptyState";
 import { useCreateNPC } from "api/worlds/npcs/createNPC";
 import AddNPCIcon from "@mui/icons-material/PersonAdd";
+import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 
 export interface NPCSectionProps {
   worldOwnerId: string;
@@ -29,6 +29,7 @@ export interface NPCSectionProps {
   setOpenNPCId: (npcId?: string) => void;
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
+  doAnyDocsHaveImages: boolean;
 }
 
 export function NPCSection(props: NPCSectionProps) {
@@ -41,12 +42,14 @@ export function NPCSection(props: NPCSectionProps) {
     setOpenNPCId,
     isSinglePlayer,
     showHiddenTag,
+    doAnyDocsHaveImages,
   } = props;
 
   const uid = useAuth().user?.uid;
   const isWorldOwner = worldOwnerId === uid;
 
-  const canUseImages = useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
+  const userCanUploadImages = useCanUploadWorldImages() ?? false;
+  const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
 
   const { search, setSearch, filteredNPCs } = useFilterNPCs(locations, npcs);
 
@@ -106,7 +109,7 @@ export function NPCSection(props: NPCSectionProps) {
           locations={locations}
           closeNPC={() => setOpenNPCId()}
           isSinglePlayer={isSinglePlayer}
-          canUseImages={canUseImages}
+          canUseImages={canShowImages}
         />
       </Box>
     );
@@ -139,7 +142,7 @@ export function NPCSection(props: NPCSectionProps) {
         npcs={filteredNPCs}
         locations={locations}
         openNPC={setOpenNPCId}
-        canUseImages={canUseImages}
+        canUseImages={canShowImages}
         showHiddenTag={showHiddenTag}
       />
     </>

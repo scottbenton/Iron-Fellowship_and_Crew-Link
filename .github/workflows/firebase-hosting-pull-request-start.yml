@@ -4,7 +4,7 @@ on:
 
 jobs:
   preflight-job:
-    name: Preflight Step
+    name: Save Pull Request Information and Kick off Hosting Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Save PR Information
