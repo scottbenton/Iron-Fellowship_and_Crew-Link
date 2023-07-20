@@ -4,7 +4,8 @@ on:
 
 jobs:
   preflight-job:
-    name: Preflight Step
+    name: Forked Repo - Save Pull Request Information and Kick off Hosting Deploy
+    if: "${{ github.event.pull_request.head.repo.full_name != github.repository }}"
     runs-on: ubuntu-latest
     steps:
       - name: Save PR Information
