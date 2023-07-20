@@ -15,6 +15,7 @@ import { EmptyState } from "components/EmptyState/EmptyState";
 import { StyledTabs, StyledTab } from "components/StyledTabs";
 import { WorldEmptyState } from "components/WorldEmptyState";
 import { useAuth } from "providers/AuthProvider";
+import { Head } from "providers/HeadProvider/Head";
 
 enum TABS {
   CHARACTER = "characters",
@@ -64,6 +65,10 @@ export function CampaignSheetPage() {
 
   return (
     <>
+      <Head
+        title={campaign.name}
+        description={`Campaign page for ${campaign.name}.`}
+      />
       <CampaignSheetHeader campaign={campaign} campaignId={campaignId} />
       <PageContent isPaper>
         <BreakContainer>

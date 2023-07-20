@@ -30,6 +30,7 @@ import { useWorldSheetStore } from "./worldSheet.store";
 import { useWorldSheetListenToNPCs } from "api/worlds/npcs/listenToNPCs";
 import { useWorldSheetListenToLore } from "api/worlds/lore/listenToLore";
 import { LoreSection } from "components/Lore";
+import { Head } from "providers/HeadProvider/Head";
 
 export enum TABS {
   DETAILS = "details",
@@ -141,6 +142,7 @@ export function WorldSheetPage() {
 
   return (
     <>
+      <Head title={world.name} description={`World page for ${world.name}`} />
       <PageHeader
         label={world.name}
         actions={

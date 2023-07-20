@@ -11,6 +11,8 @@ import {
   constructCampaignPath,
   constructCampaignSheetPath,
 } from "../routes";
+import { PageContent, PageHeader } from "components/Layout";
+import { Head } from "providers/HeadProvider/Head";
 
 export function CampaignJoinPage() {
   const { campaignId } = useParams();
@@ -81,20 +83,32 @@ export function CampaignJoinPage() {
   }
 
   return (
-    <EmptyState
-      title={`Join the fun`}
-      message={"Find your group and begin your journey"}
-      imageSrc={"/assets/nature.svg"}
-      callToAction={
-        <Button
-          size={"large"}
-          variant={"contained"}
-          onClick={() => handleJoinCampaign()}
-          disabled={isJoining}
-        >
-          Join {campaign.name}
-        </Button>
-      }
-    />
+    <>
+      <Head
+        title={`Join ${campaign.name}`}
+        description={
+          "Join your group and begin your adventure on Iron Fellowship"
+        }
+        openGraphImageSrc="/assets/ironsworn-opengraph-join-campaign.svg"
+      />
+      <PageHeader label={"Join " + campaign.name} />
+      <PageContent isPaper>
+        <EmptyState
+          title={`Join the fun`}
+          message={"Find your group and begin your journey"}
+          imageSrc={"/assets/nature.svg"}
+          callToAction={
+            <Button
+              size={"large"}
+              variant={"contained"}
+              onClick={() => handleJoinCampaign()}
+              disabled={isJoining}
+            >
+              Join {campaign.name}
+            </Button>
+          }
+        />
+      </PageContent>
+    </>
   );
 }

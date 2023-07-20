@@ -1,5 +1,11 @@
 import { LoginOrSignupPage } from "components/LoginOrSignupPage";
+import { Head } from "providers/HeadProvider/Head";
 
 export function SignupPage() {
-  return <LoginOrSignupPage isLoginPage={false} />;
+  return (
+    <>
+      <Head title={"Create an Account"} />
+      <LoginOrSignupPage isLoginPage={false} />
+    </>
+  );
 }

@@ -5,6 +5,7 @@ import { ConfirmProvider } from "material-ui-confirm";
 import { DieRollProvider } from "providers/DieRollProvider";
 import { LinkedDialogProvider } from "./LinkedDialogProvider";
 import { AuthProvider } from "./AuthProvider";
+import { HeadProvider } from "./HeadProvider";
 
 export function AppProviders(props: PropsWithChildren) {
   const { children } = props;

@@ -5,7 +5,12 @@ import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { useEffect, useRef } from "react";
 import { useContinueUrl } from "hooks/useContinueUrl";
-import { BASE_ROUTES, basePaths, unauthenticatedPaths } from "routes";
+import {
+  BASE_ROUTES,
+  basePaths,
+  openPaths,
+  onlyUnauthenticatedPaths,
+} from "routes";
 
 import {
   getAuth,
@@ -26,13 +31,10 @@ export function Layout(props: LayoutProps) {
   const { redirectWithContinueUrl, navigateToContinueURL } = useContinueUrl();
 
   useEffect(() => {
-    if (
-      !unauthenticatedPaths.includes(pathname) &&
-      state === AUTH_STATE.UNAUTHENTICATED
-    ) {
+    if (!openPaths.includes(pathname) && state === AUTH_STATE.UNAUTHENTICATED) {
       redirectWithContinueUrl(basePaths[BASE_ROUTES.LOGIN], pathname);
     } else if (
-      unauthenticatedPaths.includes(pathname) &&
+      onlyUnauthenticatedPaths.includes(pathname) &&
       state === AUTH_STATE.AUTHENTICATED
     ) {
       navigateToContinueURL(basePaths[BASE_ROUTES.CHARACTER]);

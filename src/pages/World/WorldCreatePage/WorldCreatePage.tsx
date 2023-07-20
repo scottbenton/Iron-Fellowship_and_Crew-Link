@@ -5,6 +5,7 @@ import { TruthStep } from "./components/TruthStep";
 import { useWorldCreateStore } from "./worldCreate.store";
 import { useEffect } from "react";
 import { PageContent, PageHeader } from "components/Layout";
+import { Head } from "providers/HeadProvider/Head";
 
 export function WorldCreatePage() {
   const currentStep = useWorldCreateStore((store) => store.currentStep);
@@ -18,6 +19,10 @@ export function WorldCreatePage() {
 
   return (
     <>
+      <Head
+        title={"Create a World"}
+        description={"Create a new world in Iron Fellowship."}
+      />
       <PageHeader label={"Create your World"} />
       <PageContent isPaper>
         <Alert color="info" sx={{ my: 2 }}>

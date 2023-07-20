@@ -18,6 +18,7 @@ import { CreateCampaignDialog } from "./components/CreateCampaignDialog";
 import CreateCampaignIcon from "@mui/icons-material/GroupAdd";
 import { PageContent, PageHeader } from "components/Layout";
 import { CampaignCard } from "./components/CampaignCard";
+import { Head } from "providers/HeadProvider/Head";
 
 export function CampaignSelectPage() {
   const campaigns = useCampaignStore((store) =>
@@ -54,6 +55,12 @@ export function CampaignSelectPage() {
 
   return (
     <>
+      <Head
+        title={"Your Campaigns"}
+        description={
+          "A list of all the campaigns you have joined in Iron Fellowship"
+        }
+      />
       <PageHeader
         label={"Your Campaigns"}
         actions={
