@@ -25,7 +25,7 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_IRON_JOURNAL_1AC32 }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
           channelId: live
           projectId: iron-journal-1ac32
   deploy_firestore_rules:
@@ -36,7 +36,7 @@ jobs:
         with:
           args: deploy --only firestore
         env:
-          GCP_SA_KEY: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_IRON_JOURNAL_1AC32 }}"
+          GCP_SA_KEY: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
           PROJECT_ID: "${{ secrets.FIREBASE_PROJECTID }}"
   deploy_storage_rules:
     name: Deploy Firebase Storage rules
@@ -46,5 +46,5 @@ jobs:
         with:
           args: deploy --only storage
         env:
-          GCP_SA_KEY: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_IRON_JOURNAL_1AC32 }}"
+          GCP_SA_KEY: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
           PROJECT_ID: "${{ secrets.FIREBASE_PROJECTID }}"
