@@ -27,24 +27,21 @@ jobs:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
           channelId: live
-          projectId: iron-journal-1ac32
-  deploy_firestore_rules:
-    name: Deploy Firestore rules and indexes
+          projectId: ${{ secrets.FIREBASE_PROJECTID }}
+  deploy_firestore_and_storage_rules:
+    name: Deploy Firestore and Storage rules and indexes
     runs-on: ubuntu-latest
     steps:
-      - uses: joinflux/firebase-tools@v10.7.0
+      - uses: actions/checkout@v2
+      - uses: w9jds/firebase-action@master
         with:
           args: deploy --only firestore
         env:
-          GCP_SA_KEY: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          PROJECT_ID: "${{ secrets.FIREBASE_PROJECTID }}"
-  deploy_storage_rules:
-    name: Deploy Firebase Storage rules
-    runs-on: ubuntu-latest
-    steps:
-      - uses: joinflux/firebase-tools@v10.7.0
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT_ID: "${{secrets.FIREBASE_PROJECTID}}"
+      - uses: w9jds/firebase-action@master
         with:
           args: deploy --only storage
         env:
-          GCP_SA_KEY: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          PROJECT_ID: "${{ secrets.FIREBASE_PROJECTID }}"
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT_ID: "${{secrets.FIREBASE_PROJECTID}}"
