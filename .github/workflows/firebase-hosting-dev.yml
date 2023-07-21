@@ -45,5 +45,5 @@ jobs:
         with:
           args: deploy --only storage
         env:
-          GCP_SA_KEY: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           PROJECT_ID: "${{secrets.FIREBASE_PROJECTID}}"
