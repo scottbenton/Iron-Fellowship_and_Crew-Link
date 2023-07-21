@@ -10,6 +10,7 @@ jobs:
   build_and_deploy:
     name: Build and Deploy to Firebase Hosting
     runs-on: ubuntu-latest
+    environment: Production
     env:
       VITE_FIREBASE_APIKEY: "${{secrets.FIREBASE_APIKEY}}"
       VITE_FIREBASE_AUTHDOMAIN: "${{secrets.FIREBASE_AUTHDOMAIN}}"
@@ -27,10 +28,11 @@ jobs:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
           channelId: live
-          projectId: ${{ secrets.FIREBASE_PROJECTID }}
+          projectId: "${{ secrets.FIREBASE_PROJECTID }}"
   deploy_firestore_and_storage_rules:
     name: Deploy Firestore and Storage rules and indexes
     runs-on: ubuntu-latest
+    environment: Production
     steps:
       - uses: actions/checkout@v2
       - uses: w9jds/firebase-action@master
