@@ -25,9 +25,13 @@ export type Lore = LoreDocument & {
 };
 
 export interface LocationStoreProperties {
+  doAnyDocsHaveImages: boolean;
+
   locations: {
     [key: string]: LocationDocumentWithGMProperties;
   };
+  locationSearch: string;
+  setLocationSearch: (search: string) => void;
   updateLocation: (
     locationId: string,
     location: LocationDocument,
@@ -52,6 +56,8 @@ export interface LocationStoreProperties {
   npcs: {
     [key: string]: NPC;
   };
+  npcSearch: string;
+  setNPCSearch: (search: string) => void;
   updateNPC: (
     npcId: string,
     npc: NPCDocument,
@@ -72,6 +78,8 @@ export interface LocationStoreProperties {
   lore: {
     [key: string]: Lore;
   };
+  loreSearch: string;
+  setLoreSearch: (search: string) => void;
   updateLore: (
     loreId: string,
     lore: LoreDocument,
@@ -91,19 +99,31 @@ export interface LocationStoreProperties {
 }
 
 export const initialLocationState = {
+  doAnyDocsHaveImages: false,
+
   locations: {},
+  locationSearch: "",
   openLocationId: undefined,
 
   npcs: {},
+  npcSearch: "",
   openNPCId: undefined,
 
   lore: {},
+  loreSearch: "",
   openLoreId: undefined,
 };
 
 export const locationStore = (
   set: StoreApi<LocationStoreProperties>["setState"]
 ) => ({
+  setLocationSearch: (search: string) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.locationSearch = search;
+      })
+    );
+  },
   updateLocation: (
     locationId: string,
     location: LocationDocument,
@@ -125,6 +145,7 @@ export const locationStore = (
         const newImageFilename = location.imageFilenames?.[0];
 
         if (previousImageFilename !== newImageFilename && newImageFilename) {
+          state.doAnyDocsHaveImages = true;
           loadLocationImage(newImageFilename);
         }
       })
@@ -137,6 +158,7 @@ export const locationStore = (
   ) => {
     set(
       produce((state: LocationStoreProperties) => {
+        if (!state.locations[locationId]) return;
         state.locations[locationId].gmProperties = locationGMProperties;
       })
     );
@@ -145,6 +167,7 @@ export const locationStore = (
   updateLocationNotes: (locationId: string, notes: Uint8Array | null) => {
     set(
       produce((state: LocationStoreProperties) => {
+        if (!state.locations[locationId]) return;
         state.locations[locationId].notes = notes;
       })
     );
@@ -157,6 +180,8 @@ export const locationStore = (
   ) => {
     set(
       produce((state: LocationStoreProperties) => {
+        if (!state.locations[locationId]) return;
+
         if (!Array.isArray(state.locations[locationId].imageUrls)) {
           state.locations[locationId].imageUrls = [];
         }
@@ -189,6 +214,13 @@ export const locationStore = (
     );
   },
 
+  setNPCSearch: (search: string) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.npcSearch = search;
+      })
+    );
+  },
   updateNPC: (
     npcId: string,
     npc: NPCDocument,
@@ -203,6 +235,7 @@ export const locationStore = (
         const newImageFilename = npc.imageFilenames?.[0];
 
         if (previousImageFilename !== newImageFilename && newImageFilename) {
+          state.doAnyDocsHaveImages = true;
           loadNPCImage(newImageFilename);
         }
       })
@@ -212,6 +245,8 @@ export const locationStore = (
   updateNPCGMProperties: (npcId: string, npcGMProperties: GMNPCDocument) => {
     set(
       produce((state: LocationStoreProperties) => {
+        if (!state.npcs[npcId]) return;
+
         state.npcs[npcId].gmProperties = npcGMProperties;
       })
     );
@@ -220,6 +255,8 @@ export const locationStore = (
   updateNPCNotes: (npcId: string, notes: Uint8Array | null) => {
     set(
       produce((state: LocationStoreProperties) => {
+        if (!state.npcs[npcId]) return;
+
         state.npcs[npcId].notes = notes;
       })
     );
@@ -228,6 +265,8 @@ export const locationStore = (
   addNPCImageURL: (npcId: string, imageIndex: number, url: string) => {
     set(
       produce((state: LocationStoreProperties) => {
+        if (!state.npcs[npcId]) return;
+
         if (!Array.isArray(state.npcs[npcId].imageUrls)) {
           state.npcs[npcId].imageUrls = [];
         }
@@ -260,6 +299,13 @@ export const locationStore = (
     );
   },
 
+  setLoreSearch: (search: string) => {
+    set(
+      produce((state: LocationStoreProperties) => {
+        state.loreSearch = search;
+      })
+    );
+  },
   updateLore: (
     loreId: string,
     lore: LoreDocument,
@@ -274,6 +320,7 @@ export const locationStore = (
         const newImageFilename = lore.imageFilenames?.[0];
 
         if (previousImageFilename !== newImageFilename && newImageFilename) {
+          state.doAnyDocsHaveImages = true;
           loadLoreImage(newImageFilename);
         }
       })
@@ -286,6 +333,8 @@ export const locationStore = (
   ) => {
     set(
       produce((state: LocationStoreProperties) => {
+        if (!state.lore[loreId]) return;
+
         state.lore[loreId].gmProperties = loreGMProperties;
       })
     );
@@ -294,6 +343,8 @@ export const locationStore = (
   updateLoreNotes: (loreId: string, notes: Uint8Array | null) => {
     set(
       produce((state: LocationStoreProperties) => {
+        if (!state.lore[loreId]) return;
+
         state.lore[loreId].notes = notes;
       })
     );
@@ -302,6 +353,8 @@ export const locationStore = (
   addLoreImageURL: (loreId: string, imageIndex: number, url: string) => {
     set(
       produce((state: LocationStoreProperties) => {
+        if (!state.lore[loreId]) return;
+
         if (!Array.isArray(state.lore[loreId].imageUrls)) {
           state.lore[loreId].imageUrls = [];
         }

@@ -1,5 +1,5 @@
-import { useSearch } from "hooks/useSearch";
-import { useEffect, useState } from "react";
+import { useSearch, useSearchNoState } from "hooks/useSearch";
+import { useEffect, useMemo, useState } from "react";
 import {
   LocationDocumentWithGMProperties,
   NPC,
@@ -7,58 +7,36 @@ import {
 
 export function useFilterNPCs(
   locations: { [key: string]: LocationDocumentWithGMProperties },
-  npcs: { [key: string]: NPC }
+  npcs: { [key: string]: NPC },
+  search: string
 ) {
-  const { search, setSearch, debouncedSearch } = useSearch();
+  const { debouncedSearch } = useSearchNoState(search);
 
-  const [filteredNPCs, setFilteredNPCs] = useState<{ [key: string]: NPC }>({});
+  const sortedNPCIds = useMemo(
+    () =>
+      Object.keys(npcs).sort(
+        (l1, l2) =>
+          npcs[l2].createdDate.getTime() - npcs[l1].createdDate.getTime()
+      ),
+    [npcs]
+  );
 
-  useEffect(() => {
-    let tmpNPCs: typeof filteredNPCs = {};
+  const filteredNPCIds = useMemo(() => {
     const filteredLocationIds = Object.keys(locations).filter((locationKey) => {
       return locations[locationKey].name
         .toLowerCase()
         .includes(debouncedSearch.toLowerCase());
     });
 
-    Object.keys(npcs).forEach((npcId) => {
+    return sortedNPCIds.filter((npcId) => {
       const npc = npcs[npcId];
-      if (
-        npc.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-        (npc.lastLocationId && filteredLocationIds.includes(npc.lastLocationId))
-      ) {
-        tmpNPCs[npcId] = npc;
-      }
+      return (
+        (npc.lastLocationId &&
+          filteredLocationIds.includes(npc.lastLocationId)) ||
+        npc.name.toLowerCase().includes(debouncedSearch.toLowerCase())
+      );
     });
+  }, [sortedNPCIds, npcs, locations, debouncedSearch]);
 
-    setFilteredNPCs(tmpNPCs);
-  }, [debouncedSearch, locations, npcs]);
-
-  return { search, setSearch, filteredNPCs };
-}
-export function useFilterLocations(locations: {
-  [key: string]: LocationDocumentWithGMProperties;
-}) {
-  const { search, setSearch, debouncedSearch } = useSearch();
-
-  const [filteredLocations, setFilteredLocations] = useState<{
-    [key: string]: LocationDocumentWithGMProperties;
-  }>({});
-
-  useEffect(() => {
-    let tmpLocations: { [key: string]: LocationDocumentWithGMProperties } = {};
-    Object.keys(locations).forEach((locationKey) => {
-      if (
-        locations[locationKey].name
-          .toLowerCase()
-          .includes(debouncedSearch.toLowerCase())
-      ) {
-        tmpLocations[locationKey] = locations[locationKey];
-      }
-    });
-
-    setFilteredLocations(tmpLocations);
-  }, [debouncedSearch, locations]);
-
-  return { search, setSearch, filteredLocations };
+  return { sortedNPCIds, filteredNPCIds };
 }

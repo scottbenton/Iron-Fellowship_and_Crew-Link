@@ -21,6 +21,7 @@ import {
 } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { WorldCard } from "./components/WorldCard";
+import { Head } from "providers/HeadProvider/Head";
 
 export function WorldSelectPage() {
   const worlds = useWorldsStore((store) => store.worlds);
@@ -50,6 +51,10 @@ export function WorldSelectPage() {
 
   return (
     <>
+      <Head
+        title={"Your Worlds"}
+        description="A list of all of your worlds or worlds in campaigns you've joined."
+      />
       <PageHeader
         label={"Your Worlds"}
         actions={

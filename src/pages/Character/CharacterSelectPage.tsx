@@ -22,6 +22,7 @@ import {
 } from "./routes";
 import { PageHeader } from "components/Layout/PageHeader";
 import { PageContent } from "components/Layout";
+import { Head } from "providers/HeadProvider/Head";
 
 export function CharacterSelectPage() {
   const characters = useCharacterStore((store) => store.characters);
@@ -68,6 +69,10 @@ export function CharacterSelectPage() {
 
   return (
     <>
+      <Head
+        title={"Your Characters"}
+        description={"A list of your characters in Iron Fellowship"}
+      />
       <PageHeader
         label={"Your Characters"}
         actions={

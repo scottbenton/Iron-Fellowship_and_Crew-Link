@@ -59,24 +59,6 @@ export function TabsSection(props: TabsSectionProps) {
     }
   }, [selectedTab, isMobile]);
 
-  const locations = useCampaignGMScreenStore((store) => store.locations);
-  const openLocationId = useCampaignGMScreenStore(
-    (store) => store.openLocationId
-  );
-  const setOpenLocationId = useCampaignGMScreenStore(
-    (store) => store.setOpenLocationId
-  );
-
-  const npcs = useCampaignGMScreenStore((store) => store.npcs);
-  const openNPCId = useCampaignGMScreenStore((store) => store.openNPCId);
-  const setOpenNPCId = useCampaignGMScreenStore((store) => store.setOpenNPCId);
-
-  const lore = useCampaignGMScreenStore((store) => store.lore);
-  const openLoreId = useCampaignGMScreenStore((store) => store.openLoreId);
-  const setOpenLoreId = useCampaignGMScreenStore(
-    (store) => store.setOpenLoreId
-  );
-
   const worldOwnerId = useCampaignGMScreenStore(
     (store) => store.campaign?.gmId
   );
@@ -131,10 +113,8 @@ export function TabsSection(props: TabsSectionProps) {
         <LocationsSection
           worldOwnerId={worldOwnerId}
           worldId={worldId}
-          locations={locations}
-          openLocationId={openLocationId}
-          setOpenLocationId={setOpenLocationId}
           showHiddenTag
+          useStore={useCampaignGMScreenStore}
         />
       </ContainedTabPanel>
       <ContainedTabPanel
@@ -144,11 +124,8 @@ export function TabsSection(props: TabsSectionProps) {
         <NPCSection
           worldOwnerId={worldOwnerId ?? ""}
           worldId={worldId ?? ""}
-          locations={locations}
-          npcs={npcs}
-          openNPCId={openNPCId}
-          setOpenNPCId={setOpenNPCId}
           showHiddenTag
+          useStore={useCampaignGMScreenStore}
         />
       </ContainedTabPanel>
       <ContainedTabPanel
@@ -158,10 +135,8 @@ export function TabsSection(props: TabsSectionProps) {
         <LoreSection
           worldOwnerId={worldOwnerId ?? ""}
           worldId={worldId ?? ""}
-          lore={lore}
-          openLoreId={openLoreId}
-          setOpenLoreId={setOpenLoreId}
           showHiddenTag
+          useStore={useCampaignGMScreenStore}
         />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.SETTINGS}>

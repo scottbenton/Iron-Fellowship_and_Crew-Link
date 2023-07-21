@@ -1,32 +1,31 @@
-import { useSearch } from "hooks/useSearch";
-import { useEffect, useState } from "react";
+import { useSearchNoState } from "hooks/useSearch";
+import { useMemo } from "react";
 import { Lore } from "stores/sharedLocationStore";
 
-export function useFilterLore(lore: { [key: string]: Lore }) {
-  const { search, setSearch, debouncedSearch } = useSearch();
+export function useFilterLore(lore: { [key: string]: Lore }, search: string) {
+  const { debouncedSearch } = useSearchNoState(search);
 
-  const [filteredLore, setFilteredLore] = useState<{
-    [key: string]: Lore;
-  }>({});
+  const sortedLoreIds = useMemo(
+    () =>
+      Object.keys(lore).sort(
+        (l1, l2) =>
+          lore[l2].createdDate.getTime() - lore[l1].createdDate.getTime()
+      ),
+    [lore]
+  );
 
-  useEffect(() => {
-    let tmpLore: { [key: string]: Lore } = {};
-    Object.keys(lore).forEach((loreKey) => {
-      const filteredLoreTags = (lore[loreKey].tags ?? []).filter((tag) =>
+  const filteredLoreIds = useMemo(() => {
+    return sortedLoreIds.filter((loreId) => {
+      const loreDoc = lore[loreId];
+      const filteredLoreTags = (loreDoc.tags ?? []).filter((tag) =>
         tag.toLowerCase().includes(debouncedSearch.toLowerCase())
       );
-      if (
-        lore[loreKey].name
-          .toLowerCase()
-          .includes(debouncedSearch.toLowerCase()) ||
+      return (
+        loreDoc.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
         filteredLoreTags.length > 0
-      ) {
-        tmpLore[loreKey] = lore[loreKey];
-      }
+      );
     });
+  }, [sortedLoreIds, debouncedSearch, lore]);
 
-    setFilteredLore(tmpLore);
-  }, [debouncedSearch, lore]);
-
-  return { search, setSearch, filteredLore };
+  return { filteredLoreIds, sortedLoreIds };
 }

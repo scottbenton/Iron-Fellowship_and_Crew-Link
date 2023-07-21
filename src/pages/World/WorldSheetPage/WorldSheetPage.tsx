@@ -30,6 +30,7 @@ import { useWorldSheetStore } from "./worldSheet.store";
 import { useWorldSheetListenToNPCs } from "api/worlds/npcs/listenToNPCs";
 import { useWorldSheetListenToLore } from "api/worlds/lore/listenToLore";
 import { LoreSection } from "components/Lore";
+import { Head } from "providers/HeadProvider/Head";
 
 export enum TABS {
   DETAILS = "details",
@@ -63,21 +64,8 @@ export function WorldSheetPage() {
   const { deleteWorld } = useDeleteWorld();
 
   useWorldSheetListenToLocations(worldOwnerId, worldId);
-  const locations = useWorldSheetStore((store) => store.locations);
-  const openLocationId = useWorldSheetStore((store) => store.openLocationId);
-  const setOpenLocationId = useWorldSheetStore(
-    (store) => store.setOpenLocationId
-  );
-
   useWorldSheetListenToNPCs(worldOwnerId, worldId);
-  const npcs = useWorldSheetStore((store) => store.npcs);
-  const openNPCId = useWorldSheetStore((store) => store.openNPCId);
-  const setOpenNPCId = useWorldSheetStore((store) => store.setOpenNPCId);
-
   useWorldSheetListenToLore(worldOwnerId, worldId);
-  const lore = useWorldSheetStore((store) => store.lore);
-  const openLoreId = useWorldSheetStore((store) => store.openLoreId);
-  const setOpenLoreId = useWorldSheetStore((store) => store.setOpenLoreId);
 
   const resetState = useWorldSheetStore((store) => store.resetState);
 
@@ -141,6 +129,7 @@ export function WorldSheetPage() {
 
   return (
     <>
+      <Head title={world.name} description={`World page for ${world.name}`} />
       <PageHeader
         label={world.name}
         actions={
@@ -180,12 +169,10 @@ export function WorldSheetPage() {
             })}
           >
             <LocationsSection
-              locations={locations}
-              openLocationId={openLocationId}
-              setOpenLocationId={setOpenLocationId}
               worldOwnerId={worldOwnerId}
               worldId={worldId}
               showHiddenTag
+              useStore={useWorldSheetStore}
             />
           </BreakContainer>
         )}
@@ -199,11 +186,8 @@ export function WorldSheetPage() {
             <NPCSection
               worldOwnerId={worldOwnerId}
               worldId={worldId}
-              locations={locations}
-              npcs={npcs}
-              openNPCId={openNPCId}
-              setOpenNPCId={setOpenNPCId}
               showHiddenTag
+              useStore={useWorldSheetStore}
             />
           </BreakContainer>
         )}
@@ -217,10 +201,8 @@ export function WorldSheetPage() {
             <LoreSection
               worldOwnerId={worldOwnerId}
               worldId={worldId}
-              lore={lore}
-              openLoreId={openLoreId}
-              setOpenLoreId={setOpenLoreId}
               showHiddenTag
+              useStore={useWorldSheetStore}
             />
           </BreakContainer>
         )}

@@ -4,6 +4,7 @@ export enum BASE_ROUTES {
   WORLD,
   LOGIN,
   SIGNUP,
+  HOME,
 }
 
 export const CHARACTER_PREFIX = "characters";
@@ -16,9 +17,16 @@ export const basePaths: { [key in BASE_ROUTES]: string } = {
   [BASE_ROUTES.WORLD]: "/worlds",
   [BASE_ROUTES.LOGIN]: "/login",
   [BASE_ROUTES.SIGNUP]: "/join",
+  [BASE_ROUTES.HOME]: "/",
 };
 
-export const unauthenticatedPaths = [
+export const openPaths = [
+  basePaths[BASE_ROUTES.LOGIN],
+  basePaths[BASE_ROUTES.SIGNUP],
+  basePaths[BASE_ROUTES.HOME],
+];
+
+export const onlyUnauthenticatedPaths = [
   basePaths[BASE_ROUTES.LOGIN],
   basePaths[BASE_ROUTES.SIGNUP],
 ];

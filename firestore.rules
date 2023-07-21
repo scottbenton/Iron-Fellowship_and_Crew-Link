@@ -4,6 +4,11 @@ service cloud.firestore {
   	match /characters/{userId} {
     	allow read: if true;
       allow write, delete: if userId == request.auth.uid;
+      match /characters/{characterId}/tracks/{document=**} {
+      	allow read: if true;
+        allow update: if request.auth.uid != null;
+        allow delete, create: if userId == request.auth.uid;
+      }
       match /{document=**} {
       	allow read: if true;
         allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(["campaignId", "initiativeStatus"])     
@@ -15,6 +20,7 @@ service cloud.firestore {
     }
     match /worlds/{worldId} {
     	allow read: if true;
+      allow create: if request.auth.uid != null;
       allow write: if request.auth.uid == resource.data.ownerId;
       
       function checkIsOwner() {
@@ -23,6 +29,18 @@ service cloud.firestore {
       }
       
       match /locations/{locationId} {
+     		allow read, create, update: if true;
+        allow delete: if checkIsOwner();
+          
+        match /private/{gmNotes} {
+        	allow read, write: if checkIsOwner();
+        }
+        match /public/{notes} {
+        	allow read, create, update: if true;
+          allow delete: if checkIsOwner();
+        }
+      }
+      match /lore/{loreId} {
      		allow read, create, update: if true;
         allow delete: if checkIsOwner();
           
@@ -49,7 +67,7 @@ service cloud.firestore {
     }
     match /users/{userId} {
     	allow read: if true;
-    	allow write: if userId == request.auth.uid && !request.resource.data.diff(resource.data).affectedKeys().hasAny(["isPremium"]);
+    	allow write: if userId == request.auth.uid;
 
       match /custom-oracles/{document=**} {
         allow read: if true;

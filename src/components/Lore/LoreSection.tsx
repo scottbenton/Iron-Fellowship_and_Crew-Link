@@ -9,40 +9,48 @@ import {
 } from "@mui/material";
 import AddLoreIcon from "@mui/icons-material/Book";
 import { OpenLore } from "./OpenLore";
-import { Lore } from "stores/sharedLocationStore";
+import { LocationStoreProperties, Lore } from "stores/sharedLocationStore";
 import { useFilterLore } from "./useFilterLore";
 import { useAuth } from "providers/AuthProvider";
-import { useUserDoc } from "api/user/getUserDoc";
 import { WorldEmptyState } from "components/WorldEmptyState";
 import { useCreateLore } from "api/worlds/lore/createLore";
 import { FilterBar } from "components/FilterBar";
 import { LoreItem } from "./LoreItem";
+import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
+import { StoreApi, UseBoundStore } from "zustand";
 
 export interface LoreSectionProps {
   worldOwnerId?: string;
   worldId?: string;
-  isCharacterSheet?: boolean;
   isSinglePlayer?: boolean;
-  lore: { [key: string]: Lore };
-  openLoreId?: string;
-  setOpenLoreId: (loreId?: string) => void;
   showHiddenTag?: boolean;
+  useStore: UseBoundStore<StoreApi<LocationStoreProperties>>;
 }
 
 export function LoreSection(props: LoreSectionProps) {
+  const { worldOwnerId, worldId, isSinglePlayer, showHiddenTag, useStore } =
+    props;
+
+  const isWorldOwner = useAuth().user?.uid === worldOwnerId;
+
   const {
-    worldOwnerId,
-    worldId,
-    isSinglePlayer,
     lore,
     openLoreId,
     setOpenLoreId,
-    showHiddenTag,
-  } = props;
+    doAnyDocsHaveImages,
+    search,
+    setSearch,
+  } = useStore((store) => ({
+    lore: store.lore,
+    openLoreId: store.openLoreId,
+    setOpenLoreId: store.setOpenLoreId,
+    doAnyDocsHaveImages: store.doAnyDocsHaveImages,
+    search: store.loreSearch,
+    setSearch: store.setLoreSearch,
+  }));
 
-  const isWorldOwner = useAuth().user?.uid === worldOwnerId;
-  const isWorldOwnerPremium =
-    useUserDoc(worldOwnerId).user?.canUploadPhotos ?? false;
+  const userCanUploadImages = useCanUploadWorldImages() ?? false;
+  const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
 
   const { createLore, loading: createLoreLoading } = useCreateLore();
 
@@ -51,7 +59,7 @@ export function LoreSection(props: LoreSectionProps) {
     loreItem.tags?.forEach((tag) => tags.add(tag));
   });
 
-  const { search, setSearch, filteredLore } = useFilterLore(lore);
+  const { filteredLoreIds, sortedLoreIds } = useFilterLore(lore, search);
 
   if (!worldId || !worldOwnerId) {
     return (
@@ -59,11 +67,6 @@ export function LoreSection(props: LoreSectionProps) {
     );
   }
 
-  const sortedLore = Object.keys(filteredLore).sort(
-    (l1, l2) =>
-      filteredLore[l2].createdDate.getTime() -
-      filteredLore[l1].createdDate.getTime()
-  );
   const openLore = openLoreId && lore[openLoreId];
 
   if (openLoreId && openLore) {
@@ -77,7 +80,7 @@ export function LoreSection(props: LoreSectionProps) {
         <Hidden smDown>
           <Box overflow={"auto"} flexGrow={1} minWidth={200} maxWidth={400}>
             <List>
-              {sortedLore.map((loreId) => (
+              {sortedLoreIds.map((loreId) => (
                 <ListItemButton
                   key={loreId}
                   selected={loreId === openLoreId}
@@ -103,7 +106,7 @@ export function LoreSection(props: LoreSectionProps) {
           lore={openLore}
           loreId={openLoreId}
           closeLore={() => setOpenLoreId(undefined)}
-          isWorldOwnerPremium={isWorldOwnerPremium}
+          isWorldOwnerPremium={canShowImages}
           isSinglePlayer={isSinglePlayer}
           tagList={[...tags.values()]}
         />
@@ -144,12 +147,12 @@ export function LoreSection(props: LoreSectionProps) {
           p: 2,
         }}
       >
-        {sortedLore.map((loreId) => (
+        {filteredLoreIds.map((loreId) => (
           <Grid item xs={12} md={6} lg={4} key={loreId}>
             <LoreItem
-              lore={filteredLore[loreId]}
+              lore={lore[loreId]}
               openLore={() => setOpenLoreId(loreId)}
-              canUseImages={isWorldOwnerPremium}
+              canUseImages={canShowImages}
               showHiddenTag={showHiddenTag}
             />
           </Grid>

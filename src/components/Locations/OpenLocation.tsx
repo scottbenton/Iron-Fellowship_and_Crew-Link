@@ -31,7 +31,7 @@ export interface OpenLocationProps {
   locationId: string;
   location: LocationDocumentWithGMProperties;
   closeLocation: () => void;
-  isWorldOwnerPremium?: boolean;
+  canShowImages?: boolean;
   isSinglePlayer?: boolean;
 }
 
@@ -42,7 +42,7 @@ export function OpenLocation(props: OpenLocationProps) {
     locationId,
     location,
     closeLocation,
-    isWorldOwnerPremium,
+    canShowImages,
     isSinglePlayer,
   } = props;
 
@@ -99,7 +99,7 @@ export function OpenLocation(props: OpenLocationProps) {
       bgcolor={(theme) => theme.palette.background.paper}
       width={"100%"}
     >
-      {isWorldOwnerPremium && (
+      {canShowImages && (
         <ImageUploader
           title={location.name}
           src={location.imageUrls?.[0]}
