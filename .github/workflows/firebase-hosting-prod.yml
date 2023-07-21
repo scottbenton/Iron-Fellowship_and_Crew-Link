@@ -27,7 +27,7 @@ jobs:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
           channelId: live
-          projectId: iron-journal-1ac32
+          projectId: ${{ secrets.FIREBASE_PROJECTID }}
   deploy_firestore_rules:
     name: Deploy Firestore rules and indexes
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
     name: Deploy Firebase Storage rules
     runs-on: ubuntu-latest
     steps:
-      - uses: joinflux/firebase-tools@v10.7.0
+      - uses: w9jds/firebase-action@master
         with:
           args: deploy --only storage
         env:
