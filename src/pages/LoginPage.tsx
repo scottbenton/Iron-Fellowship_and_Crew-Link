@@ -1,5 +1,11 @@
 import { LoginOrSignupPage } from "components/LoginOrSignupPage";
+import { Head } from "providers/HeadProvider/Head";
 
 export function LoginPage() {
-  return <LoginOrSignupPage isLoginPage />;
+  return (
+    <>
+      <Head title={"Login"} />
+      <LoginOrSignupPage isLoginPage />
+    </>
+  );
 }

@@ -23,6 +23,7 @@ import { CHARACTER_ROUTES, characterPaths } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { useCharacterSheetListenToNPCs } from "api/worlds/npcs/listenToNPCs";
 import { useCharacterSheetListenToLore } from "api/worlds/lore/listenToLore";
+import { Head } from "providers/HeadProvider/Head";
 
 export function CharacterSheetPage() {
   const { characterId } = useParams();
@@ -95,6 +96,10 @@ export function CharacterSheetPage() {
 
   return (
     <>
+      <Head
+        title={character.name}
+        description={`${character.name}'s character sheet`}
+      />
       <PageHeader />
       <PageContent viewHeight isPaper>
         <CharacterHeader />

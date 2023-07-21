@@ -19,6 +19,7 @@ import { constructCharacterSheetPath } from "../routes";
 import { TextFieldWithOracle } from "components/TextFieldWithOracle/TextFieldWithOracle";
 import { useRoller } from "providers/DieRollProvider";
 import { useCallback } from "react";
+import { Head } from "providers/HeadProvider/Head";
 
 export type AssetArrayType = [
   StoredAsset | undefined,
@@ -98,6 +99,10 @@ export function CharacterCreatePage() {
 
   return (
     <>
+      <Head
+        title={"Create a Character"}
+        description={"Create an Ironsworn character on Iron Fellowship"}
+      />
       <PageHeader label={"Create your Character"} />
       <PageContent isPaper>
         <Formik

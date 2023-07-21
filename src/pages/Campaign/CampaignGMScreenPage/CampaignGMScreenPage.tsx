@@ -13,6 +13,7 @@ import {
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
 import { PageContent, PageHeader } from "components/Layout";
+import { Head } from "providers/HeadProvider/Head";
 
 export function CampaignGMScreenPage() {
   const { campaignId } = useParams();
@@ -65,6 +66,10 @@ export function CampaignGMScreenPage() {
 
   return (
     <>
+      <Head
+        title={campaign.name}
+        description={`GM Screen for ${campaign.name}`}
+      />
       <PageHeader />
       <PageContent isPaper>
         <Grid

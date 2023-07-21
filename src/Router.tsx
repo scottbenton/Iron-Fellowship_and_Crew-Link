@@ -16,7 +16,6 @@ import {
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
-  redirect,
 } from "react-router-dom";
 import { ErrorRoute } from "components/ErrorRoute";
 import { CHARACTER_ROUTES, characterPaths } from "pages/Character/routes";
@@ -30,13 +29,19 @@ import { WORLD_ROUTES, worldPaths } from "pages/World/routes";
 import { WorldSheetPage } from "pages/World/WorldSheetPage";
 import { CharacterCardPage } from "pages/Character/CharacterCardPage";
 import { SignupPage } from "pages/Authentication/SignupPage";
+import { HomePage } from "pages/Home";
+import { HeadProvider } from "providers/HeadProvider";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route
         path={"/"}
-        element={<Layout />}
+        element={
+          <HeadProvider>
+            <Layout />
+          </HeadProvider>
+        }
         errorElement={<ErrorRoute />}
         loader={async () => {
           // Wait for user to load in before displaying anything.
@@ -46,12 +51,7 @@ const router = createBrowserRouter(
         }}
         shouldRevalidate={() => false}
       >
-        <Route
-          index
-          loader={() => {
-            return redirect(basePaths[BASE_ROUTES.CHARACTER]);
-          }}
-        />
+        <Route index element={<HomePage />} />
         {/* Authenticated Pages */}
         <Route>
           <Route path={basePaths[BASE_ROUTES.CHARACTER]}>
@@ -107,7 +107,11 @@ const router = createBrowserRouter(
           "/" +
           characterPaths[CHARACTER_ROUTES.CARD]
         }
-        element={<CharacterCardPage />}
+        element={
+          <HeadProvider>
+            <CharacterCardPage />
+          </HeadProvider>
+        }
       />
     </>
   )
