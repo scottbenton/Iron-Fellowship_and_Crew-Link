@@ -1,30 +1,34 @@
-import { useSearch } from "hooks/useSearch";
-import { useEffect, useState } from "react";
+import { useSearchNoState } from "hooks/useSearch";
+import { useMemo } from "react";
 import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
 
-export function useFilterLocations(locations: {
-  [key: string]: LocationDocumentWithGMProperties;
-}) {
-  const { search, setSearch, debouncedSearch } = useSearch();
-
-  const [filteredLocations, setFilteredLocations] = useState<{
+export function useFilterLocations(
+  locations: {
     [key: string]: LocationDocumentWithGMProperties;
-  }>({});
+  },
+  search: string
+) {
+  const { debouncedSearch } = useSearchNoState(search);
 
-  useEffect(() => {
-    let tmpLocations: { [key: string]: LocationDocumentWithGMProperties } = {};
-    Object.keys(locations).forEach((locationKey) => {
-      if (
-        locations[locationKey].name
+  const sortedLocationIds = useMemo(
+    () =>
+      Object.keys(locations).sort(
+        (l1, l2) =>
+          locations[l2].createdDate.getTime() -
+          locations[l1].createdDate.getTime()
+      ),
+    [locations]
+  );
+
+  const filteredLocationIds = useMemo(
+    () =>
+      sortedLocationIds.filter((locationId) =>
+        locations[locationId].name
           .toLowerCase()
           .includes(debouncedSearch.toLowerCase())
-      ) {
-        tmpLocations[locationKey] = locations[locationKey];
-      }
-    });
+      ),
+    [sortedLocationIds, locations, debouncedSearch]
+  );
 
-    setFilteredLocations(tmpLocations);
-  }, [debouncedSearch, locations]);
-
-  return { search, setSearch, filteredLocations };
+  return { filteredLocationIds, sortedLocationIds };
 }

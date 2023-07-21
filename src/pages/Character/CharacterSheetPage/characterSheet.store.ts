@@ -96,6 +96,8 @@ export type CharacterSheetStore = {
   notes?: Note[];
   setNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
+  openNoteId?: string;
+  setOpenNoteId: (openNoteId?: string) => void;
 
   characterSettings?: CharacterSettingsDoc;
   setCharacterSettings: (settings: CharacterSettingsDoc) => void;
@@ -227,6 +229,14 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
 
           state.notes[noteIndex].order = order;
           state.notes.sort((n1, n2) => n1.order - n2.order);
+        })
+      );
+    },
+
+    setOpenNoteId: (noteId) => {
+      set(
+        produce((store: CharacterSheetStore) => {
+          store.openNoteId = noteId;
         })
       );
     },

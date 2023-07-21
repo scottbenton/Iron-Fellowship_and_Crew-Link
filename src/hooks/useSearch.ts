@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function useSearch() {
-  const [search, setSearch] = useState("");
+export function useSearchNoState(search: string) {
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   useEffect(() => {
@@ -13,6 +12,13 @@ export function useSearch() {
       clearTimeout(timeout);
     };
   }, [search]);
+
+  return { debouncedSearch };
+}
+
+export function useSearch() {
+  const [search, setSearch] = useState("");
+  const { debouncedSearch } = useSearchNoState(search);
 
   return { search, setSearch, debouncedSearch };
 }
