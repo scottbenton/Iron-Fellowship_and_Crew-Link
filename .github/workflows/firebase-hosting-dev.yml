@@ -41,7 +41,7 @@ jobs:
     name: Deploy Firebase Storage rules
     runs-on: ubuntu-latest
     steps:
-      - uses: joinflux/firebase-tools@v10.7.0
+      - uses: w9jds/firebase-action@master
         with:
           args: deploy --only storage
         env:
