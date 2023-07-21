@@ -6,7 +6,7 @@ import {
 import { NPCItem } from "./NPCItem";
 
 export interface NPCListProps {
-  sortedNPCs: string[];
+  filteredNPCIds: string[];
   npcs: { [key: string]: NPC };
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openNPC: (npcId: string) => void;
@@ -15,12 +15,18 @@ export interface NPCListProps {
 }
 
 export function NPCList(props: NPCListProps) {
-  const { sortedNPCs, npcs, locations, canUseImages, openNPC, showHiddenTag } =
-    props;
+  const {
+    filteredNPCIds,
+    npcs,
+    locations,
+    canUseImages,
+    openNPC,
+    showHiddenTag,
+  } = props;
 
   return (
     <Grid container sx={{ p: 2 }} spacing={2}>
-      {sortedNPCs.map((npcId) => (
+      {filteredNPCIds.map((npcId) => (
         <Grid item xs={12} sm={6} md={4} key={npcId}>
           <NPCItem
             npc={npcs[npcId]}

@@ -132,7 +132,6 @@ export function OpenLore(props: OpenLoreProps) {
         </IconButton>
         <TextField
           inputRef={nameInputRef}
-          defaultValue={lore.name}
           onBlur={(evt) =>
             updateLore({
               worldId,

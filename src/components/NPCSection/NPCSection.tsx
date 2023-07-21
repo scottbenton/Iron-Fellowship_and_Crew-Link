@@ -1,5 +1,6 @@
 import {
   LocationDocumentWithGMProperties,
+  LocationStoreProperties,
   NPC,
 } from "stores/sharedLocationStore";
 import { FilterBar } from "components/FilterBar";
@@ -19,31 +20,37 @@ import { WorldEmptyState } from "components/WorldEmptyState";
 import { useCreateNPC } from "api/worlds/npcs/createNPC";
 import AddNPCIcon from "@mui/icons-material/PersonAdd";
 import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
+import { StoreApi, UseBoundStore } from "zustand";
 
 export interface NPCSectionProps {
   worldOwnerId: string;
   worldId: string;
-  locations: { [key: string]: LocationDocumentWithGMProperties };
-  npcs: { [key: string]: NPC };
-  openNPCId?: string;
-  setOpenNPCId: (npcId?: string) => void;
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
-  doAnyDocsHaveImages: boolean;
+  useStore: UseBoundStore<StoreApi<LocationStoreProperties>>;
 }
 
 export function NPCSection(props: NPCSectionProps) {
+  const { worldOwnerId, worldId, isSinglePlayer, showHiddenTag, useStore } =
+    props;
+
   const {
-    worldOwnerId,
-    worldId,
     locations,
     npcs,
     openNPCId,
     setOpenNPCId,
-    isSinglePlayer,
-    showHiddenTag,
     doAnyDocsHaveImages,
-  } = props;
+    search,
+    setSearch,
+  } = useStore((store) => ({
+    locations: store.locations,
+    npcs: store.npcs,
+    openNPCId: store.openNPCId,
+    setOpenNPCId: store.setOpenNPCId,
+    doAnyDocsHaveImages: store.doAnyDocsHaveImages,
+    search: store.npcSearch,
+    setSearch: store.setNPCSearch,
+  }));
 
   const uid = useAuth().user?.uid;
   const isWorldOwner = worldOwnerId === uid;
@@ -51,7 +58,11 @@ export function NPCSection(props: NPCSectionProps) {
   const userCanUploadImages = useCanUploadWorldImages() ?? false;
   const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
 
-  const { search, setSearch, filteredNPCs } = useFilterNPCs(locations, npcs);
+  const { filteredNPCIds, sortedNPCIds } = useFilterNPCs(
+    locations,
+    npcs,
+    search
+  );
 
   const { createNPC, loading } = useCreateNPC();
 
@@ -60,12 +71,6 @@ export function NPCSection(props: NPCSectionProps) {
       <WorldEmptyState isMultiplayer={!isSinglePlayer} isGM={isWorldOwner} />
     );
   }
-
-  const sortedNPCs = Object.keys(filteredNPCs).sort(
-    (l1, l2) =>
-      filteredNPCs[l2].createdDate.getTime() -
-      filteredNPCs[l1].createdDate.getTime()
-  );
 
   const openNPC = openNPCId ? npcs[openNPCId] : undefined;
 
@@ -80,7 +85,7 @@ export function NPCSection(props: NPCSectionProps) {
         <Hidden smDown>
           <Box overflow={"auto"} flexGrow={1} minWidth={200} maxWidth={400}>
             <List>
-              {sortedNPCs.map((npcId) => (
+              {sortedNPCIds.map((npcId) => (
                 <ListItemButton
                   key={npcId}
                   selected={npcId === openNPCId}
@@ -138,8 +143,8 @@ export function NPCSection(props: NPCSectionProps) {
         searchPlaceholder="Search by name or location"
       />
       <NPCList
-        sortedNPCs={sortedNPCs}
-        npcs={filteredNPCs}
+        filteredNPCIds={filteredNPCIds}
+        npcs={npcs}
         locations={locations}
         openNPC={setOpenNPCId}
         canUseImages={canShowImages}

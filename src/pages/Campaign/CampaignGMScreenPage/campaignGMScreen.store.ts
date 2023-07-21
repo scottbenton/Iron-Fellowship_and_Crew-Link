@@ -71,6 +71,8 @@ export type CampaignGMScreenStore = {
   campaignNotes?: Note[];
   setCampaignNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
+  openNoteId?: string;
+  setOpenNoteId: (openNoteId?: string) => void;
 
   campaignSettings?: CampaignSettingsDoc;
   setCampaignSettings: (settings: CampaignSettingsDoc) => void;
@@ -208,6 +210,13 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       );
     },
 
+    setOpenNoteId: (noteId) => {
+      set(
+        produce((store: CampaignGMScreenStore) => {
+          store.openNoteId = noteId;
+        })
+      );
+    },
     setCampaignSettings: (settings) => {
       set(
         produce((store: CampaignGMScreenStore) => {

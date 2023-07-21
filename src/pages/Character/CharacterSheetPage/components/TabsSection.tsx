@@ -64,26 +64,6 @@ export function TabsSection() {
     store.campaignId ? store.campaign?.gmId : uid
   );
 
-  const doAnyDocsHaveImages = useCharacterSheetStore(
-    (store) => store.doAnyDocsHaveImages
-  );
-
-  const locations = useCharacterSheetStore((store) => store.locations);
-  const openLocationId = useCharacterSheetStore(
-    (store) => store.openLocationId
-  );
-  const setOpenLocationId = useCharacterSheetStore(
-    (store) => store.setOpenLocationId
-  );
-
-  const npcs = useCharacterSheetStore((store) => store.npcs);
-  const openNPCId = useCharacterSheetStore((store) => store.openNPCId);
-  const setOpenNPCId = useCharacterSheetStore((store) => store.setOpenNPCId);
-
-  const lore = useCharacterSheetStore((store) => store.lore);
-  const openLoreId = useCharacterSheetStore((store) => store.openLoreId);
-  const setOpenLoreId = useCharacterSheetStore((store) => store.setOpenLoreId);
-
   useEffect(() => {
     if (!isMobile && selectedTab === TABS.MOVES) {
       setSelectedTab(TABS.ASSETS);
@@ -155,15 +135,11 @@ export function TabsSection() {
         greyBackground={worldId && worldOwnerId ? true : false}
       >
         <LocationsSection
-          doAnyDocsHaveImages={doAnyDocsHaveImages}
           worldId={worldId}
           worldOwnerId={worldOwnerId}
-          isCharacterSheet
           isSinglePlayer={isSinglePlayer}
-          locations={locations}
-          openLocationId={openLocationId}
-          setOpenLocationId={setOpenLocationId}
           showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
+          useStore={useCharacterSheetStore}
         />
       </ContainedTabPanel>
       <ContainedTabPanel
@@ -171,15 +147,11 @@ export function TabsSection() {
         greyBackground={worldId && worldOwnerId ? true : false}
       >
         <NPCSection
-          doAnyDocsHaveImages={doAnyDocsHaveImages}
           worldId={worldId ?? ""}
           worldOwnerId={worldOwnerId ?? ""}
-          npcs={npcs}
-          locations={locations}
-          openNPCId={openNPCId}
-          setOpenNPCId={setOpenNPCId}
           isSinglePlayer={isSinglePlayer}
           showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
+          useStore={useCharacterSheetStore}
         />
       </ContainedTabPanel>
       <ContainedTabPanel
@@ -187,14 +159,11 @@ export function TabsSection() {
         greyBackground={worldId && worldOwnerId ? true : false}
       >
         <LoreSection
-          doAnyDocsHaveImages={doAnyDocsHaveImages}
           worldId={worldId ?? ""}
           worldOwnerId={worldOwnerId ?? ""}
-          lore={lore}
-          openLoreId={openLoreId}
-          setOpenLoreId={setOpenLoreId}
           isSinglePlayer={isSinglePlayer}
           showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
+          useStore={useCharacterSheetStore}
         />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.CHARACTER}>

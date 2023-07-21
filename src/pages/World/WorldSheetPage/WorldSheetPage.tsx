@@ -63,26 +63,9 @@ export function WorldSheetPage() {
 
   const { deleteWorld } = useDeleteWorld();
 
-  const doAnyDocsHaveImages = useWorldSheetStore(
-    (store) => store.doAnyDocsHaveImages
-  );
-
   useWorldSheetListenToLocations(worldOwnerId, worldId);
-  const locations = useWorldSheetStore((store) => store.locations);
-  const openLocationId = useWorldSheetStore((store) => store.openLocationId);
-  const setOpenLocationId = useWorldSheetStore(
-    (store) => store.setOpenLocationId
-  );
-
   useWorldSheetListenToNPCs(worldOwnerId, worldId);
-  const npcs = useWorldSheetStore((store) => store.npcs);
-  const openNPCId = useWorldSheetStore((store) => store.openNPCId);
-  const setOpenNPCId = useWorldSheetStore((store) => store.setOpenNPCId);
-
   useWorldSheetListenToLore(worldOwnerId, worldId);
-  const lore = useWorldSheetStore((store) => store.lore);
-  const openLoreId = useWorldSheetStore((store) => store.openLoreId);
-  const setOpenLoreId = useWorldSheetStore((store) => store.setOpenLoreId);
 
   const resetState = useWorldSheetStore((store) => store.resetState);
 
@@ -186,13 +169,10 @@ export function WorldSheetPage() {
             })}
           >
             <LocationsSection
-              doAnyDocsHaveImages={doAnyDocsHaveImages}
-              locations={locations}
-              openLocationId={openLocationId}
-              setOpenLocationId={setOpenLocationId}
               worldOwnerId={worldOwnerId}
               worldId={worldId}
               showHiddenTag
+              useStore={useWorldSheetStore}
             />
           </BreakContainer>
         )}
@@ -204,14 +184,10 @@ export function WorldSheetPage() {
             })}
           >
             <NPCSection
-              doAnyDocsHaveImages={doAnyDocsHaveImages}
               worldOwnerId={worldOwnerId}
               worldId={worldId}
-              locations={locations}
-              npcs={npcs}
-              openNPCId={openNPCId}
-              setOpenNPCId={setOpenNPCId}
               showHiddenTag
+              useStore={useWorldSheetStore}
             />
           </BreakContainer>
         )}
@@ -223,13 +199,10 @@ export function WorldSheetPage() {
             })}
           >
             <LoreSection
-              doAnyDocsHaveImages={doAnyDocsHaveImages}
               worldOwnerId={worldOwnerId}
               worldId={worldId}
-              lore={lore}
-              openLoreId={openLoreId}
-              setOpenLoreId={setOpenLoreId}
               showHiddenTag
+              useStore={useWorldSheetStore}
             />
           </BreakContainer>
         )}
