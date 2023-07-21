@@ -89,7 +89,7 @@ export function CampaignJoinPage() {
         description={
           "Join your group and begin your adventure on Iron Fellowship"
         }
-        openGraphImageSrc="/assets/ironsworn-opengraph-join-campaign.svg"
+        openGraphImageSrc="/assets/ironsworn-opengraph-join-campaign.png"
       />
       <PageHeader label={"Join " + campaign.name} />
       <PageContent isPaper>
