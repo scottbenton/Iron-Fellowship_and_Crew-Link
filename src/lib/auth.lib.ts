@@ -17,6 +17,7 @@ import {
 } from "pages/Character/routes";
 import { BASE_ROUTES, basePaths } from "routes";
 import { getErrorMessage } from "functions/getErrorMessage";
+import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -121,5 +122,21 @@ export function getUser(): Promise<User | null> {
         resolve(null);
       }
     );
+  });
+}
+
+export function updateUserName(name: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const user = firebaseAuth.currentUser;
+    if (!user) {
+      reject(new UserNotLoggedInException());
+      return;
+    }
+    updateProfile(user, { displayName: name })
+      .then(() => resolve())
+      .catch((e) => {
+        console.error(e);
+        reject("Failed to update user name.");
+      });
   });
 }
