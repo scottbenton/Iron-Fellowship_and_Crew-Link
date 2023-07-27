@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { getErrorMessage } from "../functions/getErrorMessage";
 import { useSnackbar } from "./useSnackbar";
+import { reportApiError } from "lib/analytics.lib";
 
 export interface Config {
   disableErrorSnackbar?: boolean;
@@ -44,6 +45,9 @@ export function useApiState<Params, ReturnType>(
             setData(undefined);
             setError(errorMessage);
             setLoading(false);
+
+            reportApiError(errorMessage);
+
             reject(errorMessage);
           });
       }),

@@ -4,7 +4,7 @@ import { onAuthStateChanged, UserInfo } from "firebase/auth";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { UserDocument } from "types/User.type";
 import { AuthContext, AUTH_STATE } from "./AuthContext";
-import { clearAnalyticsUser, setAnalyticsUser } from "config/posthog.config";
+import { clearAnalyticsUser, setAnalyticsUser } from "lib/analytics.lib";
 
 export function AuthProvider(props: PropsWithChildren) {
   const { children } = props;
