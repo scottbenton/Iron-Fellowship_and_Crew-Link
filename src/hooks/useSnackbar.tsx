@@ -2,6 +2,7 @@ import { IconButton } from "@mui/material";
 import { SnackbarKey, useSnackbar as useSnackbarNS } from "notistack";
 import { ReactNode, useCallback } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import { reportApiError } from "lib/analytics.lib";
 
 export function useSnackbar() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbarNS();
@@ -27,12 +28,18 @@ export function useSnackbar() {
     });
   }, []);
 
-  const error = useCallback((message: string, action?: ReactNode) => {
-    enqueueSnackbar(message, {
-      action: (key) => mergeActions(key, closeSnackbar, action),
-      variant: "error",
-    });
-  }, []);
+  const error = useCallback(
+    (message: string, action?: ReactNode, reportError: boolean = true) => {
+      if (reportError) {
+        reportApiError(message);
+      }
+      enqueueSnackbar(message, {
+        action: (key) => mergeActions(key, closeSnackbar, action),
+        variant: "error",
+      });
+    },
+    []
+  );
 
   return { info, success, warning, error };
 }
