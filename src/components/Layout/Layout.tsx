@@ -19,7 +19,7 @@ import {
 } from "firebase/auth";
 import { completeMagicLinkSignupIfPresent } from "lib/auth.lib";
 import { useSnackbar } from "hooks/useSnackbar";
-import { sendPageViewEvent } from "config/posthog.config";
+import { sendPageViewEvent } from "lib/analytics.lib";
 
 export interface LayoutProps {}
 

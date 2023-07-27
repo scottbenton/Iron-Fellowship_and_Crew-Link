@@ -88,5 +88,3 @@ export const lightTheme = createTheme({
     borderRadius: 2,
   },
 });
-
-console.debug(lightTheme.palette.secondary);

@@ -44,6 +44,7 @@ export function useApiState<Params, ReturnType>(
             setData(undefined);
             setError(errorMessage);
             setLoading(false);
+
             reject(errorMessage);
           });
       }),
