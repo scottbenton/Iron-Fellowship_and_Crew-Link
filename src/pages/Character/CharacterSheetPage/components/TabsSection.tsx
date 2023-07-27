@@ -5,8 +5,6 @@ import { useAuth } from "providers/AuthProvider";
 import { MovesSection } from "components/MovesSection";
 import { AssetsSection } from "../Tabs/AssetsSection";
 import { OracleSection } from "components/OracleSection";
-import { ProgressTrackSection } from "../Tabs/ProgressTrackSection";
-import { TRACK_TYPES } from "types/Track.type";
 import { NotesSection } from "../Tabs/NotesSection";
 import { WorldSection } from "../Tabs/WorldSection";
 import { LocationsSection } from "components/Locations";
@@ -26,9 +24,6 @@ enum TABS {
   ASSETS = "assets",
   ORACLE = "oracle",
   TRACKS = "tracks",
-  VOWS = "vows",
-  JOURNEYS = "journeys",
-  FRAYS = "frays",
   CHARACTER = "character",
   NOTES = "notes",
   WORLD = "world",
@@ -57,6 +52,9 @@ export function TabsSection() {
   const uid = useAuth().user?.uid;
 
   const isSinglePlayer = useCharacterSheetStore((store) => !store.campaignId);
+  const isGM = useCharacterSheetStore(
+    (store) => store.campaign?.gmId === uid && !!uid
+  );
   const worldId = useCharacterSheetStore((store) =>
     store.campaignId ? store.campaign?.worldId : store.character?.worldId
   );
@@ -81,11 +79,10 @@ export function TabsSection() {
       >
         {isMobile && <StyledTab label={"Moves"} value={TABS.MOVES} />}
         <StyledTab label="Assets" value={TABS.ASSETS} />
-        {!isInCampaign && <StyledTab label="Oracle" value={TABS.ORACLE} />}
+        {(!isInCampaign || isGM) && (
+          <StyledTab label="Oracle" value={TABS.ORACLE} />
+        )}
         <StyledTab label="Tracks" value={TABS.TRACKS} />
-        {/* <StyledTab label="Vows" value={TABS.VOWS} />
-        <StyledTab label="Combat" value={TABS.FRAYS} />
-        <StyledTab label="Journeys" value={TABS.JOURNEYS} /> */}
         <StyledTab label="Notes" value={TABS.NOTES} />
         <StyledTab label={"World"} value={TABS.WORLD} />
         <StyledTab label={"Locations"} value={TABS.LOCATIONS} />
@@ -104,25 +101,6 @@ export function TabsSection() {
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.TRACKS}>
         <TracksSection />
-      </ContainedTabPanel>
-      <ContainedTabPanel isVisible={selectedTab === TABS.VOWS}>
-        <ProgressTrackSection
-          type={TRACK_TYPES.VOW}
-          typeLabel={"Vow"}
-          showPersonalIfInCampaign
-        />
-      </ContainedTabPanel>
-      <ContainedTabPanel isVisible={selectedTab === TABS.FRAYS}>
-        <ProgressTrackSection
-          type={TRACK_TYPES.FRAY}
-          typeLabel={"Combat Track"}
-        />
-      </ContainedTabPanel>
-      <ContainedTabPanel isVisible={selectedTab === TABS.JOURNEYS}>
-        <ProgressTrackSection
-          type={TRACK_TYPES.JOURNEY}
-          typeLabel={"Journey"}
-        />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.NOTES}>
         <NotesSection />
