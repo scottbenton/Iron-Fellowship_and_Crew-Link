@@ -5,19 +5,19 @@ import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { useAuth } from "providers/AuthProvider";
 import { getCharacterTracksDoc } from "./_getRef";
-import { StoredTrack, TRACK_TYPES } from "types/Track.type";
+import { TRACK_TYPES } from "types/Track.type";
 
-export const updateCharacterProgressTrack: ApiFunction<
+export const updateCharacterProgressTrackValue: ApiFunction<
   {
     uid?: string;
     characterId?: string;
     type: TRACK_TYPES;
     trackId: string;
-    track: StoredTrack;
+    value: number;
   },
   boolean
 > = function (params) {
-  const { uid, characterId, type, trackId, track } = params;
+  const { uid, characterId, type, trackId, value } = params;
   return new Promise((resolve, reject) => {
     if (!uid) {
       reject(new UserNotLoggedInException());
@@ -33,7 +33,7 @@ export const updateCharacterProgressTrack: ApiFunction<
       getCharacterTracksDoc(uid, characterId),
       //@ts-ignore
       {
-        [`${type}.${trackId}`]: track,
+        [`${type}.${trackId}.value`]: value,
       }
     )
       .then(() => {
@@ -46,29 +46,31 @@ export const updateCharacterProgressTrack: ApiFunction<
   });
 };
 
-export function useUpdateCharacterProgressTrack() {
-  const { call, loading, error } = useApiState(updateCharacterProgressTrack);
+export function useUpdateCharacterProgressTrackValue() {
+  const { call, loading, error } = useApiState(
+    updateCharacterProgressTrackValue
+  );
 
   return {
-    updateCharacterProgressTrack: call,
+    updateCharacterProgressTrackValue: call,
     loading,
     error,
   };
 }
 
-export function useUpdateCharacterSheetCharacterProgressTrack() {
+export function useUpdateCharacterSheetCharacterProgressTrackValue() {
   const uid = useAuth().user?.uid;
   const characterId = useCharacterSheetStore((store) => store.characterId);
 
-  const { updateCharacterProgressTrack, loading, error } =
-    useUpdateCharacterProgressTrack();
+  const { updateCharacterProgressTrackValue, loading, error } =
+    useUpdateCharacterProgressTrackValue();
 
   return {
-    updateCharacterProgressTrack: (params: {
+    updateCharacterProgressTrackValue: (params: {
       type: TRACK_TYPES;
       trackId: string;
-      track: StoredTrack;
-    }) => updateCharacterProgressTrack({ ...params, uid, characterId }),
+      value: number;
+    }) => updateCharacterProgressTrackValue({ ...params, uid, characterId }),
     loading,
     error,
   };

@@ -3,18 +3,18 @@ import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/chara
 import { updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getSharedCampaignTracksDoc } from "./_getRef";
-import { StoredTrack, TRACK_TYPES } from "types/Track.type";
+import { TRACK_TYPES } from "types/Track.type";
 
-export const updateCampaignProgressTrack: ApiFunction<
+export const updateCampaignProgressTrackValue: ApiFunction<
   {
     campaignId?: string;
     type: TRACK_TYPES;
     trackId: string;
-    track: StoredTrack;
+    value: number;
   },
   boolean
 > = function (params) {
-  const { campaignId, type, trackId, track } = params;
+  const { campaignId, type, trackId, value } = params;
   return new Promise((resolve, reject) => {
     if (!campaignId) {
       reject(new CampaignNotFoundException());
@@ -25,7 +25,7 @@ export const updateCampaignProgressTrack: ApiFunction<
       getSharedCampaignTracksDoc(campaignId),
       //@ts-ignore
       {
-        [`${type}.${trackId}`]: track,
+        [`${type}.${trackId}.value`]: value,
       }
     )
       .then(() => {
@@ -38,28 +38,30 @@ export const updateCampaignProgressTrack: ApiFunction<
   });
 };
 
-export function useUpdateCampaignProgressTrack() {
-  const { call, loading, error } = useApiState(updateCampaignProgressTrack);
+export function useUpdateCampaignProgressTrackValue() {
+  const { call, loading, error } = useApiState(
+    updateCampaignProgressTrackValue
+  );
 
   return {
-    updateCampaignProgressTrack: call,
+    updateCampaignProgressTrackValue: call,
     loading,
     error,
   };
 }
 
-export function useUpdateCharacterSheetCampaignProgressTrack() {
+export function useUpdateCharacterSheetCampaignProgressTrackValue() {
   const campaignId = useCharacterSheetStore((store) => store.campaignId);
 
-  const { updateCampaignProgressTrack, loading, error } =
-    useUpdateCampaignProgressTrack();
+  const { updateCampaignProgressTrackValue, loading, error } =
+    useUpdateCampaignProgressTrackValue();
 
   return {
-    updateCampaignProgressTrack: (params: {
+    updateCampaignProgressTrackValue: (params: {
       type: TRACK_TYPES;
       trackId: string;
-      track: StoredTrack;
-    }) => updateCampaignProgressTrack({ ...params, campaignId }),
+      value: number;
+    }) => updateCampaignProgressTrackValue({ ...params, campaignId }),
     loading,
     error,
   };

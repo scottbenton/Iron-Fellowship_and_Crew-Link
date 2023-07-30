@@ -1,7 +1,8 @@
-import { Avatar, ButtonBase, Menu, MenuItem } from "@mui/material";
+import { Avatar, ButtonBase, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { useRef, useState } from "react";
 import { useAuth } from "../../providers/AuthProvider";
 import { logout } from "../../lib/auth.lib";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const getInitials = (name: string) => {
   const names = name.split(" ");
@@ -43,7 +44,10 @@ export function HeaderMenu() {
             logout().then(() => window.location.reload());
           }}
         >
-          Logout
+          <ListItemIcon>
+            <LogoutIcon />
+          </ListItemIcon>
+          <ListItemText>Logout</ListItemText>
         </MenuItem>
       </Menu>
     </>

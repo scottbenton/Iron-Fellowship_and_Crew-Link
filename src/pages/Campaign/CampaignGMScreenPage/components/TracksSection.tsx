@@ -5,11 +5,13 @@ import { supplyTrack } from "data/defaultTracks";
 import { Track } from "components/Track";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { useAddCampaignProgressTrack } from "api/campaign/tracks/addCampaignProgressTrack";
-import { useUpdateCampaignProgressTrack } from "api/campaign/tracks/updateCampaignProgressTrack";
+import { useUpdateCampaignProgressTrackValue } from "api/campaign/tracks/updateCampaignProgressTrackValue";
 import { useRemoveCampaignProgressTrack } from "api/campaign/tracks/removeCampaignProgressTrack";
 import { TRACK_TYPES } from "types/Track.type";
 import { TrackWithId } from "pages/Character/CharacterSheetPage/characterSheet.store";
-import { ProgressTrackList } from "components/ProgressTrackList";
+import { ProgressTrackList } from "components/ProgressTrack";
+import { useUpdateCharacterProgressTrackValue } from "api/characters/tracks/updateCharacterProgressTrackValue";
+import { useUpdateCampaignProgressTrack } from "api/campaign/tracks/updateCampaignProgressTrack";
 import { useUpdateCharacterProgressTrack } from "api/characters/tracks/updateCharacterProgressTrack";
 
 export interface TracksSectionProps {
@@ -34,9 +36,13 @@ export function TracksSection(props: TracksSectionProps) {
   const frays = tracks[TRACK_TYPES.FRAY];
 
   const { addCampaignProgressTrack } = useAddCampaignProgressTrack();
+  const { updateCampaignProgressTrackValue } =
+    useUpdateCampaignProgressTrackValue();
+  const { updateCharacterProgressTrack } = useUpdateCharacterProgressTrack();
   const { updateCampaignProgressTrack } = useUpdateCampaignProgressTrack();
   const { removeCampaignProgressTrack } = useRemoveCampaignProgressTrack();
-  const { updateCharacterProgressTrack } = useUpdateCharacterProgressTrack();
+  const { updateCharacterProgressTrackValue } =
+    useUpdateCharacterProgressTrackValue();
 
   return (
     <Stack spacing={2}>
@@ -69,11 +75,19 @@ export function TracksSection(props: TracksSectionProps) {
             })
           }
           handleUpdateValue={(trackId, value) =>
-            updateCampaignProgressTrack({
+            updateCampaignProgressTrackValue({
               campaignId,
               type: TRACK_TYPES.FRAY,
               trackId,
               value,
+            })
+          }
+          handleUpdateTrack={(trackId, track) =>
+            updateCampaignProgressTrack({
+              campaignId,
+              type: TRACK_TYPES.FRAY,
+              trackId,
+              track,
             })
           }
           handleDeleteTrack={(trackId) =>
@@ -96,11 +110,19 @@ export function TracksSection(props: TracksSectionProps) {
             })
           }
           handleUpdateValue={(trackId, value) =>
-            updateCampaignProgressTrack({
+            updateCampaignProgressTrackValue({
               campaignId,
               type: TRACK_TYPES.VOW,
               trackId,
               value,
+            })
+          }
+          handleUpdateTrack={(trackId, track) =>
+            updateCampaignProgressTrack({
+              campaignId,
+              type: TRACK_TYPES.VOW,
+              trackId,
+              track,
             })
           }
           handleDeleteTrack={(trackId) =>
@@ -123,11 +145,19 @@ export function TracksSection(props: TracksSectionProps) {
             })
           }
           handleUpdateValue={(trackId, value) =>
-            updateCampaignProgressTrack({
+            updateCampaignProgressTrackValue({
               campaignId,
               type: TRACK_TYPES.JOURNEY,
               trackId,
               value,
+            })
+          }
+          handleUpdateTrack={(trackId, track) =>
+            updateCampaignProgressTrack({
+              campaignId,
+              type: TRACK_TYPES.JOURNEY,
+              trackId,
+              track,
             })
           }
           handleDeleteTrack={(trackId) =>
@@ -147,12 +177,21 @@ export function TracksSection(props: TracksSectionProps) {
                   trackType={TRACK_TYPES.VOW}
                   typeLabel={characters[characterId].name + "'s Vow"}
                   handleUpdateValue={(trackId, value) =>
-                    updateCharacterProgressTrack({
+                    updateCharacterProgressTrackValue({
                       uid: characters[characterId].uid,
                       characterId: characterId,
                       type: TRACK_TYPES.VOW,
                       trackId,
                       value,
+                    })
+                  }
+                  handleUpdateTrack={(trackId, track) =>
+                    updateCharacterProgressTrack({
+                      uid: characters[characterId].uid,
+                      characterId: characterId,
+                      type: TRACK_TYPES.VOW,
+                      trackId,
+                      track,
                     })
                   }
                 />

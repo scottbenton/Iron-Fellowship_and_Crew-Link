@@ -1,4 +1,11 @@
-import { Box, Button, ButtonBase, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonBase,
+  Link,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
@@ -20,6 +27,7 @@ export interface ProgressTracksProps {
   value: number;
   onValueChange?: (value: number) => void;
   onDelete?: () => void;
+  onEdit?: () => void;
 }
 
 const trackMoveIds: { [key in TRACK_TYPES]: string } = {
@@ -70,6 +78,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
     value,
     onValueChange,
     onDelete,
+    onEdit,
   } = props;
 
   const { rollTrackProgress } = useRoller();
@@ -151,13 +160,22 @@ export function ProgressTrack(props: ProgressTracksProps) {
               {getDifficultyLabel(difficulty)}
             </Typography>
           )}
-          {label && (
+          {(label || onEdit) && (
             <Typography
               variant={"h6"}
               color={(theme) => theme.palette.text.primary}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
-              {label}
+              {label + " "}
+              {onEdit && (
+                <Link
+                  component={"button"}
+                  sx={{ ml: 2 }}
+                  onClick={() => onEdit()}
+                >
+                  Edit
+                </Link>
+              )}
             </Typography>
           )}
           {description && (

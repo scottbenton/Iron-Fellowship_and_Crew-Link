@@ -1,14 +1,11 @@
 import { Box } from "@mui/material";
-import { useUpdateCharacterSheetCampaignProgressTrack } from "api/campaign/tracks/updateCampaignProgressTrack";
-import { useUpdateCharacterSheetCharacterProgressTrack } from "api/characters/tracks/updateCharacterProgressTrack";
 import { useCharacterSheetAddProgressTrack } from "api/shared/addProgressTrack";
 import { useCharacterSheetRemoveProgressTrack } from "api/shared/removeProgressTrack";
-import { useCharacterSheetUpdateProgressTrack } from "api/shared/updateProgressTrack";
-import { AddTrackDialog } from "components/AddTrackDialog/AddTrackDialog";
-import { ProgressTrack } from "components/ProgressTrack";
-import { ProgressTrackList } from "components/ProgressTrackList";
+import { useCharacterSheetUpdateProgressTrackValue } from "api/shared/updateProgressTrackValue";
+import { ProgressTrackList } from "components/ProgressTrack";
 import { TRACK_TYPES } from "types/Track.type";
 import { useCharacterSheetStore } from "../characterSheet.store";
+import { useCharacterSheetUpdateProgressTrack } from "api/shared/updateProgressTrack";
 
 export interface ProgressTrackSectionProps {
   type: TRACK_TYPES;
@@ -22,8 +19,8 @@ export function ProgressTrackSection(props: ProgressTrackSectionProps) {
   const tracks = useCharacterSheetStore((store) => store[type]);
 
   const addProgressTrack = useCharacterSheetAddProgressTrack();
+  const updateProgressTrackValue = useCharacterSheetUpdateProgressTrackValue();
   const updateProgressTrack = useCharacterSheetUpdateProgressTrack();
-
   const removeProgressTrack = useCharacterSheetRemoveProgressTrack();
 
   return (
@@ -37,7 +34,10 @@ export function ProgressTrackSection(props: ProgressTrackSectionProps) {
             addProgressTrack({ type, track: newTrack, isCampaign: true })
           }
           handleUpdateValue={(trackId, value) =>
-            updateProgressTrack({ type, trackId, value, isCampaign: true })
+            updateProgressTrackValue({ type, trackId, value, isCampaign: true })
+          }
+          handleUpdateTrack={(trackId, track) =>
+            updateProgressTrack({ type, trackId, track, isCampaign: true })
           }
           handleDeleteTrack={(trackId) =>
             removeProgressTrack({ type, isCampaign: true, id: trackId })
@@ -54,7 +54,15 @@ export function ProgressTrackSection(props: ProgressTrackSectionProps) {
             addProgressTrack({ type, track: newTrack, isCampaign: false })
           }
           handleUpdateValue={(trackId, value) =>
-            updateProgressTrack({ type, trackId, value, isCampaign: false })
+            updateProgressTrackValue({
+              type,
+              trackId,
+              value,
+              isCampaign: false,
+            })
+          }
+          handleUpdateTrack={(trackId, track) =>
+            updateProgressTrack({ type, trackId, track, isCampaign: false })
           }
           handleDeleteTrack={(trackId) =>
             removeProgressTrack({ type, isCampaign: false, id: trackId })

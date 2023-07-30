@@ -1,6 +1,6 @@
 import { useUpdateCharacterSheetCampaignProgressTrack } from "api/campaign/tracks/updateCampaignProgressTrack";
 import { useUpdateCharacterSheetCharacterProgressTrack } from "api/characters/tracks/updateCharacterProgressTrack";
-import { TRACK_TYPES } from "types/Track.type";
+import { StoredTrack, TRACK_TYPES } from "types/Track.type";
 
 export function useCharacterSheetUpdateProgressTrack() {
   const { updateCampaignProgressTrack } =
@@ -11,7 +11,7 @@ export function useCharacterSheetUpdateProgressTrack() {
   return (params: {
     type: TRACK_TYPES;
     trackId: string;
-    value: number;
+    track: StoredTrack;
     isCampaign: boolean;
   }) => {
     const { isCampaign, ...rest } = params;

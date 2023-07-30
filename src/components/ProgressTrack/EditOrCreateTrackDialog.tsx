@@ -15,23 +15,35 @@ import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import { StoredTrack, DIFFICULTY } from "../../types/Track.type";
 
-export interface AddTrackDialogProps {
+export interface EditOrCreateTrackDialogProps {
+  open: boolean;
+  handleClose: () => void;
+  initialTrack?: StoredTrack;
   trackTypeName: string;
-  handleTrackAdd: (track: StoredTrack) => Promise<boolean>;
+  handleTrack: (track: StoredTrack) => Promise<boolean>;
   buttonProps?: ButtonProps;
 }
 
-export function AddTrackDialog(props: AddTrackDialogProps) {
-  const { trackTypeName, handleTrackAdd, buttonProps } = props;
-
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
+  const {
+    open,
+    handleClose,
+    initialTrack,
+    trackTypeName,
+    handleTrack,
+    buttonProps,
+  } = props;
 
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [difficulty, setDifficulty] = useState<DIFFICULTY>();
+  const [name, setName] = useState(initialTrack?.label ?? "");
+  const [description, setDescription] = useState(
+    initialTrack?.description ?? ""
+  );
+  const [difficulty, setDifficulty] = useState<DIFFICULTY | undefined>(
+    initialTrack?.difficulty
+  );
 
   const handleDialogClose = () => {
     setName("");
@@ -39,7 +51,7 @@ export function AddTrackDialog(props: AddTrackDialogProps) {
     setDifficulty(undefined);
     setError(undefined);
     setLoading(false);
-    setDialogOpen(false);
+    handleClose();
   };
 
   const handleSubmit = () => {
@@ -55,12 +67,12 @@ export function AddTrackDialog(props: AddTrackDialogProps) {
       label: name,
       description,
       difficulty: difficulty,
-      value: 0,
+      value: initialTrack?.value ?? 0,
       createdTimestamp: Timestamp.fromDate(new Date()),
     };
 
     setLoading(true);
-    handleTrackAdd(track)
+    handleTrack(track)
       .then(() => {
         handleDialogClose();
       })
@@ -72,20 +84,10 @@ export function AddTrackDialog(props: AddTrackDialogProps) {
 
   return (
     <>
-      <Button
-        variant={"outlined"}
-        onClick={() => setDialogOpen(true)}
-        {...buttonProps}
-      >
-        Add {trackTypeName}
-      </Button>
-      <Dialog
-        open={dialogOpen}
-        onClose={() => handleDialogClose()}
-        maxWidth={"xs"}
-        fullWidth
-      >
-        <DialogTitle>Add {trackTypeName}</DialogTitle>
+      <Dialog open={open} onClose={handleDialogClose} maxWidth={"xs"} fullWidth>
+        <DialogTitle>
+          {initialTrack ? `Edit ${initialTrack.label}` : `Add ${trackTypeName}`}
+        </DialogTitle>
         <DialogContent>
           <Stack spacing={2}>
             {error && (
@@ -135,7 +137,9 @@ export function AddTrackDialog(props: AddTrackDialogProps) {
             onClick={() => handleSubmit()}
             variant={"contained"}
           >
-            Add {trackTypeName}
+            {initialTrack
+              ? `Edit ${initialTrack.label}`
+              : `Add ${trackTypeName}`}
           </Button>
         </DialogActions>
       </Dialog>
