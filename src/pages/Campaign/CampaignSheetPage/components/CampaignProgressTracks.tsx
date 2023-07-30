@@ -2,7 +2,8 @@ import { useAddCampaignProgressTrack } from "api/campaign/tracks/addCampaignProg
 import { useListenToCampaignProgressTracks } from "api/campaign/tracks/listenToCampaignProgressTracks";
 import { useRemoveCampaignProgressTrack } from "api/campaign/tracks/removeCampaignProgressTrack";
 import { useUpdateCampaignProgressTrack } from "api/campaign/tracks/updateCampaignProgressTrack";
-import { ProgressTrackList } from "components/ProgressTrackList";
+import { useUpdateCampaignProgressTrackValue } from "api/campaign/tracks/updateCampaignProgressTrackValue";
+import { ProgressTrackList } from "components/ProgressTrack";
 import { TRACK_TYPES } from "types/Track.type";
 
 export interface CampaignProgressTracksProps {
@@ -17,6 +18,8 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
     useListenToCampaignProgressTracks(campaignId);
 
   const { addCampaignProgressTrack } = useAddCampaignProgressTrack();
+  const { updateCampaignProgressTrackValue } =
+    useUpdateCampaignProgressTrackValue();
   const { updateCampaignProgressTrack } = useUpdateCampaignProgressTrack();
   const { removeCampaignProgressTrack } = useRemoveCampaignProgressTrack();
 
@@ -34,11 +37,19 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
           })
         }
         handleUpdateValue={(trackId, value) =>
-          updateCampaignProgressTrack({
+          updateCampaignProgressTrackValue({
             campaignId,
             type: TRACK_TYPES.FRAY,
             trackId,
             value,
+          })
+        }
+        handleUpdateTrack={(trackId, track) =>
+          updateCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.FRAY,
+            trackId,
+            track,
           })
         }
         handleDeleteTrack={(trackId) =>
@@ -62,11 +73,19 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
           })
         }
         handleUpdateValue={(trackId, value) =>
-          updateCampaignProgressTrack({
+          updateCampaignProgressTrackValue({
             campaignId,
             type: TRACK_TYPES.VOW,
             trackId,
             value,
+          })
+        }
+        handleUpdateTrack={(trackId, track) =>
+          updateCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.VOW,
+            trackId,
+            track,
           })
         }
         handleDeleteTrack={(trackId) =>
@@ -90,11 +109,19 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
           })
         }
         handleUpdateValue={(trackId, value) =>
-          updateCampaignProgressTrack({
+          updateCampaignProgressTrackValue({
             campaignId,
             type: TRACK_TYPES.JOURNEY,
             trackId,
             value,
+          })
+        }
+        handleUpdateTrack={(trackId, track) =>
+          updateCampaignProgressTrack({
+            campaignId,
+            type: TRACK_TYPES.JOURNEY,
+            trackId,
+            track,
           })
         }
         handleDeleteTrack={(trackId) =>
