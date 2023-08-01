@@ -1,5 +1,5 @@
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
-import { Lore } from "stores/sharedLocationStore";
+import { Lore } from "stores/world.slice";
 import AddPhotoIcon from "@mui/icons-material/Photo";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
 import { LoreTag } from "./LoreTag";

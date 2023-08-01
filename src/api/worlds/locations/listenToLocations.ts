@@ -14,9 +14,10 @@ import {
 import { GMLocationDocument } from "types/Locations.type";
 import { useAuth } from "providers/AuthProvider";
 import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
-import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
+import { LocationDocumentWithGMProperties } from "stores/world.slice";
 import { getImageUrl } from "lib/storage.lib";
 import { useWorldSheetStore } from "pages/World/WorldSheetPage/worldSheet.store";
+import { useWorldsStore } from "stores/worlds.store";
 
 export function listenToLocations(
   uid: string | undefined,
@@ -250,10 +251,10 @@ export function useCampaignGMScreenListenToLocations() {
 
   const uid = useAuth().user?.uid;
 
-  const worldOwnerId = useCampaignGMScreenStore(
-    (store) => store.campaign?.gmId
-  );
   const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
+  const worldOwnerId = useWorldsStore((store) =>
+    worldId ? store.worlds[worldId]?.ownerId : ""
+  );
 
   const updateLocation = useCampaignGMScreenStore(
     (store) => store.updateLocation

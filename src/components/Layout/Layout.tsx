@@ -11,12 +11,6 @@ import {
   openPaths,
   onlyUnauthenticatedPaths,
 } from "routes";
-
-import {
-  getAuth,
-  isSignInWithEmailLink,
-  signInWithEmailLink,
-} from "firebase/auth";
 import { completeMagicLinkSignupIfPresent } from "lib/auth.lib";
 import { useSnackbar } from "hooks/useSnackbar";
 import { sendPageViewEvent } from "lib/analytics.lib";

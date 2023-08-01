@@ -4,8 +4,11 @@ import { useCampaignGMScreenShowOrHideCustomOracle } from "api/campaign/settings
 import { CustomMovesSection } from "components/CustomMovesSection";
 import { CustomOracleSection } from "components/CustomOraclesSection";
 import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
+import { useAuth } from "providers/AuthProvider";
 
 export function SettingsSection() {
+  const uid = useAuth().user?.uid ?? "";
+
   const customMoves = useCampaignGMScreenStore((store) => store.customMoves);
   const customOracles = useCampaignGMScreenStore(
     (store) => store.customOracles
@@ -25,12 +28,12 @@ export function SettingsSection() {
   return (
     <Stack spacing={3} sx={{ pb: 2 }}>
       <CustomMovesSection
-        customMoves={customMoves}
+        customMoves={customMoves[uid] ?? []}
         hiddenMoveIds={hiddenMoves}
         showOrHideCustomMove={showOrHideCustomMove}
       />
       <CustomOracleSection
-        customOracles={customOracles}
+        customOracles={customOracles[uid] ?? []}
         hiddenOracleIds={hiddenOracles}
         showOrHideCustomOracle={showOrHideCustomOracle}
       />

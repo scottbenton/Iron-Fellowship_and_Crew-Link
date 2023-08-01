@@ -38,7 +38,7 @@ export function CampaignGMScreenPage() {
       campaignId &&
       campaigns[campaignId] &&
       uid &&
-      campaigns[campaignId].gmId !== uid
+      !campaigns[campaignId].gmIds?.includes(uid)
     ) {
       error("You aren't the GM of this campaign");
       navigate(constructCampaignSheetPath(campaignId, CAMPAIGN_ROUTES.SHEET));
@@ -57,7 +57,7 @@ export function CampaignGMScreenPage() {
     !campaignId ||
     !campaigns[campaignId] ||
     !uid ||
-    campaigns[campaignId]?.gmId !== uid
+    !campaigns[campaignId]?.gmIds?.includes(uid)
   ) {
     return null;
   }

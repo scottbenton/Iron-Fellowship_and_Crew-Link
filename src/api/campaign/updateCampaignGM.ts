@@ -1,16 +1,17 @@
 import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
-import { deleteField, updateDoc } from "firebase/firestore";
+import { arrayUnion, arrayRemove, updateDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getCampaignDoc } from "./_getRef";
 
 export const updateCampaignGM: ApiFunction<
   {
     campaignId?: string;
-    gmId?: string;
+    gmId: string;
+    shouldRemove?: boolean;
   },
   boolean
 > = function (params) {
-  const { campaignId, gmId } = params;
+  const { campaignId, gmId, shouldRemove } = params;
   return new Promise((resolve, reject) => {
     if (!campaignId) {
       reject(new CampaignNotFoundException());
@@ -19,13 +20,12 @@ export const updateCampaignGM: ApiFunction<
 
     updateDoc(
       getCampaignDoc(campaignId),
-      gmId
+      shouldRemove
         ? {
-            gmId: gmId,
+            gmIds: arrayUnion(gmId),
           }
         : {
-            gmId: deleteField(),
-            worldId: deleteField(),
+            gmIds: arrayRemove(gmId),
           }
     )
       .then(() => {

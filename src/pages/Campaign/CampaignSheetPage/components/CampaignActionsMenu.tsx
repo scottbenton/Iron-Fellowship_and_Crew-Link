@@ -17,7 +17,7 @@ export interface CampaignActionsMenuProps {
 
 export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
   const { campaignId, campaign } = props;
-  const { gmId } = campaign;
+  const { gmIds } = campaign;
   const uid = useAuth().user?.uid;
   const confirm = useConfirm();
   const navigate = useNavigate();
@@ -30,7 +30,11 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
 
   const { updateCampaignGM } = useUpdateCampaignGM();
   const removeCurrentGM = () => {
-    updateCampaignGM({ campaignId: campaignId, gmId: undefined })
+    updateCampaignGM({
+      campaignId: campaignId,
+      gmId: uid ?? "",
+      shouldRemove: true,
+    })
       .then(() => {
         handleMenuClose();
       })
@@ -79,7 +83,7 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
       .catch(() => {});
   };
 
-  const isGm = uid && uid === gmId;
+  const isGm = !!uid && (gmIds?.includes(uid) ?? false);
 
   return (
     <>

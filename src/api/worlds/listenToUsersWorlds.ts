@@ -1,19 +1,12 @@
-import { useEffect } from "react";
-import { EncodedWorld, World } from "types/World.type";
+import { useEffect, useMemo, useState } from "react";
+import { World } from "types/World.type";
 import { getErrorMessage } from "../../functions/getErrorMessage";
 import { useAuth } from "../../providers/AuthProvider";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { useWorldsStore } from "stores/worlds.store";
 import { decodeWorld, getWorldCollection } from "./_getRef";
-import { useCharacterStore } from "stores/character.store";
 import { useCampaignStore } from "stores/campaigns.store";
-import {
-  onSnapshot,
-  query,
-  Unsubscribe,
-  where,
-  Query,
-} from "firebase/firestore";
+import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
 import { listenToWorld } from "./listenToWorld";
 
 export function listenToUsersWorlds(
@@ -51,16 +44,25 @@ export function listenToUsersWorlds(
 export function useListenToUsersWorlds() {
   const uid = useAuth().user?.uid;
 
-  const campaignWorlds = useCampaignStore((store) => {
-    const worldIds: string[] = [];
+  const [worldsUserOwns, setWorldsUserOwns] = useState<string[]>([]);
 
-    Object.values(store.campaigns).map((campaign) => {
-      if (campaign.worldId && campaign.gmId !== uid) {
-        worldIds.push(campaign.worldId);
+  const campaignWorlds = useCampaignStore((store) => {
+    const worldIds: Set<string> = new Set();
+
+    Object.values(store.campaigns).forEach((campaign) => {
+      if (campaign.worldId && !worldsUserOwns.includes(campaign.worldId)) {
+        worldIds.add(campaign.worldId);
       }
     });
-    return Array.from(new Set(worldIds));
+    return Array.from(worldIds);
   });
+
+  const serializedCampaignWorlds = JSON.stringify(campaignWorlds);
+
+  const memoizedCampaignWorlds = useMemo(
+    () => JSON.parse(serializedCampaignWorlds) as string[],
+    [serializedCampaignWorlds]
+  );
 
   const setWorld = useWorldsStore((state) => state.setWorld);
   const removeWorld = useWorldsStore((state) => state.removeWorld);
@@ -72,11 +74,27 @@ export function useListenToUsersWorlds() {
     let unsubscribe: Unsubscribe;
     let unsubscribes: Unsubscribe[];
 
+    console.debug("CREATING LISTENER FOR USERS WORLDS");
+
     listenToUsersWorlds(
       uid,
       {
-        onDocChange: (id, doc) => setWorld(id, doc),
-        onDocRemove: (id) => removeWorld(id),
+        onDocChange: (id, doc) => {
+          setWorld(id, doc);
+          setWorldsUserOwns((prevWorlds) => {
+            const worldsSet = new Set(prevWorlds);
+            worldsSet.add(id);
+            return Array.from(worldsSet);
+          });
+        },
+        onDocRemove: (id) => {
+          removeWorld(id);
+          setWorldsUserOwns((prevWorlds) => {
+            const worldsSet = new Set(prevWorlds);
+            worldsSet.delete(id);
+            return Array.from(worldsSet);
+          });
+        },
         onLoaded: () => setLoading(false),
       },
       (err) => {
@@ -86,7 +104,7 @@ export function useListenToUsersWorlds() {
       }
     );
 
-    unsubscribes = campaignWorlds.map((worldId) => {
+    unsubscribes = memoizedCampaignWorlds.map((worldId) => {
       return listenToWorld(
         worldId,
         (world) => (world ? setWorld(worldId, world) : removeWorld(worldId)),
@@ -102,5 +120,5 @@ export function useListenToUsersWorlds() {
       unsubscribe && unsubscribe();
       unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  }, [uid, campaignWorlds]);
+  }, [uid, memoizedCampaignWorlds]);
 }

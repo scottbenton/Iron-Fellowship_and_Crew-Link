@@ -20,8 +20,10 @@ export const leaveCampaign: ApiFunction<
   try {
     const allPromises: Promise<any>[] = [];
 
-    if (uid === campaign.gmId) {
-      allPromises.push(updateCampaignGM({ campaignId }));
+    if (campaign.gmIds?.includes(uid)) {
+      allPromises.push(
+        updateCampaignGM({ campaignId, gmId: uid, shouldRemove: true })
+      );
     }
     Object.values(campaign.characters).forEach((character) => {
       if (character.uid === uid) {

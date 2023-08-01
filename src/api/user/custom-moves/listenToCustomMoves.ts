@@ -5,7 +5,7 @@ import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "hooks/useSnackbar";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useCampaignStore } from "stores/campaigns.store";
 import { StoredMove } from "types/Moves.type";
 import { getUserCustomMovesDoc } from "./_getRef";
@@ -35,51 +35,60 @@ export function listenToCustomMoves(
 }
 
 export function useCampaignGMScreenListenToCustomMoves() {
-  const uid = useAuth().user?.uid;
+  const gmIds = useCampaignGMScreenStore(
+    (store) => store.campaign?.gmIds ?? []
+  );
   const setMoves = useCampaignGMScreenStore((store) => store.setCustomMoves);
 
   const { error } = useSnackbar();
 
   useEffect(() => {
-    let unsubscribe: Unsubscribe;
-
-    if (uid) {
-      unsubscribe = listenToCustomMoves(uid, setMoves, (err) => {
-        console.error(err);
-        const errorMessage = getErrorMessage(
-          error,
-          "Failed to retrieve custom moves"
-        );
-        error(errorMessage);
-      });
-    }
+    let unsubscribes: Unsubscribe[] = gmIds.map((gmId) =>
+      listenToCustomMoves(
+        gmId,
+        (moves) => setMoves(gmId, moves),
+        (err) => {
+          console.error(err);
+          const errorMessage = getErrorMessage(
+            error,
+            "Failed to retrieve custom moves"
+          );
+          error(errorMessage);
+        }
+      )
+    );
 
     return () => {
-      unsubscribe && unsubscribe();
+      unsubscribes.map((unsubscribe) => unsubscribe());
     };
-  }, [uid]);
+  }, [gmIds]);
 }
 
 export function useCharacterSheetListenToCustomMoves() {
   const campaignId = useCharacterSheetStore((store) => store.campaignId);
-  const gmUid = useCampaignStore((store) =>
-    campaignId ? store.campaigns[campaignId]?.gmId : undefined
+  const gmIds = useCampaignStore(
+    (store) => store.campaigns[campaignId ?? ""]?.gmIds ?? [],
+    (a, b) => (a && b ? JSON.stringify(a) === JSON.stringify(b) : a == b)
   );
-  const userId = useAuth().user?.uid;
+  const userId = useAuth().user?.uid ?? "";
 
-  const uid = campaignId ? gmUid : userId;
+  const uids = useMemo(() => (campaignId ? gmIds : [userId]), [gmIds, userId]);
 
   const setMoves = useCharacterSheetStore((store) => store.setCustomMoves);
 
   const { error } = useSnackbar();
 
   useEffect(() => {
-    let unsubscribe: Unsubscribe;
-    if (uid) {
-      unsubscribe = listenToCustomMoves(
+    console.debug(gmIds);
+  }, [gmIds]);
+
+  useEffect(() => {
+    console.debug("LISTENING TO CUSTOM MOVES");
+    let unsubscribes: Unsubscribe[] = uids.map((uid) =>
+      listenToCustomMoves(
         uid,
         (moves) => {
-          setMoves(moves);
+          setMoves(uid, moves);
         },
         (err) => {
           console.error(err);
@@ -89,11 +98,11 @@ export function useCharacterSheetListenToCustomMoves() {
           );
           error(errorMessage);
         }
-      );
-    }
+      )
+    );
 
     return () => {
-      unsubscribe && unsubscribe();
+      unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  }, [uid]);
+  }, [uids]);
 }

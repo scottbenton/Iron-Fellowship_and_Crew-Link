@@ -1,10 +1,10 @@
 import { Move, MoveCategory } from "dataforged";
 import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
-import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useEffect, useState } from "react";
 import { License, RollMethod, RollType } from "types/Datasworn";
 import { customMoveCategoryPrefix, StoredMove } from "types/Moves.type";
+import { useUserDocs } from "api/user/getUserDoc";
 
 function convertStoredMoveToMove(storedMove: StoredMove): Move {
   return {
@@ -54,47 +54,68 @@ export function useCustomMoves() {
     (store) => store.characterSettings?.hiddenCustomMoveIds
   );
 
-  const [customMoveCategory, setCustomMoveCategory] = useState<MoveCategory>();
+  const [customMoveCategories, setCustomMoveCategories] = useState<
+    MoveCategory[]
+  >([]);
+  const [customMoveMap, setCustomMoveMap] = useState<{ [key: string]: Move }>(
+    {}
+  );
+
+  const customMoveOwners = [
+    ...Object.keys(campaignCustomMoves),
+    ...Object.keys(characterSheetCustomMoves),
+  ];
+  useUserDocs(customMoveOwners);
 
   useEffect(() => {
+    console.debug("IN USE CUSTOM MOVES HOOK");
     const customStoredMoves = campaignCustomMoves ?? characterSheetCustomMoves;
     const hiddenMoveIds = hiddenCampaignMoveIds ?? hiddenCharacterMoveIds;
 
-    if (
-      customStoredMoves &&
-      customStoredMoves.length > 0 &&
-      Array.isArray(hiddenMoveIds)
-    ) {
-      const mappedCustomMoves: { [key: string]: Move } = {};
+    const moveCategories: MoveCategory[] = [];
+    let newMoveMap: { [key: string]: Move } = {};
 
-      customStoredMoves.forEach((storedMove) => {
-        if (!hiddenMoveIds.includes(storedMove.$id)) {
-          mappedCustomMoves[storedMove.$id] =
-            convertStoredMoveToMove(storedMove);
-        }
-      });
+    Object.keys(customStoredMoves).forEach((moveAuthorId) => {
+      const customMoves = customStoredMoves[moveAuthorId];
+      if (
+        customMoves &&
+        customMoves.length > 0 &&
+        Array.isArray(hiddenMoveIds)
+      ) {
+        const mappedCustomMoves: { [key: string]: Move } = {};
 
-      setCustomMoveCategory({
-        $id: customMoveCategoryPrefix,
-        Title: {
-          $id: `${customMoveCategoryPrefix}/title`,
-          Canonical: "Custom Moves",
-          Short: "Custom Moves",
-          Standard: "Custom Moves",
-        },
-        Moves: mappedCustomMoves,
-        Source: {
-          Title: "Custom Move",
-          Authors: [],
-          License: License.None,
-        },
-        Description: "Moves created by you or your Campaign GM",
-        Display: {},
-        Optional: true,
-      });
-    } else {
-      setCustomMoveCategory(undefined);
-    }
+        customMoves.forEach((storedMove) => {
+          if (!hiddenMoveIds.includes(storedMove.$id)) {
+            mappedCustomMoves[storedMove.$id] =
+              convertStoredMoveToMove(storedMove);
+          }
+        });
+
+        newMoveMap = { ...newMoveMap, ...mappedCustomMoves };
+
+        moveCategories.push({
+          $id: customMoveCategoryPrefix,
+          Title: {
+            $id: `${customMoveCategoryPrefix}/title`,
+            Canonical: "Custom Moves",
+            Short: "Custom Moves",
+            Standard: "Custom Moves",
+          },
+          Moves: mappedCustomMoves,
+          Source: {
+            Title: "Custom Move",
+            Authors: [moveAuthorId],
+            License: License.None,
+          },
+          Description: "Moves created by you or your Campaign GM",
+          Display: {},
+          Optional: true,
+        });
+      }
+    });
+
+    setCustomMoveCategories(moveCategories);
+    setCustomMoveMap(newMoveMap);
   }, [
     campaignCustomMoves,
     characterSheetCustomMoves,
@@ -102,5 +123,5 @@ export function useCustomMoves() {
     hiddenCharacterMoveIds,
   ]);
 
-  return customMoveCategory;
+  return { customMoveCategories, customMoveMap };
 }

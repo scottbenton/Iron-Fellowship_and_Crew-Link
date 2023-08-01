@@ -9,7 +9,7 @@ import { useCustomOracles } from "./useCustomOracles";
 export function useFilterOracles() {
   const { search, setSearch, debouncedSearch } = useSearch();
 
-  const { customOracleCategory } = useCustomOracles();
+  const { customOracleCategories, allCustomOracleMap } = useCustomOracles();
   const settings = useSettingsStore((store) => store.oracleSettings);
 
   const combinedOracles = useMemo(() => {
@@ -20,7 +20,7 @@ export function useFilterOracles() {
     pinnedOracleIds.forEach((oracleId) => {
       if (settings?.pinnedOracleSections?.[oracleId]) {
         pinnedOracleTables[oracleId] =
-          oracleMap[oracleId] ?? customOracleCategory?.Tables?.[oracleId];
+          oracleMap[oracleId] ?? allCustomOracleMap[oracleId];
       }
     });
 
@@ -55,10 +55,7 @@ export function useFilterOracles() {
   const [filteredOracles, setFilteredOracles] = useState(combinedOracles);
 
   useEffect(() => {
-    let allOracles = [...combinedOracles];
-    if (customOracleCategory) {
-      allOracles.push(customOracleCategory);
-    }
+    let allOracles = [...combinedOracles, ...customOracleCategories];
 
     const results: OracleSet[] = [];
 
@@ -91,7 +88,7 @@ export function useFilterOracles() {
       }
     });
     setFilteredOracles(results);
-  }, [debouncedSearch, combinedOracles, customOracleCategory]);
+  }, [debouncedSearch, combinedOracles, customOracleCategories]);
 
   return { search, setSearch, filteredOracles };
 }

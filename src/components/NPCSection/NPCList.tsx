@@ -1,8 +1,5 @@
 import { Box, Card, CardActionArea, Grid, Typography } from "@mui/material";
-import {
-  LocationDocumentWithGMProperties,
-  NPC,
-} from "stores/sharedLocationStore";
+import { LocationDocumentWithGMProperties, NPC } from "stores/world.slice";
 import { NPCItem } from "./NPCItem";
 
 export interface NPCListProps {

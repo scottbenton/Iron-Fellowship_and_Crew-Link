@@ -19,11 +19,13 @@ import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { WORLD_ROUTES, constructWorldPath } from "pages/World/routes";
 import { useAuth } from "providers/AuthProvider";
 import { WorldEmptyState } from "components/WorldEmptyState";
+import { useEffect } from "react";
 
 export function WorldSection() {
   const confirm = useConfirm();
   const uid = useAuth().user?.uid;
 
+  const setWorld = useCampaignGMScreenStore((store) => store.setWorld);
   const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
   const world = useWorldsStore((store) =>
     worldId ? store.worlds[worldId] : undefined
@@ -57,6 +59,10 @@ export function WorldSection() {
       })
       .catch(() => {});
   };
+
+  useEffect(() => {
+    setWorld(world?.ownerId, worldId, world);
+  }, [worldId, world]);
 
   return (
     <Box>

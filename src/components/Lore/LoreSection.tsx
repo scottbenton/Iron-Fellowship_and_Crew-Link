@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import AddLoreIcon from "@mui/icons-material/Book";
 import { OpenLore } from "./OpenLore";
-import { LocationStoreProperties, Lore } from "stores/sharedLocationStore";
+import { WorldStoreProperties } from "stores/world.slice";
 import { useFilterLore } from "./useFilterLore";
 import { useAuth } from "providers/AuthProvider";
 import { WorldEmptyState } from "components/WorldEmptyState";
@@ -24,7 +24,7 @@ export interface LoreSectionProps {
   worldId?: string;
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
-  useStore: UseBoundStore<StoreApi<LocationStoreProperties>>;
+  useStore: UseBoundStore<StoreApi<WorldStoreProperties>>;
 }
 
 export function LoreSection(props: LoreSectionProps) {

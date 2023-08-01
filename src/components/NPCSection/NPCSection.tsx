@@ -1,8 +1,4 @@
-import {
-  LocationDocumentWithGMProperties,
-  LocationStoreProperties,
-  NPC,
-} from "stores/sharedLocationStore";
+import { WorldStoreProperties } from "stores/world.slice";
 import { FilterBar } from "components/FilterBar";
 import { NPCList } from "./NPCList";
 import { useFilterNPCs } from "./useFilterNPCs";
@@ -27,7 +23,7 @@ export interface NPCSectionProps {
   worldId: string;
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
-  useStore: UseBoundStore<StoreApi<LocationStoreProperties>>;
+  useStore: UseBoundStore<StoreApi<WorldStoreProperties>>;
 }
 
 export function NPCSection(props: NPCSectionProps) {

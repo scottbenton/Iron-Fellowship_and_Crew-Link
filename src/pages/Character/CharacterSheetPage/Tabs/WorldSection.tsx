@@ -20,7 +20,9 @@ export function WorldSection() {
   const worldOwnerId = useCharacterSheetStore((store) => store.worldOwnerId);
   const world = useCharacterSheetStore((store) => store.world);
 
-  const isGM = useCharacterSheetStore((store) => store.campaign?.gmId === uid);
+  const isGM = useCharacterSheetStore(
+    (store) => !!uid && (store.campaign?.gmIds?.includes(uid) ?? false)
+  );
 
   const canEdit = !campaignId && uid === worldOwnerId;
 

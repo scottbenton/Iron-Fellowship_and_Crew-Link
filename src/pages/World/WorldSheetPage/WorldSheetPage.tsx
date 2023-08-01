@@ -102,10 +102,7 @@ export function WorldSheetPage() {
           }
         });
         Object.keys(campaigns).forEach((campaignId) => {
-          if (
-            campaigns[campaignId].worldId === worldId &&
-            campaigns[campaignId].gmId === uid
-          ) {
+          if (campaigns[campaignId].worldId === worldId) {
             promises.push(updateCampaignWorld(campaignId, undefined));
           }
         });

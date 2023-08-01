@@ -9,15 +9,13 @@ const categories = [...orderedCategories, ...orderedDelveCategories];
 export function useFilterMoves() {
   const { setSearch, debouncedSearch } = useSearch();
   const [filteredMoves, setFilteredMoves] = useState(categories);
-  const customMoveCategory = useCustomMoves();
+  const { customMoveCategories } = useCustomMoves();
 
   useEffect(() => {
     const results: MoveCategory[] = [];
 
-    let allCategories = [...categories];
-    if (customMoveCategory) {
-      allCategories.push(customMoveCategory);
-    }
+    console.debug("IN FILTERED MOVES USE EFFECT");
+    let allCategories = [...categories, ...customMoveCategories];
 
     allCategories.forEach((category) => {
       if (
@@ -50,7 +48,7 @@ export function useFilterMoves() {
     });
 
     setFilteredMoves(results);
-  }, [debouncedSearch, customMoveCategory]);
+  }, [debouncedSearch, customMoveCategories]);
 
   return { setSearch, filteredMoves };
 }

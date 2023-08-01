@@ -78,55 +78,68 @@ export function useCustomOracles() {
     (store) => store.characterSettings?.hiddenCustomOraclesIds
   );
 
-  const [customOracleCategory, setCustomOracleCategory] = useState<OracleSet>();
+  const [customOracleCategories, setCustomOracleCategories] = useState<
+    OracleSet[]
+  >([]);
   const [allCustomOracleMap, setAllCustomOracleMap] = useState<{
     [oracleId: string]: OracleTable;
-  }>();
+  }>({});
 
   useEffect(() => {
     const customStoredOracles = gmScreenOracles ?? characterSheetOracles;
     const hiddenOracleIds = hiddenCampaignOracleIds ?? hiddenCharacterOracleIds;
 
-    if (
-      customStoredOracles &&
-      customStoredOracles.length > 0 &&
-      Array.isArray(hiddenOracleIds)
-    ) {
-      const mappedCustomOracles: { [key: string]: OracleTable } = {};
-      const mappedCustomOraclesWithHidden: { [key: string]: OracleTable } = {};
+    const newOracleCategories: OracleSet[] = [];
+    let newCustomOracleMap: { [oracleId: string]: OracleTable } = {};
 
-      customStoredOracles.forEach((oracle) => {
-        const convertedOracle = convertStoredOracleToOracle(oracle);
-        if (!hiddenOracleIds.includes(oracle.$id)) {
-          mappedCustomOracles[oracle.$id] = convertedOracle;
-        }
-        mappedCustomOraclesWithHidden[oracle.$id] = convertedOracle;
-      });
+    Object.keys(customStoredOracles).forEach((creatorId) => {
+      const customOracles = customStoredOracles[creatorId];
 
-      setCustomOracleCategory({
-        $id: customOracleCategoryPrefix,
-        Title: {
-          $id: `${customOracleCategoryPrefix}/title`,
-          Canonical: "Custom Oracles",
-          Short: "Custom Oracles",
-          Standard: "Custom Oracles",
-        },
-        Ancestors: [],
-        Display: {
-          $id: `${customOracleCategoryPrefix}/display`,
-        },
-        Source: {
-          Title: "Custom Oracle",
-          Authors: [],
-          License: License.None,
-        },
-        Tables: mappedCustomOracles,
-      });
-      setAllCustomOracleMap(mappedCustomOraclesWithHidden);
-    } else {
-      setCustomOracleCategory(undefined);
-      setAllCustomOracleMap(undefined);
-    }
+      if (
+        customOracles &&
+        customOracles.length > 0 &&
+        Array.isArray(hiddenOracleIds)
+      ) {
+        const mappedCustomOracles: { [key: string]: OracleTable } = {};
+        const mappedCustomOraclesWithHidden: { [key: string]: OracleTable } =
+          {};
+
+        customOracles.forEach((oracle) => {
+          const convertedOracle = convertStoredOracleToOracle(oracle);
+          if (!hiddenOracleIds.includes(oracle.$id)) {
+            mappedCustomOracles[oracle.$id] = convertedOracle;
+          }
+          mappedCustomOraclesWithHidden[oracle.$id] = convertedOracle;
+        });
+
+        newOracleCategories.push({
+          $id: customOracleCategoryPrefix,
+          Title: {
+            $id: `${customOracleCategoryPrefix}/title`,
+            Canonical: "Custom Oracles",
+            Short: "Custom Oracles",
+            Standard: "Custom Oracles",
+          },
+          Ancestors: [],
+          Display: {
+            $id: `${customOracleCategoryPrefix}/display`,
+          },
+          Source: {
+            Title: "Custom Oracle",
+            Authors: [],
+            License: License.None,
+          },
+          Tables: mappedCustomOracles,
+        });
+        newCustomOracleMap = {
+          ...newCustomOracleMap,
+          ...mappedCustomOraclesWithHidden,
+        };
+      }
+    });
+
+    setCustomOracleCategories(newOracleCategories);
+    setAllCustomOracleMap(newCustomOracleMap);
   }, [
     characterSheetOracles,
     gmScreenOracles,
@@ -134,5 +147,5 @@ export function useCustomOracles() {
     hiddenCharacterOracleIds,
   ]);
 
-  return { customOracleCategory, allCustomOracleMap };
+  return { customOracleCategories, allCustomOracleMap };
 }

@@ -14,9 +14,10 @@ import {
 import { GMLoreDocument } from "types/Lore.type";
 import { useAuth } from "providers/AuthProvider";
 import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
-import { Lore } from "stores/sharedLocationStore";
+import { Lore } from "stores/world.slice";
 import { getImageUrl } from "lib/storage.lib";
 import { useWorldSheetStore } from "pages/World/WorldSheetPage/worldSheet.store";
+import { useWorldsStore } from "stores/worlds.store";
 
 export function listenToLore(
   uid: string | undefined,
@@ -239,12 +240,10 @@ export function useCampaignGMScreenListenToLore() {
   const { error } = useSnackbar();
 
   const uid = useAuth().user?.uid;
-
-  const worldOwnerId = useCampaignGMScreenStore(
-    (store) => store.campaign?.gmId
-  );
   const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
-
+  const worldOwnerId = useWorldsStore((store) =>
+    worldId ? store.worlds[worldId]?.ownerId : ""
+  );
   const updateLore = useCampaignGMScreenStore((store) => store.updateLore);
   const updateLoreImageUrl = useCampaignGMScreenStore(
     (store) => store.addLoreImageURL

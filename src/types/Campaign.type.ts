@@ -3,6 +3,6 @@ export interface StoredCampaign {
   users: string[];
   characters: { uid: string; characterId: string }[];
   supply: number;
-  gmId?: string;
+  gmIds?: string[];
   worldId?: string;
 }

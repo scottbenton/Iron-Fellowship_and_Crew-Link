@@ -2,19 +2,27 @@ import { TrackWithId } from "pages/Character/CharacterSheetPage/characterSheet.s
 import produce from "immer";
 import { StoredAsset } from "types/Asset.type";
 import { StoredCampaign } from "types/Campaign.type";
-import { StoredMove } from "types/Moves.type";
 import { CharacterDocument } from "types/Character.type";
 import { Note } from "types/Notes.type";
-import { StoredOracle } from "types/Oracles.type";
 import { CampaignSettingsDoc } from "types/Settings.type";
 import { TRACK_TYPES } from "types/Track.type";
 import { OracleSettings } from "types/UserSettings.type";
 import { create } from "zustand";
 import {
-  LocationStoreProperties,
-  initialLocationState,
-  locationStore,
-} from "stores/sharedLocationStore";
+  WorldStoreProperties,
+  initialWorldState,
+  worldStore,
+} from "stores/world.slice";
+import {
+  CustomMovesStoreProperties,
+  customMovesStore,
+  initialCustomMovesState,
+} from "stores/customMoves.slice";
+import {
+  CustomOraclesStoreProperties,
+  customOraclesStore,
+  initialCustomOraclesState,
+} from "stores/customOracles.slice";
 
 export type CampaignGMScreenStore = {
   resetState: () => void;
@@ -62,12 +70,6 @@ export type CampaignGMScreenStore = {
   oracleSettings?: OracleSettings;
   setOracleSettings: (oracleSettings: OracleSettings) => void;
 
-  customOracles?: StoredOracle[];
-  setCustomOracles: (oracles: StoredOracle[]) => void;
-
-  customMoves?: StoredMove[];
-  setCustomMoves: (moves: StoredMove[]) => void;
-
   campaignNotes?: Note[];
   setCampaignNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
@@ -76,7 +78,9 @@ export type CampaignGMScreenStore = {
 
   campaignSettings?: CampaignSettingsDoc;
   setCampaignSettings: (settings: CampaignSettingsDoc) => void;
-} & LocationStoreProperties;
+} & WorldStoreProperties &
+  CustomMovesStoreProperties &
+  CustomOraclesStoreProperties;
 
 const initialState = {
   campaignId: undefined,
@@ -88,12 +92,12 @@ const initialState = {
   characterTracks: {},
   tracks: undefined,
   oracleSettings: undefined,
-  customOracles: undefined,
-  customMoves: undefined,
   campaignNotes: undefined,
   campaignSettings: undefined,
 
-  ...initialLocationState,
+  ...initialWorldState,
+  ...initialCustomMovesState,
+  ...initialCustomOraclesState,
 };
 
 export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
@@ -169,22 +173,6 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       );
     },
 
-    setCustomOracles: (oracles) => {
-      set(
-        produce((store: CampaignGMScreenStore) => {
-          store.customOracles = oracles;
-        })
-      );
-    },
-
-    setCustomMoves: (moves) => {
-      set(
-        produce((store: CampaignGMScreenStore) => {
-          store.customMoves = moves;
-        })
-      );
-    },
-
     setCampaignNotes: (notes) => {
       set(
         produce((store: CampaignGMScreenStore) => {
@@ -225,6 +213,8 @@ export const useCampaignGMScreenStore = create<CampaignGMScreenStore>()(
       );
     },
 
-    ...locationStore(set),
+    ...worldStore(set),
+    ...customMovesStore(set),
+    ...customOraclesStore(set),
   })
 );

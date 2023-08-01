@@ -14,7 +14,7 @@ import {
 import { GMNPCDocument } from "types/NPCs.type";
 import { useAuth } from "providers/AuthProvider";
 import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
-import { NPC } from "stores/sharedLocationStore";
+import { NPC } from "stores/world.slice";
 import { getImageUrl } from "lib/storage.lib";
 import { useWorldSheetStore } from "pages/World/WorldSheetPage/worldSheet.store";
 
@@ -241,7 +241,7 @@ export function useCampaignGMScreenListenToNPCs() {
   const uid = useAuth().user?.uid;
 
   const worldOwnerId = useCampaignGMScreenStore(
-    (store) => store.campaign?.gmId
+    (store) => store.world?.ownerId
   );
   const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
 

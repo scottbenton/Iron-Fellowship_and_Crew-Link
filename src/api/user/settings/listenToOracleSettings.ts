@@ -54,6 +54,7 @@ export function useListenToOracleSettings() {
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
+    console.debug("CREATING LISTENER FOR ORACLE SETTINGS");
 
     if (uid) {
       unsubscribe = listenToOracleSettings(uid, setOracleSettings, (err) => {

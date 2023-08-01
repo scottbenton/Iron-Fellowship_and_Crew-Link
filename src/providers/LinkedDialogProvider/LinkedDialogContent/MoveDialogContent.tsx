@@ -24,11 +24,11 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
   const { rollOracleTable } = useRoller();
-  const customMoves = useCustomMoves();
+  const { customMoveMap } = useCustomMoves();
   const { allCustomOracleMap } = useCustomOracles();
   const allOracles = { ...oracleMap, ...allCustomOracleMap };
 
-  const move = moveMap[id] ?? customMoves?.Moves[id];
+  const move = moveMap[id] ?? customMoveMap[id];
 
   const stats: MoveStats | undefined = useCharacterSheetStore((store) =>
     store.character

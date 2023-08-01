@@ -21,7 +21,7 @@ import { useUpdateLocationGMNotes } from "api/worlds/locations/updateLocationGMN
 import { DebouncedOracleInput } from "../DebouncedOracleInput";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 import { useUpdateLocationNotes } from "api/worlds/locations/updateLocationNotes";
-import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
+import { LocationDocumentWithGMProperties } from "stores/world.slice";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
 import { useUploadLocationImage } from "api/worlds/locations/uploadLocationImage";
 

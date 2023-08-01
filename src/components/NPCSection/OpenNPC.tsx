@@ -9,10 +9,7 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import {
-  LocationDocumentWithGMProperties,
-  NPC,
-} from "stores/sharedLocationStore";
+import { LocationDocumentWithGMProperties, NPC } from "stores/world.slice";
 import BackIcon from "@mui/icons-material/ChevronLeft";
 import { NPCDocument, NPC_SPECIES } from "types/NPCs.type";
 import { DebouncedOracleInput } from "components/DebouncedOracleInput";

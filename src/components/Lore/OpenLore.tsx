@@ -16,7 +16,7 @@ import { RichTextEditorNoTitle } from "components/RichTextEditor";
 import { useAuth } from "providers/AuthProvider";
 import { DebouncedOracleInput } from "../DebouncedOracleInput";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
-import { Lore } from "stores/sharedLocationStore";
+import { Lore } from "stores/world.slice";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
 import { useUpdateLore } from "api/worlds/lore/updateLore";
 import { useUpdateLoreGMProperties } from "api/worlds/lore/updateLoreGMProperties";

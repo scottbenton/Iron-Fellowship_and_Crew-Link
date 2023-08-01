@@ -1,7 +1,5 @@
 import produce from "immer";
-import { StoredMove } from "types/Moves.type";
 import { Note } from "types/Notes.type";
-import { StoredOracle } from "types/Oracles.type";
 import { CharacterSettingsDoc } from "types/Settings.type";
 import { World } from "types/World.type";
 import { create } from "zustand";
@@ -11,10 +9,20 @@ import { StoredCampaign } from "types/Campaign.type";
 import { CharacterDocument } from "types/Character.type";
 import { StoredTrack, TRACK_TYPES } from "types/Track.type";
 import {
-  LocationStoreProperties,
-  initialLocationState,
-  locationStore,
-} from "stores/sharedLocationStore";
+  WorldStoreProperties,
+  initialWorldState,
+  worldStore,
+} from "stores/world.slice";
+import {
+  CustomOraclesStoreProperties,
+  customOraclesStore,
+  initialCustomOraclesState,
+} from "stores/customOracles.slice";
+import {
+  CustomMovesStoreProperties,
+  customMovesStore,
+  initialCustomMovesState,
+} from "stores/customMoves.slice";
 
 export type TRACK_KEYS = "health" | "spirit" | "supply" | "momentum";
 
@@ -51,10 +59,6 @@ export type CharacterSheetStore = {
   campaignId?: string;
   campaign?: StoredCampaign;
 
-  worldId?: string;
-  worldOwnerId?: string;
-  world?: World;
-
   supply?: number;
 
   momentumResetValue?: number;
@@ -62,7 +66,6 @@ export type CharacterSheetStore = {
 
   setCharacter: (characterId?: string, character?: CharacterDocument) => void;
   setCampaign: (campaignId?: string, campaign?: StoredCampaign) => void;
-  setWorld: (worldOwnerId?: string, worldId?: string, world?: World) => void;
 
   assets?: StoredAsset[];
   setAssets: (newAssets: StoredAsset[]) => void;
@@ -87,12 +90,6 @@ export type CharacterSheetStore = {
     isCampaign?: boolean
   ) => void;
 
-  customMoves?: StoredMove[];
-  setCustomMoves: (moves: StoredMove[]) => void;
-
-  customOracles?: StoredOracle[];
-  setCustomOracles: (oracles: StoredOracle[]) => void;
-
   notes?: Note[];
   setNotes: (notes: Note[]) => void;
   temporarilyReorderNotes: (noteId: string, order: number) => void;
@@ -101,7 +98,9 @@ export type CharacterSheetStore = {
 
   characterSettings?: CharacterSettingsDoc;
   setCharacterSettings: (settings: CharacterSettingsDoc) => void;
-} & LocationStoreProperties;
+} & WorldStoreProperties &
+  CustomMovesStoreProperties &
+  CustomOraclesStoreProperties;
 
 const initialState = {
   characterId: undefined,
@@ -110,16 +109,16 @@ const initialState = {
   campaign: undefined,
   supply: undefined,
   assets: undefined,
-  customOracles: undefined,
-  customMoves: undefined,
   notes: undefined,
   characterSettings: undefined,
-
-  ...initialLocationState,
 
   [TRACK_TYPES.VOW]: {},
   [TRACK_TYPES.JOURNEY]: {},
   [TRACK_TYPES.FRAY]: {},
+
+  ...initialWorldState,
+  ...initialCustomMovesState,
+  ...initialCustomOraclesState,
 };
 
 export const useCharacterSheetStore = create<CharacterSheetStore>()(
@@ -158,16 +157,6 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
           if (!store.campaignId) {
             store.supply = character?.supply;
           }
-        })
-      );
-    },
-
-    setWorld: (worldOwnerId, worldId, world) => {
-      set(
-        produce((store: CharacterSheetStore) => {
-          store.worldId = worldId;
-          store.worldOwnerId = worldOwnerId;
-          store.world = world;
         })
       );
     },
@@ -241,22 +230,6 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
       );
     },
 
-    setCustomMoves: (moves) => {
-      set(
-        produce((state: CharacterSheetStore) => {
-          state.customMoves = moves;
-        })
-      );
-    },
-
-    setCustomOracles: (oracles) => {
-      set(
-        produce((state: CharacterSheetStore) => {
-          state.customOracles = oracles;
-        })
-      );
-    },
-
     setCharacterSettings: (settings) => {
       set(
         produce((state: CharacterSheetStore) => {
@@ -265,6 +238,8 @@ export const useCharacterSheetStore = create<CharacterSheetStore>()(
       );
     },
 
-    ...locationStore(set),
+    ...worldStore(set),
+    ...customMovesStore(set),
+    ...customOraclesStore(set),
   })
 );

@@ -51,6 +51,8 @@ export function useListenToUsersCampaigns() {
   useEffect(() => {
     let unsubscribe: Unsubscribe;
 
+    console.debug("CREATING LISTENER FOR USERS CAMPAIGNS");
+
     listenToUsersCampaigns(
       uid,
       {

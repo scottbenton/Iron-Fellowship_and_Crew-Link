@@ -6,7 +6,6 @@ import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useEffect } from "react";
-import { useCampaignStore } from "stores/campaigns.store";
 import { StoredOracle } from "types/Oracles.type";
 import { getUsersCustomOracleDoc } from "./_getRef";
 
@@ -37,7 +36,10 @@ export function listenToCustomOracles(
 }
 
 export function useCampaignGMScreenListenToCustomOracles() {
-  const uid = useAuth().user?.uid;
+  const gmIds = useCampaignGMScreenStore(
+    (store) => store.campaign?.gmIds ?? [],
+    (a, b) => (a && b ? JSON.stringify(a) === JSON.stringify(b) : a == b)
+  );
   const setOracles = useCampaignGMScreenStore(
     (store) => store.setCustomOracles
   );
@@ -45,54 +47,56 @@ export function useCampaignGMScreenListenToCustomOracles() {
   const { error } = useSnackbar();
 
   useEffect(() => {
-    let unsubscribe: Unsubscribe;
-
-    if (uid) {
-      unsubscribe = listenToCustomOracles(uid, setOracles, (err) => {
-        console.error(err);
-        const errorMessage = getErrorMessage(
-          error,
-          "Failed to retrieve custom oracles"
-        );
-        error(errorMessage);
-      });
-    }
+    let unsubscribes: Unsubscribe[] = gmIds.map((gmId) =>
+      listenToCustomOracles(
+        gmId,
+        (oracles) => setOracles(gmId, oracles),
+        (err) => {
+          console.error(err);
+          const errorMessage = getErrorMessage(
+            error,
+            "Failed to retrieve custom oracles"
+          );
+          error(errorMessage);
+        }
+      )
+    );
 
     return () => {
-      unsubscribe && unsubscribe();
+      unsubscribes.map((unsubscribe) => unsubscribe());
     };
-  }, [uid]);
+  }, [gmIds]);
 }
 
 export function useCharacterSheetListenToCustomOracles() {
   const campaignId = useCharacterSheetStore((store) => store.campaignId);
-  const gmUid = useCampaignStore((store) =>
-    campaignId ? store.campaigns[campaignId]?.gmId : undefined
-  );
-  const userId = useAuth().user?.uid;
+  const gmIds = useCharacterSheetStore((store) => store.campaign?.gmIds ?? []);
+  const userId = useAuth().user?.uid ?? "";
 
-  const uid = campaignId ? gmUid : userId;
+  const uids = campaignId ? gmIds : [userId];
 
   const setOracles = useCharacterSheetStore((store) => store.setCustomOracles);
 
   const { error } = useSnackbar();
 
   useEffect(() => {
-    let unsubscribe: Unsubscribe;
-
-    if (uid) {
-      unsubscribe = listenToCustomOracles(uid, setOracles, (err) => {
-        console.error(err);
-        const errorMessage = getErrorMessage(
-          error,
-          "Failed to retrieve custom oracles"
-        );
-        error(errorMessage);
-      });
-    }
+    let unsubscribes: Unsubscribe[] = uids.map((uid) =>
+      listenToCustomOracles(
+        uid,
+        (oracles) => setOracles(uid, oracles),
+        (err) => {
+          console.error(err);
+          const errorMessage = getErrorMessage(
+            error,
+            "Failed to retrieve custom oracles"
+          );
+          error(errorMessage);
+        }
+      )
+    );
 
     return () => {
-      unsubscribe && unsubscribe();
+      unsubscribes.map((unsubscribe) => unsubscribe());
     };
-  }, [uid]);
+  }, [uids]);
 }

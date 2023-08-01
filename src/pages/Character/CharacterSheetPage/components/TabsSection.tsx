@@ -53,14 +53,12 @@ export function TabsSection() {
 
   const isSinglePlayer = useCharacterSheetStore((store) => !store.campaignId);
   const isGM = useCharacterSheetStore(
-    (store) => store.campaign?.gmId === uid && !!uid
+    (store) => !!uid && (store.campaign?.gmIds?.includes(uid) ?? false)
   );
   const worldId = useCharacterSheetStore((store) =>
     store.campaignId ? store.campaign?.worldId : store.character?.worldId
   );
-  const worldOwnerId = useCharacterSheetStore((store) =>
-    store.campaignId ? store.campaign?.gmId : uid
-  );
+  const worldOwnerId = useCharacterSheetStore((store) => store.worldOwnerId);
 
   useEffect(() => {
     if (!isMobile && selectedTab === TABS.MOVES) {

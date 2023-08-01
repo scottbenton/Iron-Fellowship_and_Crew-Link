@@ -5,9 +5,8 @@ import { getErrorMessage } from "../../functions/getErrorMessage";
 import { useAuth } from "../../providers/AuthProvider";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { useWorldsStore } from "stores/worlds.store";
-import { decodeWorld, getWorldCollection, getWorldDoc } from "./_getRef";
+import { decodeWorld, getWorldDoc } from "./_getRef";
 import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
-import { string } from "yup";
 
 export function listenToWorld(
   worldId: string,
@@ -28,48 +27,30 @@ export function listenToWorld(
   );
 }
 
-export function useListenToWorld(worldOwnerId?: string, worldId?: string) {
+export function useListenToWorld(worldId?: string) {
   const [world, setWorld] = useState<World>();
 
-  const uid = useAuth().user?.uid;
   const worlds = useWorldsStore((store) => store.worlds);
-
-  const { error } = useSnackbar();
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
 
-    setWorld(undefined);
-
-    if (worldOwnerId && worldId) {
-      if (worldOwnerId === uid) {
-        setWorld(worlds[worldId]);
-      } else {
-        listenToWorld(worldId, setWorld, (err) => {
-          console.error(err);
-          const errorMessage = getErrorMessage(error, "Failed to load worlds");
-          error(errorMessage);
-        });
-      }
+    if (worldId) {
+      setWorld(worlds[worldId]);
+    } else {
+      setWorld(undefined);
     }
-
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [uid, worldOwnerId, worldId, worlds]);
+  }, [worldId, worlds]);
 
   return { world };
 }
 
 export function useCharacterSheetListenToWorld() {
-  const { error } = useSnackbar();
-  const uid = useAuth().user?.uid;
-
   const worldId = useCharacterSheetStore((store) =>
     store.campaignId ? store.campaign?.worldId : store.character?.worldId
-  );
-  const worldOwnerId = useCharacterSheetStore((store) =>
-    store.campaignId ? store.campaign?.gmId : uid
   );
 
   const setWorld = useCharacterSheetStore((store) => store.setWorld);
@@ -80,23 +61,13 @@ export function useCharacterSheetListenToWorld() {
   useEffect(() => {
     let unsubscribe: Unsubscribe | undefined;
 
-    if (worldOwnerId === uid && worldId) {
-      setWorld(worldOwnerId, worldId, usersWorld);
-    } else if (worldOwnerId !== uid && worldId) {
-      unsubscribe = listenToWorld(
-        worldId,
-        (world) => setWorld(worldOwnerId, worldId, world),
-        (err) => {
-          console.error(err);
-          const errorMessage = "Failed to load worlds";
-          error(errorMessage);
-        }
-      );
+    if (worldId && usersWorld) {
+      setWorld(usersWorld.ownerId, worldId, usersWorld);
     } else {
-      setWorld(worldOwnerId, worldId, undefined);
+      setWorld(undefined, undefined, undefined);
     }
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [worldId, worldOwnerId, usersWorld]);
+  }, [worldId, usersWorld]);
 }

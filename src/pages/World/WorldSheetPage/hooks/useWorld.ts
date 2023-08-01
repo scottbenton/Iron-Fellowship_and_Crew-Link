@@ -3,33 +3,28 @@ import { useAuth } from "providers/AuthProvider";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useWorldsStore } from "stores/worlds.store";
+import { useWorldSheetStore } from "../worldSheet.store";
 
 export function useWorld() {
-  const { userId, worldId } = useParams();
-  const uid = useAuth().user?.uid;
-
-  const isAdmin = uid === userId;
+  const { worldId } = useParams();
 
   const worlds = useWorldsStore((store) => store.worlds);
-  const areUsersWorldsLoading = useWorldsStore((store) => store.loading);
+  const isLoading = useWorldsStore((store) => store.loading);
+  const setWorld = useWorldSheetStore((store) => store.setWorld);
 
-  const {
-    getWorld,
-    data: readOnlyWorld,
-    loading: readOnlyWorldLoading,
-  } = useGetWorld();
+  const uid = useAuth().user?.uid;
+  const worldOwnerId = worldId ? worlds[worldId]?.ownerId : undefined;
+  const world = worldId ? worlds[worldId] : undefined;
 
   useEffect(() => {
-    if (!isAdmin && uid && worldId) {
-      getWorld(worldId).catch(() => {});
-    }
-  }, [isAdmin, uid, worldId]);
+    setWorld(worldOwnerId, worldId, world);
+  }, [worldId, worldOwnerId, world]);
 
   return {
-    worldOwnerId: userId,
+    worldOwnerId,
     worldId,
-    world: isAdmin ? (worldId ? worlds[worldId] : undefined) : readOnlyWorld,
-    isLoading: isAdmin ? areUsersWorldsLoading : readOnlyWorldLoading,
-    canEdit: isAdmin,
+    world,
+    isLoading,
+    canEdit: !!uid && uid === worldOwnerId,
   };
 }

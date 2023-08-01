@@ -46,6 +46,7 @@ export function useListenToUsersCharacters() {
   const uid = useAuth().user?.uid;
 
   useEffect(() => {
+    console.debug("CREATING USERS CHARACTERS LISTENER");
     let unsubscribe: Unsubscribe;
 
     listenToUsersCharacters(

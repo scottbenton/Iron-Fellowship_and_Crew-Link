@@ -3,14 +3,13 @@ import { useListenToWorld } from "api/worlds/listenToWorld";
 import { WorldSheet } from "components/WorldSheet";
 
 export interface WorldSectionProps {
-  worldOwnerId: string;
   worldId: string;
 }
 
 export function WorldSection(props: WorldSectionProps) {
-  const { worldOwnerId, worldId } = props;
+  const { worldId } = props;
 
-  const { world } = useListenToWorld(worldOwnerId, worldId);
+  const { world } = useListenToWorld(worldId);
   if (!world) {
     return <LinearProgress />;
   }

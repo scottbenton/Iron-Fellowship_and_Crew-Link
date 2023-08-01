@@ -1,9 +1,6 @@
 import { useSearch, useSearchNoState } from "hooks/useSearch";
 import { useEffect, useMemo, useState } from "react";
-import {
-  LocationDocumentWithGMProperties,
-  NPC,
-} from "stores/sharedLocationStore";
+import { LocationDocumentWithGMProperties, NPC } from "stores/world.slice";
 
 export function useFilterNPCs(
   locations: { [key: string]: LocationDocumentWithGMProperties },

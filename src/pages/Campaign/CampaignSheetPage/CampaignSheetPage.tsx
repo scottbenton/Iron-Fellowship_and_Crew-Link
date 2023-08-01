@@ -89,13 +89,13 @@ export function CampaignSheetPage() {
         )}
         {selectedTab === TABS.WORLD && (
           <>
-            {campaign.worldId && campaign.gmId ? (
-              <WorldSection
-                worldId={campaign.worldId}
-                worldOwnerId={campaign.gmId}
-              />
+            {campaign.worldId ? (
+              <WorldSection worldId={campaign.worldId} />
             ) : (
-              <WorldEmptyState isGM={uid === campaign.gmId} isMultiplayer />
+              <WorldEmptyState
+                isGM={!!uid && (campaign.gmIds?.includes(uid) ?? false)}
+                isMultiplayer
+              />
             )}
           </>
         )}

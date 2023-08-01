@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogContent, Typography } from "@mui/material";
 import { useUpdateCampaignGM } from "api/campaign/updateCampaignGM";
-import { useUserDoc } from "api/user/getUserDoc";
+import { useUserDoc, useUserDocs } from "api/user/getUserDoc";
 import { useAuth } from "providers/AuthProvider";
 import { Link } from "react-router-dom";
 import { StoredCampaign } from "types/Campaign.type";
@@ -25,7 +25,7 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
   const uid = useAuth().user?.uid;
 
   const { updateCampaignGM } = useUpdateCampaignGM();
-  const { user: gm } = useUserDoc(campaign.gmId);
+  const gms = useUserDocs(campaign.gmIds ?? []);
 
   const [inviteUsersDialogOpen, setInviteUsersDialogOpen] =
     useState<boolean>(false);
@@ -54,7 +54,9 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
     <>
       <PageHeader
         label={campaign.name}
-        subLabel={gm ? `GM: ${gm.displayName}` : ""}
+        subLabel={
+          gms ? `GM: ${gms.map((gm) => gm.displayName).join(", ")}` : ""
+        }
         actions={
           <>
             <Button
@@ -64,16 +66,18 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
             >
               Invite your Group
             </Button>
-            {!campaign.gmId && (
+            {(!campaign.gmIds || campaign.gmIds.length === 0) && (
               <Button
-                onClick={() => updateCampaignGM({ campaignId, gmId: uid })}
+                onClick={() =>
+                  updateCampaignGM({ campaignId, gmId: uid ?? "" })
+                }
                 variant={"outlined"}
                 color={"inherit"}
               >
                 Mark self as GM
               </Button>
             )}
-            {campaign.gmId && campaign.gmId === uid && (
+            {campaign.gmIds && uid && campaign.gmIds.includes(uid) && (
               <Button
                 component={Link}
                 to={constructCampaignSheetPath(

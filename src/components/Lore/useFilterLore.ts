@@ -1,6 +1,6 @@
 import { useSearchNoState } from "hooks/useSearch";
 import { useMemo } from "react";
-import { Lore } from "stores/sharedLocationStore";
+import { Lore } from "stores/world.slice";
 
 export function useFilterLore(lore: { [key: string]: Lore }, search: string) {
   const { debouncedSearch } = useSearchNoState(search);

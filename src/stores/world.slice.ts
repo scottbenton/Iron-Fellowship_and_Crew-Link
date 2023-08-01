@@ -1,9 +1,8 @@
-import { constructLocationImagePath } from "api/worlds/locations/_getRef";
 import produce from "immer";
-import { getImageUrl } from "lib/storage.lib";
 import { GMLocationDocument, LocationDocument } from "types/Locations.type";
 import { GMLoreDocument, LoreDocument } from "types/Lore.type";
 import { GMNPCDocument, NPCDocument } from "types/NPCs.type";
+import { World } from "types/World.type";
 import { StoreApi } from "zustand";
 
 export type LocationDocumentWithGMProperties = LocationDocument & {
@@ -24,7 +23,12 @@ export type Lore = LoreDocument & {
   imageUrls?: string[];
 };
 
-export interface LocationStoreProperties {
+export interface WorldStoreProperties {
+  worldId?: string;
+  worldOwnerId?: string;
+  world?: World;
+  setWorld: (worldOwnerId?: string, worldId?: string, world?: World) => void;
+
   doAnyDocsHaveImages: boolean;
 
   locations: {
@@ -98,7 +102,7 @@ export interface LocationStoreProperties {
   setOpenLoreId: (loreId?: string) => void;
 }
 
-export const initialLocationState = {
+export const initialWorldState = {
   doAnyDocsHaveImages: false,
 
   locations: {},
@@ -114,12 +118,21 @@ export const initialLocationState = {
   openLoreId: undefined,
 };
 
-export const locationStore = (
-  set: StoreApi<LocationStoreProperties>["setState"]
+export const worldStore = (
+  set: StoreApi<WorldStoreProperties>["setState"]
 ) => ({
+  setWorld: (worldOwnerId?: string, worldId?: string, world?: World) => {
+    set(
+      produce((store: WorldStoreProperties) => {
+        store.worldId = worldId;
+        store.worldOwnerId = worldOwnerId;
+        store.world = world;
+      })
+    );
+  },
   setLocationSearch: (search: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         state.locationSearch = search;
       })
     );
@@ -130,7 +143,7 @@ export const locationStore = (
     loadLocationImage: (filename: string) => void
   ) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         const { gmProperties, notes, imageUrls } =
           state.locations[locationId] ?? {};
         state.locations[locationId] = {
@@ -157,7 +170,7 @@ export const locationStore = (
     locationGMProperties: GMLocationDocument
   ) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         if (!state.locations[locationId]) return;
         state.locations[locationId].gmProperties = locationGMProperties;
       })
@@ -166,7 +179,7 @@ export const locationStore = (
 
   updateLocationNotes: (locationId: string, notes: Uint8Array | null) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         if (!state.locations[locationId]) return;
         state.locations[locationId].notes = notes;
       })
@@ -179,7 +192,7 @@ export const locationStore = (
     url: string
   ) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         if (!state.locations[locationId]) return;
 
         if (!Array.isArray(state.locations[locationId].imageUrls)) {
@@ -192,7 +205,7 @@ export const locationStore = (
 
   removeLocation: (locationId: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         delete state.locations[locationId];
       })
     );
@@ -200,7 +213,7 @@ export const locationStore = (
 
   clearLocations: () => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         state.locations = {};
       })
     );
@@ -208,7 +221,7 @@ export const locationStore = (
 
   setOpenLocationId: (locationId?: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         state.openLocationId = locationId;
       })
     );
@@ -216,7 +229,7 @@ export const locationStore = (
 
   setNPCSearch: (search: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         state.npcSearch = search;
       })
     );
@@ -227,7 +240,7 @@ export const locationStore = (
     loadNPCImage: (filename: string) => void
   ) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         const { gmProperties, notes, imageUrls } = state.npcs[npcId] ?? {};
         state.npcs[npcId] = { gmProperties, notes, imageUrls, ...npc };
 
@@ -244,7 +257,7 @@ export const locationStore = (
 
   updateNPCGMProperties: (npcId: string, npcGMProperties: GMNPCDocument) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         if (!state.npcs[npcId]) return;
 
         state.npcs[npcId].gmProperties = npcGMProperties;
@@ -254,7 +267,7 @@ export const locationStore = (
 
   updateNPCNotes: (npcId: string, notes: Uint8Array | null) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         if (!state.npcs[npcId]) return;
 
         state.npcs[npcId].notes = notes;
@@ -264,7 +277,7 @@ export const locationStore = (
 
   addNPCImageURL: (npcId: string, imageIndex: number, url: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         if (!state.npcs[npcId]) return;
 
         if (!Array.isArray(state.npcs[npcId].imageUrls)) {
@@ -277,7 +290,7 @@ export const locationStore = (
 
   removeNPC: (npcId: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         delete state.npcs[npcId];
       })
     );
@@ -285,7 +298,7 @@ export const locationStore = (
 
   clearNPCs: () => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         state.npcs = {};
       })
     );
@@ -293,7 +306,7 @@ export const locationStore = (
 
   setOpenNPCId: (npcId?: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         state.openNPCId = npcId;
       })
     );
@@ -301,7 +314,7 @@ export const locationStore = (
 
   setLoreSearch: (search: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         state.loreSearch = search;
       })
     );
@@ -312,7 +325,7 @@ export const locationStore = (
     loadLoreImage: (filename: string) => void
   ) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         const { gmProperties, notes, imageUrls } = state.lore[loreId] ?? {};
         state.lore[loreId] = { gmProperties, notes, imageUrls, ...lore };
 
@@ -332,7 +345,7 @@ export const locationStore = (
     loreGMProperties: GMLoreDocument
   ) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         if (!state.lore[loreId]) return;
 
         state.lore[loreId].gmProperties = loreGMProperties;
@@ -342,7 +355,7 @@ export const locationStore = (
 
   updateLoreNotes: (loreId: string, notes: Uint8Array | null) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         if (!state.lore[loreId]) return;
 
         state.lore[loreId].notes = notes;
@@ -352,7 +365,7 @@ export const locationStore = (
 
   addLoreImageURL: (loreId: string, imageIndex: number, url: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         if (!state.lore[loreId]) return;
 
         if (!Array.isArray(state.lore[loreId].imageUrls)) {
@@ -365,7 +378,7 @@ export const locationStore = (
 
   removeLore: (loreId: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         delete state.lore[loreId];
       })
     );
@@ -373,7 +386,7 @@ export const locationStore = (
 
   clearLore: () => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         state.lore = {};
       })
     );
@@ -381,7 +394,7 @@ export const locationStore = (
 
   setOpenLoreId: (loreId?: string) => {
     set(
-      produce((state: LocationStoreProperties) => {
+      produce((state: WorldStoreProperties) => {
         state.openLoreId = loreId;
       })
     );

@@ -1,21 +1,9 @@
-import {
-  Box,
-  Button,
-  Card,
-  IconButton,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-} from "@mui/material";
+import { Box, Button, Card, LinearProgress, List, Stack } from "@mui/material";
 import { useAddCustomOracle } from "api/user/custom-oracles/addCustomOracle";
 import { SectionHeading } from "components/SectionHeading";
 import { useState } from "react";
 import { StoredOracle } from "types/Oracles.type";
 import { CustomOracleDialog } from "./CustomOracleDialog";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useUpdateCustomOracle } from "api/user/custom-oracles/updateCustomOracle";
 import { useRemoveCustomOracle } from "api/user/custom-oracles/removeCustomOracle";
 import { useConfirm } from "material-ui-confirm";

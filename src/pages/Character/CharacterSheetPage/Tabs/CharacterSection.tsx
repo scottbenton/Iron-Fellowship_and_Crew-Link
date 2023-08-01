@@ -328,14 +328,14 @@ export function CharacterSection() {
       )}
       {!campaignId && (
         <CustomMovesSection
-          customMoves={customMoves}
+          customMoves={customMoves[uid]}
           hiddenMoveIds={hiddenMoveIds}
           showOrHideCustomMove={showOrHideCustomMove}
         />
       )}
       {!campaignId && (
         <CustomOracleSection
-          customOracles={customOracles}
+          customOracles={customOracles[uid]}
           hiddenOracleIds={hiddenOracleIds}
           showOrHideCustomOracle={showOrHideCustomOracle}
         />

@@ -1,8 +1,5 @@
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
-import {
-  LocationDocumentWithGMProperties,
-  NPC,
-} from "stores/sharedLocationStore";
+import { LocationDocumentWithGMProperties, NPC } from "stores/world.slice";
 import PhotoIcon from "@mui/icons-material/Photo";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
 

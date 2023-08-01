@@ -59,9 +59,7 @@ export function TabsSection(props: TabsSectionProps) {
     }
   }, [selectedTab, isMobile]);
 
-  const worldOwnerId = useCampaignGMScreenStore(
-    (store) => store.campaign?.gmId
-  );
+  const worldOwnerId = useCampaignGMScreenStore((store) => store.worldOwnerId);
   const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
 
   return (

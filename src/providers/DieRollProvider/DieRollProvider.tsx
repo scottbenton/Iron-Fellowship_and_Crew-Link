@@ -25,13 +25,13 @@ export function DieRollProvider(props: PropsWithChildren) {
   const { children } = props;
   const { addCharacterRoll } = useAddCharacterRoll();
 
-  const { allCustomOracleMap, customOracleCategory } = useCustomOracles();
+  const { allCustomOracleMap, customOracleCategories } = useCustomOracles();
   const combinedOracleCategories = {
     ...oracleCategoryMap,
   };
-  if (customOracleCategory) {
-    combinedOracleCategories[customOracleCategory.$id] = customOracleCategory;
-  }
+  customOracleCategories.forEach((category) => {
+    combinedOracleCategories[category.$id] = category;
+  });
 
   const [rolls, setRolls] = useState<Roll[]>([]);
   const addRoll = (roll: Roll) => {

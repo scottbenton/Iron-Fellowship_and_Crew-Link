@@ -1,11 +1,13 @@
 import { Box, Card, CardActionArea, Skeleton, Typography } from "@mui/material";
-import { useUserDoc } from "api/user/getUserDoc";
+import { useGetUserDoc, useUserDoc, useUserDocs } from "api/user/getUserDoc";
 import {
   CAMPAIGN_ROUTES,
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { StoredCampaign } from "types/Campaign.type";
+import { UserDocument } from "types/User.type";
 
 export interface CampaignCard {
   campaign: StoredCampaign;
@@ -15,7 +17,9 @@ export interface CampaignCard {
 export function CampaignCard(props: CampaignCard) {
   const { campaign, campaignId } = props;
 
-  const { user } = useUserDoc(campaign.gmId);
+  const gmIds = campaign.gmIds;
+
+  const gms = useUserDocs(gmIds ?? []);
 
   return (
     <Card elevation={2}>
@@ -27,12 +31,10 @@ export function CampaignCard(props: CampaignCard) {
         <Box>
           <Typography variant={"h6"}>{campaign.name}</Typography>
           <Typography color={"textSecondary"}>
-            {campaign.gmId && user ? (
-              `GM: ${user.displayName}`
-            ) : (
-              <Skeleton width={"12ch"} />
+            {(!campaign.gmIds || campaign.gmIds.length === 0) && "No GM Found"}
+            {campaign.gmIds && (
+              <>{gms.map((gm) => gm.displayName).join(", ")}</>
             )}
-            {!campaign.gmId && "No GM Found"}
           </Typography>
         </Box>
       </CardActionArea>

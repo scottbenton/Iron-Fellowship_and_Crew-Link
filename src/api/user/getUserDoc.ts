@@ -1,7 +1,7 @@
 import { getDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getUsersDoc } from "./_getRef";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserDocument } from "types/User.type";
 import { useMiscDataStore } from "stores/miscData.store";
 
@@ -62,4 +62,31 @@ export function useUserDoc(userId?: string) {
     user: data ?? user,
     loading,
   };
+}
+
+export function useUserDocs(userIds: string[]) {
+  const allUsers = useMiscDataStore((store) => store.userDocs);
+  const setStoreUserDoc = useMiscDataStore((store) => store.setUserDoc);
+  const { getUserDoc } = useGetUserDoc();
+
+  const [userDocs, setUserDocs] = useState<UserDocument[]>([]);
+  const loadingUserDocsRef = useRef<{ [key: string]: boolean }>({});
+
+  useEffect(() => {
+    console.debug("IN USE USER DOCS USE EFFECT");
+    const loadedUsers: UserDocument[] = [];
+    userIds.forEach((uid) => {
+      if (allUsers[uid]) {
+        loadedUsers.push(allUsers[uid]);
+      } else if (loadingUserDocsRef.current[uid] !== true) {
+        loadingUserDocsRef.current[uid] = true;
+        getUserDoc({ uid }).then((userDoc) => {
+          setStoreUserDoc(uid, userDoc);
+        });
+      }
+    });
+    setUserDocs(loadedUsers);
+  }, [userIds, allUsers]);
+
+  return userDocs;
 }

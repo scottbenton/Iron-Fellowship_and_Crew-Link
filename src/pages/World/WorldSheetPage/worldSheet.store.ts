@@ -1,16 +1,16 @@
 import {
-  LocationStoreProperties,
-  initialLocationState,
-  locationStore,
-} from "stores/sharedLocationStore";
+  WorldStoreProperties,
+  initialWorldState,
+  worldStore,
+} from "stores/world.slice";
 import { create } from "zustand";
 
 export type WorldSheetStore = {
   resetState: () => void;
-} & LocationStoreProperties;
+} & WorldStoreProperties;
 
 const initialState = {
-  ...initialLocationState,
+  ...initialWorldState,
 };
 
 export const useWorldSheetStore = create<WorldSheetStore>()(
@@ -24,6 +24,6 @@ export const useWorldSheetStore = create<WorldSheetStore>()(
       });
     },
 
-    ...locationStore(set),
+    ...worldStore(set),
   })
 );

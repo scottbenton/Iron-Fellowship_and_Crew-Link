@@ -15,8 +15,8 @@ import { useCreateLocation } from "api/worlds/locations/createLocation";
 import { OpenLocation } from "./OpenLocation";
 import {
   LocationDocumentWithGMProperties,
-  LocationStoreProperties,
-} from "stores/sharedLocationStore";
+  WorldStoreProperties,
+} from "stores/world.slice";
 import { useFilterLocations } from "./useFilterLocations";
 import { useAuth } from "providers/AuthProvider";
 import AddPhotoIcon from "@mui/icons-material/Photo";
@@ -31,7 +31,7 @@ export interface LocationsSectionProps {
   worldId?: string;
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
-  useStore: UseBoundStore<StoreApi<LocationStoreProperties>>;
+  useStore: UseBoundStore<StoreApi<WorldStoreProperties>>;
 }
 
 export function LocationsSection(props: LocationsSectionProps) {
