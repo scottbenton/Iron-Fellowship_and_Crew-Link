@@ -18,8 +18,9 @@ import {
 import { constructCharacterSheetPath } from "../routes";
 import { TextFieldWithOracle } from "components/TextFieldWithOracle/TextFieldWithOracle";
 import { useRoller } from "providers/DieRollProvider";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Head } from "providers/HeadProvider/Head";
+import { useStore } from "stores/store";
 
 export type AssetArrayType = [
   StoredAsset | undefined,
@@ -45,7 +46,10 @@ export function CharacterCreatePage() {
   const { rollOracleTable } = useRoller();
 
   const { addCharacterToCampaign } = useAddCharacterToCampaignMutation();
-  const { createCharacter, loading } = useCreateCharacter();
+
+  const [createCharacterLoading, setCreateCharacterLoading] =
+    useState<boolean>(false);
+  const createCharacter = useStore((store) => store.characters.createCharacter);
 
   const handleOracleRoll = useCallback(() => {
     const oracleIndex = Math.floor(Math.random() * nameOracles.length);
@@ -77,11 +81,12 @@ export function CharacterCreatePage() {
   };
 
   const handleSubmit = (values: CharacterCreateFormValues) => {
-    createCharacter({
-      name: values.name,
-      stats: values.stats as StatsMap,
-      assets: values.assets as [StoredAsset, StoredAsset, StoredAsset],
-    })
+    setCreateCharacterLoading(true);
+    createCharacter(
+      values.name,
+      values.stats as StatsMap,
+      values.assets as [StoredAsset, StoredAsset, StoredAsset]
+    )
       .then((characterId) => {
         if (campaignId) {
           addCharacterToCampaign({ campaignId, characterId }).finally(() => {
@@ -94,7 +99,8 @@ export function CharacterCreatePage() {
           navigate(constructCharacterSheetPath(characterId));
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setCreateCharacterLoading(false));
   };
 
   return (
@@ -142,7 +148,7 @@ export function CharacterCreatePage() {
                 <Button
                   type={"submit"}
                   variant={"contained"}
-                  disabled={loading}
+                  disabled={createCharacterLoading}
                 >
                   Create Character
                 </Button>

@@ -4,7 +4,7 @@ import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/chara
 import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "providers/AuthProvider";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useEffect, useMemo } from "react";
 import { useCampaignStore } from "stores/campaigns.store";
 import { StoredMove } from "types/Moves.type";
@@ -79,11 +79,6 @@ export function useCharacterSheetListenToCustomMoves() {
   const { error } = useSnackbar();
 
   useEffect(() => {
-    console.debug(gmIds);
-  }, [gmIds]);
-
-  useEffect(() => {
-    console.debug("LISTENING TO CUSTOM MOVES");
     let unsubscribes: Unsubscribe[] = uids.map((uid) =>
       listenToCustomMoves(
         uid,

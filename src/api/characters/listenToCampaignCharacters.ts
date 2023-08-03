@@ -1,7 +1,7 @@
 import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { getErrorMessage } from "../../functions/getErrorMessage";
-import { useSnackbar } from "../../hooks/useSnackbar";
+import { useSnackbar } from "../../providers/SnackbarProvider/useSnackbar";
 import { getCharacterDoc } from "./_getRef";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { CharacterDocument } from "../../types/Character.type";

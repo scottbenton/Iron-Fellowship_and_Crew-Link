@@ -6,6 +6,7 @@ import {
 } from "pages/Campaign/routes";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useStore } from "stores/store";
 import { StoredCampaign } from "types/Campaign.type";
 import { UserDocument } from "types/User.type";
 
@@ -19,7 +20,21 @@ export function CampaignCard(props: CampaignCard) {
 
   const gmIds = campaign.gmIds;
 
-  const gms = useUserDocs(gmIds ?? []);
+  const loadUserDocuments = useStore((store) => store.users.loadUserDocuments);
+  useEffect(() => {
+    loadUserDocuments(gmIds ?? []);
+  }, [gmIds, loadUserDocuments]);
+
+  const gmNameString = useStore((store) => {
+    let gmNames: string[] = [];
+    gmIds?.forEach((gmId) => {
+      const displayName = store.users.userMap[gmId]?.doc?.displayName;
+      if (displayName) {
+        gmNames.push(displayName);
+      }
+    });
+    return gmNames.join(", ");
+  });
 
   return (
     <Card elevation={2}>
@@ -32,9 +47,7 @@ export function CampaignCard(props: CampaignCard) {
           <Typography variant={"h6"}>{campaign.name}</Typography>
           <Typography color={"textSecondary"}>
             {(!campaign.gmIds || campaign.gmIds.length === 0) && "No GM Found"}
-            {campaign.gmIds && (
-              <>{gms.map((gm) => gm.displayName).join(", ")}</>
-            )}
+            {gmNameString}
           </Typography>
         </Box>
       </CardActionArea>

@@ -1,7 +1,7 @@
 import { Grid, Hidden, LinearProgress } from "@mui/material";
 import { MovesSection } from "components/MovesSection/MovesSection";
 import { useAuth } from "providers/AuthProvider";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCampaignStore } from "stores/campaigns.store";

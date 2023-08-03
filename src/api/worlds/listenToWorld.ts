@@ -1,9 +1,6 @@
 import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { World } from "types/World.type";
-import { getErrorMessage } from "../../functions/getErrorMessage";
-import { useAuth } from "../../providers/AuthProvider";
-import { useSnackbar } from "../../hooks/useSnackbar";
 import { useWorldsStore } from "stores/worlds.store";
 import { decodeWorld, getWorldDoc } from "./_getRef";
 import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";

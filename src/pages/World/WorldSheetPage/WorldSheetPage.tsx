@@ -10,7 +10,7 @@ import { useUpdateCampaignWorld } from "api/campaign/updateCampaignWorld";
 import { useUpdateCharacterWorld } from "api/characters/updateCharacterWorld";
 import { useDeleteWorld } from "api/worlds/deleteWorld";
 import { WorldSheet } from "components/WorldSheet";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useConfirm } from "material-ui-confirm";
 import { useAuth } from "providers/AuthProvider";
 import { useNavigate, useSearchParams } from "react-router-dom";

@@ -89,7 +89,9 @@ export function AssetsSection() {
         <AssetCardDialog
           open={typeof currentlySelectingAssetIndex === "number"}
           handleClose={() => setCurrentlySelectingAssetIndex(undefined)}
-          handleAssetSelection={(asset) => selectAsset(asset)}
+          handleAssetSelection={(asset) =>
+            selectAsset({ ...asset, order: currentlySelectingAssetIndex ?? 0 })
+          }
         />
       </Stack>
     </>

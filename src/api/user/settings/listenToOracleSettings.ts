@@ -1,7 +1,7 @@
 import { onSnapshot, setDoc, Unsubscribe } from "firebase/firestore";
 import { decodeDataswornId } from "functions/dataswornIdEncoder";
 import { useAuth } from "providers/AuthProvider";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useEffect } from "react";
 import { useSettingsStore } from "stores/settings.store";
 import { OracleSettings } from "types/UserSettings.type";
@@ -54,7 +54,6 @@ export function useListenToOracleSettings() {
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
-    console.debug("CREATING LISTENER FOR ORACLE SETTINGS");
 
     if (uid) {
       unsubscribe = listenToOracleSettings(uid, setOracleSettings, (err) => {

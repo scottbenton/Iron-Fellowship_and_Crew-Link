@@ -4,6 +4,7 @@ import { OracleCategory } from "./OracleCategory";
 import SearchIcon from "@mui/icons-material/Search";
 import { useFilterOracles } from "./useFilterOracles";
 import { useSettingsStore } from "stores/settings.store";
+import { OracleSet } from "dataforged";
 
 /**
  * 
@@ -23,7 +24,10 @@ export function OracleSection() {
 
   const settings = useSettingsStore((store) => store.oracleSettings);
 
-  const { search, filteredOracles, setSearch } = useFilterOracles();
+  // const { search, filteredOracles, setSearch } = useFilterOracles();
+  const search = "";
+  const setSearch = (search: string) => {};
+  const filteredOracles: OracleSet[] = [];
 
   return (
     <>

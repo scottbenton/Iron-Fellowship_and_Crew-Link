@@ -12,7 +12,7 @@ import {
   onlyUnauthenticatedPaths,
 } from "routes";
 import { completeMagicLinkSignupIfPresent } from "lib/auth.lib";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { sendPageViewEvent } from "lib/analytics.lib";
 
 export interface LayoutProps {}

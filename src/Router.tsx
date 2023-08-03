@@ -31,6 +31,11 @@ import { CharacterCardPage } from "pages/Character/CharacterCardPage";
 import { SignupPage } from "pages/Authentication/SignupPage";
 import { HomePage } from "pages/Home";
 import { HeadProvider } from "providers/HeadProvider";
+import { useListenToCharacters } from "stores/character/useListenToCharacters";
+import { useStore } from "stores/store";
+import { useListenToCampaigns } from "stores/campaign/useListenToCampaigns";
+import { useListenToAuth } from "stores/auth/useListenToAuth";
+import { useListenToWorlds } from "stores/world/useListenToWorlds";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -122,6 +127,12 @@ export function Router() {
   useListenToUsersCharacters();
   useListenToOracleSettings();
   useListenToUsersWorlds();
+
+  useListenToAuth();
+
+  useListenToCharacters();
+  useListenToCampaigns();
+  useListenToWorlds();
 
   return <RouterProvider router={router} />;
 }

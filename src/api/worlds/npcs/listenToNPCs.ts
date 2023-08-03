@@ -1,7 +1,7 @@
 import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { Unsubscribe } from "firebase/auth";
 import { Bytes, onSnapshot, query, where } from "firebase/firestore";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useCallback, useEffect, useState } from "react";
 import { NPCDocument } from "types/NPCs.type";
 import {

@@ -24,7 +24,7 @@ export interface AssetCardDialogProps {
   open: boolean;
   loading?: boolean;
   handleClose: () => void;
-  handleAssetSelection: (asset: StoredAsset) => void;
+  handleAssetSelection: (asset: Omit<StoredAsset, "order">) => void;
 }
 
 export function AssetCardDialog(props: AssetCardDialogProps) {
@@ -39,7 +39,7 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
       inputs[encodeDataswornId(input.$id)] = "";
     });
 
-    const storedAsset: StoredAsset = {
+    const storedAsset: Omit<StoredAsset, "order"> = {
       id: asset.$id,
       enabledAbilities: {
         0: asset.Abilities[0].Enabled,

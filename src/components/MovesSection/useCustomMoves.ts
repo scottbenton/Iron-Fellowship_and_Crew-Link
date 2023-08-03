@@ -65,10 +65,9 @@ export function useCustomMoves() {
     ...Object.keys(campaignCustomMoves),
     ...Object.keys(characterSheetCustomMoves),
   ];
-  useUserDocs(customMoveOwners);
+  // useUserDocs(customMoveOwners);
 
   useEffect(() => {
-    console.debug("IN USE CUSTOM MOVES HOOK");
     const customStoredMoves = campaignCustomMoves ?? characterSheetCustomMoves;
     const hiddenMoveIds = hiddenCampaignMoveIds ?? hiddenCharacterMoveIds;
 

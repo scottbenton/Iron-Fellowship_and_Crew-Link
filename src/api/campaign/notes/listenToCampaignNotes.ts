@@ -1,7 +1,7 @@
 import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { getErrorMessage } from "functions/getErrorMessage";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { getCampaignNoteCollection } from "./_getRef";
 import { Note } from "types/Notes.type";
 import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";

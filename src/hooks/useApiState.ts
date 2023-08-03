@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { getErrorMessage } from "../functions/getErrorMessage";
-import { useSnackbar } from "./useSnackbar";
+import { useSnackbar } from "../providers/SnackbarProvider/useSnackbar";
 
 export interface Config {
   disableErrorSnackbar?: boolean;

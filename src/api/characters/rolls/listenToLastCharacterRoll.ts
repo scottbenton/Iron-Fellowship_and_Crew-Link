@@ -8,7 +8,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "providers/AuthProvider";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import {
   convertTrackMapToArray,
   TrackWithId,

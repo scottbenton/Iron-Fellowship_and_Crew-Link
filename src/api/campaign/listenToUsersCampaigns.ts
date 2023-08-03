@@ -2,7 +2,7 @@ import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
 import { useEffect } from "react";
 import { getErrorMessage } from "../../functions/getErrorMessage";
 import { useAuth } from "providers/AuthProvider";
-import { useSnackbar } from "../../hooks/useSnackbar";
+import { useSnackbar } from "../../providers/SnackbarProvider/useSnackbar";
 import { useCampaignStore } from "../../stores/campaigns.store";
 import { StoredCampaign } from "../../types/Campaign.type";
 import { getCampaignCollection } from "./_getRef";
@@ -50,8 +50,6 @@ export function useListenToUsersCampaigns() {
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
-
-    console.debug("CREATING LISTENER FOR USERS CAMPAIGNS");
 
     listenToUsersCampaigns(
       uid,

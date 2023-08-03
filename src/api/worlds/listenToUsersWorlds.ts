@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { World } from "types/World.type";
 import { getErrorMessage } from "../../functions/getErrorMessage";
 import { useAuth } from "../../providers/AuthProvider";
-import { useSnackbar } from "../../hooks/useSnackbar";
+import { useSnackbar } from "../../providers/SnackbarProvider/useSnackbar";
 import { useWorldsStore } from "stores/worlds.store";
 import { decodeWorld, getWorldCollection } from "./_getRef";
 import { useCampaignStore } from "stores/campaigns.store";
@@ -73,8 +73,6 @@ export function useListenToUsersWorlds() {
   useEffect(() => {
     let unsubscribe: Unsubscribe;
     let unsubscribes: Unsubscribe[];
-
-    console.debug("CREATING LISTENER FOR USERS WORLDS");
 
     listenToUsersWorlds(
       uid,

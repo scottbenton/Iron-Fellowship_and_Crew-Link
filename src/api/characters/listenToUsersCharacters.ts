@@ -2,7 +2,7 @@ import { onSnapshot, query, Unsubscribe } from "firebase/firestore";
 import { useEffect } from "react";
 import { getErrorMessage } from "../../functions/getErrorMessage";
 import { useAuth } from "../../providers/AuthProvider";
-import { useSnackbar } from "../../hooks/useSnackbar";
+import { useSnackbar } from "../../providers/SnackbarProvider/useSnackbar";
 import { useCharacterStore } from "../../stores/character.store";
 import { CharacterDocument } from "../../types/Character.type";
 import { getUsersCharacterCollection } from "./_getRef";
@@ -46,7 +46,6 @@ export function useListenToUsersCharacters() {
   const uid = useAuth().user?.uid;
 
   useEffect(() => {
-    console.debug("CREATING USERS CHARACTERS LISTENER");
     let unsubscribe: Unsubscribe;
 
     listenToUsersCharacters(

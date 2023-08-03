@@ -6,13 +6,13 @@ export function useSearchNoState(search: string) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(search);
-    }, 500);
+    }, 5000);
 
     return () => {
       clearTimeout(timeout);
     };
   }, [search]);
-
+  console.debug("AHH");
   return { debouncedSearch };
 }
 

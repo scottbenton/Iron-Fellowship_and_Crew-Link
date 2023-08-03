@@ -6,6 +6,7 @@ import { UserDocument } from "types/User.type";
 import { AuthContext, AUTH_STATE } from "./AuthContext";
 import { clearAnalyticsUser, setAnalyticsUser } from "lib/analytics.lib";
 import { UserNameDialog } from "components/UserNameDialog";
+import { useStore } from "stores/store";
 
 export function AuthProvider(props: PropsWithChildren) {
   const { children } = props;

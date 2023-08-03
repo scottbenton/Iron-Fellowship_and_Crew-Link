@@ -16,7 +16,7 @@ import { loginWithGoogle, sendMagicEmailLink } from "lib/auth.lib";
 import { FirebaseError } from "firebase/app";
 import { Link } from "react-router-dom";
 import { BASE_ROUTES, basePaths } from "routes";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { getErrorMessage } from "functions/getErrorMessage";
 
 export interface LoginOrSignupPageProps {

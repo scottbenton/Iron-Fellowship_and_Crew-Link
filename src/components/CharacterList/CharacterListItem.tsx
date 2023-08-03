@@ -3,6 +3,7 @@ import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import { ReactNode } from "react";
 import { useCampaignStore } from "stores/campaigns.store";
 import { useMiscDataStore } from "stores/miscData.store";
+import { useStore } from "stores/store";
 import { CharacterDocument } from "types/Character.type";
 import { UserDocument } from "types/User.type";
 
@@ -24,8 +25,8 @@ export function CharacterListItem(props: CharacterListItemProps) {
   } = props;
   const { name, profileImage, campaignId, uid } = character;
 
-  const campaign = useCampaignStore((store) =>
-    campaignId ? store.campaigns[campaignId] : undefined
+  const campaign = useStore((store) =>
+    campaignId ? store.campaigns.campaignMap[campaignId] : undefined
   );
 
   const userDoc: UserDocument | undefined = useMiscDataStore(

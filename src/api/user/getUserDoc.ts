@@ -1,7 +1,7 @@
 import { getDoc } from "firebase/firestore";
 import { ApiFunction, useApiState } from "hooks/useApiState";
 import { getUsersDoc } from "./_getRef";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { UserDocument } from "types/User.type";
 import { useMiscDataStore } from "stores/miscData.store";
 
@@ -69,13 +69,18 @@ export function useUserDocs(userIds: string[]) {
   const setStoreUserDoc = useMiscDataStore((store) => store.setUserDoc);
   const { getUserDoc } = useGetUserDoc();
 
+  const serializedUids = JSON.stringify(userIds);
+  const memoizedUids = useMemo(
+    () => JSON.parse(serializedUids) as string[],
+    [serializedUids]
+  );
+
   const [userDocs, setUserDocs] = useState<UserDocument[]>([]);
   const loadingUserDocsRef = useRef<{ [key: string]: boolean }>({});
 
   useEffect(() => {
-    console.debug("IN USE USER DOCS USE EFFECT");
     const loadedUsers: UserDocument[] = [];
-    userIds.forEach((uid) => {
+    memoizedUids.forEach((uid) => {
       if (allUsers[uid]) {
         loadedUsers.push(allUsers[uid]);
       } else if (loadingUserDocsRef.current[uid] !== true) {
@@ -86,7 +91,7 @@ export function useUserDocs(userIds: string[]) {
       }
     });
     setUserDocs(loadedUsers);
-  }, [userIds, allUsers]);
+  }, [memoizedUids, allUsers]);
 
   return userDocs;
 }

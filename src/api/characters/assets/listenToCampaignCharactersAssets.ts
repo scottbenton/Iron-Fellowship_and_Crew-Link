@@ -1,7 +1,7 @@
 import { Unsubscribe } from "firebase/firestore";
 import { useEffect } from "react";
 import { getErrorMessage } from "../../../functions/getErrorMessage";
-import { useSnackbar } from "../../../hooks/useSnackbar";
+import { useSnackbar } from "../../../providers/SnackbarProvider/useSnackbar";
 import { useCampaignStore } from "../../../stores/campaigns.store";
 import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
 import { StoredAsset } from "types/Asset.type";

@@ -2,8 +2,9 @@ import { Translate } from "@mui/icons-material";
 import { Box, Typography, TypographyVariant, Skeleton } from "@mui/material";
 import { useListenToCharacterPortraitUrl } from "api/characters/getCharacterPortraitUrl";
 import { getHueFromString } from "functions/getHueFromString";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMiscDataStore } from "stores/miscData.store";
+import { useStore } from "stores/store";
 
 type AvatarSizes = "small" | "medium" | "large" | "huge";
 
@@ -51,10 +52,17 @@ export function PortraitAvatar(props: PortraitAvatarProps) {
     rounded,
   } = props;
 
-  useListenToCharacterPortraitUrl(uid, characterId, portraitSettings?.filename);
-  const portraitUrl: string | undefined = useMiscDataStore(
-    (store) => store.portraitUrls[characterId]
+  const loadPortrait = useStore(
+    (store) => store.characters.loadCharacterPortrait
   );
+  const portraitUrl = useStore(
+    (store) => store.characters.characterPortraitMap[uid + characterId]?.url
+  );
+
+  const filename = portraitSettings?.filename;
+  useEffect(() => {
+    loadPortrait(uid, characterId, filename);
+  }, [uid, characterId, filename, loadPortrait]);
 
   const [isTaller, setIsTaller] = useState<boolean>(true);
 

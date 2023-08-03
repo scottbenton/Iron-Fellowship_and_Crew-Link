@@ -13,7 +13,7 @@ import { useUpdateCharacterStat } from "api/characters/updateCharacterStat";
 import { useCharacterSheetUpdateDebility } from "api/characters/updateDebility";
 import { useCharacterSheetUpdateName } from "api/characters/updateName";
 import { SectionHeading } from "components/SectionHeading";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { DEBILITIES } from "types/debilities.enum";
 import { Stat } from "types/stats.enum";
 import { useCharacterSheetStore } from "../characterSheet.store";

@@ -1,7 +1,7 @@
 import { Box, LinearProgress, Tabs } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useCampaignStore } from "stores/campaigns.store";
 import { CampaignSheetHeader } from "./components/CampaignSheetHeader";
 import { CharacterSection } from "./components/CharacterSection";

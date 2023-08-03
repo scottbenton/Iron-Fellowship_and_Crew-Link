@@ -2,7 +2,7 @@ import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/chara
 import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { useAuth } from "providers/AuthProvider";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useEffect } from "react";
 import { CharacterSettingsDoc } from "types/Settings.type";
 import { getCharacterSettingsDoc } from "./_getRef";

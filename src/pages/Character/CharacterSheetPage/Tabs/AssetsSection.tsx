@@ -16,6 +16,8 @@ import { useConfirm } from "material-ui-confirm";
 
 export function AssetsSection() {
   const assetData = useCharacterSheetStore((store) => store.assets) ?? [];
+  const nextAssetIndex = (assetData[assetData.length - 1]?.order ?? 0) + 1;
+
   useListenToCharacterSheetAssets();
 
   const { addAsset, loading } = useCharacterSheetAddAsset();
@@ -119,7 +121,9 @@ export function AssetsSection() {
         open={isAssetDialogOpen}
         loading={loading}
         handleClose={() => setIsAssetDialogOpen(false)}
-        handleAssetSelection={(asset) => handleAssetAdd(asset)}
+        handleAssetSelection={(asset) =>
+          handleAssetAdd({ ...asset, order: nextAssetIndex })
+        }
       />
     </Grid>
   );

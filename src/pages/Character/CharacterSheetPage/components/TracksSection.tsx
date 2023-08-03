@@ -5,7 +5,7 @@ import {
   spiritTrack,
   supplyTrack,
 } from "data/defaultTracks";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { Track } from "components/Track";
 import { TRACK_KEYS, useCharacterSheetStore } from "../characterSheet.store";
 import ResetIcon from "@mui/icons-material/Replay";

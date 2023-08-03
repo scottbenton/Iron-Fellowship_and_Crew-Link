@@ -12,7 +12,7 @@ import {
 } from "pages/Campaign/routes";
 import { useMemo, useState } from "react";
 import { DialogTitleWithCloseButton } from "components/DialogTitleWithCloseButton";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 
 export interface CampaignSheetHeaderProps {
   campaign: StoredCampaign;

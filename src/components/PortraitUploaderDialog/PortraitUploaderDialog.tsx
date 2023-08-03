@@ -12,7 +12,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { ChangeEventHandler, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 
 export interface PortraitUploaderDialogProps {
   open: boolean;

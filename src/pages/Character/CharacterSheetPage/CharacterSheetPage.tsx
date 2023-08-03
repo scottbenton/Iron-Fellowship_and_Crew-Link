@@ -111,6 +111,7 @@ export function CharacterSheetPage() {
             pt: 2,
             [theme.breakpoints.up("md")]: {
               overflow: "hidden",
+              height: "100%",
             },
           })}
         >
