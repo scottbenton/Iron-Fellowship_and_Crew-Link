@@ -9,7 +9,7 @@ export enum WORLD_ROUTES {
 export const worldPaths: { [key in WORLD_ROUTES]: string } = {
   [WORLD_ROUTES.SELECT]: "",
   [WORLD_ROUTES.CREATE]: "create",
-  [WORLD_ROUTES.SHEET]: ":userId/:worldId",
+  [WORLD_ROUTES.SHEET]: ":worldId",
 };
 
 export function constructWorldPath(key: WORLD_ROUTES) {
@@ -21,6 +21,6 @@ export function constructWorldPath(key: WORLD_ROUTES) {
   return `${basePaths[BASE_ROUTES.WORLD]}/${worldPaths[key]}`;
 }
 
-export function constructWorldSheetPath(userId: string, worldId: string) {
-  return `${basePaths[BASE_ROUTES.WORLD]}/${userId}/${worldId}`;
+export function constructWorldSheetPath(worldId: string) {
+  return `${basePaths[BASE_ROUTES.WORLD]}/${worldId}`;
 }

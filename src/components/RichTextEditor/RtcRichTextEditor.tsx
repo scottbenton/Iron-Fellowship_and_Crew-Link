@@ -12,7 +12,7 @@ export interface RtcRichTextEditorProps {
     documentId: string,
     notes: Uint8Array,
     isBeaconRequest?: boolean
-  ) => Promise<boolean>;
+  ) => Promise<boolean | void>;
   initialValue?: Uint8Array;
 }
 

@@ -12,23 +12,6 @@ export function useFilterMoves() {
   const { customMoveCategories } = useCustomMoves();
 
   useEffect(() => {
-    console.debug("SET SEARCH CHANGED");
-  }, [setSearch]);
-  useEffect(() => {
-    console.debug("SET FILTERED MOVES CHANGED");
-  }, [setFilteredMoves]);
-
-  useEffect(() => {
-    console.debug("FILTERED MOVES CHANGED");
-  }, [filteredMoves]);
-  useEffect(() => {
-    console.debug("DEBOUNCED SEARCH CHANGED");
-  }, [debouncedSearch]);
-  useEffect(() => {
-    console.debug("CUSTOM MOVE CATEGORIES CHANGED");
-  }, [customMoveCategories]);
-
-  useEffect(() => {
     const results: MoveCategory[] = [];
 
     let allCategories = [...categories, ...customMoveCategories];
@@ -65,8 +48,6 @@ export function useFilterMoves() {
 
     setFilteredMoves(results);
   }, [debouncedSearch, customMoveCategories]);
-
-  // console.debug(customMoveCategories);
 
   return { setSearch, filteredMoves };
 }

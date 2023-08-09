@@ -7,32 +7,32 @@ import {
 } from "firebase/firestore";
 import { CharacterDocument } from "types/Character.type";
 
-export function constructUsersCharacterCollectionPath(userId: string) {
-  return `/characters/${userId}/characters`;
+export function constructCharacterCollectionPath() {
+  return `/characters`;
 }
 
-export function constructCharacterDocPath(userId: string, characterId: string) {
-  return `/characters/${userId}/characters/${characterId}`;
+export function constructCharacterDocPath(characterId: string) {
+  return `/characters/${characterId}`;
 }
 
 export function constructCharacterPortraitPath(
-  userId: string,
+  uid: string,
   characterId: string,
   filename: string
 ) {
-  return `/characters/${userId}/characters/${characterId}/${filename}`;
+  return `/characters/${uid}/characters/${characterId}/${filename}`;
 }
 
-export function getUsersCharacterCollection(userId: string) {
+export function getCharacterCollection() {
   return collection(
     firestore,
-    constructUsersCharacterCollectionPath(userId)
+    constructCharacterCollectionPath()
   ) as CollectionReference<CharacterDocument>;
 }
 
-export function getCharacterDoc(userId: string, characterId: string) {
+export function getCharacterDoc(characterId: string) {
   return doc(
     firestore,
-    constructCharacterDocPath(userId, characterId)
+    constructCharacterDocPath(characterId)
   ) as DocumentReference<CharacterDocument>;
 }

@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { useUpdateCampaignWorld } from "api/campaign/updateCampaignWorld";
 import { useUpdateCharacterWorld } from "api/characters/updateCharacterWorld";
-import { useDeleteWorld } from "api/worlds/deleteWorld";
 import { WorldSheet } from "components/WorldSheet";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useConfirm } from "material-ui-confirm";
@@ -16,10 +15,9 @@ import { useAuth } from "providers/AuthProvider";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCampaignStore } from "stores/campaigns.store";
 import { useCharacterStore } from "stores/character.store";
-import { useWorld } from "./hooks/useWorld";
+import { useSyncStore } from "./hooks/useSyncStore";
 import { useEffect, useState } from "react";
 import { LocationsSection } from "components/Locations";
-import { useWorldSheetListenToLocations } from "api/worlds/locations/listenToLocations";
 import { BreakContainer } from "components/BreakContainer";
 import { WORLD_ROUTES, constructWorldPath } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
@@ -27,10 +25,10 @@ import { StyledTab, StyledTabs } from "components/StyledTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { NPCSection } from "components/NPCSection";
 import { useWorldSheetStore } from "./worldSheet.store";
-import { useWorldSheetListenToNPCs } from "api/worlds/npcs/listenToNPCs";
-import { useWorldSheetListenToLore } from "api/worlds/lore/listenToLore";
 import { LoreSection } from "components/Lore";
 import { Head } from "providers/HeadProvider/Head";
+import { useStore } from "stores/store";
+import { useListenToLocations } from "stores/world/useListenToLocations";
 
 export enum TABS {
   DETAILS = "details",
@@ -40,6 +38,9 @@ export enum TABS {
 }
 
 export function WorldSheetPage() {
+  useSyncStore();
+  useListenToLocations();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
     (searchParams.get("tab") as TABS) ?? TABS.DETAILS
@@ -48,7 +49,16 @@ export function WorldSheetPage() {
     setSelectedTab(tab);
     setSearchParams({ tab });
   };
-  const { worldOwnerId, worldId, world, canEdit, isLoading } = useWorld();
+
+  const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
+  const world = useStore((store) => store.worlds.currentWorld.currentWorld);
+  const canEdit = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorld?.ownerIds.includes(
+        store.auth.uid
+      ) ?? false
+  );
+  const isLoading = useStore((store) => store.worlds.loading);
 
   const { error } = useSnackbar();
   const confirm = useConfirm();
@@ -61,25 +71,13 @@ export function WorldSheetPage() {
   const campaigns = useCampaignStore((store) => store.campaigns);
   const { updateCampaignWorld } = useUpdateCampaignWorld();
 
-  const { deleteWorld } = useDeleteWorld();
-
-  useWorldSheetListenToLocations(worldOwnerId, worldId);
-  useWorldSheetListenToNPCs(worldOwnerId, worldId);
-  useWorldSheetListenToLore(worldOwnerId, worldId);
-
-  const resetState = useWorldSheetStore((store) => store.resetState);
-
-  useEffect(() => {
-    return () => {
-      resetState();
-    };
-  }, []);
+  const deleteWorld = useStore((store) => store.worlds.deleteWorld);
 
   if (isLoading) {
     return <LinearProgress />;
   }
 
-  if (!world || !worldId || !worldOwnerId) {
+  if (!world || !worldId) {
     return null;
   }
 
@@ -165,12 +163,7 @@ export function WorldSheetPage() {
               flexGrow: 1,
             })}
           >
-            <LocationsSection
-              worldOwnerId={worldOwnerId}
-              worldId={worldId}
-              showHiddenTag
-              useStore={useWorldSheetStore}
-            />
+            <LocationsSection showHiddenTag />
           </BreakContainer>
         )}
         {selectedTab === TABS.NPCS && (
@@ -181,7 +174,7 @@ export function WorldSheetPage() {
             })}
           >
             <NPCSection
-              worldOwnerId={worldOwnerId}
+              worldOwnerId={""}
               worldId={worldId}
               showHiddenTag
               useStore={useWorldSheetStore}
@@ -196,7 +189,7 @@ export function WorldSheetPage() {
             })}
           >
             <LoreSection
-              worldOwnerId={worldOwnerId}
+              worldOwnerId={""}
               worldId={worldId}
               showHiddenTag
               useStore={useWorldSheetStore}

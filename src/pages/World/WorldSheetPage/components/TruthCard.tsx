@@ -3,6 +3,7 @@ import { truthMap, truthOptionMap } from "data/truths";
 import { useState } from "react";
 import { Truth, TRUTH_IDS } from "types/World.type";
 import { TruthDialogSelector } from "./TruthDialogSelector";
+import { useStore } from "stores/store";
 
 export interface TruthCardProps {
   worldId: string;
@@ -19,7 +20,12 @@ export function TruthCard(props: TruthCardProps) {
   const truth = truthMap[truthId];
   const truthOption = storedTruth.customTruth ?? truthOptionMap[storedTruth.id];
 
-  const handleUpdateWorldTruth = (truth: Truth) => {};
+  const updateWorldTruth = useStore(
+    (store) => store.worlds.currentWorld.updateCurrentWorldTruth
+  );
+  const handleUpdateWorldTruth = (truth: Truth) => {
+    updateWorldTruth(truthId, truth).catch(() => {});
+  };
 
   return (
     <>
@@ -75,7 +81,7 @@ export function TruthCard(props: TruthCardProps) {
         truthId={truthId}
         truth={truth}
         storedTruth={storedTruth}
-        selectTruthOption={() => {}}
+        selectTruthOption={(truth) => handleUpdateWorldTruth(truth)}
       />
     </>
   );

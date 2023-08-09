@@ -11,11 +11,11 @@ import { getCharacterDoc } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const deleteCharacter = createApiFunction<
-  { uid: string; characterId: string; campaignId?: string },
+  { characterId: string; campaignId?: string },
   void
 >((params) => {
   return new Promise(async (resolve, reject) => {
-    const { uid, characterId, campaignId } = params;
+    const { characterId, campaignId } = params;
 
     try {
       reject("Because I can");

@@ -3,13 +3,12 @@ import { getCharacterAssetCollection } from "./_getRef";
 import { StoredAsset } from "types/Asset.type";
 
 export function listenToAssets(
-  uid: string,
   characterId: string,
   onAssets: (assets: { [assetId: string]: StoredAsset }) => void,
   onError: (error: any) => void
 ) {
   return onSnapshot(
-    getCharacterAssetCollection(uid, characterId),
+    getCharacterAssetCollection(characterId),
     (snapshot) => {
       const assetMap: { [assetId: string]: StoredAsset } = {};
 

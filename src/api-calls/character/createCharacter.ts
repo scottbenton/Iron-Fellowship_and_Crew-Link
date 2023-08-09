@@ -1,18 +1,15 @@
-import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { addDoc, setDoc } from "firebase/firestore";
-import { encodeDataswornId } from "functions/dataswornIdEncoder";
-import { firebaseAuth } from "config/firebase.config";
+import { addDoc } from "firebase/firestore";
 import {
   healthTrack,
   momentumTrack,
   spiritTrack,
   supplyTrack,
 } from "data/defaultTracks";
-import { ApiFunction, useApiState } from "hooks/useApiState";
+import { useApiState } from "hooks/useApiState";
 import { StoredAsset } from "types/Asset.type";
 import { CharacterDocument, StatsMap } from "types/Character.type";
 import { getCharacterAssetCollection } from "./assets/_getRef";
-import { getUsersCharacterCollection } from "./_getRef";
+import { getCharacterCollection } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const createCharacter = createApiFunction<
@@ -36,11 +33,11 @@ export const createCharacter = createApiFunction<
       momentum: momentumTrack.startingValue,
     };
 
-    addDoc(getUsersCharacterCollection(uid), character)
+    addDoc(getCharacterCollection(), character)
       .then((doc) => {
         const id = doc.id;
         const assetPromises = assets.map((asset) =>
-          addDoc(getCharacterAssetCollection(uid, id), asset)
+          addDoc(getCharacterAssetCollection(id), asset)
         );
         Promise.all(assetPromises)
           .then(() => {

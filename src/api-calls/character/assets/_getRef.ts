@@ -8,33 +8,24 @@ import {
 import { StoredAsset } from "types/Asset.type";
 import { AssetDocument } from "types/Character.type";
 
-export function constructCharacterAssetCollectionPath(
-  userId: string,
-  characterId: string
-) {
-  return `/characters/${userId}/characters/${characterId}/assets`;
+export function constructCharacterAssetCollectionPath(characterId: string) {
+  return `/characters/${characterId}/assets`;
 }
 
-export function constructCharacterAssetDocPath(
-  userId: string,
-  characterId: string
-) {
-  return `/characters/${userId}/characters/${characterId}/assets/assets`;
+export function constructCharacterAssetDocPath(characterId: string) {
+  return `/characters/${characterId}/assets/assets`;
 }
 
-export function getCharacterAssetCollection(
-  userId: string,
-  characterId: string
-) {
+export function getCharacterAssetCollection(characterId: string) {
   return collection(
     firestore,
-    constructCharacterAssetCollectionPath(userId, characterId)
+    constructCharacterAssetCollectionPath(characterId)
   ) as CollectionReference<StoredAsset>;
 }
 
-export function getCharacterAssetDoc(userId: string, characterId: string) {
+export function getCharacterAssetDoc(characterId: string) {
   return doc(
     firestore,
-    constructCharacterAssetDocPath(userId, characterId)
+    constructCharacterAssetDocPath(characterId)
   ) as DocumentReference<AssetDocument>;
 }

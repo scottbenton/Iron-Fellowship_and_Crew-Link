@@ -1,38 +1,45 @@
 import {
+  Alert,
   Box,
   Button,
-  Card,
-  CardActionArea,
   Fab,
   Grid,
   Hidden,
   LinearProgress,
-  Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import AddWorldIcon from "@mui/icons-material/Add";
-import { useWorldsStore } from "stores/worlds.store";
-import { useAuth } from "providers/AuthProvider";
-import {
-  WORLD_ROUTES,
-  constructWorldPath,
-  constructWorldSheetPath,
-} from "../routes";
+import { WORLD_ROUTES, constructWorldPath } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { WorldCard } from "./components/WorldCard";
 import { Head } from "providers/HeadProvider/Head";
+import { useStore } from "stores/store";
+import { shallow } from "zustand/shallow";
 
 export function WorldSelectPage() {
-  const worlds = useWorldsStore((store) => store.worlds);
-  const worldIds = useWorldsStore((store) =>
-    Object.keys(store.worlds).sort((w1, w2) =>
-      store.worlds[w2].name.localeCompare(store.worlds[w1].name)
-    )
-  );
-  const loading = useWorldsStore((store) => store.loading);
+  const worldIds = useStore(
+    (store) =>
+      Object.keys(store.worlds.worldMap).sort((w1, w2) => {
+        const world1 = store.worlds.worldMap[w1];
+        const world2 = store.worlds.worldMap[w2];
+        const uid = store.auth.uid;
 
-  const uid = useAuth().user?.uid;
+        const isWorldOwnerOfW1 = world1.ownerIds.includes(uid);
+        const isWorldOwnerOfW2 = world2.ownerIds.includes(uid);
+
+        if (isWorldOwnerOfW1 && !isWorldOwnerOfW2) {
+          return -1;
+        } else if (!isWorldOwnerOfW1 && isWorldOwnerOfW2) {
+          return 1;
+        } else {
+          return world1.name.localeCompare(world2.name);
+        }
+      }),
+    shallow
+  );
+  const loading = useStore((store) => store.worlds.loading);
+  const error = useStore((store) => store.worlds.error);
 
   if (loading) {
     return (
@@ -46,8 +53,6 @@ export function WorldSelectPage() {
       />
     );
   }
-
-  if (!uid) return null;
 
   return (
     <>
@@ -72,6 +77,7 @@ export function WorldSelectPage() {
         }
       />
       <PageContent isPaper={!worldIds || worldIds.length === 0}>
+        {error && <Alert>Error loading your worlds.</Alert>}
         {!worldIds || worldIds.length === 0 ? (
           <EmptyState
             imageSrc="/assets/nature.svg"
@@ -94,7 +100,7 @@ export function WorldSelectPage() {
           <Grid container spacing={2}>
             {worldIds.map((worldId, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <WorldCard worldId={worldId} world={worlds[worldId]} />
+                <WorldCard worldId={worldId} />
               </Grid>
             ))}
           </Grid>

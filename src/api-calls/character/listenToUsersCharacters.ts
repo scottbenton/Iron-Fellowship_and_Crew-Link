@@ -1,11 +1,6 @@
-import { onSnapshot, query, Unsubscribe } from "firebase/firestore";
-import { useEffect } from "react";
-import { getErrorMessage } from "../../functions/getErrorMessage";
-import { useAuth } from "../../providers/AuthProvider";
-import { useSnackbar } from "../../providers/SnackbarProvider/useSnackbar";
-import { useCharacterStore } from "../../stores/character.store";
+import { onSnapshot, query, where } from "firebase/firestore";
 import { CharacterDocument } from "../../types/Character.type";
-import { getUsersCharacterCollection } from "./_getRef";
+import { getCharacterCollection } from "./_getRef";
 
 export function listenToUsersCharacters(
   uid: string,
@@ -19,7 +14,10 @@ export function listenToUsersCharacters(
   if (!uid) {
     return;
   }
-  const characterQuery = query(getUsersCharacterCollection(uid));
+  const characterQuery = query(
+    getCharacterCollection(),
+    where("uid", "==", uid)
+  );
   return onSnapshot(
     characterQuery,
     (snapshot) => {

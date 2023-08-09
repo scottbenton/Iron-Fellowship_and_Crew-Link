@@ -49,15 +49,15 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
   },
   loadCharacterPortrait: (uid, characterId, filename) => {
     const existingFilename =
-      getState().characters.characterPortraitMap[uid + characterId]?.filename;
+      getState().characters.characterPortraitMap[characterId]?.filename;
 
     if (!filename) {
       set((state) => {
-        delete state.characters.characterPortraitMap[uid + characterId];
+        delete state.characters.characterPortraitMap[characterId];
       });
     } else if (existingFilename !== filename) {
       set((state) => {
-        state.characters.characterPortraitMap[uid + characterId] = {
+        state.characters.characterPortraitMap[characterId] = {
           loading: true,
           filename: filename,
         };
@@ -65,7 +65,7 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
       getCharacterPortraitUrl({ uid, characterId, filename })
         .then((url) => {
           set((state) => {
-            state.characters.characterPortraitMap[uid + characterId] = {
+            state.characters.characterPortraitMap[characterId] = {
               loading: false,
               filename: filename,
               url,
@@ -91,7 +91,6 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
     });
   },
   deleteCharacter: (characterId) => {
-    const uid = getState().auth.uid;
     const character = getState().characters.characterMap[characterId];
     if (!character) {
       return new Promise((res, reject) =>
@@ -99,7 +98,6 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
       );
     }
     return deleteCharacter({
-      uid,
       characterId,
       campaignId: character.campaignId,
     });

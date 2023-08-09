@@ -1,6 +1,6 @@
 import { useSearchNoState } from "hooks/useSearch";
 import { useMemo } from "react";
-import { LocationDocumentWithGMProperties } from "stores/world.slice";
+import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 
 export function useFilterLocations(
   locations: {

@@ -56,7 +56,7 @@ export function PortraitAvatar(props: PortraitAvatarProps) {
     (store) => store.characters.loadCharacterPortrait
   );
   const portraitUrl = useStore(
-    (store) => store.characters.characterPortraitMap[uid + characterId]?.url
+    (store) => store.characters.characterPortraitMap[characterId]?.url
   );
 
   const filename = portraitSettings?.filename;
