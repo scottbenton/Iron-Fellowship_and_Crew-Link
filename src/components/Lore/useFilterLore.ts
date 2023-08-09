@@ -1,8 +1,11 @@
 import { useSearchNoState } from "hooks/useSearch";
 import { useMemo } from "react";
-import { Lore } from "stores/world.slice";
+import { LoreDocumentWithGMProperties } from "stores/world/currentWorld/lore/lore.slice.type";
 
-export function useFilterLore(lore: { [key: string]: Lore }, search: string) {
+export function useFilterLore(
+  lore: { [key: string]: LoreDocumentWithGMProperties },
+  search: string
+) {
   const { debouncedSearch } = useSearchNoState(search);
 
   const sortedLoreIds = useMemo(

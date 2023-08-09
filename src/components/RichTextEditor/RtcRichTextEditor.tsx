@@ -113,6 +113,12 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
     };
   }, [yDoc, hasUnsavedChanges, handleSave, id]);
 
+  useEffect(() => {
+    if (!hasUnsavedChangesRef.current && yDoc && initialValue) {
+      Y.applyUpdate(yDoc, initialValue, { peerId: "local" });
+    }
+  }, [initialValue, yDoc]);
+
   if (!yDoc || !provider) {
     return null;
   }

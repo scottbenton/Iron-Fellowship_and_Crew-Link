@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  LinearProgress,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Button, LinearProgress } from "@mui/material";
 import { useUpdateCampaignWorld } from "api/campaign/updateCampaignWorld";
 import { useUpdateCharacterWorld } from "api/characters/updateCharacterWorld";
 import { WorldSheet } from "components/WorldSheet";
@@ -16,7 +9,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCampaignStore } from "stores/campaigns.store";
 import { useCharacterStore } from "stores/character.store";
 import { useSyncStore } from "./hooks/useSyncStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LocationsSection } from "components/Locations";
 import { BreakContainer } from "components/BreakContainer";
 import { WORLD_ROUTES, constructWorldPath } from "../routes";
@@ -24,11 +17,12 @@ import { PageContent, PageHeader } from "components/Layout";
 import { StyledTab, StyledTabs } from "components/StyledTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { NPCSection } from "components/NPCSection";
-import { useWorldSheetStore } from "./worldSheet.store";
-import { LoreSection } from "components/Lore";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
-import { useListenToLocations } from "stores/world/useListenToLocations";
+import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
+import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
+import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
+import { LoreSection } from "components/Lore";
 
 export enum TABS {
   DETAILS = "details",
@@ -40,6 +34,8 @@ export enum TABS {
 export function WorldSheetPage() {
   useSyncStore();
   useListenToLocations();
+  useListenToNPCs();
+  useListenToLoreDocuments();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
@@ -173,12 +169,7 @@ export function WorldSheetPage() {
               flexGrow: 1,
             })}
           >
-            <NPCSection
-              worldOwnerId={""}
-              worldId={worldId}
-              showHiddenTag
-              useStore={useWorldSheetStore}
-            />
+            <NPCSection showHiddenTag />
           </BreakContainer>
         )}
         {selectedTab === TABS.LORE && (
@@ -188,12 +179,7 @@ export function WorldSheetPage() {
               flexGrow: 1,
             })}
           >
-            <LoreSection
-              worldOwnerId={""}
-              worldId={worldId}
-              showHiddenTag
-              useStore={useWorldSheetStore}
-            />
+            <LoreSection showHiddenTag />
           </BreakContainer>
         )}
       </PageContent>

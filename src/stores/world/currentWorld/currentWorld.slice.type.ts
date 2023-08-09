@@ -1,6 +1,8 @@
 import { LocationDocumentWithGMProperties } from "stores/world.slice";
 import { Truth, World } from "types/World.type";
 import { LocationsSlice } from "./locations/locations.slice.type";
+import { NPCsSlice } from "./npcs/npcs.slice.type";
+import { LoreSlice } from "./lore/lore.slice.type";
 
 export interface CurrentWorldSliceData {
   currentWorldId?: string;
@@ -8,6 +10,8 @@ export interface CurrentWorldSliceData {
 
   doAnyDocsHaveImages: boolean;
   currentWorldLocations: LocationsSlice;
+  currentWorldNPCs: NPCsSlice;
+  currentWorldLore: LoreSlice;
 }
 
 export interface CurrentWorldSliceActions {

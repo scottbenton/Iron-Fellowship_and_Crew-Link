@@ -13,24 +13,18 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/SectionHeading";
 import { RichTextEditorNoTitle } from "components/RichTextEditor";
-import { useAuth } from "providers/AuthProvider";
-import { DebouncedOracleInput } from "../DebouncedOracleInput";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
-import { Lore } from "stores/world.slice";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
-import { useUpdateLore } from "api/worlds/lore/updateLore";
-import { useUpdateLoreGMProperties } from "api/worlds/lore/updateLoreGMProperties";
-import { useUpdateLoreGMNotes } from "api/worlds/lore/updateLoreGMNotes";
-import { useDeleteLore } from "api/worlds/lore/deleteLore";
-import { useUpdateLoreNotes } from "api/worlds/lore/updateLoreNotes";
-import { useUploadLoreImage } from "api/worlds/lore/uploadLoreImage";
 import { LoreTagsAutocomplete } from "./LoreTagsAutocomplete";
+import { useStore } from "stores/store";
+import { LoreDocumentWithGMProperties } from "stores/world/currentWorld/lore/lore.slice.type";
+import { useListenToCurrentLoreDocument } from "stores/world/currentWorld/lore/useListenToCurrentLoreDocument";
 
 export interface OpenLoreProps {
-  worldOwnerId: string;
+  isWorldOwner: boolean;
   worldId: string;
   loreId: string;
-  lore: Lore;
+  lore: LoreDocumentWithGMProperties;
   closeLore: () => void;
   isWorldOwnerPremium?: boolean;
   isSinglePlayer?: boolean;
@@ -39,7 +33,7 @@ export interface OpenLoreProps {
 
 export function OpenLore(props: OpenLoreProps) {
   const {
-    worldOwnerId,
+    isWorldOwner,
     worldId,
     loreId,
     lore,
@@ -49,12 +43,9 @@ export function OpenLore(props: OpenLoreProps) {
     tagList,
   } = props;
 
+  useListenToCurrentLoreDocument(loreId);
+
   const confirm = useConfirm();
-
-  const { user } = useAuth();
-  const uid = user?.uid;
-
-  const isWorldOwner = worldOwnerId === uid;
 
   const [loreName, setLoreName] = useState<string>(lore.name);
 
@@ -63,12 +54,21 @@ export function OpenLore(props: OpenLoreProps) {
     setLoreName(initialLoreName);
   }, [initialLoreName]);
 
-  const { updateLore } = useUpdateLore();
-  const { updateLoreGMProperties } = useUpdateLoreGMProperties();
-  const { updateLoreGMNotes } = useUpdateLoreGMNotes();
-  const { deleteLore } = useDeleteLore();
-  const { updateLoreNotes } = useUpdateLoreNotes();
-  const { uploadLoreImage } = useUploadLoreImage();
+  const updateLore = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.updateLore
+  );
+  const updateLoreGMNotes = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.updateLoreGMNotes
+  );
+  const deleteLore = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.deleteLore
+  );
+  const updateLoreNotes = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.updateLoreNotes
+  );
+  const uploadLoreImage = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.uploadLoreImage
+  );
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const initialLoadRef = useRef<boolean>(true);
@@ -94,7 +94,7 @@ export function OpenLore(props: OpenLoreProps) {
       },
     })
       .then(() => {
-        deleteLore({ worldId, loreId })
+        deleteLore(loreId)
           .catch(() => {})
           .then(() => {
             closeLore();
@@ -112,9 +112,9 @@ export function OpenLore(props: OpenLoreProps) {
       {isWorldOwnerPremium && (
         <ImageUploader
           title={lore.name}
-          src={lore.imageUrls?.[0]}
+          src={lore.imageUrl}
           handleFileUpload={(image) =>
-            uploadLoreImage({ worldId, loreId, image }).catch(() => {})
+            uploadLoreImage(loreId, image).catch(() => {})
           }
           handleClose={closeLore}
         />
@@ -133,11 +133,9 @@ export function OpenLore(props: OpenLoreProps) {
         <TextField
           inputRef={nameInputRef}
           onBlur={(evt) =>
-            updateLore({
-              worldId,
-              loreId,
-              lore: { name: evt.currentTarget.value },
-            })
+            updateLore(loreId, { name: evt.currentTarget.value }).catch(
+              () => {}
+            )
           }
           value={loreName}
           onChange={(evt) => setLoreName(evt.currentTarget.value)}
@@ -166,7 +164,7 @@ export function OpenLore(props: OpenLoreProps) {
               tagList={tagList}
               tags={lore.tags}
               updateTags={(tags) =>
-                updateLore({ worldId, loreId, lore: { tags } })
+                updateLore(loreId, { tags }).catch(() => {})
               }
             />
           </Grid>
@@ -197,10 +195,8 @@ export function OpenLore(props: OpenLoreProps) {
                       <Checkbox
                         checked={lore.sharedWithPlayers ?? false}
                         onChange={(evt, value) =>
-                          updateLore({
-                            worldId,
-                            loreId,
-                            lore: { sharedWithPlayers: value },
+                          updateLore(loreId, {
+                            sharedWithPlayers: value,
                           }).catch(() => {})
                         }
                       />
@@ -214,12 +210,9 @@ export function OpenLore(props: OpenLoreProps) {
                   id={loreId}
                   content={lore.gmProperties?.notes ?? ""}
                   onSave={({ content, isBeaconRequest }) =>
-                    updateLoreGMNotes({
-                      worldId,
-                      loreId,
-                      notes: content,
-                      isBeacon: isBeaconRequest,
-                    })
+                    updateLoreGMNotes(loreId, content, isBeaconRequest).catch(
+                      () => {}
+                    )
                   }
                 />
               </Grid>
@@ -256,15 +249,12 @@ export function OpenLore(props: OpenLoreProps) {
                 {(lore.notes || lore.notes === null) && (
                   <RtcRichTextEditor
                     id={loreId}
-                    roomPrefix={`iron-fellowship-${worldOwnerId}-`}
+                    roomPrefix={`iron-fellowship-${worldId}-lore-`}
                     documentPassword={worldId}
                     onSave={(id, notes, isBeaconRequest) =>
-                      updateLoreNotes({
-                        worldId,
-                        loreId: id,
-                        notes,
-                        isBeacon: isBeaconRequest,
-                      })
+                      updateLoreNotes(id, notes, isBeaconRequest).catch(
+                        () => {}
+                      )
                     }
                     initialValue={lore.notes || undefined}
                   />

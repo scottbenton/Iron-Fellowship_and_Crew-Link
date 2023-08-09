@@ -9,34 +9,27 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { LocationDocumentWithGMProperties, NPC } from "stores/world.slice";
 import BackIcon from "@mui/icons-material/ChevronLeft";
 import { NPCDocument, NPC_SPECIES } from "types/NPCs.type";
 import { DebouncedOracleInput } from "components/DebouncedOracleInput";
 import { useLayoutEffect, useRef } from "react";
-import { useUpdateNPC } from "api/worlds/npcs/updateNPC";
-import { useDeleteNPC } from "api/worlds/npcs/deleteNPC";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
-import { useUploadNPCImage } from "api/worlds/npcs/uploadNPCImage";
 import { SectionHeading } from "components/SectionHeading";
-import { useAuth } from "providers/AuthProvider";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
-import { useUpdateNPCNotes } from "api/worlds/npcs/updateNPCNotes";
-import { useUpdateNPCGMProperties } from "api/worlds/npcs/updateNPCGMProperties";
-import { useUpdateNPCGMNotes } from "api/worlds/npcs/updateNPCGMNotes";
 import { RichTextEditorNoTitle } from "components/RichTextEditor";
-
-const isConstrained = false;
-const hasMaxHeight = true;
+import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
+import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
+import { useListenToCurrentNPC } from "stores/world/currentWorld/npcs/useListenToCurrentNPC";
+import { useStore } from "stores/store";
 
 export interface OpenNPCProps {
-  worldOwnerId: string;
+  isWorldOwner: boolean;
   worldId: string;
   npcId: string;
   locations: { [key: string]: LocationDocumentWithGMProperties };
-  npc: NPC;
+  npc: NPCDocumentWithGMProperties;
   closeNPC: () => void;
   isWorldOwnerPremium?: boolean;
   isSinglePlayer?: boolean;
@@ -60,7 +53,7 @@ const nameOracles: { [key in NPC_SPECIES]: string | string[] } = {
 
 export function OpenNPC(props: OpenNPCProps) {
   const {
-    worldOwnerId,
+    isWorldOwner,
     worldId,
     npcId,
     locations,
@@ -69,11 +62,9 @@ export function OpenNPC(props: OpenNPCProps) {
     isSinglePlayer,
     canUseImages,
   } = props;
-  const uid = useAuth().user?.uid;
-
-  const isWorldOwner = worldOwnerId === uid;
-
   const confirm = useConfirm();
+
+  useListenToCurrentNPC(npcId);
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const initialLoadRef = useRef<boolean>(true);
@@ -87,19 +78,28 @@ export function OpenNPC(props: OpenNPCProps) {
     }
   }, [npc]);
 
-  const { updateNPC } = useUpdateNPC();
-  const { deleteNPC } = useDeleteNPC();
-  const { uploadNPCImage } = useUploadNPCImage();
-  const { updateNPCGMProperties } = useUpdateNPCGMProperties();
-  const { updateNPCGMNotes } = useUpdateNPCGMNotes();
-  const { updateNPCNotes } = useUpdateNPCNotes();
+  const updateNPC = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.updateNPC
+  );
+  const deleteNPC = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.deleteNPC
+  );
+  const uploadNPCImage = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.uploadNPCImage
+  );
+  const updateNPCGMProperties = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.updateNPCGMProperties
+  );
+
+  const updateNPCGMNotes = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.updateNPCGMNotes
+  );
+  const updateNPCNotes = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.updateNPCNotes
+  );
 
   const handleUpdateNPC = (doc: Partial<NPCDocument>) => {
-    updateNPC({
-      worldId,
-      npcId,
-      npc: doc,
-    }).catch(() => {});
+    updateNPC(npcId, doc).catch(() => {});
   };
 
   const handleNPCDelete = () => {
@@ -114,7 +114,7 @@ export function OpenNPC(props: OpenNPCProps) {
       },
     })
       .then(() => {
-        deleteNPC({ worldId, npcId })
+        deleteNPC(npcId)
           .catch(() => {})
           .then(() => {
             closeNPC();
@@ -132,15 +132,11 @@ export function OpenNPC(props: OpenNPCProps) {
     >
       {canUseImages && (
         <ImageUploader
-          src={npc.imageUrls?.[0]}
+          src={npc.imageUrl}
           title={npc.name}
           handleClose={() => closeNPC()}
           handleFileUpload={(image) =>
-            uploadNPCImage({
-              worldId,
-              npcId,
-              image,
-            }).catch(() => {})
+            uploadNPCImage(npcId, image).catch(() => {})
           }
         />
       )}
@@ -231,11 +227,7 @@ export function OpenNPC(props: OpenNPCProps) {
                   label={"Descriptor"}
                   initialValue={npc?.gmProperties?.descriptor ?? ""}
                   updateValue={(descriptor) =>
-                    updateNPCGMProperties({
-                      worldId,
-                      npcId,
-                      npcGMProperties: { descriptor },
-                    }).catch(() => {})
+                    updateNPCGMProperties(npcId, { descriptor }).catch(() => {})
                   }
                   oracleTableId="ironsworn/oracles/character/descriptor"
                 />
@@ -245,11 +237,7 @@ export function OpenNPC(props: OpenNPCProps) {
                   label={"Role"}
                   initialValue={npc?.gmProperties?.role ?? ""}
                   updateValue={(role) =>
-                    updateNPCGMProperties({
-                      worldId,
-                      npcId,
-                      npcGMProperties: { role },
-                    }).catch(() => {})
+                    updateNPCGMProperties(npcId, { role }).catch(() => {})
                   }
                   oracleTableId="ironsworn/oracles/character/role"
                 />
@@ -259,11 +247,9 @@ export function OpenNPC(props: OpenNPCProps) {
                   label={"Disposition"}
                   initialValue={npc?.gmProperties?.disposition ?? ""}
                   updateValue={(disposition) =>
-                    updateNPCGMProperties({
-                      worldId,
-                      npcId,
-                      npcGMProperties: { disposition },
-                    }).catch(() => {})
+                    updateNPCGMProperties(npcId, { disposition }).catch(
+                      () => {}
+                    )
                   }
                   oracleTableId="ironsworn/oracles/character/disposition"
                 />
@@ -273,11 +259,7 @@ export function OpenNPC(props: OpenNPCProps) {
                   label={"Activity"}
                   initialValue={npc?.gmProperties?.activity ?? ""}
                   updateValue={(activity) =>
-                    updateNPCGMProperties({
-                      worldId,
-                      npcId,
-                      npcGMProperties: { activity },
-                    }).catch(() => {})
+                    updateNPCGMProperties(npcId, { activity }).catch(() => {})
                   }
                   oracleTableId="ironsworn/oracles/character/activity"
                 />
@@ -287,11 +269,7 @@ export function OpenNPC(props: OpenNPCProps) {
                   label={"Goal"}
                   initialValue={npc?.gmProperties?.goal ?? ""}
                   updateValue={(goal) =>
-                    updateNPCGMProperties({
-                      worldId,
-                      npcId,
-                      npcGMProperties: { goal },
-                    }).catch(() => {})
+                    updateNPCGMProperties(npcId, { goal }).catch(() => {})
                   }
                   oracleTableId="ironsworn/oracles/character/goal"
                 />
@@ -308,11 +286,9 @@ export function OpenNPC(props: OpenNPCProps) {
                       <Checkbox
                         checked={npc.sharedWithPlayers ?? false}
                         onChange={(evt, value) =>
-                          updateNPC({
-                            worldId,
-                            npcId,
-                            npc: { sharedWithPlayers: value },
-                          }).catch(() => {})
+                          updateNPC(npcId, { sharedWithPlayers: value }).catch(
+                            () => {}
+                          )
                         }
                       />
                     }
@@ -325,12 +301,7 @@ export function OpenNPC(props: OpenNPCProps) {
                   id={npcId}
                   content={npc.gmProperties?.notes ?? ""}
                   onSave={({ content, isBeaconRequest }) =>
-                    updateNPCGMNotes({
-                      worldId,
-                      npcId,
-                      notes: content,
-                      isBeacon: isBeaconRequest,
-                    })
+                    updateNPCGMNotes(npcId, content, isBeaconRequest)
                   }
                 />
               </Grid>
@@ -368,15 +339,10 @@ export function OpenNPC(props: OpenNPCProps) {
                 {(npc.notes || npc.notes === null) && (
                   <RtcRichTextEditor
                     id={npcId}
-                    roomPrefix={`iron-fellowship-${worldOwnerId}-`}
+                    roomPrefix={`iron-fellowship-${worldId}-npc-`}
                     documentPassword={worldId}
                     onSave={(documentId, notes, isBeaconRequest) =>
-                      updateNPCNotes({
-                        worldId,
-                        npcId: documentId,
-                        notes,
-                        isBeacon: isBeaconRequest,
-                      })
+                      updateNPCNotes(documentId, notes, isBeaconRequest)
                     }
                     initialValue={npc.notes || undefined}
                   />

@@ -5,26 +5,20 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
-  LinearProgress,
 } from "@mui/material";
 import BackIcon from "@mui/icons-material/ChevronLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useLayoutEffect, useRef } from "react";
-import { useUpdateLocation } from "api/worlds/locations/updateLocation";
-import { useDeleteLocation } from "api/worlds/locations/deleteLocation";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/SectionHeading";
 import { RichTextEditorNoTitle } from "components/RichTextEditor";
 import { LocationNameInput } from "./LocationNameInput";
-import { useUpdateLocationGMProperties } from "api/worlds/locations/updateLocationGMProperties";
-import { useUpdateLocationGMNotes } from "api/worlds/locations/updateLocationGMNotes";
 import { DebouncedOracleInput } from "../DebouncedOracleInput";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
-import { useUpdateLocationNotes } from "api/worlds/locations/updateLocationNotes";
 import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
-import { useUploadLocationImage } from "api/worlds/locations/uploadLocationImage";
 import { useStore } from "stores/store";
+import { useListenToCurrentLocation } from "stores/world/currentWorld/locations/useListenToCurrentLocation";
 
 export interface OpenLocationProps {
   isWorldOwner: boolean;
@@ -47,17 +41,7 @@ export function OpenLocation(props: OpenLocationProps) {
     isSinglePlayer,
   } = props;
 
-  const subscribeToCurrentLocation = useStore(
-    (store) =>
-      store.worlds.currentWorld.currentWorldLocations.subscribeToOpenLocation
-  );
-
-  useEffect(() => {
-    const unsubscribe = subscribeToCurrentLocation(locationId);
-    return () => {
-      unsubscribe();
-    };
-  }, [subscribeToCurrentLocation, locationId]);
+  useListenToCurrentLocation(locationId);
 
   const confirm = useConfirm();
 
@@ -282,7 +266,7 @@ export function OpenLocation(props: OpenLocationProps) {
                 {(location.notes || location.notes === null) && (
                   <RtcRichTextEditor
                     id={locationId}
-                    roomPrefix={`iron-fellowship-${worldId}-`}
+                    roomPrefix={`iron-fellowship-${worldId}-location-`}
                     documentPassword={worldId}
                     onSave={(id, notes, isBeaconRequest) =>
                       updateLocationNotes(id, notes, isBeaconRequest).catch(

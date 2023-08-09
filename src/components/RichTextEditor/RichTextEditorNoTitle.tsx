@@ -100,7 +100,9 @@ export function RichTextEditorNoTitle(props: RichTextEditorNoTitleProps) {
   useEffect(() => {
     if (
       editor &&
-      (!editor.getHTML() || editor.getHTML() === "<p></p>") &&
+      (!editor.getHTML() ||
+        editor.getHTML() === "<p></p>" ||
+        !hasEditedRef.current) &&
       content
     ) {
       editor.commands.setContent(content);

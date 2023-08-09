@@ -1,15 +1,15 @@
 import { CreateSliceType } from "stores/store.type";
-import {
-  CurrentWorldSlice,
-  CurrentWorldSliceData,
-} from "./currentWorld.slice.type";
+import { CurrentWorldSlice } from "./currentWorld.slice.type";
 import { defaultCurrentWorldSlice } from "./currentWorld.default.type";
 import { createLocationsSlice } from "./locations/locations.slice";
 import { defaultLocationsSlice } from "./locations/locations.slice.default";
 import { updateWorld } from "api-calls/world/updateWorld";
 import { updateWorldDescription } from "api-calls/world/updateWorldDescription";
 import { updateWorldTruth } from "api-calls/world/updateWorldTruth";
-import { LocationsSlice } from "./locations/locations.slice.type";
+import { createNPCsSlice } from "./npcs/npcs.slice";
+import { defaultNPCsSlice } from "./npcs/npcs.slice.default";
+import { createLoreSlice } from "./lore/lore.slice";
+import { defaultLoreSlice } from "./lore/lore.slice.default";
 
 export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
   ...params
@@ -18,6 +18,8 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
   return {
     ...defaultCurrentWorldSlice,
     currentWorldLocations: createLocationsSlice(...params),
+    currentWorldNPCs: createNPCsSlice(...params),
+    currentWorldLore: createLoreSlice(...params),
     setCurrentWorldId: (worldId) => {
       set((store) => {
         store.worlds.currentWorld.currentWorldId = worldId;
@@ -29,14 +31,18 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
             ...store.worlds.currentWorld,
             ...defaultCurrentWorldSlice,
           };
-          store.worlds.currentWorld.currentWorldLocations = {
-            ...store.worlds.currentWorld.currentWorldLocations,
-            ...defaultLocationsSlice,
-          };
         }
         store.worlds.currentWorld.currentWorldLocations = {
           ...store.worlds.currentWorld.currentWorldLocations,
           ...defaultLocationsSlice,
+        };
+        store.worlds.currentWorld.currentWorldNPCs = {
+          ...store.worlds.currentWorld.currentWorldNPCs,
+          ...defaultNPCsSlice,
+        };
+        store.worlds.currentWorld.currentWorldLore = {
+          ...store.worlds.currentWorld.currentWorldLore,
+          ...defaultLoreSlice,
         };
       });
     },
