@@ -4,6 +4,7 @@ import { Track } from "components/Track";
 import { supplyTrack } from "data/defaultTracks";
 import { StoredCampaign } from "types/Campaign.type";
 import { CampaignProgressTracks } from "./CampaignProgressTracks";
+import { useStore } from "stores/store";
 
 export interface TracksSectionProps {
   campaignId: string;
@@ -14,7 +15,9 @@ export interface TracksSectionProps {
 export function TracksSection(props: TracksSectionProps) {
   const { campaignId, campaign, addTopMargin } = props;
 
-  const { updateCampaignSupply } = useUpdateCampaignSupply();
+  const updateCampaignSupply = useStore(
+    (store) => store.campaigns.currentCampaign.updateCampaignSupply
+  );
 
   return (
     <>
@@ -28,9 +31,7 @@ export function TracksSection(props: TracksSectionProps) {
         min={supplyTrack.min}
         max={supplyTrack.max}
         value={campaign.supply}
-        onChange={(newValue) =>
-          updateCampaignSupply({ campaignId, supply: newValue })
-        }
+        onChange={(newValue) => updateCampaignSupply(newValue).catch(() => {})}
       />
       <CampaignProgressTracks campaignId={campaignId} />
     </>

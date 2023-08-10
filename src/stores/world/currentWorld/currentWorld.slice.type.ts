@@ -22,6 +22,8 @@ export interface CurrentWorldSliceActions {
     isBeaconRequest?: boolean
   ) => Promise<void>;
   updateCurrentWorldTruth: (truthId: string, truth: Truth) => Promise<void>;
+
+  resetStore: () => void;
 }
 
 export type CurrentWorldSlice = CurrentWorldSliceData &

@@ -188,4 +188,13 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
       gmPropertiesUnsubscribe && gmPropertiesUnsubscribe();
     };
   },
+
+  resetStore: () => {
+    set((store) => {
+      store.worlds.currentWorld.currentWorldNPCs = {
+        ...store.worlds.currentWorld.currentWorldNPCs,
+        ...defaultNPCsSlice,
+      };
+    });
+  },
 });

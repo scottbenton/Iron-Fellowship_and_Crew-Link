@@ -8,14 +8,13 @@ import { TruthCard } from "pages/World/WorldSheetPage/components/TruthCard";
 import { useStore } from "stores/store";
 
 export interface WorldSheetProps {
-  worldId: string;
   world: World;
   canEdit: boolean;
   hideCampaignHints?: boolean;
 }
 
 export function WorldSheet(props: WorldSheetProps) {
-  const { worldId, world, canEdit, hideCampaignHints } = props;
+  const { world, canEdit, hideCampaignHints } = props;
 
   const updateWorldDescription = useStore(
     (store) => store.worlds.currentWorld.updateCurrentWorldDescription
@@ -72,7 +71,6 @@ export function WorldSheet(props: WorldSheetProps) {
         {truthIds.map((truthId) => (
           <Grid item xs={12} md={6} lg={4} key={truthId}>
             <TruthCard
-              worldId={worldId}
               truthId={truthId as TRUTH_IDS}
               storedTruth={world.truths[truthId as TRUTH_IDS]}
               canEdit={canEdit}

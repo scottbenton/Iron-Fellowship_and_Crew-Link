@@ -1,18 +1,13 @@
 import { LinearProgress } from "@mui/material";
-import { useListenToWorld } from "api/worlds/listenToWorld";
 import { WorldSheet } from "components/WorldSheet";
+import { useStore } from "stores/store";
 
-export interface WorldSectionProps {
-  worldId: string;
-}
+export function WorldSection() {
+  const world = useStore((store) => store.worlds.currentWorld.currentWorld);
 
-export function WorldSection(props: WorldSectionProps) {
-  const { worldId } = props;
-
-  const { world } = useListenToWorld(worldId);
   if (!world) {
     return <LinearProgress />;
   }
 
-  return <WorldSheet worldId={worldId} world={world} canEdit={false} />;
+  return <WorldSheet world={world} canEdit={false} />;
 }

@@ -46,6 +46,7 @@ export interface LocationsSliceActions {
   ) => Promise<void>;
   uploadLocationImage: (locationId: string, image: File) => Promise<void>;
   subscribeToOpenLocation: (locationId: string) => Unsubscribe;
+  resetStore: () => void;
 }
 
 export type LocationsSlice = LocationsSliceData & LocationsSliceActions;

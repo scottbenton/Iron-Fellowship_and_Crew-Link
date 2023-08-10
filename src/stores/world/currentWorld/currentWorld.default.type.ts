@@ -5,4 +5,6 @@ export const defaultCurrentWorldSlice: Omit<
   "currentWorldLocations" | "currentWorldNPCs" | "currentWorldLore"
 > = {
   doAnyDocsHaveImages: false,
+  currentWorld: undefined,
+  currentWorldId: undefined,
 };

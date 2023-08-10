@@ -1,6 +1,4 @@
 import { Button } from "@mui/material";
-import { removeCharacterFromCampaign } from "api/campaign/removeCharacterFromCampaign";
-import { useListenToCampaignCharacters } from "api/characters/listenToCampaignCharacters";
 import { CharacterList } from "components/CharacterList";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import { SectionHeading } from "components/SectionHeading";
@@ -10,6 +8,7 @@ import { Link } from "react-router-dom";
 import { StoredCampaign } from "types/Campaign.type";
 import { AddCharacterDialog } from "./AddCharacterDialog";
 import { constructCharacterSheetPath } from "pages/Character/routes";
+import { useStore } from "stores/store";
 
 export interface CharacterSectionProps {
   campaign: StoredCampaign;
@@ -24,7 +23,12 @@ export function CharacterSection(props: CharacterSectionProps) {
   const [addCharacterDialogOpen, setAddCharacterDialogOpen] =
     useState<boolean>(false);
 
-  const campaignCharacters = useListenToCampaignCharacters(campaignId);
+  const characters = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaignCharacters
+  );
+  const removeCharacterFromCampaign = useStore(
+    (store) => store.campaigns.currentCampaign.removeCharacter
+  );
 
   const getUidFromCharacterId = (characterId: string) => {
     return Object.values(campaign.characters).find(
@@ -67,7 +71,7 @@ export function CharacterSection(props: CharacterSectionProps) {
       )}
       <CharacterList
         usePlayerNameAsSecondaryText
-        characters={campaignCharacters}
+        characters={characters}
         actions={(characterId) =>
           getUidFromCharacterId(characterId) === uid ? (
             <>
@@ -79,9 +83,7 @@ export function CharacterSection(props: CharacterSectionProps) {
               </Button>
               <Button
                 color={"error"}
-                onClick={() =>
-                  removeCharacterFromCampaign({ campaignId, characterId })
-                }
+                onClick={() => removeCharacterFromCampaign(characterId)}
               >
                 Remove from Campaign
               </Button>

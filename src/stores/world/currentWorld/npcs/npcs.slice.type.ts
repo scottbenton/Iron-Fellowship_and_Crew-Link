@@ -46,6 +46,8 @@ export interface NPCsSliceActions {
   ) => Promise<void>;
   uploadNPCImage: (npcId: string, image: File) => Promise<void>;
   subscribeToOpenNPC: (npcId: string) => Unsubscribe;
+
+  resetStore: () => void;
 }
 
 export type NPCsSlice = NPCsSliceData & NPCsSliceActions;

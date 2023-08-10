@@ -4,4 +4,6 @@ export const defaultNPCsSlice: NPCsSliceData = {
   npcMap: {},
   loading: false,
   npcSearch: "",
+  error: undefined,
+  openNPCId: undefined,
 };

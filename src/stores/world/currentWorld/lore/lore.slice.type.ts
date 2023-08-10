@@ -46,6 +46,8 @@ export interface LoreSliceActions {
   ) => Promise<void>;
   uploadLoreImage: (loreId: string, image: File) => Promise<void>;
   subscribeToOpenLore: (loreId: string) => Unsubscribe;
+
+  resetStore: () => void;
 }
 
 export type LoreSlice = LoreSliceData & LoreSliceActions;

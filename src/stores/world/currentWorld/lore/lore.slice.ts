@@ -188,4 +188,12 @@ export const createLoreSlice: CreateSliceType<LoreSlice> = (set, getState) => ({
       gmPropertiesUnsubscribe && gmPropertiesUnsubscribe();
     };
   },
+  resetStore: () => {
+    set((store) => {
+      store.worlds.currentWorld.currentWorldLore = {
+        ...store.worlds.currentWorld.currentWorldLore,
+        ...defaultLoreSlice,
+      };
+    });
+  },
 });

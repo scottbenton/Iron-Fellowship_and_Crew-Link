@@ -1,11 +1,8 @@
 import { Box, Card, Typography } from "@mui/material";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import { ReactNode } from "react";
-import { useCampaignStore } from "stores/campaigns.store";
-import { useMiscDataStore } from "stores/miscData.store";
 import { useStore } from "stores/store";
 import { CharacterDocument } from "types/Character.type";
-import { UserDocument } from "types/User.type";
 
 export interface CharacterListItemProps {
   characterId: string;
@@ -29,9 +26,7 @@ export function CharacterListItem(props: CharacterListItemProps) {
     campaignId ? store.campaigns.campaignMap[campaignId] : undefined
   );
 
-  const userDoc: UserDocument | undefined = useMiscDataStore(
-    (store) => store.userDocs[uid]
-  );
+  const userDoc = useStore((store) => store.users.userMap[uid]?.doc);
 
   return (
     <Card

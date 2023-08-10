@@ -11,10 +11,16 @@ export interface ProgressTrackListProps {
   trackType: TRACK_TYPES;
   tracks?: TrackWithId[];
   typeLabel: string;
-  handleAdd?: (newTrack: StoredTrack) => Promise<boolean>;
-  handleUpdateValue: (trackId: string, value: number) => Promise<boolean>;
-  handleDeleteTrack?: (trackId: string) => Promise<boolean>;
-  handleUpdateTrack?: (trackId: string, track: StoredTrack) => Promise<boolean>;
+  handleAdd?: (newTrack: StoredTrack) => Promise<boolean | void>;
+  handleUpdateValue: (
+    trackId: string,
+    value: number
+  ) => Promise<boolean | void>;
+  handleDeleteTrack?: (trackId: string) => Promise<boolean | void>;
+  handleUpdateTrack?: (
+    trackId: string,
+    track: StoredTrack
+  ) => Promise<boolean | void>;
   headingBreakContainer?: boolean;
 }
 

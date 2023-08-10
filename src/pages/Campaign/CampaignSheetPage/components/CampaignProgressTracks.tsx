@@ -4,6 +4,7 @@ import { useRemoveCampaignProgressTrack } from "api/campaign/tracks/removeCampai
 import { useUpdateCampaignProgressTrack } from "api/campaign/tracks/updateCampaignProgressTrack";
 import { useUpdateCampaignProgressTrackValue } from "api/campaign/tracks/updateCampaignProgressTrackValue";
 import { ProgressTrackList } from "components/ProgressTrack";
+import { useStore } from "stores/store";
 import { TRACK_TYPES } from "types/Track.type";
 
 export interface CampaignProgressTracksProps {
@@ -14,14 +15,29 @@ export interface CampaignProgressTracksProps {
 export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
   const { campaignId, addPadding } = props;
 
-  const { vows, journeys, frays } =
-    useListenToCampaignProgressTracks(campaignId);
+  const vows = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.trackMap[TRACK_TYPES.VOW]
+  );
+  const journeys = useStore(
+    (store) =>
+      store.campaigns.currentCampaign.tracks.trackMap[TRACK_TYPES.JOURNEY]
+  );
+  const frays = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.trackMap[TRACK_TYPES.FRAY]
+  );
 
-  const { addCampaignProgressTrack } = useAddCampaignProgressTrack();
-  const { updateCampaignProgressTrackValue } =
-    useUpdateCampaignProgressTrackValue();
-  const { updateCampaignProgressTrack } = useUpdateCampaignProgressTrack();
-  const { removeCampaignProgressTrack } = useRemoveCampaignProgressTrack();
+  const addCampaignProgressTrack = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.addTrack
+  );
+  const updateCampaignProgressTrackValue = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.updateTrackValue
+  );
+  const updateCampaignProgressTrack = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.updateTrack
+  );
+  const removeCampaignProgressTrack = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.removeTrack
+  );
 
   return (
     <>
@@ -30,34 +46,16 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
         trackType={TRACK_TYPES.FRAY}
         typeLabel={"Shared Combat Track"}
         handleAdd={(newTrack) =>
-          addCampaignProgressTrack({
-            campaignId,
-            type: TRACK_TYPES.FRAY,
-            track: newTrack,
-          })
+          addCampaignProgressTrack(TRACK_TYPES.FRAY, newTrack)
         }
         handleUpdateValue={(trackId, value) =>
-          updateCampaignProgressTrackValue({
-            campaignId,
-            type: TRACK_TYPES.FRAY,
-            trackId,
-            value,
-          })
+          updateCampaignProgressTrackValue(TRACK_TYPES.FRAY, trackId, value)
         }
         handleUpdateTrack={(trackId, track) =>
-          updateCampaignProgressTrack({
-            campaignId,
-            type: TRACK_TYPES.FRAY,
-            trackId,
-            track,
-          })
+          updateCampaignProgressTrack(TRACK_TYPES.FRAY, trackId, track)
         }
         handleDeleteTrack={(trackId) =>
-          removeCampaignProgressTrack({
-            campaignId,
-            type: TRACK_TYPES.FRAY,
-            id: trackId,
-          })
+          removeCampaignProgressTrack(TRACK_TYPES.FRAY, trackId)
         }
         headingBreakContainer={!addPadding}
       />
@@ -66,34 +64,16 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
         trackType={TRACK_TYPES.VOW}
         typeLabel={"Shared Vow"}
         handleAdd={(newTrack) =>
-          addCampaignProgressTrack({
-            campaignId,
-            type: TRACK_TYPES.VOW,
-            track: newTrack,
-          })
+          addCampaignProgressTrack(TRACK_TYPES.VOW, newTrack)
         }
         handleUpdateValue={(trackId, value) =>
-          updateCampaignProgressTrackValue({
-            campaignId,
-            type: TRACK_TYPES.VOW,
-            trackId,
-            value,
-          })
+          updateCampaignProgressTrackValue(TRACK_TYPES.VOW, trackId, value)
         }
         handleUpdateTrack={(trackId, track) =>
-          updateCampaignProgressTrack({
-            campaignId,
-            type: TRACK_TYPES.VOW,
-            trackId,
-            track,
-          })
+          updateCampaignProgressTrack(TRACK_TYPES.VOW, trackId, track)
         }
         handleDeleteTrack={(trackId) =>
-          removeCampaignProgressTrack({
-            campaignId,
-            type: TRACK_TYPES.VOW,
-            id: trackId,
-          })
+          removeCampaignProgressTrack(TRACK_TYPES.VOW, trackId)
         }
         headingBreakContainer={!addPadding}
       />
@@ -102,34 +82,16 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
         trackType={TRACK_TYPES.JOURNEY}
         typeLabel={"Shared Journey"}
         handleAdd={(newTrack) =>
-          addCampaignProgressTrack({
-            campaignId,
-            type: TRACK_TYPES.JOURNEY,
-            track: newTrack,
-          })
+          addCampaignProgressTrack(TRACK_TYPES.JOURNEY, newTrack)
         }
         handleUpdateValue={(trackId, value) =>
-          updateCampaignProgressTrackValue({
-            campaignId,
-            type: TRACK_TYPES.JOURNEY,
-            trackId,
-            value,
-          })
+          updateCampaignProgressTrackValue(TRACK_TYPES.JOURNEY, trackId, value)
         }
         handleUpdateTrack={(trackId, track) =>
-          updateCampaignProgressTrack({
-            campaignId,
-            type: TRACK_TYPES.JOURNEY,
-            trackId,
-            track,
-          })
+          updateCampaignProgressTrack(TRACK_TYPES.JOURNEY, trackId, track)
         }
         handleDeleteTrack={(trackId) =>
-          removeCampaignProgressTrack({
-            campaignId,
-            type: TRACK_TYPES.JOURNEY,
-            id: trackId,
-          })
+          removeCampaignProgressTrack(TRACK_TYPES.JOURNEY, trackId)
         }
         headingBreakContainer={!addPadding}
       />

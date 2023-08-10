@@ -207,4 +207,12 @@ export const createLocationsSlice: CreateSliceType<LocationsSlice> = (
       gmPropertiesUnsubscribe && gmPropertiesUnsubscribe();
     };
   },
+  resetStore: () => {
+    set((store) => {
+      store.worlds.currentWorld.currentWorldLocations = {
+        ...store.worlds.currentWorld.currentWorldLocations,
+        ...defaultLocationsSlice,
+      };
+    });
+  },
 });

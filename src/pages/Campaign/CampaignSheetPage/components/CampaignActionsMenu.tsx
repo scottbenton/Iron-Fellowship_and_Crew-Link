@@ -1,14 +1,11 @@
-import { Button, IconButton, Menu, MenuItem } from "@mui/material";
-import { useAuth } from "providers/AuthProvider";
+import { Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { StoredCampaign } from "types/Campaign.type";
 import MoreIcon from "@mui/icons-material/MoreHoriz";
-import { useUpdateCampaignGM } from "api/campaign/updateCampaignGM";
-import { useDeleteCampaign } from "api/campaign/deleteCampaign";
 import { useConfirm } from "material-ui-confirm";
-import { useLeaveCampaign } from "api/campaign/leaveCampaign";
 import { useNavigate } from "react-router-dom";
 import { CAMPAIGN_ROUTES, constructCampaignPath } from "pages/Campaign/routes";
+import { useStore } from "stores/store";
 
 export interface CampaignActionsMenuProps {
   campaignId: string;
@@ -18,7 +15,9 @@ export interface CampaignActionsMenuProps {
 export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
   const { campaignId, campaign } = props;
   const { gmIds } = campaign;
-  const uid = useAuth().user?.uid;
+
+  const uid = useStore((store) => store.auth.uid);
+
   const confirm = useConfirm();
   const navigate = useNavigate();
 
@@ -28,20 +27,21 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
     setMenuParent(undefined);
   };
 
-  const { updateCampaignGM } = useUpdateCampaignGM();
+  const updateCampaignGM = useStore(
+    (store) => store.campaigns.currentCampaign.updateCampaignGM
+  );
+
   const removeCurrentGM = () => {
-    updateCampaignGM({
-      campaignId: campaignId,
-      gmId: uid ?? "",
-      shouldRemove: true,
-    })
+    updateCampaignGM(uid, true)
       .then(() => {
         handleMenuClose();
       })
       .catch(() => {});
   };
 
-  const { deleteCampaign } = useDeleteCampaign();
+  const deleteCampaign = useStore(
+    (store) => store.campaigns.currentCampaign.deleteCampaign
+  );
   const handleDeleteCampaign = () => {
     confirm({
       title: "End Campaign",
@@ -53,7 +53,7 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
         color: "error",
       },
     }).then(() => {
-      deleteCampaign({ campaignId, characters: campaign.characters })
+      deleteCampaign()
         .then(() => {
           handleMenuClose();
         })
@@ -61,7 +61,9 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
     });
   };
 
-  const { leaveCampaign } = useLeaveCampaign();
+  const leaveCampaign = useStore(
+    (store) => store.campaigns.currentCampaign.leaveCampaign
+  );
   const handleLeaveCampaign = () => {
     confirm({
       title: "Leave Campaign",
@@ -73,7 +75,7 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
       },
     })
       .then(() => {
-        leaveCampaign({ campaign, campaignId, uid })
+        leaveCampaign()
           .then(() => {
             handleMenuClose();
             navigate(constructCampaignPath(CAMPAIGN_ROUTES.SELECT));
@@ -98,9 +100,11 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
         {isGm && (
           <MenuItem onClick={() => removeCurrentGM()}>Step Down as GM</MenuItem>
         )}
-        <MenuItem onClick={() => handleLeaveCampaign()}>
-          Leave Campaign
-        </MenuItem>
+        {campaign.users.length > 1 && (
+          <MenuItem onClick={() => handleLeaveCampaign()}>
+            Leave Campaign
+          </MenuItem>
+        )}
         {isGm && (
           <MenuItem onClick={() => handleDeleteCampaign()}>
             End Campaign

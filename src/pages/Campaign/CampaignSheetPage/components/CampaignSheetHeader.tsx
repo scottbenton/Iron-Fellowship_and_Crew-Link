@@ -1,7 +1,4 @@
 import { Button, Dialog, DialogContent, Typography } from "@mui/material";
-import { useUpdateCampaignGM } from "api/campaign/updateCampaignGM";
-import { useUserDoc, useUserDocs } from "api/user/getUserDoc";
-import { useAuth } from "providers/AuthProvider";
 import { Link } from "react-router-dom";
 import { StoredCampaign } from "types/Campaign.type";
 import { CampaignActionsMenu } from "./CampaignActionsMenu";
@@ -13,6 +10,7 @@ import {
 import { useMemo, useState } from "react";
 import { DialogTitleWithCloseButton } from "components/DialogTitleWithCloseButton";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
+import { useStore } from "stores/store";
 
 export interface CampaignSheetHeaderProps {
   campaign: StoredCampaign;
@@ -22,10 +20,19 @@ export interface CampaignSheetHeaderProps {
 export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
   const { campaign, campaignId } = props;
 
-  const uid = useAuth().user?.uid;
+  const uid = useStore((store) => store.auth.uid);
 
-  const { updateCampaignGM } = useUpdateCampaignGM();
-  const gms = useUserDocs(campaign.gmIds ?? []);
+  const updateCampaignGM = useStore(
+    (store) => store.campaigns.currentCampaign.updateCampaignGM
+  );
+
+  const gmLabel = useStore((store) =>
+    (
+      store.campaigns.currentCampaign.currentCampaign?.gmIds?.map(
+        (gmId) => store.users.userMap[gmId]?.doc?.displayName ?? "Loading"
+      ) ?? []
+    ).join(", ")
+  );
 
   const [inviteUsersDialogOpen, setInviteUsersDialogOpen] =
     useState<boolean>(false);
@@ -54,9 +61,7 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
     <>
       <PageHeader
         label={campaign.name}
-        subLabel={
-          gms ? `GM: ${gms.map((gm) => gm.displayName).join(", ")}` : ""
-        }
+        subLabel={(campaign.gmIds?.length ?? 0) > 0 ? `GM: ${gmLabel}` : ""}
         actions={
           <>
             <Button
@@ -69,7 +74,7 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
             {(!campaign.gmIds || campaign.gmIds.length === 0) && (
               <Button
                 onClick={() =>
-                  updateCampaignGM({ campaignId, gmId: uid ?? "" })
+                  updateCampaignGM(uid).catch((e) => console.error(e))
                 }
                 variant={"outlined"}
                 color={"inherit"}
@@ -77,19 +82,22 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
                 Mark self as GM
               </Button>
             )}
-            {campaign.gmIds && uid && campaign.gmIds.includes(uid) && (
-              <Button
-                component={Link}
-                to={constructCampaignSheetPath(
-                  campaignId,
-                  CAMPAIGN_ROUTES.GM_SCREEN
-                )}
-                variant={"outlined"}
-                color={"inherit"}
-              >
-                Open GM Screen
-              </Button>
-            )}
+            {campaign.gmIds &&
+              campaign.gmIds?.length === 0 &&
+              uid &&
+              campaign.gmIds.includes(uid) && (
+                <Button
+                  component={Link}
+                  to={constructCampaignSheetPath(
+                    campaignId,
+                    CAMPAIGN_ROUTES.GM_SCREEN
+                  )}
+                  variant={"outlined"}
+                  color={"inherit"}
+                >
+                  Open GM Screen
+                </Button>
+              )}
             <CampaignActionsMenu campaign={campaign} campaignId={campaignId} />
           </>
         }

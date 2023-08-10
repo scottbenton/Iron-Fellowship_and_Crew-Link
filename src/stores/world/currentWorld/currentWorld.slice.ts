@@ -2,14 +2,11 @@ import { CreateSliceType } from "stores/store.type";
 import { CurrentWorldSlice } from "./currentWorld.slice.type";
 import { defaultCurrentWorldSlice } from "./currentWorld.default.type";
 import { createLocationsSlice } from "./locations/locations.slice";
-import { defaultLocationsSlice } from "./locations/locations.slice.default";
 import { updateWorld } from "api-calls/world/updateWorld";
 import { updateWorldDescription } from "api-calls/world/updateWorldDescription";
 import { updateWorldTruth } from "api-calls/world/updateWorldTruth";
 import { createNPCsSlice } from "./npcs/npcs.slice";
-import { defaultNPCsSlice } from "./npcs/npcs.slice.default";
 import { createLoreSlice } from "./lore/lore.slice";
-import { defaultLoreSlice } from "./lore/lore.slice.default";
 
 export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
   ...params
@@ -21,30 +18,17 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
     currentWorldNPCs: createNPCsSlice(...params),
     currentWorldLore: createLoreSlice(...params),
     setCurrentWorldId: (worldId) => {
-      set((store) => {
-        store.worlds.currentWorld.currentWorldId = worldId;
-        if (worldId) {
+      const store = getState();
+      const previousWorldId = store.worlds.currentWorld.currentWorldId;
+      if (worldId && worldId !== previousWorldId) {
+        set((store) => {
           store.worlds.currentWorld.currentWorld =
-            store.worlds.worldMap[worldId];
-        } else {
-          store.worlds.currentWorld = {
-            ...store.worlds.currentWorld,
-            ...defaultCurrentWorldSlice,
-          };
-        }
-        store.worlds.currentWorld.currentWorldLocations = {
-          ...store.worlds.currentWorld.currentWorldLocations,
-          ...defaultLocationsSlice,
-        };
-        store.worlds.currentWorld.currentWorldNPCs = {
-          ...store.worlds.currentWorld.currentWorldNPCs,
-          ...defaultNPCsSlice,
-        };
-        store.worlds.currentWorld.currentWorldLore = {
-          ...store.worlds.currentWorld.currentWorldLore,
-          ...defaultLoreSlice,
-        };
-      });
+            store.worlds.worldMap[worldId] ?? undefined;
+          store.worlds.currentWorld.currentWorldId = worldId;
+        });
+      } else if (previousWorldId !== worldId) {
+        store.worlds.currentWorld.resetStore();
+      }
     },
     updateCurrentWorld: (partialWorld) => {
       const worldId = getState().worlds.currentWorld.currentWorldId;
@@ -78,6 +62,18 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
       } else {
         return new Promise((res, reject) => reject("No world id defined."));
       }
+    },
+
+    resetStore: () => {
+      set((store) => {
+        store.worlds.currentWorld.currentWorldLocations.resetStore();
+        store.worlds.currentWorld.currentWorldNPCs.resetStore();
+        store.worlds.currentWorld.currentWorldLore.resetStore();
+        store.worlds.currentWorld = {
+          ...store.worlds.currentWorld,
+          ...defaultCurrentWorldSlice,
+        };
+      });
     },
   };
 };
