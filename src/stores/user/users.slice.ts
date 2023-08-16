@@ -1,7 +1,6 @@
 import { CreateSliceType } from "stores/store.type";
 import { UserSlice } from "./users.slice.type";
 import { defaultUserSlice } from "./users.slice.default";
-import { updateUserDoc } from "api-calls/user/updateUserDoc";
 import { getUserDoc } from "api-calls/user/getUserDoc";
 
 export const createUsersSlice: CreateSliceType<UserSlice> = (

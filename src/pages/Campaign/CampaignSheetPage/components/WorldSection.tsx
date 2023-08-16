@@ -9,5 +9,5 @@ export function WorldSection() {
     return <LinearProgress />;
   }
 
-  return <WorldSheet world={world} canEdit={false} />;
+  return <WorldSheet canEdit={false} />;
 }

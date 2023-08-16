@@ -1,22 +1,22 @@
 import { Box, Typography } from "@mui/material";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
-import { useCharacterSheetStore } from "../characterSheet.store";
 import { InitiativeButtons } from "./InitiativeButtons";
 import { StatsSection } from "./StatsSection";
+import { useStore } from "stores/store";
 
 export interface CharacterHeaderProps {}
 
 export function CharacterHeader(props: CharacterHeaderProps) {
-  const uid = useCharacterSheetStore((store) => store.character?.uid ?? "");
+  const characterName = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.name ?? ""
+  );
+  const uid = useStore((store) => store.auth.uid);
+  const characterId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacterId ?? ""
+  );
 
-  const characterId = useCharacterSheetStore(
-    (store) => store.characterId ?? ""
-  );
-  const characterName = useCharacterSheetStore(
-    (store) => store.character?.name
-  );
-  const characterPortraitSettings = useCharacterSheetStore(
-    (store) => store.character?.profileImage
+  const characterPortraitSettings = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.profileImage
   );
 
   return (

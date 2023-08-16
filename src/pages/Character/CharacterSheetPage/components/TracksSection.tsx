@@ -5,43 +5,62 @@ import {
   spiritTrack,
   supplyTrack,
 } from "data/defaultTracks";
-import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { Track } from "components/Track";
-import { TRACK_KEYS, useCharacterSheetStore } from "../characterSheet.store";
 import ResetIcon from "@mui/icons-material/Replay";
-import { useUpdateCharacterSheetTrack } from "api/shared/updateCharacterSheetTrack";
+import { useStore } from "stores/store";
+
+export type TRACK_KEYS = "health" | "spirit" | "supply" | "momentum";
 
 export function TracksSection() {
-  const { error } = useSnackbar();
-
-  const { updateTrack } = useUpdateCharacterSheetTrack();
-
-  const momentum = useCharacterSheetStore(
-    (store) => store.character?.momentum
-  ) as number;
-  const maxMomentum = useCharacterSheetStore((store) => store.maxMomentum);
-  const momentumResetValue = useCharacterSheetStore(
-    (store) => store.momentumResetValue
+  const numberOfActiveDebilities = useStore((store) => {
+    return Object.values(
+      store.characters.currentCharacter.currentCharacter?.debilities ?? {}
+    ).filter((debility) => debility).length;
+  });
+  const isInCampaign = useStore(
+    (store) => !!store.characters.currentCharacter.currentCharacter?.campaignId
   );
-  const health = useCharacterSheetStore(
-    (store) => store.character?.health
-  ) as number;
-  const spirit = useCharacterSheetStore(
-    (store) => store.character?.spirit
-  ) as number;
-  const supply = useCharacterSheetStore((store) => store.supply) as number;
+  const updateCampaignSupply = useStore(
+    (store) => store.campaigns.currentCampaign.updateCampaignSupply
+  );
+  const updateCharacter = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacter
+  );
 
-  const updateTrackValue = (track: TRACK_KEYS, newValue: number) =>
-    new Promise<boolean>((resolve, reject) => {
-      updateTrack({ trackKey: track, value: newValue })
-        .then(() => {
-          resolve(true);
-        })
-        .catch((e) => {
-          error("Error: Failed to update your " + track);
-          reject(e);
-        });
-    });
+  const momentum = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.momentum ?? 0
+  );
+
+  const maxMomentum = momentumTrack.max - numberOfActiveDebilities;
+
+  let momentumResetValue = momentumTrack.startingValue;
+
+  if (numberOfActiveDebilities >= 2) {
+    momentumResetValue = 0;
+  } else if (numberOfActiveDebilities === 1) {
+    momentumResetValue = 1;
+  }
+
+  const health = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.health ?? 0
+  );
+  const spirit = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.spirit ?? 0
+  );
+  const supply = useStore(
+    (store) =>
+      (store.characters.currentCharacter.currentCharacter?.campaignId
+        ? store.campaigns.currentCampaign.currentCampaign?.supply
+        : store.characters.currentCharacter.currentCharacter?.supply) ?? 0
+  );
+
+  const updateTrackValue = (track: TRACK_KEYS, newValue: number) => {
+    if (track === "supply" && isInCampaign) {
+      return updateCampaignSupply(newValue);
+    } else {
+      return updateCharacter({ [track]: newValue });
+    }
+  };
 
   return (
     <Grid container spacing={2}>

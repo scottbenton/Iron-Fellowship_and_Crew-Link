@@ -54,6 +54,15 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
     const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
     return removeProgressTrack({ campaignId, id: trackId, type });
   },
+  updateCharacterTrack: (characterId, type, trackId, track) => {
+    return updateProgressTrack({ characterId, trackId, track, type });
+  },
+  updateCharacterTrackValue(characterId, type, trackId, value) {
+    return updateProgressTrackValue({ characterId, trackId, value, type });
+  },
+  removeCharacterTrack(characterId, type, trackId) {
+    return removeProgressTrack({ characterId, id: trackId, type });
+  },
 
   resetStore: () => {
     set((store) => {

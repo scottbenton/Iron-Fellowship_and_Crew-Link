@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@mui/material";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
-import { useCreateLocation } from "api/worlds/locations/createLocation";
 import { OpenLocation } from "./OpenLocation";
 import { useFilterLocations } from "./useFilterLocations";
 import AddPhotoIcon from "@mui/icons-material/Photo";
@@ -20,6 +19,7 @@ import HiddenIcon from "@mui/icons-material/VisibilityOff";
 import { FilterBar } from "components/FilterBar";
 import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 import { useStore } from "stores/store";
+import { useState } from "react";
 
 export interface LocationsSectionProps {
   isSinglePlayer?: boolean;
@@ -58,8 +58,20 @@ export function LocationsSection(props: LocationsSectionProps) {
   const userCanUploadImages = useCanUploadWorldImages();
   const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
 
-  const { createLocation, loading: createLocationLoading } =
-    useCreateLocation();
+  const [createLocationLoading, setCreateLocationLoading] = useState(false);
+  const createLocation = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.createLocation
+  );
+
+  const handleCreateLocation = () => {
+    setCreateLocationLoading(true);
+    createLocation()
+      .then((locationId) => {
+        setOpenLocationId(locationId);
+      })
+      .catch(() => {})
+      .finally(() => setCreateLocationLoading(false));
+  };
 
   const { filteredLocationIds, sortedLocationIds } = useFilterLocations(
     locations,
@@ -129,15 +141,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           <Button
             variant={"contained"}
             endIcon={<AddLocationIcon />}
-            onClick={() =>
-              createLocation(worldId)
-                .catch(() => {})
-                .then((locationId) => {
-                  if (locationId) {
-                    setOpenLocationId(locationId);
-                  }
-                })
-            }
+            onClick={handleCreateLocation}
             disabled={createLocationLoading}
             sx={{ flexShrink: 0 }}
           >

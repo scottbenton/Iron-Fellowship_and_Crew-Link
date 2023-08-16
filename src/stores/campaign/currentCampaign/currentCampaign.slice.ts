@@ -9,6 +9,8 @@ import { removeCharacterFromCampaign } from "api-calls/campaign/removeCharacterF
 import { addCharacterToCampaign } from "api-calls/campaign/addCharacterToCampaign";
 import { updateCampaignSupply } from "api-calls/campaign/updateCampaignSupply";
 import { createCampaignTracksSlice } from "./tracks/campaignTracks.slice";
+import { createCampaignCharactersSlice } from "./characters/campaignCharacters.slice";
+import { updateCampaignWorld } from "api-calls/campaign/updateCampaignWorld";
 
 export const createCurrentCampaignSlice: CreateSliceType<
   CurrentCampaignSlice
@@ -16,7 +18,10 @@ export const createCurrentCampaignSlice: CreateSliceType<
   const [set, getState] = params;
   return {
     ...defaultCurrentCampaignSlice,
+
+    characters: createCampaignCharactersSlice(...params),
     tracks: createCampaignTracksSlice(...params),
+
     setCurrentCampaignId: (campaignId) => {
       const state = getState();
       const campaign = campaignId
@@ -42,7 +47,7 @@ export const createCurrentCampaignSlice: CreateSliceType<
       if (campaign) {
         state.users.loadUserDocuments(campaign.users);
         const loadedCharacterIds = Object.keys(
-          state.campaigns.currentCampaign.currentCampaignCharacters ?? {}
+          state.campaigns.currentCampaign.characters.characterMap ?? {}
         );
         const campaignCharacterIds = campaign?.characters.map(
           (character) => character.characterId
@@ -50,7 +55,7 @@ export const createCurrentCampaignSlice: CreateSliceType<
         set((store) => {
           loadedCharacterIds.forEach((characterId) => {
             if (!campaignCharacterIds.includes(characterId)) {
-              delete store.campaigns.currentCampaign.currentCampaignCharacters[
+              delete store.campaigns.currentCampaign.characters.characterMap[
                 characterId
               ];
             }
@@ -64,30 +69,13 @@ export const createCurrentCampaignSlice: CreateSliceType<
 
       state.worlds.currentWorld.setCurrentWorldId(campaign?.worldId);
     },
-    listenToCurrentCampaignCharacters: (characterIds: string[]) => {
-      const unsubscribes = listenToCampaignCharacters({
-        characterIdList: characterIds,
-        onDocChange: (id, character) => {
-          set((store) => {
-            if (character) {
-              store.campaigns.currentCampaign.currentCampaignCharacters[id] =
-                character;
-            } else {
-              delete store.campaigns.currentCampaign.currentCampaignCharacters[
-                id
-              ];
-            }
-          });
-        },
-        onError: (error) => {
-          console.error(error);
-        },
-      });
-      return () => {
-        unsubscribes.forEach((unsubscribe) => {
-          unsubscribe();
-        });
-      };
+
+    updateCampaignWorld: (worldId) => {
+      const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
+      if (!campaignId) {
+        return new Promise((res, reject) => reject("Campaign Id not found"));
+      }
+      return updateCampaignWorld({ campaignId, worldId });
     },
     updateCampaignGM: (gmId, shouldRemove) => {
       const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
@@ -151,7 +139,12 @@ export const createCurrentCampaignSlice: CreateSliceType<
     },
 
     resetStore: () => {
-      getState().campaigns.currentCampaign.tracks.resetStore();
+      const state = getState();
+      state.campaigns.currentCampaign.tracks.resetStore();
+      state.campaigns.currentCampaign.characters.resetStore();
+      state.notes.resetStore();
+      state.customMovesAndOracles.resetStore();
+
       set((store) => {
         store.campaigns.currentCampaign = {
           ...store.campaigns.currentCampaign,

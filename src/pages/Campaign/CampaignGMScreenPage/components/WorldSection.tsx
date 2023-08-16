@@ -1,49 +1,43 @@
 import {
   Box,
   Button,
-  Card,
-  CardActionArea,
   Container,
-  Divider,
   LinearProgress,
-  Stack,
   Typography,
 } from "@mui/material";
-import { useCampaignGMScreenUpdateCampaignWorld } from "api/campaign/updateCampaignWorld";
-import { EmptyState } from "components/EmptyState/EmptyState";
 import { WorldSheet } from "components/WorldSheet";
 import { useConfirm } from "material-ui-confirm";
-import { Link } from "react-router-dom";
-import { useWorldsStore } from "stores/worlds.store";
-import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
-import { WORLD_ROUTES, constructWorldPath } from "pages/World/routes";
-import { useAuth } from "providers/AuthProvider";
 import { WorldEmptyState } from "components/WorldEmptyState";
-import { useEffect } from "react";
+import { useStore } from "stores/store";
+import { useState } from "react";
 
 export function WorldSection() {
   const confirm = useConfirm();
-  const uid = useAuth().user?.uid;
+  const uid = useStore((store) => store.auth.uid);
 
-  const setWorld = useCampaignGMScreenStore((store) => store.setWorld);
-  const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
-  const world = useWorldsStore((store) =>
-    worldId ? store.worlds[worldId] : undefined
-  );
-  const worldIds = useWorldsStore((store) =>
-    Object.keys(store.worlds)
-      .filter((w) => store.worlds[w].ownerId === uid)
+  const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
+  const world = useStore((store) => store.worlds.currentWorld.currentWorld);
+
+  const worldIds = useStore((store) =>
+    Object.keys(store.worlds.worldMap)
+      .filter((w) => store.worlds.worldMap[w].ownerIds.includes(uid))
       .sort((w1, w2) =>
-        store.worlds[w2].name.localeCompare(store.worlds[w1].name)
+        store.worlds.worldMap[w2].name.localeCompare(
+          store.worlds.worldMap[w1].name
+        )
       )
   );
-  const worlds = useWorldsStore((store) => store.worlds);
+  const worlds = useStore((store) => store.worlds.worldMap);
   const sortedWorlds = worldIds.map((worldId) => worlds[worldId]);
 
-  const { updateCampaignWorld, loading: updateCampaignWorldLoading } =
-    useCampaignGMScreenUpdateCampaignWorld();
+  const updateCampaignWorld = useStore(
+    (store) => store.campaigns.currentCampaign.updateCampaignWorld
+  );
+  const [updateCampaignWorldLoading, setUpdateCampaignWorldLoading] =
+    useState(false);
 
   const handleWorldRemove = () => {
+    setUpdateCampaignWorldLoading(true);
     confirm({
       title: `Remove ${world?.name}`,
       description:
@@ -55,14 +49,16 @@ export function WorldSection() {
       },
     })
       .then(() => {
-        updateCampaignWorld(undefined).catch(() => {});
+        updateCampaignWorld(undefined)
+          .catch(() => {})
+          .finally(() => {
+            setUpdateCampaignWorldLoading(false);
+          });
       })
-      .catch(() => {});
+      .catch(() => {
+        setUpdateCampaignWorldLoading(false);
+      });
   };
-
-  useEffect(() => {
-    setWorld(world?.ownerId, worldId, world);
-  }, [worldId, world]);
 
   return (
     <Box>
@@ -79,7 +75,7 @@ export function WorldSection() {
             <Typography variant={"h6"}>{world.name}</Typography>
             <Button onClick={() => handleWorldRemove()}>Remove World</Button>
           </Box>
-          <WorldSheet worldId={worldId} world={world} canEdit />
+          <WorldSheet canEdit />
         </Container>
       )}
       {worldId && !world && <LinearProgress />}
@@ -89,9 +85,12 @@ export function WorldSection() {
           isMultiplayer
           isOnWorldTab
           worldsToChooseFrom={sortedWorlds}
-          onChooseWorld={(worldIndex) =>
+          onChooseWorld={(worldIndex) => {
+            setUpdateCampaignWorldLoading(true);
             updateCampaignWorld(worldIds[worldIndex])
-          }
+              .catch(() => {})
+              .finally(() => setUpdateCampaignWorldLoading(false));
+          }}
           worldUpdateLoading={updateCampaignWorldLoading}
         />
       )}

@@ -39,7 +39,7 @@ export interface CharacterDocument {
     };
     scale: number;
   };
-  worldId?: string;
+  worldId?: string | null;
 }
 
 export interface AssetDocument {

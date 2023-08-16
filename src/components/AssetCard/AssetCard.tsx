@@ -33,10 +33,10 @@ export interface AssetCardProps {
   sx?: SxProps<Theme>;
 
   handleAbilityCheck?: (index: number, checked: boolean) => void;
-  handleInputChange?: (label: string, value: string) => Promise<boolean>;
-  handleTrackValueChange?: (num: number) => Promise<boolean>;
+  handleInputChange?: (label: string, value: string) => Promise<void>;
+  handleTrackValueChange?: (num: number) => Promise<void>;
 
-  handleCustomAssetUpdate?: (asset: Asset) => Promise<boolean>;
+  handleCustomAssetUpdate?: (asset: Asset) => Promise<void>;
 
   handleDeleteClick?: () => void;
 }

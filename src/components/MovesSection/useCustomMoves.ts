@@ -1,10 +1,8 @@
 import { Move, MoveCategory } from "dataforged";
-import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
-import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { License, RollMethod, RollType } from "types/Datasworn";
 import { customMoveCategoryPrefix, StoredMove } from "types/Moves.type";
-import { useUserDocs } from "api/user/getUserDoc";
+import { useStore } from "stores/store";
 
 function convertStoredMoveToMove(storedMove: StoredMove): Move {
   return {
@@ -40,42 +38,33 @@ function convertStoredMoveToMove(storedMove: StoredMove): Move {
 }
 
 export function useCustomMoves() {
-  const campaignCustomMoves = useCampaignGMScreenStore(
-    (store) => store.customMoves
+  const customMoveAuthorMap = useStore(
+    (store) => store.customMovesAndOracles.customMoves
   );
-  const hiddenCampaignMoveIds = useCampaignGMScreenStore(
-    (store) => store.campaignSettings?.hiddenCustomMoveIds
+  const hiddenMoveIds = useStore(
+    (store) => store.customMovesAndOracles.hiddenCustomMoveIds
   );
 
-  const characterSheetCustomMoves = useCharacterSheetStore(
-    (store) => store.customMoves
-  );
-  const hiddenCharacterMoveIds = useCharacterSheetStore(
-    (store) => store.characterSettings?.hiddenCustomMoveIds
-  );
+  const memoizedMoveMap = useMemo(() => {
+    return JSON.parse(
+      JSON.stringify(customMoveAuthorMap)
+    ) as typeof customMoveAuthorMap;
+  }, [customMoveAuthorMap]);
 
   const [customMoveCategories, setCustomMoveCategories] = useState<
     MoveCategory[]
   >([]);
+
   const [customMoveMap, setCustomMoveMap] = useState<{ [key: string]: Move }>(
     {}
   );
 
-  const customMoveOwners = [
-    ...Object.keys(campaignCustomMoves),
-    ...Object.keys(characterSheetCustomMoves),
-  ];
-  // useUserDocs(customMoveOwners);
-
   useEffect(() => {
-    const customStoredMoves = campaignCustomMoves ?? characterSheetCustomMoves;
-    const hiddenMoveIds = hiddenCampaignMoveIds ?? hiddenCharacterMoveIds;
-
     const moveCategories: MoveCategory[] = [];
     let newMoveMap: { [key: string]: Move } = {};
 
-    Object.keys(customStoredMoves).forEach((moveAuthorId) => {
-      const customMoves = customStoredMoves[moveAuthorId];
+    Object.keys(memoizedMoveMap).forEach((moveAuthorId) => {
+      const customMoves = memoizedMoveMap[moveAuthorId];
       if (
         customMoves &&
         customMoves.length > 0 &&
@@ -115,12 +104,7 @@ export function useCustomMoves() {
 
     setCustomMoveCategories(moveCategories);
     setCustomMoveMap(newMoveMap);
-  }, [
-    campaignCustomMoves,
-    characterSheetCustomMoves,
-    hiddenCampaignMoveIds,
-    hiddenCharacterMoveIds,
-  ]);
+  }, [memoizedMoveMap, hiddenMoveIds]);
 
   return { customMoveCategories, customMoveMap };
 }

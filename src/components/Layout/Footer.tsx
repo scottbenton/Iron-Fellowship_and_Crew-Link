@@ -16,7 +16,8 @@ import {
   CHARACTER_PREFIX,
   WORLD_PREFIX,
 } from "routes";
-import { AUTH_STATE, useAuth } from "providers/AuthProvider";
+import { useStore } from "stores/store";
+import { AUTH_STATE } from "stores/auth/auth.slice.type";
 
 enum ROUTE_TYPES {
   CHARACTER,
@@ -26,7 +27,7 @@ enum ROUTE_TYPES {
 
 export function Footer() {
   const { pathname } = useLocation();
-  const { state } = useAuth();
+  const state = useStore((store) => store.auth.status);
 
   const [selectedTab, setSelectedTab] = useState<ROUTE_TYPES | undefined>(
     ROUTE_TYPES.CHARACTER

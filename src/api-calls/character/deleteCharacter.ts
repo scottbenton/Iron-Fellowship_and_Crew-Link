@@ -1,14 +1,16 @@
-import { removeCharacterFromCampaign } from "api/campaign/removeCharacterFromCampaign";
-import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
-import { deleteDoc } from "firebase/firestore";
-import { ApiFunction, useApiState } from "hooks/useApiState";
-import { firebaseAuth } from "../../config/firebase.config";
-// import { getCharacterAssetDoc } from "./assets/_getRef";
-// import { getCharacter } from "./getCharacter";
-// import { deleteCharacterNotes } from "./notes/deleteCharacterNotes";
-// import { getCharacterTracksDoc } from "./tracks/_getRef";
-import { getCharacterDoc } from "./_getRef";
+import { useApiState } from "hooks/useApiState";
 import { createApiFunction } from "api-calls/createApiFunction";
+import { removeCharacterFromCampaign } from "api-calls/campaign/removeCharacterFromCampaign";
+import { firebaseAuth, firestore } from "config/firebase.config";
+import { deleteDoc, getDoc, getDocs, runTransaction } from "firebase/firestore";
+import {
+  getCharacterAssetCollection,
+  getCharacterAssetDoc,
+} from "./assets/_getRef";
+import { deleteNotes } from "api-calls/notes/deleteNotes";
+import { getCharacterSettingsDoc } from "api-calls/custom-move-oracle-settings/_getRef";
+import { getCharacterTracksDoc } from "api-calls/tracks/_getRef";
+import { getCharacterDoc } from "./_getRef";
 
 export const deleteCharacter = createApiFunction<
   { characterId: string; campaignId?: string },
@@ -18,26 +20,28 @@ export const deleteCharacter = createApiFunction<
     const { characterId, campaignId } = params;
 
     try {
-      reject("Because I can");
-      // const campaignId = (await getCharacter({ uid, characterId })).campaignId;
-      // if (campaignId) {
-      //   await removeCharacterFromCampaign({ campaignId, characterId });
-      // }
+      if (campaignId) {
+        await removeCharacterFromCampaign({
+          uid: firebaseAuth.currentUser?.uid ?? "",
+          campaignId,
+          characterId,
+        });
+      }
+      const assetDocs = await getDocs(getCharacterAssetCollection(characterId));
+      const promises: Promise<any>[] = [];
 
-      // const promises: Promise<any>[] = [];
+      promises.push(deleteNotes({ characterId }));
+      promises.push(deleteDoc(getCharacterSettingsDoc(characterId)));
+      assetDocs.forEach((asset) => {
+        promises.push(deleteDoc(getCharacterAssetDoc(characterId, asset.id)));
+      });
+      promises.push(deleteDoc(getCharacterTracksDoc(characterId)));
 
-      // promises.push(deleteDoc(getCharacterAssetDoc(uid, characterId)));
-      // promises.push(deleteDoc(getCharacterTracksDoc(uid, characterId)));
-      // promises.push(deleteDoc(getCharacterDoc(uid, characterId)));
-      // promises.push(deleteCharacterNotes(uid, characterId));
-
-      // await Promise.all(promises);
+      promises.push(deleteDoc(getCharacterDoc(characterId)));
+      await Promise.all(promises);
       resolve();
-      return;
     } catch (e) {
-      console.error(e);
       reject(e);
-      return;
     }
   });
 }, "Failed to delete character.");

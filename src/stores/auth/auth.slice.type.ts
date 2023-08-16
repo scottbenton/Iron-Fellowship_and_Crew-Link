@@ -1,5 +1,10 @@
 import { Unsubscribe, User } from "firebase/auth";
-import { AUTH_STATE } from "providers/AuthProvider";
+
+export enum AUTH_STATE {
+  LOADING,
+  UNAUTHENTICATED,
+  AUTHENTICATED,
+}
 
 export interface AuthSliceData {
   user?: User;

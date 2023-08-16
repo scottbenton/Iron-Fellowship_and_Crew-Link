@@ -2,18 +2,18 @@ import { Unsubscribe } from "firebase/firestore";
 import { StoredCampaign } from "types/Campaign.type";
 import { CharacterDocument } from "types/Character.type";
 import { CampaignTracksSlice } from "./tracks/campaignTracks.slice.type";
+import { CampaignCharactersSlice } from "./characters/campaignCharacters.slice.type";
 
 export interface CurrentCampaignSliceData {
   currentCampaignId?: string;
   currentCampaign?: StoredCampaign;
-  currentCampaignCharacters: { [key: string]: CharacterDocument };
 }
 
 export interface CurrentCampaignSliceActions {
   setCurrentCampaignId: (campaignId?: string) => void;
   setCurrentCampaign: (campaign?: StoredCampaign) => void;
-  listenToCurrentCampaignCharacters: (characterIds: string[]) => Unsubscribe;
 
+  updateCampaignWorld: (worldId?: string) => Promise<void>;
   updateCampaignGM: (gmId: string, shouldRemove?: boolean) => Promise<void>;
   deleteCampaign: () => Promise<void>;
   leaveCampaign: () => Promise<void>;
@@ -27,4 +27,5 @@ export interface CurrentCampaignSliceActions {
 export type CurrentCampaignSlice = CurrentCampaignSliceData &
   CurrentCampaignSliceActions & {
     tracks: CampaignTracksSlice;
+    characters: CampaignCharactersSlice;
   };

@@ -1,6 +1,7 @@
 import { Unsubscribe } from "firebase/firestore";
 import { StoredAsset } from "types/Asset.type";
 import { CharacterDocument, StatsMap } from "types/Character.type";
+import { CurrentCharacterSlice } from "./currentCharacter/currentCharacter.slice.type";
 
 export interface CharacterSliceData {
   characterMap: { [characterId: string]: CharacterDocument };
@@ -27,4 +28,7 @@ export interface CharacterSliceActions {
   ) => void;
 }
 
-export type CharacterSlice = CharacterSliceData & CharacterSliceActions;
+export type CharacterSlice = CharacterSliceData &
+  CharacterSliceActions & {
+    currentCharacter: CurrentCharacterSlice;
+  };

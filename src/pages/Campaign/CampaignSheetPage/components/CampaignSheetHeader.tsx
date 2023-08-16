@@ -82,22 +82,19 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
                 Mark self as GM
               </Button>
             )}
-            {campaign.gmIds &&
-              campaign.gmIds?.length === 0 &&
-              uid &&
-              campaign.gmIds.includes(uid) && (
-                <Button
-                  component={Link}
-                  to={constructCampaignSheetPath(
-                    campaignId,
-                    CAMPAIGN_ROUTES.GM_SCREEN
-                  )}
-                  variant={"outlined"}
-                  color={"inherit"}
-                >
-                  Open GM Screen
-                </Button>
-              )}
+            {campaign.gmIds && campaign.gmIds.includes(uid) && (
+              <Button
+                component={Link}
+                to={constructCampaignSheetPath(
+                  campaignId,
+                  CAMPAIGN_ROUTES.GM_SCREEN
+                )}
+                variant={"outlined"}
+                color={"inherit"}
+              >
+                Open GM Screen
+              </Button>
+            )}
             <CampaignActionsMenu campaign={campaign} campaignId={campaignId} />
           </>
         }

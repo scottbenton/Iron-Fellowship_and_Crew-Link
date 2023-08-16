@@ -15,6 +15,13 @@ export function constructCharacterDocPath(characterId: string) {
   return `/characters/${characterId}`;
 }
 
+export function constructCharacterPortraitFolderPath(
+  uid: string,
+  characterId: string
+) {
+  return `/characters/${uid}/characters/${characterId}`;
+}
+
 export function constructCharacterPortraitPath(
   uid: string,
   characterId: string,

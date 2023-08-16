@@ -11,7 +11,6 @@ import { useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
 import { useNavigate } from "react-router-dom";
 import { CAMPAIGN_ROUTES, constructCampaignSheetPath } from "../../routes";
-import { useCreateCampaignMutation } from "api/campaign/createCampaign";
 import { useStore } from "stores/store";
 
 export interface CreateCampaignDialogProps {

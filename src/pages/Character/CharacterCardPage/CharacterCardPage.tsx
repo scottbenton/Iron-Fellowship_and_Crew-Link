@@ -1,10 +1,8 @@
 import { Box, Card, Divider, GlobalStyles, Typography } from "@mui/material";
-import { useListenToCharacter } from "api/characters/listenToCharacter";
+import { useListenToCharacter } from "./hooks/useListenToCharacter";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
-import { useParams } from "react-router-dom";
 import HealthIcon from "@mui/icons-material/Favorite";
 import SpiritIcon from "@mui/icons-material/Whatshot";
-import { useListenToLastCharacterRoll } from "api/characters/rolls/listenToLastCharacterRoll";
 import { useEffect, useState } from "react";
 import { ROLL_TYPE, Roll } from "types/DieRolls.type";
 import { D6Icon } from "assets/D6Icon";
@@ -15,26 +13,25 @@ import NoInitiativeIcon from "@mui/icons-material/RemoveModerator";
 import { INITIATIVE_STATUS } from "types/Character.type";
 
 export function CharacterCardPage() {
-  const { userId, characterId } = useParams();
-
-  const character = useListenToCharacter(userId, characterId);
-  const lastRoll = useListenToLastCharacterRoll(userId, characterId);
+  const { characterId, character } = useListenToCharacter();
 
   const [visibleRoll, setVisibleRoll] = useState<Roll>();
 
-  useEffect(() => {
-    setVisibleRoll(lastRoll);
+  // useEffect(() => {
+  //   setVisibleRoll(lastRoll);
 
-    const timeout = setTimeout(() => {
-      setVisibleRoll(undefined);
-    }, 10 * 1000);
+  //   const timeout = setTimeout(() => {
+  //     setVisibleRoll(undefined);
+  //   }, 10 * 1000);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [lastRoll]);
+  //   return () => {
+  //     clearTimeout(timeout);
+  //   };
+  // }, [lastRoll]);
 
   if (!character) return null;
+
+  const userId = character.uid;
 
   return (
     <>

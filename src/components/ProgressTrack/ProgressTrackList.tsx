@@ -1,5 +1,5 @@
 import { Button, Stack } from "@mui/material";
-import { TrackWithId } from "../../pages/Character/CharacterSheetPage/characterSheet.store";
+import { TrackWithId } from "types/Track.type";
 import { StoredTrack, TRACK_TYPES } from "../../types/Track.type";
 import { EditOrCreateTrackDialog } from "./EditOrCreateTrackDialog";
 import { ProgressTrack } from "./ProgressTrack";

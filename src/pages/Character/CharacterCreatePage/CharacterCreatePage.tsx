@@ -7,8 +7,6 @@ import { Stat } from "types/stats.enum";
 import { AssetsSection } from "./components/AssetsSection";
 import { StatsField } from "./components/StatsField";
 import { StatsMap } from "types/Character.type";
-import { useAddCharacterToCampaignMutation } from "api/campaign/addCharacterToCampaign";
-import { useCreateCharacter } from "api/characters/createCharacter";
 import { PageHeader } from "components/Layout/PageHeader";
 import { PageContent } from "components/Layout";
 import {
@@ -21,6 +19,7 @@ import { useRoller } from "providers/DieRollProvider";
 import { useCallback, useState } from "react";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
+import { addCharacterToCampaign } from "api-calls/campaign/addCharacterToCampaign";
 
 export type AssetArrayType = [
   StoredAsset | undefined,
@@ -41,11 +40,10 @@ const nameOracles = [
 
 export function CharacterCreatePage() {
   const campaignId = useSearchParams()[0].get("campaignId");
+  const uid = useStore((store) => store.auth.uid);
 
   const navigate = useNavigate();
   const { rollOracleTable } = useRoller();
-
-  const { addCharacterToCampaign } = useAddCharacterToCampaignMutation();
 
   const [createCharacterLoading, setCreateCharacterLoading] =
     useState<boolean>(false);
@@ -89,12 +87,14 @@ export function CharacterCreatePage() {
     )
       .then((characterId) => {
         if (campaignId) {
-          addCharacterToCampaign({ campaignId, characterId }).finally(() => {
-            // add character to campaign
-            navigate(
-              constructCampaignSheetPath(campaignId, CAMPAIGN_ROUTES.SHEET)
-            );
-          });
+          addCharacterToCampaign({ uid, campaignId, characterId }).finally(
+            () => {
+              // add character to campaign
+              navigate(
+                constructCampaignSheetPath(campaignId, CAMPAIGN_ROUTES.SHEET)
+              );
+            }
+          );
         } else {
           navigate(constructCharacterSheetPath(characterId));
         }

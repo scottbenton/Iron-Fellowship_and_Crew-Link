@@ -1,7 +1,6 @@
 import type { OracleSet, OracleTable, OracleTableRow } from "dataforged";
-import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
-import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useStore } from "stores/store";
 import { License } from "types/Datasworn";
 import {
   customOracleCategoryPrefix,
@@ -35,6 +34,7 @@ function convertStoredOracleToOracle(storedOracle: StoredOracle): OracleTable {
       Standard: storedOracle.name,
       Canonical: storedOracle.name,
     },
+    Description: storedOracle.text,
     Display: {
       $id: `${storedOracle.$id}/display/columns`,
       Columns: [
@@ -64,19 +64,18 @@ function convertStoredOracleToOracle(storedOracle: StoredOracle): OracleTable {
 }
 
 export function useCustomOracles() {
-  const characterSheetOracles = useCharacterSheetStore(
-    (store) => store.customOracles
+  const customOracleAuthorMap = useStore(
+    (store) => store.customMovesAndOracles.customOracles
   );
-  const gmScreenOracles = useCampaignGMScreenStore(
-    (store) => store.customOracles
+  const hiddenOracleIds = useStore(
+    (store) => store.customMovesAndOracles.hiddenCustomOracleIds
   );
 
-  const hiddenCampaignOracleIds = useCampaignGMScreenStore(
-    (store) => store.campaignSettings?.hiddenCustomOraclesIds
-  );
-  const hiddenCharacterOracleIds = useCharacterSheetStore(
-    (store) => store.characterSettings?.hiddenCustomOraclesIds
-  );
+  const memoizedOracleMap = useMemo(() => {
+    return JSON.parse(
+      JSON.stringify(customOracleAuthorMap)
+    ) as typeof customOracleAuthorMap;
+  }, [customOracleAuthorMap]);
 
   const [customOracleCategories, setCustomOracleCategories] = useState<
     OracleSet[]
@@ -86,14 +85,11 @@ export function useCustomOracles() {
   }>({});
 
   useEffect(() => {
-    const customStoredOracles = gmScreenOracles ?? characterSheetOracles;
-    const hiddenOracleIds = hiddenCampaignOracleIds ?? hiddenCharacterOracleIds;
-
     const newOracleCategories: OracleSet[] = [];
     let newCustomOracleMap: { [oracleId: string]: OracleTable } = {};
 
-    Object.keys(customStoredOracles).forEach((creatorId) => {
-      const customOracles = customStoredOracles[creatorId];
+    Object.keys(memoizedOracleMap).forEach((creatorId) => {
+      const customOracles = memoizedOracleMap[creatorId];
 
       if (
         customOracles &&
@@ -140,12 +136,7 @@ export function useCustomOracles() {
 
     setCustomOracleCategories(newOracleCategories);
     setAllCustomOracleMap(newCustomOracleMap);
-  }, [
-    characterSheetOracles,
-    gmScreenOracles,
-    hiddenCampaignOracleIds,
-    hiddenCharacterOracleIds,
-  ]);
+  }, [memoizedOracleMap, hiddenOracleIds]);
 
   return { customOracleCategories, allCustomOracleMap };
 }

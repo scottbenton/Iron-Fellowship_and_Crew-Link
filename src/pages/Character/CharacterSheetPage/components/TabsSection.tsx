@@ -1,7 +1,5 @@
 import { Card, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useCharacterSheetStore } from "../characterSheet.store";
-import { useAuth } from "providers/AuthProvider";
 import { MovesSection } from "components/MovesSection";
 import { AssetsSection } from "../Tabs/AssetsSection";
 import { OracleSection } from "components/OracleSection";
@@ -18,6 +16,7 @@ import {
 import { NPCSection } from "components/NPCSection";
 import { LoreSection } from "components/Lore";
 import { TracksSection } from "../Tabs/TracksSection";
+import { useStore } from "stores/store";
 
 enum TABS {
   MOVES = "moves",
@@ -45,20 +44,24 @@ export function TabsSection() {
     setSearchParams({ tab });
   };
 
-  const isInCampaign = useCharacterSheetStore(
-    (store) => !!store.character?.campaignId
+  const isInCampaign = useStore(
+    (store) => !!store.characters.currentCharacter.currentCharacter?.campaignId
   );
 
-  const uid = useAuth().user?.uid;
+  const isGM = useStore(
+    (store) =>
+      store.campaigns.currentCampaign.currentCampaign?.gmIds?.includes(
+        store.auth.uid
+      ) ?? false
+  );
 
-  const isSinglePlayer = useCharacterSheetStore((store) => !store.campaignId);
-  const isGM = useCharacterSheetStore(
-    (store) => !!uid && (store.campaign?.gmIds?.includes(uid) ?? false)
+  const isWorldOwner = useStore((store) =>
+    store.worlds.currentWorld.currentWorld?.ownerIds.includes(store.auth.uid)
   );
-  const worldId = useCharacterSheetStore((store) =>
-    store.campaignId ? store.campaign?.worldId : store.character?.worldId
+
+  const worldExists = useStore(
+    (store) => !!store.worlds.currentWorld.currentWorld
   );
-  const worldOwnerId = useCharacterSheetStore((store) => store.worldOwnerId);
 
   useEffect(() => {
     if (!isMobile && selectedTab === TABS.MOVES) {
@@ -108,38 +111,26 @@ export function TabsSection() {
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.LOCATIONS}
-        greyBackground={worldId && worldOwnerId ? true : false}
+        greyBackground={worldExists}
       >
-        <LocationsSection
-          worldId={worldId}
-          worldOwnerId={worldOwnerId}
-          isSinglePlayer={isSinglePlayer}
-          showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
-          useStore={useCharacterSheetStore}
-        />
+        <LocationsSection showHiddenTag={isWorldOwner && isInCampaign} />
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.NPCS}
-        greyBackground={worldId && worldOwnerId ? true : false}
+        greyBackground={worldExists}
       >
         <NPCSection
-          worldId={worldId ?? ""}
-          worldOwnerId={worldOwnerId ?? ""}
-          isSinglePlayer={isSinglePlayer}
-          showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
-          useStore={useCharacterSheetStore}
+          isSinglePlayer={!isInCampaign}
+          showHiddenTag={isWorldOwner && isInCampaign}
         />
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.LORE}
-        greyBackground={worldId && worldOwnerId ? true : false}
+        greyBackground={worldExists}
       >
         <LoreSection
-          worldId={worldId ?? ""}
-          worldOwnerId={worldOwnerId ?? ""}
-          isSinglePlayer={isSinglePlayer}
-          showHiddenTag={worldOwnerId === uid && !isSinglePlayer}
-          useStore={useCharacterSheetStore}
+          isSinglePlayer={!isInCampaign}
+          showHiddenTag={isWorldOwner && isInCampaign}
         />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.CHARACTER}>

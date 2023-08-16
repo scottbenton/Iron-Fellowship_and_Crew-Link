@@ -1,6 +1,6 @@
 import { onSnapshot, Unsubscribe } from "firebase/firestore";
 import { getCampaignTracksDoc, getCharacterTracksDoc } from "./_getRef";
-import { StoredTrack, TRACK_TYPES } from "types/Track.type";
+import { StoredTrack, TRACK_TYPES, TrackWithId } from "types/Track.type";
 
 export function listenToProgressTracks(
   campaignId: string | undefined,
@@ -34,8 +34,6 @@ export function listenToProgressTracks(
     (error) => onError(error)
   );
 }
-
-export type TrackWithId = StoredTrack & { id: string };
 
 export const convertTrackMapToArray = (trackMap: {
   [id: string]: StoredTrack;

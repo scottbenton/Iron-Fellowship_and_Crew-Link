@@ -3,5 +3,4 @@ export interface OracleAndMoveVisibilitySettings {
   hiddenCustomMoveIds: string[];
 }
 
-export interface CampaignSettingsDoc extends OracleAndMoveVisibilitySettings {}
-export interface CharacterSettingsDoc extends OracleAndMoveVisibilitySettings {}
+export interface SettingsDoc extends OracleAndMoveVisibilitySettings {}

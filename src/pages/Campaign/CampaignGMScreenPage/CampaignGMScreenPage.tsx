@@ -1,12 +1,9 @@
 import { Grid, Hidden, LinearProgress } from "@mui/material";
 import { MovesSection } from "components/MovesSection/MovesSection";
-import { useAuth } from "providers/AuthProvider";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useCampaignStore } from "stores/campaigns.store";
 import { TabsSection } from "./components/TabsSection";
-import { useCampaignGMScreenApiCalls } from "./hooks.ts/useCampaignGMScreenApiCalls";
 import {
   CAMPAIGN_ROUTES,
   constructCampaignPath,
@@ -14,16 +11,22 @@ import {
 } from "pages/Campaign/routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { Head } from "providers/HeadProvider/Head";
+import { useSyncStore } from "./hooks/useSyncStore";
+import { useStore } from "stores/store";
 
 export function CampaignGMScreenPage() {
-  const { campaignId } = useParams();
+  useSyncStore();
+  const campaignId = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaignId
+  );
 
-  useCampaignGMScreenApiCalls(campaignId);
+  const uid = useStore((store) => store.auth.uid);
 
-  const uid = useAuth().user?.uid;
-
-  const campaigns = useCampaignStore((store) => store.campaigns);
-  const loading = useCampaignStore((store) => store.loading);
+  const campaigns = useStore((store) => store.campaigns.campaignMap);
+  const campaign = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign
+  );
+  const loading = useStore((store) => store.campaigns.loading);
 
   const { error } = useSnackbar();
   const navigate = useNavigate();
@@ -36,9 +39,9 @@ export function CampaignGMScreenPage() {
     if (
       !loading &&
       campaignId &&
-      campaigns[campaignId] &&
+      campaign &&
       uid &&
-      !campaigns[campaignId].gmIds?.includes(uid)
+      !campaign.gmIds?.includes(uid)
     ) {
       error("You aren't the GM of this campaign");
       navigate(constructCampaignSheetPath(campaignId, CAMPAIGN_ROUTES.SHEET));
@@ -53,16 +56,9 @@ export function CampaignGMScreenPage() {
     );
   }
 
-  if (
-    !campaignId ||
-    !campaigns[campaignId] ||
-    !uid ||
-    !campaigns[campaignId]?.gmIds?.includes(uid)
-  ) {
+  if (!campaignId || !campaign || !uid || !campaign?.gmIds?.includes(uid)) {
     return null;
   }
-
-  const campaign = campaigns[campaignId];
 
   return (
     <>

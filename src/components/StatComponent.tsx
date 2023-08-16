@@ -11,7 +11,7 @@ export interface StatComponentProps {
   updateTrack?: {
     min: number;
     max: number;
-    handleChange: (newValue: number) => Promise<boolean>;
+    handleChange: (newValue: number) => Promise<void>;
   };
   disableRoll?: boolean;
   sx?: SxProps;

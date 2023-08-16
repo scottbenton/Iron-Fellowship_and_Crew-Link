@@ -1,4 +1,3 @@
-import { LocationDocumentWithGMProperties } from "stores/world.slice";
 import { Truth, World } from "types/World.type";
 import { LocationsSlice } from "./locations/locations.slice.type";
 import { NPCsSlice } from "./npcs/npcs.slice.type";

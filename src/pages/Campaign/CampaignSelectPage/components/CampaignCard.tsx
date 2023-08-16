@@ -1,14 +1,12 @@
-import { Box, Card, CardActionArea, Skeleton, Typography } from "@mui/material";
-import { useGetUserDoc, useUserDoc, useUserDocs } from "api/user/getUserDoc";
+import { Box, Card, CardActionArea, Typography } from "@mui/material";
 import {
   CAMPAIGN_ROUTES,
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useStore } from "stores/store";
 import { StoredCampaign } from "types/Campaign.type";
-import { UserDocument } from "types/User.type";
 
 export interface CampaignCard {
   campaign: StoredCampaign;

@@ -1,8 +1,15 @@
-import { Avatar, ButtonBase, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+import {
+  Avatar,
+  ButtonBase,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { useRef, useState } from "react";
-import { useAuth } from "../../providers/AuthProvider";
 import { logout } from "../../lib/auth.lib";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useStore } from "stores/store";
 
 const getInitials = (name: string) => {
   const names = name.split(" ");
@@ -15,7 +22,7 @@ const getInitials = (name: string) => {
 };
 
 export function HeaderMenu() {
-  const { user } = useAuth();
+  const user = useStore((store) => store.auth.user);
 
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const anchorRef = useRef<HTMLButtonElement>(null);

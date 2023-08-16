@@ -1,5 +1,4 @@
 import { Unsubscribe } from "firebase/firestore";
-import { LocationDocumentWithGMProperties } from "stores/world.slice";
 import { World } from "types/World.type";
 import { CurrentWorldSlice } from "./currentWorld/currentWorld.slice.type";
 

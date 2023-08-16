@@ -1,9 +1,8 @@
 import { CreateSliceType } from "stores/store.type";
-import { AuthSlice } from "./auth.slice.type";
+import { AuthSlice, AUTH_STATE } from "./auth.slice.type";
 import { defaultAuthSlice } from "./auth.slice.default";
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "config/firebase.config";
-import { AUTH_STATE } from "providers/AuthProvider";
 import { UserDocument } from "types/User.type";
 import { clearAnalyticsUser, setAnalyticsUser } from "lib/analytics.lib";
 import { updateUserDoc } from "api-calls/user/updateUserDoc";

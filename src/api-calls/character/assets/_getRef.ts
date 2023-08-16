@@ -6,14 +6,16 @@ import {
   DocumentReference,
 } from "firebase/firestore";
 import { StoredAsset } from "types/Asset.type";
-import { AssetDocument } from "types/Character.type";
 
 export function constructCharacterAssetCollectionPath(characterId: string) {
   return `/characters/${characterId}/assets`;
 }
 
-export function constructCharacterAssetDocPath(characterId: string) {
-  return `/characters/${characterId}/assets/assets`;
+export function constructCharacterAssetDocPath(
+  characterId: string,
+  assetId: string
+) {
+  return `/characters/${characterId}/assets/${assetId}`;
 }
 
 export function getCharacterAssetCollection(characterId: string) {
@@ -23,9 +25,9 @@ export function getCharacterAssetCollection(characterId: string) {
   ) as CollectionReference<StoredAsset>;
 }
 
-export function getCharacterAssetDoc(characterId: string) {
+export function getCharacterAssetDoc(characterId: string, assetId: string) {
   return doc(
     firestore,
-    constructCharacterAssetDocPath(characterId)
-  ) as DocumentReference<AssetDocument>;
+    constructCharacterAssetDocPath(characterId, assetId)
+  ) as DocumentReference<StoredAsset>;
 }

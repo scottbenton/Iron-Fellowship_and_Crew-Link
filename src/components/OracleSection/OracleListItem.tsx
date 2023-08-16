@@ -8,9 +8,9 @@ import {
 import { D10Icon } from "assets/D10Icon";
 import PinIcon from "@mui/icons-material/PushPin";
 import { useState } from "react";
-import { useUpdatePinnedOracle } from "api/user/settings/updatePinnedOracle";
 import { useIsTouchDevice } from "hooks/useIsTouchDevice";
 import TableIcon from "@mui/icons-material/ListAlt";
+import { useStore } from "stores/store";
 
 export interface OracleListItemProps {
   id: string;
@@ -34,7 +34,10 @@ export function OracleListItem(props: OracleListItemProps) {
 
   const [isHovering, setIsHovering] = useState<boolean>(false);
 
-  const { updatePinnedOracle, loading } = useUpdatePinnedOracle();
+  const [loading, setLoading] = useState(false);
+  const updatePinnedOracle = useStore(
+    (store) => store.customMovesAndOracles.togglePinnedOracle
+  );
 
   return (
     <ListItem
@@ -61,9 +64,7 @@ export function OracleListItem(props: OracleListItemProps) {
           {(isHovering || isTouchDevice || pinned) && (
             <IconButton
               color={pinned ? "primary" : "default"}
-              onClick={() =>
-                updatePinnedOracle({ oracleId: id, pinned: !pinned })
-              }
+              onClick={() => updatePinnedOracle(id, !pinned).catch(() => {})}
               disabled={loading}
             >
               <PinIcon />

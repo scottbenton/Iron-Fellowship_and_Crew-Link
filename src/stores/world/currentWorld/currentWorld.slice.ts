@@ -21,6 +21,7 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
       const store = getState();
       const previousWorldId = store.worlds.currentWorld.currentWorldId;
       if (worldId && worldId !== previousWorldId) {
+        store.worlds.currentWorld.resetStore();
         set((store) => {
           store.worlds.currentWorld.currentWorld =
             store.worlds.worldMap[worldId] ?? undefined;
@@ -65,10 +66,11 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
     },
 
     resetStore: () => {
+      const state = getState();
+      state.worlds.currentWorld.currentWorldLocations.resetStore();
+      state.worlds.currentWorld.currentWorldNPCs.resetStore();
+      state.worlds.currentWorld.currentWorldLore.resetStore();
       set((store) => {
-        store.worlds.currentWorld.currentWorldLocations.resetStore();
-        store.worlds.currentWorld.currentWorldNPCs.resetStore();
-        store.worlds.currentWorld.currentWorldLore.resetStore();
         store.worlds.currentWorld = {
           ...store.worlds.currentWorld,
           ...defaultCurrentWorldSlice,

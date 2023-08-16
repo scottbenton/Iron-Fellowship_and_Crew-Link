@@ -1,8 +1,3 @@
-import { useAddCampaignProgressTrack } from "api/campaign/tracks/addCampaignProgressTrack";
-import { useListenToCampaignProgressTracks } from "api/campaign/tracks/listenToCampaignProgressTracks";
-import { useRemoveCampaignProgressTrack } from "api/campaign/tracks/removeCampaignProgressTrack";
-import { useUpdateCampaignProgressTrack } from "api/campaign/tracks/updateCampaignProgressTrack";
-import { useUpdateCampaignProgressTrackValue } from "api/campaign/tracks/updateCampaignProgressTrackValue";
 import { ProgressTrackList } from "components/ProgressTrack";
 import { useStore } from "stores/store";
 import { TRACK_TYPES } from "types/Track.type";

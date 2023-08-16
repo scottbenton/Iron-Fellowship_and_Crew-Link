@@ -1,5 +1,4 @@
-import { AUTH_STATE } from "providers/AuthProvider";
-import { AuthSliceData } from "./auth.slice.type";
+import { AuthSliceData, AUTH_STATE } from "./auth.slice.type";
 
 export const defaultAuthSlice: AuthSliceData = {
   uid: "",

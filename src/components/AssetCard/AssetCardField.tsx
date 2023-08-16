@@ -6,7 +6,7 @@ import { InputType } from "types/Datasworn";
 export interface AssetCardFieldProps {
   field: InputNumber | InputClock | InputText | InputSelect;
   value?: string;
-  onChange?: (newValue: string) => Promise<boolean>;
+  onChange?: (newValue: string) => Promise<void>;
   disabled: boolean;
 }
 

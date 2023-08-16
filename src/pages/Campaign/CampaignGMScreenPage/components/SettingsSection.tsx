@@ -1,29 +1,32 @@
 import { Stack } from "@mui/material";
-import { useCampaignGMScreenShowOrHideCustomMove } from "api/campaign/settings/showOrHideCustomMove copy";
-import { useCampaignGMScreenShowOrHideCustomOracle } from "api/campaign/settings/showOrHideCustomOracle";
 import { CustomMovesSection } from "components/CustomMovesSection";
 import { CustomOracleSection } from "components/CustomOraclesSection";
-import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
-import { useAuth } from "providers/AuthProvider";
+import { useStore } from "stores/store";
 
 export function SettingsSection() {
-  const uid = useAuth().user?.uid ?? "";
+  const uid = useStore((store) => store.auth.uid);
 
-  const customMoves = useCampaignGMScreenStore((store) => store.customMoves);
-  const customOracles = useCampaignGMScreenStore(
-    (store) => store.customOracles
+  const customMoves = useStore(
+    (store) => store.customMovesAndOracles.customMoves
+  );
+  const customOracles = useStore(
+    (store) => store.customMovesAndOracles.customOracles
   );
 
-  const hiddenMoves = useCampaignGMScreenStore(
-    (store) => store.campaignSettings?.hiddenCustomMoveIds
+  const hiddenMoves = useStore(
+    (store) => store.customMovesAndOracles.hiddenCustomMoveIds
   );
-  const { showOrHideCustomMove } = useCampaignGMScreenShowOrHideCustomMove();
 
-  const hiddenOracles = useCampaignGMScreenStore(
-    (store) => store.campaignSettings?.hiddenCustomOraclesIds
+  const showOrHideCustomMove = useStore(
+    (store) => store.customMovesAndOracles.toggleCustomMoveVisibility
   );
-  const { showOrHideCustomOracle } =
-    useCampaignGMScreenShowOrHideCustomOracle();
+
+  const hiddenOracles = useStore(
+    (store) => store.customMovesAndOracles.hiddenCustomOracleIds
+  );
+  const showOrHideCustomOracle = useStore(
+    (store) => store.customMovesAndOracles.toggleCustomOracleVisibility
+  );
 
   return (
     <Stack spacing={3} sx={{ pb: 2 }}>

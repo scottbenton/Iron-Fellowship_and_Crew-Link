@@ -1,5 +1,4 @@
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import { useUpdateWorldTruth } from "api/worlds/updateWorldTruth";
 import { DialogTitleWithCloseButton } from "components/DialogTitleWithCloseButton";
 import { TruthChooser } from "components/TruthChooser";
 import { TruthClassic } from "dataforged";

@@ -56,6 +56,7 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
       deleteCampaign()
         .then(() => {
           handleMenuClose();
+          navigate(constructCampaignPath(CAMPAIGN_ROUTES.SELECT));
         })
         .catch(() => {});
     });
@@ -105,7 +106,7 @@ export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
             Leave Campaign
           </MenuItem>
         )}
-        {isGm && (
+        {(isGm || campaign.users.length === 1) && (
           <MenuItem onClick={() => handleDeleteCampaign()}>
             End Campaign
           </MenuItem>

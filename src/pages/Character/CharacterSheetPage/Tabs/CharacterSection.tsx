@@ -9,81 +9,97 @@ import {
   Checkbox,
   Button,
 } from "@mui/material";
-import { useUpdateCharacterStat } from "api/characters/updateCharacterStat";
-import { useCharacterSheetUpdateDebility } from "api/characters/updateDebility";
-import { useCharacterSheetUpdateName } from "api/characters/updateName";
 import { SectionHeading } from "components/SectionHeading";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { DEBILITIES } from "types/debilities.enum";
 import { Stat } from "types/stats.enum";
-import { useCharacterSheetStore } from "../characterSheet.store";
 import { StatComponent } from "components/StatComponent";
-import { useCharacterSheetUpdateShareNotesWithGMSetting } from "api/characters/updateShareNotesWithGMSetting";
 import { useState } from "react";
 import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
-import { useCharacterSheetUpdateCharacterPortrait } from "api/characters/updateCharacterPortrait";
 import { CustomMovesSection } from "components/CustomMovesSection";
 import { CustomOracleSection } from "components/CustomOraclesSection";
-import { useCharacterSheetShowOrHideCustomMove } from "api/characters/settings/showOrHideCustomMove";
-import { useCharacterSheetShowOrHideCustomOracle } from "api/characters/settings/showOrHideCustomOracle";
 import { constructCharacterCardUrl } from "pages/Character/routes";
-import { useAuth } from "providers/AuthProvider";
+import { useStore } from "stores/store";
 
 export function CharacterSection() {
-  const uid = useAuth().user?.uid ?? "";
-  const characterId = useCharacterSheetStore((store) => store.characterId);
-  const campaignId = useCharacterSheetStore((store) => store.campaignId);
+  const uid = useStore((store) => store.auth.uid);
+  const characterId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacterId
+  );
+  const campaignId = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaignId
+  );
 
   const { success } = useSnackbar();
 
-  const stats = useCharacterSheetStore((store) => store.character?.stats);
-  const { updateCharacterStat } = useUpdateCharacterStat();
-
-  const name = useCharacterSheetStore((store) => store.character?.name);
-  const { updateName } = useCharacterSheetUpdateName();
-
-  const debilities =
-    useCharacterSheetStore((store) => store.character?.debilities) ?? {};
-  const { updateDebility } = useCharacterSheetUpdateDebility();
-
-  const handleStatChange = (stat: Stat, value: number) => {
-    return updateCharacterStat({ characterId, stat, value });
-  };
-
-  const handleDebilityChange = (debility: DEBILITIES, checked: boolean) => {
-    updateDebility({ debility, active: checked });
-  };
-
-  const sharingNotes = useCharacterSheetStore(
-    (store) => store.character?.shareNotesWithGM
+  const stats = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.stats
   );
-  const { updateShareNotesWithGMSetting } =
-    useCharacterSheetUpdateShareNotesWithGMSetting();
+  const updateCharacter = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacter
+  );
 
-  const existingPortraitSettings = useCharacterSheetStore(
-    (store) => store.character?.profileImage
+  const updateCharacterStat = (stat: Stat, value: number) => {
+    return updateCharacter({ [`stats.${stat}`]: value });
+  };
+
+  const name = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.name
+  );
+  const updateName = (newName: string) => {
+    return updateCharacter({ name: newName }).catch(() => {});
+  };
+
+  const debilities = useStore(
+    (store) =>
+      store.characters.currentCharacter.currentCharacter?.debilities ?? {}
+  );
+
+  const updateDebility = (debility: DEBILITIES, active: boolean) => {
+    updateCharacter({ [`debilities.${debility}`]: active }).catch(() => {});
+  };
+
+  const sharingNotes = useStore(
+    (store) =>
+      store.characters.currentCharacter.currentCharacter?.shareNotesWithGM
+  );
+  const updateShareNotesWithGMSetting = (shouldShare: boolean) => {
+    return updateCharacter({ shareNotesWithGM: shouldShare });
+  };
+
+  const existingPortraitSettings = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.profileImage
   );
   const [portraitDialogOpen, setPortraitDialogOpen] = useState<boolean>(false);
-  const { updateCharacterPortrait } =
-    useCharacterSheetUpdateCharacterPortrait();
 
-  const customMoves = useCharacterSheetStore((store) => store.customMoves);
-  const hiddenMoveIds = useCharacterSheetStore(
-    (store) => store.characterSettings?.hiddenCustomMoveIds
+  const updateCharacterPortrait = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacterPortrait
   );
-  const { showOrHideCustomMove } = useCharacterSheetShowOrHideCustomMove();
 
-  const customOracles = useCharacterSheetStore((store) => store.customOracles);
-  const hiddenOracleIds = useCharacterSheetStore(
-    (store) => store.characterSettings?.hiddenCustomOraclesIds
+  const customMoves = useStore(
+    (store) => store.customMovesAndOracles.customMoves[store.auth.uid]
   );
-  const { showOrHideCustomOracle } = useCharacterSheetShowOrHideCustomOracle();
+  const hiddenMoveIds = useStore(
+    (store) => store.customMovesAndOracles?.hiddenCustomMoveIds
+  );
+  const showOrHideCustomMove = useStore(
+    (store) => store.customMovesAndOracles.toggleCustomMoveVisibility
+  );
+
+  const customOracles = useStore(
+    (store) => store.customMovesAndOracles.customOracles[store.auth.uid]
+  );
+  const hiddenOracleIds = useStore(
+    (store) => store.customMovesAndOracles?.hiddenCustomOracleIds
+  );
+  const showOrHideCustomOracle = useStore(
+    (store) => store.customMovesAndOracles.toggleCustomOracleVisibility
+  );
 
   const copyLinkToClipboard = () => {
     navigator.clipboard
       .writeText(
-        window.location.origin +
-          constructCharacterCardUrl(uid, characterId ?? "")
+        window.location.origin + constructCharacterCardUrl(characterId ?? "")
       )
       .then(() => {
         success("Copied Link to Clipboard");
@@ -110,7 +126,7 @@ export function CharacterSection() {
                   <Checkbox
                     checked={debilities[DEBILITIES.WOUNDED] ?? false}
                     onChange={(evt, checked) =>
-                      handleDebilityChange(DEBILITIES.WOUNDED, checked)
+                      updateDebility(DEBILITIES.WOUNDED, checked)
                     }
                     name="wounded"
                   />
@@ -122,7 +138,7 @@ export function CharacterSection() {
                   <Checkbox
                     checked={debilities[DEBILITIES.SHAKEN] ?? false}
                     onChange={(evt, checked) =>
-                      handleDebilityChange(DEBILITIES.SHAKEN, checked)
+                      updateDebility(DEBILITIES.SHAKEN, checked)
                     }
                     name="shaken"
                   />
@@ -134,7 +150,7 @@ export function CharacterSection() {
                   <Checkbox
                     checked={debilities[DEBILITIES.UNPREPARED] ?? false}
                     onChange={(evt, checked) =>
-                      handleDebilityChange(DEBILITIES.UNPREPARED, checked)
+                      updateDebility(DEBILITIES.UNPREPARED, checked)
                     }
                     name="unprepared"
                   />
@@ -146,7 +162,7 @@ export function CharacterSection() {
                   <Checkbox
                     checked={debilities[DEBILITIES.ENCUMBERED] ?? false}
                     onChange={(evt, checked) =>
-                      handleDebilityChange(DEBILITIES.ENCUMBERED, checked)
+                      updateDebility(DEBILITIES.ENCUMBERED, checked)
                     }
                     name="encumbered"
                   />
@@ -163,7 +179,7 @@ export function CharacterSection() {
                   <Checkbox
                     checked={debilities[DEBILITIES.MAIMED] ?? false}
                     onChange={(evt, checked) =>
-                      handleDebilityChange(DEBILITIES.MAIMED, checked)
+                      updateDebility(DEBILITIES.MAIMED, checked)
                     }
                     name="maimed"
                   />
@@ -175,7 +191,7 @@ export function CharacterSection() {
                   <Checkbox
                     checked={debilities[DEBILITIES.CORRUPTED] ?? false}
                     onChange={(evt, checked) =>
-                      handleDebilityChange(DEBILITIES.CORRUPTED, checked)
+                      updateDebility(DEBILITIES.CORRUPTED, checked)
                     }
                     name="corrupted"
                   />
@@ -192,7 +208,7 @@ export function CharacterSection() {
                   <Checkbox
                     checked={debilities[DEBILITIES.CURSED] ?? false}
                     onChange={(evt, checked) =>
-                      handleDebilityChange(DEBILITIES.CURSED, checked)
+                      updateDebility(DEBILITIES.CURSED, checked)
                     }
                     name="cursed"
                   />
@@ -204,7 +220,7 @@ export function CharacterSection() {
                   <Checkbox
                     checked={debilities[DEBILITIES.TORMENTED] ?? false}
                     onChange={(evt, checked) =>
-                      handleDebilityChange(DEBILITIES.TORMENTED, checked)
+                      updateDebility(DEBILITIES.TORMENTED, checked)
                     }
                     name="tormented"
                   />
@@ -242,7 +258,8 @@ export function CharacterSection() {
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) => handleStatChange(Stat.Edge, newValue),
+              handleChange: (newValue) =>
+                updateCharacterStat(Stat.Edge, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
@@ -253,7 +270,7 @@ export function CharacterSection() {
               min: 0,
               max: 5,
               handleChange: (newValue) =>
-                handleStatChange(Stat.Heart, newValue),
+                updateCharacterStat(Stat.Heart, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
@@ -263,7 +280,8 @@ export function CharacterSection() {
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) => handleStatChange(Stat.Iron, newValue),
+              handleChange: (newValue) =>
+                updateCharacterStat(Stat.Iron, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
@@ -274,7 +292,7 @@ export function CharacterSection() {
               min: 0,
               max: 5,
               handleChange: (newValue) =>
-                handleStatChange(Stat.Shadow, newValue),
+                updateCharacterStat(Stat.Shadow, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
@@ -284,7 +302,8 @@ export function CharacterSection() {
             updateTrack={{
               min: 0,
               max: 5,
-              handleChange: (newValue) => handleStatChange(Stat.Wits, newValue),
+              handleChange: (newValue) =>
+                updateCharacterStat(Stat.Wits, newValue),
             }}
             sx={{ mr: 2, mt: 2 }}
           />
@@ -300,13 +319,13 @@ export function CharacterSection() {
         <PortraitUploaderDialog
           open={portraitDialogOpen}
           handleClose={() => setPortraitDialogOpen(false)}
-          handleUpload={(image, scale, position) => {
-            return updateCharacterPortrait({
-              portrait: typeof image === "string" ? undefined : image,
+          handleUpload={(image, scale, position) =>
+            updateCharacterPortrait(
+              typeof image === "string" ? undefined : image,
               scale,
-              position,
-            });
-          }}
+              position
+            ).catch(() => {})
+          }
           existingPortraitSettings={existingPortraitSettings}
         />
       </Box>
@@ -328,14 +347,14 @@ export function CharacterSection() {
       )}
       {!campaignId && (
         <CustomMovesSection
-          customMoves={customMoves[uid]}
+          customMoves={customMoves}
           hiddenMoveIds={hiddenMoveIds}
           showOrHideCustomMove={showOrHideCustomMove}
         />
       )}
       {!campaignId && (
         <CustomOracleSection
-          customOracles={customOracles[uid]}
+          customOracles={customOracles}
           hiddenOracleIds={hiddenOracleIds}
           showOrHideCustomOracle={showOrHideCustomOracle}
         />

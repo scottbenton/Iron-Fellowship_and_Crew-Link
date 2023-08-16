@@ -1,38 +1,27 @@
 import { Box, LinearProgress, useMediaQuery, useTheme } from "@mui/material";
-import { useAddCampaignNote } from "api/campaign/notes/addCampaignNote";
-import { useListenToCampaignNoteContent } from "api/campaign/notes/listenToCampaignNoteContent";
-import { useListenToCampaignNotes } from "api/campaign/notes/listenToCampaignNotes";
-import { useRemoveCampaignNote } from "api/campaign/notes/removeCampaignNote";
-import { useUpdateCampaignNote } from "api/campaign/notes/updateCampaignNote";
-import { useUpdateCampaignNoteOrder } from "api/campaign/notes/updateCampaignNoteOrder";
 import { Notes } from "components/Notes/Notes";
 import { useEffect } from "react";
-import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
+import { useStore } from "stores/store";
 
-export interface CampaignNotesSectionProps {
-  campaignId: string;
-}
-
-export function CampaignNotesSection(props: CampaignNotesSectionProps) {
-  const { campaignId } = props;
+export function CampaignNotesSection() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const notes = useCampaignGMScreenStore((store) => store.campaignNotes);
-  const temporarilyReorderNotes = useCampaignGMScreenStore(
-    (store) => store.temporarilyReorderNotes
+  const notes = useStore((store) => store.notes.notes);
+  const temporarilyReorderNotes = useStore(
+    (store) => store.notes.temporarilyReorderNotes
   );
 
-  const {
-    noteContent,
-    noteId: openNoteId,
-    setNoteId,
-  } = useListenToCampaignNoteContent(campaignId);
+  const noteContent = useStore((store) => store.notes.openNoteContent);
+  const openNoteId = useStore((store) => store.notes.openNoteId);
+  const setNoteId = useStore((store) => store.notes.setOpenNoteId);
 
-  const { addCampaignNote } = useAddCampaignNote();
-  const { updateCampaignNote } = useUpdateCampaignNote();
-  const { updateCampaignNoteOrder } = useUpdateCampaignNoteOrder();
-  const { removeCampaignNote } = useRemoveCampaignNote();
+  const addCampaignNote = useStore((store) => store.notes.addNote);
+  const updateCampaignNote = useStore((store) => store.notes.updateNote);
+  const updateCampaignNoteOrder = useStore(
+    (store) => store.notes.updateNoteOrder
+  );
+  const removeCampaignNote = useStore((store) => store.notes.removeNote);
 
   useEffect(() => {
     if (Array.isArray(notes) && notes.length > 0 && !openNoteId && !isMobile) {
@@ -48,7 +37,7 @@ export function CampaignNotesSection(props: CampaignNotesSectionProps) {
 
   const handleNoteReorder = (noteId: string, order: number) => {
     temporarilyReorderNotes(noteId, order);
-    return updateCampaignNoteOrder({ campaignId, noteId, order });
+    return updateCampaignNoteOrder(noteId, order);
   };
 
   return (
@@ -59,16 +48,16 @@ export function CampaignNotesSection(props: CampaignNotesSectionProps) {
         selectedNoteContent={noteContent}
         openNote={(noteId) => setNoteId(noteId)}
         createNote={() =>
-          addCampaignNote({
-            campaignId,
-            order:
-              notes && notes.length > 0 ? notes[notes.length - 1].order + 1 : 1,
-          })
+          addCampaignNote(
+            notes && notes.length > 0 ? notes[notes.length - 1].order + 1 : 1
+          )
         }
         updateNoteOrder={handleNoteReorder}
-        onSave={(params) => updateCampaignNote({ campaignId, ...params })}
+        onSave={({ noteId, title, content, isBeaconRequest }) =>
+          updateCampaignNote(noteId, title, content, isBeaconRequest)
+        }
         onDelete={(noteId) =>
-          removeCampaignNote({ campaignId, noteId })
+          removeCampaignNote(noteId)
             .then(() => {
               setNoteId(undefined);
             })

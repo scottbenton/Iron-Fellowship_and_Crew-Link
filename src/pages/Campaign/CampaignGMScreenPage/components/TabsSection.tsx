@@ -10,7 +10,6 @@ import { CampaignNotesSection } from "./CampaignNotesSection";
 import { SettingsSection } from "./SettingsSection";
 import { WorldSection } from "./WorldSection";
 import { LocationsSection } from "components/Locations";
-import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { useSearchParams } from "react-router-dom";
 import {
   StyledTabs,
@@ -59,9 +58,6 @@ export function TabsSection(props: TabsSectionProps) {
     }
   }, [selectedTab, isMobile]);
 
-  const worldOwnerId = useCampaignGMScreenStore((store) => store.worldOwnerId);
-  const worldId = useCampaignGMScreenStore((store) => store.campaign?.worldId);
-
   return (
     <Card
       variant={"outlined"}
@@ -98,7 +94,7 @@ export function TabsSection(props: TabsSectionProps) {
         <OracleSection />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.NOTES}>
-        <CampaignNotesSection campaignId={campaignId} />
+        <CampaignNotesSection />
       </ContainedTabPanel>
 
       <ContainedTabPanel isVisible={selectedTab === TABS.WORLD}>
@@ -106,36 +102,21 @@ export function TabsSection(props: TabsSectionProps) {
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.LOCATIONS}
-        greyBackground={worldId && worldOwnerId ? true : false}
+        greyBackground={campaign.worldId ? true : false}
       >
-        <LocationsSection
-          worldOwnerId={worldOwnerId}
-          worldId={worldId}
-          showHiddenTag
-          useStore={useCampaignGMScreenStore}
-        />
+        <LocationsSection showHiddenTag />
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.NPCS}
-        greyBackground={worldId && worldOwnerId ? true : false}
+        greyBackground={campaign.worldId ? true : false}
       >
-        <NPCSection
-          worldOwnerId={worldOwnerId ?? ""}
-          worldId={worldId ?? ""}
-          showHiddenTag
-          useStore={useCampaignGMScreenStore}
-        />
+        <NPCSection showHiddenTag />
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.LORE}
-        greyBackground={worldId && worldOwnerId ? true : false}
+        greyBackground={campaign.worldId ? true : false}
       >
-        <LoreSection
-          worldOwnerId={worldOwnerId ?? ""}
-          worldId={worldId ?? ""}
-          showHiddenTag
-          useStore={useCampaignGMScreenStore}
-        />
+        <LoreSection showHiddenTag />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.SETTINGS}>
         <SettingsSection />

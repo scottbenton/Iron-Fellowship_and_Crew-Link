@@ -37,8 +37,8 @@ export interface CustomOracleDialogProps {
   open: boolean;
   onClose: () => void;
 
-  createCustomOracle: (move: StoredOracle) => Promise<boolean>;
-  updateCustomOracle: (moveId: string, move: StoredOracle) => Promise<boolean>;
+  createCustomOracle: (move: StoredOracle) => Promise<boolean | void>;
+  updateCustomOracle: (moveId: string, move: StoredOracle) => Promise<boolean | void>;
   oracle?: StoredOracle;
 }
 

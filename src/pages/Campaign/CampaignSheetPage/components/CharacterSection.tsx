@@ -2,7 +2,6 @@ import { Button } from "@mui/material";
 import { CharacterList } from "components/CharacterList";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import { SectionHeading } from "components/SectionHeading";
-import { useAuth } from "providers/AuthProvider";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { StoredCampaign } from "types/Campaign.type";
@@ -18,13 +17,13 @@ export interface CharacterSectionProps {
 export function CharacterSection(props: CharacterSectionProps) {
   const { campaign, campaignId } = props;
 
-  const uid = useAuth().user?.uid;
+  const uid = useStore((store) => store.auth.uid);
 
   const [addCharacterDialogOpen, setAddCharacterDialogOpen] =
     useState<boolean>(false);
 
   const characters = useStore(
-    (store) => store.campaigns.currentCampaign.currentCampaignCharacters
+    (store) => store.campaigns.currentCampaign.characters.characterMap
   );
   const removeCharacterFromCampaign = useStore(
     (store) => store.campaigns.currentCampaign.removeCharacter

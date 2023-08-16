@@ -13,7 +13,7 @@ export interface NoteSidebarProps {
   selectedNoteId?: string;
   openNote: (noteId: string) => void;
   createNote?: () => Promise<string>;
-  updateNoteOrder?: (noteId: string, order: number) => Promise<boolean>;
+  updateNoteOrder?: (noteId: string, order: number) => Promise<boolean | void>;
   isMobile: boolean;
 }
 

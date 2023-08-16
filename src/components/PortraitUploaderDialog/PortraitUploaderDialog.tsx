@@ -21,7 +21,7 @@ export interface PortraitUploaderDialogProps {
     image: File | string,
     scale: number,
     position: { x: number; y: number }
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   existingPortraitFile?: File | string;
   existingPortraitSettings?: {
     position: {

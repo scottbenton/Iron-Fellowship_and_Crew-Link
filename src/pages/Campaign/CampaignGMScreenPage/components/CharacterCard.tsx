@@ -12,12 +12,10 @@ import { CharacterDocument, INITIATIVE_STATUS } from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AssetCard } from "components/AssetCard/AssetCard";
 import { InitiativeStatusChip } from "components/InitiativeStatusChip";
-import { useUpdateCharacterInitiative } from "api/characters/updateCharacterInitiative";
-import { CharacterNotesComponent } from "./CharacterNotesComponent";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
-import { useCampaignGMScreenStore } from "../campaignGMScreen.store";
 import { Stat } from "types/stats.enum";
-import { useMiscDataStore } from "stores/miscData.store";
+import { useStore } from "stores/store";
+import { useState } from "react";
 
 export interface CharacterCardProps {
   uid: string;
@@ -28,14 +26,27 @@ export interface CharacterCardProps {
 export function CharacterCard(props: CharacterCardProps) {
   const { uid, characterId, character } = props;
 
-  const storedAssets = useCampaignGMScreenStore(
-    (store) => store.characterAssets[characterId]
+  const storedAssets = useStore(
+    (store) =>
+      store.campaigns.currentCampaign.characters.characterAssets[characterId]
   );
 
-  const user = useMiscDataStore((store) => store.userDocs[uid]);
-
-  const { updateCharacterInitiative, loading: initiativeLoading } =
-    useUpdateCharacterInitiative();
+  const user = useStore((store) => store.users.userMap[uid]?.doc);
+  const updateCharacter = useStore(
+    (store) => store.campaigns.currentCampaign.characters.updateCharacter
+  );
+  const [
+    updateCharacterInitiativeLoading,
+    setUpdateCharacterInitiativeLoading,
+  ] = useState(false);
+  const updateCharacterInitiative = (initiativeStatus: INITIATIVE_STATUS) => {
+    setUpdateCharacterInitiativeLoading(true);
+    updateCharacter(characterId, { initiativeStatus })
+      .catch(() => {})
+      .finally(() => {
+        setUpdateCharacterInitiativeLoading(false);
+      });
+  };
 
   return (
     <Card variant={"outlined"}>
@@ -66,14 +77,8 @@ export function CharacterCard(props: CharacterCardProps) {
             status={
               character.initiativeStatus ?? INITIATIVE_STATUS.OUT_OF_COMBAT
             }
-            handleStatusChange={(initiativeStatus) =>
-              updateCharacterInitiative({
-                uid,
-                characterId,
-                initiativeStatus,
-              }).catch(() => {})
-            }
-            loading={initiativeLoading}
+            handleStatusChange={updateCharacterInitiative}
+            loading={updateCharacterInitiativeLoading}
             variant={"outlined"}
           />
         </Box>
@@ -122,6 +127,12 @@ export function CharacterCard(props: CharacterCardProps) {
             disableRoll
             sx={{ mr: 1, mt: 1 }}
           />
+          <StatComponent
+            label={"Momentum"}
+            value={character.momentum}
+            disableRoll
+            sx={{ mr: 1, mt: 1 }}
+          />
         </Box>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -140,7 +151,7 @@ export function CharacterCard(props: CharacterCardProps) {
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        {/* <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             Notes
           </AccordionSummary>
@@ -155,7 +166,7 @@ export function CharacterCard(props: CharacterCardProps) {
               </Typography>
             )}
           </AccordionDetails>
-        </Accordion>
+        </Accordion> */}
       </Box>
     </Card>
   );

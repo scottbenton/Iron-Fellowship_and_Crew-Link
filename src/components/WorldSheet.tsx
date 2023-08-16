@@ -8,17 +8,19 @@ import { TruthCard } from "pages/World/WorldSheetPage/components/TruthCard";
 import { useStore } from "stores/store";
 
 export interface WorldSheetProps {
-  world: World;
   canEdit: boolean;
   hideCampaignHints?: boolean;
 }
 
 export function WorldSheet(props: WorldSheetProps) {
-  const { world, canEdit, hideCampaignHints } = props;
+  const { canEdit, hideCampaignHints } = props;
+
+  const world = useStore((store) => store.worlds.currentWorld.currentWorld);
 
   const updateWorldDescription = useStore(
     (store) => store.worlds.currentWorld.updateCurrentWorldDescription
   );
+  if (!world) return null;
 
   return (
     <>

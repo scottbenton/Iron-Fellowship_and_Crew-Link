@@ -1,4 +1,3 @@
-import { useUpdateCampaignSupply } from "api/campaign/updateCampaignSupply";
 import { SectionHeading } from "components/SectionHeading";
 import { Track } from "components/Track";
 import { supplyTrack } from "data/defaultTracks";

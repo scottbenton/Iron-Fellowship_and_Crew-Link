@@ -4,7 +4,6 @@ import { SnackbarProvider } from "./SnackbarProvider";
 import { ConfirmProvider } from "material-ui-confirm";
 import { DieRollProvider } from "providers/DieRollProvider";
 import { LinkedDialogProvider } from "./LinkedDialogProvider";
-import { AuthProvider } from "./AuthProvider";
 import { AnalyticsProvider } from "lib/analytics.lib";
 
 export function AppProviders(props: PropsWithChildren) {
@@ -14,13 +13,11 @@ export function AppProviders(props: PropsWithChildren) {
       <ThemeProvider>
         <ConfirmProvider>
           <SnackbarProvider>
-            <AuthProvider>
-              <DieRollProvider>
-                <LinkedDialogProvider>
-                  <>{children}</>
-                </LinkedDialogProvider>
-              </DieRollProvider>
-            </AuthProvider>
+            <DieRollProvider>
+              <LinkedDialogProvider>
+                <>{children}</>
+              </LinkedDialogProvider>
+            </DieRollProvider>
           </SnackbarProvider>
         </ConfirmProvider>
       </ThemeProvider>

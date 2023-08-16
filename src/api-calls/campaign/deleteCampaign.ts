@@ -1,4 +1,3 @@
-import { CampaignNotFoundException } from "api/error/CampaignNotFoundException";
 import { deleteDoc, deleteField, updateDoc } from "firebase/firestore";
 import { getCharacterDoc } from "../character/_getRef";
 // import { deleteCampaignNotes } from "./notes/deleteCampaignNotes";
@@ -13,11 +12,6 @@ export const deleteCampaign = createApiFunction<
   const { campaignId, characterIds } = params;
 
   return new Promise(async (resolve, reject) => {
-    if (!campaignId) {
-      reject(new CampaignNotFoundException());
-      return;
-    }
-
     try {
       const characterPromises = characterIds.map((characterId) => {
         return updateDoc(getCharacterDoc(characterId), {

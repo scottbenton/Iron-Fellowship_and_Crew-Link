@@ -7,6 +7,8 @@ import { createCampaignSlice } from "./campaign/campaign.slice";
 import { createUsersSlice } from "./user/users.slice";
 import { createWorldSlice } from "./world/world.slice";
 import { shallow } from "zustand/shallow";
+import { createCustomMovesAndOraclesSlice } from "./customMovesAndOracles/customMovesAndOracles.slice";
+import { createNotesSlice } from "./notes/notes.slice";
 
 export const useStore = createWithEqualityFn<IStore>()(
   immer((...params) => ({
@@ -15,6 +17,8 @@ export const useStore = createWithEqualityFn<IStore>()(
     worlds: createWorldSlice(...params),
     auth: createAuthSlice(...params),
     users: createUsersSlice(...params),
+    customMovesAndOracles: createCustomMovesAndOraclesSlice(...params),
+    notes: createNotesSlice(...params),
   })),
   shallow
 );

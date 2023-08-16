@@ -1,13 +1,8 @@
 import { Button, LinearProgress } from "@mui/material";
-import { useUpdateCampaignWorld } from "api/campaign/updateCampaignWorld";
-import { useUpdateCharacterWorld } from "api/characters/updateCharacterWorld";
 import { WorldSheet } from "components/WorldSheet";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useConfirm } from "material-ui-confirm";
-import { useAuth } from "providers/AuthProvider";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useCampaignStore } from "stores/campaigns.store";
-import { useCharacterStore } from "stores/character.store";
 import { useSyncStore } from "./hooks/useSyncStore";
 import { useState } from "react";
 import { LocationsSection } from "components/Locations";
@@ -58,15 +53,9 @@ export function WorldSheetPage() {
 
   const { error } = useSnackbar();
   const confirm = useConfirm();
-  const uid = useAuth().user?.uid;
+  const uid = useStore((store) => store.auth.uid);
 
   const navigate = useNavigate();
-
-  const characters = useCharacterStore((store) => store.characters);
-  const { updateCharacterWorld } = useUpdateCharacterWorld();
-  const campaigns = useCampaignStore((store) => store.campaigns);
-  const { updateCampaignWorld } = useUpdateCampaignWorld();
-
   const deleteWorld = useStore((store) => store.worlds.deleteWorld);
 
   if (isLoading) {
@@ -89,31 +78,11 @@ export function WorldSheetPage() {
       },
     })
       .then(() => {
-        let promises: Promise<boolean>[] = [];
-        Object.keys(characters).forEach((characterId) => {
-          if (characters[characterId].worldId === worldId) {
-            promises.push(updateCharacterWorld({ uid, characterId }));
-          }
-        });
-        Object.keys(campaigns).forEach((campaignId) => {
-          if (campaigns[campaignId].worldId === worldId) {
-            promises.push(updateCampaignWorld(campaignId, undefined));
-          }
-        });
-
-        Promise.all(promises)
+        deleteWorld(worldId)
           .then(() => {
-            deleteWorld(worldId)
-              .then(() => {
-                navigate(constructWorldPath(WORLD_ROUTES.SELECT));
-              })
-              .catch((e) => {
-                error("Failed to delete world");
-              });
+            navigate(constructWorldPath(WORLD_ROUTES.SELECT));
           })
-          .catch((e) => {
-            error("Failed to remove world from campaigns and characters.");
-          });
+          .catch(() => {});
       })
       .catch(() => {});
   };
@@ -149,9 +118,7 @@ export function WorldSheetPage() {
             <StyledTab value={TABS.LORE} label={"Lore"} />
           </StyledTabs>
         </BreakContainer>
-        {selectedTab === TABS.DETAILS && (
-          <WorldSheet worldId={worldId} world={world} canEdit={canEdit} />
-        )}
+        {selectedTab === TABS.DETAILS && <WorldSheet canEdit={canEdit} />}
         {selectedTab === TABS.LOCATIONS && (
           <BreakContainer
             sx={(theme) => ({

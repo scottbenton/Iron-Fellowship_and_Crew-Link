@@ -1,9 +1,6 @@
-import { Translate } from "@mui/icons-material";
 import { Box, Typography, TypographyVariant, Skeleton } from "@mui/material";
-import { useListenToCharacterPortraitUrl } from "api/characters/getCharacterPortraitUrl";
 import { getHueFromString } from "functions/getHueFromString";
 import { useEffect, useState } from "react";
-import { useMiscDataStore } from "stores/miscData.store";
 import { useStore } from "stores/store";
 
 type AvatarSizes = "small" | "medium" | "large" | "huge";

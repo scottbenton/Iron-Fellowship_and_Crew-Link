@@ -15,7 +15,6 @@ import { RollSnackbar } from "./RollSnackbar";
 import { oracleCategoryMap, oracleMap } from "data/oracles";
 import { useCustomOracles } from "components/OracleSection/useCustomOracles";
 import { TRACK_TYPES } from "types/Track.type";
-import { useAddCharacterRoll } from "api/characters/rolls/addCharacterRoll";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -23,7 +22,7 @@ const getRoll = (dieMax: number) => {
 
 export function DieRollProvider(props: PropsWithChildren) {
   const { children } = props;
-  const { addCharacterRoll } = useAddCharacterRoll();
+  // const { addCharacterRoll } = useAddCharacterRoll();
 
   const { allCustomOracleMap, customOracleCategories } = useCustomOracles();
   const combinedOracleCategories = {
@@ -73,7 +72,7 @@ export function DieRollProvider(props: PropsWithChildren) {
       timestamp: new Date(),
     };
 
-    addCharacterRoll(statRoll)?.catch(() => {});
+    // addCharacterRoll(statRoll)?.catch(() => {});
 
     if (showSnackbar) {
       addRoll(statRoll);
@@ -146,7 +145,7 @@ export function DieRollProvider(props: PropsWithChildren) {
 
     addRoll(trackProgressRoll);
 
-    addCharacterRoll(trackProgressRoll)?.catch(() => {});
+    // addCharacterRoll(trackProgressRoll)?.catch(() => {});
 
     return result;
   };
