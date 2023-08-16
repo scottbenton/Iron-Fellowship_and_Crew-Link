@@ -37,8 +37,6 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
 
   const table = oracle.Table;
 
-  console.debug(oracle);
-
   return (
     <>
       <LinkedDialogContentTitle
