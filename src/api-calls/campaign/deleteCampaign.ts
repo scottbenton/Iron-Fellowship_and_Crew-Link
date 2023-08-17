@@ -1,9 +1,10 @@
 import { deleteDoc, deleteField, updateDoc } from "firebase/firestore";
 import { getCharacterDoc } from "../character/_getRef";
-// import { deleteCampaignNotes } from "./notes/deleteCampaignNotes";
-// import { getSharedCampaignTracksDoc } from "./tracks/_getRef";
 import { getCampaignDoc } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
+import { deleteNotes } from "api-calls/notes/deleteNotes";
+import { getCampaignTracksDoc } from "api-calls/tracks/_getRef";
+import { getCampaignSettingsDoc } from "api-calls/custom-move-oracle-settings/_getRef";
 
 export const deleteCampaign = createApiFunction<
   { campaignId: string; characterIds: string[] },
@@ -27,15 +28,17 @@ export const deleteCampaign = createApiFunction<
 
     try {
       const campaignDeletePromise = deleteDoc(getCampaignDoc(campaignId));
-      // const campaignTrackDeletePromise = deleteDoc(
-      //   getSharedCampaignTracksDoc(campaignId)
-      // );
-      // const campaignNotesDeletePromise = deleteCampaignNotes(campaignId);
+      const noteDeletePromise = deleteNotes({ campaignId });
+      const tracksDeletePromise = deleteDoc(getCampaignTracksDoc(campaignId));
+      const settingsDeletePromise = deleteDoc(
+        getCampaignSettingsDoc(campaignId)
+      );
 
       await Promise.all([
         campaignDeletePromise,
-        // campaignTrackDeletePromise,
-        // campaignNotesDeletePromise,
+        noteDeletePromise,
+        tracksDeletePromise,
+        settingsDeletePromise,
       ]);
       resolve();
     } catch (e) {

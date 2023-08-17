@@ -17,9 +17,12 @@ import {
   getCharacterCollection,
   getCharacterDoc,
 } from "api-calls/character/_getRef";
+import { deleteAllLocations } from "./locations/deleteAllLocations";
+import { deleteAllLoreDocuments } from "./lore/deleteAllLoreDocuments";
+import { deleteAllNPCs } from "./npcs/deleteAllNPCs";
 
 export const deleteWorld = createApiFunction<string, void>((worldId) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const campaignsUsingWorld = getDocs(
       query(getCampaignCollection(), where("worldId", "==", worldId))
     );
@@ -27,35 +30,33 @@ export const deleteWorld = createApiFunction<string, void>((worldId) => {
       query(getCharacterCollection(), where("worldId", "==", worldId))
     );
 
-    runTransaction(firestore, async (transaction) => {
-      const campaignUpdatePromises = (await campaignsUsingWorld).docs.map(
-        (doc) => {
-          transaction.update(getCampaignDoc(doc.id), {
-            worldId: deleteField(),
+    try {
+      const promises: Promise<any>[] = [];
+      promises.push(
+        runTransaction(firestore, async (transaction) => {
+          (await campaignsUsingWorld).docs.map((doc) => {
+            transaction.update(getCampaignDoc(doc.id), {
+              worldId: deleteField(),
+            });
           });
-        }
+          (await charactersUsingWorld).docs.map((doc) => {
+            transaction.update(getCharacterDoc(doc.id), {
+              worldId: deleteField(),
+            });
+          });
+        })
       );
-      const characterUpdatePromises = (await charactersUsingWorld).docs.map(
-        (doc) => {
-          transaction.update(getCharacterDoc(doc.id), {
-            worldId: deleteField(),
-          });
-        }
-      );
-      await Promise.all(campaignUpdatePromises);
-      await Promise.all(characterUpdatePromises);
-    })
-      .then(() => {
-        deleteDoc(getWorldDoc(worldId))
-          .then(() => {
-            resolve();
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      })
-      .catch((e) => {
-        reject(e);
-      });
+
+      promises.push(deleteAllLocations({ worldId }));
+      promises.push(deleteAllLoreDocuments({ worldId }));
+      promises.push(deleteAllNPCs({ worldId }));
+
+      await Promise.all(promises);
+      await deleteDoc(getWorldDoc(worldId));
+
+      resolve();
+    } catch (e) {
+      reject(e);
+    }
   });
 }, "Failed to delete world.");
