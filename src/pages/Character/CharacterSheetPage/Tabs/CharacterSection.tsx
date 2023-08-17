@@ -329,7 +329,7 @@ export function CharacterSection() {
           existingPortraitSettings={existingPortraitSettings}
         />
       </Box>
-      {campaignId && (
+      {/* {campaignId && (
         <Box px={2}>
           <FormControlLabel
             control={
@@ -344,7 +344,7 @@ export function CharacterSection() {
             label="Share notes with your GM?"
           />
         </Box>
-      )}
+      )} */}
       {!campaignId && (
         <CustomMovesSection
           customMoves={customMoves}
