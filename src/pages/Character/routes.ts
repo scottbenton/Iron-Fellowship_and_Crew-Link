@@ -10,7 +10,7 @@ export enum CHARACTER_ROUTES {
 export const characterPaths: { [key in CHARACTER_ROUTES]: string } = {
   [CHARACTER_ROUTES.CREATE]: "create",
   [CHARACTER_ROUTES.SHEET]: ":characterId",
-  [CHARACTER_ROUTES.CARD]: ":userId/:characterId/card",
+  [CHARACTER_ROUTES.CARD]: ":characterId/card",
   [CHARACTER_ROUTES.SELECT]: "",
 };
 
@@ -32,6 +32,6 @@ export function constructCharacterCreateInCampaignUrl(campaignId: string) {
   }?campaignId=${campaignId}`;
 }
 
-export function constructCharacterCardUrl(uid: string, characterId: string) {
-  return `${basePaths[BASE_ROUTES.CHARACTER]}/${uid}/${characterId}/card`;
+export function constructCharacterCardUrl(characterId: string) {
+  return `${basePaths[BASE_ROUTES.CHARACTER]}/${characterId}/card`;
 }

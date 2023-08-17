@@ -9,50 +9,65 @@ import {
 } from "@mui/material";
 import AddLoreIcon from "@mui/icons-material/Book";
 import { OpenLore } from "./OpenLore";
-import { LocationStoreProperties, Lore } from "stores/sharedLocationStore";
 import { useFilterLore } from "./useFilterLore";
-import { useAuth } from "providers/AuthProvider";
 import { WorldEmptyState } from "components/WorldEmptyState";
-import { useCreateLore } from "api/worlds/lore/createLore";
 import { FilterBar } from "components/FilterBar";
 import { LoreItem } from "./LoreItem";
 import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
-import { StoreApi, UseBoundStore } from "zustand";
+import { useStore } from "stores/store";
+import { useState } from "react";
 
 export interface LoreSectionProps {
-  worldOwnerId?: string;
-  worldId?: string;
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
-  useStore: UseBoundStore<StoreApi<LocationStoreProperties>>;
 }
 
 export function LoreSection(props: LoreSectionProps) {
-  const { worldOwnerId, worldId, isSinglePlayer, showHiddenTag, useStore } =
-    props;
+  const { isSinglePlayer, showHiddenTag } = props;
 
-  const isWorldOwner = useAuth().user?.uid === worldOwnerId;
+  const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
+  const isWorldOwner = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorld?.ownerIds?.includes(
+        store.auth.uid
+      ) ?? false
+  );
 
-  const {
-    lore,
-    openLoreId,
-    setOpenLoreId,
-    doAnyDocsHaveImages,
-    search,
-    setSearch,
-  } = useStore((store) => ({
-    lore: store.lore,
-    openLoreId: store.openLoreId,
-    setOpenLoreId: store.setOpenLoreId,
-    doAnyDocsHaveImages: store.doAnyDocsHaveImages,
-    search: store.loreSearch,
-    setSearch: store.setLoreSearch,
-  }));
+  const lore = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.loreMap
+  );
+  const openLoreId = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.openLoreId
+  );
+  const setOpenLoreId = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.setOpenLoreId
+  );
+  const doAnyDocsHaveImages = useStore(
+    (store) => store.worlds.currentWorld.doAnyDocsHaveImages
+  );
+  const search = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.loreSearch
+  );
+  const setSearch = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.setLoreSearch
+  );
 
-  const userCanUploadImages = useCanUploadWorldImages() ?? false;
-  const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
+  const canShowImages = useCanUploadWorldImages() || doAnyDocsHaveImages;
 
-  const { createLore, loading: createLoreLoading } = useCreateLore();
+  const [createLoreLoading, setCreateLoreLoading] = useState(false);
+  const createLore = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.createLore
+  );
+
+  const handleCreateLore = () => {
+    setCreateLoreLoading(true);
+    createLore()
+      .then((loreId) => setOpenLoreId(loreId))
+      .catch(() => {})
+      .finally(() => {
+        setCreateLoreLoading(false);
+      });
+  };
 
   const tags = new Set<string>();
   Object.values(lore).forEach((loreItem) => {
@@ -61,7 +76,7 @@ export function LoreSection(props: LoreSectionProps) {
 
   const { filteredLoreIds, sortedLoreIds } = useFilterLore(lore, search);
 
-  if (!worldId || !worldOwnerId) {
+  if (!worldId) {
     return (
       <WorldEmptyState isMultiplayer={!isSinglePlayer} isGM={isWorldOwner} />
     );
@@ -102,7 +117,7 @@ export function LoreSection(props: LoreSectionProps) {
 
         <OpenLore
           worldId={worldId}
-          worldOwnerId={worldOwnerId}
+          isWorldOwner={isWorldOwner}
           lore={openLore}
           loreId={openLoreId}
           closeLore={() => setOpenLoreId(undefined)}
@@ -121,15 +136,7 @@ export function LoreSection(props: LoreSectionProps) {
           <Button
             variant={"contained"}
             endIcon={<AddLoreIcon />}
-            onClick={() =>
-              createLore(worldId)
-                .catch(() => {})
-                .then((loreId) => {
-                  if (loreId) {
-                    setOpenLoreId(loreId);
-                  }
-                })
-            }
+            onClick={handleCreateLore}
             disabled={createLoreLoading}
             sx={{ flexShrink: 0 }}
           >

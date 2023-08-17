@@ -12,7 +12,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { ChangeEventHandler, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 
 export interface PortraitUploaderDialogProps {
   open: boolean;
@@ -21,7 +21,7 @@ export interface PortraitUploaderDialogProps {
     image: File | string,
     scale: number,
     position: { x: number; y: number }
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   existingPortraitFile?: File | string;
   existingPortraitSettings?: {
     position: {

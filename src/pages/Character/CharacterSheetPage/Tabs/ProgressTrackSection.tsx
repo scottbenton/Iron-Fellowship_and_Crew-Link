@@ -1,11 +1,7 @@
 import { Box } from "@mui/material";
-import { useCharacterSheetAddProgressTrack } from "api/shared/addProgressTrack";
-import { useCharacterSheetRemoveProgressTrack } from "api/shared/removeProgressTrack";
-import { useCharacterSheetUpdateProgressTrackValue } from "api/shared/updateProgressTrackValue";
 import { ProgressTrackList } from "components/ProgressTrack";
 import { TRACK_TYPES } from "types/Track.type";
-import { useCharacterSheetStore } from "../characterSheet.store";
-import { useCharacterSheetUpdateProgressTrack } from "api/shared/updateProgressTrack";
+import { useStore } from "stores/store";
 
 export interface ProgressTrackSectionProps {
   type: TRACK_TYPES;
@@ -16,57 +12,71 @@ export interface ProgressTrackSectionProps {
 export function ProgressTrackSection(props: ProgressTrackSectionProps) {
   const { type, typeLabel, showPersonalIfInCampaign } = props;
 
-  const tracks = useCharacterSheetStore((store) => store[type]);
+  const characterTracks = useStore(
+    (store) => store.characters.currentCharacter.tracks.trackMap[type]
+  );
+  const addProgressTrack = useStore(
+    (store) => store.characters.currentCharacter.tracks.addTrack
+  );
+  const updateProgressTrackValue = useStore(
+    (store) => store.characters.currentCharacter.tracks.updateTrackValue
+  );
+  const updateProgressTrack = useStore(
+    (store) => store.characters.currentCharacter.tracks.updateTrack
+  );
+  const removeProgressTrack = useStore(
+    (store) => store.characters.currentCharacter.tracks.removeTrack
+  );
 
-  const addProgressTrack = useCharacterSheetAddProgressTrack();
-  const updateProgressTrackValue = useCharacterSheetUpdateProgressTrackValue();
-  const updateProgressTrack = useCharacterSheetUpdateProgressTrack();
-  const removeProgressTrack = useCharacterSheetRemoveProgressTrack();
+  const campaignTracks = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.trackMap[type]
+  );
+  const addCampaignTrack = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.addTrack
+  );
+  const updateCampaignTrackValue = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.updateTrackValue
+  );
+  const updateCampaignTrack = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.updateTrack
+  );
+  const removeCampaignTrackValue = useStore(
+    (store) => store.campaigns.currentCampaign.tracks.removeTrack
+  );
 
   return (
     <Box>
-      {Array.isArray(tracks.campaign) && (
+      {Array.isArray(campaignTracks) && (
         <ProgressTrackList
           trackType={type}
-          tracks={tracks.campaign}
+          tracks={campaignTracks}
           typeLabel={`Campaign ${typeLabel}`}
-          handleAdd={(newTrack) =>
-            addProgressTrack({ type, track: newTrack, isCampaign: true })
-          }
+          handleAdd={(newTrack) => addCampaignTrack(type, newTrack)}
           handleUpdateValue={(trackId, value) =>
-            updateProgressTrackValue({ type, trackId, value, isCampaign: true })
+            updateCampaignTrackValue(type, trackId, value)
           }
           handleUpdateTrack={(trackId, track) =>
-            updateProgressTrack({ type, trackId, track, isCampaign: true })
+            updateCampaignTrack(type, trackId, track)
           }
           handleDeleteTrack={(trackId) =>
-            removeProgressTrack({ type, isCampaign: true, id: trackId })
+            removeCampaignTrackValue(type, trackId)
           }
         />
       )}
-      {((Array.isArray(tracks.campaign) && showPersonalIfInCampaign) ||
-        !Array.isArray(tracks.campaign)) && (
+      {((Array.isArray(campaignTracks) && showPersonalIfInCampaign) ||
+        !Array.isArray(campaignTracks)) && (
         <ProgressTrackList
           trackType={type}
-          tracks={tracks.character}
+          tracks={characterTracks}
           typeLabel={`Character ${typeLabel}`}
-          handleAdd={(newTrack) =>
-            addProgressTrack({ type, track: newTrack, isCampaign: false })
-          }
+          handleAdd={(newTrack) => addProgressTrack(type, newTrack)}
           handleUpdateValue={(trackId, value) =>
-            updateProgressTrackValue({
-              type,
-              trackId,
-              value,
-              isCampaign: false,
-            })
+            updateProgressTrackValue(type, trackId, value)
           }
           handleUpdateTrack={(trackId, track) =>
-            updateProgressTrack({ type, trackId, track, isCampaign: false })
+            updateProgressTrack(type, trackId, track)
           }
-          handleDeleteTrack={(trackId) =>
-            removeProgressTrack({ type, isCampaign: false, id: trackId })
-          }
+          handleDeleteTrack={(trackId) => removeProgressTrack(type, trackId)}
         />
       )}
     </Box>

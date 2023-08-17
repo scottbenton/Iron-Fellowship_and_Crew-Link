@@ -37,7 +37,13 @@ export function sendPageViewEvent() {
   posthog.capture("$pageview");
 }
 
-export function reportApiError(errorMessage: string) {
+export function reportApiError(
+  errorMessage: string,
+  underlyingErrorMessage?: string
+) {
   if (!analyticsEnabled) return;
-  posthog.capture("error-api", { message: errorMessage });
+  posthog.capture("error-api", {
+    message: errorMessage,
+    underlyingErrorMessage,
+  });
 }

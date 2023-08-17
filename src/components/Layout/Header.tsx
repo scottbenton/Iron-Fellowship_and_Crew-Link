@@ -10,7 +10,6 @@ import {
   useTheme,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import { AUTH_STATE, useAuth } from "../../providers/AuthProvider";
 import {
   BASE_ROUTES,
   basePaths,
@@ -24,10 +23,12 @@ import { HeaderMenu } from "./HeaderMenu";
 import CharacterIcon from "@mui/icons-material/Person";
 import CampaignIcon from "@mui/icons-material/Groups";
 import WorldIcon from "@mui/icons-material/Public";
+import { useStore } from "stores/store";
+import { AUTH_STATE } from "stores/auth/auth.slice.type";
 
 export function Header() {
   const theme = useTheme();
-  const { state } = useAuth();
+  const state = useStore((store) => store.auth.status);
 
   const path = useLocation().pathname;
 

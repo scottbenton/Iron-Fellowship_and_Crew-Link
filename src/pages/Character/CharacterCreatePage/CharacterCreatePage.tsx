@@ -7,8 +7,6 @@ import { Stat } from "types/stats.enum";
 import { AssetsSection } from "./components/AssetsSection";
 import { StatsField } from "./components/StatsField";
 import { StatsMap } from "types/Character.type";
-import { useAddCharacterToCampaignMutation } from "api/campaign/addCharacterToCampaign";
-import { useCreateCharacter } from "api/characters/createCharacter";
 import { PageHeader } from "components/Layout/PageHeader";
 import { PageContent } from "components/Layout";
 import {
@@ -18,8 +16,10 @@ import {
 import { constructCharacterSheetPath } from "../routes";
 import { TextFieldWithOracle } from "components/TextFieldWithOracle/TextFieldWithOracle";
 import { useRoller } from "providers/DieRollProvider";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Head } from "providers/HeadProvider/Head";
+import { useStore } from "stores/store";
+import { addCharacterToCampaign } from "api-calls/campaign/addCharacterToCampaign";
 
 export type AssetArrayType = [
   StoredAsset | undefined,
@@ -40,12 +40,14 @@ const nameOracles = [
 
 export function CharacterCreatePage() {
   const campaignId = useSearchParams()[0].get("campaignId");
+  const uid = useStore((store) => store.auth.uid);
 
   const navigate = useNavigate();
   const { rollOracleTable } = useRoller();
 
-  const { addCharacterToCampaign } = useAddCharacterToCampaignMutation();
-  const { createCharacter, loading } = useCreateCharacter();
+  const [createCharacterLoading, setCreateCharacterLoading] =
+    useState<boolean>(false);
+  const createCharacter = useStore((store) => store.characters.createCharacter);
 
   const handleOracleRoll = useCallback(() => {
     const oracleIndex = Math.floor(Math.random() * nameOracles.length);
@@ -77,24 +79,28 @@ export function CharacterCreatePage() {
   };
 
   const handleSubmit = (values: CharacterCreateFormValues) => {
-    createCharacter({
-      name: values.name,
-      stats: values.stats as StatsMap,
-      assets: values.assets as [StoredAsset, StoredAsset, StoredAsset],
-    })
+    setCreateCharacterLoading(true);
+    createCharacter(
+      values.name,
+      values.stats as StatsMap,
+      values.assets as [StoredAsset, StoredAsset, StoredAsset]
+    )
       .then((characterId) => {
         if (campaignId) {
-          addCharacterToCampaign({ campaignId, characterId }).finally(() => {
-            // add character to campaign
-            navigate(
-              constructCampaignSheetPath(campaignId, CAMPAIGN_ROUTES.SHEET)
-            );
-          });
+          addCharacterToCampaign({ uid, campaignId, characterId }).finally(
+            () => {
+              // add character to campaign
+              navigate(
+                constructCampaignSheetPath(campaignId, CAMPAIGN_ROUTES.SHEET)
+              );
+            }
+          );
         } else {
           navigate(constructCharacterSheetPath(characterId));
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setCreateCharacterLoading(false));
   };
 
   return (
@@ -142,7 +148,7 @@ export function CharacterCreatePage() {
                 <Button
                   type={"submit"}
                   variant={"contained"}
-                  disabled={loading}
+                  disabled={createCharacterLoading}
                 >
                   Create Character
                 </Button>

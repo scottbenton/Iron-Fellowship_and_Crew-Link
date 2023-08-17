@@ -1,21 +1,26 @@
 import { TextField } from "@mui/material";
-import { useRenameWorld } from "api/worlds/renameWorld";
 import { SectionHeading } from "components/SectionHeading";
 import { useEffect, useState } from "react";
+import { useStore } from "stores/store";
 
-export interface WorldNameSectionProps {
-  worldName: string;
-  worldId: string;
-}
-
-export function WorldNameSection(props: WorldNameSectionProps) {
-  const { worldName, worldId } = props;
-
+export function WorldNameSection() {
+  const worldName = useStore(
+    (store) => store.worlds.currentWorld.currentWorld?.name ?? ""
+  );
   const [tmpWorldName, setTmpWorldName] = useState(worldName);
 
-  const { renameWorld, loading } = useRenameWorld();
+  const [loading, setLoading] = useState(false);
+  const updateWorld = useStore(
+    (store) => store.worlds.currentWorld.updateCurrentWorld
+  );
+
   const handleSave = () => {
-    renameWorld(worldId, tmpWorldName).catch(() => {});
+    setLoading(true);
+    updateWorld({ name: tmpWorldName })
+      .catch(() => {})
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {

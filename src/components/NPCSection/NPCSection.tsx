@@ -1,8 +1,3 @@
-import {
-  LocationDocumentWithGMProperties,
-  LocationStoreProperties,
-  NPC,
-} from "stores/sharedLocationStore";
 import { FilterBar } from "components/FilterBar";
 import { NPCList } from "./NPCList";
 import { useFilterNPCs } from "./useFilterNPCs";
@@ -15,47 +10,51 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import { useAuth } from "providers/AuthProvider";
 import { WorldEmptyState } from "components/WorldEmptyState";
-import { useCreateNPC } from "api/worlds/npcs/createNPC";
 import AddNPCIcon from "@mui/icons-material/PersonAdd";
 import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
-import { StoreApi, UseBoundStore } from "zustand";
+import { useStore } from "stores/store";
+import { useState } from "react";
 
 export interface NPCSectionProps {
-  worldOwnerId: string;
-  worldId: string;
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
-  useStore: UseBoundStore<StoreApi<LocationStoreProperties>>;
 }
 
 export function NPCSection(props: NPCSectionProps) {
-  const { worldOwnerId, worldId, isSinglePlayer, showHiddenTag, useStore } =
-    props;
+  const { isSinglePlayer, showHiddenTag } = props;
 
-  const {
-    locations,
-    npcs,
-    openNPCId,
-    setOpenNPCId,
-    doAnyDocsHaveImages,
-    search,
-    setSearch,
-  } = useStore((store) => ({
-    locations: store.locations,
-    npcs: store.npcs,
-    openNPCId: store.openNPCId,
-    setOpenNPCId: store.setOpenNPCId,
-    doAnyDocsHaveImages: store.doAnyDocsHaveImages,
-    search: store.npcSearch,
-    setSearch: store.setNPCSearch,
-  }));
+  const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
+  const isWorldOwner = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorld?.ownerIds?.includes(
+        store.auth.uid
+      ) ?? false
+  );
+  const doAnyDocsHaveImages = useStore(
+    (store) => store.worlds.currentWorld.doAnyDocsHaveImages
+  );
 
-  const uid = useAuth().user?.uid;
-  const isWorldOwner = worldOwnerId === uid;
+  const locations = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.locationMap
+  );
+  const npcs = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.npcMap
+  );
+  const openNPCId = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.openNPCId
+  );
+  const setOpenNPCId = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.setOpenNPCId
+  );
+  const search = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.npcSearch
+  );
+  const setSearch = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.setNPCSearch
+  );
 
-  const userCanUploadImages = useCanUploadWorldImages() ?? false;
+  const userCanUploadImages = useCanUploadWorldImages();
   const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
 
   const { filteredNPCIds, sortedNPCIds } = useFilterNPCs(
@@ -64,9 +63,19 @@ export function NPCSection(props: NPCSectionProps) {
     search
   );
 
-  const { createNPC, loading } = useCreateNPC();
+  const [createNPCLoading, setCreateNPCLoading] = useState<boolean>(false);
+  const createNPC = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.createNPC
+  );
+  const handleCreateNPC = () => {
+    setCreateNPCLoading(true);
+    createNPC()
+      .then((npcId) => setOpenNPCId(npcId))
+      .catch(() => {})
+      .finally(() => setCreateNPCLoading(false));
+  };
 
-  if (!worldId || !worldOwnerId) {
+  if (!worldId) {
     return (
       <WorldEmptyState isMultiplayer={!isSinglePlayer} isGM={isWorldOwner} />
     );
@@ -107,7 +116,7 @@ export function NPCSection(props: NPCSectionProps) {
         </Hidden>
 
         <OpenNPC
-          worldOwnerId={worldOwnerId}
+          isWorldOwner={isWorldOwner}
           worldId={worldId}
           npcId={openNPCId}
           npc={openNPC}
@@ -128,14 +137,10 @@ export function NPCSection(props: NPCSectionProps) {
         action={
           <Button
             variant={"contained"}
-            disabled={loading}
+            disabled={createNPCLoading}
             sx={{ flexShrink: 0 }}
             endIcon={<AddNPCIcon />}
-            onClick={() =>
-              createNPC(worldId)
-                .then((npcId) => setOpenNPCId(npcId))
-                .catch(() => {})
-            }
+            onClick={handleCreateNPC}
           >
             Add NPC
           </Button>

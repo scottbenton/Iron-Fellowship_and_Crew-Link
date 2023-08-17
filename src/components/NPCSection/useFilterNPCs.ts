@@ -1,13 +1,11 @@
-import { useSearch, useSearchNoState } from "hooks/useSearch";
-import { useEffect, useMemo, useState } from "react";
-import {
-  LocationDocumentWithGMProperties,
-  NPC,
-} from "stores/sharedLocationStore";
+import { useSearchNoState } from "hooks/useSearch";
+import { useMemo } from "react";
+import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
+import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
 
 export function useFilterNPCs(
   locations: { [key: string]: LocationDocumentWithGMProperties },
-  npcs: { [key: string]: NPC },
+  npcs: { [key: string]: NPCDocumentWithGMProperties },
   search: string
 ) {
   const { debouncedSearch } = useSearchNoState(search);

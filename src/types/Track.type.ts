@@ -22,6 +22,8 @@ export interface StoredTrack {
   createdTimestamp: Timestamp;
 }
 
+export type TrackWithId = StoredTrack & { id: string };
+
 export type TracksDocument = {
   [key in TRACK_TYPES]?: { [id: string]: StoredTrack };
 };

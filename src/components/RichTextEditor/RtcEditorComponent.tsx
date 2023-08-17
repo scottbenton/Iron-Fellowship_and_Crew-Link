@@ -6,8 +6,8 @@ import { WebrtcProvider } from "y-webrtc";
 import * as Y from "yjs";
 import { Editor } from "./Editor";
 import { EditorToolbar } from "./EditorToolbar";
-import { useAuth } from "providers/AuthProvider";
 import { getHueFromString, hslToHex } from "functions/getHueFromString";
+import { useStore } from "stores/store";
 
 export interface RtcRichTextEditorProps {
   provider: WebrtcProvider;
@@ -18,7 +18,7 @@ export interface RtcRichTextEditorProps {
 export function RtcEditorComponent(props: RtcRichTextEditorProps) {
   const { provider, doc, saving } = props;
 
-  const user = useAuth().user;
+  const user = useStore((store) => store.auth.user);
 
   const editor = useEditor(
     {

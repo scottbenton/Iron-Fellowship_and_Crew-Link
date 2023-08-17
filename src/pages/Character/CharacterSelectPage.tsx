@@ -1,17 +1,15 @@
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Fab,
   Hidden,
   LinearProgress,
-  Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { deleteCharacter } from "../../api/characters/deleteCharacter";
 import { CharacterList } from "../../components/CharacterList/CharacterList";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
-import { useSnackbar } from "../../hooks/useSnackbar";
-import { useCharacterStore } from "../../stores/character.store";
 import AddCharacterIcon from "@mui/icons-material/PersonAdd";
 
 import { useConfirm } from "material-ui-confirm";
@@ -23,22 +21,17 @@ import {
 import { PageHeader } from "components/Layout/PageHeader";
 import { PageContent } from "components/Layout";
 import { Head } from "providers/HeadProvider/Head";
+import { useStore } from "stores/store";
 
 export function CharacterSelectPage() {
-  const characters = useCharacterStore((store) => store.characters);
-  const loading = useCharacterStore((store) => store.loading);
-
-  const { error } = useSnackbar();
-
-  const handleDelete = (characterId: string) => {
-    deleteCharacter(characterId).catch((e) => {
-      error("Error deleting your character.");
-    });
-  };
+  const characters = useStore((store) => store.characters.characterMap);
+  const isLoading = useStore((store) => store.characters.loading);
+  const errorMessage = useStore((store) => store.characters.error);
+  const deleteCharacter = useStore((store) => store.characters.deleteCharacter);
 
   const confirm = useConfirm();
 
-  const handleClick = (characterId: string) => {
+  const handleDeleteCharacter = (characterId: string) => {
     confirm({
       title: "Delete Character",
       description: `Are you sure you want to delete ${characters[characterId].name}?`,
@@ -49,22 +42,13 @@ export function CharacterSelectPage() {
       },
     })
       .then(() => {
-        handleDelete(characterId);
+        deleteCharacter(characterId).catch(() => {});
       })
       .catch(() => {});
   };
 
-  if (loading) {
-    return (
-      <LinearProgress
-        sx={{
-          width: "100vw",
-          position: "absolute",
-          left: 0,
-        }}
-        color={"secondary"}
-      />
-    );
+  if (isLoading) {
+    return <LinearProgress color={"secondary"} />;
   }
 
   return (
@@ -92,6 +76,12 @@ export function CharacterSelectPage() {
       <PageContent
         isPaper={!characters || Object.keys(characters).length === 0}
       >
+        {errorMessage && (
+          <Alert severity={"error"} sx={{ mb: 4 }}>
+            <AlertTitle>Error Loading Characters</AlertTitle>
+            {errorMessage}
+          </Alert>
+        )}
         {!characters || Object.keys(characters).length === 0 ? (
           <EmptyState
             imageSrc="/assets/nature.svg"
@@ -123,7 +113,7 @@ export function CharacterSelectPage() {
                   </Button>
                   <Button
                     color={"error"}
-                    onClick={() => handleClick(characterId)}
+                    onClick={() => handleDeleteCharacter(characterId)}
                   >
                     Delete
                   </Button>

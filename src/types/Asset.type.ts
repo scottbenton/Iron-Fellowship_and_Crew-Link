@@ -75,6 +75,7 @@ export interface StoredAsset {
   } | null;
   trackValue: number | null;
   customAsset: DataforgedAsset | null;
+  order: number;
 }
 
 export function getAssetType(assetType?: string): AssetType | undefined {

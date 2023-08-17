@@ -1,16 +1,15 @@
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import { useUpdateWorldTruth } from "api/worlds/updateWorldTruth";
 import { DialogTitleWithCloseButton } from "components/DialogTitleWithCloseButton";
 import { TruthChooser } from "components/TruthChooser";
 import { TruthClassic } from "dataforged";
 import { getCustomTruthId } from "pages/World/WorldCreatePage/worldCreate.store";
 import { useState } from "react";
 import { Truth, TRUTH_IDS } from "types/World.type";
+import { useStore } from "stores/store";
 
 export interface TruthDialogSelectorProps {
   open: boolean;
   handleClose: () => void;
-  worldId: string;
   truthId: TRUTH_IDS;
   truth: TruthClassic;
   storedTruth: Truth;
@@ -18,15 +17,8 @@ export interface TruthDialogSelectorProps {
 }
 
 export function TruthDialogSelector(props: TruthDialogSelectorProps) {
-  const {
-    open,
-    handleClose,
-    worldId,
-    truth,
-    storedTruth,
-    truthId,
-    selectTruthOption,
-  } = props;
+  const { open, handleClose, truth, storedTruth, truthId, selectTruthOption } =
+    props;
 
   const [selectedOptionId, setSelectedOptionId] = useState(storedTruth.id);
 
@@ -37,7 +29,9 @@ export function TruthDialogSelector(props: TruthDialogSelectorProps) {
     storedTruth.customTruth?.["Quest starter"] ?? ""
   );
 
-  const { updateWorldTruth, loading } = useUpdateWorldTruth();
+  const updateWorldTruth = useStore(
+    (store) => store.worlds.currentWorld.updateCurrentWorldTruth
+  );
 
   const handleSave = () => {
     let updatedTruth: Truth;
@@ -57,7 +51,7 @@ export function TruthDialogSelector(props: TruthDialogSelectorProps) {
     }
     selectTruthOption(updatedTruth);
 
-    updateWorldTruth(worldId, truthId, updatedTruth)
+    updateWorldTruth(truthId, updatedTruth)
       .then(() => {
         handleClose();
       })

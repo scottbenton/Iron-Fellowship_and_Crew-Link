@@ -5,37 +5,61 @@ import {
   LinearProgress,
   Typography,
 } from "@mui/material";
-import { useCharacterSheetUpdateCharacterWorld } from "api/characters/updateCharacterWorld";
 import { WorldSheet } from "components/WorldSheet";
-import { useAuth } from "providers/AuthProvider";
-import { useWorldsStore } from "stores/worlds.store";
-import { useCharacterSheetStore } from "../characterSheet.store";
 import { WorldEmptyState } from "components/WorldEmptyState";
+import { useStore } from "stores/store";
+import { useState } from "react";
 
 export function WorldSection() {
-  const uid = useAuth().user?.uid;
+  const uid = useStore((store) => store.auth.uid);
 
-  const campaignId = useCharacterSheetStore((store) => store.campaignId);
-  const worldId = useCharacterSheetStore((store) => store.worldId);
-  const worldOwnerId = useCharacterSheetStore((store) => store.worldOwnerId);
-  const world = useCharacterSheetStore((store) => store.world);
+  const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
+  const world = useStore((store) => store.worlds.currentWorld.currentWorld);
 
-  const isGM = useCharacterSheetStore((store) => store.campaign?.gmId === uid);
+  const campaignId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.campaignId
+  );
+  const isWorldOwner = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorld?.ownerIds.includes(
+        store.auth.uid
+      ) ?? false
+  );
+  const isGM = useStore(
+    (store) =>
+      store.campaigns.currentCampaign.currentCampaign?.gmIds?.includes(
+        store.auth.uid
+      ) ?? false
+  );
 
-  const canEdit = !campaignId && uid === worldOwnerId;
+  const canEdit = !campaignId || isWorldOwner;
 
-  const { updateCharacterWorld, loading: updateCharacterWorldLoading } =
-    useCharacterSheetUpdateCharacterWorld();
-
-  const worldIds = useWorldsStore((store) =>
-    Object.keys(store.worlds)
-      .filter((w) => store.worlds[w].ownerId === uid)
+  const worldIds = useStore((store) =>
+    Object.keys(store.worlds.worldMap)
+      .filter((w) => store.worlds.worldMap[w].ownerIds.includes(uid))
       .sort((w1, w2) =>
-        store.worlds[w2].name.localeCompare(store.worlds[w1].name)
+        store.worlds.worldMap[w2].name.localeCompare(
+          store.worlds.worldMap[w1].name
+        )
       )
   );
-  const worlds = useWorldsStore((store) => store.worlds);
+  const worlds = useStore((store) => store.worlds.worldMap);
   const sortedWorlds = worldIds.map((worldId) => worlds[worldId]);
+
+  const updateCharacter = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacter
+  );
+
+  const [updateCharacterWorldLoading, setUpdateCharacterWorldLoading] =
+    useState(false);
+  const updateCharacterWorld = (worldId?: string) => {
+    setUpdateCharacterWorldLoading(true);
+    updateCharacter({ worldId: worldId ?? null })
+      .catch(() => {})
+      .finally(() => {
+        setUpdateCharacterWorldLoading(false);
+      });
+  };
 
   return (
     <Box>
@@ -51,19 +75,14 @@ export function WorldSection() {
               }}
             >
               <Typography variant={"h6"}>{world.name}</Typography>
-              <Button
-                onClick={() => updateCharacterWorld(undefined).catch(() => {})}
-              >
-                Remove World
-              </Button>
+              {!campaignId && (
+                <Button onClick={() => updateCharacterWorld(undefined)}>
+                  Remove World
+                </Button>
+              )}
             </Box>
           )}
-          <WorldSheet
-            worldId={worldId}
-            world={world}
-            canEdit={canEdit}
-            hideCampaignHints
-          />
+          <WorldSheet canEdit={canEdit} hideCampaignHints />
         </Container>
       )}
       {worldId && !world && <LinearProgress />}

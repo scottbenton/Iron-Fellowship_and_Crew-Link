@@ -3,7 +3,6 @@ import { MarkdownRenderer } from "components/MarkdownRenderer";
 import { MoveStatRollers } from "./MoveStatRollers";
 import { MoveStats } from "components/MovesSection/MoveStats.type";
 import { moveMap } from "data/moves";
-import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
 import { Stat, PlayerConditionMeter } from "types/stats.enum";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { useCustomMoves } from "components/MovesSection/useCustomMoves";
@@ -12,6 +11,7 @@ import { useRoller } from "providers/DieRollProvider";
 import { OracleTable } from "dataforged";
 import { useCustomOracles } from "components/OracleSection/useCustomOracles";
 import { assetMap } from "data/assets";
+import { useStore } from "stores/store";
 
 export interface MoveDialogContentProps {
   id: string;
@@ -24,39 +24,50 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
   const { rollOracleTable } = useRoller();
-  const customMoves = useCustomMoves();
+  const { customMoveMap } = useCustomMoves();
   const { allCustomOracleMap } = useCustomOracles();
   const allOracles = { ...oracleMap, ...allCustomOracleMap };
 
-  const move = moveMap[id] ?? customMoves?.Moves[id];
+  const move = moveMap[id] ?? customMoveMap[id];
 
-  const stats: MoveStats | undefined = useCharacterSheetStore((store) =>
-    store.character
-      ? {
-          [Stat.Edge]: store.character.stats[Stat.Edge],
-          [Stat.Heart]: store.character.stats[Stat.Heart],
-          [Stat.Iron]: store.character.stats[Stat.Iron],
-          [Stat.Shadow]: store.character.stats[Stat.Shadow],
-          [Stat.Wits]: store.character.stats[Stat.Wits],
-          [PlayerConditionMeter.Health]: store.character.health,
-          [PlayerConditionMeter.Spirit]: store.character.spirit,
-          [PlayerConditionMeter.Supply]: store.supply ?? 0,
-          companionHealth:
-            store.assets
-              ?.filter(
-                (asset) =>
-                  asset.trackValue !== null && asset.trackValue !== undefined
-              )
-              .map((asset) => ({
-                companionName:
-                  asset.customAsset?.Title.Short ??
-                  assetMap[asset.id]?.Title.Short ??
-                  "Unknown",
-                health: asset.trackValue ?? 0,
-              })) ?? [],
-        }
-      : undefined
-  );
+  const stats: MoveStats | undefined = useStore((store) => {
+    const character = store.characters.currentCharacter.currentCharacter;
+    const campaignSupply =
+      store.campaigns.currentCampaign.currentCampaign?.supply;
+    const assets = Object.values(
+      store.characters.currentCharacter.assets.assets
+    );
+
+    if (character) {
+      return {
+        [Stat.Edge]: character.stats[Stat.Edge],
+        [Stat.Heart]: character.stats[Stat.Heart],
+        [Stat.Iron]: character.stats[Stat.Iron],
+        [Stat.Shadow]: character.stats[Stat.Shadow],
+        [Stat.Wits]: character.stats[Stat.Wits],
+        [PlayerConditionMeter.Health]: character.health,
+        [PlayerConditionMeter.Spirit]: character.spirit,
+        [PlayerConditionMeter.Supply]: character.campaignId
+          ? campaignSupply ?? 0
+          : character.supply,
+        companionHealth:
+          assets
+            ?.filter(
+              (asset) =>
+                asset.trackValue !== null && asset.trackValue !== undefined
+            )
+            .map((asset) => ({
+              companionName:
+                asset.customAsset?.Title.Short ??
+                assetMap[asset.id]?.Title.Short ??
+                "Unknown",
+              health: asset.trackValue ?? 0,
+            })) ?? [],
+      };
+    } else {
+      return undefined;
+    }
+  });
 
   if (!move) {
     return (

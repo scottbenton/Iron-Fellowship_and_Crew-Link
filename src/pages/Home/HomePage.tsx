@@ -4,12 +4,12 @@ import {
   CHARACTER_ROUTES,
   constructCharacterPath,
 } from "pages/Character/routes";
-import { useAuth } from "providers/AuthProvider";
 import { Link } from "react-router-dom";
 import { BASE_ROUTES, basePaths } from "routes";
+import { useStore } from "stores/store";
 
 export function HomePage() {
-  const isLoggedIn = useAuth().user ? true : false;
+  const isLoggedIn = useStore((store) => !!store.auth.user);
 
   return (
     <>

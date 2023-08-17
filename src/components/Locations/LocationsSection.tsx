@@ -11,63 +11,74 @@ import {
   Typography,
 } from "@mui/material";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
-import { useCreateLocation } from "api/worlds/locations/createLocation";
 import { OpenLocation } from "./OpenLocation";
-import {
-  LocationDocumentWithGMProperties,
-  LocationStoreProperties,
-} from "stores/sharedLocationStore";
 import { useFilterLocations } from "./useFilterLocations";
-import { useAuth } from "providers/AuthProvider";
 import AddPhotoIcon from "@mui/icons-material/Photo";
 import { WorldEmptyState } from "components/WorldEmptyState";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
 import { FilterBar } from "components/FilterBar";
 import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
-import { StoreApi, UseBoundStore } from "zustand";
+import { useStore } from "stores/store";
+import { useState } from "react";
 
 export interface LocationsSectionProps {
-  worldOwnerId?: string;
-  worldId?: string;
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
-  useStore: UseBoundStore<StoreApi<LocationStoreProperties>>;
 }
 
 export function LocationsSection(props: LocationsSectionProps) {
-  const { worldOwnerId, worldId, isSinglePlayer, showHiddenTag, useStore } =
-    props;
+  const { isSinglePlayer, showHiddenTag } = props;
 
-  const {
-    doAnyDocsHaveImages,
-    locations,
-    openLocationId,
-    setOpenLocationId,
-    search,
-    setSearch,
-  } = useStore((store) => ({
-    doAnyDocsHaveImages: store.doAnyDocsHaveImages,
-    locations: store.locations,
-    openLocationId: store.openLocationId,
-    setOpenLocationId: store.setOpenLocationId,
-    search: store.locationSearch,
-    setSearch: store.setLocationSearch,
-  }));
-
-  const isWorldOwner = useAuth().user?.uid === worldOwnerId;
+  const isWorldOwner = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorld?.ownerIds.includes(
+        store.auth.uid
+      ) ?? false
+  );
+  const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
+  const doAnyDocsHaveImages = useStore(
+    (store) => store.worlds.currentWorld.doAnyDocsHaveImages
+  );
+  const locations = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.locationMap
+  );
+  const openLocationId = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.openLocationId
+  );
+  const setOpenLocationId = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.setOpenLocationId
+  );
+  const search = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.locationSearch
+  );
+  const setSearch = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.setLocationSearch
+  );
 
   const userCanUploadImages = useCanUploadWorldImages();
   const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
 
-  const { createLocation, loading: createLocationLoading } =
-    useCreateLocation();
+  const [createLocationLoading, setCreateLocationLoading] = useState(false);
+  const createLocation = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.createLocation
+  );
+
+  const handleCreateLocation = () => {
+    setCreateLocationLoading(true);
+    createLocation()
+      .then((locationId) => {
+        setOpenLocationId(locationId);
+      })
+      .catch(() => {})
+      .finally(() => setCreateLocationLoading(false));
+  };
 
   const { filteredLocationIds, sortedLocationIds } = useFilterLocations(
     locations,
     search
   );
 
-  if (!worldId || !worldOwnerId) {
+  if (!worldId) {
     return (
       <WorldEmptyState isMultiplayer={!isSinglePlayer} isGM={isWorldOwner} />
     );
@@ -110,7 +121,7 @@ export function LocationsSection(props: LocationsSectionProps) {
 
         <OpenLocation
           worldId={worldId}
-          worldOwnerId={worldOwnerId}
+          isWorldOwner={isWorldOwner}
           location={openLocation}
           locationId={openLocationId}
           closeLocation={() => setOpenLocationId(undefined)}
@@ -130,15 +141,7 @@ export function LocationsSection(props: LocationsSectionProps) {
           <Button
             variant={"contained"}
             endIcon={<AddLocationIcon />}
-            onClick={() =>
-              createLocation(worldId)
-                .catch(() => {})
-                .then((locationId) => {
-                  if (locationId) {
-                    setOpenLocationId(locationId);
-                  }
-                })
-            }
+            onClick={handleCreateLocation}
             disabled={createLocationLoading}
             sx={{ flexShrink: 0 }}
           >
@@ -168,7 +171,7 @@ export function LocationsSection(props: LocationsSectionProps) {
                         height: "100%",
                         width: "100%",
                         overflow: "hidden",
-                        backgroundImage: `url("${locations[locationId].imageUrls?.[0]}")`,
+                        backgroundImage: `url("${locations[locationId].imageUrl}")`,
                         backgroundColor: theme.palette.grey[300],
                         backgroundSize: "cover",
                         backgroundPosition: "center center",
@@ -177,7 +180,7 @@ export function LocationsSection(props: LocationsSectionProps) {
                         justifyContent: "center",
                       })}
                     >
-                      {!locations[locationId].imageUrls?.length && (
+                      {!locations[locationId].imageUrl && (
                         <AddPhotoIcon
                           sx={(theme) => ({
                             width: 30,

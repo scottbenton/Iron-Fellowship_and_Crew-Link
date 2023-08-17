@@ -20,7 +20,7 @@ export interface EditOrCreateTrackDialogProps {
   handleClose: () => void;
   initialTrack?: StoredTrack;
   trackTypeName: string;
-  handleTrack: (track: StoredTrack) => Promise<boolean>;
+  handleTrack: (track: StoredTrack) => Promise<boolean | void>;
   buttonProps?: ButtonProps;
 }
 

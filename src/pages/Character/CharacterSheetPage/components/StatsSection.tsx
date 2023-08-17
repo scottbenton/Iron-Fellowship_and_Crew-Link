@@ -2,21 +2,27 @@ import { Box } from "@mui/material";
 import { StatsMap } from "types/Character.type";
 
 import { Stat } from "types/stats.enum";
-import { useCharacterSheetStore } from "../characterSheet.store";
 import { StatComponent } from "components/StatComponent";
+import { useStore } from "stores/store";
 
 export function StatsSection() {
   // We know character is defined at this point, hence the typecasting
-  const stats = useCharacterSheetStore(
-    (store) => store.character?.stats
+  const stats = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.stats
   ) as StatsMap;
-  const health = useCharacterSheetStore(
-    (store) => store.character?.health
+  const health = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.health
   ) as number;
-  const spirit = useCharacterSheetStore(
-    (store) => store.character?.spirit
+  const spirit = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.spirit
   ) as number;
-  const supply = useCharacterSheetStore((store) => store.supply) as number;
+
+  const supply = useStore(
+    (store) =>
+      (store.characters.currentCharacter.currentCharacter?.campaignId
+        ? store.campaigns.currentCampaign.currentCampaign?.supply
+        : store.characters.currentCharacter.currentCharacter?.supply) ?? 5
+  );
 
   return (
     <Box display={"flex"} flexWrap={"wrap"} justifyContent={"flex-start"}>

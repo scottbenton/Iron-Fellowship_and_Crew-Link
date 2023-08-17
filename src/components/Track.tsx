@@ -13,7 +13,7 @@ export interface TrackProps {
   min: number;
   max: number;
   value: number;
-  onChange: (newValue: number) => Promise<boolean>;
+  onChange: (newValue: number) => Promise<boolean | void>;
   sx?: SxProps<Theme>;
   disabled?: boolean;
 }

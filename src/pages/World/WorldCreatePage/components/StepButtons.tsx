@@ -1,11 +1,11 @@
 import { Box, Button } from "@mui/material";
-import { useCreateWorld } from "api/worlds/createWorld";
 import { truths } from "data/truths";
-import { useAuth } from "providers/AuthProvider";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useNavigate } from "react-router-dom";
 import { useWorldCreateStore } from "../worldCreate.store";
 import { constructWorldSheetPath } from "pages/World/routes";
+import { useStore } from "stores/store";
+import { useState } from "react";
 
 export function StepButtons() {
   const { error, success } = useSnackbar();
@@ -18,22 +18,26 @@ export function StepButtons() {
   const getWorldFromState = useWorldCreateStore(
     (store) => store.getWorldFromState
   );
-  const { createWorld, loading } = useCreateWorld();
+
+  const createWorld = useStore((store) => store.worlds.createWorld);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const uid = useAuth().user?.uid ?? "";
 
   const onSubmit = () => {
+    setLoading(true);
     getWorldFromState()
       .then((world) => {
         createWorld(world)
           .then((worldId) => {
-            navigate(constructWorldSheetPath(uid, worldId));
+            navigate(constructWorldSheetPath(worldId));
           })
-          .catch((e) => {});
+          .catch((e) => {})
+          .finally(() => setLoading(false));
       })
       .catch((e) => {
         error(e);
+        setLoading(false);
       });
   };
 

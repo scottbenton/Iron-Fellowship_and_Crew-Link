@@ -11,7 +11,7 @@ import { useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
 import { useNavigate } from "react-router-dom";
 import { CAMPAIGN_ROUTES, constructCampaignSheetPath } from "../../routes";
-import { useCreateCampaignMutation } from "api/campaign/createCampaign";
+import { useStore } from "stores/store";
 
 export interface CreateCampaignDialogProps {
   open: boolean;
@@ -22,17 +22,21 @@ export function CreateCampaignDialog(props: CreateCampaignDialogProps) {
   const { open, handleClose } = props;
   const navigate = useNavigate();
 
-  const { createCampaign, loading } = useCreateCampaignMutation();
-
+  const createCampaign = useStore((store) => store.campaigns.createCampaign);
+  const [loading, setLoading] = useState(false);
   const [label, setLabel] = useState<string>("");
 
   const handleCreate = () => {
+    setLoading(true);
     createCampaign(label)
       .then((campaignId) => {
         navigate(constructCampaignSheetPath(campaignId, CAMPAIGN_ROUTES.SHEET));
       })
       .catch(() => {
         handleClose();
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 

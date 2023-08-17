@@ -6,14 +6,14 @@ export type TRUTH_IDS = (typeof truthIds)[number];
 export interface World {
   name: string;
   truths: { [key in TRUTH_IDS]: Truth };
-  ownerId: string;
+  ownerIds: string[];
   description?: string;
 }
 
 export interface EncodedWorld {
   name: string;
   truths: { [key: string]: Truth };
-  ownerId: string;
+  ownerIds: string[];
   description?: string;
 }
 

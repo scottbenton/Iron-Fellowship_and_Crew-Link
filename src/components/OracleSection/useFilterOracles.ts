@@ -2,25 +2,27 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearch } from "hooks/useSearch";
 import type { OracleSet, OracleTable } from "dataforged";
 import { oracleMap, orderedOracleCategories } from "data/oracles";
-import { useSettingsStore } from "stores/settings.store";
 import { License } from "types/Datasworn";
 import { useCustomOracles } from "./useCustomOracles";
+import { useStore } from "stores/store";
 
 export function useFilterOracles() {
   const { search, setSearch, debouncedSearch } = useSearch();
 
-  const { customOracleCategory } = useCustomOracles();
-  const settings = useSettingsStore((store) => store.oracleSettings);
+  const { customOracleCategories, allCustomOracleMap } = useCustomOracles();
+  const pinnedOracles = useStore(
+    (store) => store.customMovesAndOracles.pinnedOraclesIds
+  );
 
   const combinedOracles = useMemo(() => {
-    const pinnedOracleIds = Object.keys(settings?.pinnedOracleSections ?? {});
+    const pinnedOracleIds = Object.keys(pinnedOracles);
 
     const pinnedOracleTables: { [tableId: string]: OracleTable } = {};
 
     pinnedOracleIds.forEach((oracleId) => {
-      if (settings?.pinnedOracleSections?.[oracleId]) {
+      if (pinnedOracles[oracleId]) {
         pinnedOracleTables[oracleId] =
-          oracleMap[oracleId] ?? customOracleCategory?.Tables?.[oracleId];
+          oracleMap[oracleId] ?? allCustomOracleMap[oracleId];
       }
     });
 
@@ -50,15 +52,12 @@ export function useFilterOracles() {
     return pinnedOracleSection
       ? [pinnedOracleSection, ...orderedOracleCategories]
       : orderedOracleCategories;
-  }, [settings]);
+  }, [pinnedOracles]);
 
   const [filteredOracles, setFilteredOracles] = useState(combinedOracles);
 
   useEffect(() => {
-    let allOracles = [...combinedOracles];
-    if (customOracleCategory) {
-      allOracles.push(customOracleCategory);
-    }
+    let allOracles = [...combinedOracles, ...customOracleCategories];
 
     const results: OracleSet[] = [];
 
@@ -91,7 +90,7 @@ export function useFilterOracles() {
       }
     });
     setFilteredOracles(results);
-  }, [debouncedSearch, combinedOracles, customOracleCategory]);
+  }, [debouncedSearch, combinedOracles, customOracleCategories]);
 
   return { search, setSearch, filteredOracles };
 }

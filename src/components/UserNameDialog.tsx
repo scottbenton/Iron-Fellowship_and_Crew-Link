@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { updateUserName } from "lib/auth.lib";
 import { useState } from "react";
 
@@ -32,6 +32,7 @@ export function UserNameDialog(props: UserNameDialogProps) {
           handleClose();
         })
         .catch((e) => {
+          console.error(e);
           error("Failed to update name");
           handleClose();
         })

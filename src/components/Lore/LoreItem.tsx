@@ -1,11 +1,11 @@
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
-import { Lore } from "stores/sharedLocationStore";
 import AddPhotoIcon from "@mui/icons-material/Photo";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
 import { LoreTag } from "./LoreTag";
+import { LoreDocumentWithGMProperties } from "stores/world/currentWorld/lore/lore.slice.type";
 
 export interface LoreItemProps {
-  lore: Lore;
+  lore: LoreDocumentWithGMProperties;
   openLore: () => void;
   canUseImages: boolean;
   showHiddenTag?: boolean;
@@ -33,7 +33,7 @@ export function LoreItem(props: LoreItemProps) {
               maxWidth: "100%",
               width: "100%",
               overflow: "hidden",
-              backgroundImage: `url("${lore.imageUrls?.[0]}")`,
+              backgroundImage: `url("${lore.imageUrl}")`,
               backgroundColor: theme.palette.grey[300],
               backgroundSize: "cover",
               backgroundPosition: "center center",
@@ -42,7 +42,7 @@ export function LoreItem(props: LoreItemProps) {
               justifyContent: "center",
             })}
           >
-            {!lore.imageUrls?.length && (
+            {!lore.imageUrl && (
               <AddPhotoIcon
                 sx={(theme) => ({
                   width: 30,

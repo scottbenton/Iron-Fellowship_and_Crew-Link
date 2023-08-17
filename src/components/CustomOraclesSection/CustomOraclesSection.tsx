@@ -1,25 +1,11 @@
-import {
-  Box,
-  Button,
-  Card,
-  IconButton,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-} from "@mui/material";
-import { useAddCustomOracle } from "api/user/custom-oracles/addCustomOracle";
+import { Box, Button, Card, LinearProgress, List, Stack } from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
 import { useState } from "react";
 import { StoredOracle } from "types/Oracles.type";
 import { CustomOracleDialog } from "./CustomOracleDialog";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useUpdateCustomOracle } from "api/user/custom-oracles/updateCustomOracle";
-import { useRemoveCustomOracle } from "api/user/custom-oracles/removeCustomOracle";
 import { useConfirm } from "material-ui-confirm";
 import { CustomOraclesListItem } from "./CustomOraclesListItem";
+import { useStore } from "stores/store";
 
 export interface CustomOracleSectionProps {
   customOracles?: StoredOracle[];
@@ -27,7 +13,7 @@ export interface CustomOracleSectionProps {
   showOrHideCustomOracle: (
     oracleId: string,
     hidden: boolean
-  ) => Promise<boolean>;
+  ) => Promise<boolean | void>;
 }
 
 export function CustomOracleSection(props: CustomOracleSectionProps) {
@@ -40,9 +26,15 @@ export function CustomOracleSection(props: CustomOracleSectionProps) {
   const [currentlyEditingOracle, setCurrentlyEditingOracle] =
     useState<StoredOracle>();
 
-  const { addCustomOracle } = useAddCustomOracle();
-  const { updateCustomOracle } = useUpdateCustomOracle();
-  const { removeCustomOracle } = useRemoveCustomOracle();
+  const addCustomOracle = useStore(
+    (store) => store.customMovesAndOracles.addCustomOracle
+  );
+  const updateCustomOracle = useStore(
+    (store) => store.customMovesAndOracles.updateCustomOracle
+  );
+  const removeCustomOracle = useStore(
+    (store) => store.customMovesAndOracles.removeCustomOracle
+  );
 
   const handleDelete = (oracleId: string, oracle: StoredOracle) => {
     confirm({

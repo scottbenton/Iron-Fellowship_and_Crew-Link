@@ -17,7 +17,6 @@ import {
 } from "pages/Character/routes";
 import { BASE_ROUTES, basePaths } from "routes";
 import { getErrorMessage } from "functions/getErrorMessage";
-import { UserNotLoggedInException } from "api/error/UserNotLoggedInException";
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -129,7 +128,7 @@ export function updateUserName(name: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const user = firebaseAuth.currentUser;
     if (!user) {
-      reject(new UserNotLoggedInException());
+      reject(new Error("User is not logged in."));
       return;
     }
     updateProfile(user, { displayName: name })

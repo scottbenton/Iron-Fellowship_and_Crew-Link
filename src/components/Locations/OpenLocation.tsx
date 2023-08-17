@@ -8,25 +8,20 @@ import {
 } from "@mui/material";
 import BackIcon from "@mui/icons-material/ChevronLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useLayoutEffect, useRef } from "react";
-import { useUpdateLocation } from "api/worlds/locations/updateLocation";
-import { useDeleteLocation } from "api/worlds/locations/deleteLocation";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/SectionHeading";
 import { RichTextEditorNoTitle } from "components/RichTextEditor";
 import { LocationNameInput } from "./LocationNameInput";
-import { useAuth } from "providers/AuthProvider";
-import { useUpdateLocationGMProperties } from "api/worlds/locations/updateLocationGMProperties";
-import { useUpdateLocationGMNotes } from "api/worlds/locations/updateLocationGMNotes";
 import { DebouncedOracleInput } from "../DebouncedOracleInput";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
-import { useUpdateLocationNotes } from "api/worlds/locations/updateLocationNotes";
-import { LocationDocumentWithGMProperties } from "stores/sharedLocationStore";
+import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
-import { useUploadLocationImage } from "api/worlds/locations/uploadLocationImage";
+import { useStore } from "stores/store";
+import { useListenToCurrentLocation } from "stores/world/currentWorld/locations/useListenToCurrentLocation";
 
 export interface OpenLocationProps {
-  worldOwnerId: string;
+  isWorldOwner: boolean;
   worldId: string;
   locationId: string;
   location: LocationDocumentWithGMProperties;
@@ -37,7 +32,7 @@ export interface OpenLocationProps {
 
 export function OpenLocation(props: OpenLocationProps) {
   const {
-    worldOwnerId,
+    isWorldOwner,
     worldId,
     locationId,
     location,
@@ -46,19 +41,32 @@ export function OpenLocation(props: OpenLocationProps) {
     isSinglePlayer,
   } = props;
 
+  useListenToCurrentLocation(locationId);
+
   const confirm = useConfirm();
 
-  const { user } = useAuth();
-  const uid = user?.uid;
-
-  const isWorldOwner = worldOwnerId === uid;
-
-  const { updateLocation, loading } = useUpdateLocation();
-  const { updateLocationGMProperties } = useUpdateLocationGMProperties();
-  const { updateLocationGMNotes } = useUpdateLocationGMNotes();
-  const { deleteLocation } = useDeleteLocation();
-  const { updateLocationNotes } = useUpdateLocationNotes();
-  const { uploadLocationImage } = useUploadLocationImage();
+  const updateLocation = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.updateLocation
+  );
+  const updateLocationGMProperties = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorldLocations.updateLocationGMProperties
+  );
+  const updateLocationGMNotes = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorldLocations.updateLocationGMNotes
+  );
+  const deleteLocation = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLocations.deleteLocation
+  );
+  const updateLocationNotes = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorldLocations.updateLocationNotes
+  );
+  const uploadLocationImage = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorldLocations.uploadLocationImage
+  );
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const initialLoadRef = useRef<boolean>(true);
@@ -84,7 +92,7 @@ export function OpenLocation(props: OpenLocationProps) {
       },
     })
       .then(() => {
-        deleteLocation({ worldId, locationId })
+        deleteLocation(locationId)
           .catch(() => {})
           .then(() => {
             closeLocation();
@@ -102,9 +110,9 @@ export function OpenLocation(props: OpenLocationProps) {
       {canShowImages && (
         <ImageUploader
           title={location.name}
-          src={location.imageUrls?.[0]}
+          src={location.imageUrl}
           handleFileUpload={(image) =>
-            uploadLocationImage({ worldId, locationId, image }).catch(() => {})
+            uploadLocationImage(locationId, image).catch(() => {})
           }
           handleClose={closeLocation}
         />
@@ -124,11 +132,7 @@ export function OpenLocation(props: OpenLocationProps) {
           inputRef={nameInputRef}
           initialName={location.name}
           updateName={(newName) =>
-            updateLocation({
-              worldId,
-              locationId,
-              location: { name: newName },
-            }).catch(() => {})
+            updateLocation(locationId, { name: newName }).catch(() => {})
           }
         />
         <IconButton onClick={() => handleLocationDelete()}>
@@ -167,10 +171,8 @@ export function OpenLocation(props: OpenLocationProps) {
                   label={"Description"}
                   initialValue={location?.gmProperties?.descriptor ?? ""}
                   updateValue={(descriptor) =>
-                    updateLocationGMProperties({
-                      worldId,
-                      locationId,
-                      locationGMProperties: { descriptor },
+                    updateLocationGMProperties(locationId, {
+                      descriptor,
                     }).catch(() => {})
                   }
                   oracleTableId="ironsworn/oracles/place/descriptor"
@@ -181,11 +183,9 @@ export function OpenLocation(props: OpenLocationProps) {
                   label={"Trouble"}
                   initialValue={location?.gmProperties?.trouble ?? ""}
                   updateValue={(trouble) => {
-                    updateLocationGMProperties({
-                      worldId,
-                      locationId,
-                      locationGMProperties: { trouble },
-                    });
+                    updateLocationGMProperties(locationId, { trouble }).catch(
+                      () => {}
+                    );
                   }}
                   oracleTableId={"ironsworn/oracles/settlement/trouble"}
                 />
@@ -195,10 +195,8 @@ export function OpenLocation(props: OpenLocationProps) {
                   label={"Location Features"}
                   initialValue={location?.gmProperties?.locationFeatures ?? ""}
                   updateValue={(locationFeatures) => {
-                    updateLocationGMProperties({
-                      worldId,
-                      locationId,
-                      locationGMProperties: { locationFeatures },
+                    updateLocationGMProperties(locationId, {
+                      locationFeatures,
                     }).catch(() => {});
                   }}
                   oracleTableId={"ironsworn/oracles/place/location"}
@@ -216,10 +214,8 @@ export function OpenLocation(props: OpenLocationProps) {
                       <Checkbox
                         checked={location.sharedWithPlayers ?? false}
                         onChange={(evt, value) =>
-                          updateLocation({
-                            worldId,
-                            locationId,
-                            location: { sharedWithPlayers: value },
+                          updateLocation(locationId, {
+                            sharedWithPlayers: value,
                           }).catch(() => {})
                         }
                       />
@@ -233,12 +229,7 @@ export function OpenLocation(props: OpenLocationProps) {
                   id={locationId}
                   content={location.gmProperties?.notes ?? ""}
                   onSave={({ content, isBeaconRequest }) =>
-                    updateLocationGMNotes({
-                      worldId,
-                      locationId,
-                      notes: content,
-                      isBeacon: isBeaconRequest,
-                    })
+                    updateLocationGMNotes(locationId, content, isBeaconRequest)
                   }
                 />
               </Grid>
@@ -275,15 +266,12 @@ export function OpenLocation(props: OpenLocationProps) {
                 {(location.notes || location.notes === null) && (
                   <RtcRichTextEditor
                     id={locationId}
-                    roomPrefix={`iron-fellowship-${worldOwnerId}-`}
+                    roomPrefix={`iron-fellowship-${worldId}-location-`}
                     documentPassword={worldId}
                     onSave={(id, notes, isBeaconRequest) =>
-                      updateLocationNotes({
-                        worldId,
-                        locationId: id,
-                        notes,
-                        isBeacon: isBeaconRequest,
-                      })
+                      updateLocationNotes(id, notes, isBeaconRequest).catch(
+                        () => {}
+                      )
                     }
                     initialValue={location.notes || undefined}
                   />

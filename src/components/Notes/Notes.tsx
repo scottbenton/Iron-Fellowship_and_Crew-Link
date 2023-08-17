@@ -17,13 +17,13 @@ export interface NotesProps {
   selectedNoteContent?: string;
   openNote: (noteId?: string) => void;
   createNote?: () => Promise<string>;
-  updateNoteOrder?: (noteId: string, order: number) => Promise<boolean>;
+  updateNoteOrder?: (noteId: string, order: number) => Promise<boolean | void>;
   onSave?: (params: {
     noteId: string;
     title: string;
     content?: string;
     isBeaconRequest?: boolean;
-  }) => Promise<boolean>;
+  }) => Promise<boolean | void>;
   onDelete?: (noteId: string) => void;
   condensedView?: boolean;
 }

@@ -1,28 +1,31 @@
 import { Alert, Grid, Typography } from "@mui/material";
-import { useUpdateWorldDescription } from "api/worlds/updateWorldDescription";
 import { truthIds } from "data/truths";
 import { TRUTH_IDS, World } from "types/World.type";
 import { RichTextEditorNoTitle } from "./RichTextEditor";
 import { SectionHeading } from "./SectionHeading";
 import { WorldNameSection } from "pages/World/WorldSheetPage/components/WorldNameSection";
 import { TruthCard } from "pages/World/WorldSheetPage/components/TruthCard";
+import { useStore } from "stores/store";
 
 export interface WorldSheetProps {
-  worldId: string;
-  world: World;
   canEdit: boolean;
   hideCampaignHints?: boolean;
 }
 
 export function WorldSheet(props: WorldSheetProps) {
-  const { worldId, world, canEdit, hideCampaignHints } = props;
+  const { canEdit, hideCampaignHints } = props;
 
-  const { updateWorldDescription } = useUpdateWorldDescription();
+  const world = useStore((store) => store.worlds.currentWorld.currentWorld);
+
+  const updateWorldDescription = useStore(
+    (store) => store.worlds.currentWorld.updateCurrentWorldDescription
+  );
+  if (!world) return null;
 
   return (
     <>
       {canEdit ? (
-        <WorldNameSection worldId={worldId} worldName={world.name} />
+        <WorldNameSection />
       ) : (
         <Typography
           variant={"h5"}
@@ -49,7 +52,7 @@ export function WorldSheet(props: WorldSheetProps) {
             onSave={
               canEdit
                 ? ({ content, isBeaconRequest }) =>
-                    updateWorldDescription(worldId, content, isBeaconRequest)
+                    updateWorldDescription(content, isBeaconRequest)
                 : undefined
             }
           />
@@ -70,7 +73,6 @@ export function WorldSheet(props: WorldSheetProps) {
         {truthIds.map((truthId) => (
           <Grid item xs={12} md={6} lg={4} key={truthId}>
             <TruthCard
-              worldId={worldId}
               truthId={truthId as TRUTH_IDS}
               storedTruth={world.truths[truthId as TRUTH_IDS]}
               canEdit={canEdit}

@@ -1,11 +1,7 @@
 import { Button, LinearProgress } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { useCampaignStore } from "stores/campaigns.store";
-import { useAddUserToCampaign } from "api/campaign/addUserToCampaign";
-import { useGetCampaign } from "api/campaign/getCampaign";
 import { EmptyState } from "components/EmptyState/EmptyState";
-import { useAuth } from "providers/AuthProvider";
 import {
   CAMPAIGN_ROUTES,
   constructCampaignPath,
@@ -13,23 +9,48 @@ import {
 } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { Head } from "providers/HeadProvider/Head";
+import { useStore } from "stores/store";
+import { StoredCampaign } from "types/Campaign.type";
 
 export function CampaignJoinPage() {
   const { campaignId } = useParams();
-  const uid = useAuth().user?.uid;
+  const uid = useStore((store) => store.auth.uid);
 
-  const {
-    campaign,
-    loading: loadingGetCampaign,
-    error,
-    getCampaign,
-  } = useGetCampaign();
-  const { addUserToCampaign, loading: isJoining } = useAddUserToCampaign();
-  const campaigns = useCampaignStore((store) => store.campaigns);
+  const [campaign, setCampaign] = useState<StoredCampaign>();
+  const getCampaign = useStore((store) => store.campaigns.getCampaign);
+  const [getCampaignLoading, setGetCampaignLoading] = useState(true);
+  const [getCampaignError, setGetCampaignError] = useState<string>();
+
+  useEffect(() => {
+    if (campaignId) {
+      getCampaign(campaignId)
+        .then((campaign) => {
+          setGetCampaignLoading(false);
+          setCampaign(campaign);
+        })
+        .catch((e) => {
+          setGetCampaignLoading(false);
+          setGetCampaignError(
+            typeof e === "string" ? e : "We could not load this campaign."
+          );
+        });
+    }
+  }, [getCampaign, campaignId]);
+
+  const addUserToCampaign = useStore(
+    (store) => store.campaigns.addUserToCampaign
+  );
+  const [addUserToCampaignLoading, setAddUserToCampaignLoading] =
+    useState(false);
+
+  const campaigns = useStore((store) => store.campaigns.campaignMap);
 
   const handleJoinCampaign = () => {
     if (campaignId && uid) {
-      addUserToCampaign({ campaignId, userId: uid }).catch(() => {});
+      setAddUserToCampaignLoading(true);
+      addUserToCampaign(uid, campaignId)
+        .catch(() => {})
+        .finally(() => setAddUserToCampaignLoading(false));
     }
   };
 
@@ -39,7 +60,7 @@ export function CampaignJoinPage() {
     }
   }, [campaignId]);
 
-  if (loadingGetCampaign || !campaignId) {
+  if (getCampaignLoading || !campaignId) {
     return (
       <LinearProgress
         sx={{
@@ -52,11 +73,11 @@ export function CampaignJoinPage() {
     );
   }
 
-  if (error) {
+  if (getCampaignError) {
     return (
       <EmptyState
         title={"Error loading Campaign"}
-        message={error}
+        message={getCampaignError}
         imageSrc={"/assets/nature.svg"}
         callToAction={
           <Button
@@ -102,7 +123,7 @@ export function CampaignJoinPage() {
               size={"large"}
               variant={"contained"}
               onClick={() => handleJoinCampaign()}
-              disabled={isJoining}
+              disabled={addUserToCampaignLoading}
             >
               Join {campaign.name}
             </Button>

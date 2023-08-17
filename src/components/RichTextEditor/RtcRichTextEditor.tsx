@@ -12,7 +12,7 @@ export interface RtcRichTextEditorProps {
     documentId: string,
     notes: Uint8Array,
     isBeaconRequest?: boolean
-  ) => Promise<boolean>;
+  ) => Promise<boolean | void>;
   initialValue?: Uint8Array;
 }
 
@@ -112,6 +112,12 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
       clearTimeout(timeout);
     };
   }, [yDoc, hasUnsavedChanges, handleSave, id]);
+
+  useEffect(() => {
+    if (!hasUnsavedChangesRef.current && yDoc && initialValue) {
+      Y.applyUpdate(yDoc, initialValue, { peerId: "local" });
+    }
+  }, [initialValue, yDoc]);
 
   if (!yDoc || !provider) {
     return null;

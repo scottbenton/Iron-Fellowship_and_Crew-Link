@@ -30,7 +30,7 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
         >
           Oracle Not Found
         </LinkedDialogContentTitle>
-        <DialogContent>Sorry, we could not find that move.</DialogContent>
+        <DialogContent>Sorry, we could not find that oracle.</DialogContent>
       </>
     );
   }

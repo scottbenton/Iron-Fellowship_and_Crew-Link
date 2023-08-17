@@ -1,9 +1,5 @@
-import { useListenToOracleSettings } from "api/user/settings/listenToOracleSettings";
-import { useListenToUsersWorlds } from "api/worlds/listenToUsersWorlds";
 import { CampaignGMScreenPage } from "pages/Campaign/CampaignGMScreenPage";
 import { WorldCreatePage } from "pages/World/WorldCreatePage";
-import { useListenToUsersCampaigns } from "./api/campaign/listenToUsersCampaigns";
-import { useListenToUsersCharacters } from "./api/characters/listenToUsersCharacters";
 import { Layout } from "./components/Layout";
 import { CampaignJoinPage } from "pages/Campaign/CampaignJoinPage";
 import { CharacterCreatePage } from "./pages/Character/CharacterCreatePage";
@@ -31,6 +27,12 @@ import { CharacterCardPage } from "pages/Character/CharacterCardPage";
 import { SignupPage } from "pages/Authentication/SignupPage";
 import { HomePage } from "pages/Home";
 import { HeadProvider } from "providers/HeadProvider";
+import { useListenToCharacters } from "stores/character/useListenToCharacters";
+import { useStore } from "stores/store";
+import { useListenToCampaigns } from "stores/campaign/useListenToCampaigns";
+import { useListenToAuth } from "stores/auth/useListenToAuth";
+import { useListenToWorlds } from "stores/world/useListenToWorlds";
+import { useListenToOracleSettings } from "stores/customMovesAndOracles/useListenToOracleSettings";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -118,10 +120,12 @@ const router = createBrowserRouter(
 );
 
 export function Router() {
-  useListenToUsersCampaigns();
-  useListenToUsersCharacters();
+  useListenToAuth();
+
+  useListenToCharacters();
+  useListenToCampaigns();
+  useListenToWorlds();
   useListenToOracleSettings();
-  useListenToUsersWorlds();
 
   return <RouterProvider router={router} />;
 }

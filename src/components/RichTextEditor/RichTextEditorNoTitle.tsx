@@ -14,7 +14,7 @@ export interface RichTextEditorNoTitleProps {
     id?: string;
     content: string;
     isBeaconRequest?: boolean;
-  }) => Promise<boolean>;
+  }) => Promise<boolean | void>;
   onDelete?: (id: string) => void;
 }
 
@@ -96,6 +96,18 @@ export function RichTextEditorNoTitle(props: RichTextEditorNoTitleProps) {
       window.removeEventListener("beforeunload", onUnloadFunction);
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      editor &&
+      (!editor.getHTML() ||
+        editor.getHTML() === "<p></p>" ||
+        !hasEditedRef.current) &&
+      content
+    ) {
+      editor.commands.setContent(content);
+    }
+  }, [content]);
 
   return (
     <Editor

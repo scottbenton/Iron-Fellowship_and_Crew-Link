@@ -19,7 +19,7 @@ import { AssetCardField } from "./AssetCardField";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import { CreateCustomAsset } from "../AssetCardDialog/CreateCustomAsset";
-import { useSnackbar } from "../../hooks/useSnackbar";
+import { useSnackbar } from "../../providers/SnackbarProvider/useSnackbar";
 import { assetMap, assetTypeLabels } from "data/assets";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
@@ -33,10 +33,10 @@ export interface AssetCardProps {
   sx?: SxProps<Theme>;
 
   handleAbilityCheck?: (index: number, checked: boolean) => void;
-  handleInputChange?: (label: string, value: string) => Promise<boolean>;
-  handleTrackValueChange?: (num: number) => Promise<boolean>;
+  handleInputChange?: (label: string, value: string) => Promise<void>;
+  handleTrackValueChange?: (num: number) => Promise<void>;
 
-  handleCustomAssetUpdate?: (asset: Asset) => Promise<boolean>;
+  handleCustomAssetUpdate?: (asset: Asset) => Promise<void>;
 
   handleDeleteClick?: () => void;
 }

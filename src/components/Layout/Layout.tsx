@@ -1,6 +1,5 @@
 import { Box, LinearProgress } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
-import { AUTH_STATE, useAuth } from "../../providers/AuthProvider";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { useEffect, useRef } from "react";
@@ -11,21 +10,18 @@ import {
   openPaths,
   onlyUnauthenticatedPaths,
 } from "routes";
-
-import {
-  getAuth,
-  isSignInWithEmailLink,
-  signInWithEmailLink,
-} from "firebase/auth";
 import { completeMagicLinkSignupIfPresent } from "lib/auth.lib";
-import { useSnackbar } from "hooks/useSnackbar";
+import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { sendPageViewEvent } from "lib/analytics.lib";
+import { UserNameDialog } from "components/UserNameDialog";
+import { useStore } from "stores/store";
+import { AUTH_STATE } from "stores/auth/auth.slice.type";
 
 export interface LayoutProps {}
 
 export function Layout(props: LayoutProps) {
   const { pathname } = useLocation();
-  const { state } = useAuth();
+  const state = useStore((store) => store.auth.status);
   const { error } = useSnackbar();
 
   const previousMagicLinkPathnameChecked = useRef<string>();
@@ -53,6 +49,11 @@ export function Layout(props: LayoutProps) {
     }
   }, [pathname, error]);
 
+  const userNameDialogOpen = useStore((store) => store.auth.userNameDialogOpen);
+  const closeUserNameDialog = useStore(
+    (store) => store.auth.closeUserNameDialog
+  );
+
   if (state === AUTH_STATE.LOADING) {
     return <LinearProgress color={"secondary"} />;
   }
@@ -70,6 +71,10 @@ export function Layout(props: LayoutProps) {
       <Header />
       <Outlet />
       <Footer />
+      <UserNameDialog
+        open={userNameDialogOpen}
+        handleClose={closeUserNameDialog}
+      />
     </Box>
   );
 }

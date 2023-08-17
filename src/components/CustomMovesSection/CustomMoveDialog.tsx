@@ -39,8 +39,11 @@ export interface CustomMoveDialogProps {
   open: boolean;
   onClose: () => void;
 
-  createCustomMove: (move: StoredMove) => Promise<boolean>;
-  updateCustomMove: (moveId: string, move: StoredMove) => Promise<boolean>;
+  createCustomMove: (move: StoredMove) => Promise<boolean | void>;
+  updateCustomMove: (
+    moveId: string,
+    move: StoredMove
+  ) => Promise<boolean | void>;
   move?: StoredMove;
 }
 

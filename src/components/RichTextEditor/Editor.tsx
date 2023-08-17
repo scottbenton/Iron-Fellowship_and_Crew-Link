@@ -25,6 +25,7 @@ export function Editor(props: EditorProps) {
               borderStyle: "solid",
               borderColor: theme.palette.divider,
               borderRadius: theme.shape.borderRadius,
+              overflow: "hidden",
             }
           : {
               height: "100%",

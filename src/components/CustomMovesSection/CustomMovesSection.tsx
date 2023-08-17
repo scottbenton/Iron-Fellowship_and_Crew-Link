@@ -4,15 +4,16 @@ import { useState } from "react";
 import { StoredMove } from "types/Moves.type";
 import { CustomMoveDialog } from "./CustomMoveDialog";
 import { useConfirm } from "material-ui-confirm";
-import { useAddCustomMove } from "api/user/custom-moves/addCustomMove";
-import { useUpdateCustomMove } from "api/user/custom-moves/updateCustomMove";
-import { useRemoveCustomMove } from "api/user/custom-moves/removeCustomMove";
 import { CustomMoveListItem } from "./CustomMoveListItem";
+import { useStore } from "stores/store";
 
 export interface CustomMovesSectionProps {
   customMoves?: StoredMove[];
   hiddenMoveIds?: string[];
-  showOrHideCustomMove: (moveId: string, hidden: boolean) => Promise<boolean>;
+  showOrHideCustomMove: (
+    moveId: string,
+    hidden: boolean
+  ) => Promise<boolean | void>;
 }
 
 export function CustomMovesSection(props: CustomMovesSectionProps) {
@@ -26,9 +27,15 @@ export function CustomMovesSection(props: CustomMovesSectionProps) {
   const [currentlyEditingMove, setCurrentlyEditingMove] =
     useState<StoredMove>();
 
-  const { addCustomMove } = useAddCustomMove();
-  const { updateCustomMove } = useUpdateCustomMove();
-  const { removeCustomMove } = useRemoveCustomMove();
+  const addCustomMove = useStore(
+    (store) => store.customMovesAndOracles.addCustomMove
+  );
+  const updateCustomMove = useStore(
+    (store) => store.customMovesAndOracles.updateCustomMove
+  );
+  const removeCustomMove = useStore(
+    (store) => store.customMovesAndOracles.removeCustomMove
+  );
 
   const handleDelete = (moveId: string, move: StoredMove) => {
     confirm({

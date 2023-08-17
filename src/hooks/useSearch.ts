@@ -12,7 +12,6 @@ export function useSearchNoState(search: string) {
       clearTimeout(timeout);
     };
   }, [search]);
-
   return { debouncedSearch };
 }
 

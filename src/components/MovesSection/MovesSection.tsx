@@ -3,6 +3,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { MoveCategory } from "./MoveCategory";
 import { useFilterMoves } from "./useFilterMoves";
 import { useLinkedDialog } from "providers/LinkedDialogProvider";
+import { MoveCategory as MoveCategoryType } from "dataforged";
 
 export function MovesSection() {
   const { setSearch, filteredMoves } = useFilterMoves();
@@ -10,7 +11,10 @@ export function MovesSection() {
   const { openDialog } = useLinkedDialog();
 
   return (
-    <Card variant={"outlined"} sx={{ height: "100%" }}>
+    <Card
+      variant={"outlined"}
+      sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+    >
       <Input
         fullWidth
         startAdornment={
@@ -30,7 +34,7 @@ export function MovesSection() {
         })}
       />
 
-      <Box sx={{ overflow: "auto", height: "100%" }}>
+      <Box sx={{ overflow: "auto", flexGrow: 1 }}>
         {filteredMoves.map((category, index) => (
           <MoveCategory
             key={index}

@@ -1,13 +1,11 @@
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
-import {
-  LocationDocumentWithGMProperties,
-  NPC,
-} from "stores/sharedLocationStore";
 import PhotoIcon from "@mui/icons-material/Photo";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
+import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
+import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
 
 export interface NPCItemProps {
-  npc: NPC;
+  npc: NPCDocumentWithGMProperties;
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openNPC: () => void;
   canUseImages: boolean;
@@ -56,7 +54,7 @@ export function NPCItem(props: NPCItemProps) {
                 flexShrink: 0,
                 borderRadius: theme.shape.borderRadius,
                 backgroundColor: theme.palette.grey[300],
-                backgroundImage: `url(${npc.imageUrls?.[0]})`,
+                backgroundImage: `url(${npc.imageUrl})`,
                 backgroundPosition: "center center",
                 backgroundSize: "cover",
                 display: "flex",
@@ -64,7 +62,7 @@ export function NPCItem(props: NPCItemProps) {
                 justifyContent: "center",
               })}
             >
-              {!npc.imageUrls?.length && (
+              {!npc.imageUrl && (
                 <PhotoIcon
                   sx={(theme) => ({
                     color: theme.palette.grey[500],

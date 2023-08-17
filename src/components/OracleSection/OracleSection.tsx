@@ -3,26 +3,14 @@ import { useRoller } from "providers/DieRollProvider";
 import { OracleCategory } from "./OracleCategory";
 import SearchIcon from "@mui/icons-material/Search";
 import { useFilterOracles } from "./useFilterOracles";
-import { useSettingsStore } from "stores/settings.store";
-
-/**
- * 
- * "ironsworn/oracles/moves/ask_the_oracle/almost_certain"
-​
-26: "ironsworn/oracles/moves/ask_the_oracle/likely"
-​
-27: "ironsworn/oracles/moves/ask_the_oracle/50_50"
-​
-28: "ironsworn/oracles/moves/ask_the_oracle/unlikely"
-​
-29: "ironsworn/oracles/moves/ask_the_oracle/small_chance"
- */
+import { useStore } from "stores/store";
 
 export function OracleSection() {
   const { rollOracleTable } = useRoller();
 
-  const settings = useSettingsStore((store) => store.oracleSettings);
-
+  const pinnedOracles = useStore(
+    (store) => store.customMovesAndOracles.pinnedOraclesIds
+  );
   const { search, filteredOracles, setSearch } = useFilterOracles();
 
   return (
@@ -107,7 +95,7 @@ export function OracleSection() {
         <OracleCategory
           category={category}
           key={category.Title.Standard}
-          pinnedCategories={settings?.pinnedOracleSections}
+          pinnedCategories={pinnedOracles}
         />
       ))}
     </>

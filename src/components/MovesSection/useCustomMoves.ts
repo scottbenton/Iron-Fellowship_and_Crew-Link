@@ -1,10 +1,8 @@
 import { Move, MoveCategory } from "dataforged";
-import { useCampaignGMScreenStore } from "pages/Campaign/CampaignGMScreenPage/campaignGMScreen.store";
-import { useCharacterSheetStore } from "pages/Character/CharacterSheetPage/characterSheet.store";
-import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { License, RollMethod, RollType } from "types/Datasworn";
 import { customMoveCategoryPrefix, StoredMove } from "types/Moves.type";
+import { useStore } from "stores/store";
 
 function convertStoredMoveToMove(storedMove: StoredMove): Move {
   return {
@@ -40,67 +38,73 @@ function convertStoredMoveToMove(storedMove: StoredMove): Move {
 }
 
 export function useCustomMoves() {
-  const campaignCustomMoves = useCampaignGMScreenStore(
-    (store) => store.customMoves
+  const customMoveAuthorMap = useStore(
+    (store) => store.customMovesAndOracles.customMoves
   );
-  const hiddenCampaignMoveIds = useCampaignGMScreenStore(
-    (store) => store.campaignSettings?.hiddenCustomMoveIds
-  );
-
-  const characterSheetCustomMoves = useCharacterSheetStore(
-    (store) => store.customMoves
-  );
-  const hiddenCharacterMoveIds = useCharacterSheetStore(
-    (store) => store.characterSettings?.hiddenCustomMoveIds
+  const hiddenMoveIds = useStore(
+    (store) => store.customMovesAndOracles.hiddenCustomMoveIds
   );
 
-  const [customMoveCategory, setCustomMoveCategory] = useState<MoveCategory>();
+  const memoizedMoveMap = useMemo(() => {
+    return JSON.parse(
+      JSON.stringify(customMoveAuthorMap)
+    ) as typeof customMoveAuthorMap;
+  }, [customMoveAuthorMap]);
+
+  const [customMoveCategories, setCustomMoveCategories] = useState<
+    MoveCategory[]
+  >([]);
+
+  const [customMoveMap, setCustomMoveMap] = useState<{ [key: string]: Move }>(
+    {}
+  );
 
   useEffect(() => {
-    const customStoredMoves = campaignCustomMoves ?? characterSheetCustomMoves;
-    const hiddenMoveIds = hiddenCampaignMoveIds ?? hiddenCharacterMoveIds;
+    const moveCategories: MoveCategory[] = [];
+    let newMoveMap: { [key: string]: Move } = {};
 
-    if (
-      customStoredMoves &&
-      customStoredMoves.length > 0 &&
-      Array.isArray(hiddenMoveIds)
-    ) {
-      const mappedCustomMoves: { [key: string]: Move } = {};
+    Object.keys(memoizedMoveMap).forEach((moveAuthorId) => {
+      const customMoves = memoizedMoveMap[moveAuthorId];
+      if (
+        customMoves &&
+        customMoves.length > 0 &&
+        Array.isArray(hiddenMoveIds)
+      ) {
+        const mappedCustomMoves: { [key: string]: Move } = {};
 
-      customStoredMoves.forEach((storedMove) => {
-        if (!hiddenMoveIds.includes(storedMove.$id)) {
-          mappedCustomMoves[storedMove.$id] =
-            convertStoredMoveToMove(storedMove);
-        }
-      });
+        customMoves.forEach((storedMove) => {
+          if (!hiddenMoveIds.includes(storedMove.$id)) {
+            mappedCustomMoves[storedMove.$id] =
+              convertStoredMoveToMove(storedMove);
+          }
+        });
 
-      setCustomMoveCategory({
-        $id: customMoveCategoryPrefix,
-        Title: {
-          $id: `${customMoveCategoryPrefix}/title`,
-          Canonical: "Custom Moves",
-          Short: "Custom Moves",
-          Standard: "Custom Moves",
-        },
-        Moves: mappedCustomMoves,
-        Source: {
-          Title: "Custom Move",
-          Authors: [],
-          License: License.None,
-        },
-        Description: "Moves created by you or your Campaign GM",
-        Display: {},
-        Optional: true,
-      });
-    } else {
-      setCustomMoveCategory(undefined);
-    }
-  }, [
-    campaignCustomMoves,
-    characterSheetCustomMoves,
-    hiddenCampaignMoveIds,
-    hiddenCharacterMoveIds,
-  ]);
+        newMoveMap = { ...newMoveMap, ...mappedCustomMoves };
 
-  return customMoveCategory;
+        moveCategories.push({
+          $id: customMoveCategoryPrefix,
+          Title: {
+            $id: `${customMoveCategoryPrefix}/title`,
+            Canonical: "Custom Moves",
+            Short: "Custom Moves",
+            Standard: "Custom Moves",
+          },
+          Moves: mappedCustomMoves,
+          Source: {
+            Title: "Custom Move",
+            Authors: [moveAuthorId],
+            License: License.None,
+          },
+          Description: "Moves created by you or your Campaign GM",
+          Display: {},
+          Optional: true,
+        });
+      }
+    });
+
+    setCustomMoveCategories(moveCategories);
+    setCustomMoveMap(newMoveMap);
+  }, [memoizedMoveMap, hiddenMoveIds]);
+
+  return { customMoveCategories, customMoveMap };
 }

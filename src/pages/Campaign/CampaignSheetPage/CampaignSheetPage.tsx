@@ -1,21 +1,17 @@
-import { Box, LinearProgress, Tabs } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useSnackbar } from "hooks/useSnackbar";
-import { useCampaignStore } from "stores/campaigns.store";
+import { LinearProgress } from "@mui/material";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { CampaignSheetHeader } from "./components/CampaignSheetHeader";
 import { CharacterSection } from "./components/CharacterSection";
 import { WorldSection } from "./components/WorldSection";
-
-import { CAMPAIGN_ROUTES, constructCampaignPath } from "../routes";
 import { PageContent } from "components/Layout";
 import { BreakContainer } from "components/BreakContainer";
 import { TracksSection } from "./components/TracksSection";
-import { EmptyState } from "components/EmptyState/EmptyState";
 import { StyledTabs, StyledTab } from "components/StyledTabs";
 import { WorldEmptyState } from "components/WorldEmptyState";
-import { useAuth } from "providers/AuthProvider";
 import { Head } from "providers/HeadProvider/Head";
+import { useStore } from "stores/store";
+import { useSyncStore } from "./hooks/useSyncStore";
 
 enum TABS {
   CHARACTER = "characters",
@@ -24,11 +20,9 @@ enum TABS {
 }
 
 export function CampaignSheetPage() {
-  const { campaignId } = useParams();
+  useSyncStore();
 
-  const { error } = useSnackbar();
-  const navigate = useNavigate();
-  const uid = useAuth().user?.uid;
+  const uid = useStore((store) => store.auth.uid);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
@@ -39,15 +33,13 @@ export function CampaignSheetPage() {
     setSearchParams({ tab });
   };
 
-  const campaigns = useCampaignStore((store) => store.campaigns);
-  const loading = useCampaignStore((store) => store.loading);
-
-  useEffect(() => {
-    if (!loading && (!campaignId || !campaigns[campaignId])) {
-      error("You aren't a member of this campaign");
-      navigate(constructCampaignPath(CAMPAIGN_ROUTES.SELECT));
-    }
-  }, [loading, campaigns, campaignId]);
+  const loading = useStore((store) => store.campaigns.loading);
+  const campaignId = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaignId
+  );
+  const campaign = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign
+  );
 
   if (loading) {
     return (
@@ -57,11 +49,9 @@ export function CampaignSheetPage() {
     );
   }
 
-  if (!campaignId || !campaigns[campaignId]) {
+  if (!campaignId || !campaign) {
     return null;
   }
-
-  const campaign = campaigns[campaignId];
 
   return (
     <>
@@ -89,13 +79,13 @@ export function CampaignSheetPage() {
         )}
         {selectedTab === TABS.WORLD && (
           <>
-            {campaign.worldId && campaign.gmId ? (
-              <WorldSection
-                worldId={campaign.worldId}
-                worldOwnerId={campaign.gmId}
-              />
+            {campaign.worldId ? (
+              <WorldSection />
             ) : (
-              <WorldEmptyState isGM={uid === campaign.gmId} isMultiplayer />
+              <WorldEmptyState
+                isGM={!!uid && (campaign.gmIds?.includes(uid) ?? false)}
+                isMultiplayer
+              />
             )}
           </>
         )}

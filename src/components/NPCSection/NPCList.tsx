@@ -1,13 +1,11 @@
-import { Box, Card, CardActionArea, Grid, Typography } from "@mui/material";
-import {
-  LocationDocumentWithGMProperties,
-  NPC,
-} from "stores/sharedLocationStore";
+import { Grid } from "@mui/material";
 import { NPCItem } from "./NPCItem";
+import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
+import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 
 export interface NPCListProps {
   filteredNPCIds: string[];
-  npcs: { [key: string]: NPC };
+  npcs: { [key: string]: NPCDocumentWithGMProperties };
   locations: { [key: string]: LocationDocumentWithGMProperties };
   openNPC: (npcId: string) => void;
   canUseImages: boolean;
