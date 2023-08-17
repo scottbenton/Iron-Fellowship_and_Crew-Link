@@ -113,7 +113,10 @@ export function TabsSection() {
         isVisible={selectedTab === TABS.LOCATIONS}
         greyBackground={worldExists}
       >
-        <LocationsSection showHiddenTag={isWorldOwner && isInCampaign} />
+        <LocationsSection
+          isSinglePlayer={!isInCampaign}
+          showHiddenTag={isWorldOwner && isInCampaign}
+        />
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.NPCS}
