@@ -20,6 +20,6 @@ export function constructCharacterTracksDocPath(characterId: string) {
 export function getCharacterTracksDoc(characterId: string) {
   return doc(
     firestore,
-    constructCampaignTracksDocPath(characterId)
+    constructCharacterTracksDocPath(characterId)
   ) as DocumentReference<TracksDocument>;
 }
