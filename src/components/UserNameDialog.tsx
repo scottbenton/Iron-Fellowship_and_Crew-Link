@@ -32,6 +32,7 @@ export function UserNameDialog(props: UserNameDialogProps) {
           handleClose();
         })
         .catch((e) => {
+          console.error(e);
           error("Failed to update name");
           handleClose();
         })

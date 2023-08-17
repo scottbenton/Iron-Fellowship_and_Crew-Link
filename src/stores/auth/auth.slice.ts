@@ -54,6 +54,8 @@ export const createAuthSlice: CreateSliceType<AuthSlice> = (set) => ({
   },
 
   closeUserNameDialog: () => {
-    set((state) => (state.auth.userNameDialogOpen = false));
+    set((state) => {
+      state.auth.userNameDialogOpen = false;
+    });
   },
 });
