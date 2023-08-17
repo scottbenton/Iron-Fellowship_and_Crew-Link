@@ -1,8 +1,14 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Chip, Stack, Typography } from "@mui/material";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import { InitiativeButtons } from "./InitiativeButtons";
 import { StatsSection } from "./StatsSection";
 import { useStore } from "stores/store";
+import LinkIcon from "@mui/icons-material/Launch";
+import { Link } from "react-router-dom";
+import {
+  CAMPAIGN_ROUTES,
+  constructCampaignSheetPath,
+} from "pages/Campaign/routes";
 
 export interface CharacterHeaderProps {}
 
@@ -17,6 +23,16 @@ export function CharacterHeader(props: CharacterHeaderProps) {
 
   const characterPortraitSettings = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.profileImage
+  );
+
+  const campaignId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.campaignId
+  );
+  const isGM = useStore(
+    (store) =>
+      store.campaigns.currentCampaign.currentCampaign?.gmIds?.includes(
+        store.auth.uid
+      ) ?? false
   );
 
   return (
@@ -55,7 +71,38 @@ export function CharacterHeader(props: CharacterHeaderProps) {
           >
             {characterName}
           </Typography>
-          <InitiativeButtons />
+          <Stack spacing={1} direction={"row"}>
+            <InitiativeButtons />
+            {campaignId && (
+              <Chip
+                size={"small"}
+                color={"secondary"}
+                variant={"outlined"}
+                icon={<LinkIcon />}
+                label="Campaign"
+                component={Link}
+                to={constructCampaignSheetPath(
+                  campaignId,
+                  CAMPAIGN_ROUTES.SHEET
+                )}
+                clickable
+              />
+            )}
+            {campaignId && isGM && (
+              <Chip
+                size={"small"}
+                color={"secondary"}
+                icon={<LinkIcon />}
+                label={"GM Screen"}
+                component={Link}
+                to={constructCampaignSheetPath(
+                  campaignId,
+                  CAMPAIGN_ROUTES.GM_SCREEN
+                )}
+                clickable
+              />
+            )}
+          </Stack>
         </Box>
       </Box>
       <StatsSection />
