@@ -15,8 +15,8 @@ export const createCharacterTracksSlice: CreateSliceType<
 
   subscribe: (characterId) => {
     const unsubscribe = listenToProgressTracks(
-      characterId,
       undefined,
+      characterId,
       (vows, journeys, frays) => {
         set((store) => {
           store.characters.currentCharacter.tracks.trackMap = {
