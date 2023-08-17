@@ -5,7 +5,6 @@ import {
   spiritTrack,
   supplyTrack,
 } from "data/defaultTracks";
-import { useApiState } from "hooks/useApiState";
 import { StoredAsset } from "types/Asset.type";
 import { CharacterDocument, StatsMap } from "types/Character.type";
 import { getCharacterAssetCollection } from "./assets/_getRef";
@@ -52,13 +51,3 @@ export const createCharacter = createApiFunction<
       });
   });
 }, "Failed to create your character");
-
-export function useCreateCharacter() {
-  const { call, loading, error } = useApiState(createCharacter);
-
-  return {
-    createCharacter: call,
-    loading,
-    error,
-  };
-}

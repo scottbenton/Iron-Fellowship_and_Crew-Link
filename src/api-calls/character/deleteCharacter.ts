@@ -1,8 +1,7 @@
-import { useApiState } from "hooks/useApiState";
 import { createApiFunction } from "api-calls/createApiFunction";
 import { removeCharacterFromCampaign } from "api-calls/campaign/removeCharacterFromCampaign";
-import { firebaseAuth, firestore } from "config/firebase.config";
-import { deleteDoc, getDoc, getDocs, runTransaction } from "firebase/firestore";
+import { firebaseAuth } from "config/firebase.config";
+import { deleteDoc, getDocs } from "firebase/firestore";
 import {
   getCharacterAssetCollection,
   getCharacterAssetDoc,
@@ -37,21 +36,11 @@ export const deleteCharacter = createApiFunction<
       });
       promises.push(deleteDoc(getCharacterTracksDoc(characterId)));
 
-      promises.push(deleteDoc(getCharacterDoc(characterId)));
       await Promise.all(promises);
+      await deleteDoc(getCharacterDoc(characterId));
       resolve();
     } catch (e) {
       reject(e);
     }
   });
 }, "Failed to delete character.");
-
-export function useDeleteCharacter() {
-  const { call, loading, error } = useApiState(deleteCharacter);
-
-  return {
-    deleteCharacter: call,
-    loading,
-    error,
-  };
-}

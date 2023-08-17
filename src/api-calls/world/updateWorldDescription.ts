@@ -1,5 +1,4 @@
 import { updateDoc } from "firebase/firestore";
-import { ApiFunction, useApiState } from "hooks/useApiState";
 import { constructWorldDocPath, getWorldDoc } from "./_getRef";
 import { firebaseAuth } from "config/firebase.config";
 import { createApiFunction } from "api-calls/createApiFunction";
@@ -59,18 +58,3 @@ export const updateWorldDescription = createApiFunction<
     }
   });
 }, "Failed to update world description.");
-
-export function useUpdateWorldDescription() {
-  const { call, loading, error } = useApiState(updateWorldDescription);
-  return {
-    updateWorldDescription: (
-      worldId: string,
-      description: string,
-      isBeaconRequest?: boolean
-    ) => {
-      return call({ worldId, description, isBeaconRequest });
-    },
-    loading,
-    error,
-  };
-}

@@ -1,7 +1,10 @@
 import { getErrorMessage } from "functions/getErrorMessage";
-import { ApiFunction } from "hooks/useApiState";
 import { reportApiError } from "lib/analytics.lib";
 import { createErrorSnackbar } from "providers/SnackbarProvider";
+
+export type ApiFunction<Params, ReturnType> = (
+  params: Params
+) => Promise<ReturnType>;
 
 export function createApiFunction<Params, Result>(
   apiFunction: ApiFunction<Params, Result>,

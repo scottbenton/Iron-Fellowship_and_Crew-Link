@@ -1,31 +1,38 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-  	match /characters/{userId} {
+  	match /characters/{characterId} {
     	allow read: if true;
-      allow write, delete: if userId == request.auth.uid;
-      match /characters/{characterId}/tracks/{document=**} {
+      allow create: if request.auth.uid != null;
+	    allow write, delete: if request.auth.uid == resource.data.uid;
+  	  allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(["campaignId", "worldId", "initiativeStatus"])     
+
+      function checkIsOwner() {
+      	let character = get(/databases/$(database)/documents/characters/$(characterId)).data;
+        return character.uid == request.auth.uid;
+      }
+      
+      match /tracks/{document=**} {
       	allow read: if true;
         allow update: if request.auth.uid != null;
-        allow delete, create: if userId == request.auth.uid;
+        allow delete, create: if checkIsOwner();
       }
       match /{document=**} {
       	allow read: if true;
-        allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(["campaignId", "initiativeStatus"])     
-        allow write, delete: if userId == request.auth.uid
+        allow write, delete: if checkIsOwner();
       }
     }
     match /campaigns/{document=**} {
-    	allow read, write, delete: if true;
+    	allow read, write, delete: if request.auth.uid != null;
     }
     match /worlds/{worldId} {
     	allow read: if true;
       allow create: if request.auth.uid != null;
-      allow write: if request.auth.uid == resource.data.ownerId;
+      allow write: if request.auth.uid in resource.data.ownerIds;
       
       function checkIsOwner() {
       	let world = get(/databases/$(database)/documents/worlds/$(worldId)).data;
-        return world.ownerId == request.auth.uid;
+        return request.auth.uid in world.ownerIds;
       }
       
       match /locations/{locationId} {
