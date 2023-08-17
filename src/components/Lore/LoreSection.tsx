@@ -65,7 +65,7 @@ export function LoreSection(props: LoreSectionProps) {
       .then((loreId) => setOpenLoreId(loreId))
       .catch(() => {})
       .finally(() => {
-        setCreateLoreLoading(true);
+        setCreateLoreLoading(false);
       });
   };
 
