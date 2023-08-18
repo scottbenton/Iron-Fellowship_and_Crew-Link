@@ -1,4 +1,12 @@
-import { Box, Button, List, ListItemButton, ListItemText } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import { useState } from "react";
 import { Note } from "types/Notes.type";
 import {
@@ -7,6 +15,8 @@ import {
   OnDragEndResponder,
 } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./StrictModeDroppable";
+import { ROLL_LOG_ID } from "stores/notes/notes.slice.type";
+import DieIcon from "@mui/icons-material/Casino";
 
 export interface NoteSidebarProps {
   notes: Note[];
@@ -98,6 +108,17 @@ export function NoteSidebar(props: NoteSidebarProps) {
               ref={provided.innerRef}
               sx={{ overflowY: "auto" }}
             >
+              <ListItemButton
+                selected={ROLL_LOG_ID === selectedNoteId}
+                onClick={() => openNote(ROLL_LOG_ID)}
+              >
+                <ListItemIcon>
+                  <DieIcon />
+                </ListItemIcon>
+                <ListItemText>Roll Log</ListItemText>
+              </ListItemButton>
+              <Divider />
+
               {notes.map((note, index) => (
                 <Draggable
                   key={note.noteId}
@@ -107,7 +128,6 @@ export function NoteSidebar(props: NoteSidebarProps) {
                 >
                   {(provided, snapshot) => (
                     <ListItemButton
-                      dense
                       selected={note.noteId === selectedNoteId}
                       onClick={() => openNote(note.noteId)}
                       ref={provided.innerRef}

@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useListenToCurrentCampaignCharacters } from "stores/campaign/currentCampaign/characters/useListenToCurrentCampaignCharacters";
 import { useListenToCampaignTracks } from "stores/campaign/currentCampaign/tracks/useListenToCampaignTracks";
 import { useListenToCurrentCharacterAssets } from "stores/character/currentCharacter/assets/useListenToCurrentCharacterAssets";
 import { useListenToCharacterTracks } from "stores/character/currentCharacter/tracks/useListenToCharacterTracks";
 import { useListenToCustomMovesAndOracles } from "stores/customMovesAndOracles/useListenToCustomMovesAndOracles";
+import { useListenToNewLogs } from "stores/gameLog/useListenToNewLogs";
 import { useListenToNotes } from "stores/notes/useListenToNotes";
 import { useStore } from "stores/store";
 import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
@@ -73,4 +75,7 @@ export function useSyncStore() {
   useListenToLocations();
   useListenToNPCs();
   useListenToLoreDocuments();
+
+  useListenToNewLogs();
+  useListenToCurrentCampaignCharacters();
 }

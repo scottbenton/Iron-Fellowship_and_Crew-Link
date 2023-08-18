@@ -15,7 +15,7 @@ const getRollResultLabel = (result: ROLL_RESULT) => {
 
 export interface TrackProgressRollSnackbarProps {
   roll: TrackProgressRoll;
-  clearRoll: () => void;
+  clearRoll?: () => void;
   expanded: boolean;
 }
 
@@ -36,8 +36,8 @@ export function TrackProgressRollSnackbar(
         alignItems: "flex-start",
         mt: 1,
       })}
-      component={ButtonBase}
-      onClick={() => clearRoll()}
+      component={clearRoll ? ButtonBase : 'div'}
+      onClick={clearRoll ? () => clearRoll() : undefined}
     >
       <Typography
         variant={expanded ? "h6" : "subtitle1"}

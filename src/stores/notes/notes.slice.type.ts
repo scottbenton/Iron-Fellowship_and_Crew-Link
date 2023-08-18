@@ -1,5 +1,7 @@
 import { Unsubscribe } from "firebase/firestore";
-import { Note, NoteContentDocument } from "types/Notes.type";
+import { Note } from "types/Notes.type";
+
+export const ROLL_LOG_ID = "roll-log";
 
 export interface NotesSliceData {
   notes: Note[];

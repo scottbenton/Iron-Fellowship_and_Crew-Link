@@ -9,6 +9,7 @@ import { createWorldSlice } from "./world/world.slice";
 import { shallow } from "zustand/shallow";
 import { createCustomMovesAndOraclesSlice } from "./customMovesAndOracles/customMovesAndOracles.slice";
 import { createNotesSlice } from "./notes/notes.slice";
+import { createGameLogSlice } from "./gameLog/gameLog.slice";
 
 export const useStore = createWithEqualityFn<IStore>()(
   immer((...params) => ({
@@ -19,6 +20,7 @@ export const useStore = createWithEqualityFn<IStore>()(
     users: createUsersSlice(...params),
     customMovesAndOracles: createCustomMovesAndOraclesSlice(...params),
     notes: createNotesSlice(...params),
+    gameLog: createGameLogSlice(...params),
   })),
   shallow
 );

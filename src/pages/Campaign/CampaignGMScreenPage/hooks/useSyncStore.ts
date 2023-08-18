@@ -10,6 +10,7 @@ import { useListenToNotes } from "stores/notes/useListenToNotes";
 import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
 import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
 import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
+import { useListenToNewLogs } from "stores/gameLog/useListenToNewLogs";
 
 export function useSyncStore() {
   const { campaignId } = useParams();
@@ -34,4 +35,5 @@ export function useSyncStore() {
   useListenToNotes();
 
   useListenToCustomMovesAndOracles();
+  useListenToNewLogs();
 }

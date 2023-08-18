@@ -22,7 +22,9 @@ export function OracleSection() {
           color={"primary"}
           onClick={() =>
             rollOracleTable(
-              "ironsworn/oracles/moves/ask_the_oracle/small_chance"
+              "ironsworn/oracles/moves/ask_the_oracle/small_chance",
+              true,
+              true
             )
           }
         >
@@ -33,7 +35,11 @@ export function OracleSection() {
           variant={"outlined"}
           color={"primary"}
           onClick={() =>
-            rollOracleTable("ironsworn/oracles/moves/ask_the_oracle/unlikely")
+            rollOracleTable(
+              "ironsworn/oracles/moves/ask_the_oracle/unlikely",
+              true,
+              true
+            )
           }
         >
           Unlikely
@@ -43,7 +49,11 @@ export function OracleSection() {
           variant={"outlined"}
           color={"primary"}
           onClick={() =>
-            rollOracleTable("ironsworn/oracles/moves/ask_the_oracle/50_50")
+            rollOracleTable(
+              "ironsworn/oracles/moves/ask_the_oracle/50_50",
+              true,
+              true
+            )
           }
         >
           50/50
@@ -53,7 +63,11 @@ export function OracleSection() {
           variant={"outlined"}
           color={"primary"}
           onClick={() =>
-            rollOracleTable("ironsworn/oracles/moves/ask_the_oracle/likely")
+            rollOracleTable(
+              "ironsworn/oracles/moves/ask_the_oracle/likely",
+              true,
+              true
+            )
           }
         >
           Likely
@@ -64,7 +78,9 @@ export function OracleSection() {
           color={"primary"}
           onClick={() =>
             rollOracleTable(
-              "ironsworn/oracles/moves/ask_the_oracle/almost_certain"
+              "ironsworn/oracles/moves/ask_the_oracle/almost_certain",
+              true,
+              true
             )
           }
         >

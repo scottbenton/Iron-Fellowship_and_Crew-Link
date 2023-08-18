@@ -16,6 +16,9 @@ export interface BaseRoll {
   type: ROLL_TYPE;
   rollLabel: string;
   timestamp: Date;
+  characterId: string | null;
+  uid: string;
+  gmsOnly: boolean;
 }
 export interface StatRoll extends BaseRoll {
   type: ROLL_TYPE.STAT;
