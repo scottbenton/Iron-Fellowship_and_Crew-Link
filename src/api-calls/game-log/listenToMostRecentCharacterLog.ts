@@ -1,8 +1,13 @@
 import {
+  DocumentSnapshot,
   QueryConstraint,
   Unsubscribe,
+  endBefore,
+  limit,
   onSnapshot,
+  orderBy,
   query,
+  startAfter,
   where,
 } from "firebase/firestore";
 import { Roll } from "types/DieRolls.type";
@@ -13,32 +18,27 @@ import {
   getCharacterGameLogCollection,
 } from "./_getRef";
 
-export function listenToLogsAfter(params: {
-  latestLoadedDate?: Date;
+export function listenToMostRecentCharacterLog(params: {
   isGM: boolean;
   campaignId?: string;
-  characterId?: string;
+  characterId: string;
   onRoll: (rollId: string, roll: Roll) => void;
   onError: (error: string) => void;
 }): Unsubscribe {
-  const { latestLoadedDate, isGM, campaignId, characterId, onRoll, onError } =
-    params;
-
-  if (!campaignId && !characterId) {
-    onError("Either campaign or character ID must be defined.");
-    return () => {};
-  }
+  const { isGM, campaignId, characterId, onRoll, onError } = params;
 
   const collection = campaignId
     ? getCampaignGameLogCollection(campaignId)
     : getCharacterGameLogCollection(characterId as string);
 
-  const queryConstraints: QueryConstraint[] = [];
+  const queryConstraints: QueryConstraint[] = [
+    where("timestamp", ">", new Date()),
+    where("characterId", "==", characterId),
+    orderBy("timestamp", "desc"),
+    limit(1),
+  ];
   if (!isGM) {
     queryConstraints.push(where("gmsOnly", "==", false));
-  }
-  if (latestLoadedDate) {
-    queryConstraints.push(where("timestamp", ">", latestLoadedDate));
   }
 
   return onSnapshot(
