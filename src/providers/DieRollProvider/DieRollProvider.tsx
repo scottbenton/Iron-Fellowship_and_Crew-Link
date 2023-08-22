@@ -15,6 +15,7 @@ import { RollSnackbar } from "./RollSnackbar";
 import { oracleCategoryMap, oracleMap } from "data/oracles";
 import { useCustomOracles } from "components/OracleSection/useCustomOracles";
 import { TRACK_TYPES } from "types/Track.type";
+import { useStore } from "stores/store";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -22,7 +23,15 @@ const getRoll = (dieMax: number) => {
 
 export function DieRollProvider(props: PropsWithChildren) {
   const { children } = props;
-  // const { addCharacterRoll } = useAddCharacterRoll();
+
+  const uid = useStore((store) => store.auth.uid);
+  const characterId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacterId ?? null
+  );
+  const campaignId = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaignId
+  );
+  const addRollToLog = useStore((store) => store.gameLog.addRoll);
 
   const { allCustomOracleMap, customOracleCategories } = useCustomOracles();
   const combinedOracleCategories = {
@@ -70,9 +79,16 @@ export function DieRollProvider(props: PropsWithChildren) {
       result,
       rollLabel: label,
       timestamp: new Date(),
+      characterId,
+      uid,
+      gmsOnly: false,
     };
 
-    // addCharacterRoll(statRoll)?.catch(() => {});
+    addRollToLog({
+      campaignId,
+      characterId: characterId || undefined,
+      roll: statRoll,
+    }).catch(() => {});
 
     if (showSnackbar) {
       addRoll(statRoll);
@@ -81,7 +97,11 @@ export function DieRollProvider(props: PropsWithChildren) {
     return result;
   };
 
-  const rollOracleTable = (oracleId: string, showSnackbar = true) => {
+  const rollOracleTable = (
+    oracleId: string,
+    showSnackbar = true,
+    gmsOnly = false
+  ) => {
     const oracleCategoryId = oracleId.match(
       /ironsworn\/oracles\/[^\/]*/gm
     )?.[0];
@@ -107,9 +127,17 @@ export function DieRollProvider(props: PropsWithChildren) {
       oracleCategoryName: oracleCategory.Title.Short,
       rollLabel: oracle.Title.Short,
       timestamp: new Date(),
+      characterId,
+      uid,
+      gmsOnly,
     };
 
     if (showSnackbar) {
+      addRollToLog({
+        campaignId,
+        characterId: characterId || undefined,
+        roll: oracleRoll,
+      }).catch(() => {});
       addRoll(oracleRoll);
     }
 
@@ -141,11 +169,17 @@ export function DieRollProvider(props: PropsWithChildren) {
       trackProgress,
       trackType,
       result,
+      characterId,
+      uid,
+      gmsOnly: false,
     };
 
     addRoll(trackProgressRoll);
-
-    // addCharacterRoll(trackProgressRoll)?.catch(() => {});
+    addRollToLog({
+      campaignId,
+      characterId: characterId || undefined,
+      roll: trackProgressRoll,
+    }).catch(() => {});
 
     return result;
   };
@@ -197,7 +231,7 @@ export function DieRollProvider(props: PropsWithChildren) {
                 <RollSnackbar
                   roll={roll}
                   clearRoll={() => clearRoll(index)}
-                  isMostRecentRoll={index === array.length - 1}
+                  isExpanded={index === array.length - 1}
                 />
               </span>
             </Slide>

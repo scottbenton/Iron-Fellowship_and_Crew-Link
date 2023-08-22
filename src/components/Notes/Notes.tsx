@@ -10,6 +10,9 @@ import {
 import { RichTextEditor } from "components/RichTextEditor";
 import { Note } from "types/Notes.type";
 import { NoteSidebar } from "./NoteSidebar";
+import { useState } from "react";
+import { ROLL_LOG_ID } from "stores/notes/notes.slice.type";
+import { GameLog } from "components/GameLog";
 
 export interface NotesProps {
   notes: Note[];
@@ -68,19 +71,27 @@ export function Notes(props: NotesProps) {
           minHeight={"100%"}
           sx={{ overflowY: "auto" }}
         >
-          {condensedView && selectedNote && (
-            <Breadcrumbs aria-label="breadcrumb" sx={{ px: 2, py: 1 }}>
-              <Link
-                underline="hover"
-                color="inherit"
-                onClick={() => openNote()}
-              >
-                Notes
-              </Link>
-              <Typography color="text.primary">{selectedNote.title}</Typography>
-            </Breadcrumbs>
-          )}
+          {condensedView &&
+            (selectedNote || selectedNoteId === ROLL_LOG_ID) && (
+              <Breadcrumbs aria-label="breadcrumb" sx={{ px: 2, py: 1 }}>
+                <Link
+                  underline="hover"
+                  color="inherit"
+                  onClick={() => openNote()}
+                  sx={{ cursor: "pointer" }}
+                >
+                  Notes
+                </Link>
+                <Typography color="text.primary">
+                  {selectedNoteId === ROLL_LOG_ID
+                    ? "Roll Log"
+                    : selectedNote?.title ?? ""}
+                </Typography>
+              </Breadcrumbs>
+            )}
+          {selectedNoteId === ROLL_LOG_ID && <GameLog />}
           {selectedNoteId &&
+            selectedNoteId !== ROLL_LOG_ID &&
             selectedNote &&
             selectedNoteContent !== undefined && (
               <RichTextEditor

@@ -12,7 +12,7 @@ import { MarkdownRenderer } from "components/MarkdownRenderer";
 
 export interface OracleTableRollSnackbarProps {
   roll: OracleTableRoll;
-  clearRoll: () => void;
+  clearRoll?: () => void;
   expanded: boolean;
 }
 
@@ -32,8 +32,8 @@ export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
         alignItems: "flex-start",
         mt: 1,
       })}
-      component={ButtonBase}
-      onClick={() => clearRoll()}
+      component={clearRoll ? ButtonBase : "div"}
+      onClick={clearRoll ? () => clearRoll() : undefined}
     >
       {expanded && roll.oracleCategoryName && (
         <Typography

@@ -6,6 +6,7 @@ import { UserSlice } from "./user/users.slice.type";
 import { WorldSlice } from "./world/world.slice.type";
 import { CustomMovesAndOraclesSlice } from "./customMovesAndOracles/customMovesAndOracles.slice.type";
 import { NotesSlice } from "./notes/notes.slice.type";
+import { GameLogSlice } from "./gameLog/gameLog.slice.type";
 
 export type IStore = {
   auth: AuthSlice;
@@ -15,6 +16,7 @@ export type IStore = {
   worlds: WorldSlice;
   customMovesAndOracles: CustomMovesAndOraclesSlice;
   notes: NotesSlice;
+  gameLog: GameLogSlice;
 };
 
 export type CreateSliceType<T> = StateCreator<

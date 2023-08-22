@@ -5,12 +5,12 @@ import { TrackProgressRollSnackbar } from "./TrackProgressRollSnackbar";
 
 export interface RollSnackbarProps {
   roll: Roll;
-  clearRoll: () => void;
-  isMostRecentRoll: boolean;
+  clearRoll?: () => void;
+  isExpanded: boolean;
 }
 
 export function RollSnackbar(props: RollSnackbarProps) {
-  const { roll, clearRoll, isMostRecentRoll } = props;
+  const { roll, clearRoll, isExpanded } = props;
 
   switch (roll.type) {
     case ROLL_TYPE.STAT:
@@ -18,7 +18,7 @@ export function RollSnackbar(props: RollSnackbarProps) {
         <StatRollSnackbar
           roll={roll}
           clearRoll={clearRoll}
-          expanded={isMostRecentRoll}
+          expanded={isExpanded}
         />
       );
     case ROLL_TYPE.ORACLE_TABLE:
@@ -26,7 +26,7 @@ export function RollSnackbar(props: RollSnackbarProps) {
         <OracleTableRollSnackbar
           roll={roll}
           clearRoll={clearRoll}
-          expanded={isMostRecentRoll}
+          expanded={isExpanded}
         />
       );
     case ROLL_TYPE.TRACK_PROGRESS:
@@ -34,7 +34,7 @@ export function RollSnackbar(props: RollSnackbarProps) {
         <TrackProgressRollSnackbar
           roll={roll}
           clearRoll={clearRoll}
-          expanded={isMostRecentRoll}
+          expanded={isExpanded}
         />
       );
     default:

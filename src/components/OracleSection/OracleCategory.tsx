@@ -41,7 +41,7 @@ export function OracleCategory(props: OracleCategoryProps) {
                   ? "Reveal a Danger (Alt)"
                   : oracle.Title.Short
               }
-              onRollClick={() => rollOracleTable(oracle.$id)}
+              onRollClick={() => rollOracleTable(oracle.$id, true, true)}
               onOpenClick={() => {
                 openDialog(oracle.$id);
               }}

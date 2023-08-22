@@ -1,6 +1,7 @@
 import { Box, LinearProgress, useMediaQuery, useTheme } from "@mui/material";
 import { Notes } from "components/Notes/Notes";
 import { useEffect } from "react";
+import { ROLL_LOG_ID } from "stores/notes/notes.slice.type";
 import { useStore } from "stores/store";
 
 export function CampaignNotesSection() {
@@ -24,12 +25,10 @@ export function CampaignNotesSection() {
   const removeCampaignNote = useStore((store) => store.notes.removeNote);
 
   useEffect(() => {
-    if (Array.isArray(notes) && notes.length > 0 && !openNoteId && !isMobile) {
-      setNoteId(notes[notes.length - 1].noteId);
-    } else if (!Array.isArray(notes) || notes.length === 0) {
-      setNoteId(undefined);
+    if (!openNoteId && !isMobile) {
+      setNoteId(ROLL_LOG_ID);
     }
-  }, [notes, setNoteId, openNoteId, isMobile]);
+  }, [setNoteId, openNoteId, isMobile]);
 
   if (!Array.isArray(notes)) {
     return <LinearProgress />;

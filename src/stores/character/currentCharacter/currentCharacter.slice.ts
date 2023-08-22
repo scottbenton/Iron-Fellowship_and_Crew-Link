@@ -69,6 +69,7 @@ export const createCurrentCharacterSlice: CreateSliceType<
       state.characters.currentCharacter.assets.resetStore();
       state.characters.currentCharacter.tracks.resetStore();
       state.notes.resetStore();
+      state.gameLog.resetStore();
     },
   };
 };

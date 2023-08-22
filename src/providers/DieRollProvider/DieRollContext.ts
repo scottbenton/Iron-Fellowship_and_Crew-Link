@@ -11,7 +11,8 @@ export interface IDieRollContext {
   ) => ROLL_RESULT;
   rollOracleTable: (
     oracleId: string,
-    showSnackbar?: boolean
+    showSnackbar?: boolean,
+    gmsOnly?: boolean
   ) => string | undefined;
   rollTrackProgress: (
     trackType: TRACK_TYPES,

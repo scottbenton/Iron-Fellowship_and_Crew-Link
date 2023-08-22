@@ -23,6 +23,10 @@ export interface MoveDialogContentProps {
 export function MoveDialogContent(props: MoveDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
+  const shouldOracleRollBeGMSOnly = useStore(
+    (store) => !store.characters.currentCharacter.currentCharacterId
+  );
+
   const { rollOracleTable } = useRoller();
   const { customMoveMap } = useCustomMoves();
   const { allCustomOracleMap } = useCustomOracles();
@@ -116,7 +120,9 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
                 key={oracle.$id}
                 variant={"outlined"}
                 sx={{ mr: 1, mb: 1 }}
-                onClick={() => rollOracleTable(oracle.$id)}
+                onClick={() =>
+                  rollOracleTable(oracle.$id, true, shouldOracleRollBeGMSOnly)
+                }
               >
                 Roll {oracle.Title.Standard.replace("Ask the Oracle: ", "")}
               </Button>

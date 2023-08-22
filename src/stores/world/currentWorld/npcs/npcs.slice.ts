@@ -46,8 +46,10 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
       },
       (npcId, imageUrl) => {
         set((store) => {
-          store.worlds.currentWorld.currentWorldNPCs.npcMap[npcId].imageUrl =
-            imageUrl;
+          if (store.worlds.currentWorld.currentWorldNPCs.npcMap[npcId]) {
+            store.worlds.currentWorld.currentWorldNPCs.npcMap[npcId].imageUrl =
+              imageUrl;
+          }
         });
       },
       (npcId) => {

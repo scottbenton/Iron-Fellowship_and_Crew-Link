@@ -1,4 +1,11 @@
-import { Box, Card, Divider, GlobalStyles, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Divider,
+  GlobalStyles,
+  Slide,
+  Typography,
+} from "@mui/material";
 import { useListenToCharacter } from "./hooks/useListenToCharacter";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import HealthIcon from "@mui/icons-material/Favorite";
@@ -11,23 +18,48 @@ import { getRollResultLabel } from "providers/DieRollProvider/RollSnackbar/StatR
 import InitiativeIcon from "@mui/icons-material/Shield";
 import NoInitiativeIcon from "@mui/icons-material/RemoveModerator";
 import { INITIATIVE_STATUS } from "types/Character.type";
+import { Unsubscribe } from "firebase/firestore";
+import { listenToMostRecentCharacterLog } from "api-calls/game-log/listenToMostRecentCharacterLog";
 
 export function CharacterCardPage() {
   const { characterId, character } = useListenToCharacter();
+  const campaignId = character?.campaignId;
 
-  const [visibleRoll, setVisibleRoll] = useState<Roll>();
+  const [isRollVisible, setIsRollVisible] = useState(false);
+  const [latestRoll, setLatestRoll] = useState<Roll>();
 
-  // useEffect(() => {
-  //   setVisibleRoll(lastRoll);
+  useEffect(() => {
+    let unsubscribe: Unsubscribe;
 
-  //   const timeout = setTimeout(() => {
-  //     setVisibleRoll(undefined);
-  //   }, 10 * 1000);
+    if (characterId) {
+      unsubscribe = listenToMostRecentCharacterLog({
+        isGM: false,
+        campaignId,
+        characterId,
+        onRoll: (rollId, roll) => {
+          setLatestRoll(roll);
+          setIsRollVisible(true);
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      });
+    }
 
-  //   return () => {
-  //     clearTimeout(timeout);
-  //   };
-  // }, [lastRoll]);
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, [characterId, campaignId]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsRollVisible(false);
+    }, 10 * 1000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [latestRoll]);
 
   if (!character) return null;
 
@@ -145,161 +177,163 @@ export function CharacterCardPage() {
             </Box>
           </Box>
         </Box>
-        {visibleRoll && (
-          <Card
-            sx={(theme) => ({
-              px: 4,
-              py: 2,
-              backgroundColor: theme.palette.primary.dark,
-              color: theme.palette.primary.contrastText,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              mt: 1,
-              borderRadius: 16,
-            })}
-          >
-            <Typography
-              variant={"h4"}
-              fontFamily={(theme) => theme.fontFamilyTitle}
+        {latestRoll && (
+          <Slide in={isRollVisible} direction={"up"}>
+            <Card
+              sx={(theme) => ({
+                px: 4,
+                py: 2,
+                backgroundColor: theme.palette.primary.dark,
+                color: theme.palette.primary.contrastText,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                mt: 1,
+                borderRadius: 16,
+              })}
             >
-              {visibleRoll.rollLabel}
-            </Typography>
-            <Box display={"flex"} flexDirection={"row"}>
-              {visibleRoll.type === ROLL_TYPE.STAT && (
-                <>
-                  <Box>
-                    <Box
-                      display={"flex"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                    >
-                      <D6Icon sx={{ width: 40, height: 40 }} />
-                      <Typography
-                        variant={"h4"}
-                        ml={2}
-                        color={(theme) => theme.palette.grey[200]}
+              <Typography
+                variant={"h4"}
+                fontFamily={(theme) => theme.fontFamilyTitle}
+              >
+                {latestRoll.rollLabel}
+              </Typography>
+              <Box display={"flex"} flexDirection={"row"}>
+                {latestRoll.type === ROLL_TYPE.STAT && (
+                  <>
+                    <Box>
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
                       >
-                        {visibleRoll.action + (visibleRoll.modifier || 0)}
-                      </Typography>
-                    </Box>
-                    <Box
-                      display={"flex"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                    >
-                      <D10Icon sx={{ width: 40, height: 40 }} />
-                      <Typography
-                        variant={"h4"}
-                        ml={2}
-                        color={(theme) => theme.palette.grey[200]}
+                        <D6Icon sx={{ width: 40, height: 40 }} />
+                        <Typography
+                          variant={"h4"}
+                          ml={2}
+                          color={(theme) => theme.palette.grey[200]}
+                        >
+                          {latestRoll.action + (latestRoll.modifier || 0)}
+                        </Typography>
+                      </Box>
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
                       >
-                        {visibleRoll.challenge1}, {visibleRoll.challenge2}
-                      </Typography>
+                        <D10Icon sx={{ width: 40, height: 40 }} />
+                        <Typography
+                          variant={"h4"}
+                          ml={2}
+                          color={(theme) => theme.palette.grey[200]}
+                        >
+                          {latestRoll.challenge1}, {latestRoll.challenge2}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
 
-                  <Divider
-                    orientation={"vertical"}
-                    sx={(theme) => ({
-                      alignSelf: "stretch",
-                      borderColor: theme.palette.grey[400],
-                      height: "auto",
-                      mx: 4,
-                    })}
-                  />
-                  <Box
-                    display={"flex"}
-                    flexDirection={"column"}
-                    alignItems={"flex-start"}
-                    justifyContent={"center"}
-                  >
-                    <Typography
-                      color={"white"}
-                      variant={"h3"}
-                      fontFamily={(theme) => theme.fontFamilyTitle}
+                    <Divider
+                      orientation={"vertical"}
+                      sx={(theme) => ({
+                        alignSelf: "stretch",
+                        borderColor: theme.palette.grey[400],
+                        height: "auto",
+                        mx: 4,
+                      })}
+                    />
+                    <Box
+                      display={"flex"}
+                      flexDirection={"column"}
+                      alignItems={"flex-start"}
+                      justifyContent={"center"}
                     >
-                      {getRollResultLabel(visibleRoll.result)}
-                    </Typography>
-                    {visibleRoll.challenge1 === visibleRoll.challenge2 && (
                       <Typography
-                        variant={"h5"}
-                        color={(theme) => theme.palette.grey[200]}
+                        color={"white"}
+                        variant={"h3"}
                         fontFamily={(theme) => theme.fontFamilyTitle}
                       >
-                        Doubles
+                        {getRollResultLabel(latestRoll.result)}
                       </Typography>
-                    )}
-                  </Box>
-                </>
-              )}
-              {visibleRoll.type === ROLL_TYPE.TRACK_PROGRESS && (
-                <>
-                  <Box>
-                    <Box
-                      display={"flex"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                    >
-                      <Typography
-                        variant={"h4"}
-                        color={(theme) => theme.palette.grey[200]}
-                      >
-                        Progress: {visibleRoll.trackProgress}
-                      </Typography>
+                      {latestRoll.challenge1 === latestRoll.challenge2 && (
+                        <Typography
+                          variant={"h5"}
+                          color={(theme) => theme.palette.grey[200]}
+                          fontFamily={(theme) => theme.fontFamilyTitle}
+                        >
+                          Doubles
+                        </Typography>
+                      )}
                     </Box>
-                    <Box
-                      display={"flex"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                    >
-                      <D10Icon sx={{ width: 40, height: 40 }} />
-                      <Typography
-                        variant={"h4"}
-                        ml={2}
-                        color={(theme) => theme.palette.grey[200]}
+                  </>
+                )}
+                {latestRoll.type === ROLL_TYPE.TRACK_PROGRESS && (
+                  <>
+                    <Box>
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
                       >
-                        {visibleRoll.challenge1}, {visibleRoll.challenge2}
-                      </Typography>
+                        <Typography
+                          variant={"h4"}
+                          color={(theme) => theme.palette.grey[200]}
+                        >
+                          Progress: {latestRoll.trackProgress}
+                        </Typography>
+                      </Box>
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <D10Icon sx={{ width: 40, height: 40 }} />
+                        <Typography
+                          variant={"h4"}
+                          ml={2}
+                          color={(theme) => theme.palette.grey[200]}
+                        >
+                          {latestRoll.challenge1}, {latestRoll.challenge2}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
 
-                  <Divider
-                    orientation={"vertical"}
-                    sx={(theme) => ({
-                      alignSelf: "stretch",
-                      borderColor: theme.palette.grey[400],
-                      height: "auto",
-                      mx: 4,
-                    })}
-                  />
-                  <Box
-                    display={"flex"}
-                    flexDirection={"column"}
-                    alignItems={"flex-start"}
-                    justifyContent={"center"}
-                  >
-                    <Typography
-                      color={"white"}
-                      variant={"h3"}
-                      fontFamily={(theme) => theme.fontFamilyTitle}
+                    <Divider
+                      orientation={"vertical"}
+                      sx={(theme) => ({
+                        alignSelf: "stretch",
+                        borderColor: theme.palette.grey[400],
+                        height: "auto",
+                        mx: 4,
+                      })}
+                    />
+                    <Box
+                      display={"flex"}
+                      flexDirection={"column"}
+                      alignItems={"flex-start"}
+                      justifyContent={"center"}
                     >
-                      {getRollResultLabel(visibleRoll.result)}
-                    </Typography>
-                    {visibleRoll.challenge1 === visibleRoll.challenge2 && (
                       <Typography
-                        color={(theme) => theme.palette.grey[200]}
-                        variant={"caption"}
+                        color={"white"}
+                        variant={"h3"}
                         fontFamily={(theme) => theme.fontFamilyTitle}
                       >
-                        Doubles
+                        {getRollResultLabel(latestRoll.result)}
                       </Typography>
-                    )}
-                  </Box>
-                </>
-              )}
-            </Box>
-          </Card>
+                      {latestRoll.challenge1 === latestRoll.challenge2 && (
+                        <Typography
+                          color={(theme) => theme.palette.grey[200]}
+                          variant={"caption"}
+                          fontFamily={(theme) => theme.fontFamilyTitle}
+                        >
+                          Doubles
+                        </Typography>
+                      )}
+                    </Box>
+                  </>
+                )}
+              </Box>
+            </Card>
+          </Slide>
         )}
       </Box>
     </>
