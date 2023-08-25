@@ -1,4 +1,4 @@
-import { setDoc } from "firebase/firestore";
+import { Bytes, setDoc } from "firebase/firestore";
 import {
   constructPrivateDetailsLocationDocPath,
   getPrivateDetailsLocationDoc,
@@ -9,7 +9,7 @@ import { createApiFunction } from "api-calls/createApiFunction";
 interface Params {
   worldId: string;
   locationId: string;
-  notes: string;
+  notes: Uint8Array;
   isBeacon?: boolean;
 }
 
@@ -30,7 +30,7 @@ export const updateLocationGMNotes = createApiFunction<Params, void>(
           .stsTokenManager.accessToken;
         if (notes) {
           fetch(
-            `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=notes`,
+            `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=gmNotes`,
             {
               method: "PATCH",
               headers: {
@@ -40,8 +40,8 @@ export const updateLocationGMNotes = createApiFunction<Params, void>(
               body: JSON.stringify({
                 name: contentPath,
                 fields: {
-                  notes: {
-                    stringValue: notes,
+                  gmNotes: {
+                    bytesValue: Bytes.fromUint8Array(notes).toBase64(),
                   },
                 },
               }),
@@ -54,7 +54,7 @@ export const updateLocationGMNotes = createApiFunction<Params, void>(
       } else {
         setDoc(
           getPrivateDetailsLocationDoc(worldId, locationId),
-          { notes: notes },
+          { gmNotes: Bytes.fromUint8Array(notes) },
           { merge: true }
         )
           .then(() => {

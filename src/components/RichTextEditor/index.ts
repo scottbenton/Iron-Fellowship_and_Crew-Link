@@ -1,2 +1,1 @@
-export * from "./RichTextEditor";
-export * from "./RichTextEditorNoTitle";
+export * from "./RtcRichTextEditor";

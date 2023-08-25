@@ -14,7 +14,11 @@ export function listenToLoreGMProperties(
     getPrivateDetailsLoreDoc(worldId, loreId),
     (snapshot) => {
       const gmProps = snapshot.data();
-      updateGMProperties(gmProps);
+      const newProps: GMLoreDocument = {
+        ...gmProps,
+        gmNotes: gmProps?.gmNotes?.toUint8Array(),
+      };
+      updateGMProperties(newProps);
     },
     (error) => {
       onError(getErrorMessage(error, "Failed to get lore document gm notes"));

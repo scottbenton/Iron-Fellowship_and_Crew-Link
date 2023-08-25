@@ -1,4 +1,4 @@
-import { setDoc } from "firebase/firestore";
+import { Bytes, setDoc } from "firebase/firestore";
 import {
   constructPrivateDetailsNPCDocPath,
   getPrivateDetailsNPCDoc,
@@ -9,7 +9,7 @@ import { createApiFunction } from "api-calls/createApiFunction";
 interface Params {
   worldId: string;
   npcId: string;
-  notes: string;
+  notes: Uint8Array;
   isBeacon?: boolean;
 }
 
@@ -29,7 +29,7 @@ export const updateNPCGMNotes = createApiFunction<Params, void>((params) => {
         .accessToken;
       if (notes) {
         fetch(
-          `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=notes`,
+          `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=gmNotes`,
           {
             method: "PATCH",
             headers: {
@@ -39,8 +39,8 @@ export const updateNPCGMNotes = createApiFunction<Params, void>((params) => {
             body: JSON.stringify({
               name: contentPath,
               fields: {
-                notes: {
-                  stringValue: notes,
+                gmNotes: {
+                  bytesValue: Bytes.fromUint8Array(notes).toBase64(),
                 },
               },
             }),
@@ -53,7 +53,7 @@ export const updateNPCGMNotes = createApiFunction<Params, void>((params) => {
     } else {
       setDoc(
         getPrivateDetailsNPCDoc(worldId, npcId),
-        { notes: notes },
+        { gmNotes: Bytes.fromUint8Array(notes) },
         { merge: true }
       )
         .then(() => {

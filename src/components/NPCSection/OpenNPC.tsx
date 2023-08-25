@@ -18,7 +18,6 @@ import { useConfirm } from "material-ui-confirm";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
 import { SectionHeading } from "components/SectionHeading";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
-import { RichTextEditorNoTitle } from "components/RichTextEditor";
 import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
 import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 import { useListenToCurrentNPC } from "stores/world/currentWorld/npcs/useListenToCurrentNPC";
@@ -297,12 +296,14 @@ export function OpenNPC(props: OpenNPCProps) {
                 </Grid>
               )}
               <Grid item xs={12}>
-                <RichTextEditorNoTitle
+                <RtcRichTextEditor
                   id={npcId}
-                  content={npc.gmProperties?.notes ?? ""}
-                  onSave={({ content, isBeaconRequest }) =>
-                    updateNPCGMNotes(npcId, content, isBeaconRequest)
+                  roomPrefix={`iron-fellowship-${worldId}-npc-gmnotes-`}
+                  documentPassword={worldId}
+                  onSave={(documentId, notes, isBeaconRequest) =>
+                    updateNPCGMNotes(documentId, notes, isBeaconRequest)
                   }
+                  initialValue={npc.gmProperties?.gmNotes}
                 />
               </Grid>
             </>

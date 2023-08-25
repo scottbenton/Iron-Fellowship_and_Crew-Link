@@ -1,24 +1,34 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { WebrtcProvider } from "y-webrtc";
 import * as Y from "yjs";
-
 import { RtcEditorComponent } from "./RtcEditorComponent";
+import { TiptapTransformer } from "@hocuspocus/transformer";
 
 export interface RtcRichTextEditorProps {
   id: string;
   roomPrefix: string;
   documentPassword: string;
-  onSave: (
+  onSave?: (
     documentId: string,
     notes: Uint8Array,
-    isBeaconRequest?: boolean
+    isBeaconRequest?: boolean,
+    title?: string
   ) => Promise<boolean | void>;
+  onDelete?: (id: string) => void;
   initialValue?: Uint8Array;
+  showTitle?: boolean;
 }
 
 export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
-  const { id, roomPrefix, documentPassword, onSave, initialValue } = props;
-
+  const {
+    id,
+    roomPrefix,
+    documentPassword,
+    onSave,
+    onDelete,
+    initialValue,
+    showTitle,
+  } = props;
   const [yDoc, setYDoc] = useState<Y.Doc>();
   const [provider, setProvider] = useState<WebrtcProvider>();
 
@@ -28,17 +38,23 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
   const [saving, setSaving] = useState<boolean>(false);
 
   const handleSave = useCallback(
-    (idToPass: string, notes: Uint8Array, isBeaconRequest?: boolean) => {
-      setHasUnsavedChanges(false);
-      hasUnsavedChangesRef.current = false;
-      setSaving(true);
-      onSave(idToPass, notes, isBeaconRequest)
-        .catch(() => {})
-        .finally(() => {
-          setSaving(false);
-        });
+    (idToPass: string, doc: Y.Doc, isBeaconRequest?: boolean) => {
+      if (onSave) {
+        const notes = Y.encodeStateAsUpdate(doc);
+        const title = showTitle ? extractTitle(doc) : undefined;
+        setHasUnsavedChanges(false);
+        hasUnsavedChangesRef.current = false;
+        setSaving(true);
+        onSave(idToPass, notes, isBeaconRequest, title)
+          .catch((e) => {
+            console.error(e);
+          })
+          .finally(() => {
+            setSaving(false);
+          });
+      }
     },
-    []
+    [showTitle, onSave]
   );
 
   useEffect(() => {
@@ -71,19 +87,18 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
 
     return () => {
       if (hasUnsavedChangesRef.current && newYDoc) {
-        handleSave(id, Y.encodeStateAsUpdate(newYDoc));
+        handleSave(id, newYDoc);
       }
-      newProvider.disconnect();
       newYDoc?.destroy();
       newProvider?.destroy();
     };
-  }, [roomPrefix, id, handleSave]);
+  }, [roomPrefix, id, handleSave, initialValue]);
 
   // Handle save on page unload
   useEffect(() => {
     const onUnloadFunction = () => {
       if (hasUnsavedChangesRef.current && yDoc) {
-        handleSave(id, Y.encodeStateAsUpdate(yDoc), true);
+        handleSave(id, yDoc, true);
         // Delay closing because firefox does not support keep-alive
         // NOTE - this is a bad way of handling this, but I can't find a better way to check support for keep alive
         if (navigator.userAgent?.includes("Mozilla")) {
@@ -103,8 +118,7 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
     let timeout: NodeJS.Timeout;
     if (yDoc && hasUnsavedChanges) {
       timeout = setTimeout(() => {
-        const changes = Y.encodeStateAsUpdate(yDoc);
-        handleSave(id, changes);
+        handleSave(id, yDoc);
       }, 30 * 1000);
     }
 
@@ -115,13 +129,33 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
 
   useEffect(() => {
     if (!hasUnsavedChangesRef.current && yDoc && initialValue) {
-      Y.applyUpdate(yDoc, initialValue, { peerId: "local" });
+      if (initialValue) {
+        Y.applyUpdate(yDoc, initialValue, { peerId: "local" });
+      }
     }
-  }, [initialValue, yDoc]);
+  }, [initialValue, yDoc, showTitle]);
 
   if (!yDoc || !provider) {
     return null;
   }
 
-  return <RtcEditorComponent provider={provider} doc={yDoc} saving={saving} />;
+  return (
+    <RtcEditorComponent
+      readOnly={!onSave}
+      provider={provider}
+      doc={yDoc}
+      saving={saving}
+      deleteNote={onDelete ? () => onDelete(id) : undefined}
+      withHeading={showTitle}
+    />
+  );
+}
+
+function extractTitle(doc: Y.Doc): string | undefined {
+  const jsonContent = TiptapTransformer.fromYdoc(doc, "default");
+  let currentNode = jsonContent.content?.[0];
+  while (currentNode && !currentNode.text) {
+    currentNode = currentNode.content?.[0];
+  }
+  return currentNode?.text ?? "Placeholder Title";
 }

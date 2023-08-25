@@ -136,7 +136,17 @@ export function NoteSidebar(props: NoteSidebarProps) {
                       sx={{}}
                       style={provided.draggableProps.style}
                     >
-                      <ListItemText>{note.title}</ListItemText>
+                      <ListItemText
+                        primaryTypographyProps={{
+                          sx: {
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          },
+                        }}
+                      >
+                        {note.title}
+                      </ListItemText>
                     </ListItemButton>
                   )}
                 </Draggable>

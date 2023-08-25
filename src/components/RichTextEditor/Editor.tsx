@@ -84,7 +84,7 @@ export function Editor(props: EditorProps) {
             "&:focus": {
               outline: "none",
             },
-            "&.is-empty::before": {
+            "&>.is-empty::before": {
               content: "attr(data-placeholder)",
               float: "left",
               color: theme.palette.grey[400],

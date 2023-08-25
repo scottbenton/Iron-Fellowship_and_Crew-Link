@@ -12,7 +12,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/SectionHeading";
-import { RichTextEditorNoTitle } from "components/RichTextEditor";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
 import { LoreTagsAutocomplete } from "./LoreTagsAutocomplete";
@@ -206,14 +205,12 @@ export function OpenLore(props: OpenLoreProps) {
                 </Grid>
               )}
               <Grid item xs={12}>
-                <RichTextEditorNoTitle
+                <RtcRichTextEditor
                   id={loreId}
-                  content={lore.gmProperties?.notes ?? ""}
-                  onSave={({ content, isBeaconRequest }) =>
-                    updateLoreGMNotes(loreId, content, isBeaconRequest).catch(
-                      () => {}
-                    )
-                  }
+                  roomPrefix={`iron-fellowship-${worldId}-lore-gmnotes-`}
+                  documentPassword={worldId}
+                  onSave={updateLoreNotes}
+                  initialValue={lore.gmProperties?.gmNotes}
                 />
               </Grid>
             </>
@@ -251,11 +248,7 @@ export function OpenLore(props: OpenLoreProps) {
                     id={loreId}
                     roomPrefix={`iron-fellowship-${worldId}-lore-`}
                     documentPassword={worldId}
-                    onSave={(id, notes, isBeaconRequest) =>
-                      updateLoreNotes(id, notes, isBeaconRequest).catch(
-                        () => {}
-                      )
-                    }
+                    onSave={updateLoreNotes}
                     initialValue={lore.notes || undefined}
                   />
                 )}

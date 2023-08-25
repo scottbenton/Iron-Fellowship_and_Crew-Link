@@ -32,7 +32,7 @@ export interface LocationsSliceActions {
   ) => Promise<void>;
   updateLocationGMNotes: (
     locationId: string,
-    notes: string,
+    notes: Uint8Array,
     isBeaconRequest?: boolean
   ) => Promise<void>;
   updateLocationGMProperties: (

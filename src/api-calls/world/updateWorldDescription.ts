@@ -1,4 +1,4 @@
-import { updateDoc } from "firebase/firestore";
+import { Bytes, updateDoc } from "firebase/firestore";
 import { constructWorldDocPath, getWorldDoc } from "./_getRef";
 import { firebaseAuth } from "config/firebase.config";
 import { createApiFunction } from "api-calls/createApiFunction";
@@ -6,7 +6,7 @@ import { createApiFunction } from "api-calls/createApiFunction";
 export const updateWorldDescription = createApiFunction<
   {
     worldId: string;
-    description: string;
+    description: Uint8Array;
     isBeaconRequest?: boolean;
   },
   void
@@ -24,7 +24,7 @@ export const updateWorldDescription = createApiFunction<
         .accessToken;
       if (description) {
         fetch(
-          `https://firestore.googleapis.com/v1/${worldDocPath}?updateMask.fieldPaths=description`,
+          `https://firestore.googleapis.com/v1/${worldDocPath}?updateMask.fieldPaths=worldDescription`,
           {
             method: "PATCH",
             headers: {
@@ -34,8 +34,8 @@ export const updateWorldDescription = createApiFunction<
             body: JSON.stringify({
               name: worldDocPath,
               fields: {
-                description: {
-                  stringValue: description,
+                worldDescription: {
+                  bytesValue: Bytes.fromUint8Array(description).toBase64(),
                 },
               },
             }),
@@ -47,7 +47,7 @@ export const updateWorldDescription = createApiFunction<
       resolve();
     } else {
       updateDoc(getWorldDoc(worldId), {
-        description,
+        worldDescription: Bytes.fromUint8Array(description),
       })
         .then(() => {
           resolve();

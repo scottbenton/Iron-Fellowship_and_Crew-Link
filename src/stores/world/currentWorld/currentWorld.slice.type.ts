@@ -17,7 +17,8 @@ export interface CurrentWorldSliceActions {
   setCurrentWorldId: (worldId?: string) => void;
   updateCurrentWorld: (partialWorld: Partial<World>) => Promise<void>;
   updateCurrentWorldDescription: (
-    description: string,
+    worldId: string,
+    description: Uint8Array,
     isBeaconRequest?: boolean
   ) => Promise<void>;
   updateCurrentWorldTruth: (truthId: string, truth: Truth) => Promise<void>;

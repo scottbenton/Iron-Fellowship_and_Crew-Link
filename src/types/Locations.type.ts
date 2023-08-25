@@ -14,11 +14,15 @@ export interface LocationDocument
   createdDate: Date;
 }
 
-export interface GMLocationDocument {
+export interface StoredGMLocationDocument {
   descriptor?: string;
   trouble?: string;
   locationFeatures?: string;
-  notes?: string;
+  gmNotes?: Bytes;
+}
+export interface GMLocationDocument
+  extends Omit<StoredGMLocationDocument, "gmNotes"> {
+  gmNotes?: Uint8Array;
 }
 
 export interface LocationNotesDocument {

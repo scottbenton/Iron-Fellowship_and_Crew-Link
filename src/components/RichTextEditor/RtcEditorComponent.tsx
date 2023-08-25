@@ -1,54 +1,48 @@
-import Collaboration from "@tiptap/extension-collaboration";
-import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { WebrtcProvider } from "y-webrtc";
 import * as Y from "yjs";
 import { Editor } from "./Editor";
 import { EditorToolbar } from "./EditorToolbar";
-import { getHueFromString, hslToHex } from "functions/getHueFromString";
 import { useStore } from "stores/store";
+import { rtcExtensions } from "./rtcExtensions";
 
 export interface RtcRichTextEditorProps {
   provider: WebrtcProvider;
   doc: Y.Doc;
   saving: boolean;
+  withHeading?: boolean;
+  readOnly?: boolean;
+  deleteNote?: () => void;
 }
 
 export function RtcEditorComponent(props: RtcRichTextEditorProps) {
-  const { provider, doc, saving } = props;
+  const { provider, doc, saving, withHeading, readOnly, deleteNote } = props;
 
   const user = useStore((store) => store.auth.user);
 
   const editor = useEditor(
     {
-      extensions: [
-        StarterKit.configure({
-          history: false,
-        }),
-        Collaboration.configure({ document: doc }),
-        CollaborationCursor.configure({
-          provider: provider,
-          user: {
-            name: user?.displayName ?? "Unknown User",
-            color: user
-              ? hslToHex(getHueFromString(user.uid), 70, 80)
-              : "#d0d0d0",
-          },
-        }),
-      ],
+      extensions: rtcExtensions({
+        doc,
+        provider,
+        user,
+        withHeading,
+      }),
       editable: true,
     },
-    [doc, user]
+    [doc, provider, user, withHeading]
   );
 
   return (
     <Editor
       outlined
-      editable
+      editable={!readOnly}
       editor={editor}
       saving={saving}
-      toolbar={editor && <EditorToolbar editor={editor} />}
+      toolbar={
+        editor &&
+        !readOnly && <EditorToolbar editor={editor} deleteNote={deleteNote} />
+      }
     />
   );
 }

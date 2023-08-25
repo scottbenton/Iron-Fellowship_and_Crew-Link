@@ -9,7 +9,7 @@ export interface NotesSliceData {
   error?: string;
 
   openNoteId?: string;
-  openNoteContent?: string;
+  openNoteContent?: Uint8Array | null;
 }
 
 export interface NotesSliceActions {
@@ -27,7 +27,7 @@ export interface NotesSliceActions {
   updateNote: (
     noteId: string,
     title: string,
-    content: string | undefined,
+    content: Uint8Array | undefined,
     isBeaconRequest?: boolean
   ) => Promise<void>;
   updateNoteOrder: (noteId: string, order: number) => Promise<void>;

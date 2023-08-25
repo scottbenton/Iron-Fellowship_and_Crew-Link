@@ -1,5 +1,6 @@
 import { firestore } from "config/firebase.config";
 import {
+  Bytes,
   collection,
   CollectionReference,
   doc,
@@ -34,7 +35,7 @@ export function getWorldDoc(worldId: string) {
 }
 
 export function encodeWorld(world: World): EncodedWorld {
-  const { truths: decodedTruths, ...remainingWorld } = world;
+  const { truths: decodedTruths, worldDescription, ...remainingWorld } = world;
 
   const encodedTruths: { [key: string]: Truth } = {};
 
@@ -48,11 +49,19 @@ export function encodeWorld(world: World): EncodedWorld {
     truths: encodedTruths,
   };
 
+  if (worldDescription) {
+    encodedWorld.worldDescription = Bytes.fromUint8Array(worldDescription);
+  }
+
   return encodedWorld;
 }
 
 export function decodeWorld(encodedWorld: EncodedWorld): World {
-  const { truths: encodedTruths, ...remainingWorld } = encodedWorld;
+  const {
+    truths: encodedTruths,
+    worldDescription,
+    ...remainingWorld
+  } = encodedWorld;
   const decodedTruths: { [key: string]: Truth } = {};
 
   Object.keys(encodedTruths).forEach((encodedTruthId) => {
@@ -62,6 +71,7 @@ export function decodeWorld(encodedWorld: EncodedWorld): World {
 
   const world: World = {
     ...remainingWorld,
+    worldDescription: worldDescription?.toUint8Array(),
     truths: decodedTruths as { [key in TRUTH_IDS]: Truth },
   };
 
