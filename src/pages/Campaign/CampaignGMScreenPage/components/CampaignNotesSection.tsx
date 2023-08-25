@@ -61,7 +61,14 @@ export function CampaignNotesSection() {
         }
         updateNoteOrder={handleNoteReorder}
         onSave={({ noteId, title, content, isBeaconRequest }) =>
-          updateCampaignNote(noteId, title, content, isBeaconRequest)
+          updateCampaignNote(
+            campaignId,
+            undefined,
+            noteId,
+            title,
+            content,
+            isBeaconRequest
+          )
         }
         onDelete={(noteId) =>
           removeCampaignNote(noteId)

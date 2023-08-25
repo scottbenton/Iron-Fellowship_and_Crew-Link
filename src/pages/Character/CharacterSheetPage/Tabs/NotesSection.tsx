@@ -61,7 +61,14 @@ export function NotesSection() {
         }
         updateNoteOrder={handleNoteReorder}
         onSave={({ noteId, title, content, isBeaconRequest }) =>
-          updateCharacterNote(noteId, title, content, isBeaconRequest)
+          updateCharacterNote(
+            undefined,
+            characterId,
+            noteId,
+            title,
+            content,
+            isBeaconRequest
+          )
         }
         condensedView={isMobile}
         onDelete={(noteId) =>
