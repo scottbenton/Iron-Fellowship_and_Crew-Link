@@ -1,13 +1,11 @@
 import { Alert, Grid, Typography } from "@mui/material";
 import { truthIds } from "data/truths";
-import { TRUTH_IDS, World } from "types/World.type";
-import { RichTextEditorNoTitle } from "./RichTextEditor";
+import { TRUTH_IDS } from "types/World.type";
 import { SectionHeading } from "./SectionHeading";
 import { WorldNameSection } from "pages/World/WorldSheetPage/components/WorldNameSection";
 import { TruthCard } from "pages/World/WorldSheetPage/components/TruthCard";
 import { useStore } from "stores/store";
 import { RtcRichTextEditor } from "./RichTextEditor/RtcRichTextEditor";
-import { isButtonElement } from "react-router-dom/dist/dom";
 
 export interface WorldSheetProps {
   canEdit: boolean;

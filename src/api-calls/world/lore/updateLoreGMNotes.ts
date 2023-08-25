@@ -40,7 +40,7 @@ export const updateLoreGMNotes = createApiFunction<Params, void>((params) => {
               name: contentPath,
               fields: {
                 gmNotes: {
-                  bytesValue: Bytes.fromUint8Array(notes),
+                  bytesValue: Bytes.fromUint8Array(notes).toBase64(),
                 },
               },
             }),

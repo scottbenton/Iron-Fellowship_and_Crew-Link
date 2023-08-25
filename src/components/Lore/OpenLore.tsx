@@ -12,7 +12,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/SectionHeading";
-import { RichTextEditorNoTitle } from "components/RichTextEditor";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
 import { LoreTagsAutocomplete } from "./LoreTagsAutocomplete";
@@ -244,7 +243,7 @@ export function OpenLore(props: OpenLoreProps) {
                 </Grid>
               )}
               <Grid item xs={12}>
-                {(lore.notes || lore.notes === null) && false && (
+                {(lore.notes || lore.notes === null) && (
                   <RtcRichTextEditor
                     id={loreId}
                     roomPrefix={`iron-fellowship-${worldId}-lore-`}

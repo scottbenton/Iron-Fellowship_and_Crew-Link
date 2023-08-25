@@ -18,7 +18,6 @@ import { useConfirm } from "material-ui-confirm";
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
 import { SectionHeading } from "components/SectionHeading";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
-import { RichTextEditorNoTitle } from "components/RichTextEditor";
 import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
 import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 import { useListenToCurrentNPC } from "stores/world/currentWorld/npcs/useListenToCurrentNPC";
