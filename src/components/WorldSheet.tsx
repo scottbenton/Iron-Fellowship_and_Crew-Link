@@ -25,8 +25,6 @@ export function WorldSheet(props: WorldSheetProps) {
   );
   if (!world || !worldId) return null;
 
-  console.debug(world);
-
   return (
     <>
       {canEdit ? (

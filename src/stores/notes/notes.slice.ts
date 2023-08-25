@@ -60,7 +60,7 @@ export const createNotesSlice: CreateSliceType<NotesSlice> = (
       (content) => {
         set((store) => {
           if (store.notes.openNoteId === noteId) {
-            store.notes.openNoteContent = content ?? "";
+            store.notes.openNoteContent = content ?? null;
           }
         });
       },

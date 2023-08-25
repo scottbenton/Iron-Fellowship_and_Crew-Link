@@ -5,7 +5,6 @@ import { Editor } from "./Editor";
 import { EditorToolbar } from "./EditorToolbar";
 import { useStore } from "stores/store";
 import { rtcExtensions } from "./rtcExtensions";
-import { useEffect } from "react";
 
 export interface RtcRichTextEditorProps {
   provider: WebrtcProvider;
@@ -33,35 +32,6 @@ export function RtcEditorComponent(props: RtcRichTextEditorProps) {
     },
     [doc, provider, user, withHeading]
   );
-
-  useEffect(() => {
-    console.count("Provider Changed");
-  }, [provider]);
-
-  useEffect(() => {
-    console.count("Doc Changed");
-  }, [doc]);
-
-  useEffect(() => {
-    console.count("withHeading Changed");
-  }, [withHeading]);
-
-  useEffect(() => {
-    console.count("deleteNote Changed");
-  }, [deleteNote]);
-
-  useEffect(() => {
-    console.count("user Changed");
-  }, [user]);
-
-  useEffect(() => {
-    console.count("Editor Changed");
-  }, [editor]);
-
-  useEffect(() => {
-    console.count("Provider Changed");
-  }, [provider]);
-  console.debug("EDITOR COMPONENT RERENDERED");
 
   return (
     <Editor

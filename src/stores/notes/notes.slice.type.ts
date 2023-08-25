@@ -9,7 +9,7 @@ export interface NotesSliceData {
   error?: string;
 
   openNoteId?: string;
-  openNoteContent?: Uint8Array | string;
+  openNoteContent?: Uint8Array | null;
 }
 
 export interface NotesSliceActions {

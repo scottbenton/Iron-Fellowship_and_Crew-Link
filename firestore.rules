@@ -22,8 +22,16 @@ service cloud.firestore {
         allow write, delete: if checkIsOwner();
       }
     }
-    match /campaigns/{document=**} {
+    match /campaigns/{campaignId} {
     	allow read, write, delete: if request.auth.uid != null;
+        
+    	match /{document=**} {
+    		allow read, write, delete: if request.auth.uid != null;
+      }
+      
+      match /game-log/{document=**} {
+      	allow read: if true;
+      }
     }
     match /worlds/{worldId} {
     	allow read: if true;

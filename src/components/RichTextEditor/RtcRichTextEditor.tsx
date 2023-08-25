@@ -146,6 +146,7 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
       doc={yDoc}
       saving={saving}
       deleteNote={onDelete ? () => onDelete(id) : undefined}
+      withHeading={showTitle}
     />
   );
 }
@@ -156,5 +157,5 @@ function extractTitle(doc: Y.Doc): string | undefined {
   while (currentNode && !currentNode.text) {
     currentNode = currentNode.content?.[0];
   }
-  return currentNode.text ?? "Placeholder Title";
+  return currentNode?.text ?? "Placeholder Title";
 }

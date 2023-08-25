@@ -40,7 +40,7 @@ export const rtcExtensions = (params: {
     extensions.push(CustomDocument);
     extensions.push(
       Placeholder.configure({
-        placeholder: ({ node, pos }) => {
+        placeholder: ({ node }) => {
           if (node.type.name === "heading") {
             return "Add a title";
           }

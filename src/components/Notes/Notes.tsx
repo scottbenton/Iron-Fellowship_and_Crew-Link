@@ -8,7 +8,7 @@ import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 export interface NotesProps {
   notes: Note[];
   selectedNoteId?: string;
-  selectedNoteContent?: Uint8Array;
+  selectedNoteContent?: Uint8Array | null;
   openNote: (noteId?: string) => void;
   createNote?: () => Promise<string>;
   updateNoteOrder?: (noteId: string, order: number) => Promise<boolean | void>;
@@ -100,7 +100,7 @@ export function Notes(props: NotesProps) {
                 roomPrefix={roomPrefix}
                 documentPassword={roomPassword}
                 id={selectedNoteId}
-                initialValue={selectedNoteContent}
+                initialValue={selectedNoteContent ?? undefined}
                 showTitle
                 onSave={
                   onSave
