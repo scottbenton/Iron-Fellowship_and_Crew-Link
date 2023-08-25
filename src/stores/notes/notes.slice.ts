@@ -100,10 +100,14 @@ export const createNotesSlice: CreateSliceType<NotesSlice> = (
     return addNote({ campaignId, characterId, order });
   },
 
-  updateNote: (noteId, title, content, isBeaconRequest) => {
-    const state = getState();
-    const campaignId = state.campaigns.currentCampaign.currentCampaignId;
-    const characterId = state.characters.currentCharacter.currentCharacterId;
+  updateNote: (
+    campaignId,
+    characterId,
+    noteId,
+    title,
+    content,
+    isBeaconRequest
+  ) => {
     return updateNote({
       campaignId,
       characterId,

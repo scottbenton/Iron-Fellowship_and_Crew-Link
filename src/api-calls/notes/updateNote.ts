@@ -26,6 +26,8 @@ export const updateNote = createApiFunction<
   const { campaignId, characterId, noteId, title, content, isBeaconRequest } =
     params;
 
+  console.debug(campaignId, characterId);
+
   return new Promise((resolve, reject) => {
     if (!campaignId && !characterId) {
       reject(new Error("Either campaign or character ID must be defined."));

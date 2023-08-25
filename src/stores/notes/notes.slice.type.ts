@@ -25,6 +25,8 @@ export interface NotesSliceActions {
 
   addNote: (order: number) => Promise<string>;
   updateNote: (
+    campaignId: string | undefined,
+    characterId: string | undefined,
     noteId: string,
     title: string,
     content: Uint8Array | undefined,
