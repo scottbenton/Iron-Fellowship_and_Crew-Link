@@ -6,6 +6,8 @@ import { SectionHeading } from "./SectionHeading";
 import { WorldNameSection } from "pages/World/WorldSheetPage/components/WorldNameSection";
 import { TruthCard } from "pages/World/WorldSheetPage/components/TruthCard";
 import { useStore } from "stores/store";
+import { RtcRichTextEditor } from "./RichTextEditor/RtcRichTextEditor";
+import { isButtonElement } from "react-router-dom/dist/dom";
 
 export interface WorldSheetProps {
   canEdit: boolean;
@@ -16,11 +18,14 @@ export function WorldSheet(props: WorldSheetProps) {
   const { canEdit, hideCampaignHints } = props;
 
   const world = useStore((store) => store.worlds.currentWorld.currentWorld);
+  const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
 
   const updateWorldDescription = useStore(
     (store) => store.worlds.currentWorld.updateCurrentWorldDescription
   );
-  if (!world) return null;
+  if (!world || !worldId) return null;
+
+  console.debug(world);
 
   return (
     <>
@@ -34,7 +39,7 @@ export function WorldSheet(props: WorldSheetProps) {
           {world.name}
         </Typography>
       )}
-      {(canEdit || world.description) && (
+      {(canEdit || world.worldDescription) && (
         <>
           <SectionHeading
             breakContainer
@@ -47,14 +52,17 @@ export function WorldSheet(props: WorldSheetProps) {
               shared with your players.
             </Alert>
           )}
-          <RichTextEditorNoTitle
-            content={world.description ?? ""}
+          <RtcRichTextEditor
+            id={worldId}
+            roomPrefix={`worlds-${worldId}-description-`}
+            documentPassword={worldId}
             onSave={
               canEdit
-                ? ({ content, isBeaconRequest }) =>
-                    updateWorldDescription(content, isBeaconRequest)
+                ? (documentId, content, isBeaconRequest) =>
+                    updateWorldDescription(worldId, content, isBeaconRequest)
                 : undefined
             }
+            initialValue={world.worldDescription}
           />
         </>
       )}

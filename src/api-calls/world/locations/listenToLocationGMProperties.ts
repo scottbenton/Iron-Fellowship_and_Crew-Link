@@ -14,7 +14,11 @@ export function listenToLocationGMProperties(
     getPrivateDetailsLocationDoc(worldId, locationId),
     (snapshot) => {
       const gmProps = snapshot.data();
-      updateGMProperties(gmProps);
+      const newProps: GMLocationDocument = {
+        ...gmProps,
+        gmNotes: gmProps?.gmNotes?.toUint8Array(),
+      };
+      updateGMProperties(newProps);
     },
     (error) => {
       onError(getErrorMessage(error, "Failed to get location gm notes"));

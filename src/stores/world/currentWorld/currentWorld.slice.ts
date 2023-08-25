@@ -40,17 +40,12 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
           reject("No world id defined.");
         });
     },
-    updateCurrentWorldDescription: (description, isBeaconRequest) => {
-      const worldId = getState().worlds.currentWorld.currentWorldId;
-      if (worldId) {
-        return updateWorldDescription({
-          worldId,
-          description,
-          isBeaconRequest,
-        });
-      } else {
-        return new Promise((res, reject) => reject("No world id defined."));
-      }
+    updateCurrentWorldDescription: (worldId, description, isBeaconRequest) => {
+      return updateWorldDescription({
+        worldId,
+        description,
+        isBeaconRequest,
+      });
     },
     updateCurrentWorldTruth: (truthId, truth) => {
       const worldId = getState().worlds.currentWorld.currentWorldId;

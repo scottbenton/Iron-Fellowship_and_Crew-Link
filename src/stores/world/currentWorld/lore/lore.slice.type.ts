@@ -32,7 +32,7 @@ export interface LoreSliceActions {
   ) => Promise<void>;
   updateLoreGMNotes: (
     loreId: string,
-    notes: string,
+    notes: Uint8Array,
     isBeaconRequest?: boolean
   ) => Promise<void>;
   updateLoreGMProperties: (

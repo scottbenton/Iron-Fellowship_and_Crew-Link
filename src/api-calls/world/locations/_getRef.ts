@@ -7,9 +7,9 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import {
-  GMLocationDocument,
   LocationDocument,
   LocationNotesDocument,
+  StoredGMLocationDocument,
   StoredLocation,
 } from "types/Locations.type";
 
@@ -71,7 +71,7 @@ export function getPrivateDetailsLocationDoc(
   return doc(
     firestore,
     constructPrivateDetailsLocationDocPath(worldId, locationId)
-  ) as DocumentReference<GMLocationDocument>;
+  ) as DocumentReference<StoredGMLocationDocument>;
 }
 
 export function getPublicNotesLocationDoc(worldId: string, locationId: string) {

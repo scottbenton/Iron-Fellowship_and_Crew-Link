@@ -1,34 +1,28 @@
-import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Link,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
-import { RichTextEditor } from "components/RichTextEditor";
+import { Box, Breadcrumbs, Link, Typography } from "@mui/material";
 import { Note } from "types/Notes.type";
 import { NoteSidebar } from "./NoteSidebar";
-import { useState } from "react";
 import { ROLL_LOG_ID } from "stores/notes/notes.slice.type";
 import { GameLog } from "components/GameLog";
+import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
 
 export interface NotesProps {
   notes: Note[];
   selectedNoteId?: string;
-  selectedNoteContent?: string;
+  selectedNoteContent?: Uint8Array;
   openNote: (noteId?: string) => void;
   createNote?: () => Promise<string>;
   updateNoteOrder?: (noteId: string, order: number) => Promise<boolean | void>;
   onSave?: (params: {
     noteId: string;
     title: string;
-    content?: string;
+    content?: Uint8Array;
     isBeaconRequest?: boolean;
   }) => Promise<boolean | void>;
   onDelete?: (noteId: string) => void;
   condensedView?: boolean;
+  source:
+    | { type: "character"; characterId: string }
+    | { type: "campaign"; campaignId: string };
 }
 
 export function Notes(props: NotesProps) {
@@ -42,9 +36,17 @@ export function Notes(props: NotesProps) {
     onSave,
     onDelete,
     condensedView,
+    source,
   } = props;
 
   const selectedNote = notes.find((note) => note.noteId === selectedNoteId);
+
+  const roomPrefix =
+    source.type === "character"
+      ? `characters-${source.characterId}-`
+      : `campaigns-${source.campaignId}-`;
+  const roomPassword =
+    source.type === "character" ? source.characterId : source.campaignId;
 
   return (
     <Box
@@ -94,28 +96,20 @@ export function Notes(props: NotesProps) {
             selectedNoteId !== ROLL_LOG_ID &&
             selectedNote &&
             selectedNoteContent !== undefined && (
-              <RichTextEditor
+              <RtcRichTextEditor
+                roomPrefix={roomPrefix}
+                documentPassword={roomPassword}
                 id={selectedNoteId}
-                content={{
-                  title: selectedNote.title,
-                  body: selectedNoteContent,
-                }}
+                initialValue={selectedNoteContent}
+                showTitle
                 onSave={
                   onSave
-                    ? ({ id, title, content, isBeaconRequest }) =>
-                        new Promise<boolean>((resolve, reject) => {
-                          if (id) {
-                            onSave({
-                              noteId: id,
-                              title,
-                              content,
-                              isBeaconRequest,
-                            })
-                              .then(() => resolve(true))
-                              .catch((e) => reject(e));
-                          } else {
-                            reject("Note id not provided");
-                          }
+                    ? (noteId, notes, isBeaconRequest, title) =>
+                        onSave({
+                          noteId,
+                          title: title ?? "Note",
+                          content: notes,
+                          isBeaconRequest,
                         })
                     : undefined
                 }

@@ -14,7 +14,11 @@ export function listenToNPCGMProperties(
     getPrivateDetailsNPCDoc(worldId, npcId),
     (snapshot) => {
       const gmProps = snapshot.data();
-      updateGMProperties(gmProps);
+      const newProps: GMNPCDocument = {
+        ...gmProps,
+        gmNotes: gmProps?.gmNotes?.toUint8Array(),
+      };
+      updateGMProperties(newProps);
     },
     (error) => {
       onError(getErrorMessage(error, "Failed to get npc gm notes"));

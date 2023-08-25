@@ -206,14 +206,12 @@ export function OpenLore(props: OpenLoreProps) {
                 </Grid>
               )}
               <Grid item xs={12}>
-                <RichTextEditorNoTitle
+                <RtcRichTextEditor
                   id={loreId}
-                  content={lore.gmProperties?.notes ?? ""}
-                  onSave={({ content, isBeaconRequest }) =>
-                    updateLoreGMNotes(loreId, content, isBeaconRequest).catch(
-                      () => {}
-                    )
-                  }
+                  roomPrefix={`iron-fellowship-${worldId}-lore-gmnotes-`}
+                  documentPassword={worldId}
+                  onSave={updateLoreNotes}
+                  initialValue={lore.gmProperties?.gmNotes}
                 />
               </Grid>
             </>
@@ -246,16 +244,12 @@ export function OpenLore(props: OpenLoreProps) {
                 </Grid>
               )}
               <Grid item xs={12}>
-                {(lore.notes || lore.notes === null) && (
+                {(lore.notes || lore.notes === null) && false && (
                   <RtcRichTextEditor
                     id={loreId}
                     roomPrefix={`iron-fellowship-${worldId}-lore-`}
                     documentPassword={worldId}
-                    onSave={(id, notes, isBeaconRequest) =>
-                      updateLoreNotes(id, notes, isBeaconRequest).catch(
-                        () => {}
-                      )
-                    }
+                    onSave={updateLoreNotes}
                     initialValue={lore.notes || undefined}
                   />
                 )}

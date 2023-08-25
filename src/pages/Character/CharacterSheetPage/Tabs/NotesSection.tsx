@@ -13,6 +13,10 @@ export function NotesSection() {
     (store) => store.notes.temporarilyReorderNotes
   );
 
+  const characterId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacterId ?? ""
+  );
+
   const noteContent = useStore((store) => store.notes.openNoteContent);
   const openNoteId = useStore((store) => store.notes.openNoteId);
   const setNoteId = useStore((store) => store.notes.setOpenNoteId);
@@ -42,6 +46,10 @@ export function NotesSection() {
   return (
     <Box height={"100%"}>
       <Notes
+        source={{
+          type: "character",
+          characterId,
+        }}
         notes={notes}
         selectedNoteId={openNoteId}
         selectedNoteContent={noteContent}

@@ -1,4 +1,4 @@
-import { setDoc, updateDoc } from "firebase/firestore";
+import { Bytes, setDoc, updateDoc } from "firebase/firestore";
 import {
   constructCampaignNoteContentPath,
   constructCampaignNoteDocPath,
@@ -18,7 +18,7 @@ export const updateNote = createApiFunction<
     characterId: string | undefined;
     noteId: string;
     title: string;
-    content?: string;
+    content?: Uint8Array;
     isBeaconRequest?: boolean;
   },
   void
@@ -52,7 +52,7 @@ export const updateNote = createApiFunction<
         .accessToken;
       if (content) {
         fetch(
-          `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=content`,
+          `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=notes`,
           {
             method: "PATCH",
             headers: {
@@ -62,8 +62,8 @@ export const updateNote = createApiFunction<
             body: JSON.stringify({
               name: contentPath,
               fields: {
-                content: {
-                  stringValue: content,
+                notes: {
+                  bytesValue: Bytes.fromUint8Array(content).toBase64(),
                 },
               },
             }),
@@ -112,8 +112,9 @@ export const updateNote = createApiFunction<
               ? getCharacterNoteContentDocument(characterId, noteId)
               : getCampaignNoteContentDocument(campaignId as string, noteId),
             {
-              content,
-            }
+              notes: Bytes.fromUint8Array(content),
+            },
+            { merge: true }
           )
         );
       }

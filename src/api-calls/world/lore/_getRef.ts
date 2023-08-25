@@ -7,7 +7,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import {
-  GMLoreDocument,
+  StoredGMLoreDocument,
   LoreDocument,
   LoreNotesDocument,
   LoreDocumentFirestore,
@@ -65,7 +65,7 @@ export function getPrivateDetailsLoreDoc(worldId: string, loreId: string) {
   return doc(
     firestore,
     constructPrivateDetailsLoreDocPath(worldId, loreId)
-  ) as DocumentReference<GMLoreDocument>;
+  ) as DocumentReference<StoredGMLoreDocument>;
 }
 
 export function getPublicNotesLoreDoc(worldId: string, loreId: string) {

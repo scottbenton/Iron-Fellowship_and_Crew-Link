@@ -32,7 +32,7 @@ export interface NPCsSliceActions {
   ) => Promise<void>;
   updateNPCGMNotes: (
     npcId: string,
-    notes: string,
+    notes: Uint8Array,
     isBeaconRequest?: boolean
   ) => Promise<void>;
   updateNPCGMProperties: (

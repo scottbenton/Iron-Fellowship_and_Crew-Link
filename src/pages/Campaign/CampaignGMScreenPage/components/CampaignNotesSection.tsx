@@ -13,6 +13,10 @@ export function CampaignNotesSection() {
     (store) => store.notes.temporarilyReorderNotes
   );
 
+  const campaignId = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaignId ?? ""
+  );
+
   const noteContent = useStore((store) => store.notes.openNoteContent);
   const openNoteId = useStore((store) => store.notes.openNoteId);
   const setNoteId = useStore((store) => store.notes.setOpenNoteId);
@@ -42,6 +46,10 @@ export function CampaignNotesSection() {
   return (
     <Box height={"100%"}>
       <Notes
+        source={{
+          type: "campaign",
+          campaignId,
+        }}
         notes={notes}
         selectedNoteId={openNoteId}
         selectedNoteContent={noteContent}

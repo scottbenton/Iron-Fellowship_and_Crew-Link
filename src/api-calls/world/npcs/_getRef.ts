@@ -7,7 +7,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import {
-  GMNPCDocument,
+  StoredGMNPCDocument,
   NPCDocument,
   NPCNotesDocument,
   NPCDocumentFirestore,
@@ -62,7 +62,7 @@ export function getPrivateDetailsNPCDoc(worldId: string, npcId: string) {
   return doc(
     firestore,
     constructPrivateDetailsNPCDocPath(worldId, npcId)
-  ) as DocumentReference<GMNPCDocument>;
+  ) as DocumentReference<StoredGMNPCDocument>;
 }
 
 export function getPublicNotesNPCDoc(worldId: string, npcId: string) {

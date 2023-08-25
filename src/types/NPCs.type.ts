@@ -25,13 +25,16 @@ export interface NPCDocumentFirestore
   createdTimestamp: Timestamp;
 }
 
-export interface GMNPCDocument {
+export interface StoredGMNPCDocument {
   goal?: string;
   role?: string;
   descriptor?: string;
   disposition?: string;
   activity?: string;
-  notes?: string;
+  gmNotes?: Bytes;
+}
+export interface GMNPCDocument extends Omit<StoredGMNPCDocument, "gmNotes"> {
+  gmNotes?: Uint8Array;
 }
 
 export interface NPCNotesDocument {

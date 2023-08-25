@@ -15,8 +15,11 @@ export interface LoreDocumentFirestore
   createdTimestamp: Timestamp;
 }
 
+export interface StoredGMLoreDocument {
+  gmNotes?: Bytes;
+}
 export interface GMLoreDocument {
-  notes?: string;
+  gmNotes?: Uint8Array;
 }
 
 export interface LoreNotesDocument {

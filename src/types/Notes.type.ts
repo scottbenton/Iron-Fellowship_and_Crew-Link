@@ -1,3 +1,5 @@
+import { Bytes } from "firebase/firestore";
+
 export interface NoteDocument {
   title: string;
   order: number;
@@ -11,5 +13,5 @@ export interface Note {
 }
 
 export interface NoteContentDocument {
-  content: string;
+  notes?: Bytes;
 }

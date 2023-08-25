@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.10.5",
     "@fontsource/rubik": "^4.5.13",
     "@fontsource/staatliches": "^4.5.9",
+    "@hocuspocus/transformer": "^2.4.0",
     "@iconify-icons/game-icons": "^1.2.1",
     "@mui/icons-material": "^5.11.0",
     "@mui/lab": "^5.0.0-alpha.115",
