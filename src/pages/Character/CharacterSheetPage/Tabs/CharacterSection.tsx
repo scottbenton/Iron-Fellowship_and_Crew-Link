@@ -371,6 +371,7 @@ export function CharacterSection() {
             onClick={() => copyLinkToClipboard()}
             color={"inherit"}
             variant={"outlined"}
+            sx={{ mt: 1 }}
           >
             Copy link to Card Overlay for OBS
           </Button>

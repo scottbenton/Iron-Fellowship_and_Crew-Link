@@ -84,6 +84,7 @@ export function CharacterCardPage() {
       >
         <Box
           display={"flex"}
+          flexGrow={1}
           justifyContent={isReversed ? "flex-end" : "flex-start"}
           sx={{
             transform: "skew(-.35rad)",
@@ -221,6 +222,7 @@ export function CharacterCardPage() {
             alignItems={"stretch"}
             ref={rollContainerRef}
             maxWidth={500}
+            justifyContent={isReversed ? "center" : "flex-start"}
             width={"100%"}
           >
             {latestRoll && (
