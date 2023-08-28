@@ -1,29 +1,25 @@
-import {
-  Box,
-  Card,
-  Divider,
-  GlobalStyles,
-  Slide,
-  Typography,
-} from "@mui/material";
+import { Box, GlobalStyles, Slide, Typography } from "@mui/material";
 import { useListenToCharacter } from "./hooks/useListenToCharacter";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
 import HealthIcon from "@mui/icons-material/Favorite";
 import SpiritIcon from "@mui/icons-material/Whatshot";
-import { useEffect, useState } from "react";
-import { ROLL_TYPE, Roll } from "types/DieRolls.type";
-import { D6Icon } from "assets/D6Icon";
-import { D10Icon } from "assets/D10Icon";
-import { getRollResultLabel } from "providers/DieRollProvider/RollSnackbar/StatRollSnackbar";
-import InitiativeIcon from "@mui/icons-material/Shield";
-import NoInitiativeIcon from "@mui/icons-material/RemoveModerator";
-import { INITIATIVE_STATUS } from "types/Character.type";
+import { useEffect, useRef, useState } from "react";
+import { Roll } from "types/DieRolls.type";
 import { Unsubscribe } from "firebase/firestore";
 import { listenToMostRecentCharacterLog } from "api-calls/game-log/listenToMostRecentCharacterLog";
+import { RollCard } from "./components/RollCard";
+import { INITIATIVE_STATUS } from "types/Character.type";
+import InitiativeIcon from "@mui/icons-material/Shield";
+import NoInitiativeIcon from "@mui/icons-material/RemoveModerator";
+import { useSearchParams } from "react-router-dom";
 
 export function CharacterCardPage() {
+  const [params, setParams] = useSearchParams();
+  const isReversed = params.get("reverse") === "true";
   const { characterId, character } = useListenToCharacter();
   const campaignId = character?.campaignId;
+
+  const rollContainerRef = useRef<HTMLDivElement>(null);
 
   const [isRollVisible, setIsRollVisible] = useState(false);
   const [latestRoll, setLatestRoll] = useState<Roll>();
@@ -79,262 +75,187 @@ export function CharacterCardPage() {
       />
       <Box
         display={"flex"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        py={4}
-        px={4}
+        alignItems={"flex-end"}
+        px={8}
+        py={6}
+        height={"100vh"}
+        width={"100%"}
+        overflow={"hidden"}
       >
-        <Box display={"flex"} overflow={"hidden"}>
-          <PortraitAvatar
-            uid={userId ?? ""}
-            characterId={characterId ?? ""}
-            name={character?.name}
-            portraitSettings={character?.profileImage}
-            size={"huge"}
-            colorful
-            rounded
-            darkBorder
-          />
+        <Box
+          display={"flex"}
+          flexGrow={1}
+          justifyContent={isReversed ? "flex-end" : "flex-start"}
+          sx={{
+            transform: "skew(-.35rad)",
+            flexWrap: "wrap-reverse",
+          }}
+        >
+          <Box
+            sx={{
+              transform: "skew(.35rad)",
+              position: "relative",
+              zIndex: 6,
+            }}
+          >
+            <PortraitAvatar
+              uid={userId ?? ""}
+              characterId={characterId ?? ""}
+              name={character?.name}
+              portraitSettings={character?.profileImage}
+              size={"huge"}
+              rounded
+              darkBorder
+            />
+          </Box>
+
           <Box
             sx={(theme) => ({
+              marginLeft: -10,
               display: "inline",
               backgroundColor: theme.palette.grey[800],
               color: theme.palette.common.white,
-              marginLeft: -8,
-              paddingLeft: 10,
-              paddingRight: 2,
-              borderRadius: 16,
-              flexGrow: 1,
+              paddingLeft: 14,
+              paddingRight: 4,
+              borderRadius: 4,
               py: 2,
               my: 2,
+              minWidth: 430,
+              position: "relative",
+              zIndex: 5,
             })}
           >
-            <Box>
-              <Typography
-                variant={"h2"}
-                fontFamily={(theme) => theme.fontFamilyTitle}
-                textOverflow={"ellipsis"}
-                overflow={"hidden"}
-                whiteSpace={"nowrap"}
-              >
-                {character.name}
-              </Typography>
-            </Box>
-            <Box display={"flex"}>
-              <Box display={"flex"} alignItems={"center"}>
-                <HealthIcon
-                  sx={(theme) => ({
-                    width: 50,
-                    height: 50,
-                    color: theme.palette.grey[300],
-                  })}
-                />
-                <Typography variant={"h3"} ml={1}>
-                  {character.health}
+            <Box
+              sx={{
+                transform: "skew(.35rad)",
+              }}
+            >
+              <Box>
+                <Typography
+                  variant={"h2"}
+                  fontFamily={(theme) => theme.fontFamilyTitle}
+                  textOverflow={"ellipsis"}
+                  overflow={"hidden"}
+                  whiteSpace={"nowrap"}
+                >
+                  {character.name}
                 </Typography>
               </Box>
-              <Box display={"flex"} alignItems={"center"} ml={4}>
-                <SpiritIcon
-                  sx={(theme) => ({
-                    width: 50,
-                    height: 50,
-                    color: theme.palette.grey[300],
-                  })}
-                />
-                <Typography variant={"h3"} ml={1}>
-                  {character.spirit}
-                </Typography>
+              <Box display={"flex"}>
+                <Box display={"flex"} alignItems={"center"}>
+                  <HealthIcon
+                    sx={(theme) => ({
+                      width: 50,
+                      height: 50,
+                      color: theme.palette.secondary.main,
+                    })}
+                  />
+                  <Typography variant={"h3"} ml={1}>
+                    {character.health}
+                  </Typography>
+                </Box>
+                <Box display={"flex"} alignItems={"center"} ml={4}>
+                  <SpiritIcon
+                    sx={(theme) => ({
+                      width: 50,
+                      height: 50,
+                      color: theme.palette.info.light,
+                    })}
+                  />
+                  <Typography variant={"h3"} ml={1}>
+                    {character.spirit}
+                  </Typography>
+                </Box>
               </Box>
-              <Box display={"flex"} alignItems={"center"} ml={4} width={248}>
-                {character.initiativeStatus &&
-                  character.initiativeStatus !==
-                    INITIATIVE_STATUS.OUT_OF_COMBAT && (
-                    <>
-                      {character.initiativeStatus ===
-                      INITIATIVE_STATUS.HAS_INITIATIVE ? (
-                        <InitiativeIcon
-                          sx={(theme) => ({
-                            width: 50,
-                            height: 50,
-                            color: theme.palette.grey[300],
-                          })}
-                        />
-                      ) : (
-                        <NoInitiativeIcon
-                          sx={(theme) => ({
-                            width: 50,
-                            height: 50,
-                            color: theme.palette.grey[300],
-                          })}
-                        />
-                      )}
-                      <Typography variant={"h4"} ml={1}>
-                        {getStatusText(character.initiativeStatus)}
-                      </Typography>
-                    </>
-                  )}
-              </Box>
+
+              {character.initiativeStatus &&
+                character.initiativeStatus !==
+                  INITIATIVE_STATUS.OUT_OF_COMBAT && (
+                  <Box
+                    position={"absolute"}
+                    display={"flex"}
+                    py={0.5}
+                    pl={1}
+                    pr={2}
+                    ml={-1}
+                    mt={1}
+                    color={(theme) =>
+                      character.initiativeStatus ===
+                      INITIATIVE_STATUS.HAS_INITIATIVE
+                        ? theme.palette.success.contrastText
+                        : theme.palette.error.contrastText
+                    }
+                    bgcolor={(theme) =>
+                      character.initiativeStatus ===
+                      INITIATIVE_STATUS.HAS_INITIATIVE
+                        ? theme.palette.success.main
+                        : theme.palette.error.main
+                    }
+                    borderRadius={(theme) => theme.shape.borderRadius}
+                  >
+                    {character.initiativeStatus ===
+                    INITIATIVE_STATUS.HAS_INITIATIVE ? (
+                      <InitiativeIcon
+                        sx={(theme) => ({
+                          width: 50,
+                          height: 50,
+                        })}
+                      />
+                    ) : (
+                      <NoInitiativeIcon
+                        sx={(theme) => ({
+                          width: 50,
+                          height: 50,
+                        })}
+                      />
+                    )}
+                    <Typography variant={"h4"} ml={1}>
+                      {getStatusText(character.initiativeStatus)}
+                    </Typography>
+                  </Box>
+                )}
             </Box>
           </Box>
-        </Box>
-        {latestRoll && (
-          <Slide in={isRollVisible} direction={"up"}>
-            <Card
-              sx={(theme) => ({
-                px: 4,
-                py: 2,
-                backgroundColor: theme.palette.primary.dark,
-                color: theme.palette.primary.contrastText,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                mt: 1,
-                borderRadius: 16,
-              })}
-            >
-              <Typography
-                variant={"h4"}
-                fontFamily={(theme) => theme.fontFamilyTitle}
+          <Box
+            my={2}
+            display={"flex"}
+            alignItems={"stretch"}
+            ref={rollContainerRef}
+            maxWidth={500}
+            justifyContent={isReversed ? "center" : "flex-start"}
+            width={"100%"}
+          >
+            {latestRoll && (
+              <Slide
+                in={isRollVisible}
+                direction={isReversed ? "left" : "right"}
+                container={rollContainerRef.current}
               >
-                {latestRoll.rollLabel}
-              </Typography>
-              <Box display={"flex"} flexDirection={"row"}>
-                {latestRoll.type === ROLL_TYPE.STAT && (
-                  <>
-                    <Box>
-                      <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                      >
-                        <D6Icon sx={{ width: 40, height: 40 }} />
-                        <Typography
-                          variant={"h4"}
-                          ml={2}
-                          color={(theme) => theme.palette.grey[200]}
-                        >
-                          {latestRoll.action + (latestRoll.modifier || 0)}
-                        </Typography>
-                      </Box>
-                      <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                      >
-                        <D10Icon sx={{ width: 40, height: 40 }} />
-                        <Typography
-                          variant={"h4"}
-                          ml={2}
-                          color={(theme) => theme.palette.grey[200]}
-                        >
-                          {latestRoll.challenge1}, {latestRoll.challenge2}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    <Divider
-                      orientation={"vertical"}
-                      sx={(theme) => ({
-                        alignSelf: "stretch",
-                        borderColor: theme.palette.grey[400],
-                        height: "auto",
-                        mx: 4,
-                      })}
-                    />
-                    <Box
-                      display={"flex"}
-                      flexDirection={"column"}
-                      alignItems={"flex-start"}
-                      justifyContent={"center"}
-                    >
-                      <Typography
-                        color={"white"}
-                        variant={"h3"}
-                        fontFamily={(theme) => theme.fontFamilyTitle}
-                      >
-                        {getRollResultLabel(latestRoll.result)}
-                      </Typography>
-                      {latestRoll.challenge1 === latestRoll.challenge2 && (
-                        <Typography
-                          variant={"h5"}
-                          color={(theme) => theme.palette.grey[200]}
-                          fontFamily={(theme) => theme.fontFamilyTitle}
-                        >
-                          Doubles
-                        </Typography>
-                      )}
-                    </Box>
-                  </>
-                )}
-                {latestRoll.type === ROLL_TYPE.TRACK_PROGRESS && (
-                  <>
-                    <Box>
-                      <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                      >
-                        <Typography
-                          variant={"h4"}
-                          color={(theme) => theme.palette.grey[200]}
-                        >
-                          Progress: {latestRoll.trackProgress}
-                        </Typography>
-                      </Box>
-                      <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                      >
-                        <D10Icon sx={{ width: 40, height: 40 }} />
-                        <Typography
-                          variant={"h4"}
-                          ml={2}
-                          color={(theme) => theme.palette.grey[200]}
-                        >
-                          {latestRoll.challenge1}, {latestRoll.challenge2}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    <Divider
-                      orientation={"vertical"}
-                      sx={(theme) => ({
-                        alignSelf: "stretch",
-                        borderColor: theme.palette.grey[400],
-                        height: "auto",
-                        mx: 4,
-                      })}
-                    />
-                    <Box
-                      display={"flex"}
-                      flexDirection={"column"}
-                      alignItems={"flex-start"}
-                      justifyContent={"center"}
-                    >
-                      <Typography
-                        color={"white"}
-                        variant={"h3"}
-                        fontFamily={(theme) => theme.fontFamilyTitle}
-                      >
-                        {getRollResultLabel(latestRoll.result)}
-                      </Typography>
-                      {latestRoll.challenge1 === latestRoll.challenge2 && (
-                        <Typography
-                          color={(theme) => theme.palette.grey[200]}
-                          variant={"caption"}
-                          fontFamily={(theme) => theme.fontFamilyTitle}
-                        >
-                          Doubles
-                        </Typography>
-                      )}
-                    </Box>
-                  </>
-                )}
-              </Box>
-            </Card>
-          </Slide>
-        )}
+                <Box
+                  sx={(theme) => ({
+                    backgroundColor: theme.palette.grey[800],
+                    color: theme.palette.common.white,
+                    px: 6,
+                    borderRadius: 4,
+                    py: 2,
+                    minWidth: 200,
+                    ml: 4,
+                    display: "flex",
+                    alignItems: "center",
+                  })}
+                >
+                  <Box
+                    sx={{
+                      transform: "skew(.35rad)",
+                    }}
+                  >
+                    <RollCard roll={latestRoll} />
+                  </Box>
+                </Box>
+              </Slide>
+            )}
+          </Box>
+        </Box>
       </Box>
     </>
   );
