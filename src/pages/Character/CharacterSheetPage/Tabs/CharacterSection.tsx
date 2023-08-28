@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
+  Alert,
 } from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
@@ -361,9 +362,19 @@ export function CharacterSection() {
       )}
       <SectionHeading label={"Misc"} />
       <Box px={2}>
-        <Button onClick={() => copyLinkToClipboard()}>
-          Copy link to card overlay url
-        </Button>
+        <Alert severity="info">
+          Iron Fellowship includes an overlay for OBS or other webcam editors so
+          you can overlay information about your character as you play. You can
+          add the given link as a browser source over your camera to display
+          this information.
+          <Button
+            onClick={() => copyLinkToClipboard()}
+            color={"inherit"}
+            variant={"outlined"}
+          >
+            Copy link to Card Overlay for OBS
+          </Button>
+        </Alert>
       </Box>
     </Stack>
   );
