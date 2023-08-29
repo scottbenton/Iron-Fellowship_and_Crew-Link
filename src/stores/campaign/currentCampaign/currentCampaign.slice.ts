@@ -7,7 +7,7 @@ import { deleteCampaign } from "api-calls/campaign/deleteCampaign";
 import { leaveCampaign } from "api-calls/campaign/leaveCampaign";
 import { removeCharacterFromCampaign } from "api-calls/campaign/removeCharacterFromCampaign";
 import { addCharacterToCampaign } from "api-calls/campaign/addCharacterToCampaign";
-import { updateCampaignSupply } from "api-calls/campaign/updateCampaignSupply";
+import { updateCampaign } from "api-calls/campaign/updateCampaign";
 import { createCampaignTracksSlice } from "./tracks/campaignTracks.slice";
 import { createCampaignCharactersSlice } from "./characters/campaignCharacters.slice";
 import { updateCampaignWorld } from "api-calls/campaign/updateCampaignWorld";
@@ -141,7 +141,14 @@ export const createCurrentCampaignSlice: CreateSliceType<
       if (!campaignId) {
         return new Promise((res, reject) => reject("No campaign found."));
       }
-      return updateCampaignSupply({ campaignId, supply });
+      return updateCampaign({ campaignId, campaign: { supply } });
+    },
+    updateCampaign: (campaign) => {
+      const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
+      if (!campaignId) {
+        return new Promise((res, reject) => reject("No campaign found."));
+      }
+      return updateCampaign({ campaignId, campaign });
     },
 
     resetStore: () => {

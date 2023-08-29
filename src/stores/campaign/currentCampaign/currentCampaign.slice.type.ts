@@ -20,6 +20,7 @@ export interface CurrentCampaignSliceActions {
   addCharacter: (characterId: string) => Promise<void>;
   removeCharacter: (characterId: string) => Promise<void>;
   updateCampaignSupply: (supply: number) => Promise<void>;
+  updateCampaign: (campaign: Partial<StoredCampaign>) => Promise<void>;
 
   resetStore: () => void;
 }

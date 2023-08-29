@@ -1,19 +1,18 @@
 import { updateDoc } from "firebase/firestore";
 import { getCampaignDoc } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
+import { StoredCampaign } from "types/Campaign.type";
 
-export const updateCampaignSupply = createApiFunction<
+export const updateCampaign = createApiFunction<
   {
     campaignId: string;
-    supply: number;
+    campaign: Partial<StoredCampaign>;
   },
   void
 >((params) => {
-  const { campaignId, supply } = params;
+  const { campaignId, campaign } = params;
   return new Promise((resolve, reject) => {
-    updateDoc(getCampaignDoc(campaignId), {
-      supply,
-    })
+    updateDoc(getCampaignDoc(campaignId), campaign)
       .then(() => {
         resolve();
       })
@@ -21,4 +20,4 @@ export const updateCampaignSupply = createApiFunction<
         reject(e);
       });
   });
-}, "Failed to update supply.");
+}, "Failed to update campaign.");
