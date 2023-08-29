@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { CharacterList } from "components/CharacterList";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import { SectionHeading } from "components/SectionHeading";
@@ -8,6 +8,7 @@ import { StoredCampaign } from "types/Campaign.type";
 import { AddCharacterDialog } from "./AddCharacterDialog";
 import { constructCharacterSheetPath } from "pages/Character/routes";
 import { useStore } from "stores/store";
+import { PlayerCard } from "./PlayerCard";
 
 export interface CharacterSectionProps {
   campaign: StoredCampaign;
@@ -25,6 +26,11 @@ export function CharacterSection(props: CharacterSectionProps) {
   const characters = useStore(
     (store) => store.campaigns.currentCampaign.characters.characterMap
   );
+
+  const players = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign?.users ?? []
+  );
+
   const removeCharacterFromCampaign = useStore(
     (store) => store.campaigns.currentCampaign.removeCharacter
   );
@@ -97,6 +103,14 @@ export function CharacterSection(props: CharacterSectionProps) {
         handleClose={() => setAddCharacterDialogOpen(false)}
         campaignId={campaignId}
       />
+      <SectionHeading label={"Players"} breakContainer sx={{ mt: 5 }} />
+      <Grid container spacing={2} sx={{ mt: 2 }}>
+        {players.map((playerId, index) => (
+          <Grid item xs={12} sm={6} md={4} key={playerId}>
+            <PlayerCard playerId={playerId} />
+          </Grid>
+        ))}
+      </Grid>
     </>
   );
 }

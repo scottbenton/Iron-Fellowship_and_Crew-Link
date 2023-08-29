@@ -10,6 +10,7 @@ import { useRef, useState } from "react";
 import { logout } from "../../lib/auth.lib";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useStore } from "stores/store";
+import { UserAvatar } from "components/UserAvatar";
 
 const getInitials = (name: string) => {
   const names = name.split(" ");
@@ -22,14 +23,10 @@ const getInitials = (name: string) => {
 };
 
 export function HeaderMenu() {
-  const user = useStore((store) => store.auth.user);
+  const userId = useStore((store) => store.auth.uid);
 
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
-
-  if (!user) return null;
-
-  const initials = getInitials(user.displayName ?? "User");
 
   return (
     <>
@@ -38,7 +35,7 @@ export function HeaderMenu() {
         ref={anchorRef}
         onClick={() => setMenuOpen(true)}
       >
-        <Avatar src={user.photoURL ?? undefined}>{initials}</Avatar>
+        <UserAvatar uid={userId} />
       </ButtonBase>
       <Menu
         open={menuOpen}
