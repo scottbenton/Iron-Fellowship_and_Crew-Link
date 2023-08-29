@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import { DialogTitleWithCloseButton } from "components/DialogTitleWithCloseButton";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useStore } from "stores/store";
+import { EditableTitle } from "components/EditableTitle";
 
 export interface CampaignSheetHeaderProps {
   campaign: StoredCampaign;
@@ -25,6 +26,9 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
   const updateCampaignGM = useStore(
     (store) => store.campaigns.currentCampaign.updateCampaignGM
   );
+  const updateCampaign = useStore(
+    (store) => store.campaigns.currentCampaign.updateCampaign
+  );
 
   const gmLabel = useStore((store) =>
     (
@@ -33,6 +37,7 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
       ) ?? []
     ).join(", ")
   );
+  const isGm = campaign.gmIds?.includes(uid) ?? false;
 
   const [inviteUsersDialogOpen, setInviteUsersDialogOpen] =
     useState<boolean>(false);
@@ -60,7 +65,16 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
   return (
     <>
       <PageHeader
-        label={campaign.name}
+        label={
+          <EditableTitle
+            srLabel={"Campaign Name"}
+            value={campaign.name}
+            onBlur={(evt) =>
+              updateCampaign({ name: evt.currentTarget.value }).catch(() => {})
+            }
+            readOnly={!isGm}
+          />
+        }
         subLabel={(campaign.gmIds?.length ?? 0) > 0 ? `GM: ${gmLabel}` : ""}
         actions={
           <>
@@ -82,7 +96,7 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
                 Mark self as GM
               </Button>
             )}
-            {campaign.gmIds && campaign.gmIds.includes(uid) && (
+            {isGm && (
               <Button
                 component={Link}
                 to={constructCampaignSheetPath(

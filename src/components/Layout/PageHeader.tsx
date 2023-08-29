@@ -3,7 +3,7 @@ import { Border } from "assets/Border";
 import React, { PropsWithChildren } from "react";
 
 export interface PageHeaderProps extends PropsWithChildren {
-  label?: string;
+  label?: string | React.ReactNode;
   subLabel?: string;
   actions?: React.ReactNode;
 }
@@ -39,15 +39,18 @@ export function PageHeader(props: PageHeaderProps) {
           ) : (
             <>
               <Box>
-                {label && (
-                  <Typography
-                    variant={"h4"}
-                    component={"h1"}
-                    fontFamily={(theme) => theme.fontFamilyTitle}
-                  >
-                    {label}
-                  </Typography>
-                )}
+                {label &&
+                  (typeof label === "string" ? (
+                    <Typography
+                      variant={"h4"}
+                      component={"h1"}
+                      fontFamily={(theme) => theme.fontFamilyTitle}
+                    >
+                      {label}
+                    </Typography>
+                  ) : (
+                    label
+                  ))}
                 {subLabel && (
                   <Typography
                     variant={"h6"}
