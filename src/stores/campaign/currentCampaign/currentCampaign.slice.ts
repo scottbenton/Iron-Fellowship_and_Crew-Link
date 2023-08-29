@@ -71,11 +71,15 @@ export const createCurrentCampaignSlice: CreateSliceType<
     },
 
     updateCampaignWorld: (worldId) => {
-      const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
+      const state = getState();
+      const campaignId = state.campaigns.currentCampaign.currentCampaignId;
+      const gmIds =
+        state.campaigns.currentCampaign.currentCampaign?.gmIds ?? [];
+
       if (!campaignId) {
         return new Promise((res, reject) => reject("Campaign Id not found"));
       }
-      return updateCampaignWorld({ campaignId, worldId });
+      return updateCampaignWorld({ campaignId, gmIds, worldId });
     },
     updateCampaignGM: (gmId, shouldRemove) => {
       const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
