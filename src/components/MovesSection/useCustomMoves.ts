@@ -45,6 +45,15 @@ export function useCustomMoves() {
     (store) => store.customMovesAndOracles.hiddenCustomMoveIds
   );
 
+  const customMoveAuthorNames = useStore((store) => {
+    const nameMap: { [key: string]: string } = {};
+    Object.keys(customMoveAuthorMap).forEach((authorId) => {
+      nameMap[authorId] =
+        store.users.userMap[authorId].doc?.displayName ?? "Loading";
+    });
+    return nameMap;
+  });
+
   const memoizedMoveMap = useMemo(() => {
     return JSON.parse(
       JSON.stringify(customMoveAuthorMap)
@@ -81,13 +90,14 @@ export function useCustomMoves() {
 
         newMoveMap = { ...newMoveMap, ...mappedCustomMoves };
 
+        const categoryName = `Custom Moves (${customMoveAuthorNames[moveAuthorId]})`;
         moveCategories.push({
           $id: customMoveCategoryPrefix,
           Title: {
             $id: `${customMoveCategoryPrefix}/title`,
-            Canonical: "Custom Moves",
-            Short: "Custom Moves",
-            Standard: "Custom Moves",
+            Canonical: categoryName,
+            Short: categoryName,
+            Standard: categoryName,
           },
           Moves: mappedCustomMoves,
           Source: {
@@ -104,7 +114,7 @@ export function useCustomMoves() {
 
     setCustomMoveCategories(moveCategories);
     setCustomMoveMap(newMoveMap);
-  }, [memoizedMoveMap, hiddenMoveIds]);
+  }, [memoizedMoveMap, hiddenMoveIds, customMoveAuthorNames]);
 
   return { customMoveCategories, customMoveMap };
 }

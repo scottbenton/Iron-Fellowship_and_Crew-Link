@@ -71,6 +71,15 @@ export function useCustomOracles() {
     (store) => store.customMovesAndOracles.hiddenCustomOracleIds
   );
 
+  const customOracleAuthorNames = useStore((store) => {
+    const nameMap: { [key: string]: string } = {};
+    Object.keys(customOracleAuthorMap).forEach((authorId) => {
+      nameMap[authorId] =
+        store.users.userMap[authorId].doc?.displayName ?? "Loading";
+    });
+    return nameMap;
+  });
+
   const memoizedOracleMap = useMemo(() => {
     return JSON.parse(
       JSON.stringify(customOracleAuthorMap)
@@ -108,13 +117,14 @@ export function useCustomOracles() {
           mappedCustomOraclesWithHidden[oracle.$id] = convertedOracle;
         });
 
+        const customOracleCategoryName = `Custom Oracles (${customOracleAuthorNames[creatorId]})`;
         newOracleCategories.push({
           $id: customOracleCategoryPrefix,
           Title: {
             $id: `${customOracleCategoryPrefix}/title`,
-            Canonical: "Custom Oracles",
-            Short: "Custom Oracles",
-            Standard: "Custom Oracles",
+            Canonical: customOracleCategoryName,
+            Short: customOracleCategoryName,
+            Standard: customOracleCategoryName,
           },
           Ancestors: [],
           Display: {
@@ -136,7 +146,7 @@ export function useCustomOracles() {
 
     setCustomOracleCategories(newOracleCategories);
     setAllCustomOracleMap(newCustomOracleMap);
-  }, [memoizedOracleMap, hiddenOracleIds]);
+  }, [memoizedOracleMap, hiddenOracleIds, customOracleAuthorNames]);
 
   return { customOracleCategories, allCustomOracleMap };
 }
