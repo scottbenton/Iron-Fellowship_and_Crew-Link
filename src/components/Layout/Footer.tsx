@@ -54,6 +54,7 @@ export function Footer() {
           bgcolor: theme.palette.primary.main,
           color: theme.palette.primary.contrastText,
           position: "fixed",
+          zIndex: theme.zIndex.appBar,
           bottom: 0,
           left: 0,
           right: 0,
