@@ -72,7 +72,15 @@ export function TabsSection() {
   return (
     <Card
       variant={"outlined"}
-      sx={{ flexGrow: 1, mt: 2, display: "flex", flexDirection: "column" }}
+      sx={(theme) => ({
+        flexGrow: 1,
+        mt: 2,
+        display: "flex",
+        flexDirection: "column",
+        [theme.breakpoints.down("sm")]: {
+          mx: -2,
+        },
+      })}
     >
       <StyledTabs
         value={selectedTab}
