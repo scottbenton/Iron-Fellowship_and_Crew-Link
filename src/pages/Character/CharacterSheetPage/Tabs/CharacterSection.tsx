@@ -256,56 +256,35 @@ export function CharacterSection() {
           <StatComponent
             label="Edge"
             value={stats[Stat.Edge]}
-            updateTrack={{
-              min: 0,
-              max: 5,
-              handleChange: (newValue) =>
-                updateCharacterStat(Stat.Edge, newValue),
-            }}
+            updateTrack={(newValue) => updateCharacterStat(Stat.Edge, newValue)}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Heart"
             value={stats[Stat.Heart]}
-            updateTrack={{
-              min: 0,
-              max: 5,
-              handleChange: (newValue) =>
-                updateCharacterStat(Stat.Heart, newValue),
-            }}
+            updateTrack={(newValue) =>
+              updateCharacterStat(Stat.Heart, newValue)
+            }
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Iron"
             value={stats[Stat.Iron]}
-            updateTrack={{
-              min: 0,
-              max: 5,
-              handleChange: (newValue) =>
-                updateCharacterStat(Stat.Iron, newValue),
-            }}
+            updateTrack={(newValue) => updateCharacterStat(Stat.Iron, newValue)}
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Shadow"
             value={stats[Stat.Shadow]}
-            updateTrack={{
-              min: 0,
-              max: 5,
-              handleChange: (newValue) =>
-                updateCharacterStat(Stat.Shadow, newValue),
-            }}
+            updateTrack={(newValue) =>
+              updateCharacterStat(Stat.Shadow, newValue)
+            }
             sx={{ mr: 2, mt: 2 }}
           />
           <StatComponent
             label="Wits"
             value={stats[Stat.Wits]}
-            updateTrack={{
-              min: 0,
-              max: 5,
-              handleChange: (newValue) =>
-                updateCharacterStat(Stat.Wits, newValue),
-            }}
+            updateTrack={(newValue) => updateCharacterStat(Stat.Wits, newValue)}
             sx={{ mr: 2, mt: 2 }}
           />
         </Box>
@@ -363,10 +342,12 @@ export function CharacterSection() {
       <SectionHeading label={"Misc"} />
       <Box px={2}>
         <Alert severity="info">
-          Iron Fellowship includes an overlay for OBS or other webcam editors so
-          you can overlay information about your character as you play. You can
-          add the given link as a browser source over your camera to display
-          this information.
+          <div>
+            Iron Fellowship includes an overlay for OBS or other webcam editors
+            so you can overlay information about your character as you play. You
+            can add the given link as a browser source over your camera to
+            display this information.
+          </div>
           <Button
             onClick={() => copyLinkToClipboard()}
             color={"inherit"}

@@ -24,6 +24,13 @@ export function StatsSection() {
         : store.characters.currentCharacter.currentCharacter?.supply) ?? 5
   );
 
+  const adds = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.adds ?? 0
+  );
+  const updateAdds = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacter
+  );
+
   return (
     <Box display={"flex"} flexWrap={"wrap"} justifyContent={"flex-start"}>
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
@@ -50,7 +57,7 @@ export function StatsSection() {
         <StatComponent
           label={"Wits"}
           value={stats[Stat.Wits]}
-          sx={{ my: 0.5, mr: 4 }}
+          sx={{ my: 0.5, mr: 3 }}
         />
       </Box>
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} pl={0.5}>
@@ -64,7 +71,17 @@ export function StatsSection() {
           value={spirit}
           sx={{ my: 0.5, mr: 1 }}
         />
-        <StatComponent label={"Supply"} value={supply} sx={{ my: 0.5 }} />
+        <StatComponent
+          label={"Supply"}
+          value={supply}
+          sx={{ my: 0.5, mr: 3 }}
+        />
+        <StatComponent
+          label={"Adds"}
+          updateTrack={(newValue) => updateAdds({ adds: newValue })}
+          value={adds}
+          sx={{ my: 0.5 }}
+        />
       </Box>
     </Box>
   );

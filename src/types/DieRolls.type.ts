@@ -26,6 +26,7 @@ export interface StatRoll extends BaseRoll {
   challenge1: number;
   challenge2: number;
   modifier?: number;
+  adds?: number;
   result: ROLL_RESULT;
 }
 
