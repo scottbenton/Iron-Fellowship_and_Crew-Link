@@ -65,11 +65,11 @@ export function CharacterCreatePage() {
     }
 
     if (
-      !values.stats[Stat.Edge] ||
-      !values.stats[Stat.Iron] ||
-      !values.stats[Stat.Heart] ||
-      !values.stats[Stat.Shadow] ||
-      !values.stats[Stat.Wits]
+      values.stats[Stat.Edge] === undefined ||
+      !values.stats[Stat.Iron] === undefined ||
+      !values.stats[Stat.Heart] === undefined ||
+      !values.stats[Stat.Shadow] === undefined ||
+      !values.stats[Stat.Wits] === undefined
     ) {
       errors.stats = "Stats are required";
     }
