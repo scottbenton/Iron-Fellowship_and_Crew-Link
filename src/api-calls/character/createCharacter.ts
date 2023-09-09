@@ -16,7 +16,7 @@ export const createCharacter = createApiFunction<
     uid: string;
     name: string;
     stats: StatsMap;
-    assets: [StoredAsset, StoredAsset, StoredAsset];
+    assets: StoredAsset[];
   },
   string
 >((params) => {

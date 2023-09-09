@@ -18,7 +18,15 @@ export interface CharacterSliceActions {
   createCharacter: (
     name: string,
     stats: StatsMap,
-    assets: [StoredAsset, StoredAsset, StoredAsset]
+    assets: StoredAsset[],
+    portrait?: {
+      image: File | string;
+      scale: number;
+      position: {
+        x: number;
+        y: number;
+      };
+    }
   ) => Promise<string>;
   deleteCharacter: (characterId: string) => Promise<void>;
   loadCharacterPortrait: (

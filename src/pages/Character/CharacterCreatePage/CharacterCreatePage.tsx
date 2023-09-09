@@ -82,7 +82,8 @@ export function CharacterCreatePage() {
     createCharacter(
       values.name,
       values.stats as StatsMap,
-      values.assets as [StoredAsset, StoredAsset, StoredAsset]
+      values.assets,
+      values.portrait
     )
       .then((characterId) => {
         if (campaignId) {

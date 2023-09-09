@@ -63,7 +63,7 @@ export function StatsField() {
         >
           {isCustomStatsEnabled
             ? "Use standard stats instead."
-            : "Use custom stats"}
+            : "Use custom stat values"}
         </Link>
       </Typography>
 
