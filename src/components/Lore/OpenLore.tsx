@@ -209,7 +209,7 @@ export function OpenLore(props: OpenLoreProps) {
                   id={loreId}
                   roomPrefix={`iron-fellowship-${worldId}-lore-gmnotes-`}
                   documentPassword={worldId}
-                  onSave={updateLoreNotes}
+                  onSave={updateLoreGMNotes}
                   initialValue={lore.gmProperties?.gmNotes}
                 />
               </Grid>
