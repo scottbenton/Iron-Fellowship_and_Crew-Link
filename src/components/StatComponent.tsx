@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { useRoller } from "../providers/DieRollProvider";
 import { useStore } from "stores/store";
+import { useEffect, useState } from "react";
 
 export interface StatComponentProps {
   label: string;
@@ -19,13 +20,26 @@ export interface StatComponentProps {
 export function StatComponent(props: StatComponentProps) {
   const { label, value, updateTrack, disableRoll, sx } = props;
 
+  const [inputValue, setInputValue] = useState<string>(value + "");
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  useEffect(() => {
+    if (!isInputFocused) {
+      setInputValue(value + "");
+    }
+  }, [isInputFocused, value]);
+
   const { rollStat } = useRoller();
   const adds = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.adds ?? 0
   );
   const hasAdds = adds !== 0;
+  const resetAdds = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacter
+  );
 
   const handleStatUpdate = (stringVal: string) => {
+    setInputValue(stringVal);
     const intVal = !stringVal ? 0 : parseInt(stringVal);
     if (updateTrack && !isNaN(intVal)) {
       updateTrack(intVal).catch((e) => {
@@ -77,7 +91,10 @@ export function StatComponent(props: StatComponentProps) {
       ]}
       component={updateTrack || disableRoll ? "div" : ButtonBase}
       onClick={() => {
-        !(updateTrack || disableRoll) && rollStat(label, value, adds);
+        if (!(updateTrack || disableRoll)) {
+          rollStat(label, value, adds);
+          resetAdds({ adds: 0 }).catch(() => {});
+        }
       }}
     >
       <Typography
@@ -121,7 +138,7 @@ export function StatComponent(props: StatComponentProps) {
           color={"secondary"}
           id={label}
           variant={"outlined"}
-          defaultValue={value ?? "0"}
+          value={inputValue}
           onChange={(evt) => handleStatUpdate(evt.target.value)}
           sx={{
             width: "100%",
@@ -130,6 +147,8 @@ export function StatComponent(props: StatComponentProps) {
           type={"number"}
           size={"small"}
           inputProps={{ inputMode: "numeric" }}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => setIsInputFocused(false)}
         />
       )}
     </Card>
