@@ -1,4 +1,4 @@
-import { Box, Button, Paper, TextField } from "@mui/material";
+import { Alert, Box, Button, Stack } from "@mui/material";
 import { Formik } from "formik";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SectionHeading } from "components/SectionHeading";
@@ -20,17 +20,20 @@ import { useCallback, useState } from "react";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { addCharacterToCampaign } from "api-calls/campaign/addCharacterToCampaign";
-
-export type AssetArrayType = [
-  StoredAsset | undefined,
-  StoredAsset | undefined,
-  StoredAsset | undefined
-];
+import { ImageInput } from "./components/ImageInput";
 
 type CharacterCreateFormValues = {
   name: string;
   stats: { [key in Stat]: number | undefined };
-  assets: AssetArrayType;
+  assets: StoredAsset[];
+  portrait?: {
+    image: File | string;
+    scale: number;
+    position: {
+      x: number;
+      y: number;
+    };
+  };
 };
 
 const nameOracles = [
@@ -69,10 +72,6 @@ export function CharacterCreatePage() {
       !values.stats[Stat.Wits]
     ) {
       errors.stats = "Stats are required";
-    }
-
-    if (!values.assets[0] || !values.assets[1] || !values.assets[2]) {
-      errors.assets = "Assets are required";
     }
 
     return errors;
@@ -121,7 +120,7 @@ export function CharacterCreatePage() {
               [Stat.Shadow]: undefined,
               [Stat.Wits]: undefined,
             },
-            assets: [undefined, undefined, undefined],
+            assets: [],
           }}
           validate={validate}
           onSubmit={handleSubmit}
@@ -129,19 +128,28 @@ export function CharacterCreatePage() {
           {(form) => (
             <form onSubmit={form.handleSubmit}>
               <SectionHeading breakContainer label={"Character Details"} />
-              <div>
-                <TextFieldWithOracle
-                  getOracleValue={() => handleOracleRoll() ?? ""}
-                  label={"Name"}
-                  name={"name"}
-                  value={form.values.name}
-                  onChange={(value) => form.setFieldValue("name", value)}
-                  error={form.touched.name && !!form.errors.name}
-                  helperText={form.touched.name && form.errors.name}
-                  sx={{ maxWidth: 350, mt: 2 }}
-                  fullWidth
-                />
-              </div>
+              <Alert severity={"info"} sx={{ mt: 2 }}>
+                Your name, stats, and portrait can always be changed later fom
+                the "Character" tab in your character sheet.
+              </Alert>
+              <Box display={"flex"} alignItems={"center"} mt={3}>
+                <ImageInput name={form.values.name} />
+                <div>
+                  <TextFieldWithOracle
+                    getOracleValue={() => handleOracleRoll() ?? ""}
+                    label={"Name"}
+                    name={"name"}
+                    value={form.values.name}
+                    onChange={(value) => form.setFieldValue("name", value)}
+                    error={form.touched.name && !!form.errors.name}
+                    helperText={form.touched.name && form.errors.name}
+                    sx={{ maxWidth: 350, ml: 2 }}
+                    fullWidth
+                    variant={"filled"}
+                    color={"secondary"}
+                  />
+                </div>
+              </Box>
               <StatsField />
               <AssetsSection />
               <Box display={"flex"} justifyContent={"flex-end"} mt={2}>
