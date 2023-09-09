@@ -45,7 +45,7 @@ export function StatRollCard(props: StatRollCardProps) {
               whiteSpace={"nowrap"}
               color={(theme) => theme.palette.grey[200]}
             >
-              {roll.action + (roll.modifier ?? 0)}
+              {roll.action + (roll.modifier ?? 0) + (roll.adds ?? 0)}
             </Typography>
           </Box>
           <Box

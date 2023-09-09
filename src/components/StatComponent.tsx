@@ -1,18 +1,18 @@
-import { Box, ButtonBase, Card, SxProps, Typography } from "@mui/material";
-
-import PlusIcon from "@mui/icons-material/Add";
-import MinusIcon from "@mui/icons-material/Remove";
-import { useState } from "react";
+import {
+  ButtonBase,
+  Card,
+  SxProps,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useRoller } from "../providers/DieRollProvider";
+import { useStore } from "stores/store";
+import { useEffect, useState } from "react";
 
 export interface StatComponentProps {
   label: string;
   value: number;
-  updateTrack?: {
-    min: number;
-    max: number;
-    handleChange: (newValue: number) => Promise<void>;
-  };
+  updateTrack?: (newValue: number) => Promise<void>;
   disableRoll?: boolean;
   sx?: SxProps;
 }
@@ -20,27 +20,35 @@ export interface StatComponentProps {
 export function StatComponent(props: StatComponentProps) {
   const { label, value, updateTrack, disableRoll, sx } = props;
 
+  const [inputValue, setInputValue] = useState<string>(value + "");
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  useEffect(() => {
+    if (!isInputFocused) {
+      setInputValue(value + "");
+    }
+  }, [isInputFocused, value]);
+
   const { rollStat } = useRoller();
+  const adds = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.adds ?? 0
+  );
+  const hasAdds = adds !== 0;
+  const resetAdds = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacter
+  );
 
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const handleStatUpdate = (newValue: number) => {
-    if (
-      updateTrack &&
-      newValue >= updateTrack.min &&
-      newValue <= updateTrack.max
-    ) {
-      setLoading(true);
-      updateTrack
-        .handleChange(newValue)
-        .catch((e) => {
-          console.error(e);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+  const handleStatUpdate = (stringVal: string) => {
+    setInputValue(stringVal);
+    const intVal = !stringVal ? 0 : parseInt(stringVal);
+    if (updateTrack && !isNaN(intVal)) {
+      updateTrack(intVal).catch((e) => {
+        console.error(e);
+      });
     }
   };
+
+  const valueWithAdds = updateTrack ? value : value + adds;
 
   return (
     <Card
@@ -57,7 +65,7 @@ export function StatComponent(props: StatComponentProps) {
             ["background-color", "border-color"],
             { duration: theme.transitions.duration.shorter }
           ),
-          "&>h6": {
+          "&>h6#track-label": {
             transition: theme.transitions.create(
               ["background-color", "color"],
               { duration: theme.transitions.duration.shorter }
@@ -71,7 +79,7 @@ export function StatComponent(props: StatComponentProps) {
             updateTrack || disableRoll
               ? {}
               : {
-                  "&>h6": {
+                  "&>h6#track-label": {
                     backgroundColor: theme.palette.grey[300],
                     color: theme.palette.grey[800],
                   },
@@ -83,7 +91,10 @@ export function StatComponent(props: StatComponentProps) {
       ]}
       component={updateTrack || disableRoll ? "div" : ButtonBase}
       onClick={() => {
-        !(updateTrack || disableRoll) && rollStat(label, value);
+        if (!(updateTrack || disableRoll)) {
+          rollStat(label, value, adds);
+          resetAdds({ adds: 0 }).catch(() => {});
+        }
       }}
     >
       <Typography
@@ -91,24 +102,12 @@ export function StatComponent(props: StatComponentProps) {
         textAlign={"center"}
         variant={"subtitle1"}
         lineHeight={1}
+        id={"track-label"}
       >
         {label}
+        {hasAdds && label !== "Adds" && "*"}
       </Typography>
-      <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
-        {updateTrack && (
-          <ButtonBase
-            onClick={() => handleStatUpdate(value + 1)}
-            sx={(theme) => ({
-              width: "100%",
-              color: theme.palette.grey[600],
-              "&:hover": {
-                backgroundColor: theme.palette.action.hover,
-              },
-            })}
-          >
-            <PlusIcon sx={{ width: 20, height: 20 }} />
-          </ButtonBase>
-        )}
+      {!updateTrack ? (
         <Typography
           sx={[
             (theme) => ({
@@ -130,25 +129,28 @@ export function StatComponent(props: StatComponentProps) {
             mr={0.2}
             color={(theme) => theme.palette.grey[500]}
           >
-            {value > 0 ? "+" : ""}
+            {valueWithAdds > 0 ? "+" : ""}
           </Typography>
-          {value}
+          {valueWithAdds}
         </Typography>
-        {updateTrack && (
-          <ButtonBase
-            onClick={() => handleStatUpdate(value - 1)}
-            sx={(theme) => ({
-              width: "100%",
-              color: theme.palette.grey[600],
-              "&:hover": {
-                backgroundColor: theme.palette.action.hover,
-              },
-            })}
-          >
-            <MinusIcon sx={{ width: 20, height: 20 }} />
-          </ButtonBase>
-        )}
-      </Box>
+      ) : (
+        <TextField
+          color={"secondary"}
+          id={label}
+          variant={"outlined"}
+          value={inputValue}
+          onChange={(evt) => handleStatUpdate(evt.target.value)}
+          sx={{
+            width: "100%",
+            "& input": { paddingRight: 0, py: 0.75 },
+          }}
+          type={"number"}
+          size={"small"}
+          inputProps={{ inputMode: "numeric" }}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => setIsInputFocused(false)}
+        />
+      )}
     </Card>
   );
 }

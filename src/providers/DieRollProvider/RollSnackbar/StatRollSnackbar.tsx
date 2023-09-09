@@ -62,9 +62,13 @@ export function StatRollSnackbar(props: StatRollSnackbarProps) {
             >
               <D6Icon />
               <Typography ml={1} color={(theme) => theme.palette.grey[200]}>
-                {roll.action}{" "}
-                {roll.modifier
-                  ? `+ ${roll.modifier} = ${roll.action + roll.modifier}`
+                {roll.action}
+                {roll.modifier ? ` + ${roll.modifier}` : ""}
+                {roll.adds ? ` + ${roll.adds}` : ""}
+                {roll.modifier || roll.adds
+                  ? ` = ${
+                      roll.action + (roll.modifier ?? 0) + (roll.adds ?? 0)
+                    }`
                   : ""}
               </Typography>
             </Box>

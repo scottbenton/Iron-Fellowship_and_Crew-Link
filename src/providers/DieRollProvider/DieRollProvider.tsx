@@ -56,12 +56,17 @@ export function DieRollProvider(props: PropsWithChildren) {
     });
   };
 
-  const rollStat = (label: string, modifier: number, showSnackbar = true) => {
+  const rollStat = (
+    label: string,
+    modifier: number,
+    adds?: number,
+    showSnackbar = true
+  ) => {
     const challenge1 = getRoll(10);
     const challenge2 = getRoll(10);
     const action = getRoll(6);
 
-    const actionTotal = action + (modifier ?? 0);
+    const actionTotal = action + (modifier ?? 0) + (adds ?? 0);
 
     let result: ROLL_RESULT = ROLL_RESULT.WEAK_HIT;
     if (actionTotal > challenge1 && actionTotal > challenge2) {
@@ -83,6 +88,10 @@ export function DieRollProvider(props: PropsWithChildren) {
       uid,
       gmsOnly: false,
     };
+
+    if (adds) {
+      statRoll.adds = adds;
+    }
 
     addRollToLog({
       campaignId,

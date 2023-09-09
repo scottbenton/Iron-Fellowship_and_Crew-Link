@@ -7,6 +7,7 @@ export interface IDieRollContext {
   rollStat: (
     rollLabel: string,
     modifier: number,
+    adds?: number,
     showSnackbar?: boolean
   ) => ROLL_RESULT;
   rollOracleTable: (

@@ -19,6 +19,7 @@ export interface CharacterDocument {
   health: number;
   spirit: number;
   supply: number;
+  adds?: number;
   momentum: number;
   campaignId?: string;
   experience?: {
