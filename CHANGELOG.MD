@@ -4,6 +4,8 @@
 
 ### New Features
 
+- Added an input in the character sheet header for "Adds" - roll modifiers
+
 ### Changes
 
 - Character Creation Changes
