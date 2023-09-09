@@ -7,6 +7,7 @@ import { deleteCharacter } from "api-calls/character/deleteCharacter";
 import { createCharacter } from "api-calls/character/createCharacter";
 import { getCharacterPortraitUrl } from "api-calls/character/getCharacterPortrait";
 import { createCurrentCharacterSlice } from "./currentCharacter/currentCharacter.slice";
+import { updateCharacterPortrait } from "api-calls/character/updateCharacterPortrait";
 
 export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
   ...params
@@ -94,18 +95,42 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
       }
     },
 
-    createCharacter: (name, stats, assets) => {
+    createCharacter: (name, stats, assets, portrait) => {
       const uid = getState().auth.user?.uid;
       if (!uid) {
         return new Promise((res, reject) =>
           reject("You must be logged in to create a character")
         );
       }
-      return createCharacter({
-        uid,
-        name,
-        stats,
-        assets,
+      return new Promise((resolve, reject) => {
+        createCharacter({
+          uid,
+          name,
+          stats,
+          assets,
+        }).then((characterId) => {
+          if (
+            portrait &&
+            portrait.image &&
+            typeof portrait.image !== "string"
+          ) {
+            updateCharacterPortrait({
+              uid,
+              characterId,
+              portrait: portrait.image,
+              scale: portrait.scale,
+              position: portrait.position,
+            })
+              .then(() => {
+                resolve(characterId);
+              })
+              .catch((e) => {
+                resolve(characterId);
+              });
+          } else {
+            resolve(characterId);
+          }
+        });
       });
     },
     deleteCharacter: (characterId) => {

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,6 +14,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { ChangeEventHandler, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
+import { PortraitAvatarDisplay } from "components/PortraitAvatar/PortraitAvatarDisplay";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 
 export interface PortraitUploaderDialogProps {
   open: boolean;
@@ -120,22 +124,23 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
               position={position}
               onPositionChange={setPosition}
             />
-            <Box mt={2}>
-              <Typography
-                variant={"subtitle1"}
-                color={(theme) => theme.palette.text.secondary}
-              >
-                Zoom
-              </Typography>
-              <Slider
-                min={100}
-                max={200}
-                sx={{ width: 250 }}
-                value={scale * 100}
-                onChange={(evt, value) =>
-                  setScale(Array.isArray(value) ? 1 : value / 100)
-                }
-              />
+            <Box display={"flex"} justifyContent={"flex-end"} mt={0.5}>
+              <ButtonGroup variant={"outlined"}>
+                <Button
+                  disabled={scale <= 1}
+                  onClick={() => setScale((prevScale) => prevScale - 0.1)}
+                  aria-label={"Zoom Out"}
+                >
+                  <ZoomOutIcon />
+                </Button>
+                <Button
+                  disabled={scale >= 2}
+                  onClick={() => setScale((prevScale) => prevScale + 0.1)}
+                  aria-label={"Zoom In"}
+                >
+                  <ZoomInIcon />
+                </Button>
+              </ButtonGroup>
             </Box>
           </Box>
         )}

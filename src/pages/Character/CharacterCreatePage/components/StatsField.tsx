@@ -1,15 +1,30 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import { useField } from "formik";
 import { useState } from "react";
 import { Stat } from "types/stats.enum";
-import { StatDropdown } from "./StatDropdown";
+import { StatInput } from "./StatInput";
 
 export function StatsField() {
-  const [field, meta] = useField({ name: "stats" });
+  const [field, meta, handlers] = useField({ name: "stats" });
 
   const [statsRemainingTracker, setStatsRemainingTracker] = useState<number[]>([
     3, 2, 2, 1, 1,
   ]);
+
+  const [isCustomStatsEnabled, setIsCustomStatsEnabled] =
+    useState<boolean>(false);
+
+  const toggleCustomStats = () => {
+    handlers.setValue({
+      [Stat.Edge]: undefined,
+      [Stat.Heart]: undefined,
+      [Stat.Iron]: undefined,
+      [Stat.Shadow]: undefined,
+      [Stat.Wits]: undefined,
+    });
+    setStatsRemainingTracker([3, 2, 2, 1, 1]);
+    setIsCustomStatsEnabled((prevValue) => !prevValue);
+  };
 
   const handleStatsRemainingChange = (
     previousValue: number | undefined,
@@ -31,40 +46,62 @@ export function StatsField() {
   };
 
   return (
-    <Box mt={2}>
-      <Typography color={(theme) => theme.palette.text.secondary}>
-        Select a number 1-3 for each stat.
+    <Box mt={3}>
+      <Typography
+        display={"flex"}
+        alignItems={"baseline"}
+        color={(theme) => theme.palette.text.secondary}
+      >
+        {isCustomStatsEnabled
+          ? "Enter a number for each stat."
+          : "Select a number 1-3 for each stat."}
+        <Link
+          component={"button"}
+          type={"button"}
+          sx={{ ml: 1 }}
+          onClick={() => toggleCustomStats()}
+        >
+          {isCustomStatsEnabled
+            ? "Use standard stats instead."
+            : "Use custom stat values"}
+        </Link>
       </Typography>
+
       <Box mt={0.5} display={"flex"} flexWrap={"wrap"}>
-        <StatDropdown
+        <StatInput
           stat={Stat.Edge}
           label={"Edge"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}
+          allowAnyNumber={isCustomStatsEnabled}
         />
-        <StatDropdown
+        <StatInput
           stat={Stat.Heart}
           label={"Heart"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}
+          allowAnyNumber={isCustomStatsEnabled}
         />
-        <StatDropdown
+        <StatInput
           stat={Stat.Iron}
           label={"Iron"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}
+          allowAnyNumber={isCustomStatsEnabled}
         />
-        <StatDropdown
+        <StatInput
           stat={Stat.Shadow}
           label={"Shadow"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}
+          allowAnyNumber={isCustomStatsEnabled}
         />
-        <StatDropdown
+        <StatInput
           stat={Stat.Wits}
           label={"Wits"}
           remainingOptions={statsRemainingTracker}
           handleRemainingOptionsChange={handleStatsRemainingChange}
+          allowAnyNumber={isCustomStatsEnabled}
         />
       </Box>
       {meta.touched && meta.error && (
