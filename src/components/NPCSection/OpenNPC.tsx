@@ -300,9 +300,7 @@ export function OpenNPC(props: OpenNPCProps) {
                   id={npcId}
                   roomPrefix={`iron-fellowship-${worldId}-npc-gmnotes-`}
                   documentPassword={worldId}
-                  onSave={(documentId, notes, isBeaconRequest) =>
-                    updateNPCGMNotes(documentId, notes, isBeaconRequest)
-                  }
+                  onSave={updateNPCGMNotes}
                   initialValue={npc.gmProperties?.gmNotes}
                 />
               </Grid>
@@ -342,9 +340,7 @@ export function OpenNPC(props: OpenNPCProps) {
                     id={npcId}
                     roomPrefix={`iron-fellowship-${worldId}-npc-`}
                     documentPassword={worldId}
-                    onSave={(documentId, notes, isBeaconRequest) =>
-                      updateNPCNotes(documentId, notes, isBeaconRequest)
-                    }
+                    onSave={updateNPCNotes}
                     initialValue={npc.notes || undefined}
                   />
                 )}

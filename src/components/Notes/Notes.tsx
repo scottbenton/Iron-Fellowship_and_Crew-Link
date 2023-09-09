@@ -4,6 +4,7 @@ import { NoteSidebar } from "./NoteSidebar";
 import { ROLL_LOG_ID } from "stores/notes/notes.slice.type";
 import { GameLog } from "components/GameLog";
 import { RtcRichTextEditor } from "components/RichTextEditor/RtcRichTextEditor";
+import { useCallback } from "react";
 
 export interface NotesProps {
   notes: Note[];
@@ -47,6 +48,26 @@ export function Notes(props: NotesProps) {
       : `campaigns-${source.campaignId}-`;
   const roomPassword =
     source.type === "character" ? source.characterId : source.campaignId;
+
+  console.debug(selectedNoteContent);
+
+  const saveCallback = useCallback(
+    (
+      noteId: string,
+      notes: Uint8Array,
+      isBeaconRequest?: boolean,
+      title?: string
+    ) =>
+      onSave
+        ? onSave({
+            noteId,
+            title: title ?? "Note",
+            content: notes,
+            isBeaconRequest,
+          })
+        : new Promise<void>((res) => res()),
+    []
+  );
 
   return (
     <Box
@@ -102,17 +123,7 @@ export function Notes(props: NotesProps) {
                 id={selectedNoteId}
                 initialValue={selectedNoteContent ?? undefined}
                 showTitle
-                onSave={
-                  onSave
-                    ? (noteId, notes, isBeaconRequest, title) =>
-                        onSave({
-                          noteId,
-                          title: title ?? "Note",
-                          content: notes,
-                          isBeaconRequest,
-                        })
-                    : undefined
-                }
+                onSave={onSave ? saveCallback : undefined}
                 onDelete={onDelete}
               />
             )}

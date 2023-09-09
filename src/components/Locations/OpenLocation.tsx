@@ -228,9 +228,7 @@ export function OpenLocation(props: OpenLocationProps) {
                   id={locationId}
                   roomPrefix={`iron-fellowship-${worldId}-location-gmnotes-`}
                   documentPassword={worldId}
-                  onSave={(id, notes, isBeaconRequest) =>
-                    updateLocationGMNotes(id, notes, isBeaconRequest)
-                  }
+                  onSave={updateLocationGMNotes}
                   initialValue={location.gmProperties?.gmNotes}
                 />
               </Grid>
@@ -269,11 +267,7 @@ export function OpenLocation(props: OpenLocationProps) {
                     id={locationId}
                     roomPrefix={`iron-fellowship-${worldId}-location-`}
                     documentPassword={worldId}
-                    onSave={(id, notes, isBeaconRequest) =>
-                      updateLocationNotes(id, notes, isBeaconRequest).catch(
-                        () => {}
-                      )
-                    }
+                    onSave={updateLocationNotes}
                     initialValue={location.notes || undefined}
                   />
                 )}
