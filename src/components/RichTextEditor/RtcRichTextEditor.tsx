@@ -3,6 +3,7 @@ import { WebrtcProvider } from "y-webrtc";
 import * as Y from "yjs";
 import { RtcEditorComponent } from "./RtcEditorComponent";
 import { TiptapTransformer } from "@hocuspocus/transformer";
+import { useCreateRefFrom } from "hooks/useCreateRefFrom";
 
 export interface RtcRichTextEditorProps {
   id: string;
@@ -29,6 +30,8 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
     initialValue,
     showTitle,
   } = props;
+  const initialValueRef = useCreateRefFrom(initialValue);
+
   const [yDoc, setYDoc] = useState<Y.Doc>();
   const [provider, setProvider] = useState<WebrtcProvider>();
 
@@ -61,8 +64,9 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
     const roomName = roomPrefix + id;
     // Recreate our yDoc and Provider
     const newYDoc = new Y.Doc();
-    if (initialValue) {
-      Y.applyUpdate(newYDoc, initialValue);
+    if (initialValueRef.current) {
+      console.debug("RECREATING Y DOC AND APPLYING UPDATE");
+      Y.applyUpdate(newYDoc, initialValueRef.current);
     }
 
     // Add update listener
@@ -92,7 +96,7 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
       newYDoc?.destroy();
       newProvider?.destroy();
     };
-  }, [roomPrefix, id, handleSave, initialValue]);
+  }, [roomPrefix, id, handleSave]);
 
   // Handle save on page unload
   useEffect(() => {
@@ -136,6 +140,7 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
   }, [initialValue, yDoc, showTitle]);
 
   if (!yDoc || !provider) {
+    console.debug("No YDOC, or no PROVIDER present");
     return null;
   }
 

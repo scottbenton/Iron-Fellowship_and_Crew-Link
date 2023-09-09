@@ -6,6 +6,7 @@ import { WorldNameSection } from "pages/World/WorldSheetPage/components/WorldNam
 import { TruthCard } from "pages/World/WorldSheetPage/components/TruthCard";
 import { useStore } from "stores/store";
 import { RtcRichTextEditor } from "./RichTextEditor/RtcRichTextEditor";
+import { useCallback } from "react";
 
 export interface WorldSheetProps {
   canEdit: boolean;
@@ -21,6 +22,15 @@ export function WorldSheet(props: WorldSheetProps) {
   const updateWorldDescription = useStore(
     (store) => store.worlds.currentWorld.updateCurrentWorldDescription
   );
+
+  const updateWorldDescriptionCallback = useCallback(
+    (documentId: string, content: Uint8Array, isBeaconRequest?: boolean) =>
+      worldId
+        ? updateWorldDescription(worldId, content, isBeaconRequest)
+        : new Promise<void>((res) => res()),
+    [updateWorldDescription, worldId]
+  );
+
   if (!world || !worldId) return null;
 
   return (
@@ -52,12 +62,7 @@ export function WorldSheet(props: WorldSheetProps) {
             id={worldId}
             roomPrefix={`worlds-${worldId}-description-`}
             documentPassword={worldId}
-            onSave={
-              canEdit
-                ? (documentId, content, isBeaconRequest) =>
-                    updateWorldDescription(worldId, content, isBeaconRequest)
-                : undefined
-            }
+            onSave={canEdit ? updateWorldDescriptionCallback : undefined}
             initialValue={world.worldDescription}
           />
         </>
