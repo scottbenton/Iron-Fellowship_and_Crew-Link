@@ -49,8 +49,6 @@ export function Notes(props: NotesProps) {
   const roomPassword =
     source.type === "character" ? source.characterId : source.campaignId;
 
-  console.debug(selectedNoteContent);
-
   const saveCallback = useCallback(
     (
       noteId: string,

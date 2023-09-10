@@ -18,6 +18,7 @@ import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/loca
 import { ImageUploader } from "components/ImageUploader/ImageUploader";
 import { useStore } from "stores/store";
 import { useListenToCurrentLocation } from "stores/world/currentWorld/locations/useListenToCurrentLocation";
+import { BondsSection } from "components/BondsSection";
 
 export interface OpenLocationProps {
   isWorldOwner: boolean;
@@ -66,6 +67,26 @@ export function OpenLocation(props: OpenLocationProps) {
     (store) =>
       store.worlds.currentWorld.currentWorldLocations.uploadLocationImage
   );
+
+  const currentCharacterId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacterId
+  );
+  const singleplayerBond =
+    currentCharacterId && location.characterBonds
+      ? location.characterBonds[currentCharacterId]
+      : false;
+  const updateLocationCharacterBond = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorldLocations
+        .updateLocationCharacterBond
+  );
+
+  const currentCampaignCharacters = useStore(
+    (store) => store.campaigns.currentCampaign.characters.characterMap
+  );
+  const bondedCharacterNames = Object.keys(currentCampaignCharacters)
+    .filter((characterId) => location.characterBonds?.[characterId])
+    .map((characterId) => currentCampaignCharacters[characterId]?.name ?? "");
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const initialLoadRef = useRef<boolean>(true);
@@ -223,6 +244,22 @@ export function OpenLocation(props: OpenLocationProps) {
                   />
                 </Grid>
               )}
+              {isSinglePlayer && (
+                <BondsSection
+                  onBondToggle={
+                    currentCharacterId
+                      ? (bonded) =>
+                          updateLocationCharacterBond(
+                            locationId,
+                            currentCharacterId,
+                            bonded
+                          ).catch(() => {})
+                      : undefined
+                  }
+                  isBonded={singleplayerBond}
+                  bondedCharacters={bondedCharacterNames}
+                />
+              )}
               <Grid item xs={12}>
                 <RtcRichTextEditor
                   id={locationId}
@@ -252,6 +289,22 @@ export function OpenLocation(props: OpenLocationProps) {
                     </Alert>
                   </Grid>
                 </>
+              )}
+              {!isSinglePlayer && (
+                <BondsSection
+                  onBondToggle={
+                    currentCharacterId
+                      ? (bonded) =>
+                          updateLocationCharacterBond(
+                            locationId,
+                            currentCharacterId,
+                            bonded
+                          ).catch(() => {})
+                      : undefined
+                  }
+                  isBonded={singleplayerBond}
+                  bondedCharacters={bondedCharacterNames}
+                />
               )}
               {!location.sharedWithPlayers && (
                 <Grid item xs={12}>

@@ -15,6 +15,7 @@ export interface NPCDocument {
   lastLocationId?: string;
   imageFilenames?: string[];
   sharedWithPlayers?: boolean;
+  characterBonds?: { [characterId: string]: boolean };
   updatedDate: Date;
   createdDate: Date;
 }

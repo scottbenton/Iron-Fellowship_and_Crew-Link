@@ -27,9 +27,10 @@ export function SectionHeading(props: SectionHeadingProps) {
 
           [theme.breakpoints.down("sm")]: {
             flexDirection: "column",
-
-            marginX: breakContainer ? -2 : 0,
             paddingX: 2,
+          },
+          [theme.breakpoints.down("md")]: {
+            marginX: breakContainer ? -2 : 0,
           },
         }),
         ...(Array.isArray(sx) ? sx : [sx]),

@@ -65,7 +65,6 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
     // Recreate our yDoc and Provider
     const newYDoc = new Y.Doc();
     if (initialValueRef.current) {
-      console.debug("RECREATING Y DOC AND APPLYING UPDATE");
       Y.applyUpdate(newYDoc, initialValueRef.current);
     }
 
@@ -140,7 +139,6 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
   }, [initialValue, yDoc, showTitle]);
 
   if (!yDoc || !provider) {
-    console.debug("No YDOC, or no PROVIDER present");
     return null;
   }
 

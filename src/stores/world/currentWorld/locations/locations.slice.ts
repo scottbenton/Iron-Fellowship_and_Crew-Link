@@ -13,6 +13,7 @@ import { listenToLocationNotes } from "api-calls/world/locations/listenToLocatio
 import { reportApiError } from "lib/analytics.lib";
 import { Unsubscribe } from "firebase/firestore";
 import { listenToLocationGMProperties } from "api-calls/world/locations/listenToLocationGMProperties";
+import { updateLocationCharacterBond } from "api-calls/world/locations/updateLocationCharacterBond";
 
 export const createLocationsSlice: CreateSliceType<LocationsSlice> = (
   set,
@@ -124,6 +125,18 @@ export const createLocationsSlice: CreateSliceType<LocationsSlice> = (
       return new Promise((res, reject) => reject("No world found"));
     }
     return updateLocationNotes({ worldId, locationId, notes, isBeacon });
+  },
+  updateLocationCharacterBond: (locationId, characterId, bonded) => {
+    const worldId = getState().worlds.currentWorld.currentWorldId;
+    if (!worldId) {
+      return new Promise((res, reject) => reject("No world found"));
+    }
+    return updateLocationCharacterBond({
+      worldId,
+      locationId,
+      characterId,
+      bonded,
+    });
   },
   uploadLocationImage: (locationId, image) => {
     const worldId = getState().worlds.currentWorld.currentWorldId;

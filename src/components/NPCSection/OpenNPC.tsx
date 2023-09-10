@@ -22,6 +22,7 @@ import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs
 import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 import { useListenToCurrentNPC } from "stores/world/currentWorld/npcs/useListenToCurrentNPC";
 import { useStore } from "stores/store";
+import { BondsSection } from "components/BondsSection";
 
 export interface OpenNPCProps {
   isWorldOwner: boolean;
@@ -121,6 +122,34 @@ export function OpenNPC(props: OpenNPCProps) {
       })
       .catch(() => {});
   };
+
+  const currentCharacterId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacterId
+  );
+  const npcLocation = npc.lastLocationId
+    ? locations[npc.lastLocationId]
+    : undefined;
+  const npcLocationBonds = npcLocation?.characterBonds ?? {};
+  const npcBonds = npc.characterBonds ?? {};
+  const isCharacterBondedToLocation =
+    npcLocationBonds[currentCharacterId ?? ""] ?? false;
+  const isCharacterBondedToNPC = npcBonds[currentCharacterId ?? ""] ?? false;
+
+  const singleplayerBond =
+    isCharacterBondedToLocation || isCharacterBondedToNPC || false;
+
+  const updateNPCCharacterBond = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.updateNPCCharacterBond
+  );
+
+  const currentCampaignCharacters = useStore(
+    (store) => store.campaigns.currentCampaign.characters.characterMap
+  );
+  const bondedCharacterNames = Object.keys(currentCampaignCharacters)
+    .filter(
+      (characterId) => npcLocationBonds[characterId] || npcBonds[characterId]
+    )
+    .map((characterId) => currentCampaignCharacters[characterId]?.name ?? "");
 
   return (
     <Box
@@ -295,6 +324,26 @@ export function OpenNPC(props: OpenNPCProps) {
                   />
                 </Grid>
               )}
+              {isSinglePlayer && (
+                <BondsSection
+                  onBondToggle={
+                    currentCharacterId
+                      ? (bonded) =>
+                          updateNPCCharacterBond(
+                            npcId,
+                            currentCharacterId,
+                            bonded
+                          ).catch(() => {})
+                      : undefined
+                  }
+                  isBonded={singleplayerBond}
+                  bondedCharacters={bondedCharacterNames}
+                  disableToggle={isCharacterBondedToLocation}
+                  inheritedBondName={
+                    isCharacterBondedToLocation ? npcLocation?.name : undefined
+                  }
+                />
+              )}
               <Grid item xs={12}>
                 <RtcRichTextEditor
                   id={npcId}
@@ -325,6 +374,26 @@ export function OpenNPC(props: OpenNPCProps) {
                     </Alert>
                   </Grid>
                 </>
+              )}
+              {!isSinglePlayer && (
+                <BondsSection
+                  onBondToggle={
+                    currentCharacterId
+                      ? (bonded) =>
+                          updateNPCCharacterBond(
+                            npcId,
+                            currentCharacterId,
+                            bonded
+                          ).catch(() => {})
+                      : undefined
+                  }
+                  isBonded={singleplayerBond}
+                  bondedCharacters={bondedCharacterNames}
+                  disableToggle={isCharacterBondedToLocation}
+                  inheritedBondName={
+                    isCharacterBondedToLocation ? npcLocation?.name : undefined
+                  }
+                />
               )}
               {!npc.sharedWithPlayers && (
                 <Grid item xs={12}>
