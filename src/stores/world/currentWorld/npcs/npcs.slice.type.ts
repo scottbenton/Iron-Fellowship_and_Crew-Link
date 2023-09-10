@@ -44,6 +44,11 @@ export interface NPCsSliceActions {
     notes: Uint8Array,
     isBeaconRequest?: boolean
   ) => Promise<void>;
+  updateNPCCharacterBond: (
+    npcId: string,
+    characterId: string,
+    bonded: boolean
+  ) => Promise<void>;
   uploadNPCImage: (npcId: string, image: File) => Promise<void>;
   subscribeToOpenNPC: (npcId: string) => Unsubscribe;
 

@@ -44,6 +44,11 @@ export interface LocationsSliceActions {
     notes: Uint8Array,
     isBeaconRequest?: boolean
   ) => Promise<void>;
+  updateLocationCharacterBond: (
+    locationId: string,
+    characterId: string,
+    bonded: boolean
+  ) => Promise<void>;
   uploadLocationImage: (locationId: string, image: File) => Promise<void>;
   subscribeToOpenLocation: (locationId: string) => Unsubscribe;
   resetStore: () => void;

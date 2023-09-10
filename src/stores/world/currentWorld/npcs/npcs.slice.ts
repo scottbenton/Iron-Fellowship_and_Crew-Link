@@ -13,6 +13,7 @@ import { listenToNPCNotes } from "api-calls/world/npcs/listenToNPCNotes";
 import { reportApiError } from "lib/analytics.lib";
 import { Unsubscribe } from "firebase/firestore";
 import { listenToNPCGMProperties } from "api-calls/world/npcs/listenToNPCGMProperties";
+import { updateNPCCharacterBond } from "api-calls/world/npcs/updateNPCCharacterBond";
 
 export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
   ...defaultNPCsSlice,
@@ -120,6 +121,18 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
       return new Promise((res, reject) => reject("No world found"));
     }
     return updateNPCNotes({ worldId, npcId, notes, isBeacon });
+  },
+  updateNPCCharacterBond: (npcId, characterId, bonded) => {
+    const worldId = getState().worlds.currentWorld.currentWorldId;
+    if (!worldId) {
+      return new Promise((res, reject) => reject("No world found"));
+    }
+    return updateNPCCharacterBond({
+      worldId,
+      npcId,
+      characterId,
+      bonded,
+    });
   },
   uploadNPCImage: (npcId, image) => {
     const worldId = getState().worlds.currentWorld.currentWorldId;

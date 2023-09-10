@@ -5,6 +5,7 @@
 ### New Features
 
 - Added an input in the character sheet header for "Adds" - roll modifiers
+- Added bonds checkbox to locations & NPCs to track bonds
 
 ### Changes
 
