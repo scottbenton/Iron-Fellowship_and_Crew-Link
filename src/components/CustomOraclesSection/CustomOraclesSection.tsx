@@ -80,6 +80,7 @@ export function CustomOracleSection(props: CustomOracleSectionProps) {
           )}
           <div>
             <Button
+              color={"inherit"}
               variant={"outlined"}
               onClick={() => setIsAddOracleDialogOpen(true)}
             >

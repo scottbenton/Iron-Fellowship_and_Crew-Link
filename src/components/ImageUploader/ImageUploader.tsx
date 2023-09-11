@@ -40,8 +40,14 @@ export function ImageUploader(props: ImageUploaderProps) {
           width: "100%",
           overflow: "hidden",
           backgroundImage: `url("${src}")`,
-          backgroundColor: theme.palette.grey[300],
-          color: theme.palette.grey[700],
+          backgroundColor:
+            theme.palette.mode === "light"
+              ? theme.palette.grey[300]
+              : theme.palette.grey[700],
+          color:
+            theme.palette.mode === "light"
+              ? theme.palette.grey[500]
+              : theme.palette.grey[300],
           backgroundSize: "cover",
           backgroundPosition: "center center",
           display: "flex",
@@ -90,7 +96,6 @@ export function ImageUploader(props: ImageUploaderProps) {
               sx={(theme) => ({
                 width: 36,
                 height: 36,
-                color: theme.palette.grey[500],
                 mb: 1,
               })}
             />

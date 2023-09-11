@@ -11,6 +11,10 @@ import { logout } from "../../lib/auth.lib";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useStore } from "stores/store";
 import { UserAvatar } from "components/UserAvatar";
+import { useToggleTheme } from "providers/ThemeProvider";
+import LightThemeIcon from "@mui/icons-material/LightMode";
+import DarkThemeIcon from "@mui/icons-material/DarkMode";
+import { THEME_TYPE } from "providers/ThemeProvider/theme";
 
 const getInitials = (name: string) => {
   const names = name.split(" ");
@@ -28,6 +32,8 @@ export function HeaderMenu() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
+  const { themeType, toggleTheme } = useToggleTheme();
+
   return (
     <>
       <ButtonBase
@@ -42,6 +48,23 @@ export function HeaderMenu() {
         onClose={() => setMenuOpen(false)}
         anchorEl={anchorRef.current}
       >
+        <MenuItem
+          onClick={() => {
+            setMenuOpen(false);
+            toggleTheme();
+          }}
+        >
+          <ListItemIcon>
+            {themeType === THEME_TYPE.LIGHT ? (
+              <DarkThemeIcon />
+            ) : (
+              <LightThemeIcon />
+            )}
+          </ListItemIcon>
+          <ListItemText>
+            {themeType === THEME_TYPE.LIGHT ? "Dark Mode" : "Light Mode"}
+          </ListItemText>
+        </MenuItem>
         <MenuItem
           onClick={() => {
             setMenuOpen(false);

@@ -76,7 +76,9 @@ export function TruthDialogSelector(props: TruthDialogSelectorProps) {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => handleClose()}>Cancel</Button>
+        <Button color={"inherit"} onClick={() => handleClose()}>
+          Cancel
+        </Button>
         <Button variant={"contained"} onClick={() => handleSave()}>
           Save Changes
         </Button>

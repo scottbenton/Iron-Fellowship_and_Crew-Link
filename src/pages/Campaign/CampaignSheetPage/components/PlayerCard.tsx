@@ -53,11 +53,14 @@ export function PlayerCard(props: PlayerCardProps) {
           display={"flex"}
           justifyContent={"flex-end"}
           sx={(theme) => ({
-            backgroundColor: theme.palette.grey[100],
-            color: "white",
+            backgroundColor: theme.palette.background.paperInlay,
           })}
         >
-          <Button disabled={isPlayerGM || gmCallLoading} onClick={handleAddGm}>
+          <Button
+            color={"inherit"}
+            disabled={isPlayerGM || gmCallLoading}
+            onClick={handleAddGm}
+          >
             Add as GM
           </Button>
         </Box>

@@ -25,12 +25,14 @@ export function MovesSection() {
         aria-label={"Filter Moves"}
         placeholder={"Filter Moves"}
         onChange={(evt) => setSearch(evt.currentTarget.value)}
-        color={"secondary"}
+        color={"primary"}
         sx={(theme) => ({
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: theme.palette.darkGrey.main,
           color: "#fff",
           px: 2,
-          borderBottomColor: theme.palette.primary.light,
+          "&::hover": {
+            borderBottomColor: theme.palette.darkGrey.light,
+          },
         })}
       />
 

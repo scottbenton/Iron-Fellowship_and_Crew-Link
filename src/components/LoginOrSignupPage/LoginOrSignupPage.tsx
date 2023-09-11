@@ -76,7 +76,7 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
                   alignItems: "center",
                   justifyContent: "center",
                   p: 0.5,
-                  bgcolor: theme.palette.secondary.main,
+                  bgcolor: theme.palette.primary.main,
                   color: theme.palette.common.white,
                 })}
               >
@@ -94,14 +94,24 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
             {isLoginPage ? (
               <Typography>
                 Need an account?{" "}
-                <Link to={basePaths[BASE_ROUTES.SIGNUP]}>
+                <Typography
+                  component={Link}
+                  color={"primary"}
+                  to={basePaths[BASE_ROUTES.SIGNUP]}
+                >
                   Create an Account
-                </Link>
+                </Typography>
               </Typography>
             ) : (
               <Typography>
                 Already have an account?{" "}
-                <Link to={basePaths[BASE_ROUTES.LOGIN]}>Login</Link>
+                <Typography
+                  component={Link}
+                  color={"primary"}
+                  to={basePaths[BASE_ROUTES.LOGIN]}
+                >
+                  Login
+                </Typography>
               </Typography>
             )}
           </Box>
@@ -111,7 +121,7 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
                 variant={"contained"}
                 sx={(theme) => ({
                   backgroundColor: "#fff",
-                  color: theme.palette.text.primary,
+                  color: theme.palette.grey[900],
                   "&:hover": {
                     backgroundColor: theme.palette.grey[200],
                   },

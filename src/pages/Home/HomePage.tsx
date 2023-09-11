@@ -38,7 +38,7 @@ export function HomePage() {
           </Typography>
           {isLoggedIn ? (
             <Button
-              color={"secondary"}
+              color={"primary"}
               variant={"contained"}
               component={Link}
               to={constructCharacterPath(CHARACTER_ROUTES.SELECT)}
@@ -49,7 +49,7 @@ export function HomePage() {
           ) : (
             <Stack direction={"row"} spacing={1} mt={4}>
               <Button
-                color={"secondary"}
+                color={"primary"}
                 component={Link}
                 to={basePaths[BASE_ROUTES.LOGIN]}
               >
@@ -57,7 +57,7 @@ export function HomePage() {
               </Button>
               <Button
                 variant={"contained"}
-                color={"secondary"}
+                color={"primary"}
                 component={Link}
                 to={basePaths[BASE_ROUTES.SIGNUP]}
               >

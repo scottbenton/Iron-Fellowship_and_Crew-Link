@@ -147,7 +147,7 @@ export function CharacterCardPage() {
                     sx={(theme) => ({
                       width: 50,
                       height: 50,
-                      color: theme.palette.secondary.main,
+                      color: theme.palette.primary.main,
                     })}
                   />
                   <Typography variant={"h3"} ml={1}>

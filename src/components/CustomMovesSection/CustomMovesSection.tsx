@@ -85,6 +85,7 @@ export function CustomMovesSection(props: CustomMovesSectionProps) {
           )}
           <div>
             <Button
+              color={"inherit"}
               variant={"outlined"}
               onClick={() => setIsAddMoveDialogOpen(true)}
             >

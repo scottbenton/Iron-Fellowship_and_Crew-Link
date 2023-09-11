@@ -42,7 +42,8 @@ export function CharacterHeader(props: CharacterHeaderProps) {
           position: "relative",
           mx: -3,
           px: 3,
-          backgroundColor: theme.palette.primary.light,
+          backgroundColor:
+            theme.palette.grey[theme.palette.mode === "light" ? 600 : 700],
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -76,7 +77,7 @@ export function CharacterHeader(props: CharacterHeaderProps) {
             {campaignId && (
               <Chip
                 size={"small"}
-                color={"secondary"}
+                color={"primary"}
                 variant={"outlined"}
                 icon={<LinkIcon />}
                 label="Campaign"
@@ -91,7 +92,7 @@ export function CharacterHeader(props: CharacterHeaderProps) {
             {campaignId && isGM && (
               <Chip
                 size={"small"}
-                color={"secondary"}
+                color={"primary"}
                 icon={<LinkIcon />}
                 label={"GM Screen"}
                 component={Link}

@@ -6,8 +6,17 @@ export function LoreTag(props: ChipProps) {
 
   const strLabel = typeof label === "string" ? label : "";
 
-  const bgcolor = getHSLFromString(strLabel, 70, 80);
-  const color = getHSLFromString(strLabel, 90, 20);
+  const lightColor = getHSLFromString(strLabel, 70, 80);
+  const darkColor = getHSLFromString(strLabel, 90, 15);
 
-  return <Chip sx={{ bgcolor, color }} {...props} />;
+  return (
+    <Chip
+      sx={(theme) =>
+        theme.palette.mode === "light"
+          ? { bgcolor: lightColor, color: darkColor }
+          : { bgcolor: darkColor, color: lightColor }
+      }
+      {...props}
+    />
+  );
 }

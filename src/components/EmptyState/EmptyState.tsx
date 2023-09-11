@@ -42,7 +42,11 @@ export function EmptyState(props: EmptyStateProps) {
           </Typography>
         )}
         {message && (
-          <Typography variant={"body1"} color={"GrayText"} textAlign={"center"}>
+          <Typography
+            variant={"body1"}
+            color={"textSecondary"}
+            textAlign={"center"}
+          >
             {message}
           </Typography>
         )}

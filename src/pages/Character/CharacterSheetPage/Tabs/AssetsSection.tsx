@@ -113,7 +113,7 @@ export function AssetsSection() {
       <Grid item xs={12}>
         <Button
           variant={"outlined"}
-          color={"primary"}
+          color={"inherit"}
           onClick={() => setIsAssetDialogOpen(true)}
         >
           Add Asset

@@ -17,12 +17,12 @@ export function PageHeader(props: PageHeaderProps) {
     <>
       <Box
         sx={(theme) => ({
-          color: theme.palette.primary.contrastText,
+          color: theme.palette.darkGrey.contrastText,
           pt: isEmpty ? 0 : 4,
           pb: 12,
           mb: isEmpty ? -18 : -12,
           width: "100vw",
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: theme.palette.darkGrey.main,
         })}
       >
         <Container
@@ -72,7 +72,11 @@ export function PageHeader(props: PageHeaderProps) {
       </Box>
       <Box
         sx={(theme) => ({
-          backgroundImage: 'url("/assets/border.svg")',
+          backgroundImage: `url("${
+            theme.palette.mode === "light"
+              ? "/assets/border.svg"
+              : "/assets/border-dark.svg"
+          }")`,
           position: "relative",
           top: theme.spacing(isEmpty ? 18 : 12),
           mt: "-1px",
@@ -82,6 +86,7 @@ export function PageHeader(props: PageHeaderProps) {
           backgroundRepeat: "repeat-x",
           backgroundSize: "contain",
           backgroundPositionY: "bottom",
+          minWidth: 1000,
         })}
       />
     </>

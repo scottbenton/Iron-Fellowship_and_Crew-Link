@@ -103,7 +103,7 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
         </Box>
       </DialogTitle>
       <DialogContent>
-        <Button variant="outlined" component="label">
+        <Button variant="outlined" component="label" color={"inherit"}>
           {file ? "Change Image" : "Upload Image"}
           <input
             hidden
@@ -127,6 +127,7 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
             <Box display={"flex"} justifyContent={"flex-end"} mt={0.5}>
               <ButtonGroup variant={"outlined"}>
                 <Button
+                  color={"inherit"}
                   disabled={scale <= 1}
                   onClick={() => setScale((prevScale) => prevScale - 0.1)}
                   aria-label={"Zoom Out"}
@@ -134,6 +135,7 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
                   <ZoomOutIcon />
                 </Button>
                 <Button
+                  color={"inherit"}
                   disabled={scale >= 2}
                   onClick={() => setScale((prevScale) => prevScale + 0.1)}
                   aria-label={"Zoom In"}
@@ -146,7 +148,11 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => handleClose()} disabled={loading}>
+        <Button
+          color={"inherit"}
+          onClick={() => handleClose()}
+          disabled={loading}
+        >
           Cancel
         </Button>
         <Button

@@ -103,13 +103,13 @@ export function TracksSection() {
           />
           <ButtonBase
             sx={(theme) => ({
-              backgroundColor: theme.palette.primary.light,
-              color: theme.palette.primary.contrastText,
+              backgroundColor: theme.palette.darkGrey.main,
+              color: theme.palette.darkGrey.contrastText,
               borderRadius: theme.shape.borderRadius,
               ml: 0.25,
 
               "&:hover": {
-                backgroundColor: theme.palette.primary.main,
+                backgroundColor: theme.palette.darkGrey.dark,
               },
             })}
             onClick={() =>

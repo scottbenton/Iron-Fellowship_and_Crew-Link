@@ -250,7 +250,7 @@ export function DieRollProvider(props: PropsWithChildren) {
           <Fab
             variant={"extended"}
             size={"medium"}
-            color={"secondary"}
+            color={"primary"}
             onClick={() => clearRolls()}
             sx={{ mt: 2 }}
           >

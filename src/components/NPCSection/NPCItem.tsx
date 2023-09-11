@@ -53,7 +53,10 @@ export function NPCItem(props: NPCItemProps) {
                 height: 80,
                 flexShrink: 0,
                 borderRadius: theme.shape.borderRadius,
-                backgroundColor: theme.palette.grey[300],
+                backgroundColor:
+                  theme.palette.mode === "light"
+                    ? theme.palette.grey[300]
+                    : theme.palette.grey[700],
                 backgroundImage: `url(${npc.imageUrl})`,
                 backgroundPosition: "center center",
                 backgroundSize: "cover",
@@ -65,7 +68,10 @@ export function NPCItem(props: NPCItemProps) {
               {!npc.imageUrl && (
                 <PhotoIcon
                   sx={(theme) => ({
-                    color: theme.palette.grey[500],
+                    color:
+                      theme.palette.mode === "light"
+                        ? theme.palette.grey[500]
+                        : theme.palette.grey[300],
                   })}
                 />
               )}

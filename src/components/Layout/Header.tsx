@@ -45,7 +45,14 @@ export function Header() {
   }, [path]);
 
   return (
-    <AppBar elevation={0} position={"static"}>
+    <AppBar
+      elevation={0}
+      position={"static"}
+      color={"darkGrey"}
+      enableColorOnDark
+      component={"div"}
+      sx={{ border: "unset" }} // Undo border I added to the paper component in dark mode
+    >
       <Container maxWidth={"xl"}>
         <Toolbar
           variant={"dense"}
@@ -66,43 +73,41 @@ export function Header() {
               <Hidden smDown>
                 <>
                   <Button
+                    color={"inherit"}
                     component={Link}
                     to={basePaths[BASE_ROUTES.CHARACTER]}
+                    endIcon={<CharacterIcon />}
                     sx={{
-                      color: "white",
                       "&:hover": {
-                        backgroundColor: theme.palette.primary.dark,
+                        backgroundColor: "darkGrey.light",
                       },
                     }}
-                    endIcon={<CharacterIcon />}
                   >
                     Characters
                   </Button>
                   <Button
+                    color={"inherit"}
                     component={Link}
                     to={basePaths[BASE_ROUTES.CAMPAIGN]}
+                    endIcon={<CampaignIcon />}
                     sx={{
-                      color: "white",
-                      ml: 1,
                       "&:hover": {
-                        backgroundColor: theme.palette.primary.dark,
+                        backgroundColor: "darkGrey.light",
                       },
                     }}
-                    endIcon={<CampaignIcon />}
                   >
                     Campaigns
                   </Button>
                   <Button
+                    color={"inherit"}
                     component={Link}
                     to={basePaths[BASE_ROUTES.WORLD]}
+                    endIcon={<WorldIcon />}
                     sx={{
-                      color: "white",
-                      ml: 1,
                       "&:hover": {
-                        backgroundColor: theme.palette.primary.dark,
+                        backgroundColor: "darkGrey.light",
                       },
                     }}
-                    endIcon={<WorldIcon />}
                   >
                     Worlds
                   </Button>
@@ -113,7 +118,7 @@ export function Header() {
           ) : (
             <Stack direction={"row"} spacing={1}>
               <Button
-                color={"secondary"}
+                color={"inherit"}
                 component={Link}
                 to={basePaths[BASE_ROUTES.LOGIN]}
               >
@@ -121,7 +126,7 @@ export function Header() {
               </Button>
               <Button
                 variant={"contained"}
-                color={"secondary"}
+                color={"primary"}
                 component={Link}
                 to={basePaths[BASE_ROUTES.SIGNUP]}
               >

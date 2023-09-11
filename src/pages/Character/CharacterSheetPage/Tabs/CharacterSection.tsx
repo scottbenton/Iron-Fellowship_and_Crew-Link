@@ -21,6 +21,7 @@ import { CustomMovesSection } from "components/CustomMovesSection";
 import { CustomOracleSection } from "components/CustomOraclesSection";
 import { constructCharacterCardUrl } from "pages/Character/routes";
 import { useStore } from "stores/store";
+import { useConfirm } from "material-ui-confirm";
 
 export function CharacterSection() {
   const uid = useStore((store) => store.auth.uid);
@@ -108,6 +109,29 @@ export function CharacterSection() {
       .catch((e) => {
         console.error(e);
       });
+  };
+
+  const characterName = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.name ?? ""
+  );
+  const deleteCharacter = useStore((store) => store.characters.deleteCharacter);
+
+  const confirm = useConfirm();
+
+  const handleDeleteCharacter = (characterId: string) => {
+    confirm({
+      title: "Delete Character",
+      description: `Are you sure you want to delete ${characterName}?`,
+      confirmationText: "Delete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        deleteCharacter(characterId).catch(() => {});
+      })
+      .catch(() => {});
   };
 
   return (
@@ -289,8 +313,14 @@ export function CharacterSection() {
           />
         </Box>
       )}
-      <Box px={2}>
+      <Box
+        px={2}
+        display={"flex"}
+        flexDirection={"column"}
+        alignItems={"flex-start"}
+      >
         <Button
+          color={"inherit"}
           variant={"outlined"}
           onClick={() => setPortraitDialogOpen(true)}
         >
@@ -308,7 +338,15 @@ export function CharacterSection() {
           }
           existingPortraitSettings={existingPortraitSettings}
         />
+        <Button
+          sx={{ mt: 2 }}
+          color={"error"}
+          onClick={() => handleDeleteCharacter(characterId ?? "")}
+        >
+          Delete Character
+        </Button>
       </Box>
+
       {/* {campaignId && (
         <Box px={2}>
           <FormControlLabel

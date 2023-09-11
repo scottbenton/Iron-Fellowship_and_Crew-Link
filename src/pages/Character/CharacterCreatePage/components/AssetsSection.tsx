@@ -107,6 +107,7 @@ export function AssetsSection() {
               ))}
             </Grid>
             <Button
+              color={"inherit"}
               variant={"outlined"}
               onClick={() => setIsAddAssetDialogOpen(true)}
               sx={{ mt: 1 }}
@@ -121,6 +122,7 @@ export function AssetsSection() {
             imageSrc={"/assets/nature.svg"}
             callToAction={
               <Button
+                color={"inherit"}
                 variant={"outlined"}
                 onClick={() => setIsAddAssetDialogOpen(true)}
               >

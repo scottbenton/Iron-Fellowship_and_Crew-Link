@@ -1,22 +1,40 @@
-import { Box, Card, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
-import { ReactNode } from "react";
+import { PropsWithChildren, ReactNode, forwardRef } from "react";
+import { Link } from "react-router-dom";
 import { useStore } from "stores/store";
 import { CharacterDocument } from "types/Character.type";
+import OpenIcon from "@mui/icons-material/ChevronRight";
 
 export interface CharacterListItemProps {
   characterId: string;
   character: CharacterDocument;
   actions?: (characterId: string) => ReactNode;
+  href?: string;
   usePlayerNameAsSecondaryText?: boolean;
   raised?: boolean;
 }
+
+const LinkComponent = forwardRef<
+  HTMLAnchorElement,
+  PropsWithChildren<{ href: string }>
+>((props, ref) => {
+  const { href, ...rest } = props;
+  return <Link ref={ref} to={href} {...rest} />;
+});
 
 export function CharacterListItem(props: CharacterListItemProps) {
   const {
     characterId,
     character,
     actions,
+    href,
     usePlayerNameAsSecondaryText,
     raised,
   } = props;
@@ -28,6 +46,30 @@ export function CharacterListItem(props: CharacterListItemProps) {
 
   const userDoc = useStore((store) => store.users.userMap[uid]?.doc);
 
+  const Wrapper = ({ children }: PropsWithChildren) =>
+    !href ? (
+      <Box display={"flex"} alignItems={"flex-start"} p={2} height={"100%"}>
+        {children}
+      </Box>
+    ) : (
+      <CardActionArea
+        href={href}
+        LinkComponent={LinkComponent}
+        sx={{ height: "100%" }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            p: 2,
+            height: "100%",
+          }}
+        >
+          {children}
+        </Box>
+      </CardActionArea>
+    );
+
   return (
     <Card
       variant={raised ? "elevation" : "outlined"}
@@ -38,52 +80,66 @@ export function CharacterListItem(props: CharacterListItemProps) {
         justifyContent: "space-between",
         overflow: "hidden",
       }}
-      elevation={raised ? 3 : 0}
     >
-      <Box display={"flex"}>
-        <Box display={"flex"} alignItems={"flex-start"} p={2}>
-          <PortraitAvatar
-            uid={uid}
-            characterId={characterId}
-            name={name}
-            portraitSettings={profileImage}
-            size={"medium"}
-            colorful
-          />
-          <Box display={"flex"} flexDirection={"column"} ml={2} pt={1}>
-            <Typography variant={"h6"} lineHeight={1.25}>
-              {name}
+      <Wrapper>
+        <PortraitAvatar
+          uid={uid}
+          characterId={characterId}
+          name={name}
+          portraitSettings={profileImage}
+          size={"medium"}
+          colorful
+        />
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          ml={2}
+          pt={1}
+          flexGrow={1}
+        >
+          <Typography variant={"h6"} lineHeight={1.25}>
+            {name}
+          </Typography>
+
+          {usePlayerNameAsSecondaryText && (
+            <Typography
+              variant={"subtitle2"}
+              component={"div"}
+              // mt={-1}
+              color={(theme) => theme.palette.text.secondary}
+            >
+              {userDoc ? userDoc.displayName : "Loading"}
             </Typography>
+          )}
 
-            {usePlayerNameAsSecondaryText && (
-              <Typography
-                variant={"subtitle2"}
-                // mt={-1}
-                color={(theme) => theme.palette.text.secondary}
-              >
-                {userDoc ? userDoc.displayName : "Loading"}
-              </Typography>
-            )}
-
-            {!usePlayerNameAsSecondaryText && campaignId ? (
-              <Typography
-                variant={"subtitle2"}
-                // mt={-1}
-                color={(theme) => theme.palette.text.secondary}
-              >
-                {campaign ? campaign.name : "Campaign: Loading"}
-              </Typography>
-            ) : null}
-          </Box>
+          {!usePlayerNameAsSecondaryText && campaignId ? (
+            <Typography
+              variant={"subtitle2"}
+              component={"div"}
+              // mt={-1}
+              color={(theme) => theme.palette.text.secondary}
+            >
+              {campaign ? campaign.name : "Campaign: Loading"}
+            </Typography>
+          ) : null}
         </Box>
-      </Box>
+        {href && (
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"flex-end"}
+            alignSelf={"stretch"}
+          >
+            <OpenIcon />
+          </Box>
+        )}
+      </Wrapper>
       {actions && (
         <Box
           display={"flex"}
           justifyContent={"flex-end"}
           sx={(theme) => ({
-            backgroundColor: theme.palette.grey[100],
-            color: "white",
+            backgroundColor: theme.palette.background.paperInlay,
           })}
         >
           {actions(characterId)}

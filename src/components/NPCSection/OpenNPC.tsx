@@ -182,7 +182,7 @@ export function OpenNPC(props: OpenNPCProps) {
         <DebouncedOracleInput
           placeholder={"NPC Name"}
           variant={"standard"}
-          color={"secondary"}
+          color={"primary"}
           oracleTableId={nameOracles[npc.species]}
           inputRef={nameInputRef}
           initialValue={npc.name}

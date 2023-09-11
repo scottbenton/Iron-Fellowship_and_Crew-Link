@@ -34,7 +34,10 @@ export function LoreItem(props: LoreItemProps) {
               width: "100%",
               overflow: "hidden",
               backgroundImage: `url("${lore.imageUrl}")`,
-              backgroundColor: theme.palette.grey[300],
+              backgroundColor:
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[300]
+                  : theme.palette.grey[700],
               backgroundSize: "cover",
               backgroundPosition: "center center",
               display: "flex",
@@ -47,7 +50,10 @@ export function LoreItem(props: LoreItemProps) {
                 sx={(theme) => ({
                   width: 30,
                   height: 30,
-                  color: theme.palette.grey[500],
+                  color:
+                    theme.palette.mode === "light"
+                      ? theme.palette.grey[500]
+                      : theme.palette.grey[300],
                 })}
               />
             )}

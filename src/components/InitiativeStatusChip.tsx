@@ -22,7 +22,7 @@ const getStatusProps = (status: INITIATIVE_STATUS): Partial<ChipProps> => {
       };
     case INITIATIVE_STATUS.OUT_OF_COMBAT:
       return {
-        color: "secondary",
+        color: "primary",
       };
   }
 };

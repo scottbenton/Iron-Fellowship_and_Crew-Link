@@ -108,7 +108,7 @@ export function WorldSheetPage() {
           <StyledTabs
             value={selectedTab}
             onChange={(evt, value) => handleTabChange(value)}
-            indicatorColor="secondary"
+            indicatorColor="primary"
             centered
             variant={"standard"}
           >
@@ -122,7 +122,7 @@ export function WorldSheetPage() {
         {selectedTab === TABS.LOCATIONS && (
           <BreakContainer
             sx={(theme) => ({
-              backgroundColor: theme.palette.background.default,
+              backgroundColor: theme.palette.background.paperInlay,
               flexGrow: 1,
             })}
           >
@@ -135,7 +135,7 @@ export function WorldSheetPage() {
         {selectedTab === TABS.NPCS && (
           <BreakContainer
             sx={(theme) => ({
-              backgroundColor: theme.palette.background.default,
+              backgroundColor: theme.palette.background.paperInlay,
               flexGrow: 1,
             })}
           >
@@ -145,7 +145,7 @@ export function WorldSheetPage() {
         {selectedTab === TABS.LORE && (
           <BreakContainer
             sx={(theme) => ({
-              backgroundColor: theme.palette.background.default,
+              backgroundColor: theme.palette.background.paperInlay,
               flexGrow: 1,
             })}
           >

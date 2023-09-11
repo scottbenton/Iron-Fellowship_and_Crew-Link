@@ -375,6 +375,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
             <DialogActions>
               <Button
                 type={"button"}
+                color={"inherit"}
                 onClick={() => {
                   form.resetForm();
                   handleCancel();

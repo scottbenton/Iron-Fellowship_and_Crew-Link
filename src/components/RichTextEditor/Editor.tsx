@@ -87,7 +87,7 @@ export function Editor(props: EditorProps) {
             "&>.is-empty::before": {
               content: "attr(data-placeholder)",
               float: "left",
-              color: theme.palette.grey[400],
+              color: theme.palette.action.disabled,
               pointerEvents: "none",
               height: 0,
             },

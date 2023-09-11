@@ -1,10 +1,9 @@
 import { Tab, TabProps } from "@mui/material";
-import React from "react";
-import { Link, useMatch } from "react-router-dom";
 
 export function StyledTab(props: TabProps) {
   const { ...tabProps } = props;
 
+  const selected = (tabProps as any).selected;
   return (
     <Tab
       sx={(theme) => ({
@@ -14,6 +13,9 @@ export function StyledTab(props: TabProps) {
         minWidth: 64,
         minHeight: 1,
         textTransform: "unset",
+
+        color:
+          theme.palette.text[selected ? "primary" : "secondary"] + "!important",
       })}
       {...tabProps}
     />

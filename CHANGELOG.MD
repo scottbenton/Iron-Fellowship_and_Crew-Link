@@ -6,6 +6,7 @@
 
 - Added an input in the character sheet header for "Adds", allowing users to add roll modifiers to rolls
 - Added bonds checkbox to locations & NPCs to track bonds
+- Added a dark theme. Click your user icon in the top right corner to switch themes.
 - Added NPC list to locations, showing the NPCs that are present at that location
 
 ### Changes

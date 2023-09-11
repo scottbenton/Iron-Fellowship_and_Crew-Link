@@ -100,8 +100,8 @@ export function AssetCard(props: AssetCardProps) {
       >
         <Box
           sx={(theme) => ({
-            backgroundColor: theme.palette.primary.main,
-            color: "white",
+            backgroundColor: theme.palette.darkGrey.main,
+            color: theme.palette.darkGrey.contrastText,
             py: handleDeleteClick ? 0.5 : 1,
             px: 1,
             display: "flex",
@@ -225,12 +225,12 @@ export function AssetCard(props: AssetCardProps) {
         </Box>
         {actions && (
           <Box
-            sx={(theme) => ({
+            sx={{
               display: "flex",
               justifyContent: "flex-end",
               px: 1,
               pb: 1,
-            })}
+            }}
           >
             {actions}
           </Box>

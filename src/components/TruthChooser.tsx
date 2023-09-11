@@ -67,7 +67,7 @@ export function TruthChooser(props: TruthChooserProps) {
               cursor: "pointer",
               borderColor:
                 selectedTruthOptionId === option.$id
-                  ? theme.palette.secondary.light
+                  ? theme.palette.primary.light
                   : undefined,
             })}
           >
@@ -78,7 +78,7 @@ export function TruthChooser(props: TruthChooserProps) {
                   sx={{ float: "right", width: 24, height: 24 }}
                 >
                   {selectedTruthOptionId === option.$id && (
-                    <CheckIcon color={"secondary"} />
+                    <CheckIcon color={"primary"} />
                   )}
                 </Box>
                 {option.Description}
@@ -86,7 +86,7 @@ export function TruthChooser(props: TruthChooserProps) {
             </Box>
             <Box
               sx={(theme) => ({
-                backgroundColor: theme.palette.background.default,
+                backgroundColor: theme.palette.background.paperInlay,
                 borderRadius: theme.shape.borderRadius,
                 px: 1,
                 pb: 1,
@@ -113,7 +113,7 @@ export function TruthChooser(props: TruthChooserProps) {
             borderWidth: 2,
             borderColor:
               selectedTruthOptionId === customTruthId
-                ? theme.palette.secondary.light
+                ? theme.palette.primary.light
                 : undefined,
           })}
           variant={"outlined"}
@@ -122,7 +122,7 @@ export function TruthChooser(props: TruthChooserProps) {
             <Box display={"flex"} justifyContent={"space-between"}>
               <Typography variant={"h6"}>Custom Truth</Typography>
               {selectedTruthOptionId === customTruthId && (
-                <CheckIcon color={"secondary"} />
+                <CheckIcon color={"primary"} />
               )}
             </Box>
             <TextField
@@ -146,7 +146,9 @@ export function TruthChooser(props: TruthChooserProps) {
               }
             />
             <Box onClick={() => selectTruthOption(customTruthId)}>
-              <Button variant={"outlined"}>Select</Button>
+              <Button color={"inherit"} variant={"outlined"}>
+                Select
+              </Button>
             </Box>
           </Stack>
         </Card>

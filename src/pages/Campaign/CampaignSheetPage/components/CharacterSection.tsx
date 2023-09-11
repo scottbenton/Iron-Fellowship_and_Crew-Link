@@ -48,7 +48,8 @@ export function CharacterSection(props: CharacterSectionProps) {
         action={
           <div>
             <Button
-              variant={"contained"}
+              color={"inherit"}
+              variant={"outlined"}
               sx={{ ml: 1 }}
               onClick={() => setAddCharacterDialogOpen(true)}
             >
@@ -81,6 +82,7 @@ export function CharacterSection(props: CharacterSectionProps) {
           getUidFromCharacterId(characterId) === uid ? (
             <>
               <Button
+                color={"inherit"}
                 component={Link}
                 to={constructCharacterSheetPath(characterId)}
               >
@@ -105,7 +107,7 @@ export function CharacterSection(props: CharacterSectionProps) {
       />
       <SectionHeading label={"Players"} breakContainer sx={{ mt: 5 }} />
       <Grid container spacing={2} sx={{ mt: 2 }}>
-        {players.map((playerId, index) => (
+        {players.map((playerId) => (
           <Grid item xs={12} sm={6} md={4} key={playerId}>
             <PlayerCard playerId={playerId} />
           </Grid>

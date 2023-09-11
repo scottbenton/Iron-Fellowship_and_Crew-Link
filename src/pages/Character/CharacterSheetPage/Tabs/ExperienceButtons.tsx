@@ -22,10 +22,10 @@ export function ExperienceButtons(props: ExperienceButtonsProps) {
     >
       <ButtonBase
         sx={(theme) => ({
-          backgroundColor: theme.palette.primary.light,
-          color: theme.palette.primary.contrastText,
+          backgroundColor: theme.palette.darkGrey.main,
+          color: theme.palette.darkGrey.contrastText,
           "&:hover": {
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.darkGrey.dark,
           },
         })}
         onClick={() => handleSubtract()}
@@ -42,10 +42,10 @@ export function ExperienceButtons(props: ExperienceButtonsProps) {
       </Typography>
       <ButtonBase
         sx={(theme) => ({
-          backgroundColor: theme.palette.primary.light,
-          color: theme.palette.primary.contrastText,
+          backgroundColor: theme.palette.darkGrey.main,
+          color: theme.palette.darkGrey.contrastText,
           "&:hover": {
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.darkGrey.dark,
           },
         })}
         onClick={() => handleAdd()}

@@ -29,14 +29,14 @@ export function TrackProgressRollSnackbar(
       sx={(theme) => ({
         px: 2,
         py: 1,
-        backgroundColor: theme.palette.primary.dark,
-        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.darkGrey.dark,
+        color: theme.palette.darkGrey.contrastText,
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
         mt: 1,
       })}
-      component={clearRoll ? ButtonBase : 'div'}
+      component={clearRoll ? ButtonBase : "div"}
       onClick={clearRoll ? () => clearRoll() : undefined}
     >
       <Typography

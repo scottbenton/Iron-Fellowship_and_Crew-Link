@@ -76,7 +76,10 @@ export function WorldSection() {
             >
               <Typography variant={"h6"}>{world.name}</Typography>
               {!campaignId && (
-                <Button onClick={() => updateCharacterWorld(undefined)}>
+                <Button
+                  color={"inherit"}
+                  onClick={() => updateCharacterWorld(undefined)}
+                >
                   Remove World
                 </Button>
               )}

@@ -21,8 +21,11 @@ export function OracleCategory(props: OracleCategoryProps) {
       <List disablePadding>
         <ListSubheader
           sx={(theme) => ({
-            backgroundColor: theme.palette.primary.light,
-            color: "white",
+            backgroundColor:
+              theme.palette.darkGrey[
+                theme.palette.mode === "light" ? "light" : "dark"
+              ],
+            color: theme.palette.darkGrey.contrastText,
             ...theme.typography.body1,
             fontFamily: theme.fontFamilyTitle,
           })}

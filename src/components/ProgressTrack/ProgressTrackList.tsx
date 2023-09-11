@@ -75,7 +75,10 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
         label={`${typeLabel}s`}
         action={
           handleAdd && (
-            <Button onClick={() => setAddTrackDialogOpen(true)}>
+            <Button
+              color={"inherit"}
+              onClick={() => setAddTrackDialogOpen(true)}
+            >
               Add {typeLabel}
             </Button>
           )

@@ -83,8 +83,8 @@ export function StatInput(props: StatInputProps) {
         htmlFor={label}
         sx={(theme) => ({
           fontFamily: theme.fontFamilyTitle,
-          color: theme.palette.grey[600],
-          backgroundColor: theme.palette.grey[100],
+          color: theme.palette.text.secondary,
+          backgroundColor: theme.palette.background.paperInlay,
         })}
       >
         {label}
@@ -92,7 +92,7 @@ export function StatInput(props: StatInputProps) {
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
         {allowAnyNumber ? (
           <TextField
-            color={"secondary"}
+            color={"primary"}
             id={label}
             variant={"outlined"}
             value={value ?? ""}
@@ -104,7 +104,7 @@ export function StatInput(props: StatInputProps) {
           <TextField
             id={label}
             select
-            color={"secondary"}
+            color={"primary"}
             variant={"outlined"}
             value={value ?? -1}
             onChange={(evt) => handleSelectChange(evt.target.value)}

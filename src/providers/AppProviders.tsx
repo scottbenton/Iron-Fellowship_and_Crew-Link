@@ -11,7 +11,9 @@ export function AppProviders(props: PropsWithChildren) {
   return (
     <AnalyticsProvider>
       <ThemeProvider>
-        <ConfirmProvider>
+        <ConfirmProvider
+          defaultOptions={{ cancellationButtonProps: { color: "inherit" } }}
+        >
           <SnackbarProvider>
             <DieRollProvider>
               <LinkedDialogProvider>

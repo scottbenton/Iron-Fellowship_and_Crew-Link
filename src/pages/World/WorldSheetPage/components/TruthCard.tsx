@@ -49,6 +49,7 @@ export function TruthCard(props: TruthCardProps) {
             <Typography variant={"h6"}>{truth?.Title.Standard}</Typography>
             {canEdit && (
               <Link
+                color={"inherit"}
                 component={"button"}
                 onClick={() => setEditDialogOpen(true)}
               >
@@ -65,7 +66,7 @@ export function TruthCard(props: TruthCardProps) {
               pb: 1,
               m: -1,
               mt: 1,
-              backgroundColor: theme.palette.background.default,
+              backgroundColor: theme.palette.background.paperInlay,
             })}
           >
             <Typography variant={"overline"}>Quest Starter:</Typography>
