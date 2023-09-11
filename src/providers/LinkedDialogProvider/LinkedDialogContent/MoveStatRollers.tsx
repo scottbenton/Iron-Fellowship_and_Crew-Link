@@ -19,6 +19,7 @@ export function MoveStatRollers(props: MoveStatsProps) {
     (store) => store.characters.currentCharacter.updateCurrentCharacter
   );
 
+  console.debug(visibleStats);
   if (!stats) return null;
 
   return (
@@ -89,7 +90,8 @@ export function MoveStatRollers(props: MoveStatsProps) {
           />
         ))}
 
-      {Object.keys(visibleStats).length > 0 && (
+      {Object.keys(visibleStats).filter((statKey) => statKey !== "vow progress")
+        .length > 0 && (
         <StatComponent
           label={`Adds`}
           value={adds ?? 0}

@@ -24,7 +24,7 @@ export function UserAvatar(props: UserAvatarProps) {
     <Avatar
       src={user?.photoURL ?? undefined}
       sx={(theme) => ({
-        bgcolor: theme.palette.darkGrey.main,
+        bgcolor: theme.palette.darkGrey.dark,
         color: theme.palette.darkGrey.contrastText,
       })}
     >

@@ -74,7 +74,10 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           </Box>
         ),
         thead: ({ children }) => (
-          <Box component={"thead"} bgcolor={(theme) => theme.palette.grey[200]}>
+          <Box
+            component={"thead"}
+            bgcolor={(theme) => theme.palette.background.paperInlayDarker}
+          >
             {children}
           </Box>
         ),
@@ -94,7 +97,7 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
             component={"tr"}
             sx={(theme) => ({
               "&:nth-of-type(even)": {
-                backgroundColor: theme.palette.grey[100],
+                backgroundColor: theme.palette.background.paperInlay,
               },
             })}
           >
@@ -107,7 +110,7 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
             px={1}
             py={0.5}
             variant={"body2"}
-            color={(theme) => theme.palette.grey[700]}
+            color={(theme) => theme.palette.text.primary}
           >
             {children}
           </Typography>

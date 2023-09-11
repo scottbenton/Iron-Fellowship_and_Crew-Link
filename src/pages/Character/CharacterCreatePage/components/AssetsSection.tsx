@@ -107,6 +107,7 @@ export function AssetsSection() {
               ))}
             </Grid>
             <Button
+              color={"inherit"}
               variant={"outlined"}
               onClick={() => setIsAddAssetDialogOpen(true)}
               sx={{ mt: 1 }}
