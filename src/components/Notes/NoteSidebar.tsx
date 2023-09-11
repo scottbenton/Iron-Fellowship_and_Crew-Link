@@ -58,7 +58,6 @@ export function NoteSidebar(props: NoteSidebarProps) {
       return;
     }
 
-    const length = notes.length;
     let noteBefore: Note | undefined;
     let noteAfter: Note | undefined;
 
@@ -92,7 +91,7 @@ export function NoteSidebar(props: NoteSidebarProps) {
   return (
     <Box
       sx={(theme) => ({
-        bgcolor: theme.palette.grey[100],
+        bgcolor: theme.palette.background.paperInlay,
       })}
       width={isMobile ? "100%" : "33%"}
       maxWidth={isMobile ? undefined : "250px"}
@@ -157,8 +156,13 @@ export function NoteSidebar(props: NoteSidebarProps) {
         </StrictModeDroppable>
       </DragDropContext>
       {createNote && (
-        <Box bgcolor={(theme) => theme.palette.grey[300]}>
+        <Box
+          bgcolor={(theme) =>
+            theme.palette.grey[theme.palette.mode == "light" ? 300 : 700]
+          }
+        >
           <Button
+            color={"inherit"}
             onClick={() => handleCreateNote()}
             disabled={loading}
             sx={(theme) => ({

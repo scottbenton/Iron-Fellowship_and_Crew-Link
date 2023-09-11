@@ -50,6 +50,7 @@ export function HeaderMenu() {
       >
         <MenuItem
           onClick={() => {
+            setMenuOpen(false);
             toggleTheme();
           }}
         >

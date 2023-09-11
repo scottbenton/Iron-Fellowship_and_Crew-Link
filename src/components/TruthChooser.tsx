@@ -146,7 +146,9 @@ export function TruthChooser(props: TruthChooserProps) {
               }
             />
             <Box onClick={() => selectTruthOption(customTruthId)}>
-              <Button variant={"outlined"}>Select</Button>
+              <Button color={"inherit"} variant={"outlined"}>
+                Select
+              </Button>
             </Box>
           </Stack>
         </Card>

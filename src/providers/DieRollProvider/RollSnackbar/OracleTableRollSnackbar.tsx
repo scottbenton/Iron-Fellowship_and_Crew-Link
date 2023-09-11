@@ -25,8 +25,8 @@ export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
       sx={(theme) => ({
         px: 2,
         py: 1,
-        backgroundColor: theme.palette.primary.dark,
-        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.darkGrey.dark,
+        color: theme.palette.darkGrey.contrastText,
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
@@ -67,9 +67,7 @@ export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
                 <D10Icon />
                 <D10Icon />
               </div>
-              <Typography ml={1} color={(theme) => theme.palette.grey[200]}>
-                {roll.roll}
-              </Typography>
+              <Typography ml={1}>{roll.roll}</Typography>
             </Box>
           </Box>
         )}
@@ -78,7 +76,7 @@ export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
             orientation={"vertical"}
             sx={(theme) => ({
               alignSelf: "stretch",
-              borderColor: theme.palette.grey[400],
+              borderColor: theme.palette.grey[200],
               height: "auto",
               mx: 2,
             })}

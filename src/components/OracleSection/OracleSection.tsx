@@ -19,7 +19,7 @@ export function OracleSection() {
         <Button
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
-          color={"primary"}
+          color={"inherit"}
           onClick={() =>
             rollOracleTable(
               "ironsworn/oracles/moves/ask_the_oracle/small_chance",
@@ -33,7 +33,7 @@ export function OracleSection() {
         <Button
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
-          color={"primary"}
+          color={"inherit"}
           onClick={() =>
             rollOracleTable(
               "ironsworn/oracles/moves/ask_the_oracle/unlikely",
@@ -47,7 +47,7 @@ export function OracleSection() {
         <Button
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
-          color={"primary"}
+          color={"inherit"}
           onClick={() =>
             rollOracleTable(
               "ironsworn/oracles/moves/ask_the_oracle/50_50",
@@ -61,7 +61,7 @@ export function OracleSection() {
         <Button
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
-          color={"primary"}
+          color={"inherit"}
           onClick={() =>
             rollOracleTable(
               "ironsworn/oracles/moves/ask_the_oracle/likely",
@@ -75,7 +75,7 @@ export function OracleSection() {
         <Button
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
-          color={"primary"}
+          color={"inherit"}
           onClick={() =>
             rollOracleTable(
               "ironsworn/oracles/moves/ask_the_oracle/almost_certain",
@@ -101,10 +101,10 @@ export function OracleSection() {
         onChange={(evt) => setSearch(evt.target.value)}
         color={"primary"}
         sx={(theme) => ({
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: theme.palette.darkGrey.main,
           color: "#fff",
           px: 2,
-          borderBottomColor: theme.palette.primary.light,
+          borderBottomColor: theme.palette.darkGrey.light,
         })}
       />
       {filteredOracles.map((category) => (

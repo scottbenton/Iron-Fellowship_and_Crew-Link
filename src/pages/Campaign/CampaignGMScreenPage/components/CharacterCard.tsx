@@ -67,7 +67,7 @@ export function CharacterCard(props: CharacterCardProps) {
             >
               {character.name}
             </Typography>
-            <Typography variant={"subtitle1"} mt={-1} color={"GrayText"}>
+            <Typography variant={"subtitle1"} mt={-1} color={"textSecondary"}>
               {user ? user.displayName : "Loading..."}
             </Typography>
           </Box>

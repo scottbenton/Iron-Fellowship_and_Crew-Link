@@ -20,7 +20,17 @@ export function UserAvatar(props: UserAvatarProps) {
       <Avatar />
     </Skeleton>;
   }
-  return <Avatar src={user?.photoURL ?? undefined}>{initials}</Avatar>;
+  return (
+    <Avatar
+      src={user?.photoURL ?? undefined}
+      sx={(theme) => ({
+        bgcolor: theme.palette.darkGrey.main,
+        color: theme.palette.darkGrey.contrastText,
+      })}
+    >
+      {initials}
+    </Avatar>
+  );
 }
 
 const getInitials = (name: string) => {

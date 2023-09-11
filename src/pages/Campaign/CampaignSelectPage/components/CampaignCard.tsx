@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useStore } from "stores/store";
 import { StoredCampaign } from "types/Campaign.type";
+import OpenIcon from "@mui/icons-material/ChevronRight";
 
 export interface CampaignCard {
   campaign: StoredCampaign;
@@ -35,18 +36,26 @@ export function CampaignCard(props: CampaignCard) {
   });
 
   return (
-    <Card elevation={2}>
+    <Card elevation={2} sx={{ height: "100%" }}>
       <CardActionArea
         component={Link}
         to={constructCampaignSheetPath(campaignId, CAMPAIGN_ROUTES.SHEET)}
-        sx={{ p: 2 }}
+        sx={{ p: 2, height: "100%", display: "flex", alignItems: "flex-start" }}
       >
-        <Box>
+        <Box flexGrow={1}>
           <Typography variant={"h6"}>{campaign.name}</Typography>
           <Typography color={"textSecondary"}>
             {(!campaign.gmIds || campaign.gmIds.length === 0) && "No GM Found"}
             {gmNameString}
           </Typography>
+        </Box>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"flex-end"}
+          alignSelf={"stretch"}
+        >
+          <OpenIcon />
         </Box>
       </CardActionArea>
     </Card>

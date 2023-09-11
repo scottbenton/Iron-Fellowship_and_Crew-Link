@@ -159,7 +159,7 @@ export const darkTheme = createTheme({
     background: {
       paper: "#27272a",
       paperInlay: "#18181b",
-      paperInlayDarker: "#18181b",
+      paperInlayDarker: "#09090b",
       default: "#09090b",
     },
     grey: {

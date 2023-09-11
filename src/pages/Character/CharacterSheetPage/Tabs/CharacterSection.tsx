@@ -320,6 +320,7 @@ export function CharacterSection() {
         alignItems={"flex-start"}
       >
         <Button
+          color={"inherit"}
           variant={"outlined"}
           onClick={() => setPortraitDialogOpen(true)}
         >

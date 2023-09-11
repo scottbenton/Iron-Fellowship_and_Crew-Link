@@ -38,7 +38,10 @@ export interface CustomOracleDialogProps {
   onClose: () => void;
 
   createCustomOracle: (move: StoredOracle) => Promise<boolean | void>;
-  updateCustomOracle: (moveId: string, move: StoredOracle) => Promise<boolean | void>;
+  updateCustomOracle: (
+    moveId: string,
+    move: StoredOracle
+  ) => Promise<boolean | void>;
   oracle?: StoredOracle;
 }
 
@@ -256,7 +259,10 @@ export function CustomOracleDialog(props: CustomOracleDialogProps) {
                                 </Typography>
                               </TableCell>
                               <TableCell>
-                                <Button onClick={() => push({})}>
+                                <Button
+                                  color={"inherit"}
+                                  onClick={() => push({})}
+                                >
                                   Add Row
                                 </Button>
                               </TableCell>
@@ -279,6 +285,7 @@ export function CustomOracleDialog(props: CustomOracleDialogProps) {
             <DialogActions>
               <Button
                 type={"button"}
+                color={"inherit"}
                 onClick={() => {
                   form.resetForm();
                   handleCancel();

@@ -50,7 +50,11 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
         {oracle.Description && (
           <MarkdownRenderer markdown={oracle.Description} />
         )}
-        <Button variant={"outlined"} onClick={() => rollOracleTable(id)}>
+        <Button
+          variant={"outlined"}
+          color={"inherit"}
+          onClick={() => rollOracleTable(id)}
+        >
           Roll on the Table
         </Button>
         <Box
@@ -62,7 +66,10 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
           sx={{ borderCollapse: "collapse" }}
           width={"100%"}
         >
-          <Box component={"thead"} bgcolor={(theme) => theme.palette.grey[200]}>
+          <Box
+            component={"thead"}
+            bgcolor={(theme) => theme.palette.background.paperInlayDarker}
+          >
             <tr>
               <Typography
                 component={"th"}
@@ -95,7 +102,7 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
                   component={"tr"}
                   sx={(theme) => ({
                     "&:nth-of-type(even)": {
-                      backgroundColor: theme.palette.grey[100],
+                      backgroundColor: theme.palette.background.paperInlay,
                     },
                   })}
                 >
@@ -104,7 +111,7 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
                     px={1}
                     py={0.5}
                     variant={"body2"}
-                    color={(theme) => theme.palette.grey[700]}
+                    color={(theme) => theme.palette.text.secondary}
                   >
                     {diff === 0 ? Floor : `${Floor} - ${Ceiling}`}
                   </Typography>
@@ -113,7 +120,7 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
                     px={1}
                     py={0.5}
                     variant={"body2"}
-                    color={(theme) => theme.palette.grey[700]}
+                    color={(theme) => theme.palette.text.primary}
                   >
                     <MarkdownRenderer inheritColor markdown={Result} />
                   </Typography>

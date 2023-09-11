@@ -55,6 +55,7 @@ export function StepButtons() {
       <Button
         disabled={currentStep === 0 || loading}
         onClick={() => handlePrevious()}
+        color={"inherit"}
       >
         Back
       </Button>

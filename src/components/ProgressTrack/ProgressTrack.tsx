@@ -169,6 +169,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
               {label + " "}
               {onEdit && (
                 <Link
+                  color={"inherit"}
                   component={"button"}
                   sx={{ ml: 2 }}
                   onClick={() => onEdit()}
@@ -199,11 +200,11 @@ export function ProgressTrack(props: ProgressTracksProps) {
               )
             }
             sx={(theme) => ({
-              backgroundColor: theme.palette.primary.light,
-              color: theme.palette.primary.contrastText,
+              backgroundColor: theme.palette.darkGrey.main,
+              color: theme.palette.darkGrey.contrastText,
               px: 0.5,
               "&:hover": {
-                backgroundColor: theme.palette.primary.main,
+                backgroundColor: theme.palette.darkGrey.dark,
               },
               borderTopLeftRadius: theme.shape.borderRadius,
               borderBottomLeftRadius: theme.shape.borderRadius,
@@ -214,7 +215,11 @@ export function ProgressTrack(props: ProgressTracksProps) {
         )}
         <Box
           display={"flex"}
-          color={(theme) => theme.palette.grey[600]}
+          color={(theme) =>
+            theme.palette.mode === "light"
+              ? theme.palette.grey[600]
+              : theme.palette.grey[300]
+          }
           borderTop={1}
           borderBottom={1}
           borderColor={(theme) => theme.palette.divider}
@@ -243,11 +248,11 @@ export function ProgressTrack(props: ProgressTracksProps) {
             }
             focusRipple
             sx={(theme) => ({
-              backgroundColor: theme.palette.primary.light,
-              color: theme.palette.primary.contrastText,
+              backgroundColor: theme.palette.darkGrey.main,
+              color: theme.palette.darkGrey.contrastText,
               px: 0.5,
               "&:hover": {
-                backgroundColor: theme.palette.primary.main,
+                backgroundColor: theme.palette.darkGrey.dark,
               },
 
               borderTopRightRadius: theme.shape.borderRadius,
@@ -260,6 +265,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
       </Box>
       {onDelete && (
         <Button
+          color={"inherit"}
           onClick={handleDeleteClick}
           endIcon={<CompleteIcon />}
           variant={"outlined"}
@@ -270,6 +276,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
       )}
       {trackType && (
         <Button
+          color={"inherit"}
           onClick={handleRollClick}
           endIcon={<DieIcon />}
           variant={"outlined"}

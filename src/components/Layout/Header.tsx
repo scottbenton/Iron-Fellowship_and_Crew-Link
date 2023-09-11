@@ -73,43 +73,41 @@ export function Header() {
               <Hidden smDown>
                 <>
                   <Button
+                    color={"inherit"}
                     component={Link}
                     to={basePaths[BASE_ROUTES.CHARACTER]}
+                    endIcon={<CharacterIcon />}
                     sx={{
-                      color: "white",
                       "&:hover": {
-                        backgroundColor: theme.palette.primary.dark,
+                        backgroundColor: "darkGrey.light",
                       },
                     }}
-                    endIcon={<CharacterIcon />}
                   >
                     Characters
                   </Button>
                   <Button
+                    color={"inherit"}
                     component={Link}
                     to={basePaths[BASE_ROUTES.CAMPAIGN]}
+                    endIcon={<CampaignIcon />}
                     sx={{
-                      color: "white",
-                      ml: 1,
                       "&:hover": {
-                        backgroundColor: theme.palette.primary.dark,
+                        backgroundColor: "darkGrey.light",
                       },
                     }}
-                    endIcon={<CampaignIcon />}
                   >
                     Campaigns
                   </Button>
                   <Button
+                    color={"inherit"}
                     component={Link}
                     to={basePaths[BASE_ROUTES.WORLD]}
+                    endIcon={<WorldIcon />}
                     sx={{
-                      color: "white",
-                      ml: 1,
                       "&:hover": {
-                        backgroundColor: theme.palette.primary.dark,
+                        backgroundColor: "darkGrey.light",
                       },
                     }}
-                    endIcon={<WorldIcon />}
                   >
                     Worlds
                   </Button>
@@ -120,7 +118,7 @@ export function Header() {
           ) : (
             <Stack direction={"row"} spacing={1}>
               <Button
-                color={"primary"}
+                color={"inherit"}
                 component={Link}
                 to={basePaths[BASE_ROUTES.LOGIN]}
               >

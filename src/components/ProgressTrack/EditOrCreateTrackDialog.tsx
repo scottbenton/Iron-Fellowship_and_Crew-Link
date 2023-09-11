@@ -129,7 +129,11 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button disabled={loading} onClick={() => handleDialogClose()}>
+          <Button
+            disabled={loading}
+            onClick={() => handleDialogClose()}
+            color={"inherit"}
+          >
             Cancel
           </Button>
           <Button

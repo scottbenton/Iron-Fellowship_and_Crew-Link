@@ -49,6 +49,7 @@ export function TruthCard(props: TruthCardProps) {
             <Typography variant={"h6"}>{truth?.Title.Standard}</Typography>
             {canEdit && (
               <Link
+                color={"inherit"}
                 component={"button"}
                 onClick={() => setEditDialogOpen(true)}
               >

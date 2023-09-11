@@ -70,8 +70,8 @@ export function StatComponent(props: StatComponentProps) {
               ["background-color", "color"],
               { duration: theme.transitions.duration.shorter }
             ),
-            backgroundColor: theme.palette.grey[100],
-            color: theme.palette.grey[600],
+            backgroundColor: theme.palette.background.paperInlay,
+            color: theme.palette.text.secondary,
             fontFamily: theme.fontFamilyTitle,
             py: 0.5,
           },
@@ -80,8 +80,8 @@ export function StatComponent(props: StatComponentProps) {
               ? {}
               : {
                   "&>h6#track-label": {
-                    backgroundColor: theme.palette.grey[300],
-                    color: theme.palette.grey[800],
+                    backgroundColor: theme.palette.background.paperInlayDarker,
+                    color: theme.palette.text.primary,
                   },
                   borderColor: theme.palette.primary.main,
                 },
@@ -111,7 +111,7 @@ export function StatComponent(props: StatComponentProps) {
         <Typography
           sx={[
             (theme) => ({
-              color: theme.palette.grey[700],
+              color: theme.palette.text.primary,
               paddingX: 0,
               flexGrow: 1,
               display: "flex",
@@ -123,12 +123,7 @@ export function StatComponent(props: StatComponentProps) {
           variant={"h6"}
           textAlign={"center"}
         >
-          <Typography
-            component={"span"}
-            variant={"body1"}
-            mr={0.2}
-            color={(theme) => theme.palette.grey[500]}
-          >
+          <Typography component={"span"} variant={"body1"} mr={0.2}>
             {valueWithAdds > 0 ? "+" : ""}
           </Typography>
           {valueWithAdds}

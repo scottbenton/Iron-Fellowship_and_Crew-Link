@@ -73,7 +73,9 @@ export function WorldSection() {
             }}
           >
             <Typography variant={"h6"}>{world.name}</Typography>
-            <Button onClick={() => handleWorldRemove()}>Remove World</Button>
+            <Button color={"inherit"} onClick={() => handleWorldRemove()}>
+              Remove World
+            </Button>
           </Box>
           <WorldSheet canEdit />
         </Container>

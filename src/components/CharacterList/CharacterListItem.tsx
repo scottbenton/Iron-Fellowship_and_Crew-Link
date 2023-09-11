@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren, ReactNode, forwardRef } from "react";
 import { Link } from "react-router-dom";
 import { useStore } from "stores/store";
 import { CharacterDocument } from "types/Character.type";
@@ -21,11 +21,13 @@ export interface CharacterListItemProps {
   raised?: boolean;
 }
 
-function LinkComponent(props: PropsWithChildren<{ href: string }>) {
+const LinkComponent = forwardRef<
+  HTMLAnchorElement,
+  PropsWithChildren<{ href: string }>
+>((props, ref) => {
   const { href, ...rest } = props;
-  console.debug(props);
-  return <Link to={href} {...rest} />;
-}
+  return <Link ref={ref} to={href} {...rest} />;
+});
 
 export function CharacterListItem(props: CharacterListItemProps) {
   const {
@@ -46,12 +48,23 @@ export function CharacterListItem(props: CharacterListItemProps) {
 
   const Wrapper = ({ children }: PropsWithChildren) =>
     !href ? (
-      <Box display={"flex"} alignItems={"flex-start"} p={2}>
+      <Box display={"flex"} alignItems={"flex-start"} p={2} height={"100%"}>
         {children}
       </Box>
     ) : (
-      <CardActionArea href={href} LinkComponent={LinkComponent}>
-        <Box sx={{ display: "flex", alignItems: "flex-start", p: 2 }}>
+      <CardActionArea
+        href={href}
+        LinkComponent={LinkComponent}
+        sx={{ height: "100%" }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            p: 2,
+            height: "100%",
+          }}
+        >
           {children}
         </Box>
       </CardActionArea>
@@ -77,7 +90,13 @@ export function CharacterListItem(props: CharacterListItemProps) {
           size={"medium"}
           colorful
         />
-        <Box display={"flex"} flexDirection={"column"} ml={2} pt={1}>
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          ml={2}
+          pt={1}
+          flexGrow={1}
+        >
           <Typography variant={"h6"} lineHeight={1.25}>
             {name}
           </Typography>
@@ -106,7 +125,6 @@ export function CharacterListItem(props: CharacterListItemProps) {
         </Box>
         {href && (
           <Box
-            flexGrow={1}
             display={"flex"}
             alignItems={"center"}
             justifyContent={"flex-end"}

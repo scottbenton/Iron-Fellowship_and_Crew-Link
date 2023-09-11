@@ -1,11 +1,4 @@
-import {
-  Box,
-  ButtonBase,
-  Card,
-  Divider,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, ButtonBase, Card, Divider, Typography } from "@mui/material";
 import { ROLL_RESULT, StatRoll } from "types/DieRolls.type";
 import { D6Icon } from "assets/D6Icon";
 import { D10Icon } from "assets/D10Icon";
@@ -29,15 +22,14 @@ export interface StatRollSnackbarProps {
 
 export function StatRollSnackbar(props: StatRollSnackbarProps) {
   const { roll, clearRoll, expanded } = props;
-  const theme = useTheme();
 
   return (
     <Card
       sx={(theme) => ({
         px: 2,
         py: 1,
-        backgroundColor: theme.palette.primary.dark,
-        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.darkGrey.dark,
+        color: theme.palette.darkGrey.contrastText,
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",

@@ -52,7 +52,11 @@ export function CreateCampaignDialog(props: CreateCampaignDialogProps) {
         />
       </DialogContent>
       <DialogActions>
-        <Button disabled={loading} onClick={() => handleClose()}>
+        <Button
+          color={"inherit"}
+          disabled={loading}
+          onClick={() => handleClose()}
+        >
           Cancel
         </Button>
         <LoadingButton
