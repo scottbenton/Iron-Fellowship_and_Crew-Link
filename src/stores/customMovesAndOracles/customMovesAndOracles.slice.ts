@@ -15,6 +15,7 @@ import { addCustomOracle } from "api-calls/user/custom-oracles/addCustomOracle";
 import { updateCustomOracle } from "api-calls/user/custom-oracles/updateCustomOracle";
 import { removeCustomOracle } from "api-calls/user/custom-oracles/removeCustomOracle";
 import { updatePinnedOracle } from "api-calls/custom-move-oracle-settings/settings/updatePinnedOracle";
+import { updateSettings } from "api-calls/custom-move-oracle-settings/updateSettings";
 
 export const createCustomMovesAndOraclesSlice: CreateSliceType<
   CustomMovesAndOraclesSlice
@@ -71,6 +72,10 @@ export const createCustomMovesAndOraclesSlice: CreateSliceType<
               settings.hiddenCustomMoveIds;
             store.customMovesAndOracles.hiddenCustomOracleIds =
               settings.hiddenCustomOraclesIds;
+            store.customMovesAndOracles.delve = {
+              showDelveMoves: !settings.hideDelveMoves,
+              showDelveOracles: !settings.hideDelveOracles,
+            };
           });
         },
         (error) => {
@@ -153,6 +158,19 @@ export const createCustomMovesAndOraclesSlice: CreateSliceType<
     const uid = getState().auth.uid;
 
     return updatePinnedOracle({ uid, oracleId, pinned });
+  },
+
+  updateSettings: (settings) => {
+    const state = getState();
+
+    const campaignId = state.campaigns.currentCampaign.currentCampaignId;
+    const characterId = state.characters.currentCharacter.currentCharacterId;
+
+    return updateSettings({
+      campaignId,
+      characterId,
+      settings,
+    });
   },
 
   resetStore: () => {

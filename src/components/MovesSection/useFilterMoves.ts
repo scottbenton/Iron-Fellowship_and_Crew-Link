@@ -3,6 +3,7 @@ import { useSearch } from "hooks/useSearch";
 import { orderedCategories, orderedDelveCategories } from "data/moves";
 import { Move, MoveCategory } from "dataforged";
 import { useCustomMoves } from "./useCustomMoves";
+import { useStore } from "stores/store";
 
 const categories = [...orderedCategories, ...orderedDelveCategories];
 
@@ -11,10 +12,17 @@ export function useFilterMoves() {
   const [filteredMoves, setFilteredMoves] = useState(categories);
   const { customMoveCategories } = useCustomMoves();
 
+  const showDelveMoves = useStore(
+    (store) => store.customMovesAndOracles.delve.showDelveMoves
+  );
+
   useEffect(() => {
     const results: MoveCategory[] = [];
 
-    let allCategories = [...categories, ...customMoveCategories];
+    let allCategories = [...categories, ...customMoveCategories].filter(
+      (category) =>
+        showDelveMoves || category.Source.Title !== "Ironsworn: Delve"
+    );
 
     allCategories.forEach((category) => {
       if (
@@ -47,7 +55,7 @@ export function useFilterMoves() {
     });
 
     setFilteredMoves(results);
-  }, [debouncedSearch, customMoveCategories]);
+  }, [debouncedSearch, customMoveCategories, showDelveMoves]);
 
   return { setSearch, filteredMoves };
 }

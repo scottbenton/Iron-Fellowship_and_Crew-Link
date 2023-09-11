@@ -1,6 +1,7 @@
 import { Unsubscribe } from "firebase/firestore";
 import { StoredMove } from "types/Moves.type";
 import { StoredOracle } from "types/Oracles.type";
+import { SettingsDoc } from "types/Settings.type";
 
 export interface CustomMovesAndOraclesSliceData {
   customMoves: {
@@ -8,6 +9,10 @@ export interface CustomMovesAndOraclesSliceData {
   };
   customOracles: {
     [uid: string]: StoredOracle[];
+  };
+  delve: {
+    showDelveMoves: boolean;
+    showDelveOracles: boolean;
   };
 
   hiddenCustomMoveIds: string[];
@@ -43,6 +48,8 @@ export interface CustomMovesAndOraclesSliceActions {
   removeCustomOracle: (oracleId: string) => Promise<void>;
 
   togglePinnedOracle: (oracleId: string, pinned: boolean) => Promise<void>;
+
+  updateSettings: (settings: Partial<SettingsDoc>) => Promise<void>;
 
   resetStore: () => void;
 }

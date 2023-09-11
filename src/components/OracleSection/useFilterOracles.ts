@@ -14,6 +14,10 @@ export function useFilterOracles() {
     (store) => store.customMovesAndOracles.pinnedOraclesIds
   );
 
+  const showDelveOracles = useStore(
+    (store) => store.customMovesAndOracles.delve.showDelveOracles
+  );
+
   const combinedOracles = useMemo(() => {
     const pinnedOracleIds = Object.keys(pinnedOracles);
 
@@ -57,7 +61,10 @@ export function useFilterOracles() {
   const [filteredOracles, setFilteredOracles] = useState(combinedOracles);
 
   useEffect(() => {
-    let allOracles = [...combinedOracles, ...customOracleCategories];
+    let allOracles = [...combinedOracles, ...customOracleCategories].filter(
+      (category) =>
+        showDelveOracles || category.Source.Title !== "Ironsworn: Delve"
+    );
 
     const results: OracleSet[] = [];
 
@@ -90,7 +97,12 @@ export function useFilterOracles() {
       }
     });
     setFilteredOracles(results);
-  }, [debouncedSearch, combinedOracles, customOracleCategories]);
+  }, [
+    debouncedSearch,
+    combinedOracles,
+    customOracleCategories,
+    showDelveOracles,
+  ]);
 
   return { search, setSearch, filteredOracles };
 }

@@ -16,6 +16,7 @@
   - Users can now choose to enter in custom stat values instead of being limited to the standard array
   - Adding assets during character creation is now optional
   - Assets can now be modified during character creation (ex: Giving a companion a name)
+- Added ability to filter out Ironsworn Delve moves and oracles.
 
 ### Bug Fixes
 
