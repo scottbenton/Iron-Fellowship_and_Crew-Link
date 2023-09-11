@@ -126,7 +126,10 @@ export function WorldSheetPage() {
               flexGrow: 1,
             })}
           >
-            <LocationsSection showHiddenTag />
+            <LocationsSection
+              showHiddenTag
+              openNPCTab={() => setSelectedTab(TABS.NPCS)}
+            />
           </BreakContainer>
         )}
         {selectedTab === TABS.NPCS && (
