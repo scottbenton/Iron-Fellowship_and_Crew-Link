@@ -19,6 +19,7 @@ import { ImageUploader } from "components/ImageUploader/ImageUploader";
 import { useStore } from "stores/store";
 import { useListenToCurrentLocation } from "stores/world/currentWorld/locations/useListenToCurrentLocation";
 import { BondsSection } from "components/BondsSection";
+import { LocationNPCs } from "./LocationNPCs";
 
 export interface OpenLocationProps {
   isWorldOwner: boolean;
@@ -28,6 +29,8 @@ export interface OpenLocationProps {
   closeLocation: () => void;
   canShowImages?: boolean;
   isSinglePlayer?: boolean;
+  showHiddenTag?: boolean;
+  openNPCTab: () => void;
 }
 
 export function OpenLocation(props: OpenLocationProps) {
@@ -39,6 +42,8 @@ export function OpenLocation(props: OpenLocationProps) {
     closeLocation,
     canShowImages,
     isSinglePlayer,
+    showHiddenTag,
+    openNPCTab,
   } = props;
 
   useListenToCurrentLocation(locationId);
@@ -327,6 +332,12 @@ export function OpenLocation(props: OpenLocationProps) {
               </Grid>
             </>
           )}
+          <LocationNPCs
+            locationId={locationId}
+            canUseImages={canShowImages ?? false}
+            showHiddenTag={showHiddenTag}
+            openNPCTab={openNPCTab}
+          />
         </Grid>
       </Box>
     </Box>

@@ -24,10 +24,11 @@ import { useState } from "react";
 export interface LocationsSectionProps {
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
+  openNPCTab: () => void;
 }
 
 export function LocationsSection(props: LocationsSectionProps) {
-  const { isSinglePlayer, showHiddenTag } = props;
+  const { isSinglePlayer, showHiddenTag, openNPCTab } = props;
 
   const isWorldOwner = useStore(
     (store) =>
@@ -127,6 +128,8 @@ export function LocationsSection(props: LocationsSectionProps) {
           closeLocation={() => setOpenLocationId(undefined)}
           canShowImages={canShowImages}
           isSinglePlayer={isSinglePlayer}
+          showHiddenTag={showHiddenTag}
+          openNPCTab={openNPCTab}
         />
       </Box>
     );

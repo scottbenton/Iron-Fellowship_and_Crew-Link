@@ -124,6 +124,7 @@ export function TabsSection() {
         <LocationsSection
           isSinglePlayer={!isInCampaign}
           showHiddenTag={isWorldOwner && isInCampaign}
+          openNPCTab={() => setSelectedTab(TABS.NPCS)}
         />
       </ContainedTabPanel>
       <ContainedTabPanel
