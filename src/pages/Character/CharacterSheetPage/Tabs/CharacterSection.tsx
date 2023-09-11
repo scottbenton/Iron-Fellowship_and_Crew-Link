@@ -134,6 +134,16 @@ export function CharacterSection() {
       .catch(() => {});
   };
 
+  const shouldShowDelveMoves = useStore(
+    (store) => store.customMovesAndOracles.delve.showDelveMoves
+  );
+  const shouldShowDelveOracles = useStore(
+    (store) => store.customMovesAndOracles.delve.showDelveOracles
+  );
+  const updateSettings = useStore(
+    (store) => store.customMovesAndOracles.updateSettings
+  );
+
   return (
     <Stack spacing={2} pb={2}>
       <SectionHeading label={"Debilities"} />
@@ -346,36 +356,47 @@ export function CharacterSection() {
           Delete Character
         </Button>
       </Box>
-
-      {/* {campaignId && (
-        <Box px={2}>
+      {!campaignId && (
+        <>
+          <CustomMovesSection
+            customMoves={customMoves}
+            hiddenMoveIds={hiddenMoveIds}
+            showOrHideCustomMove={showOrHideCustomMove}
+          />
           <FormControlLabel
             control={
               <Checkbox
-                checked={sharingNotes ?? false}
-                onChange={(evt, checked) =>
-                  updateShareNotesWithGMSetting(checked).catch(() => {})
-                }
-                name="Share Notes with GM"
+                checked={shouldShowDelveMoves}
+                onChange={(evt, value) => {
+                  updateSettings({ hideDelveMoves: !value }).catch(() => {});
+                }}
               />
             }
-            label="Share notes with your GM?"
+            label={"Show Delve Moves?"}
+            sx={{ px: 2 }}
           />
-        </Box>
-      )} */}
-      {!campaignId && (
-        <CustomMovesSection
-          customMoves={customMoves}
-          hiddenMoveIds={hiddenMoveIds}
-          showOrHideCustomMove={showOrHideCustomMove}
-        />
+        </>
       )}
       {!campaignId && (
-        <CustomOracleSection
-          customOracles={customOracles}
-          hiddenOracleIds={hiddenOracleIds}
-          showOrHideCustomOracle={showOrHideCustomOracle}
-        />
+        <>
+          <CustomOracleSection
+            customOracles={customOracles}
+            hiddenOracleIds={hiddenOracleIds}
+            showOrHideCustomOracle={showOrHideCustomOracle}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={shouldShowDelveOracles}
+                onChange={(evt, value) => {
+                  updateSettings({ hideDelveOracles: !value }).catch(() => {});
+                }}
+              />
+            }
+            label={"Show Delve Oracles?"}
+            sx={{ px: 2 }}
+          />
+        </>
       )}
       <SectionHeading label={"Misc"} />
       <Box px={2}>

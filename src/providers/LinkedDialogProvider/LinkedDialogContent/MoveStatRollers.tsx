@@ -19,7 +19,6 @@ export function MoveStatRollers(props: MoveStatsProps) {
     (store) => store.characters.currentCharacter.updateCurrentCharacter
   );
 
-  console.debug(visibleStats);
   if (!stats) return null;
 
   return (
