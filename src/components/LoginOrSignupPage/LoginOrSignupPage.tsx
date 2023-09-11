@@ -76,7 +76,7 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
                   alignItems: "center",
                   justifyContent: "center",
                   p: 0.5,
-                  bgcolor: theme.palette.secondary.main,
+                  bgcolor: theme.palette.primary.main,
                   color: theme.palette.common.white,
                 })}
               >

@@ -48,7 +48,7 @@ export function CharacterSelectPage() {
   };
 
   if (isLoading) {
-    return <LinearProgress color={"secondary"} />;
+    return <LinearProgress color={"primary"} />;
   }
 
   return (
@@ -65,7 +65,7 @@ export function CharacterSelectPage() {
               component={Link}
               to={constructCharacterPath(CHARACTER_ROUTES.CREATE)}
               variant={"contained"}
-              color={"secondary"}
+              color={"primary"}
               endIcon={<AddCharacterIcon />}
             >
               Create a Character
@@ -102,23 +102,7 @@ export function CharacterSelectPage() {
           <>
             <CharacterList
               characters={characters}
-              actions={(characterId) => (
-                <>
-                  <Button
-                    color={"primary"}
-                    component={Link}
-                    to={constructCharacterSheetPath(characterId)}
-                  >
-                    View
-                  </Button>
-                  <Button
-                    color={"error"}
-                    onClick={() => handleDeleteCharacter(characterId)}
-                  >
-                    Delete
-                  </Button>
-                </>
-              )}
+              linkToCharacterSheet
               raised
             />
             <Hidden smUp>
@@ -128,7 +112,7 @@ export function CharacterSelectPage() {
               <Fab
                 component={Link}
                 to={constructCharacterPath(CHARACTER_ROUTES.CREATE)}
-                color={"secondary"}
+                color={"primary"}
                 sx={(theme) => ({
                   position: "fixed",
                   bottom: theme.spacing(9),

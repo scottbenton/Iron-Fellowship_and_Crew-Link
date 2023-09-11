@@ -39,7 +39,7 @@ export function CampaignSelectPage() {
     useState<boolean>(false);
 
   if (loading) {
-    return <LinearProgress color={"secondary"} />;
+    return <LinearProgress color={"primary"} />;
   }
 
   return (
@@ -56,7 +56,7 @@ export function CampaignSelectPage() {
           <Hidden smDown>
             <Button
               onClick={() => setCreateCampaignDialogOpen(true)}
-              color={"secondary"}
+              color={"primary"}
               variant={"contained"}
               endIcon={<CreateCampaignIcon />}
             >
@@ -109,7 +109,7 @@ export function CampaignSelectPage() {
       <Hidden smUp>
         <Fab
           onClick={() => setCreateCampaignDialogOpen(true)}
-          color={"secondary"}
+          color={"primary"}
           sx={(theme) => ({
             position: "fixed",
             bottom: theme.spacing(9),

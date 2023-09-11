@@ -121,6 +121,7 @@ export function AssetsSection() {
             imageSrc={"/assets/nature.svg"}
             callToAction={
               <Button
+                color={"inherit"}
                 variant={"outlined"}
                 onClick={() => setIsAddAssetDialogOpen(true)}
               >

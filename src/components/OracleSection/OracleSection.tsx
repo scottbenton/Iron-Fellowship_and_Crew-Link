@@ -99,7 +99,7 @@ export function OracleSection() {
         placeholder={"Filter Oracles"}
         value={search}
         onChange={(evt) => setSearch(evt.target.value)}
-        color={"secondary"}
+        color={"primary"}
         sx={(theme) => ({
           backgroundColor: theme.palette.primary.main,
           color: "#fff",

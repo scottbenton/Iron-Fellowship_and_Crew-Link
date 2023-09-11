@@ -68,7 +68,7 @@ export function WorldSelectPage() {
               component={Link}
               to={constructWorldPath(WORLD_ROUTES.CREATE)}
               variant={"contained"}
-              color={"secondary"}
+              color={"primary"}
               endIcon={<AddWorldIcon />}
             >
               Create a World
@@ -112,7 +112,7 @@ export function WorldSelectPage() {
           <Fab
             component={Link}
             to={constructWorldPath(WORLD_ROUTES.CREATE)}
-            color={"secondary"}
+            color={"primary"}
             sx={(theme) => ({
               position: "fixed",
               bottom: theme.spacing(9),

@@ -83,7 +83,7 @@ export function StatComponent(props: StatComponentProps) {
                     backgroundColor: theme.palette.grey[300],
                     color: theme.palette.grey[800],
                   },
-                  borderColor: theme.palette.secondary.main,
+                  borderColor: theme.palette.primary.main,
                 },
         }),
 
@@ -135,7 +135,7 @@ export function StatComponent(props: StatComponentProps) {
         </Typography>
       ) : (
         <TextField
-          color={"secondary"}
+          color={"primary"}
           id={label}
           variant={"outlined"}
           value={inputValue}

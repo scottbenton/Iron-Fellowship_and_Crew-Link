@@ -89,6 +89,7 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
                         readOnly
                         actions={
                           <Button
+                            color={"inherit"}
                             onClick={() => onAssetSelect(asset)}
                             disabled={loading}
                           >
@@ -110,8 +111,8 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
       </DialogContent>
       <DialogActions
         sx={(theme) => ({
-          backgroundColor: theme.palette.primary.main,
-          color: "white",
+          backgroundColor: theme.palette.darkGrey.main,
+          color: theme.palette.darkGrey.contrastText,
         })}
       >
         <Button

@@ -53,8 +53,16 @@ export function Track(props: TrackProps) {
     <Box sx={sx} display={"flex"} overflow={"auto"}>
       {label && (
         <Box
-          bgcolor={(theme) => theme.palette.primary.light}
-          color={(theme) => theme.palette.primary.contrastText}
+          bgcolor={(theme) =>
+            theme.palette.mode === "light"
+              ? theme.palette.darkGrey.light
+              : theme.palette.grey[400]
+          }
+          color={(theme) =>
+            theme.palette.mode === "light"
+              ? theme.palette.darkGrey.contrastText
+              : theme.palette.grey[800]
+          }
           px={0.5}
           display={"flex"}
           justifyContent={"center"}

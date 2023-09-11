@@ -147,7 +147,7 @@ export function CharacterCreatePage() {
                     sx={{ maxWidth: 350, ml: 2 }}
                     fullWidth
                     variant={"filled"}
-                    color={"secondary"}
+                    color={"primary"}
                   />
                 </div>
               </Box>

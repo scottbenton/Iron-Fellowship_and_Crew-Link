@@ -1,4 +1,4 @@
-import { Box, Link, Typography } from "@mui/material";
+import { Box, Link, Typography, useTheme } from "@mui/material";
 import { useLinkedDialog } from "providers/LinkedDialogProvider";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -14,6 +14,7 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
   const { inlineParagraph, markdown, inheritColor, disableLinks } = props;
 
   const { openDialog } = useLinkedDialog();
+  const theme = useTheme();
 
   return (
     <ReactMarkdown
@@ -124,8 +125,13 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
               return (
                 <Link
                   component={"button"}
-                  sx={{ cursor: "pointer", verticalAlign: "baseline" }}
-                  color={"info.dark"}
+                  sx={{
+                    cursor: "pointer",
+                    verticalAlign: "baseline",
+                  }}
+                  color={
+                    theme.palette.mode === "light" ? "info.dark" : "info.light"
+                  }
                   onClick={() => openDialog(href)}
                 >
                   {props.children}

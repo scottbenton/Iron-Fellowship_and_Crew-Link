@@ -51,17 +51,17 @@ export function Footer() {
     <Hidden smUp>
       <BottomNavigation
         sx={(theme) => ({
-          bgcolor: theme.palette.primary.main,
-          color: theme.palette.primary.contrastText,
+          bgcolor: theme.palette.darkGrey.main,
+          color: theme.palette.darkGrey.contrastText,
           position: "fixed",
           zIndex: theme.zIndex.appBar,
           bottom: 0,
           left: 0,
           right: 0,
           "&>a": {
-            color: theme.palette.primary.contrastText,
+            color: theme.palette.darkGrey.contrastText,
             "&.Mui-selected": {
-              color: theme.palette.secondary.main,
+              color: theme.palette.primary.main,
             },
           },
         })}

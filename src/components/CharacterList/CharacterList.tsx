@@ -2,6 +2,7 @@ import { Grid } from "@mui/material";
 import { ReactNode } from "react";
 import { CharacterDocument } from "types/Character.type";
 import { CharacterListItem } from "./CharacterListItem";
+import { constructCharacterSheetPath } from "pages/Character/routes";
 
 export interface CharacterListProps {
   characters: { [key: string]: CharacterDocument };
@@ -9,6 +10,7 @@ export interface CharacterListProps {
   maxColumns?: number;
   usePlayerNameAsSecondaryText?: boolean;
   raised?: boolean;
+  linkToCharacterSheet?: boolean;
 }
 
 export function CharacterList(props: CharacterListProps) {
@@ -18,6 +20,7 @@ export function CharacterList(props: CharacterListProps) {
     maxColumns,
     usePlayerNameAsSecondaryText,
     raised,
+    linkToCharacterSheet,
   } = props;
 
   const minGridValue = maxColumns ? 12 / maxColumns : 4;
@@ -40,6 +43,11 @@ export function CharacterList(props: CharacterListProps) {
             }
             usePlayerNameAsSecondaryText={usePlayerNameAsSecondaryText}
             raised={raised}
+            href={
+              linkToCharacterSheet
+                ? constructCharacterSheetPath(characterId)
+                : undefined
+            }
           />
         </Grid>
       ))}

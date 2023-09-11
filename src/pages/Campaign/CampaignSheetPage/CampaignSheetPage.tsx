@@ -65,7 +65,7 @@ export function CampaignSheetPage() {
           <StyledTabs
             value={selectedTab}
             onChange={(evt, value) => handleTabChange(value)}
-            indicatorColor="secondary"
+            indicatorColor="primary"
             centered
             variant={"standard"}
           >

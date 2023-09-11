@@ -13,7 +13,7 @@ export function SectionHeading(props: SectionHeadingProps) {
 
   return (
     <Box
-      bgcolor={(theme) => theme.palette.grey[200]}
+      bgcolor={(theme) => theme.palette.background.paperInlayDarker}
       py={0.5}
       display={"flex"}
       justifyContent={"space-between"}

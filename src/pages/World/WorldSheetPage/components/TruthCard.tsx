@@ -65,7 +65,7 @@ export function TruthCard(props: TruthCardProps) {
               pb: 1,
               m: -1,
               mt: 1,
-              backgroundColor: theme.palette.background.default,
+              backgroundColor: theme.palette.background.paperInlay,
             })}
           >
             <Typography variant={"overline"}>Quest Starter:</Typography>

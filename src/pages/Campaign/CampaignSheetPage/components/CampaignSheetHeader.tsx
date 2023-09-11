@@ -79,7 +79,7 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
         actions={
           <>
             <Button
-              color={"secondary"}
+              color={"primary"}
               variant={"contained"}
               onClick={() => setInviteUsersDialogOpen(true)}
             >

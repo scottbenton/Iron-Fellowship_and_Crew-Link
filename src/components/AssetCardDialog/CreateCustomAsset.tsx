@@ -308,7 +308,10 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                               label={`Input ${index + 1}`}
                               key={index}
                               action={
-                                <Button onClick={() => remove(index)}>
+                                <Button
+                                  color="inherit"
+                                  onClick={() => remove(index)}
+                                >
                                   Remove
                                 </Button>
                               }
@@ -377,7 +380,11 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                           </Stack>
                         ))}
                         <div>
-                          <Button variant={"outlined"} onClick={() => push({})}>
+                          <Button
+                            color={"inherit"}
+                            variant={"outlined"}
+                            onClick={() => push({})}
+                          >
                             Add Input
                           </Button>
                         </div>
@@ -446,6 +453,7 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                   )}
                   <div>
                     <Button
+                      color={"inherit"}
                       variant={"outlined"}
                       onClick={() =>
                         form.setFieldValue(
@@ -542,7 +550,11 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
               </Grid>
               <Grid item xs={12}>
                 <Box display={"flex"} justifyContent={"flex-end"}>
-                  <Button variant={"contained"} type={"submit"}>
+                  <Button
+                    color={"primary"}
+                    variant={"contained"}
+                    type={"submit"}
+                  >
                     {startingAsset
                       ? "Update Custom Asset"
                       : "Select Custom Asset"}

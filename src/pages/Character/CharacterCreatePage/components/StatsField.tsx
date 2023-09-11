@@ -59,6 +59,8 @@ export function StatsField() {
           component={"button"}
           type={"button"}
           sx={{ ml: 1 }}
+          color={"inherit"}
+          variant={"inherit"}
           onClick={() => toggleCustomStats()}
         >
           {isCustomStatsEnabled

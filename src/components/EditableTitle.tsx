@@ -48,7 +48,7 @@ export function EditableTitle(props: EditableTitleProps) {
           },
           "&:focus": {
             borderWidth: 2,
-            borderColor: theme.palette.secondary.main,
+            borderColor: theme.palette.primary.main,
           },
           width: tempValue.length + "ch",
         },

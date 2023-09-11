@@ -55,7 +55,7 @@ export function Layout(props: LayoutProps) {
   );
 
   if (state === AUTH_STATE.LOADING) {
-    return <LinearProgress color={"secondary"} />;
+    return <LinearProgress color={"primary"} />;
   }
 
   return (
@@ -65,7 +65,7 @@ export function Layout(props: LayoutProps) {
       flexDirection={"column"}
       sx={(theme) => ({
         overflowX: "hidden",
-        backgroundColor: theme.palette.background.background,
+        backgroundColor: theme.palette.background.default,
       })}
     >
       <Header />
