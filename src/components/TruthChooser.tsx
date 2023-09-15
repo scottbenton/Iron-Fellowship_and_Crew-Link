@@ -87,7 +87,7 @@ export function TruthChooser(props: TruthChooserProps) {
             <Box
               sx={(theme) => ({
                 backgroundColor: theme.palette.background.paperInlay,
-                borderRadius: theme.shape.borderRadius,
+                borderRadius: `${theme.shape.borderRadius}px`,
                 px: 1,
                 pb: 1,
                 m: -1,

@@ -62,7 +62,7 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
           mt={1}
           border={1}
           borderColor={(theme) => theme.palette.divider}
-          borderRadius={(theme) => theme.shape.borderRadius}
+          borderRadius={(theme) => `${theme.shape.borderRadius}px`}
           sx={{ borderCollapse: "collapse" }}
           width={"100%"}
         >

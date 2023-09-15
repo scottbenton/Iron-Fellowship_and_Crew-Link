@@ -112,7 +112,7 @@ export function DieRollProvider(props: PropsWithChildren) {
     gmsOnly = false
   ) => {
     const oracleCategoryId = oracleId.match(
-      /ironsworn\/oracles\/[^\/]*/gm
+      /(ironsworn|starforged)\/oracles\/[^\/]*/gm
     )?.[0];
 
     const oracle = oracleMap[oracleId] ?? allCustomOracleMap?.[oracleId];

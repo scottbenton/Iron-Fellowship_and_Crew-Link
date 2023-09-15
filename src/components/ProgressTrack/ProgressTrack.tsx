@@ -206,8 +206,8 @@ export function ProgressTrack(props: ProgressTracksProps) {
               "&:hover": {
                 backgroundColor: theme.palette.darkGrey.dark,
               },
-              borderTopLeftRadius: theme.shape.borderRadius,
-              borderBottomLeftRadius: theme.shape.borderRadius,
+              borderTopLeftRadius: `${theme.shape.borderRadius}px`,
+              borderBottomLeftRadius: `${theme.shape.borderRadius}px`,
             })}
           >
             <MinusIcon />
@@ -255,8 +255,8 @@ export function ProgressTrack(props: ProgressTracksProps) {
                 backgroundColor: theme.palette.darkGrey.dark,
               },
 
-              borderTopRightRadius: theme.shape.borderRadius,
-              borderBottomRightRadius: theme.shape.borderRadius,
+              borderTopRightRadius: `${theme.shape.borderRadius}px`,
+              borderBottomRightRadius: `${theme.shape.borderRadius}px`,
             })}
           >
             <PlusIcon />

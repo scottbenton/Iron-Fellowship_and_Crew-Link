@@ -52,7 +52,7 @@ export function NPCItem(props: NPCItemProps) {
                 width: 80,
                 height: 80,
                 flexShrink: 0,
-                borderRadius: theme.shape.borderRadius,
+                borderRadius: `${theme.shape.borderRadius}px`,
                 backgroundColor:
                   theme.palette.mode === "light"
                     ? theme.palette.grey[300]

@@ -64,6 +64,9 @@ export function AssetCard(props: AssetCardProps) {
   const isCustom = !!storedAsset?.customAsset;
 
   if (!asset) return null;
+  if (asset.$id === "starforged/assets/command_vehicle/starship") {
+    console.debug(asset);
+  }
 
   let alternateConditionMeterProperties:
     | AssetAlterPropertiesConditionMeter
@@ -100,7 +103,7 @@ export function AssetCard(props: AssetCardProps) {
       >
         <Box
           sx={(theme) => ({
-            backgroundColor: theme.palette.darkGrey.main,
+            backgroundColor: theme.palette.darkGrey.light,
             color: theme.palette.darkGrey.contrastText,
             py: handleDeleteClick ? 0.5 : 1,
             px: 1,

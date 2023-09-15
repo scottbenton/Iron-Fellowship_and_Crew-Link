@@ -7,6 +7,8 @@ import { SectionHeading } from "components/SectionHeading";
 import { useField } from "formik";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import { Asset } from "dataforged";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export function AssetsSection() {
   const [field, meta, handlers] = useField<StoredAsset[]>("assets");
@@ -58,13 +60,19 @@ export function AssetsSection() {
     return new Promise<void>((res) => res());
   };
 
+  const defaultRuleAlertText = useGameSystemValue({
+    [GAME_SYSTEMS.IRONSWORN]:
+      "When playing with the default rules, you should choose three assets when creating your character.",
+    [GAME_SYSTEMS.STARFORGED]:
+      "When playing with the default rules, you should choose the Starship asset and three other assets when creating your character.",
+  });
+
   return (
     <>
       <SectionHeading breakContainer label={"Assets"} sx={{ mt: 4 }} />
       <Box>
         <Alert severity="info" sx={{ mt: 2 }}>
-          When playing with the default rules, you should choose three assets
-          when creating your character.
+          {defaultRuleAlertText}
         </Alert>
         {field.value.length > 0 ? (
           <>

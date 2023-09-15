@@ -65,7 +65,7 @@ export function StatInput(props: StatInputProps) {
       variant={"outlined"}
       sx={[
         (theme) => ({
-          borderRadius: theme.shape.borderRadius,
+          borderRadius: `${theme.shape.borderRadius}px`,
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",

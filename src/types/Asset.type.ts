@@ -7,38 +7,6 @@ export enum AssetType {
   Ritual = "Ritual",
 }
 
-export interface JsonAsset {
-  Name: string;
-  "Asset Type": string;
-  "Input Fields"?: string[];
-  Deed?: boolean;
-  Description?: string;
-  Abilities: {
-    Name?: string;
-    Text: string;
-    Enabled?: boolean;
-    "Alter Properties"?: {
-      "Asset Track": {
-        Name: string;
-        Max: number;
-      };
-    };
-  }[];
-  "Asset Track"?: {
-    Name: string;
-    Max: number;
-    "Starting Value"?: number;
-  };
-  MultiFieldAssetTrack?: {
-    Fields: {
-      Name: string;
-      ActiveText: string;
-      InactiveText: string;
-      IsActive: boolean;
-    }[];
-  };
-}
-
 export interface Asset {
   id: string;
   name: string;

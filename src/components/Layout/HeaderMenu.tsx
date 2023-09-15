@@ -14,17 +14,16 @@ import { UserAvatar } from "components/UserAvatar";
 import { useToggleTheme } from "providers/ThemeProvider";
 import LightThemeIcon from "@mui/icons-material/LightMode";
 import DarkThemeIcon from "@mui/icons-material/DarkMode";
-import { THEME_TYPE } from "providers/ThemeProvider/theme";
-
-const getInitials = (name: string) => {
-  const names = name.split(" ");
-  let initials = names[0].substring(0, 1).toUpperCase();
-
-  if (names.length > 1) {
-    initials += names[names.length - 1].substring(0, 1).toUpperCase();
-  }
-  return initials;
-};
+import { THEME_TYPE } from "providers/ThemeProvider/themes";
+import { useGameSystem } from "hooks/useGameSystem";
+import { getIsProdEnvironment } from "functions/getGameSystem";
+import SystemIcon from "@mui/icons-material/Casino";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
+import {
+  CHARACTER_ROUTES,
+  constructCharacterPath,
+  constructCharacterSheetPath,
+} from "pages/Character/routes";
 
 export function HeaderMenu() {
   const userId = useStore((store) => store.auth.uid);
@@ -33,6 +32,9 @@ export function HeaderMenu() {
   const anchorRef = useRef<HTMLButtonElement>(null);
 
   const { themeType, toggleTheme } = useToggleTheme();
+
+  const { gameSystem, chooseGameSystem } = useGameSystem();
+  const isProd = getIsProdEnvironment();
 
   return (
     <>
@@ -76,6 +78,26 @@ export function HeaderMenu() {
           </ListItemIcon>
           <ListItemText>Logout</ListItemText>
         </MenuItem>
+        {!isProd && (
+          <MenuItem
+            onClick={() => {
+              chooseGameSystem(
+                gameSystem === GAME_SYSTEMS.IRONSWORN
+                  ? GAME_SYSTEMS.STARFORGED
+                  : GAME_SYSTEMS.IRONSWORN
+              );
+              setMenuOpen(false);
+              location.pathname = constructCharacterPath(
+                CHARACTER_ROUTES.SELECT
+              );
+            }}
+          >
+            <ListItemIcon>
+              <SystemIcon />
+            </ListItemIcon>
+            <ListItemText>Switch System</ListItemText>
+          </MenuItem>
+        )}
       </Menu>
     </>
   );

@@ -92,7 +92,7 @@ export function HomePage() {
                 "Screenshot of a character sheet in Iron Fellowship for a character named Eirik"
               }
               width={"100%"}
-              borderRadius={(theme) => theme.shape.borderRadius}
+              borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             />
           </Grid>
         </Grid>
@@ -124,7 +124,7 @@ export function HomePage() {
                 "Screenshot of a campaign in Iron Fellowship titled Land of Ten Thousand Gods with four characters added."
               }
               width={"100%"}
-              borderRadius={(theme) => theme.shape.borderRadius}
+              borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             />
           </Grid>
         </Grid>
@@ -151,7 +151,7 @@ export function HomePage() {
                 "Screenshot of a campaign in Iron Fellowship titled Land of Ten Thousand Gods with four characters added."
               }
               width={"100%"}
-              borderRadius={(theme) => theme.shape.borderRadius}
+              borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             />
           </Grid>
         </Grid>
@@ -183,7 +183,7 @@ export function HomePage() {
                 "Screenshot of a campaign in Iron Fellowship titled Land of Ten Thousand Gods with four characters added."
               }
               width={"100%"}
-              borderRadius={(theme) => theme.shape.borderRadius}
+              borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             />
           </Grid>
         </Grid>

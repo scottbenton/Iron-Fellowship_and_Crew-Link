@@ -105,7 +105,7 @@ export function TracksSection() {
             sx={(theme) => ({
               backgroundColor: theme.palette.darkGrey.main,
               color: theme.palette.darkGrey.contrastText,
-              borderRadius: theme.shape.borderRadius,
+              borderRadius: `${theme.shape.borderRadius}px`,
               ml: 0.25,
 
               "&:hover": {

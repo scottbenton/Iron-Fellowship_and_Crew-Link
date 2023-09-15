@@ -13,7 +13,7 @@ export interface LinkedDialogContentProps {
 export function LinkedDialogContent(props: LinkedDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
-  if (id?.startsWith("ironsworn/moves")) {
+  if (id?.startsWith("ironsworn/moves") || id?.startsWith("starforged/moves")) {
     return (
       <MoveDialogContent
         id={id}
@@ -24,7 +24,10 @@ export function LinkedDialogContent(props: LinkedDialogContentProps) {
     );
   }
 
-  if (id?.startsWith("ironsworn/oracles")) {
+  if (
+    id?.startsWith("ironsworn/oracles") ||
+    id?.startsWith("starforged/oracles")
+  ) {
     return (
       <OracleDialogContent
         id={id}

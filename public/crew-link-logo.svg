@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="120"
+   height="120"
+   version="1.1"
+   viewBox="0 0 120 120"
+   id="svg4"
+   sodipodi:docname="crew-link-logo.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.4356643"
+     inkscape:cx="188.06625"
+     inkscape:cy="219.06236"
+     inkscape:window-width="1500"
+     inkscape:window-height="931"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g4" />
+  <g
+     transform="matrix(1.2073 0 0 1.2073 -12.439 -9.8678)"
+     stroke-width="0"
+     id="g4">
+    <circle
+       cx="60"
+       cy="57.87"
+       r="49.697"
+       fill="#ff6584"
+       id="circle1"
+       style="fill:#a16207;fill-opacity:1" />
+    <path
+       sodipodi:type="star"
+       style="fill:#f9f9f9;fill-opacity:1;stroke-width:0"
+       id="path4"
+       inkscape:flatsided="false"
+       sodipodi:sides="4"
+       sodipodi:cx="25.703014"
+       sodipodi:cy="36.638062"
+       sodipodi:r1="36.617912"
+       sodipodi:r2="12.816269"
+       sodipodi:arg1="0"
+       sodipodi:arg2="0.78539816"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 62.320927,36.638062 -27.555442,9.06247 -9.062471,27.555442 -9.06247,-27.555442 -27.555442,-9.06247 27.555442,-9.062471 9.06247,-27.55544177 9.062471,27.55544177 z"
+       transform="matrix(1.0178968,0,0,1.1309964,33.837812,16.433602)" />
+  </g>
+</svg>

@@ -67,7 +67,7 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
             mb={1}
             border={1}
             borderColor={(theme) => theme.palette.divider}
-            borderRadius={(theme) => theme.shape.borderRadius}
+            borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             sx={{ borderCollapse: "collapse" }}
           >
             {children}

@@ -72,7 +72,7 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
               <Box
                 sx={(theme) => ({
                   display: "inline-flex",
-                  borderRadius: 999 || theme.shape.borderRadius,
+                  borderRadius: 999 || `${theme.shape.borderRadius}px`,
                   alignItems: "center",
                   justifyContent: "center",
                   p: 0.5,

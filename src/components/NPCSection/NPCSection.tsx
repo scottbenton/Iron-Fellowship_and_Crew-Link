@@ -7,6 +7,7 @@ import {
   Button,
   Hidden,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
 } from "@mui/material";
@@ -95,21 +96,22 @@ export function NPCSection(props: NPCSectionProps) {
           <Box overflow={"auto"} flexGrow={1} minWidth={200} maxWidth={400}>
             <List>
               {sortedNPCIds.map((npcId) => (
-                <ListItemButton
-                  key={npcId}
-                  selected={npcId === openNPCId}
-                  onClick={() => setOpenNPCId(npcId)}
-                >
-                  <ListItemText
-                    primary={npcs[npcId].name}
-                    secondary={
-                      !isSinglePlayer &&
-                      isWorldOwner &&
-                      showHiddenTag &&
-                      (!npcs[npcId].sharedWithPlayers ? "Hidden" : "Shared")
-                    }
-                  />
-                </ListItemButton>
+                <ListItem key={npcId} disablePadding>
+                  <ListItemButton
+                    selected={npcId === openNPCId}
+                    onClick={() => setOpenNPCId(npcId)}
+                  >
+                    <ListItemText
+                      primary={npcs[npcId].name}
+                      secondary={
+                        !isSinglePlayer &&
+                        isWorldOwner &&
+                        showHiddenTag &&
+                        (!npcs[npcId].sharedWithPlayers ? "Hidden" : "Shared")
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
               ))}
             </List>
           </Box>

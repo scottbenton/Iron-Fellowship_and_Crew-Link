@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@fontsource/bebas-neue": "^5.0.12",
     "@fontsource/rubik": "^4.5.13",
     "@fontsource/staatliches": "^4.5.9",
     "@hocuspocus/transformer": "^2.4.0",

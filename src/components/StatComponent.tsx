@@ -55,7 +55,6 @@ export function StatComponent(props: StatComponentProps) {
       variant={"outlined"}
       sx={[
         (theme) => ({
-          borderRadius: theme.shape.borderRadius,
           overflow: "hidden",
           width: 75,
           display: "flex",
@@ -83,6 +82,12 @@ export function StatComponent(props: StatComponentProps) {
                     backgroundColor: theme.palette.background.paperInlayDarker,
                     color: theme.palette.text.primary,
                   },
+                  borderColor: theme.palette.primary.main,
+                },
+          "&:focus":
+            updateTrack || disableRoll
+              ? {}
+              : {
                   borderColor: theme.palette.primary.main,
                 },
         }),

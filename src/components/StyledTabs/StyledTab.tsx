@@ -8,7 +8,7 @@ export function StyledTab(props: TabProps) {
     <Tab
       sx={(theme) => ({
         zIndex: 1,
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: `${theme.shape.borderRadius}px`,
         height: "32px",
         minWidth: 64,
         minHeight: 1,

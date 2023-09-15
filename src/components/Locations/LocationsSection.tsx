@@ -6,6 +6,7 @@ import {
   Grid,
   Hidden,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
   Typography,
@@ -99,22 +100,23 @@ export function LocationsSection(props: LocationsSectionProps) {
           <Box overflow={"auto"} flexGrow={1} minWidth={200} maxWidth={400}>
             <List>
               {sortedLocationIds.map((locationId) => (
-                <ListItemButton
-                  key={locationId}
-                  selected={locationId === openLocationId}
-                  onClick={() => setOpenLocationId(locationId)}
-                >
-                  <ListItemText
-                    primary={locations[locationId].name}
-                    secondary={
-                      !isSinglePlayer &&
-                      isWorldOwner &&
-                      (!locations[locationId].sharedWithPlayers
-                        ? "Hidden"
-                        : "Shared")
-                    }
-                  />
-                </ListItemButton>
+                <ListItem key={locationId} disablePadding>
+                  <ListItemButton
+                    onClick={() => setOpenLocationId(locationId)}
+                    selected={locationId === openLocationId}
+                  >
+                    <ListItemText
+                      primary={locations[locationId].name}
+                      secondary={
+                        !isSinglePlayer &&
+                        isWorldOwner &&
+                        (!locations[locationId].sharedWithPlayers
+                          ? "Hidden"
+                          : "Shared")
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
               ))}
             </List>
           </Box>

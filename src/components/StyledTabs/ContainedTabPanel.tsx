@@ -16,7 +16,7 @@ export function ContainedTabPanel(props: ContainedTabPanelProps) {
       flexGrow={1}
       overflow={"auto"}
       bgcolor={(theme) =>
-        greyBackground ? theme.palette.background.paperInlay : undefined
+        greyBackground ? theme.palette.background.default : undefined
       }
     >
       {children}

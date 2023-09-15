@@ -1,15 +1,26 @@
-import { ironswornAssetCategories } from "./dataforged";
+import { getSystem } from "hooks/useGameSystem";
+import {
+  ironswornAssetCategories,
+  starforgedAssetCategories,
+} from "./dataforged";
 import type { Asset as DataforgedAsset } from "dataforged";
+import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
+
+const gameSystem = getSystem();
+const assetCategories: GameSystemChooser<typeof ironswornAssetCategories> = {
+  [GAME_SYSTEMS.IRONSWORN]: ironswornAssetCategories,
+  [GAME_SYSTEMS.STARFORGED]: starforgedAssetCategories,
+};
 
 // NEW ASSETS START HERE
 export const assetMap: { [key: string]: DataforgedAsset } = {};
 export const assetTypeLabels: { [key: string]: string } = {};
 
-Object.values(ironswornAssetCategories).forEach((category) => {
+Object.values(assetCategories[gameSystem]).forEach((category) => {
   assetTypeLabels[category.$id] = category.Title.Standard;
   Object.values(category.Assets).forEach((asset) => {
     assetMap[asset.$id] = asset;
   });
 });
 
-export const assetGroups = Object.values(ironswornAssetCategories);
+export const assetGroups = Object.values(assetCategories[gameSystem]);

@@ -10,14 +10,9 @@ import {
   useTheme,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import {
-  BASE_ROUTES,
-  basePaths,
-  CAMPAIGN_PREFIX,
-  CHARACTER_PREFIX,
-} from "../../routes";
+import { BASE_ROUTES, basePaths } from "../../routes";
 import { ReactComponent as IronFellowshipLogo } from "./iron-fellowship-logo.svg";
-import { useEffect, useState } from "react";
+import { ReactComponent as CrewLinkLogo } from "./crew-link-logo.svg";
 import { HeaderMenu } from "./HeaderMenu";
 
 import CharacterIcon from "@mui/icons-material/Person";
@@ -25,30 +20,29 @@ import CampaignIcon from "@mui/icons-material/Groups";
 import WorldIcon from "@mui/icons-material/Public";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export function Header() {
-  const theme = useTheme();
   const state = useStore((store) => store.auth.status);
 
-  const path = useLocation().pathname;
+  const isLightTheme = useTheme().palette.mode === "light";
 
-  const [selectedTab, setSelectedTab] = useState<"character" | "campaign">();
+  const Logo = useGameSystemValue({
+    [GAME_SYSTEMS.IRONSWORN]: IronFellowshipLogo,
+    [GAME_SYSTEMS.STARFORGED]: CrewLinkLogo,
+  });
 
-  useEffect(() => {
-    if (path.includes(CHARACTER_PREFIX)) {
-      setSelectedTab("character");
-    } else if (path.includes(CAMPAIGN_PREFIX)) {
-      setSelectedTab("campaign");
-    } else {
-      setSelectedTab(undefined);
-    }
-  }, [path]);
+  const title = useGameSystemValue({
+    [GAME_SYSTEMS.IRONSWORN]: "Iron Fellowship",
+    [GAME_SYSTEMS.STARFORGED]: "Crew Link",
+  });
 
   return (
     <AppBar
       elevation={0}
       position={"static"}
-      color={"darkGrey"}
+      color={isLightTheme ? "darkGrey" : "transparent"}
       enableColorOnDark
       component={"div"}
       sx={{ border: "unset" }} // Undo border I added to the paper component in dark mode
@@ -63,9 +57,13 @@ export function Header() {
           }}
         >
           <Box display={"flex"} alignItems={"center"}>
-            <IronFellowshipLogo width={32} height={32} />
-            <Typography fontFamily={"Staatliches"} variant={"h5"} ml={2}>
-              Iron Fellowship
+            <Logo width={32} height={32} />
+            <Typography
+              fontFamily={(theme) => theme.fontFamilyTitle}
+              variant={"h5"}
+              ml={2}
+            >
+              {title}
             </Typography>
           </Box>
           {state === AUTH_STATE.AUTHENTICATED ? (
