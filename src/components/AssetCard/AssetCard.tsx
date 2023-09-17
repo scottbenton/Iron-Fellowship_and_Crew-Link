@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   IconButton,
   SxProps,
   Theme,
@@ -64,9 +65,6 @@ export function AssetCard(props: AssetCardProps) {
   const isCustom = !!storedAsset?.customAsset;
 
   if (!asset) return null;
-  if (asset.$id === "starforged/assets/command_vehicle/starship") {
-    console.debug(asset);
-  }
 
   let alternateConditionMeterProperties:
     | AssetAlterPropertiesConditionMeter
@@ -193,7 +191,23 @@ export function AssetCard(props: AssetCardProps) {
               </Box>
             ))}
           </Box>
-
+          {!hideTracks &&
+            storedAsset &&
+            conditionMeter &&
+            conditionMeter.Conditions.length > 0 && (
+              <Box display={"flex"} flexWrap={"wrap"}>
+                {conditionMeter.Conditions.map((condition, index) => (
+                  <FormControlLabel
+                    key={condition}
+                    control={
+                      <Checkbox checked={false} onChange={(evt, value) => {}} />
+                    }
+                    label={condition}
+                    sx={{ textTransform: "capitalize", marginRight: 3 }}
+                  />
+                ))}
+              </Box>
+            )}
           {!hideTracks &&
             storedAsset &&
             conditionMeter &&

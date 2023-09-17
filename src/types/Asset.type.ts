@@ -7,32 +7,6 @@ export enum AssetType {
   Ritual = "Ritual",
 }
 
-export interface Asset {
-  id: string;
-  name: string;
-  type: AssetType;
-  inputs?: string[];
-  description?: string;
-  abilities: {
-    name?: string;
-    text: string;
-    startsEnabled?: boolean;
-    alterTrack?: {
-      trackName: string;
-      max: number;
-    };
-  }[];
-  track?: {
-    name: string;
-    max: number;
-    startingValue?: number;
-  };
-  multiFieldTrack?: {
-    name: string;
-    options: string[];
-  };
-}
-
 export interface StoredAsset {
   id: string;
   enabledAbilities: {
@@ -44,6 +18,7 @@ export interface StoredAsset {
   trackValue: number | null;
   customAsset: DataforgedAsset | null;
   order: number;
+  conditions?: { [key: string]: boolean };
 }
 
 export function getAssetType(assetType?: string): AssetType | undefined {
