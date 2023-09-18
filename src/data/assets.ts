@@ -3,7 +3,9 @@ import type { Asset as DataforgedAsset } from "dataforged";
 
 // NEW ASSETS START HERE
 export const assetMap: { [key: string]: DataforgedAsset } = {};
-export const assetTypeLabels: { [key: string]: string } = {};
+export const assetTypeLabels: { [key: string]: string } = {
+  "ironsworn/assets/role": "Role",
+};
 
 Object.values(ironswornAssetCategories).forEach((category) => {
   assetTypeLabels[category.$id] = category.Title.Standard;

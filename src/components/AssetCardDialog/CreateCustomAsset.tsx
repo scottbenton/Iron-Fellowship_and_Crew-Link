@@ -1,5 +1,22 @@
-import { Box, Button, Grid, MenuItem, Stack, TextField } from "@mui/material";
-import type { Asset, InputSelectOption } from "dataforged";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  MenuItem,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from "@mui/material";
+import type { Asset, AssetAbility, InputSelectOption } from "dataforged";
 import { InputType, License } from "types/Datasworn";
 import {
   AssetType,
@@ -14,6 +31,7 @@ import {
   encodeContents,
   generateAssetDataswornId,
 } from "functions/dataswornIdEncoder";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export interface CreateCustomAssetProps {
   handleSelect: (asset: Asset) => void;
@@ -46,13 +64,15 @@ interface FormValues {
   inputs?: FormAssetInput[];
   track?: FormAssetTrack;
 
-  ability1Name?: string;
-  ability1Description: string;
-  ability2Name?: string;
-  ability2Description: string;
-  ability3Name?: string;
-  ability3Description: string;
+  abilities: {
+    name?: string;
+    description: string;
+  }[];
 }
+
+type AssetWithCorrectedAbilities = Omit<Asset, "Abilities"> & {
+  Abilities: AssetAbility[];
+};
 
 const formSchema = Yup.object().shape({
   assetType: Yup.string().required("Category is required"),
@@ -71,9 +91,11 @@ const formSchema = Yup.object().shape({
       startingValue: Yup.number().required("Starting value is required"),
     })
     .default(undefined),
-  ability1Description: Yup.string().required("Description is required"),
-  ability2Description: Yup.string().required("Description is required"),
-  ability3Description: Yup.string().required("Description is required"),
+  abilities: Yup.array(
+    Yup.object().shape({
+      description: Yup.string().required("Description is required"),
+    })
+  ),
 });
 
 function convertAssetToFormValue(asset?: Asset) {
@@ -108,12 +130,10 @@ function convertAssetToFormValue(asset?: Asset) {
       startingValue: asset["Condition meter"].Value,
     },
 
-    ability1Name: asset?.Abilities[0].Label,
-    ability1Description: asset?.Abilities[0].Text ?? "",
-    ability2Name: asset?.Abilities[1].Label,
-    ability2Description: asset?.Abilities[1].Text ?? "",
-    ability3Name: asset?.Abilities[2].Label,
-    ability3Description: asset?.Abilities[2].Text ?? "",
+    abilities: asset?.Abilities.map((ability) => ({
+      name: ability.Label,
+      description: ability.Text,
+    })) ?? [{ description: "" }, { description: "" }, { description: "" }],
   };
 
   return initialValues;
@@ -166,7 +186,7 @@ function convertFormValuesToAsset(values: FormValues) {
     }
   });
 
-  const asset: Asset = {
+  const asset: AssetWithCorrectedAbilities = {
     $id: assetId,
     Title: {
       $id: `${assetId}/title`,
@@ -185,26 +205,12 @@ function convertFormValuesToAsset(values: FormValues) {
       Authors: [],
       License: License.None,
     },
-    Abilities: [
-      {
-        $id: `${assetId}/1`,
-        Label: values.ability1Name || "",
-        Text: values.ability1Description,
-        Enabled: false,
-      },
-      {
-        $id: `${assetId}/2`,
-        Label: values.ability2Name || "",
-        Text: values.ability2Description,
-        Enabled: false,
-      },
-      {
-        $id: `${assetId}/3`,
-        Label: values.ability3Name || "",
-        Text: values.ability3Description,
-        Enabled: false,
-      },
-    ],
+    Abilities: values.abilities.map((ability, index) => ({
+      $id: `${assetId}/${index}`,
+      Label: ability.name || "",
+      Text: ability.description,
+      Enabled: false,
+    })),
   };
 
   if (values.track) {
@@ -233,7 +239,7 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
 
   const handleSubmit = (values: FormValues) => {
     const asset = convertFormValuesToAsset(values);
-    handleSelect(asset);
+    handleSelect(asset as unknown as Asset);
   };
 
   return (
@@ -267,6 +273,7 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                     Combat Talent
                   </MenuItem>
                   <MenuItem value={AssetType.Ritual}>Ritual</MenuItem>
+                  <MenuItem value={AssetType.Role}>Role</MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -470,83 +477,79 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
               <Grid item xs={12}>
                 <SectionHeading label={"Asset Abilities"} />
               </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  name={"ability1Name"}
-                  label={"Ability 1 Name"}
-                  value={form.values.ability1Name ?? ""}
-                  onChange={form.handleChange}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} md={8}>
-                <TextField
-                  name={"ability1Description"}
-                  label={"Ability 1 Description"}
-                  value={form.values.ability1Description ?? ""}
-                  onChange={form.handleChange}
-                  fullWidth
-                  error={
-                    form.touched.ability1Description &&
-                    !!form.errors.ability1Description
-                  }
-                  helperText={
-                    form.touched.ability1Description &&
-                    form.errors.ability1Description
-                  }
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  name={"ability2Name"}
-                  label={"Ability 2 Name"}
-                  value={form.values.ability2Name ?? ""}
-                  onChange={form.handleChange}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} md={8}>
-                <TextField
-                  name={"ability2Description"}
-                  label={"Ability 2 Description"}
-                  value={form.values.ability2Description ?? ""}
-                  onChange={form.handleChange}
-                  fullWidth
-                  error={
-                    form.touched.ability2Description &&
-                    !!form.errors.ability2Description
-                  }
-                  helperText={
-                    form.touched.ability2Description &&
-                    form.errors.ability2Description
-                  }
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  name={"ability3Name"}
-                  label={"Ability 3 Name"}
-                  value={form.values.ability3Name ?? ""}
-                  onChange={form.handleChange}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} md={8}>
-                <TextField
-                  name={"ability3Description"}
-                  label={"Ability 3 Description"}
-                  value={form.values.ability3Description ?? ""}
-                  onChange={form.handleChange}
-                  fullWidth
-                  error={
-                    form.touched.ability3Description &&
-                    !!form.errors.ability3Description
-                  }
-                  helperText={
-                    form.touched.ability3Description &&
-                    form.errors.ability3Description
-                  }
-                />
+              <Grid item xs={12}>
+                <FieldArray name="abilities">
+                  {({ remove, push }) => (
+                    <TableContainer component={Paper} variant={"outlined"}>
+                      <Table size={"small"}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Ability Name</TableCell>
+                            <TableCell>Ability Description</TableCell>
+                            <TableCell />
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {form.values.abilities.map((ability, index) => (
+                            <TableRow key={index}>
+                              <TableCell>
+                                <TextField
+                                  value={ability.name ?? ""}
+                                  onChange={(evt) => {
+                                    form.setFieldValue(
+                                      `abilities[${index}].name`,
+                                      evt.currentTarget.value ?? undefined
+                                    );
+                                  }}
+                                  variant={"standard"}
+                                  placeholder={"Ability Name"}
+                                />
+                              </TableCell>
+
+                              <TableCell>
+                                <TextField
+                                  value={ability.description ?? ""}
+                                  onChange={(evt) => {
+                                    form.setFieldValue(
+                                      `abilities[${index}].description`,
+                                      evt.currentTarget.value
+                                    );
+                                  }}
+                                  variant={"standard"}
+                                  placeholder={"Description"}
+                                  fullWidth
+                                  error={
+                                    form.touched.abilities &&
+                                    !form.values.abilities[index].description
+                                  }
+                                />
+                              </TableCell>
+                              <TableCell
+                                sx={{ width: 0, minWidth: "fit-content" }}
+                              >
+                                <IconButton onClick={() => remove(index)}>
+                                  <DeleteIcon />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                        <TableFooter>
+                          <TableRow>
+                            <TableCell>
+                              <Button
+                                color={"inherit"}
+                                onClick={() => push({})}
+                              >
+                                Add Row
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        </TableFooter>
+                      </Table>
+                    </TableContainer>
+                  )}
+                </FieldArray>
               </Grid>
               <Grid item xs={12}>
                 <Box display={"flex"} justifyContent={"flex-end"}>

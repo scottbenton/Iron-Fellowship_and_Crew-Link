@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.0
+
+### New Features
+
+- Added a "Role" type to custom assets, in case users are playing with custom roles
+
+### Changes
+
+- Removed restrictions on number of abilities when creating or modifying custom assets.
+
+### Bug Fixes
+
+---
+
 ## 1.2.0
 
 ### New Features
