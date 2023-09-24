@@ -28,7 +28,7 @@ export interface CharacterDocument {
   };
   bonds?: number;
   debilities?: {
-    [key in DEBILITIES]?: boolean;
+    [key: string]: boolean;
   };
   initiativeStatus?: INITIATIVE_STATUS;
   shareNotesWithGM?: boolean;

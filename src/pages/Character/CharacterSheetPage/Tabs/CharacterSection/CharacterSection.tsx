@@ -22,6 +22,8 @@ import { CustomOracleSection } from "components/CustomOraclesSection";
 import { constructCharacterCardUrl } from "pages/Character/routes";
 import { useStore } from "stores/store";
 import { useConfirm } from "material-ui-confirm";
+import { Debilities } from "./Debilities";
+import { Stats } from "./Stats";
 
 export function CharacterSection() {
   const uid = useStore((store) => store.auth.uid);
@@ -34,39 +36,15 @@ export function CharacterSection() {
 
   const { success } = useSnackbar();
 
-  const stats = useStore(
-    (store) => store.characters.currentCharacter.currentCharacter?.stats
-  );
   const updateCharacter = useStore(
     (store) => store.characters.currentCharacter.updateCurrentCharacter
   );
-
-  const updateCharacterStat = (stat: Stat, value: number) => {
-    return updateCharacter({ [`stats.${stat}`]: value });
-  };
 
   const name = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.name
   );
   const updateName = (newName: string) => {
     return updateCharacter({ name: newName }).catch(() => {});
-  };
-
-  const debilities = useStore(
-    (store) =>
-      store.characters.currentCharacter.currentCharacter?.debilities ?? {}
-  );
-
-  const updateDebility = (debility: DEBILITIES, active: boolean) => {
-    updateCharacter({ [`debilities.${debility}`]: active }).catch(() => {});
-  };
-
-  const sharingNotes = useStore(
-    (store) =>
-      store.characters.currentCharacter.currentCharacter?.shareNotesWithGM
-  );
-  const updateShareNotesWithGMSetting = (shouldShare: boolean) => {
-    return updateCharacter({ shareNotesWithGM: shouldShare });
   };
 
   const existingPortraitSettings = useStore(
@@ -146,127 +124,7 @@ export function CharacterSection() {
 
   return (
     <Stack spacing={2} pb={2}>
-      <SectionHeading label={"Debilities"} />
-      <Box px={2}>
-        <Box
-          display={"flex"}
-          flexWrap={"wrap"}
-          justifyContent={"space-between"}
-        >
-          <FormControl component="fieldset" variant="standard">
-            <FormLabel component="legend">Conditions</FormLabel>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={debilities[DEBILITIES.WOUNDED] ?? false}
-                    onChange={(evt, checked) =>
-                      updateDebility(DEBILITIES.WOUNDED, checked)
-                    }
-                    name="wounded"
-                  />
-                }
-                label="Wounded"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={debilities[DEBILITIES.SHAKEN] ?? false}
-                    onChange={(evt, checked) =>
-                      updateDebility(DEBILITIES.SHAKEN, checked)
-                    }
-                    name="shaken"
-                  />
-                }
-                label="Shaken"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={debilities[DEBILITIES.UNPREPARED] ?? false}
-                    onChange={(evt, checked) =>
-                      updateDebility(DEBILITIES.UNPREPARED, checked)
-                    }
-                    name="unprepared"
-                  />
-                }
-                label="Unprepared"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={debilities[DEBILITIES.ENCUMBERED] ?? false}
-                    onChange={(evt, checked) =>
-                      updateDebility(DEBILITIES.ENCUMBERED, checked)
-                    }
-                    name="encumbered"
-                  />
-                }
-                label="Encumbered"
-              />
-            </FormGroup>
-          </FormControl>
-          <FormControl component="fieldset" variant="standard">
-            <FormLabel component="legend">Banes</FormLabel>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={debilities[DEBILITIES.MAIMED] ?? false}
-                    onChange={(evt, checked) =>
-                      updateDebility(DEBILITIES.MAIMED, checked)
-                    }
-                    name="maimed"
-                  />
-                }
-                label="Maimed"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={debilities[DEBILITIES.CORRUPTED] ?? false}
-                    onChange={(evt, checked) =>
-                      updateDebility(DEBILITIES.CORRUPTED, checked)
-                    }
-                    name="corrupted"
-                  />
-                }
-                label="Corrupted"
-              />
-            </FormGroup>
-          </FormControl>
-          <FormControl component="fieldset" variant="standard">
-            <FormLabel component="legend">Burdens</FormLabel>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={debilities[DEBILITIES.CURSED] ?? false}
-                    onChange={(evt, checked) =>
-                      updateDebility(DEBILITIES.CURSED, checked)
-                    }
-                    name="cursed"
-                  />
-                }
-                label="Cursed"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={debilities[DEBILITIES.TORMENTED] ?? false}
-                    onChange={(evt, checked) =>
-                      updateDebility(DEBILITIES.TORMENTED, checked)
-                    }
-                    name="tormented"
-                  />
-                }
-                label="Tormented"
-              />
-            </FormGroup>
-          </FormControl>
-        </Box>
-      </Box>
-
+      <Debilities />
       <SectionHeading label={"Stats & Settings"} />
       {name && (
         <Box pt={2} px={2}>
@@ -277,52 +135,7 @@ export function CharacterSection() {
           />
         </Box>
       )}
-      {stats && (
-        <Box
-          display={"flex"}
-          flexDirection={"row"}
-          flexWrap={"wrap"}
-          px={2}
-          sx={{
-            mt: "0px !important",
-          }}
-        >
-          <StatComponent
-            label="Edge"
-            value={stats[Stat.Edge]}
-            updateTrack={(newValue) => updateCharacterStat(Stat.Edge, newValue)}
-            sx={{ mr: 2, mt: 2 }}
-          />
-          <StatComponent
-            label="Heart"
-            value={stats[Stat.Heart]}
-            updateTrack={(newValue) =>
-              updateCharacterStat(Stat.Heart, newValue)
-            }
-            sx={{ mr: 2, mt: 2 }}
-          />
-          <StatComponent
-            label="Iron"
-            value={stats[Stat.Iron]}
-            updateTrack={(newValue) => updateCharacterStat(Stat.Iron, newValue)}
-            sx={{ mr: 2, mt: 2 }}
-          />
-          <StatComponent
-            label="Shadow"
-            value={stats[Stat.Shadow]}
-            updateTrack={(newValue) =>
-              updateCharacterStat(Stat.Shadow, newValue)
-            }
-            sx={{ mr: 2, mt: 2 }}
-          />
-          <StatComponent
-            label="Wits"
-            value={stats[Stat.Wits]}
-            updateTrack={(newValue) => updateCharacterStat(Stat.Wits, newValue)}
-            sx={{ mr: 2, mt: 2 }}
-          />
-        </Box>
-      )}
+      <Stats />
       <Box
         px={2}
         display={"flex"}

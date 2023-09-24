@@ -5,4 +5,6 @@ export interface OracleAndMoveVisibilitySettings {
   hideDelveOracles?: boolean;
 }
 
-export interface SettingsDoc extends OracleAndMoveVisibilitySettings {}
+export interface SettingsDoc extends OracleAndMoveVisibilitySettings {
+  customStats: string[];
+}
