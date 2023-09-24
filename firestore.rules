@@ -37,7 +37,8 @@ service cloud.firestore {
     	allow read: if true;
       allow create: if request.auth.uid != null;
       allow write: if request.auth.uid in resource.data.ownerIds;
-      
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(["ownerIds"])     
+
       function checkIsOwner() {
       	let world = get(/databases/$(database)/documents/worlds/$(worldId)).data;
         return request.auth.uid in world.ownerIds;

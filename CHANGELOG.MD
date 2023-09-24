@@ -12,6 +12,8 @@
 
 ### Bug Fixes
 
+- Fixed a bug when switching GMs that didn't allow the new GM access to the world
+
 ---
 
 ## 1.2.0
