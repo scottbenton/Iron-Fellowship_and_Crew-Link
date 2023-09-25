@@ -27,15 +27,9 @@ export function CustomMovesSection(props: CustomMovesSectionProps) {
   const [currentlyEditingMove, setCurrentlyEditingMove] =
     useState<StoredMove>();
 
-  const addCustomMove = useStore(
-    (store) => store.customMovesAndOracles.addCustomMove
-  );
-  const updateCustomMove = useStore(
-    (store) => store.customMovesAndOracles.updateCustomMove
-  );
-  const removeCustomMove = useStore(
-    (store) => store.customMovesAndOracles.removeCustomMove
-  );
+  const addCustomMove = useStore((store) => store.settings.addCustomMove);
+  const updateCustomMove = useStore((store) => store.settings.updateCustomMove);
+  const removeCustomMove = useStore((store) => store.settings.removeCustomMove);
 
   const handleDelete = (moveId: string, move: StoredMove) => {
     confirm({

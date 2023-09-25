@@ -1,8 +1,9 @@
-import { CustomMovesAndOraclesSliceData } from "./customMovesAndOracles.slice.type";
+import { SettingsSliceData } from "./settings.slice.type";
 
-export const defaultCustomMovesAndOracles: CustomMovesAndOraclesSliceData = {
+export const defaultSettings: SettingsSliceData = {
   customMoves: {},
   customOracles: {},
+  customStats: [],
 
   delve: {
     showDelveMoves: true,

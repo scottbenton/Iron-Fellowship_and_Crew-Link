@@ -3,7 +3,8 @@ import { StoredMove } from "types/Moves.type";
 import { StoredOracle } from "types/Oracles.type";
 import { SettingsDoc } from "types/Settings.type";
 
-export interface CustomMovesAndOraclesSliceData {
+export interface SettingsSliceData {
+  customStats: string[];
   customMoves: {
     [uid: string]: StoredMove[];
   };
@@ -21,7 +22,7 @@ export interface CustomMovesAndOraclesSliceData {
   pinnedOraclesIds: { [oracleId: string]: boolean };
 }
 
-export interface CustomMovesAndOraclesSliceActions {
+export interface SettingsSliceActions {
   subscribe: (userIds: string[]) => Unsubscribe;
   subscribeToSettings: (params: {
     characterId?: string;
@@ -54,5 +55,4 @@ export interface CustomMovesAndOraclesSliceActions {
   resetStore: () => void;
 }
 
-export type CustomMovesAndOraclesSlice = CustomMovesAndOraclesSliceData &
-  CustomMovesAndOraclesSliceActions;
+export type SettingsSlice = SettingsSliceData & SettingsSliceActions;

@@ -1,45 +1,42 @@
 import { Checkbox, FormControlLabel, Stack } from "@mui/material";
 import { CustomMovesSection } from "components/CustomMovesSection";
 import { CustomOracleSection } from "components/CustomOraclesSection";
+import { CustomStats } from "components/CustomStats";
+import { SectionHeading } from "components/SectionHeading";
 import { useStore } from "stores/store";
 
 export function SettingsSection() {
   const uid = useStore((store) => store.auth.uid);
 
-  const customMoves = useStore(
-    (store) => store.customMovesAndOracles.customMoves
-  );
-  const customOracles = useStore(
-    (store) => store.customMovesAndOracles.customOracles
-  );
+  const customMoves = useStore((store) => store.settings.customMoves);
+  const customOracles = useStore((store) => store.settings.customOracles);
 
-  const hiddenMoves = useStore(
-    (store) => store.customMovesAndOracles.hiddenCustomMoveIds
-  );
+  const hiddenMoves = useStore((store) => store.settings.hiddenCustomMoveIds);
 
   const showOrHideCustomMove = useStore(
-    (store) => store.customMovesAndOracles.toggleCustomMoveVisibility
+    (store) => store.settings.toggleCustomMoveVisibility
   );
 
   const hiddenOracles = useStore(
-    (store) => store.customMovesAndOracles.hiddenCustomOracleIds
+    (store) => store.settings.hiddenCustomOracleIds
   );
   const showOrHideCustomOracle = useStore(
-    (store) => store.customMovesAndOracles.toggleCustomOracleVisibility
+    (store) => store.settings.toggleCustomOracleVisibility
   );
 
   const shouldShowDelveMoves = useStore(
-    (store) => store.customMovesAndOracles.delve.showDelveMoves
+    (store) => store.settings.delve.showDelveMoves
   );
   const shouldShowDelveOracles = useStore(
-    (store) => store.customMovesAndOracles.delve.showDelveOracles
+    (store) => store.settings.delve.showDelveOracles
   );
-  const updateSettings = useStore(
-    (store) => store.customMovesAndOracles.updateSettings
-  );
+  const updateSettings = useStore((store) => store.settings.updateSettings);
 
   return (
     <Stack spacing={3} sx={{ pb: 2 }}>
+      <SectionHeading label={"Custom Stats"} />
+
+      <CustomStats />
       <CustomMovesSection
         customMoves={customMoves[uid] ?? []}
         hiddenMoveIds={hiddenMoves}

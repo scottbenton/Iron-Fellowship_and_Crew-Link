@@ -4,7 +4,7 @@ import { AuthSlice } from "./auth/auth.slice.type";
 import { CampaignSlice } from "./campaign/campaign.slice.type";
 import { UserSlice } from "./user/users.slice.type";
 import { WorldSlice } from "./world/world.slice.type";
-import { CustomMovesAndOraclesSlice } from "./customMovesAndOracles/customMovesAndOracles.slice.type";
+import { SettingsSlice } from "./settings/settings.slice.type";
 import { NotesSlice } from "./notes/notes.slice.type";
 import { GameLogSlice } from "./gameLog/gameLog.slice.type";
 
@@ -14,7 +14,7 @@ export type IStore = {
   campaigns: CampaignSlice;
   users: UserSlice;
   worlds: WorldSlice;
-  customMovesAndOracles: CustomMovesAndOraclesSlice;
+  settings: SettingsSlice;
   notes: NotesSlice;
   gameLog: GameLogSlice;
 };

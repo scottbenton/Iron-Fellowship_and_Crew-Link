@@ -32,7 +32,7 @@ import { useStore } from "stores/store";
 import { useListenToCampaigns } from "stores/campaign/useListenToCampaigns";
 import { useListenToAuth } from "stores/auth/useListenToAuth";
 import { useListenToWorlds } from "stores/world/useListenToWorlds";
-import { useListenToOracleSettings } from "stores/customMovesAndOracles/useListenToOracleSettings";
+import { useListenToOracleSettings } from "stores/settings/useListenToOracleSettings";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

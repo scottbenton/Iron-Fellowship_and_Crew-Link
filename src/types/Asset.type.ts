@@ -80,7 +80,6 @@ export interface StoredAsset {
 }
 
 export function getAssetType(assetType?: string): AssetType | undefined {
-  console.debug(assetType);
   switch (assetType?.toLocaleLowerCase()) {
     case "ironsworn/assets/companion":
       return AssetType.Companion;

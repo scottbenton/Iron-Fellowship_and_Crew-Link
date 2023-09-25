@@ -5,7 +5,7 @@ import { useListenToCurrentCampaignCharacters } from "stores/campaign/currentCam
 import { useStore } from "stores/store";
 import { useListenToCurrentCampaignCharacterAssets } from "stores/campaign/currentCampaign/characters/useListenToCurrentCampaignCharacterAssets";
 import { useListenToCurrentCampaignCharacterTracks } from "stores/campaign/currentCampaign/characters/useListenToCurrentCampaignCharacterTracks";
-import { useListenToCustomMovesAndOracles } from "stores/customMovesAndOracles/useListenToCustomMovesAndOracles";
+import { useListenToSettings } from "stores/settings/useListenToSettings";
 import { useListenToNotes } from "stores/notes/useListenToNotes";
 import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
 import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
@@ -34,6 +34,6 @@ export function useSyncStore() {
 
   useListenToNotes();
 
-  useListenToCustomMovesAndOracles();
+  useListenToSettings();
   useListenToNewLogs();
 }

@@ -5,6 +5,7 @@
 ### New Features
 
 - Added a "Role" type to custom assets, in case users are playing with custom roles
+- Added the ability for GMs (in multiplayer) and players (in singleplayer) to define custom stats for their campaigns or characters
 
 ### Changes
 

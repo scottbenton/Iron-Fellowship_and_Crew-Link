@@ -8,9 +8,7 @@ import { useStore } from "stores/store";
 export function OracleSection() {
   const { rollOracleTable } = useRoller();
 
-  const pinnedOracles = useStore(
-    (store) => store.customMovesAndOracles.pinnedOraclesIds
-  );
+  const pinnedOracles = useStore((store) => store.settings.pinnedOraclesIds);
   const { search, filteredOracles, setSearch } = useFilterOracles();
 
   return (
