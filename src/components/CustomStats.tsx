@@ -75,24 +75,31 @@ export function CustomStats(props: CustomStatsProps) {
           }}
         >
           {customStats.map((customStat) => (
-            <Box key={customStat} pt={2} pr={2} position={"relative"}>
-              <ButtonBase
-                sx={(theme) => ({
-                  position: "absolute",
-                  top: theme.spacing(1),
-                  right: theme.spacing(1),
-                  bgcolor: theme.palette.grey[500],
-                  borderRadius: "100%",
-                })}
-                onClick={() => handleRemoveCustomStat(customStat)}
-              >
-                <CloseIcon
+            <Box
+              key={customStat}
+              pt={isInCampaign ? 1 : 2}
+              pr={isInCampaign ? 1 : 2}
+              position={"relative"}
+            >
+              {!isInCampaign && (
+                <ButtonBase
                   sx={(theme) => ({
-                    width: theme.spacing(2.5),
-                    height: theme.spacing(2.5),
+                    position: "absolute",
+                    top: theme.spacing(1),
+                    right: theme.spacing(1),
+                    bgcolor: theme.palette.grey[500],
+                    borderRadius: "100%",
                   })}
-                />
-              </ButtonBase>
+                  onClick={() => handleRemoveCustomStat(customStat)}
+                >
+                  <CloseIcon
+                    sx={(theme) => ({
+                      width: theme.spacing(2.5),
+                      height: theme.spacing(2.5),
+                    })}
+                  />
+                </ButtonBase>
+              )}
               <StatComponent
                 key={customStat}
                 label={customStat}
@@ -106,20 +113,13 @@ export function CustomStats(props: CustomStatsProps) {
         </Box>
       )}
       {!isOnCharacterSheet && customStats.length > 0 && (
-        <Box
-          display={"flex"}
-          flexDirection={"row"}
-          flexWrap={"wrap"}
-          px={2}
-          sx={{
-            mt: "0px !important",
-          }}
-        >
+        <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} px={2}>
           {customStats.map((customStat) => (
             <Chip
               label={customStat}
               onDelete={() => handleRemoveCustomStat(customStat)}
               key={customStat}
+              sx={{ mr: 1, mb: 1 }}
             />
           ))}
         </Box>

@@ -35,7 +35,7 @@ export function StatsSection() {
 
   return (
     <Box display={"flex"} flexWrap={"wrap"} justifyContent={"flex-start"}>
-      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mr={2}>
         <StatComponent
           label={"Edge"}
           value={stats[Stat.Edge]}
@@ -59,20 +59,17 @@ export function StatsSection() {
         <StatComponent
           label={"Wits"}
           value={stats[Stat.Wits]}
-          sx={{ my: 0.5, mr: 3 }}
+          sx={{ my: 0.5, mr: 1 }}
         />
+        {customStats.map((customStat) => (
+          <StatComponent
+            key={customStat}
+            label={customStat}
+            value={stats[customStat] ?? 0}
+            sx={{ my: 0.5, mr: 1 }}
+          />
+        ))}
       </Box>
-      {customStats.length > 0 && (
-        <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
-          {customStats.map((customStat) => (
-            <StatComponent
-              label={customStat}
-              value={stats[customStat] ?? 0}
-              sx={{ my: 0.5, mr: 1 }}
-            />
-          ))}
-        </Box>
-      )}
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} pl={0.5}>
         <StatComponent
           label={"Health"}

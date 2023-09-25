@@ -1,6 +1,8 @@
 import { Checkbox, FormControlLabel, Stack } from "@mui/material";
 import { CustomMovesSection } from "components/CustomMovesSection";
 import { CustomOracleSection } from "components/CustomOraclesSection";
+import { CustomStats } from "components/CustomStats";
+import { SectionHeading } from "components/SectionHeading";
 import { useStore } from "stores/store";
 
 export function SettingsSection() {
@@ -32,6 +34,9 @@ export function SettingsSection() {
 
   return (
     <Stack spacing={3} sx={{ pb: 2 }}>
+      <SectionHeading label={"Custom Stats"} />
+
+      <CustomStats />
       <CustomMovesSection
         customMoves={customMoves[uid] ?? []}
         hiddenMoveIds={hiddenMoves}
