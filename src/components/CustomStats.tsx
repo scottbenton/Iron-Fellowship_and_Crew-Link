@@ -88,9 +88,11 @@ export function CustomStats(props: CustomStatsProps) {
                     top: theme.spacing(1),
                     right: theme.spacing(1),
                     bgcolor: theme.palette.grey[500],
+                    color: theme.palette.common.white,
                     borderRadius: "100%",
                   })}
                   onClick={() => handleRemoveCustomStat(customStat)}
+                  aria-label={`Delete ${customStat}`}
                 >
                   <CloseIcon
                     sx={(theme) => ({
