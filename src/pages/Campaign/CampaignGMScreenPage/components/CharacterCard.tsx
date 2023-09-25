@@ -31,6 +31,8 @@ export function CharacterCard(props: CharacterCardProps) {
       store.campaigns.currentCampaign.characters.characterAssets[characterId]
   );
 
+  const customStats = useStore((store) => store.settings.customStats);
+
   const user = useStore((store) => store.users.userMap[uid]?.doc);
   const updateCharacter = useStore(
     (store) => store.campaigns.currentCampaign.characters.updateCharacter
@@ -113,6 +115,15 @@ export function CharacterCard(props: CharacterCardProps) {
             sx={{ mr: 1, mt: 1 }}
             disableRoll
           />
+          {customStats.map((customStat) => (
+            <StatComponent
+              key={customStat}
+              label={customStat}
+              value={character.stats[customStat] ?? 0}
+              sx={{ mr: 1, mt: 1 }}
+              disableRoll
+            />
+          ))}
         </Box>
         <Box display={"flex"} px={2} pb={2}>
           <StatComponent
