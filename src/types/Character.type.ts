@@ -3,7 +3,7 @@ import { DEBILITIES } from "./debilities.enum";
 import { Stat } from "./stats.enum";
 
 export type StatsMap = {
-  [key in Stat]: number;
+  [key: string]: number;
 };
 
 export enum INITIATIVE_STATUS {

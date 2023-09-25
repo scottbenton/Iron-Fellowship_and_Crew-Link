@@ -10,6 +10,8 @@ export function StatsSection() {
   const stats = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.stats
   ) as StatsMap;
+  const customStats = useStore((store) => store.settings.customStats);
+
   const health = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.health
   ) as number;
@@ -60,6 +62,17 @@ export function StatsSection() {
           sx={{ my: 0.5, mr: 3 }}
         />
       </Box>
+      {customStats.length > 0 && (
+        <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
+          {customStats.map((customStat) => (
+            <StatComponent
+              label={customStat}
+              value={stats[customStat] ?? 0}
+              sx={{ my: 0.5, mr: 1 }}
+            />
+          ))}
+        </Box>
+      )}
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} pl={0.5}>
         <StatComponent
           label={"Health"}

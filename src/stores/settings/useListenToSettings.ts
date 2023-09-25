@@ -2,14 +2,14 @@ import { Unsubscribe } from "firebase/firestore";
 import { useEffect } from "react";
 import { useStore } from "stores/store";
 
-export function useListenToCustomMovesAndOracles() {
+export function useListenToSettings() {
   const uid = useStore((store) => store.auth.user?.uid);
   const campaignGMIds = useStore(
     (store) => store.campaigns.currentCampaign.currentCampaign?.gmIds
   );
-  const subscribe = useStore((store) => store.customMovesAndOracles.subscribe);
+  const subscribe = useStore((store) => store.settings.subscribe);
   const subscribeToSettings = useStore(
-    (store) => store.customMovesAndOracles.subscribeToSettings
+    (store) => store.settings.subscribeToSettings
   );
 
   const campaignId = useStore(

@@ -1,10 +1,6 @@
 import {
   Stack,
   Box,
-  TextField,
-  FormControl,
-  FormLabel,
-  FormGroup,
   FormControlLabel,
   Checkbox,
   Button,
@@ -12,21 +8,15 @@ import {
 } from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
-import { DEBILITIES } from "types/debilities.enum";
-import { Stat } from "types/stats.enum";
-import { StatComponent } from "components/StatComponent";
-import { useState } from "react";
-import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
 import { CustomMovesSection } from "components/CustomMovesSection";
 import { CustomOracleSection } from "components/CustomOraclesSection";
 import { constructCharacterCardUrl } from "pages/Character/routes";
 import { useStore } from "stores/store";
-import { useConfirm } from "material-ui-confirm";
 import { Debilities } from "./Debilities";
 import { Stats } from "./Stats";
+import { CharacterSettings } from "./CharacterSettings";
 
 export function CharacterSection() {
-  const uid = useStore((store) => store.auth.uid);
   const characterId = useStore(
     (store) => store.characters.currentCharacter.currentCharacterId
   );
@@ -36,44 +26,24 @@ export function CharacterSection() {
 
   const { success } = useSnackbar();
 
-  const updateCharacter = useStore(
-    (store) => store.characters.currentCharacter.updateCurrentCharacter
-  );
-
-  const name = useStore(
-    (store) => store.characters.currentCharacter.currentCharacter?.name
-  );
-  const updateName = (newName: string) => {
-    return updateCharacter({ name: newName }).catch(() => {});
-  };
-
-  const existingPortraitSettings = useStore(
-    (store) => store.characters.currentCharacter.currentCharacter?.profileImage
-  );
-  const [portraitDialogOpen, setPortraitDialogOpen] = useState<boolean>(false);
-
-  const updateCharacterPortrait = useStore(
-    (store) => store.characters.currentCharacter.updateCurrentCharacterPortrait
-  );
-
   const customMoves = useStore(
-    (store) => store.customMovesAndOracles.customMoves[store.auth.uid]
+    (store) => store.settings.customMoves[store.auth.uid]
   );
   const hiddenMoveIds = useStore(
-    (store) => store.customMovesAndOracles?.hiddenCustomMoveIds
+    (store) => store.settings?.hiddenCustomMoveIds
   );
   const showOrHideCustomMove = useStore(
-    (store) => store.customMovesAndOracles.toggleCustomMoveVisibility
+    (store) => store.settings.toggleCustomMoveVisibility
   );
 
   const customOracles = useStore(
-    (store) => store.customMovesAndOracles.customOracles[store.auth.uid]
+    (store) => store.settings.customOracles[store.auth.uid]
   );
   const hiddenOracleIds = useStore(
-    (store) => store.customMovesAndOracles?.hiddenCustomOracleIds
+    (store) => store.settings?.hiddenCustomOracleIds
   );
   const showOrHideCustomOracle = useStore(
-    (store) => store.customMovesAndOracles.toggleCustomOracleVisibility
+    (store) => store.settings.toggleCustomOracleVisibility
   );
 
   const copyLinkToClipboard = () => {
@@ -89,86 +59,20 @@ export function CharacterSection() {
       });
   };
 
-  const characterName = useStore(
-    (store) => store.characters.currentCharacter.currentCharacter?.name ?? ""
-  );
-  const deleteCharacter = useStore((store) => store.characters.deleteCharacter);
-
-  const confirm = useConfirm();
-
-  const handleDeleteCharacter = (characterId: string) => {
-    confirm({
-      title: "Delete Character",
-      description: `Are you sure you want to delete ${characterName}?`,
-      confirmationText: "Delete",
-      confirmationButtonProps: {
-        variant: "contained",
-        color: "error",
-      },
-    })
-      .then(() => {
-        deleteCharacter(characterId).catch(() => {});
-      })
-      .catch(() => {});
-  };
-
   const shouldShowDelveMoves = useStore(
-    (store) => store.customMovesAndOracles.delve.showDelveMoves
+    (store) => store.settings.delve.showDelveMoves
   );
   const shouldShowDelveOracles = useStore(
-    (store) => store.customMovesAndOracles.delve.showDelveOracles
+    (store) => store.settings.delve.showDelveOracles
   );
-  const updateSettings = useStore(
-    (store) => store.customMovesAndOracles.updateSettings
-  );
+  const updateSettings = useStore((store) => store.settings.updateSettings);
 
   return (
     <Stack spacing={2} pb={2}>
       <Debilities />
-      <SectionHeading label={"Stats & Settings"} />
-      {name && (
-        <Box pt={2} px={2}>
-          <TextField
-            label={"Name"}
-            defaultValue={name}
-            onBlur={(evt) => updateName(evt.target.value)}
-          />
-        </Box>
-      )}
+      <CharacterSettings />
       <Stats />
-      <Box
-        px={2}
-        display={"flex"}
-        flexDirection={"column"}
-        alignItems={"flex-start"}
-      >
-        <Button
-          color={"inherit"}
-          variant={"outlined"}
-          onClick={() => setPortraitDialogOpen(true)}
-        >
-          Upload Character Portrait
-        </Button>
-        <PortraitUploaderDialog
-          open={portraitDialogOpen}
-          handleClose={() => setPortraitDialogOpen(false)}
-          handleUpload={(image, scale, position) =>
-            updateCharacterPortrait(
-              typeof image === "string" ? undefined : image,
-              scale,
-              position
-            ).catch(() => {})
-          }
-          existingPortraitSettings={existingPortraitSettings}
-        />
-        <Button
-          sx={{ mt: 2 }}
-          color={"error"}
-          onClick={() => handleDeleteCharacter(characterId ?? "")}
-        >
-          Delete Character
-        </Button>
-      </Box>
+
       {!campaignId && (
         <>
           <CustomMovesSection

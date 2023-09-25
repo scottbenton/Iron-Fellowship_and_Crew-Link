@@ -1,6 +1,6 @@
 import { CreateSliceType } from "stores/store.type";
-import { CustomMovesAndOraclesSlice } from "./customMovesAndOracles.slice.type";
-import { defaultCustomMovesAndOracles } from "./customMovesAndOracles.slice.default";
+import { SettingsSlice } from "./settings.slice.type";
+import { defaultSettings } from "./settings.slice.default";
 import { Unsubscribe } from "firebase/firestore";
 import { listenToCustomMoves } from "api-calls/user/custom-moves/listenToCustomMoves";
 import { listenToCustomOracles } from "api-calls/user/custom-oracles/listenToCustomOracles";
@@ -17,10 +17,11 @@ import { removeCustomOracle } from "api-calls/user/custom-oracles/removeCustomOr
 import { updatePinnedOracle } from "api-calls/custom-move-oracle-settings/settings/updatePinnedOracle";
 import { updateSettings } from "api-calls/custom-move-oracle-settings/updateSettings";
 
-export const createCustomMovesAndOraclesSlice: CreateSliceType<
-  CustomMovesAndOraclesSlice
-> = (set, getState) => ({
-  ...defaultCustomMovesAndOracles,
+export const createSettingsSlice: CreateSliceType<SettingsSlice> = (
+  set,
+  getState
+) => ({
+  ...defaultSettings,
 
   subscribe: (uids) => {
     getState().users.loadUserDocuments(uids);
@@ -32,7 +33,7 @@ export const createCustomMovesAndOraclesSlice: CreateSliceType<
           uid,
           (moves) => {
             set((store) => {
-              store.customMovesAndOracles.customMoves[uid] = moves;
+              store.settings.customMoves[uid] = moves;
             });
           },
           (error) => {
@@ -46,7 +47,7 @@ export const createCustomMovesAndOraclesSlice: CreateSliceType<
           uid,
           (oracles) => {
             set((store) => {
-              store.customMovesAndOracles.customOracles[uid] = oracles;
+              store.settings.customOracles[uid] = oracles;
             });
           },
           (error) => {
@@ -57,7 +58,7 @@ export const createCustomMovesAndOraclesSlice: CreateSliceType<
     });
     return () => {
       unsubscribes.forEach((unsubscribe) => unsubscribe());
-      getState().customMovesAndOracles.resetStore();
+      getState().settings.resetStore();
     };
   },
 
@@ -68,14 +69,15 @@ export const createCustomMovesAndOraclesSlice: CreateSliceType<
         characterId,
         (settings) => {
           set((store) => {
-            store.customMovesAndOracles.hiddenCustomMoveIds =
-              settings.hiddenCustomMoveIds;
-            store.customMovesAndOracles.hiddenCustomOracleIds =
+            store.settings.hiddenCustomMoveIds = settings.hiddenCustomMoveIds;
+            store.settings.hiddenCustomOracleIds =
               settings.hiddenCustomOraclesIds;
-            store.customMovesAndOracles.delve = {
+            store.settings.delve = {
               showDelveMoves: !settings.hideDelveMoves,
               showDelveOracles: !settings.hideDelveOracles,
             };
+
+            store.settings.customStats = settings.customStats;
           });
         },
         (error) => {
@@ -91,8 +93,7 @@ export const createCustomMovesAndOraclesSlice: CreateSliceType<
       uid,
       (settings) => {
         set((store) => {
-          store.customMovesAndOracles.pinnedOraclesIds =
-            settings.pinnedOracleSections ?? {};
+          store.settings.pinnedOraclesIds = settings.pinnedOracleSections ?? {};
         });
       },
       (error) => {
@@ -175,10 +176,10 @@ export const createCustomMovesAndOraclesSlice: CreateSliceType<
 
   resetStore: () => {
     set((state) => {
-      const pinnedOraclesIds = state.customMovesAndOracles.pinnedOraclesIds;
-      state.customMovesAndOracles = {
-        ...state.customMovesAndOracles,
-        ...defaultCustomMovesAndOracles,
+      const pinnedOraclesIds = state.settings.pinnedOraclesIds;
+      state.settings = {
+        ...state.settings,
+        ...defaultSettings,
         pinnedOraclesIds,
       };
     });

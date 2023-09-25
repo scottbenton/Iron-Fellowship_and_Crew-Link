@@ -65,10 +65,10 @@ function convertStoredOracleToOracle(storedOracle: StoredOracle): OracleTable {
 
 export function useCustomOracles() {
   const customOracleAuthorMap = useStore(
-    (store) => store.customMovesAndOracles.customOracles
+    (store) => store.settings.customOracles
   );
   const hiddenOracleIds = useStore(
-    (store) => store.customMovesAndOracles.hiddenCustomOracleIds
+    (store) => store.settings.hiddenCustomOracleIds
   );
 
   const customOracleAuthorNames = useStore((store) => {

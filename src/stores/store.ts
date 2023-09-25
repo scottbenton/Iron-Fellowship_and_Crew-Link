@@ -7,7 +7,7 @@ import { createCampaignSlice } from "./campaign/campaign.slice";
 import { createUsersSlice } from "./user/users.slice";
 import { createWorldSlice } from "./world/world.slice";
 import { shallow } from "zustand/shallow";
-import { createCustomMovesAndOraclesSlice } from "./customMovesAndOracles/customMovesAndOracles.slice";
+import { createSettingsSlice } from "./settings/settings.slice";
 import { createNotesSlice } from "./notes/notes.slice";
 import { createGameLogSlice } from "./gameLog/gameLog.slice";
 
@@ -18,7 +18,7 @@ export const useStore = createWithEqualityFn<IStore>()(
     worlds: createWorldSlice(...params),
     auth: createAuthSlice(...params),
     users: createUsersSlice(...params),
-    customMovesAndOracles: createCustomMovesAndOraclesSlice(...params),
+    settings: createSettingsSlice(...params),
     notes: createNotesSlice(...params),
     gameLog: createGameLogSlice(...params),
   })),

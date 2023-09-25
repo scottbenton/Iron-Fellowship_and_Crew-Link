@@ -38,12 +38,8 @@ function convertStoredMoveToMove(storedMove: StoredMove): Move {
 }
 
 export function useCustomMoves() {
-  const customMoveAuthorMap = useStore(
-    (store) => store.customMovesAndOracles.customMoves
-  );
-  const hiddenMoveIds = useStore(
-    (store) => store.customMovesAndOracles.hiddenCustomMoveIds
-  );
+  const customMoveAuthorMap = useStore((store) => store.settings.customMoves);
+  const hiddenMoveIds = useStore((store) => store.settings.hiddenCustomMoveIds);
 
   const customMoveAuthorNames = useStore((store) => {
     const nameMap: { [key: string]: string } = {};

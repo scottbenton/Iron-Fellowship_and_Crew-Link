@@ -13,7 +13,7 @@ export function useFilterMoves() {
   const { customMoveCategories } = useCustomMoves();
 
   const showDelveMoves = useStore(
-    (store) => store.customMovesAndOracles.delve.showDelveMoves
+    (store) => store.settings.delve.showDelveMoves
   );
 
   useEffect(() => {

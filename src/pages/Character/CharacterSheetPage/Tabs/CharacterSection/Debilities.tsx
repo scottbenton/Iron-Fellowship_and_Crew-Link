@@ -50,6 +50,7 @@ export function Debilities() {
                         name={debility}
                       />
                     }
+                    sx={{ textTransform: "capitalize" }}
                     label={debility}
                   />
                 ))}

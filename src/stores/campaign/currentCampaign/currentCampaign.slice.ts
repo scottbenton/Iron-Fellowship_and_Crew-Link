@@ -156,7 +156,7 @@ export const createCurrentCampaignSlice: CreateSliceType<
       state.campaigns.currentCampaign.tracks.resetStore();
       state.campaigns.currentCampaign.characters.resetStore();
       state.notes.resetStore();
-      state.customMovesAndOracles.resetStore();
+      state.settings.resetStore();
       state.gameLog.resetStore();
 
       set((store) => {

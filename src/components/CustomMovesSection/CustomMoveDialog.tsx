@@ -23,9 +23,10 @@ import { useState } from "react";
 import { StoredMove } from "types/Moves.type";
 import { MoveStatKeys, PlayerConditionMeter, Stat } from "types/stats.enum";
 import type { OracleTable } from "dataforged";
+import { useStore } from "stores/store";
 
 type EnabledStats = {
-  [stat in MoveStatKeys]: boolean;
+  [stat: string]: boolean;
 };
 
 interface FormValues {
@@ -54,22 +55,13 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
   const combinedOracles = { ...oracleMap, ...allCustomOracleMap };
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [oracleMissingError, setOracleMissingError] = useState<boolean>(false);
+
+  const customStats = useStore((store) => store.settings.customStats);
 
   const initialValues: FormValues = {
     name: move?.name ?? "",
     description: move?.text ?? "",
-    enabledStats: {
-      [Stat.Edge]: false,
-      [Stat.Heart]: false,
-      [Stat.Iron]: false,
-      [Stat.Shadow]: false,
-      [Stat.Wits]: false,
-      [PlayerConditionMeter.Health]: false,
-      [PlayerConditionMeter.Spirit]: false,
-      [PlayerConditionMeter.Supply]: false,
-      ["companion health"]: false,
-    },
+    enabledStats: {},
     oracleIds: move?.oracleIds ?? [],
   };
 
@@ -196,7 +188,9 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={form.values.enabledStats[Stat.Edge]}
+                              checked={
+                                form.values.enabledStats[Stat.Edge] ?? false
+                              }
                               onChange={(evt, checked) =>
                                 form.setFieldValue(
                                   `enabledStats.${Stat.Edge}`,
@@ -211,7 +205,9 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={form.values.enabledStats[Stat.Heart]}
+                              checked={
+                                form.values.enabledStats[Stat.Heart] ?? false
+                              }
                               onChange={(evt, checked) =>
                                 form.setFieldValue(
                                   `enabledStats.${Stat.Heart}`,
@@ -226,7 +222,9 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={form.values.enabledStats[Stat.Iron]}
+                              checked={
+                                form.values.enabledStats[Stat.Iron] ?? false
+                              }
                               onChange={(evt, checked) =>
                                 form.setFieldValue(
                                   `enabledStats.${Stat.Iron}`,
@@ -241,7 +239,9 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={form.values.enabledStats[Stat.Shadow]}
+                              checked={
+                                form.values.enabledStats[Stat.Shadow] ?? false
+                              }
                               onChange={(evt, checked) =>
                                 form.setFieldValue(
                                   `enabledStats.${Stat.Shadow}`,
@@ -256,7 +256,9 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={form.values.enabledStats[Stat.Wits]}
+                              checked={
+                                form.values.enabledStats[Stat.Wits] ?? false
+                              }
                               onChange={(evt, checked) =>
                                 form.setFieldValue(
                                   `enabledStats.${Stat.Wits}`,
@@ -269,6 +271,31 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                           label="Wits"
                         />
                       </FormGroup>
+                      {customStats.length > 0 && (
+                        <FormGroup>
+                          {customStats.map((customStat) => (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={
+                                    form.values.enabledStats[customStat] ??
+                                    false
+                                  }
+                                  onChange={(evt, checked) =>
+                                    form.setFieldValue(
+                                      `enabledStats.${customStat}`,
+                                      checked
+                                    )
+                                  }
+                                  name={`enabledStats.${customStat}`}
+                                />
+                              }
+                              sx={{ textTransform: "capitalize" }}
+                              label={customStat}
+                            />
+                          ))}
+                        </FormGroup>
+                      )}
                       <FormGroup>
                         <FormControlLabel
                           control={
@@ -276,7 +303,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               checked={
                                 form.values.enabledStats[
                                   PlayerConditionMeter.Health
-                                ]
+                                ] ?? false
                               }
                               onChange={(evt, checked) =>
                                 form.setFieldValue(
@@ -295,7 +322,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               checked={
                                 form.values.enabledStats[
                                   PlayerConditionMeter.Spirit
-                                ]
+                                ] ?? false
                               }
                               onChange={(evt, checked) =>
                                 form.setFieldValue(
@@ -314,7 +341,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               checked={
                                 form.values.enabledStats[
                                   PlayerConditionMeter.Supply
-                                ]
+                                ] ?? false
                               }
                               onChange={(evt, checked) =>
                                 form.setFieldValue(
@@ -331,7 +358,8 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                           control={
                             <Checkbox
                               checked={
-                                form.values.enabledStats["companion health"]
+                                form.values.enabledStats["companion health"] ??
+                                false
                               }
                               onChange={(evt, checked) =>
                                 form.setFieldValue(
