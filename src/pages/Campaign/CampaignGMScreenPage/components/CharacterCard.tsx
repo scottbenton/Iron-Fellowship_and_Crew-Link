@@ -31,6 +31,12 @@ export function CharacterCard(props: CharacterCardProps) {
       store.campaigns.currentCampaign.characters.characterAssets[characterId]
   );
 
+  const customStats = useStore((store) => store.settings.customStats);
+  const customTracks = useStore((store) =>
+    store.settings.customTracks.filter((track) => track.rollable)
+  );
+  const customTrackValues = character.customTracks ?? {};
+
   const user = useStore((store) => store.users.userMap[uid]?.doc);
   const updateCharacter = useStore(
     (store) => store.campaigns.currentCampaign.characters.updateCharacter
@@ -113,6 +119,15 @@ export function CharacterCard(props: CharacterCardProps) {
             sx={{ mr: 1, mt: 1 }}
             disableRoll
           />
+          {customStats.map((customStat) => (
+            <StatComponent
+              key={customStat}
+              label={customStat}
+              value={character.stats[customStat] ?? 0}
+              sx={{ mr: 1, mt: 1 }}
+              disableRoll
+            />
+          ))}
         </Box>
         <Box display={"flex"} px={2} pb={2}>
           <StatComponent
@@ -133,6 +148,23 @@ export function CharacterCard(props: CharacterCardProps) {
             disableRoll
             sx={{ mr: 1, mt: 1 }}
           />
+          {customTracks.map((customTrack) => {
+            const index = customTrackValues[customTrack.label];
+            const value =
+              index !== undefined &&
+              typeof customTrack.values[index].value === "number"
+                ? (customTrack.values[index].value as number)
+                : 0;
+
+            return (
+              <StatComponent
+                label={customTrack.label}
+                value={value}
+                disableRoll
+                sx={{ mr: 1, mt: 1 }}
+              />
+            );
+          })}
         </Box>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>

@@ -20,6 +20,8 @@ export function listenToSettings(
       onSettings({
         hiddenCustomMoveIds: [],
         hiddenCustomOraclesIds: [],
+        customStats: [],
+        customTracks: {},
         ...snapshot.data(),
       });
     },

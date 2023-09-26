@@ -26,14 +26,12 @@ export function CustomOracleSection(props: CustomOracleSectionProps) {
   const [currentlyEditingOracle, setCurrentlyEditingOracle] =
     useState<StoredOracle>();
 
-  const addCustomOracle = useStore(
-    (store) => store.customMovesAndOracles.addCustomOracle
-  );
+  const addCustomOracle = useStore((store) => store.settings.addCustomOracle);
   const updateCustomOracle = useStore(
-    (store) => store.customMovesAndOracles.updateCustomOracle
+    (store) => store.settings.updateCustomOracle
   );
   const removeCustomOracle = useStore(
-    (store) => store.customMovesAndOracles.removeCustomOracle
+    (store) => store.settings.removeCustomOracle
   );
 
   const handleDelete = (oracleId: string, oracle: StoredOracle) => {

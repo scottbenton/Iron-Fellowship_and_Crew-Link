@@ -1,9 +1,7 @@
 import { Button, DialogContent } from "@mui/material";
 import { MarkdownRenderer } from "components/MarkdownRenderer";
 import { MoveStatRollers } from "./MoveStatRollers";
-import { MoveStats } from "components/MovesSection/MoveStats.type";
 import { moveMap } from "data/moves";
-import { Stat, PlayerConditionMeter } from "types/stats.enum";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { useCustomMoves } from "components/MovesSection/useCustomMoves";
 import { oracleMap } from "data/oracles";
@@ -33,45 +31,6 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
   const allOracles = { ...oracleMap, ...allCustomOracleMap };
 
   const move = moveMap[id] ?? customMoveMap[id];
-
-  const stats: MoveStats | undefined = useStore((store) => {
-    const character = store.characters.currentCharacter.currentCharacter;
-    const campaignSupply =
-      store.campaigns.currentCampaign.currentCampaign?.supply;
-    const assets = Object.values(
-      store.characters.currentCharacter.assets.assets
-    );
-
-    if (character) {
-      return {
-        [Stat.Edge]: character.stats[Stat.Edge],
-        [Stat.Heart]: character.stats[Stat.Heart],
-        [Stat.Iron]: character.stats[Stat.Iron],
-        [Stat.Shadow]: character.stats[Stat.Shadow],
-        [Stat.Wits]: character.stats[Stat.Wits],
-        [PlayerConditionMeter.Health]: character.health,
-        [PlayerConditionMeter.Spirit]: character.spirit,
-        [PlayerConditionMeter.Supply]: character.campaignId
-          ? campaignSupply ?? 0
-          : character.supply,
-        companionHealth:
-          assets
-            ?.filter(
-              (asset) =>
-                asset.trackValue !== null && asset.trackValue !== undefined
-            )
-            .map((asset) => ({
-              companionName:
-                asset.customAsset?.Title.Short ??
-                assetMap[asset.id]?.Title.Short ??
-                "Unknown",
-              health: asset.trackValue ?? 0,
-            })) ?? [],
-      };
-    } else {
-      return undefined;
-    }
-  });
 
   if (!move) {
     return (
@@ -111,7 +70,7 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
         {move.Title.Standard}
       </LinkedDialogContentTitle>
       <DialogContent>
-        <MoveStatRollers stats={stats} visibleStats={visibleStats} />
+        <MoveStatRollers visibleStats={visibleStats} />
         <MarkdownRenderer markdown={move.Text} />
         {moveOracles.map(
           (oracle) =>

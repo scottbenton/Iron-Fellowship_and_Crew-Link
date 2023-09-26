@@ -5,7 +5,7 @@ import { useStore } from "stores/store";
 export function useListenToOracleSettings() {
   const uid = useStore((store) => store.auth.user?.uid);
   const subscribe = useStore(
-    (store) => store.customMovesAndOracles.subscribeToPinnedOracleSettings
+    (store) => store.settings.subscribeToPinnedOracleSettings
   );
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import { DEBILITIES } from "./debilities.enum";
 import { Stat } from "./stats.enum";
 
 export type StatsMap = {
-  [key in Stat]: number;
+  [key: string]: number;
 };
 
 export enum INITIATIVE_STATUS {
@@ -28,7 +28,7 @@ export interface CharacterDocument {
   };
   bonds?: number;
   debilities?: {
-    [key in DEBILITIES]?: boolean;
+    [key: string]: boolean;
   };
   initiativeStatus?: INITIATIVE_STATUS;
   shareNotesWithGM?: boolean;
@@ -41,6 +41,10 @@ export interface CharacterDocument {
     scale: number;
   };
   worldId?: string | null;
+
+  customTracks?: {
+    [trackName: string]: number;
+  };
 }
 
 export interface AssetDocument {

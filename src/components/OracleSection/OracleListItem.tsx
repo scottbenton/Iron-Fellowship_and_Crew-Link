@@ -36,7 +36,7 @@ export function OracleListItem(props: OracleListItemProps) {
 
   const [loading, setLoading] = useState(false);
   const updatePinnedOracle = useStore(
-    (store) => store.customMovesAndOracles.togglePinnedOracle
+    (store) => store.settings.togglePinnedOracle
   );
 
   return (

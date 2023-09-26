@@ -1,3 +1,5 @@
+import { CustomTrack } from "./CustomTrackSettings.type";
+
 export interface OracleAndMoveVisibilitySettings {
   hiddenCustomOraclesIds: string[];
   hiddenCustomMoveIds: string[];
@@ -5,4 +7,7 @@ export interface OracleAndMoveVisibilitySettings {
   hideDelveOracles?: boolean;
 }
 
-export interface SettingsDoc extends OracleAndMoveVisibilitySettings {}
+export interface SettingsDoc extends OracleAndMoveVisibilitySettings {
+  customStats: string[];
+  customTracks: { [key: string]: CustomTrack };
+}

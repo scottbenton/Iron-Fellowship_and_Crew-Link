@@ -5,6 +5,7 @@ export enum AssetType {
   Path = "Path",
   CombatTalent = "Combat talent",
   Ritual = "Ritual",
+  Role = "Role",
 }
 
 export interface StoredAsset {
@@ -23,14 +24,16 @@ export interface StoredAsset {
 
 export function getAssetType(assetType?: string): AssetType | undefined {
   switch (assetType?.toLocaleLowerCase()) {
-    case "companion":
+    case "ironsworn/assets/companion":
       return AssetType.Companion;
-    case "combat talent":
+    case "ironsworn/assets/combat_talent":
       return AssetType.CombatTalent;
-    case "path":
+    case "ironsworn/assets/path":
       return AssetType.Path;
-    case "ritual":
+    case "ironsworn/assets/ritual":
       return AssetType.Ritual;
+    case "ironsworn/assets/role":
+      return AssetType.Role;
     default:
       return undefined;
   }
@@ -41,4 +44,5 @@ export const assetTypeToIdMap: { [assetType in AssetType]: string } = {
   [AssetType.CombatTalent]: "ironsworn/assets/combat_talent",
   [AssetType.Companion]: "ironsworn/assets/companion",
   [AssetType.Ritual]: "ironsworn/assets/ritual",
+  [AssetType.Role]: "ironsworn/assets/role",
 };

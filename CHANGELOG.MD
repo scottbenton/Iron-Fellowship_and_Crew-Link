@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.3.0
+
+### New Features
+
+- Added a "Role" type to custom assets, in case users are playing with custom roles
+- Added the ability for GMs (in multiplayer) and players (in singleplayer) to define custom stats for their campaigns or characters
+- Added the ability for GMs (in multiplayer) and players (in singleplayer) to define custom tracks for their campaigns or characters
+- Custom stats and tracks can now be used in custom moves
+
+### Changes
+
+- Removed restrictions on number of abilities when creating or modifying custom assets.
+
+### Bug Fixes
+
+- Fixed a bug when switching GMs that didn't allow the new GM access to the world
+- Fixed non companion assets with tracks showing up in the "Companion Endure Harm" Move
+
+---
+
 ## 1.2.0
 
 ### New Features

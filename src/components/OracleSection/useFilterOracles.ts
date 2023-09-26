@@ -10,12 +10,10 @@ export function useFilterOracles() {
   const { search, setSearch, debouncedSearch } = useSearch();
 
   const { customOracleCategories, allCustomOracleMap } = useCustomOracles();
-  const pinnedOracles = useStore(
-    (store) => store.customMovesAndOracles.pinnedOraclesIds
-  );
+  const pinnedOracles = useStore((store) => store.settings.pinnedOraclesIds);
 
   const showDelveOracles = useStore(
-    (store) => store.customMovesAndOracles.delve.showDelveOracles
+    (store) => store.settings.delve.showDelveOracles
   );
 
   const combinedOracles = useMemo(() => {

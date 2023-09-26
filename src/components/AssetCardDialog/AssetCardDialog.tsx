@@ -39,13 +39,14 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
       inputs[encodeDataswornId(input.$id)] = "";
     });
 
+    const enabledAbilities: { [key: number]: boolean } = {};
+    asset.Abilities.map((ability, index) => {
+      enabledAbilities[index] = ability.Enabled;
+    });
+
     const storedAsset: Omit<StoredAsset, "order"> = {
       id: asset.$id,
-      enabledAbilities: {
-        0: asset.Abilities[0].Enabled,
-        1: asset.Abilities[1].Enabled,
-        2: asset.Abilities[2].Enabled,
-      },
+      enabledAbilities,
       inputs: Object.keys(inputs).length > 0 ? inputs : null,
       trackValue:
         asset?.["Condition meter"]?.Value ??

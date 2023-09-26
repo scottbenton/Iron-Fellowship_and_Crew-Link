@@ -10,6 +10,8 @@ export function StatsSection() {
   const stats = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.stats
   ) as StatsMap;
+  const customStats = useStore((store) => store.settings.customStats);
+
   const health = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.health
   ) as number;
@@ -31,9 +33,17 @@ export function StatsSection() {
     (store) => store.characters.currentCharacter.updateCurrentCharacter
   );
 
+  const customTracks = useStore((store) =>
+    store.settings.customTracks.filter((track) => track.rollable)
+  );
+  const customTrackValues = useStore(
+    (store) =>
+      store.characters.currentCharacter.currentCharacter?.customTracks ?? {}
+  );
+
   return (
     <Box display={"flex"} flexWrap={"wrap"} justifyContent={"flex-start"}>
-      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mr={2}>
         <StatComponent
           label={"Edge"}
           value={stats[Stat.Edge]}
@@ -57,8 +67,16 @@ export function StatsSection() {
         <StatComponent
           label={"Wits"}
           value={stats[Stat.Wits]}
-          sx={{ my: 0.5, mr: 3 }}
+          sx={{ my: 0.5, mr: 1 }}
         />
+        {customStats.map((customStat) => (
+          <StatComponent
+            key={customStat}
+            label={customStat}
+            value={stats[customStat] ?? 0}
+            sx={{ my: 0.5, mr: 1 }}
+          />
+        ))}
       </Box>
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} pl={0.5}>
         <StatComponent
@@ -74,8 +92,24 @@ export function StatsSection() {
         <StatComponent
           label={"Supply"}
           value={supply}
-          sx={{ my: 0.5, mr: 3 }}
+          sx={{ my: 0.5, mr: customTracks.length > 0 ? 1 : 3 }}
         />
+
+        {customTracks.map((track, index) => (
+          <StatComponent
+            key={track.label}
+            label={track.label}
+            value={
+              customTrackValues[track.label] !== undefined &&
+              typeof track.values[customTrackValues[track.label]].value ===
+                "number"
+                ? (track.values[customTrackValues[track.label]].value as number)
+                : 0
+            }
+            sx={{ my: 0.5, mr: customTracks.length - 1 === index ? 3 : 1 }}
+          />
+        ))}
+
         <StatComponent
           label={"Adds"}
           updateTrack={(newValue) => updateAdds({ adds: newValue })}
