@@ -32,6 +32,10 @@ export function CharacterCard(props: CharacterCardProps) {
   );
 
   const customStats = useStore((store) => store.settings.customStats);
+  const customTracks = useStore((store) =>
+    store.settings.customTracks.filter((track) => track.rollable)
+  );
+  const customTrackValues = character.customTracks ?? {};
 
   const user = useStore((store) => store.users.userMap[uid]?.doc);
   const updateCharacter = useStore(
@@ -144,6 +148,23 @@ export function CharacterCard(props: CharacterCardProps) {
             disableRoll
             sx={{ mr: 1, mt: 1 }}
           />
+          {customTracks.map((customTrack) => {
+            const index = customTrackValues[customTrack.label];
+            const value =
+              index !== undefined &&
+              typeof customTrack.values[index].value === "number"
+                ? (customTrack.values[index].value as number)
+                : 0;
+
+            return (
+              <StatComponent
+                label={customTrack.label}
+                value={value}
+                disableRoll
+                sx={{ mr: 1, mt: 1 }}
+              />
+            );
+          })}
         </Box>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>

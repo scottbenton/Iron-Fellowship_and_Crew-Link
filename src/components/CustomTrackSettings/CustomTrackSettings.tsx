@@ -17,7 +17,6 @@ import { CustomTrack } from "types/CustomTrackSettings.type";
 
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { encodeDataswornId } from "functions/dataswornIdEncoder";
 
 export function CustomTrackSettings() {
   const [customTrackDialogOpen, setCustomTrackDialogOpen] =
@@ -67,44 +66,48 @@ export function CustomTrackSettings() {
   return (
     <>
       <SectionHeading label="Custom Tracks" />
-      <Box px={2}>
-        <Card variant={"outlined"}>
-          <List disablePadding>
-            {customTracks.map((customTrack) => (
-              <ListItem
-                dense
-                key={customTrack.label}
-                sx={(theme) => ({
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  "&:nth-of-type(even)": {
-                    backgroundColor: theme.palette.action.hover,
-                  },
-                })}
-              >
-                <ListItemText primary={customTrack.label} />
-                <Box>
-                  <Tooltip title={"Edit Custom Track"}>
-                    <IconButton
-                      onClick={() => {
-                        setCurrentlyEditingTrack(customTrack);
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={"Delete Custom Track"}>
-                    <IconButton onClick={() => deleteCustomTrack(customTrack)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </ListItem>
-            ))}
-          </List>
-        </Card>
-      </Box>
+      {customTracks.length > 0 && (
+        <Box px={2}>
+          <Card variant={"outlined"}>
+            <List disablePadding>
+              {customTracks.map((customTrack) => (
+                <ListItem
+                  dense
+                  key={customTrack.label}
+                  sx={(theme) => ({
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    "&:nth-of-type(even)": {
+                      backgroundColor: theme.palette.action.hover,
+                    },
+                  })}
+                >
+                  <ListItemText primary={customTrack.label} />
+                  <Box>
+                    <Tooltip title={"Edit Custom Track"}>
+                      <IconButton
+                        onClick={() => {
+                          setCurrentlyEditingTrack(customTrack);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={"Delete Custom Track"}>
+                      <IconButton
+                        onClick={() => deleteCustomTrack(customTrack)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </Card>
+        </Box>
+      )}
       <Box px={2}>
         <Button
           variant={"outlined"}

@@ -56,15 +56,11 @@ export function AddCustomTrackDialog(props: AddCustomTrackDialogProps) {
   );
 
   const isNumericTrack = useMemo(() => {
-    console.debug(
-      cells.filter((cell) => cell.selectable === true && !isNumeric(cell.value))
-    );
     return (
       cells.filter((cell) => cell.selectable === true && !isNumeric(cell.value))
         .length === 0
     );
   }, [cells]);
-  console.debug(isNumericTrack);
 
   const resetAndClose = () => {
     onClose();
@@ -121,7 +117,7 @@ export function AddCustomTrackDialog(props: AddCustomTrackDialogProps) {
   return (
     <Dialog open={open} onClose={resetAndClose}>
       <DialogTitleWithCloseButton onClose={resetAndClose}>
-        Add Custom Track
+        {initialTrack ? "Edit" : "Add"} Custom Track
       </DialogTitleWithCloseButton>
       <DialogContent>
         <Stack spacing={3} direction={"column"} sx={{ mt: 1 }}>
@@ -258,7 +254,7 @@ export function AddCustomTrackDialog(props: AddCustomTrackDialogProps) {
           variant={"contained"}
           onClick={() => handleSubmit()}
         >
-          Create Custom Track
+          {initialTrack ? "Save Changes" : "Create Custom Track"}
         </Button>
       </DialogActions>
     </Dialog>

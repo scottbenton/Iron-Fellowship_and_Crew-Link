@@ -74,7 +74,7 @@ export function CharacterSection() {
       <CharacterSettings />
       <Stats />
 
-      <CustomTrackSettings />
+      {!campaignId && <CustomTrackSettings />}
       {!campaignId && (
         <>
           <CustomMovesSection

@@ -78,7 +78,6 @@ export function CustomTrack(props: CustomTrackProps) {
               ]}
             >
               {typeof cell.value === "number" && cell.value > 0 && "+"}
-              {typeof cell.value === "number" && cell.value < 0 && "+"}
               {cell.value}
             </ToggleButton>
           ) : (
