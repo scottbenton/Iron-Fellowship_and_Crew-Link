@@ -15,6 +15,7 @@ import { useStore } from "stores/store";
 import { Debilities } from "./Debilities";
 import { Stats } from "./Stats";
 import { CharacterSettings } from "./CharacterSettings";
+import { CustomTrackSettings } from "components/CustomTrackSettings";
 
 export function CharacterSection() {
   const characterId = useStore(
@@ -73,6 +74,7 @@ export function CharacterSection() {
       <CharacterSettings />
       <Stats />
 
+      <CustomTrackSettings />
       {!campaignId && (
         <>
           <CustomMovesSection

@@ -8,6 +8,7 @@ import {
 import { Track } from "components/Track";
 import ResetIcon from "@mui/icons-material/Replay";
 import { useStore } from "stores/store";
+import { CustomTracks } from "./CustomTracks";
 
 export type TRACK_KEYS = "health" | "spirit" | "supply" | "momentum";
 
@@ -123,6 +124,7 @@ export function TracksSection() {
           </ButtonBase>
         </Box>
       </Grid>
+      <CustomTracks />
     </Grid>
   );
 }

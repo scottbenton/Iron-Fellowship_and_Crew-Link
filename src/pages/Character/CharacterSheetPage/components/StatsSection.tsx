@@ -33,6 +33,14 @@ export function StatsSection() {
     (store) => store.characters.currentCharacter.updateCurrentCharacter
   );
 
+  const customTracks = useStore((store) =>
+    store.settings.customTracks.filter((track) => track.rollable)
+  );
+  const customTrackValues = useStore(
+    (store) =>
+      store.characters.currentCharacter.currentCharacter?.customTracks ?? {}
+  );
+
   return (
     <Box display={"flex"} flexWrap={"wrap"} justifyContent={"flex-start"}>
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mr={2}>
@@ -84,8 +92,24 @@ export function StatsSection() {
         <StatComponent
           label={"Supply"}
           value={supply}
-          sx={{ my: 0.5, mr: 3 }}
+          sx={{ my: 0.5, mr: customTracks.length > 0 ? 1 : 3 }}
         />
+
+        {customTracks.map((track, index) => (
+          <StatComponent
+            key={track.label}
+            label={track.label}
+            value={
+              customTrackValues[track.label] !== undefined &&
+              typeof track.values[customTrackValues[track.label]].value ===
+                "number"
+                ? (track.values[customTrackValues[track.label]].value as number)
+                : 0
+            }
+            sx={{ my: 0.5, mr: customTracks.length - 1 === index ? 3 : 1 }}
+          />
+        ))}
+
         <StatComponent
           label={"Adds"}
           updateTrack={(newValue) => updateAdds({ adds: newValue })}

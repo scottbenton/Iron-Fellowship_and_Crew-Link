@@ -1,10 +1,12 @@
 import { Unsubscribe } from "firebase/firestore";
+import { CustomTrack } from "types/CustomTrackSettings.type";
 import { StoredMove } from "types/Moves.type";
 import { StoredOracle } from "types/Oracles.type";
 import { SettingsDoc } from "types/Settings.type";
 
 export interface SettingsSliceData {
   customStats: string[];
+  customTracks: CustomTrack[];
   customMoves: {
     [uid: string]: StoredMove[];
   };
@@ -50,7 +52,10 @@ export interface SettingsSliceActions {
 
   togglePinnedOracle: (oracleId: string, pinned: boolean) => Promise<void>;
 
-  updateSettings: (settings: Partial<SettingsDoc>) => Promise<void>;
+  updateSettings: (
+    settings: Partial<SettingsDoc>,
+    useUpdate?: boolean
+  ) => Promise<void>;
 
   resetStore: () => void;
 }

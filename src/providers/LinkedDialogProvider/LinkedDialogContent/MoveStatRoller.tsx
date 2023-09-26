@@ -20,7 +20,9 @@ export function MoveStatRoller(props: MoveStatRollerProps) {
       .map((asset) => {
         const inputKeys = Object.keys(asset.inputs ?? {});
         const assetInputName =
-          inputKeys.length > 0 ? (asset.inputs ?? {})[inputKeys[0]] : undefined;
+          inputKeys.length > 0
+            ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
+            : undefined;
         return {
           name:
             assetInputName ??
