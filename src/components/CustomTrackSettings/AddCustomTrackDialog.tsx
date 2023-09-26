@@ -153,7 +153,7 @@ export function AddCustomTrackDialog(props: AddCustomTrackDialogProps) {
                           });
                         }}
                         variant={"standard"}
-                        placeholder={"Ability Name"}
+                        placeholder={"Cell Value"}
                       />
                     </TableCell>
 
