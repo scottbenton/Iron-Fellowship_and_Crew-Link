@@ -21,7 +21,7 @@ export function listenToSettings(
         hiddenCustomMoveIds: [],
         hiddenCustomOraclesIds: [],
         customStats: [],
-        customTracks: [],
+        customTracks: {},
         ...snapshot.data(),
       });
     },
