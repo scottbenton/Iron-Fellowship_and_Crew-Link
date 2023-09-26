@@ -11,26 +11,29 @@ export interface MoveStatRollerProps {
 export function MoveStatRoller(props: MoveStatRollerProps) {
   const { stats, statName } = props;
 
-  const companions = useStore((store) =>
-    Object.values(store.characters.currentCharacter.assets.assets)
-      .filter(
-        (asset) =>
-          asset.trackValue && asset.id.toLocaleLowerCase().includes("companion")
-      )
-      .map((asset) => {
-        const inputKeys = Object.keys(asset.inputs ?? {});
-        const assetInputName =
-          inputKeys.length > 0 ? (asset.inputs ?? {})[inputKeys[0]] : undefined;
-        return {
-          name:
-            assetInputName ??
-            asset.customAsset?.Title.Short ??
-            assetMap[asset.id]?.Title.Short ??
-            "",
-          health: asset.trackValue ?? 0,
-        };
-      })
-  );
+  const { companions } = useStore((store) => {
+    const companions: { name: string; health: number }[] = [];
+    Object.values(store.characters.currentCharacter.assets.assets).flatMap(
+      (asset) => {
+        const actualAsset = asset.customAsset ?? assetMap[asset.id];
+        if (
+          asset.trackValue &&
+          actualAsset?.["Condition meter"]?.Label === "companion health"
+        ) {
+          const inputKeys = Object.keys(asset.inputs ?? {});
+          const assetInputName =
+            inputKeys.length > 0
+              ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
+              : undefined;
+          companions.push({
+            name: assetInputName ?? actualAsset.Title.Short ?? "",
+            health: asset.trackValue ?? 0,
+          });
+        }
+      }
+    );
+    return { companions };
+  });
 
   if (stats[statName] !== undefined) {
     return (

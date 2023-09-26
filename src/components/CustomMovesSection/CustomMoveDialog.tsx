@@ -57,6 +57,9 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const customStats = useStore((store) => store.settings.customStats);
+  const customTracks = useStore((store) =>
+    store.settings.customTracks.filter((track) => track.rollable)
+  );
 
   const initialValues: FormValues = {
     name: move?.name ?? "",
@@ -292,6 +295,33 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               }
                               sx={{ textTransform: "capitalize" }}
                               label={customStat}
+                            />
+                          ))}
+                        </FormGroup>
+                      )}
+                      {customTracks.length > 0 && (
+                        <FormGroup>
+                          {customTracks.map((customTrack) => (
+                            <FormControlLabel
+                              key={customTrack.label}
+                              control={
+                                <Checkbox
+                                  checked={
+                                    form.values.enabledStats[
+                                      customTrack.label
+                                    ] ?? false
+                                  }
+                                  onChange={(evt, checked) =>
+                                    form.setFieldValue(
+                                      `enabledStats.${customTrack.label}`,
+                                      checked
+                                    )
+                                  }
+                                  name={`enabledStats.${customTrack.label}`}
+                                />
+                              }
+                              sx={{ textTransform: "capitalize" }}
+                              label={customTrack.label}
                             />
                           ))}
                         </FormGroup>

@@ -78,6 +78,9 @@ export const createSettingsSlice: CreateSliceType<SettingsSlice> = (
             };
 
             store.settings.customStats = settings.customStats;
+            store.settings.customTracks = Object.values(
+              settings.customTracks
+            ).sort((ct1, ct2) => ct1.order - ct2.order);
           });
         },
         (error) => {
@@ -161,7 +164,7 @@ export const createSettingsSlice: CreateSliceType<SettingsSlice> = (
     return updatePinnedOracle({ uid, oracleId, pinned });
   },
 
-  updateSettings: (settings) => {
+  updateSettings: (settings, useUpdate) => {
     const state = getState();
 
     const campaignId = state.campaigns.currentCampaign.currentCampaignId;
@@ -171,6 +174,7 @@ export const createSettingsSlice: CreateSliceType<SettingsSlice> = (
       campaignId,
       characterId,
       settings,
+      useUpdate,
     });
   },
 

@@ -41,6 +41,10 @@ export interface CharacterDocument {
     scale: number;
   };
   worldId?: string | null;
+
+  customTracks?: {
+    [trackName: string]: number;
+  };
 }
 
 export interface AssetDocument {

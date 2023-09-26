@@ -21,6 +21,18 @@ export function MoveStatRollers(props: MoveStatsProps) {
           statMap[customStat] = 0;
         }
       });
+      store.settings.customTracks.forEach((customTrack) => {
+        if (!statMap[customTrack.label] && customTrack.rollable) {
+          const index = (currentCharacter.customTracks ?? {})[
+            customTrack.label
+          ];
+          const value =
+            index && typeof customTrack.values[index].value === "number"
+              ? customTrack.values[index].value
+              : 0;
+          statMap[customTrack.label] = value as number;
+        }
+      });
       statMap[PlayerConditionMeter.Health] = currentCharacter.health;
       statMap[PlayerConditionMeter.Spirit] = currentCharacter.spirit;
       statMap[PlayerConditionMeter.Supply] =
