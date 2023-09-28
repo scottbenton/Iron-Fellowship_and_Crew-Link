@@ -1,12 +1,10 @@
-import { Box, Stack } from "@mui/material";
+import { Box } from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
 import { ExperienceTrack } from "./ExperienceTrack";
 import { ProgressTrack } from "components/ProgressTrack";
-import { ProgressTrackSection } from "./ProgressTrackSection";
-import { TRACK_TYPES } from "types/Track.type";
 import { useStore } from "stores/store";
 
-export function TracksSection() {
+export function IronswornTracks() {
   const bondValue = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.bonds ?? 0
   );
@@ -19,7 +17,7 @@ export function TracksSection() {
   };
 
   return (
-    <Stack spacing={2}>
+    <>
       <SectionHeading label={"Experience"} />
       <Box px={2}>
         <ExperienceTrack />
@@ -32,16 +30,6 @@ export function TracksSection() {
           onValueChange={(value) => updateBonds(value)}
         />
       </Box>
-      <ProgressTrackSection
-        type={TRACK_TYPES.FRAY}
-        typeLabel={"Combat Track"}
-      />
-      <ProgressTrackSection
-        type={TRACK_TYPES.VOW}
-        typeLabel={"Vow"}
-        showPersonalIfInCampaign
-      />
-      <ProgressTrackSection type={TRACK_TYPES.JOURNEY} typeLabel={"Journey"} />
-    </Stack>
+    </>
   );
 }

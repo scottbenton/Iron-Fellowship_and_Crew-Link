@@ -278,6 +278,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                         <FormGroup>
                           {customStats.map((customStat) => (
                             <FormControlLabel
+                              key={customStat}
                               control={
                                 <Checkbox
                                   checked={

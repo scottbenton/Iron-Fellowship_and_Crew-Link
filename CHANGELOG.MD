@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.0
+
+### New Features
+
+### Changes
+
+- Simplified world creation so that you no longer need to go through all the world truths when creating a world.
+
+### Bug Fixes
+
+- Fixed a bug on read only rich text editors that still allowed cursors to appear
+
+---
+
 ## 1.3.0
 
 ### New Features

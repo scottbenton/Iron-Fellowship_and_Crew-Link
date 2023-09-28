@@ -23,7 +23,7 @@ export function StyledTabs(props: StyledTabsProps) {
       }}
       sx={(theme) => ({
         py: 0,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paperInlay,
         borderBottom: `1px solid ${theme.palette.divider}`,
         alignItems: "center",
       })}

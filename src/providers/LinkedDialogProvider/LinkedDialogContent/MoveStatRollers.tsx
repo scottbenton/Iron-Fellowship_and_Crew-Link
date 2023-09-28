@@ -3,6 +3,7 @@ import { StatComponent } from "components/StatComponent";
 import { PlayerConditionMeter } from "types/stats.enum";
 import { useStore } from "stores/store";
 import { MoveStatRoller } from "./MoveStatRoller";
+import { assetMap } from "data/assets";
 
 export interface MoveStatsProps {
   visibleStats: { [key: string]: boolean };
@@ -51,6 +52,45 @@ export function MoveStatRollers(props: MoveStatsProps) {
     (store) => store.characters.currentCharacter.updateCurrentCharacter
   );
 
+  const { companions, vehicles } = useStore((store) => {
+    const companions: { name: string; health: number }[] = [];
+    const vehicles: { name: string; integrity: number }[] = [];
+
+    Object.values(store.characters.currentCharacter.assets.assets).flatMap(
+      (asset) => {
+        const actualAsset = asset.customAsset ?? assetMap[asset.id];
+        if (
+          asset.trackValue &&
+          actualAsset?.["Condition meter"]?.Label === "companion health"
+        ) {
+          const inputKeys = Object.keys(asset.inputs ?? {});
+          const assetInputName =
+            inputKeys.length > 0
+              ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
+              : undefined;
+          companions.push({
+            name: assetInputName ?? actualAsset.Title.Short ?? "",
+            health: asset.trackValue ?? 0,
+          });
+        } else if (
+          asset.trackValue &&
+          actualAsset?.["Condition meter"]?.Label === "integrity"
+        ) {
+          const inputKeys = Object.keys(asset.inputs ?? {});
+          const assetInputName =
+            inputKeys.length > 0
+              ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
+              : undefined;
+          vehicles.push({
+            name: assetInputName ?? actualAsset.Title.Short ?? "",
+            integrity: asset.trackValue ?? 0,
+          });
+        }
+      }
+    );
+    return { companions, vehicles };
+  });
+
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
       {Object.keys(visibleStats).map(
@@ -60,6 +100,8 @@ export function MoveStatRollers(props: MoveStatsProps) {
               key={visibleStat}
               stats={stats ?? {}}
               statName={visibleStat}
+              companions={companions}
+              vehicles={vehicles}
             />
           )
       )}

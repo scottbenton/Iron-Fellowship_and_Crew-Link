@@ -200,7 +200,10 @@ export function ProgressTrack(props: ProgressTracksProps) {
               )
             }
             sx={(theme) => ({
-              backgroundColor: theme.palette.darkGrey.main,
+              backgroundColor:
+                theme.palette.darkGrey[
+                  theme.palette.mode === "light" ? "main" : "light"
+                ],
               color: theme.palette.darkGrey.contrastText,
               px: 0.5,
               "&:hover": {
@@ -248,7 +251,10 @@ export function ProgressTrack(props: ProgressTracksProps) {
             }
             focusRipple
             sx={(theme) => ({
-              backgroundColor: theme.palette.darkGrey.main,
+              backgroundColor:
+                theme.palette.darkGrey[
+                  theme.palette.mode === "light" ? "main" : "light"
+                ],
               color: theme.palette.darkGrey.contrastText,
               px: 0.5,
               "&:hover": {

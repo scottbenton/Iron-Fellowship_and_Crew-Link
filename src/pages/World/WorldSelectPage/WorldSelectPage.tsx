@@ -7,10 +7,10 @@ import {
   Hidden,
   LinearProgress,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { EmptyState } from "components/EmptyState/EmptyState";
 import AddWorldIcon from "@mui/icons-material/Add";
-import { WORLD_ROUTES, constructWorldPath } from "../routes";
+import { constructWorldSheetPath } from "../routes";
 import { PageContent, PageHeader } from "components/Layout";
 import { WorldCard } from "./components/WorldCard";
 import { Head } from "providers/HeadProvider/Head";
@@ -41,6 +41,17 @@ export function WorldSelectPage() {
   const loading = useStore((store) => store.worlds.loading);
   const error = useStore((store) => store.worlds.error);
 
+  const navigate = useNavigate();
+
+  const createWorld = useStore((store) => store.worlds.createWorld);
+  const handleWorldCreate = () => {
+    createWorld()
+      .then((worldId) => {
+        navigate(constructWorldSheetPath(worldId));
+      })
+      .catch(() => {});
+  };
+
   if (loading) {
     return (
       <LinearProgress
@@ -65,11 +76,10 @@ export function WorldSelectPage() {
         actions={
           <Hidden smDown>
             <Button
-              component={Link}
-              to={constructWorldPath(WORLD_ROUTES.CREATE)}
               variant={"contained"}
               color={"primary"}
               endIcon={<AddWorldIcon />}
+              onClick={() => handleWorldCreate()}
             >
               Create a World
             </Button>
@@ -87,8 +97,7 @@ export function WorldSelectPage() {
             }
             callToAction={
               <Button
-                component={Link}
-                to={constructWorldPath(WORLD_ROUTES.CREATE)}
+                onClick={handleWorldCreate}
                 variant={"contained"}
                 endIcon={<AddWorldIcon />}
               >
@@ -110,14 +119,13 @@ export function WorldSelectPage() {
         </Hidden>
         <Hidden smUp>
           <Fab
-            component={Link}
-            to={constructWorldPath(WORLD_ROUTES.CREATE)}
             color={"primary"}
             sx={(theme) => ({
               position: "fixed",
               bottom: theme.spacing(9),
               right: theme.spacing(2),
             })}
+            onClick={() => handleWorldCreate()}
           >
             <AddWorldIcon />
           </Fab>

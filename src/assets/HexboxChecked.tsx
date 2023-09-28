@@ -26,20 +26,20 @@ export function HexboxChecked(props: HexboxCheckedProps) {
           <path
             d="m6.601 15.966-7.6042-7.6042 1.901-1.901 5.7031 5.7031 12.24-12.24 1.901 1.9011z"
             display="none"
-            stroke-width=".033352"
+            strokeWidth=".033352"
           />
           <path
             d="m-8.3048-12.064h36.349v40.14h-36.349zm14.906 28.029 14.141-14.141-1.901-1.9011-12.24 12.24-5.7031-5.7031-1.901 1.901z"
-            stroke-width=".033352"
+            strokeWidth=".033352"
           />
         </clipPath>
       </defs>
       <path
         transform="matrix(.99945 0 0 .99945 6.136 8.0598)"
         d="m22.123 15.081-12.254 7.0748-12.254-7.0748 1e-7 -14.15 12.254-7.0748 12.254 7.0748z"
-        clip-path="url(#clipPath2)"
-        stroke-linejoin="round"
-        stroke-width="1.8409"
+        clipPath="url(#clipPath2)"
+        strokeLinejoin="round"
+        strokeWidth="1.8409"
       />
     </SvgIcon>
   );

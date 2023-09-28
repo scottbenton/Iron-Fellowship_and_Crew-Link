@@ -27,7 +27,7 @@ export const ironswornLightTheme = createTheme({
   },
   fontFamilyTitle: ["Staatliches", ...baseFontFamilies].join(","),
   shape: {
-    borderRadius: 2,
+    borderRadius: 4,
   },
   components: {
     MuiList: {

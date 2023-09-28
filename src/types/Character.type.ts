@@ -1,6 +1,5 @@
 import { StoredAsset } from "./Asset.type";
-import { DEBILITIES } from "./debilities.enum";
-import { Stat } from "./stats.enum";
+import { LegacyTrack } from "./LegacyTrack.type";
 
 export type StatsMap = {
   [key: string]: number;
@@ -25,6 +24,11 @@ export interface CharacterDocument {
   experience?: {
     earned?: number;
     spent?: number;
+  };
+  legacyTracks?: {
+    quests?: LegacyTrack;
+    bonds?: LegacyTrack;
+    discoveries?: LegacyTrack;
   };
   bonds?: number;
   debilities?: {

@@ -10,7 +10,7 @@ import {
   decodeDataswornId,
   encodeDataswornId,
 } from "functions/dataswornIdEncoder";
-import { EncodedWorld, Truth, TRUTH_IDS, World } from "types/World.type";
+import { EncodedWorld, Truth, World } from "types/World.type";
 
 export function constructWorldsPath() {
   return `/worlds`;
@@ -39,10 +39,11 @@ export function encodeWorld(world: World): EncodedWorld {
 
   const encodedTruths: { [key: string]: Truth } = {};
 
-  Object.keys(decodedTruths).forEach((truthId) => {
-    encodedTruths[encodeDataswornId(truthId)] =
-      world.truths[truthId as TRUTH_IDS];
-  });
+  if (decodedTruths) {
+    Object.keys(decodedTruths).forEach((truthId) => {
+      encodedTruths[encodeDataswornId(truthId)] = decodedTruths[truthId];
+    });
+  }
 
   const encodedWorld: EncodedWorld = {
     ...remainingWorld,
@@ -62,17 +63,20 @@ export function decodeWorld(encodedWorld: EncodedWorld): World {
     worldDescription,
     ...remainingWorld
   } = encodedWorld;
+
   const decodedTruths: { [key: string]: Truth } = {};
 
-  Object.keys(encodedTruths).forEach((encodedTruthId) => {
-    decodedTruths[decodeDataswornId(encodedTruthId) as TRUTH_IDS] =
-      encodedWorld.truths[encodedTruthId];
-  });
+  if (encodedTruths) {
+    Object.keys(encodedTruths).forEach((encodedTruthId) => {
+      decodedTruths[decodeDataswornId(encodedTruthId)] =
+        encodedTruths[encodedTruthId];
+    });
+  }
 
   const world: World = {
     ...remainingWorld,
     worldDescription: worldDescription?.toUint8Array(),
-    truths: decodedTruths as { [key in TRUTH_IDS]: Truth },
+    truths: decodedTruths,
   };
 
   return world;

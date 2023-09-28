@@ -19,9 +19,9 @@ export const starforgedDarkTheme = createTheme({
     ...sharedStatusColors,
     background: {
       paper: starforgedGrey[900],
-      paperInlay: starforgedGrey[800],
-      paperInlayDarker: starforgedGrey[700],
-      default: "#030712",
+      paperInlay: starforgedGrey[950],
+      paperInlayDarker: starforgedGrey[800],
+      default: starforgedGrey[950],
     },
     grey: starforgedGrey,
   },
@@ -30,7 +30,7 @@ export const starforgedDarkTheme = createTheme({
   },
   fontFamilyTitle: ["'Bebas Neue'", ...baseFontFamilies].join(","),
   shape: {
-    borderRadius: 2,
+    borderRadius: 8,
   },
   components: {
     MuiList: {

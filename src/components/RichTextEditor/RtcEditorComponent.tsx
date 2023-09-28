@@ -28,7 +28,7 @@ export function RtcEditorComponent(props: RtcRichTextEditorProps) {
         user,
         withHeading,
       }),
-      editable: true,
+      editable: !readOnly,
     },
     [doc, provider, user, withHeading]
   );

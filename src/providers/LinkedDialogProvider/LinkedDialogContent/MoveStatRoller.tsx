@@ -5,35 +5,13 @@ import { useStore } from "stores/store";
 
 export interface MoveStatRollerProps {
   stats: { [key: string]: number };
+  companions: { health: number; name: string }[];
+  vehicles: { integrity: number; name: string }[];
   statName: string;
 }
 
 export function MoveStatRoller(props: MoveStatRollerProps) {
-  const { stats, statName } = props;
-
-  const { companions } = useStore((store) => {
-    const companions: { name: string; health: number }[] = [];
-    Object.values(store.characters.currentCharacter.assets.assets).flatMap(
-      (asset) => {
-        const actualAsset = asset.customAsset ?? assetMap[asset.id];
-        if (
-          asset.trackValue &&
-          actualAsset?.["Condition meter"]?.Label === "companion health"
-        ) {
-          const inputKeys = Object.keys(asset.inputs ?? {});
-          const assetInputName =
-            inputKeys.length > 0
-              ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
-              : undefined;
-          companions.push({
-            name: assetInputName ?? actualAsset.Title.Short ?? "",
-            health: asset.trackValue ?? 0,
-          });
-        }
-      }
-    );
-    return { companions };
-  });
+  const { stats, statName, companions, vehicles } = props;
 
   if (stats[statName] !== undefined) {
     return (
@@ -53,6 +31,21 @@ export function MoveStatRoller(props: MoveStatRollerProps) {
             key={index}
             label={`${companion.name}'s Health`}
             value={companion.health}
+            sx={{ mb: 1, mr: 1 }}
+          />
+        ))}
+      </>
+    );
+  }
+
+  if (statName === "vehicle integrity" && Object.keys(stats).length > 0) {
+    return (
+      <>
+        {vehicles.map((vehicle, index) => (
+          <StatComponent
+            key={index}
+            label={`${vehicle.name}'s Integrity`}
+            value={vehicle.integrity}
             sx={{ mb: 1, mr: 1 }}
           />
         ))}

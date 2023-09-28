@@ -18,7 +18,7 @@ export const truthIds = [
   "ironsworn/setting_truths/firstborn",
   "ironsworn/setting_truths/beasts",
   "ironsworn/setting_truths/horrors",
-] as const;
+];
 
 export const truths = Object.values(ironswornWorldTruths);
 
@@ -41,6 +41,6 @@ export const starforgedTruthOptionMap: {
 starforgedTruths.forEach((truth) => {
   starforgedTruthMap[truth.$id] = truth;
   truth.Table.forEach((truthOption) => {
-    truthOptionMap[truthOption.$id] = truthOption;
+    starforgedTruthOptionMap[truthOption.$id] = truthOption;
   });
 });
