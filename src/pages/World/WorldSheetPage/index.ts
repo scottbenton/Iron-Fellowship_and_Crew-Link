@@ -1,1 +1,1 @@
-export * from "./WorldSheetPage";
+export { WorldSheetPage as Component } from "./WorldSheetPage";

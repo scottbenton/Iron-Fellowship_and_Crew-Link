@@ -1,1 +1,1 @@
-export * from "./CampaignSheetPage";
+export { CampaignSheetPage as Component } from "./CampaignSheetPage";

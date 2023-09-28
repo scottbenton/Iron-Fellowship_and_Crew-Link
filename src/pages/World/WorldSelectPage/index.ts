@@ -1,1 +1,1 @@
-export * from "./WorldSelectPage";
+export { WorldSelectPage as Component } from "./WorldSelectPage";

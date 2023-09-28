@@ -1,1 +1,3 @@
-export * from "./HomePage";
+import { HomePage } from "./HomePage";
+
+export const Component = HomePage;
