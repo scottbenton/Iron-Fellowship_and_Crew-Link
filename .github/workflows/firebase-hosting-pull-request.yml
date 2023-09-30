@@ -36,7 +36,7 @@ jobs:
   deploy_firestore_and_storage_rules_iron_fellowship:
     name: Deploy Firestore and Storage rules and indexes to Iron Fellowship
     runs-on: ubuntu-latest
-    environment: Production
+    environment: Dev
     steps:
       - uses: actions/checkout@v2
       - uses: w9jds/firebase-action@master
@@ -84,7 +84,7 @@ jobs:
   deploy_firestore_and_storage_rules_crew_link:
     name: Deploy Firestore and Storage rules and indexes to Crew Link
     runs-on: ubuntu-latest
-    environment: Production
+    environment: Dev
     steps:
       - uses: actions/checkout@v2
       - uses: w9jds/firebase-action@master
