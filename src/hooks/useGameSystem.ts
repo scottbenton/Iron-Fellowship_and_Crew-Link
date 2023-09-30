@@ -1,7 +1,7 @@
-import { getGameSystem, getIsProdEnvironment } from "functions/getGameSystem";
+import { getGameSystem, getIsLocalEnvironment } from "functions/getGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 
-const isProd = getIsProdEnvironment();
+const isLocal = getIsLocalEnvironment();
 const LOCAL_STORAGE_KEY = "game-system";
 
 export function getSystem() {
@@ -16,7 +16,7 @@ export function getSystem() {
     localStorageGameSystem = GAME_SYSTEMS.STARFORGED;
   }
 
-  return isProd
+  return !isLocal
     ? defaultGameSystem
     : localStorageGameSystem ?? defaultGameSystem;
 }
@@ -24,7 +24,7 @@ export function useGameSystem() {
   const gameSystem = getSystem();
 
   const chooseGameSystem = (gameSystem: GAME_SYSTEMS) => {
-    if (!isProd) {
+    if (isLocal) {
       localStorage.setItem(LOCAL_STORAGE_KEY, gameSystem);
     }
   };

@@ -1,5 +1,4 @@
 import {
-  Avatar,
   ButtonBase,
   ListItemIcon,
   ListItemText,
@@ -16,13 +15,12 @@ import LightThemeIcon from "@mui/icons-material/LightMode";
 import DarkThemeIcon from "@mui/icons-material/DarkMode";
 import { THEME_TYPE } from "providers/ThemeProvider/themes";
 import { useGameSystem } from "hooks/useGameSystem";
-import { getIsProdEnvironment } from "functions/getGameSystem";
+import { getIsLocalEnvironment } from "functions/getGameSystem";
 import SystemIcon from "@mui/icons-material/Casino";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import {
   CHARACTER_ROUTES,
   constructCharacterPath,
-  constructCharacterSheetPath,
 } from "pages/Character/routes";
 
 export function HeaderMenu() {
@@ -34,7 +32,7 @@ export function HeaderMenu() {
   const { themeType, toggleTheme } = useToggleTheme();
 
   const { gameSystem, chooseGameSystem } = useGameSystem();
-  const isProd = getIsProdEnvironment();
+  const isLocal = getIsLocalEnvironment();
 
   return (
     <>
@@ -78,7 +76,7 @@ export function HeaderMenu() {
           </ListItemIcon>
           <ListItemText>Logout</ListItemText>
         </MenuItem>
-        {!isProd && (
+        {isLocal && (
           <MenuItem
             onClick={() => {
               chooseGameSystem(
