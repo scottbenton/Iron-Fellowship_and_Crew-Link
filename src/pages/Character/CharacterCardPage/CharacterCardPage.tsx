@@ -1,6 +1,6 @@
 import { Box, GlobalStyles, Slide, Typography } from "@mui/material";
 import { useListenToCharacter } from "./hooks/useListenToCharacter";
-import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
+import { PortraitAvatar } from "components/features/characters/PortraitAvatar/PortraitAvatar";
 import HealthIcon from "@mui/icons-material/Favorite";
 import SpiritIcon from "@mui/icons-material/Whatshot";
 import { useEffect, useRef, useState } from "react";

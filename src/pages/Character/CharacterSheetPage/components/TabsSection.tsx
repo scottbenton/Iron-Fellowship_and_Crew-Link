@@ -1,20 +1,20 @@
 import { Card, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
-import { MovesSection } from "components/MovesSection";
+import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
 import { AssetsSection } from "../Tabs/AssetsSection";
-import { OracleSection } from "components/OracleSection";
+import { OracleSection } from "components/features/charactersAndCampaigns/OracleSection";
 import { NotesSection } from "../Tabs/NotesSection";
 import { WorldSection } from "../Tabs/WorldSection";
-import { LocationsSection } from "components/Locations";
+import { LocationsSection } from "components/features/worlds/Locations";
 import { CharacterSection } from "../Tabs/CharacterSection";
 import { useSearchParams } from "react-router-dom";
 import {
   StyledTabs,
   StyledTab,
   ContainedTabPanel,
-} from "components/StyledTabs";
-import { NPCSection } from "components/NPCSection";
-import { LoreSection } from "components/Lore";
+} from "components/shared/StyledTabs";
+import { NPCSection } from "components/features/worlds/NPCSection";
+import { LoreSection } from "components/features/worlds/Lore";
 import { TracksSection } from "../Tabs/TracksSection";
 import { useStore } from "stores/store";
 

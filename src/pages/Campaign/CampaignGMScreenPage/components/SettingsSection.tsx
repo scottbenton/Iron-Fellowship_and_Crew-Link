@@ -1,9 +1,9 @@
 import { Checkbox, FormControlLabel, Stack } from "@mui/material";
-import { CustomMovesSection } from "components/CustomMovesSection";
-import { CustomOracleSection } from "components/CustomOraclesSection";
-import { CustomStats } from "components/CustomStats";
-import { CustomTrackSettings } from "components/CustomTrackSettings";
-import { SectionHeading } from "components/SectionHeading";
+import { CustomMovesSection } from "components/features/charactersAndCampaigns/CustomMovesSection";
+import { CustomOracleSection } from "components/features/charactersAndCampaigns/CustomOraclesSection";
+import { CustomStats } from "components/features/charactersAndCampaigns/CustomStats";
+import { CustomTrackSettings } from "components/features/charactersAndCampaigns/CustomTrackSettings";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { useGameSystem } from "hooks/useGameSystem";
 import { useStore } from "stores/store";
 import { GAME_SYSTEMS } from "types/GameSystems.type";

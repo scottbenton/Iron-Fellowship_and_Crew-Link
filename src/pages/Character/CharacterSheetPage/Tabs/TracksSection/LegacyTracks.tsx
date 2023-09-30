@@ -1,4 +1,4 @@
-import { SectionHeading } from "components/SectionHeading";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { LegacyTrack } from "./LegacyTrack";
 import { Stack } from "@mui/material";
 import { useStore } from "stores/store";

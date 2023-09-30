@@ -5,9 +5,9 @@ import {
   LinearProgress,
   Typography,
 } from "@mui/material";
-import { WorldSheet } from "components/WorldSheet";
+import { WorldSheet } from "components/features/worlds/WorldSheet";
 import { useConfirm } from "material-ui-confirm";
-import { WorldEmptyState } from "components/WorldEmptyState";
+import { WorldEmptyState } from "components/features/worlds/WorldEmptyState";
 import { useStore } from "stores/store";
 import { useState } from "react";
 

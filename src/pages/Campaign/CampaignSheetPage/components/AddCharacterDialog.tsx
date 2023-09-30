@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { CharacterList } from "components/CharacterList/CharacterList";
+import { CharacterList } from "components/features/characters/CharacterList/CharacterList";
 import { Link } from "react-router-dom";
 import { constructCharacterCreateInCampaignUrl } from "pages/Character/routes";
 import { useStore } from "stores/store";

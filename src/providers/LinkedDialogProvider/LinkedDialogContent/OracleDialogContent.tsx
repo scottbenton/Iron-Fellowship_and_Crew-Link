@@ -1,6 +1,6 @@
 import { Box, Button, DialogContent, Typography } from "@mui/material";
-import { MarkdownRenderer } from "components/MarkdownRenderer";
-import { useCustomOracles } from "components/OracleSection/useCustomOracles";
+import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
+import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { oracleMap } from "data/oracles";
 import { useRoller } from "providers/DieRollProvider";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";

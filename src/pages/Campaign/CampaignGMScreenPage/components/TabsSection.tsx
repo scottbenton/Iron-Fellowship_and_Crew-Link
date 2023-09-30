@@ -1,23 +1,23 @@
 import { Box, Card, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
-import { MovesSection } from "components/MovesSection";
+import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
 import { useEffect } from "react";
 import { useState } from "react";
 import { StoredCampaign } from "types/Campaign.type";
 import { CharacterSection } from "./CharacterSection";
 import { TracksSection } from "./TracksSection";
-import { OracleSection } from "components/OracleSection";
+import { OracleSection } from "components/features/charactersAndCampaigns/OracleSection";
 import { CampaignNotesSection } from "./CampaignNotesSection";
 import { SettingsSection } from "./SettingsSection";
 import { WorldSection } from "./WorldSection";
-import { LocationsSection } from "components/Locations";
+import { LocationsSection } from "components/features/worlds/Locations";
 import { useSearchParams } from "react-router-dom";
 import {
   StyledTabs,
   StyledTab,
   ContainedTabPanel,
-} from "components/StyledTabs";
-import { NPCSection } from "components/NPCSection";
-import { LoreSection } from "components/Lore";
+} from "components/shared/StyledTabs";
+import { NPCSection } from "components/features/worlds/NPCSection";
+import { LoreSection } from "components/features/worlds/Lore";
 
 enum TABS {
   MOVES = "moves",

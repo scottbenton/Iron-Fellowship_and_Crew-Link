@@ -1,5 +1,5 @@
 import { Box, Chip, Stack, Typography } from "@mui/material";
-import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
+import { PortraitAvatar } from "components/features/characters/PortraitAvatar/PortraitAvatar";
 import { InitiativeButtons } from "./InitiativeButtons";
 import { StatsSection } from "./StatsSection";
 import { useStore } from "stores/store";

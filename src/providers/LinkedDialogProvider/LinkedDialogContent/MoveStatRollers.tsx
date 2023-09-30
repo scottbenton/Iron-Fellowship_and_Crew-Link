@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { StatComponent } from "components/StatComponent";
+import { StatComponent } from "components/features/characters/StatComponent";
 import { PlayerConditionMeter } from "types/stats.enum";
 import { useStore } from "stores/store";
 import { MoveStatRoller } from "./MoveStatRoller";

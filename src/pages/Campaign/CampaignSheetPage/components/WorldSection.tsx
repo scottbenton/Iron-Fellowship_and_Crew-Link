@@ -1,5 +1,5 @@
 import { LinearProgress } from "@mui/material";
-import { WorldSheet } from "components/WorldSheet";
+import { WorldSheet } from "components/features/worlds/WorldSheet";
 import { useStore } from "stores/store";
 
 export function WorldSection() {

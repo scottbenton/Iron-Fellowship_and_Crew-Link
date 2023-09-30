@@ -1,11 +1,11 @@
 import { Alert, Box, Button, Grid, Typography } from "@mui/material";
-import { AssetCard } from "components/AssetCard/AssetCard";
+import { AssetCard } from "components/features/assets/AssetCard";
 import { useState } from "react";
 import { StoredAsset } from "types/Asset.type";
-import { AssetCardDialog } from "components/AssetCardDialog";
-import { SectionHeading } from "components/SectionHeading";
+import { AssetCardDialog } from "components/features/assets/AssetCardDialog";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { useField } from "formik";
-import { EmptyState } from "components/EmptyState/EmptyState";
+import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import { Asset } from "dataforged";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";

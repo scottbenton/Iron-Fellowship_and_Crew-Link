@@ -1,5 +1,5 @@
 import { TextField } from "@mui/material";
-import { SectionHeading } from "components/SectionHeading";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "stores/store";
 

@@ -1,13 +1,13 @@
 import { Button, DialogContent } from "@mui/material";
-import { MarkdownRenderer } from "components/MarkdownRenderer";
+import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { MoveStatRollers } from "./MoveStatRollers";
 import { moveMap } from "data/moves";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
-import { useCustomMoves } from "components/MovesSection/useCustomMoves";
+import { useCustomMoves } from "components/features/charactersAndCampaigns/MovesSection/useCustomMoves";
 import { oracleMap } from "data/oracles";
 import { useRoller } from "providers/DieRollProvider";
 import { OracleTable } from "dataforged";
-import { useCustomOracles } from "components/OracleSection/useCustomOracles";
+import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { useStore } from "stores/store";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";

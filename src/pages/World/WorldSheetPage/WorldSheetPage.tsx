@@ -1,23 +1,23 @@
 import { Button, LinearProgress } from "@mui/material";
-import { WorldSheet } from "components/WorldSheet";
+import { WorldSheet } from "components/features/worlds/WorldSheet";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useConfirm } from "material-ui-confirm";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSyncStore } from "./hooks/useSyncStore";
 import { useEffect, useState } from "react";
-import { LocationsSection } from "components/Locations";
-import { BreakContainer } from "components/BreakContainer";
+import { LocationsSection } from "components/features/worlds/Locations";
+import { BreakContainer } from "components/shared/BreakContainer";
 import { WORLD_ROUTES, constructWorldPath } from "../routes";
-import { PageContent, PageHeader } from "components/Layout";
-import { StyledTab, StyledTabs } from "components/StyledTabs";
+import { PageContent, PageHeader } from "components/shared/Layout";
+import { StyledTab, StyledTabs } from "components/shared/StyledTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { NPCSection } from "components/NPCSection";
+import { NPCSection } from "components/features/worlds/NPCSection";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
 import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
 import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
-import { LoreSection } from "components/Lore";
+import { LoreSection } from "components/features/worlds/Lore";
 
 export enum TABS {
   DETAILS = "details",

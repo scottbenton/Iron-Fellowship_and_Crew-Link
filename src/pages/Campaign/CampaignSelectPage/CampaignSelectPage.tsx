@@ -9,10 +9,10 @@ import {
   AlertTitle,
 } from "@mui/material";
 import { useState } from "react";
-import { EmptyState } from "components/EmptyState/EmptyState";
+import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import { CreateCampaignDialog } from "./components/CreateCampaignDialog";
 import CreateCampaignIcon from "@mui/icons-material/GroupAdd";
-import { PageContent, PageHeader } from "components/Layout";
+import { PageContent, PageHeader } from "components/shared/Layout";
 import { CampaignCard } from "./components/CampaignCard";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";

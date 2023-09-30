@@ -7,12 +7,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { StatComponent } from "components/StatComponent";
+import { StatComponent } from "components/features/characters/StatComponent";
 import { CharacterDocument, INITIATIVE_STATUS } from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { AssetCard } from "components/AssetCard/AssetCard";
-import { InitiativeStatusChip } from "components/InitiativeStatusChip";
-import { PortraitAvatar } from "components/PortraitAvatar/PortraitAvatar";
+import { AssetCard } from "components/features/assets/AssetCard";
+import { InitiativeStatusChip } from "components/features/characters/InitiativeStatusChip";
+import { PortraitAvatar } from "components/features/characters/PortraitAvatar/PortraitAvatar";
 import { Stat } from "types/stats.enum";
 import { useStore } from "stores/store";
 import { useState } from "react";

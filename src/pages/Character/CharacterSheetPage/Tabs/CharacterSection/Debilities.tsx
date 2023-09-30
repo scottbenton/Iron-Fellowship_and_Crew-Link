@@ -6,7 +6,7 @@ import {
   Checkbox,
   FormGroup,
 } from "@mui/material";
-import { SectionHeading } from "components/SectionHeading";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { debilities } from "data/debilities";
 import { useStore } from "stores/store";
 

@@ -1,6 +1,6 @@
 import { Box, Button, TextField } from "@mui/material";
-import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
-import { SectionHeading } from "components/SectionHeading";
+import { PortraitUploaderDialog } from "components/features/characters/PortraitUploaderDialog";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
 import { useStore } from "stores/store";

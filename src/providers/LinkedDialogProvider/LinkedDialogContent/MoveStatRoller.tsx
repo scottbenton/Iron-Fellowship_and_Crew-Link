@@ -1,5 +1,5 @@
 import { Chip } from "@mui/material";
-import { StatComponent } from "components/StatComponent";
+import { StatComponent } from "components/features/characters/StatComponent";
 import { assetMap } from "data/assets";
 import { useStore } from "stores/store";
 

@@ -1,7 +1,7 @@
 import { Box, Divider, Typography } from "@mui/material";
 import { OracleTableRoll } from "types/DieRolls.type";
 import { D10Icon } from "assets/D10Icon";
-import { MarkdownRenderer } from "components/MarkdownRenderer";
+import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 
 export interface OracleTableRollCardProps {
   roll: OracleTableRoll;

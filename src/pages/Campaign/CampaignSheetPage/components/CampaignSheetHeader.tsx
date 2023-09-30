@@ -2,16 +2,16 @@ import { Button, Dialog, DialogContent, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { StoredCampaign } from "types/Campaign.type";
 import { CampaignActionsMenu } from "./CampaignActionsMenu";
-import { PageHeader } from "components/Layout";
+import { PageHeader } from "components/shared/Layout";
 import {
   CAMPAIGN_ROUTES,
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
 import { useMemo, useState } from "react";
-import { DialogTitleWithCloseButton } from "components/DialogTitleWithCloseButton";
+import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useStore } from "stores/store";
-import { EditableTitle } from "components/EditableTitle";
+import { EditableTitle } from "components/shared/EditableTitle";
 
 export interface CampaignSheetHeaderProps {
   campaign: StoredCampaign;

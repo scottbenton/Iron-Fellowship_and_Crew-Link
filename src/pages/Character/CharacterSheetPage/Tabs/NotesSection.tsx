@@ -1,5 +1,5 @@
 import { Box, LinearProgress, useMediaQuery, useTheme } from "@mui/material";
-import { Notes } from "components/Notes/Notes";
+import { Notes } from "components/features/charactersAndCampaigns/Notes/Notes";
 import { useEffect } from "react";
 import { ROLL_LOG_ID } from "stores/notes/notes.slice.type";
 import { useStore } from "stores/store";

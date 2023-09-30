@@ -8,10 +8,10 @@ import {
   LinearProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { EmptyState } from "components/EmptyState/EmptyState";
+import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import AddWorldIcon from "@mui/icons-material/Add";
 import { constructWorldSheetPath } from "../routes";
-import { PageContent, PageHeader } from "components/Layout";
+import { PageContent, PageHeader } from "components/shared/Layout";
 import { WorldCard } from "./components/WorldCard";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";

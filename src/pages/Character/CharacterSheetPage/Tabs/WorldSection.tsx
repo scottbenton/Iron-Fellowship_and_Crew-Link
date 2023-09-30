@@ -5,8 +5,8 @@ import {
   LinearProgress,
   Typography,
 } from "@mui/material";
-import { WorldSheet } from "components/WorldSheet";
-import { WorldEmptyState } from "components/WorldEmptyState";
+import { WorldSheet } from "components/features/worlds/WorldSheet";
+import { WorldEmptyState } from "components/features/worlds/WorldEmptyState";
 import { useStore } from "stores/store";
 import { useState } from "react";
 

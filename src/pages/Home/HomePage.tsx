@@ -1,5 +1,5 @@
 import { Box, Typography, Grid, Button, Stack } from "@mui/material";
-import { PageContent, PageHeader } from "components/Layout";
+import { PageContent, PageHeader } from "components/shared/Layout";
 import {
   CHARACTER_ROUTES,
   constructCharacterPath,

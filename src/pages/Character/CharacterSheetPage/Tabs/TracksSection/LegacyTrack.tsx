@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { ProgressTrackTick } from "components/ProgressTrack/ProgressTrackTick";
+import { ProgressTrackTick } from "components/features/ProgressTrack/ProgressTrackTick";
 import UncheckedIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckedIcon from "@mui/icons-material/CheckBox";
 import MinusIcon from "@mui/icons-material/Remove";
