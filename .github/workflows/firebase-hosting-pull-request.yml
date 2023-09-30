@@ -3,8 +3,8 @@ on:
   - pull_request
 
 jobs:
-  build_and_preview:
-    name: Build and deploy to Firebase Hosting preview
+  build_and_preview_iron_fellowship:
+    name: Build and deploy Iron Fellowship to Firebase Hosting preview
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     environment: Dev
@@ -33,3 +33,69 @@ jobs:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.IRON_FELLOWSHIP_FIREBASE_SERVICE_ACCOUNT }}"
           projectId: "${{ secrets.IRON_FELLOWSHIP_FIREBASE_PROJECTID }}"
+  deploy_firestore_and_storage_rules_iron_fellowship:
+    name: Deploy Firestore and Storage rules and indexes to Iron Fellowship
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v2
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only firestore
+        env:
+          GCP_SA_KEY: ${{ secrets.IRON_FELLOWSHIP_FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT_ID: "${{secrets.IRON_FELLOWSHIP_FIREBASE_PROJECTID}}"
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only storage
+        env:
+          GCP_SA_KEY: ${{ secrets.IRON_FELLOWSHIP_FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT_ID: "${{secrets.IRON_FELLOWSHIP_FIREBASE_PROJECTID}}"
+  build_and_preview_crew_link:
+    name: Build and deploy Crew Link to Firebase Hosting preview
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+    runs-on: ubuntu-latest
+    environment: Dev
+    env:
+      VITE_IRON_FELLOWSHIP_FIREBASE_APIKEY: "${{ secrets.IRON_FELLOWSHIP_FIREBASE_APIKEY }}"
+      VITE_IRON_FELLOWSHIP_FIREBASE_AUTHDOMAIN: "${{ secrets.IRON_FELLOWSHIP_FIREBASE_AUTHDOMAIN }}"
+      VITE_IRON_FELLOWSHIP_FIREBASE_PROJECTID: "${{ secrets.IRON_FELLOWSHIP_FIREBASE_PROJECTID }}"
+      VITE_IRON_FELLOWSHIP_FIREBASE_STORAGEBUCKET: "${{ secrets.IRON_FELLOWSHIP_FIREBASE_STORAGEBUCKET }}"
+      VITE_IRON_FELLOWSHIP_FIREBASE_MESSAGINGSENDERID: "${{ secrets.IRON_FELLOWSHIP_FIREBASE_MESSAGINGSENDERID }}"
+      VITE_IRON_FELLOWSHIP_FIREBASE_APPID: "${{ secrets.IRON_FELLOWSHIP_FIREBASE_APPID }}"
+      VITE_CREW_LINK_FIREBASE_APIKEY: "${{ secrets.CREW_LINK_FIREBASE_APIKEY }}"
+      VITE_CREW_LINK_FIREBASE_AUTHDOMAIN: "${{ secrets.CREW_LINK_FIREBASE_AUTHDOMAIN }}"
+      VITE_CREW_LINK_FIREBASE_PROJECTID: "${{ secrets.CREW_LINK_FIREBASE_PROJECTID }}"
+      VITE_CREW_LINK_FIREBASE_STORAGEBUCKET: "${{ secrets.CREW_LINK_FIREBASE_STORAGEBUCKET }}"
+      VITE_CREW_LINK_FIREBASE_MESSAGINGSENDERID: "${{ secrets.CREW_LINK_FIREBASE_MESSAGINGSENDERID }}"
+      VITE_CREW_LINK_FIREBASE_APPID: "${{ secrets.CREW_LINK_FIREBASE_APPID }}"
+      VITE_POSTHOG_KEY: "${{secrets.POSTHOG_KEY}}"
+      VITE_POSTHOG_HOST: "${{secrets.POSTHOG_HOST}}"
+      VITE_TITLE: "Crew Link DEV"
+      VITE_FAVICON_PATH: "/crew-link-logo.svg"
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci && npm run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.CREW_LINK_FIREBASE_SERVICE_ACCOUNT }}"
+          projectId: "${{ secrets.CREW_LINK_FIREBASE_PROJECTID }}"
+  deploy_firestore_and_storage_rules_crew_link:
+    name: Deploy Firestore and Storage rules and indexes to Crew Link
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v2
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only firestore
+        env:
+          GCP_SA_KEY: ${{ secrets.CREW_LINK_FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT_ID: "${{secrets.CREW_LINK_FIREBASE_PROJECTID}}"
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only storage
+        env:
+          GCP_SA_KEY: ${{ secrets.CREW_LINK_FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT_ID: "${{secrets.CREW_LINK_FIREBASE_PROJECTID}}"
