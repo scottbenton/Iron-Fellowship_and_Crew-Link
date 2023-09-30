@@ -55,14 +55,16 @@ export function StatComponent(props: StatComponentProps) {
       variant={"outlined"}
       sx={[
         (theme) => ({
-          borderRadius: theme.shape.borderRadius,
           overflow: "hidden",
           width: 75,
           display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
+          outlineColor: theme.palette.primary.main,
+          outlineWidth: 0,
+          outlineStyle: "solid",
           transition: theme.transitions.create(
-            ["background-color", "border-color"],
+            ["background-color", "border-color", "outline-width"],
             { duration: theme.transitions.duration.shorter }
           ),
           "&>h6#track-label": {
@@ -83,6 +85,16 @@ export function StatComponent(props: StatComponentProps) {
                     backgroundColor: theme.palette.background.paperInlayDarker,
                     color: theme.palette.text.primary,
                   },
+                  outlineWidth: 2,
+                  outlineColor: theme.palette.primary.main,
+                  borderColor: theme.palette.primary.main,
+                },
+          "&:focus":
+            updateTrack || disableRoll
+              ? {}
+              : {
+                  outlineWidth: 2,
+                  outlineColor: theme.palette.primary.main,
                   borderColor: theme.palette.primary.main,
                 },
         }),

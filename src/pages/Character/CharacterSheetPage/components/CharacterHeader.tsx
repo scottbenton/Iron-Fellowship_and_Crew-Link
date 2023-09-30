@@ -43,7 +43,7 @@ export function CharacterHeader(props: CharacterHeaderProps) {
           mx: -3,
           px: 3,
           backgroundColor:
-            theme.palette.grey[theme.palette.mode === "light" ? 600 : 700],
+            theme.palette.grey[theme.palette.mode === "light" ? 600 : 800],
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="32" height="32" version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <clipPath id="clipPath2">
+   <path d="m6.601 15.966-7.6042-7.6042 1.901-1.901 5.7031 5.7031 12.24-12.24 1.901 1.9011z" display="none" stroke-width=".033352"/>
+   <path class="powerclip" d="m-8.3048-12.064h36.349v40.14h-36.349zm14.906 28.029 14.141-14.141-1.901-1.9011-12.24 12.24-5.7031-5.7031-1.901 1.901z" stroke-width=".033352"/>
+  </clipPath>
+ </defs>
+ <path transform="matrix(.99945 0 0 .99945 6.136 8.0598)" d="m22.123 15.081-12.254 7.0748-12.254-7.0748 1e-7 -14.15 12.254-7.0748 12.254 7.0748z" clip-path="url(#clipPath2)" fill="#000080" stroke="#000080" stroke-linejoin="round" stroke-width="1.8409"/>
+</svg>

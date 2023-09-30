@@ -21,6 +21,8 @@ import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { addCharacterToCampaign } from "api-calls/campaign/addCharacterToCampaign";
 import { ImageInput } from "./components/ImageInput";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 type CharacterCreateFormValues = {
   name: string;
@@ -36,14 +38,20 @@ type CharacterCreateFormValues = {
   };
 };
 
-const nameOracles = [
+const nameOraclesIronsworn = [
   "ironsworn/oracles/name/ironlander/a",
   "ironsworn/oracles/name/ironlander/b",
 ];
 
+const nameOracleStarforged = ["starforged/oracles/characters/names/given"];
+
 export function CharacterCreatePage() {
   const campaignId = useSearchParams()[0].get("campaignId");
   const uid = useStore((store) => store.auth.uid);
+  const nameOracles = useGameSystemValue({
+    [GAME_SYSTEMS.IRONSWORN]: nameOraclesIronsworn,
+    [GAME_SYSTEMS.STARFORGED]: nameOracleStarforged,
+  });
 
   const navigate = useNavigate();
   const { rollOracleTable } = useRoller();
@@ -54,8 +62,9 @@ export function CharacterCreatePage() {
 
   const handleOracleRoll = useCallback(() => {
     const oracleIndex = Math.floor(Math.random() * nameOracles.length);
+
     return rollOracleTable(nameOracles[oracleIndex], false);
-  }, [rollOracleTable]);
+  }, [rollOracleTable, nameOracles]);
 
   const validate = (values: CharacterCreateFormValues) => {
     const errors: { [key in keyof CharacterCreateFormValues]?: string } = {};

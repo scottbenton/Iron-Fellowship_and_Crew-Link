@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   List,
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -105,17 +106,21 @@ export function NoteSidebar(props: NoteSidebarProps) {
             <List
               {...provided.droppableProps}
               ref={provided.innerRef}
-              sx={{ overflowY: "auto" }}
+              sx={{
+                overflowY: "auto",
+              }}
             >
-              <ListItemButton
-                selected={ROLL_LOG_ID === selectedNoteId}
-                onClick={() => openNote(ROLL_LOG_ID)}
-              >
-                <ListItemIcon>
-                  <DieIcon />
-                </ListItemIcon>
-                <ListItemText>Roll Log</ListItemText>
-              </ListItemButton>
+              <ListItem disablePadding>
+                <ListItemButton
+                  selected={ROLL_LOG_ID === selectedNoteId}
+                  onClick={() => openNote(ROLL_LOG_ID)}
+                >
+                  <ListItemIcon>
+                    <DieIcon />
+                  </ListItemIcon>
+                  <ListItemText>Roll Log</ListItemText>
+                </ListItemButton>
+              </ListItem>
               <Divider />
 
               {notes.map((note, index) => (
@@ -126,27 +131,30 @@ export function NoteSidebar(props: NoteSidebarProps) {
                   isDragDisabled={!updateNoteOrder}
                 >
                   {(provided, snapshot) => (
-                    <ListItemButton
-                      selected={note.noteId === selectedNoteId}
-                      onClick={() => openNote(note.noteId)}
+                    <ListItem
+                      disablePadding
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      sx={{}}
                       style={provided.draggableProps.style}
                     >
-                      <ListItemText
-                        primaryTypographyProps={{
-                          sx: {
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          },
-                        }}
+                      <ListItemButton
+                        selected={note.noteId === selectedNoteId}
+                        onClick={() => openNote(note.noteId)}
                       >
-                        {note.title}
-                      </ListItemText>
-                    </ListItemButton>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            sx: {
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            },
+                          }}
+                        >
+                          {note.title}
+                        </ListItemText>
+                      </ListItemButton>
+                    </ListItem>
                   )}
                 </Draggable>
               ))}

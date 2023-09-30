@@ -2,13 +2,11 @@ import { BASE_ROUTES, basePaths } from "routes";
 
 export enum WORLD_ROUTES {
   SELECT,
-  CREATE,
   SHEET,
 }
 
 export const worldPaths: { [key in WORLD_ROUTES]: string } = {
   [WORLD_ROUTES.SELECT]: "",
-  [WORLD_ROUTES.CREATE]: "create",
   [WORLD_ROUTES.SHEET]: ":worldId",
 };
 

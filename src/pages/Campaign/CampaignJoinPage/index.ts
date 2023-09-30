@@ -1,1 +1,1 @@
-export * from "./CampaignJoinPage";
+export { CampaignJoinPage as Component } from "./CampaignJoinPage";

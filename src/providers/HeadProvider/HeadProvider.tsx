@@ -1,6 +1,25 @@
+import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { PropsWithChildren } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
+import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
+
+const appDetails: GameSystemChooser<{
+  title: string;
+  icon: string;
+  game: string;
+}> = {
+  [GAME_SYSTEMS.IRONSWORN]: {
+    title: "Iron Fellowship for Ironsworn",
+    icon: "/iron-fellowship-logo.svg",
+    game: "Ironsworn",
+  },
+  [GAME_SYSTEMS.STARFORGED]: {
+    title: "Crew Link for Starforged",
+    icon: "/crew-link-logo.svg",
+    game: "Starforged",
+  },
+};
 
 export function HeadProvider(props: PropsWithChildren) {
   const { children } = props;
@@ -8,15 +27,17 @@ export function HeadProvider(props: PropsWithChildren) {
   const pathname = useLocation().pathname;
   const url = window.location.origin + pathname;
 
+  const details = useGameSystemValue(appDetails);
+
   return (
     <HelmetProvider>
       <Helmet>
-        <title>Iron Fellowship</title>
-        <meta property="og:site_name" content="Iron Fellowship" />
-        <meta property="og:title" content="Iron Fellowship" />
+        <title>{details.title}</title>
+        <meta property="og:site_name" content={details.title} />
+        <meta property="og:title" content={details.title} />
         <meta
           property="og:description"
-          content="A collaborative app for players and GMs playing Ironsworn"
+          content={`A collaborative app for players and GMs playing ${details.game}`}
         />
         <meta property="og:url" content={url} />
         <meta property="og:type" content="website" />

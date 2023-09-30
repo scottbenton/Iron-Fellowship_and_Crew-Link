@@ -89,7 +89,7 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
           {initialTrack ? `Edit ${initialTrack.label}` : `Add ${trackTypeName}`}
         </DialogTitle>
         <DialogContent>
-          <Stack spacing={2}>
+          <Stack spacing={2} sx={{ mt: 1 }}>
             {error && (
               <Alert severity="error">
                 <AlertTitle>Error</AlertTitle>

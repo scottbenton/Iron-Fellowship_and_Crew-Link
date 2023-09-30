@@ -72,7 +72,7 @@ export function ImageUploader(props: ImageUploaderProps) {
             p={1}
             bgcolor={(theme) => theme.palette.background.paper}
             sx={(theme) => ({
-              borderBottomLeftRadius: theme.shape.borderRadius,
+              borderBottomLeftRadius: `${theme.shape.borderRadius}px`,
             })}
           >
             {isHovering && (

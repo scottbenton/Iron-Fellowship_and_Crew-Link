@@ -67,7 +67,7 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
             mb={1}
             border={1}
             borderColor={(theme) => theme.palette.divider}
-            borderRadius={(theme) => theme.shape.borderRadius}
+            borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             sx={{ borderCollapse: "collapse" }}
           >
             {children}
@@ -123,7 +123,9 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           if (href.startsWith("ironsworn/") || href.startsWith("starforged/")) {
             if (
               href.startsWith("ironsworn/moves") ||
-              href.startsWith("ironsworn/oracles")
+              href.startsWith("ironsworn/oracles") ||
+              href.startsWith("starforged/moves") ||
+              href.startsWith("starforged/oracles")
             ) {
               return (
                 <Link

@@ -8,49 +8,68 @@ import {
   Typography,
 } from "@mui/material";
 import { truthMap } from "data/truths";
+import { useState } from "react";
+import { useStore } from "stores/store";
 import CheckIcon from "@mui/icons-material/CheckCircle";
-import { getCustomTruthId } from "pages/World/WorldCreatePage/worldCreate.store";
+import { Truth } from "types/World.type";
 
-export interface TruthChooserProps {
+export interface IronswornWorldTruthChooserProps {
   truthId: string;
-  selectedTruthOptionId?: string;
-  selectTruthOption: (truthSelectionId: string) => void;
-  customDescription?: string;
-  changeCustomTruthDescription: (description: string) => void;
-  customTruthQuestStarter?: string;
-  changeCustomTruthQuestStarter: (questStarter: string) => void;
-  maxColumns?: number;
+  initialTruth?: Truth;
+  maxCols?: number;
 }
 
-export function TruthChooser(props: TruthChooserProps) {
-  const {
-    truthId,
-    selectedTruthOptionId,
-    selectTruthOption,
-    customDescription,
-    changeCustomTruthDescription,
-    customTruthQuestStarter,
-    changeCustomTruthQuestStarter,
-    maxColumns,
-  } = props;
-  const truth = truthMap[truthId];
+export const getCustomTruthId = (truthId: string) => {
+  return `${truthId}/custom`;
+};
 
-  if (!truth) {
-    return null;
-  }
+export function IronswornWorldTruthChooser(
+  props: IronswornWorldTruthChooserProps
+) {
+  const { truthId, initialTruth, maxCols = 12 } = props;
 
-  const minGridValue = maxColumns ? 12 / maxColumns : 4;
+  const [selectedTruth, setSelectedTruth] = useState(initialTruth?.id);
+  const [customDescription, setCustomDescription] = useState(
+    initialTruth?.customTruth?.Description ?? ""
+  );
+  const [customQuestStarter, setCustomQuestStarter] = useState(
+    initialTruth?.customTruth?.["Quest starter"] ?? ""
+  );
 
   const customTruthId = getCustomTruthId(truthId);
 
+  const worldTruth = truthMap[truthId];
+
+  const updateWorldTruth = useStore(
+    (store) => store.worlds.currentWorld.updateCurrentWorldTruth
+  );
+
+  const selectTruthOption = (id: string) => {
+    setSelectedTruth(id);
+
+    const truth: Truth = {
+      id,
+    };
+    if (id === customTruthId) {
+      truth.customTruth = {
+        $id: customTruthId,
+        Description: customDescription,
+        "Quest starter": customQuestStarter,
+      };
+    }
+    updateWorldTruth(truthId, truth).catch(() => {
+      setSelectedTruth(initialTruth?.id);
+    });
+  };
+
   return (
     <Grid container spacing={2}>
-      {truth.Options.map((option) => (
+      {worldTruth.Options.map((option) => (
         <Grid
           item
           xs={12}
-          md={6 > minGridValue ? 6 : minGridValue}
-          lg={4 > minGridValue ? 4 : minGridValue}
+          md={6 > 12 / maxCols ? 6 : 12 / maxCols}
+          lg={4 > 12 / maxCols ? 4 : 12 / maxCols}
           key={option.$id}
         >
           <Card
@@ -66,7 +85,7 @@ export function TruthChooser(props: TruthChooserProps) {
               borderWidth: 2,
               cursor: "pointer",
               borderColor:
-                selectedTruthOptionId === option.$id
+                selectedTruth === option.$id
                   ? theme.palette.primary.light
                   : undefined,
             })}
@@ -77,7 +96,7 @@ export function TruthChooser(props: TruthChooserProps) {
                   component={"span"}
                   sx={{ float: "right", width: 24, height: 24 }}
                 >
-                  {selectedTruthOptionId === option.$id && (
+                  {selectedTruth === option.$id && (
                     <CheckIcon color={"primary"} />
                   )}
                 </Box>
@@ -87,7 +106,7 @@ export function TruthChooser(props: TruthChooserProps) {
             <Box
               sx={(theme) => ({
                 backgroundColor: theme.palette.background.paperInlay,
-                borderRadius: theme.shape.borderRadius,
+                borderRadius: `${theme.shape.borderRadius}px`,
                 px: 1,
                 pb: 1,
                 m: -1,
@@ -103,8 +122,8 @@ export function TruthChooser(props: TruthChooserProps) {
       <Grid
         item
         xs={12}
-        md={6 > minGridValue ? 6 : minGridValue}
-        lg={4 > minGridValue ? 4 : minGridValue}
+        md={6 > 12 / maxCols ? 6 : 12 / maxCols}
+        lg={4 > 12 / maxCols ? 4 : 12 / maxCols}
       >
         <Card
           sx={(theme) => ({
@@ -112,7 +131,7 @@ export function TruthChooser(props: TruthChooserProps) {
             height: "100%",
             borderWidth: 2,
             borderColor:
-              selectedTruthOptionId === customTruthId
+              selectedTruth === customTruthId
                 ? theme.palette.primary.light
                 : undefined,
           })}
@@ -121,7 +140,7 @@ export function TruthChooser(props: TruthChooserProps) {
           <Stack spacing={2}>
             <Box display={"flex"} justifyContent={"space-between"}>
               <Typography variant={"h6"}>Custom Truth</Typography>
-              {selectedTruthOptionId === customTruthId && (
+              {selectedTruth === customTruthId && (
                 <CheckIcon color={"primary"} />
               )}
             </Box>
@@ -130,23 +149,23 @@ export function TruthChooser(props: TruthChooserProps) {
               minRows={3}
               fullWidth
               multiline
-              value={customDescription ?? ""}
-              onChange={(evt) =>
-                changeCustomTruthDescription(evt.currentTarget.value)
-              }
+              value={customDescription}
+              onChange={(evt) => setCustomDescription(evt.currentTarget.value)}
             />
             <TextField
               label={"Quest Starter"}
               minRows={3}
               fullWidth
               multiline
-              value={customTruthQuestStarter ?? ""}
-              onChange={(evt) =>
-                changeCustomTruthQuestStarter(evt.currentTarget.value)
-              }
+              value={customQuestStarter}
+              onChange={(evt) => setCustomQuestStarter(evt.currentTarget.value)}
             />
-            <Box onClick={() => selectTruthOption(customTruthId)}>
-              <Button color={"inherit"} variant={"outlined"}>
+            <Box>
+              <Button
+                color={"inherit"}
+                variant={"outlined"}
+                onClick={() => selectTruthOption(customTruthId)}
+              >
                 Select
               </Button>
             </Box>

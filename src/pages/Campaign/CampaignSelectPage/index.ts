@@ -1,1 +1,1 @@
-export * from "./CampaignSelectPage";
+export { CampaignSelectPage as Component } from "./CampaignSelectPage";

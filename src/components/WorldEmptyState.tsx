@@ -7,10 +7,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { WORLD_ROUTES, constructWorldPath } from "pages/World/routes";
-import { Link } from "react-router-dom";
+import { constructWorldSheetPath } from "pages/World/routes";
+import { useNavigate } from "react-router-dom";
 import { World } from "types/World.type";
 import { EmptyState } from "./EmptyState/EmptyState";
+import { useStore } from "stores/store";
 
 export interface WorldEmptyStateProps {
   isGM?: boolean;
@@ -30,6 +31,17 @@ export function WorldEmptyState(props: WorldEmptyStateProps) {
     worldUpdateLoading,
     isOnWorldTab,
   } = props;
+
+  const navigate = useNavigate();
+
+  const createWorld = useStore((store) => store.worlds.createWorld);
+  const handleWorldCreate = () => {
+    createWorld()
+      .then((worldId) => {
+        navigate(constructWorldSheetPath(worldId));
+      })
+      .catch(() => {});
+  };
 
   return (
     <>
@@ -57,8 +69,7 @@ export function WorldEmptyState(props: WorldEmptyStateProps) {
           <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
             <Button
               variant={"contained"}
-              component={Link}
-              to={constructWorldPath(WORLD_ROUTES.CREATE)}
+              onClick={handleWorldCreate}
               disabled={worldUpdateLoading}
             >
               Create a new World
@@ -87,8 +98,7 @@ export function WorldEmptyState(props: WorldEmptyStateProps) {
               <Button
                 variant={"contained"}
                 color={"primary"}
-                component={Link}
-                to={constructWorldPath(WORLD_ROUTES.CREATE)}
+                onClick={handleWorldCreate}
               >
                 Create a World
               </Button>

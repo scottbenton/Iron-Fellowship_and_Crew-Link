@@ -1,5 +1,10 @@
-import { TruthClassic, TruthOptionClassic } from "dataforged";
-import { ironswornWorldTruths } from "./dataforged";
+import {
+  TruthClassic,
+  TruthOptionClassic,
+  TruthOptionStarforged,
+  TruthStarforged,
+} from "dataforged";
+import { ironswornWorldTruths, starforgedWorldTruths } from "./dataforged";
 
 export const truthIds = [
   "ironsworn/setting_truths/the_old_world",
@@ -13,7 +18,7 @@ export const truthIds = [
   "ironsworn/setting_truths/firstborn",
   "ironsworn/setting_truths/beasts",
   "ironsworn/setting_truths/horrors",
-] as const;
+];
 
 export const truths = Object.values(ironswornWorldTruths);
 
@@ -25,4 +30,17 @@ truths.forEach((truth) => {
   truth.Options.forEach(
     (truthOption) => (truthOptionMap[truthOption.$id] = truthOption)
   );
+});
+
+export const starforgedTruths = Object.values(starforgedWorldTruths);
+export const starforgedTruthMap: { [key: string]: TruthStarforged } = {};
+export const starforgedTruthOptionMap: {
+  [key: string]: TruthOptionStarforged;
+} = {};
+
+starforgedTruths.forEach((truth) => {
+  starforgedTruthMap[truth.$id] = truth;
+  truth.Table.forEach((truthOption) => {
+    starforgedTruthOptionMap[truthOption.$id] = truthOption;
+  });
 });

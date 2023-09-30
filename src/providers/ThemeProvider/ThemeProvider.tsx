@@ -1,13 +1,16 @@
 import { PropsWithChildren, useCallback, useState } from "react";
 import { CssBaseline, ThemeProvider as MuiThemeProvider } from "@mui/material";
-import { THEME_TYPE, darkTheme, lightTheme } from "./theme";
+import { THEME_TYPE, gameThemes } from "./themes";
 import { ThemeContext } from "./ThemeContext";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
 
 export function ThemeProvider(props: PropsWithChildren) {
   const { children } = props;
 
+  const themes = useGameSystemValue(gameThemes);
+
   const [currentThemeType, setCurrentThemeType] = useState<THEME_TYPE>(
-    localStorage.getItem("themeType") === "dark"
+    localStorage.getItem("themeType") === THEME_TYPE.DARK
       ? THEME_TYPE.DARK
       : THEME_TYPE.LIGHT
   );
@@ -27,9 +30,7 @@ export function ThemeProvider(props: PropsWithChildren) {
 
   return (
     <ThemeContext.Provider value={{ themeType: currentThemeType, toggleTheme }}>
-      <MuiThemeProvider
-        theme={currentThemeType === THEME_TYPE.LIGHT ? lightTheme : darkTheme}
-      >
+      <MuiThemeProvider theme={themes[currentThemeType]}>
         <CssBaseline />
         {children}
       </MuiThemeProvider>

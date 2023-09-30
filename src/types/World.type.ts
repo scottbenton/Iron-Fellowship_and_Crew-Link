@@ -6,14 +6,14 @@ export type TRUTH_IDS = (typeof truthIds)[number];
 
 export interface World {
   name: string;
-  truths: { [key in TRUTH_IDS]: Truth };
+  truths?: { [key: string]: Truth };
   ownerIds: string[];
   worldDescription?: Uint8Array;
 }
 
 export interface EncodedWorld {
   name: string;
-  truths: { [key: string]: Truth };
+  truths?: { [key: string]: Truth };
   ownerIds: string[];
   worldDescription?: Bytes;
 }
@@ -21,4 +21,5 @@ export interface EncodedWorld {
 export interface Truth {
   id: string;
   customTruth?: TruthOptionClassic;
+  selectedSubItemId?: string | null;
 }

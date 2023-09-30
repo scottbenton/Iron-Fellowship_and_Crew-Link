@@ -81,8 +81,9 @@ export const createWorldSlice: CreateSliceType<WorldSlice> = (...params) => {
         unsubscribes.forEach((unsubscribe) => unsubscribe());
       };
     },
-    createWorld: (world) => {
-      return createWorld(world);
+    createWorld: () => {
+      const uid = getState().auth.uid;
+      return createWorld({ name: "New World", ownerIds: [uid] });
     },
     deleteWorld: (worldId) => {
       return deleteWorld(worldId);

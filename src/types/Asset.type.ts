@@ -8,64 +8,6 @@ export enum AssetType {
   Role = "Role",
 }
 
-export interface JsonAsset {
-  Name: string;
-  "Asset Type": string;
-  "Input Fields"?: string[];
-  Deed?: boolean;
-  Description?: string;
-  Abilities: {
-    Name?: string;
-    Text: string;
-    Enabled?: boolean;
-    "Alter Properties"?: {
-      "Asset Track": {
-        Name: string;
-        Max: number;
-      };
-    };
-  }[];
-  "Asset Track"?: {
-    Name: string;
-    Max: number;
-    "Starting Value"?: number;
-  };
-  MultiFieldAssetTrack?: {
-    Fields: {
-      Name: string;
-      ActiveText: string;
-      InactiveText: string;
-      IsActive: boolean;
-    }[];
-  };
-}
-
-export interface Asset {
-  id: string;
-  name: string;
-  type: AssetType;
-  inputs?: string[];
-  description?: string;
-  abilities: {
-    name?: string;
-    text: string;
-    startsEnabled?: boolean;
-    alterTrack?: {
-      trackName: string;
-      max: number;
-    };
-  }[];
-  track?: {
-    name: string;
-    max: number;
-    startingValue?: number;
-  };
-  multiFieldTrack?: {
-    name: string;
-    options: string[];
-  };
-}
-
 export interface StoredAsset {
   id: string;
   enabledAbilities: {
@@ -77,6 +19,7 @@ export interface StoredAsset {
   trackValue: number | null;
   customAsset: DataforgedAsset | null;
   order: number;
+  conditions?: { [key: string]: boolean };
 }
 
 export function getAssetType(assetType?: string): AssetType | undefined {

@@ -1,1 +1,1 @@
-export * from "./CharacterCreatePage";
+export { CharacterCreatePage as Component } from "./CharacterCreatePage";

@@ -39,7 +39,7 @@ export function EditableTitle(props: EditableTitleProps) {
           borderWidth: 2,
           borderStyle: "solid",
           borderColor: "transparent",
-          borderRadius: theme.shape.borderRadius,
+          borderRadius: `${theme.shape.borderRadius}px`,
           p: 1,
           mx: -1,
           display: "flex",

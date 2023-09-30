@@ -200,14 +200,17 @@ export function ProgressTrack(props: ProgressTracksProps) {
               )
             }
             sx={(theme) => ({
-              backgroundColor: theme.palette.darkGrey.main,
+              backgroundColor:
+                theme.palette.darkGrey[
+                  theme.palette.mode === "light" ? "main" : "light"
+                ],
               color: theme.palette.darkGrey.contrastText,
               px: 0.5,
               "&:hover": {
                 backgroundColor: theme.palette.darkGrey.dark,
               },
-              borderTopLeftRadius: theme.shape.borderRadius,
-              borderBottomLeftRadius: theme.shape.borderRadius,
+              borderTopLeftRadius: `${theme.shape.borderRadius}px`,
+              borderBottomLeftRadius: `${theme.shape.borderRadius}px`,
             })}
           >
             <MinusIcon />
@@ -248,15 +251,18 @@ export function ProgressTrack(props: ProgressTracksProps) {
             }
             focusRipple
             sx={(theme) => ({
-              backgroundColor: theme.palette.darkGrey.main,
+              backgroundColor:
+                theme.palette.darkGrey[
+                  theme.palette.mode === "light" ? "main" : "light"
+                ],
               color: theme.palette.darkGrey.contrastText,
               px: 0.5,
               "&:hover": {
                 backgroundColor: theme.palette.darkGrey.dark,
               },
 
-              borderTopRightRadius: theme.shape.borderRadius,
-              borderBottomRightRadius: theme.shape.borderRadius,
+              borderTopRightRadius: `${theme.shape.borderRadius}px`,
+              borderBottomRightRadius: `${theme.shape.borderRadius}px`,
             })}
           >
             <PlusIcon />

@@ -95,7 +95,7 @@ export function PortraitAvatarDisplay(props: PortraitAvatarDisplayProps) {
           : darkBorder
           ? theme.palette.grey[700]
           : theme.palette.grey[400],
-        borderRadius: rounded ? "100%" : theme.shape.borderRadius,
+        borderRadius: rounded ? "100%" : `${theme.shape.borderRadius}px`,
         "&>img": {
           width: isTaller ? `${100 * scale}%` : "auto",
           height: isTaller ? "auto" : `${100 * scale}%`,

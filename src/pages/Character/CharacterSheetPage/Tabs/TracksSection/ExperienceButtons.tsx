@@ -17,7 +17,7 @@ export function ExperienceButtons(props: ExperienceButtonsProps) {
       alignItems={"stretch"}
       mr={1}
       mt={0.5}
-      borderRadius={(theme) => theme.shape.borderRadius}
+      borderRadius={(theme) => `${theme.shape.borderRadius}px`}
       overflow={"hidden"}
     >
       <ButtonBase

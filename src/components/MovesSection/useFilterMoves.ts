@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSearch } from "hooks/useSearch";
-import { orderedCategories, orderedDelveCategories } from "data/moves";
+import { orderedCategories } from "data/moves";
 import { Move, MoveCategory } from "dataforged";
 import { useCustomMoves } from "./useCustomMoves";
 import { useStore } from "stores/store";
 
-const categories = [...orderedCategories, ...orderedDelveCategories];
-
 export function useFilterMoves() {
   const { setSearch, debouncedSearch } = useSearch();
-  const [filteredMoves, setFilteredMoves] = useState(categories);
+  const [filteredMoves, setFilteredMoves] = useState(orderedCategories);
   const { customMoveCategories } = useCustomMoves();
 
   const showDelveMoves = useStore(
@@ -19,7 +17,7 @@ export function useFilterMoves() {
   useEffect(() => {
     const results: MoveCategory[] = [];
 
-    let allCategories = [...categories, ...customMoveCategories].filter(
+    let allCategories = [...orderedCategories, ...customMoveCategories].filter(
       (category) =>
         showDelveMoves || category.Source.Title !== "Ironsworn: Delve"
     );

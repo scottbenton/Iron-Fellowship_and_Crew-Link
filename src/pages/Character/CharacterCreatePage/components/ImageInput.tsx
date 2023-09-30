@@ -40,7 +40,7 @@ export function ImageInput(props: ImageInputProps) {
       <ButtonBase
         aria-label={"Upload a Character Portrait"}
         sx={(theme) => ({
-          borderRadius: theme.shape.borderRadius,
+          borderRadius: `${theme.shape.borderRadius}px`,
         })}
         onClick={() => setDialogOpen(true)}
       >

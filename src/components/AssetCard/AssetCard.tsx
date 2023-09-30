@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   IconButton,
   SxProps,
   Theme,
@@ -100,7 +101,7 @@ export function AssetCard(props: AssetCardProps) {
       >
         <Box
           sx={(theme) => ({
-            backgroundColor: theme.palette.darkGrey.main,
+            backgroundColor: theme.palette.darkGrey.light,
             color: theme.palette.darkGrey.contrastText,
             py: handleDeleteClick ? 0.5 : 1,
             px: 1,
@@ -190,7 +191,23 @@ export function AssetCard(props: AssetCardProps) {
               </Box>
             ))}
           </Box>
-
+          {!hideTracks &&
+            storedAsset &&
+            conditionMeter &&
+            conditionMeter.Conditions.length > 0 && (
+              <Box display={"flex"} flexWrap={"wrap"}>
+                {conditionMeter.Conditions.map((condition, index) => (
+                  <FormControlLabel
+                    key={condition}
+                    control={
+                      <Checkbox checked={false} onChange={(evt, value) => {}} />
+                    }
+                    label={condition}
+                    sx={{ textTransform: "capitalize", marginRight: 3 }}
+                  />
+                ))}
+              </Box>
+            )}
           {!hideTracks &&
             storedAsset &&
             conditionMeter &&

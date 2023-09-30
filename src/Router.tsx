@@ -1,9 +1,4 @@
-import { CampaignGMScreenPage } from "pages/Campaign/CampaignGMScreenPage";
-import { WorldCreatePage } from "pages/World/WorldCreatePage";
 import { Layout } from "./components/Layout";
-import { CampaignJoinPage } from "pages/Campaign/CampaignJoinPage";
-import { CharacterCreatePage } from "./pages/Character/CharacterCreatePage";
-import { CharacterSelectPage } from "./pages/Character/CharacterSelectPage";
 import { getUser } from "./lib/auth.lib";
 import { BASE_ROUTES, basePaths } from "./routes";
 
@@ -15,20 +10,10 @@ import {
 } from "react-router-dom";
 import { ErrorRoute } from "components/ErrorRoute";
 import { CHARACTER_ROUTES, characterPaths } from "pages/Character/routes";
-import { CharacterSheetPage } from "pages/Character/CharacterSheetPage";
-import { LoginPage } from "pages/LoginPage";
-import { CampaignSelectPage } from "pages/Campaign/CampaignSelectPage";
 import { CAMPAIGN_ROUTES, campaignPaths } from "pages/Campaign/routes";
-import { CampaignSheetPage } from "pages/Campaign/CampaignSheetPage";
-import { WorldSelectPage } from "pages/World/WorldSelectPage";
 import { WORLD_ROUTES, worldPaths } from "pages/World/routes";
-import { WorldSheetPage } from "pages/World/WorldSheetPage";
-import { CharacterCardPage } from "pages/Character/CharacterCardPage";
-import { SignupPage } from "pages/Authentication/SignupPage";
-import { HomePage } from "pages/Home";
 import { HeadProvider } from "providers/HeadProvider";
 import { useListenToCharacters } from "stores/character/useListenToCharacters";
-import { useStore } from "stores/store";
 import { useListenToCampaigns } from "stores/campaign/useListenToCampaigns";
 import { useListenToAuth } from "stores/auth/useListenToAuth";
 import { useListenToWorlds } from "stores/world/useListenToWorlds";
@@ -53,53 +38,58 @@ const router = createBrowserRouter(
         }}
         shouldRevalidate={() => false}
       >
-        <Route index element={<HomePage />} />
+        <Route index lazy={() => import("pages/Home")} />
         {/* Authenticated Pages */}
         <Route>
           <Route path={basePaths[BASE_ROUTES.CHARACTER]}>
-            <Route index element={<CharacterSelectPage />} />
+            <Route
+              index
+              lazy={() => import("pages/Character/CharacterSelectPage")}
+            />
             <Route
               path={characterPaths[CHARACTER_ROUTES.CREATE]}
-              element={<CharacterCreatePage />}
+              lazy={() => import("pages/Character/CharacterCreatePage")}
             />
             <Route
               path={characterPaths[CHARACTER_ROUTES.SHEET]}
-              element={<CharacterSheetPage />}
+              lazy={() => import("pages/Character/CharacterSheetPage")}
             />
           </Route>
           <Route path={basePaths[BASE_ROUTES.CAMPAIGN]}>
-            <Route index element={<CampaignSelectPage />} />
+            <Route
+              index
+              lazy={() => import("pages/Campaign/CampaignSelectPage")}
+            />
             <Route
               path={campaignPaths[CAMPAIGN_ROUTES.SHEET]}
-              element={<CampaignSheetPage />}
+              lazy={() => import("pages/Campaign/CampaignSheetPage")}
             />
             <Route
               path={campaignPaths[CAMPAIGN_ROUTES.GM_SCREEN]}
-              element={<CampaignGMScreenPage />}
+              lazy={() => import("pages/Campaign/CampaignGMScreenPage")}
             />
             <Route
               path={campaignPaths[CAMPAIGN_ROUTES.JOIN]}
-              element={<CampaignJoinPage />}
+              lazy={() => import("pages/Campaign/CampaignJoinPage")}
             />
           </Route>
           <Route path={basePaths[BASE_ROUTES.WORLD]}>
-            <Route index element={<WorldSelectPage />} />
-            <Route
-              path={worldPaths[WORLD_ROUTES.CREATE]}
-              element={<WorldCreatePage />}
-            />
+            <Route index lazy={() => import("pages/World/WorldSelectPage")} />
             <Route
               path={worldPaths[WORLD_ROUTES.SHEET]}
-              element={<WorldSheetPage />}
+              lazy={() => import("pages/World/WorldSheetPage")}
             />
           </Route>
           {/* Unauthenticated Pages */}
         </Route>
         <Route>
-          <Route path={basePaths[BASE_ROUTES.LOGIN]} element={<LoginPage />} />
+          <Route
+            path={basePaths[BASE_ROUTES.LOGIN]}
+            lazy={() => import("pages/Authentication/LoginPage")}
+          />
           <Route
             path={basePaths[BASE_ROUTES.SIGNUP]}
-            element={<SignupPage />}
+            lazy={() => import("pages/Authentication/SignupPage")}
           />
         </Route>
       </Route>
@@ -109,11 +99,7 @@ const router = createBrowserRouter(
           "/" +
           characterPaths[CHARACTER_ROUTES.CARD]
         }
-        element={
-          <HeadProvider>
-            <CharacterCardPage />
-          </HeadProvider>
-        }
+        lazy={() => import("pages/Character/CharacterCardPage")}
       />
     </>
   )

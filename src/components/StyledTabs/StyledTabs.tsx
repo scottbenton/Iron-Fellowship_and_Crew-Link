@@ -13,7 +13,7 @@ export function StyledTabs(props: StyledTabsProps) {
               ? theme.palette.grey[300]
               : theme.palette.grey[700],
           color: theme.palette.text.secondary,
-          borderRadius: theme.shape.borderRadius,
+          borderRadius: `${theme.shape.borderRadius}px`,
         }),
       }}
       TabScrollButtonProps={{

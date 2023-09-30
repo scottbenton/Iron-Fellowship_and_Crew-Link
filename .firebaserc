@@ -1,7 +1,9 @@
 {
   "projects": {
-    "default": "iron-journal-1ac32",
-    "dev": "iron-fellowship-dev"
+    "iron-fellowship-prod": "iron-journal-1ac32",
+    "iron-fellowship-dev": "iron-fellowship-dev",
+    "crew-link-prod":"starforged-crew-link",
+    "crew-link-dev":"crew-link-dev"
   },
   "targets": {},
   "etags": {}

@@ -1,7 +1,7 @@
 import { LoginOrSignupPage } from "components/LoginOrSignupPage";
 import { Head } from "providers/HeadProvider/Head";
 
-export function LoginPage() {
+export function Component() {
   return (
     <>
       <Head title={"Login"} />

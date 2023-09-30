@@ -191,7 +191,7 @@ export function CharacterCardPage() {
                         ? theme.palette.success.main
                         : theme.palette.error.main
                     }
-                    borderRadius={(theme) => theme.shape.borderRadius}
+                    borderRadius={(theme) => `${theme.shape.borderRadius}px`}
                   >
                     {character.initiativeStatus ===
                     INITIATIVE_STATUS.HAS_INITIATIVE ? (

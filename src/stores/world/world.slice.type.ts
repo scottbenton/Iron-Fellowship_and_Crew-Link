@@ -17,7 +17,7 @@ export interface WorldSliceActions {
     worldIdsUserOwns: string[]
   ) => Unsubscribe | undefined;
 
-  createWorld: (world: World) => Promise<string>;
+  createWorld: () => Promise<string>;
   deleteWorld: (worldId: string) => Promise<void>;
 }
 

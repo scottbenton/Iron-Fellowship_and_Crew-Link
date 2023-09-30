@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 import { SectionHeading } from "components/SectionHeading";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStore } from "stores/store";
 
 export function WorldNameSection() {
@@ -14,6 +14,8 @@ export function WorldNameSection() {
     (store) => store.worlds.currentWorld.updateCurrentWorld
   );
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const handleSave = () => {
     setLoading(true);
     updateWorld({ name: tmpWorldName })
@@ -25,6 +27,9 @@ export function WorldNameSection() {
 
   useEffect(() => {
     setTmpWorldName(worldName);
+    if (worldName === "New World") {
+      inputRef.current?.focus();
+    }
   }, [worldName]);
 
   return (
@@ -32,6 +37,7 @@ export function WorldNameSection() {
       <SectionHeading breakContainer label={"World Name"} />
 
       <TextField
+        inputRef={inputRef}
         sx={{ mt: 2 }}
         label={"World Name"}
         value={tmpWorldName}

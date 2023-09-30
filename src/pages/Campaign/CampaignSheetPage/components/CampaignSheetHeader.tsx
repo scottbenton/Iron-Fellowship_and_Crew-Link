@@ -132,7 +132,7 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
               color: theme.palette.grey[200],
               px: 1,
               py: 0.25,
-              borderRadius: theme.shape.borderRadius,
+              borderRadius: `${theme.shape.borderRadius}px`,
               my: 2,
             })}
           >

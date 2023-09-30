@@ -68,8 +68,8 @@ export function Track(props: TrackProps) {
           justifyContent={"center"}
           alignItems={"center"}
           sx={(theme) => ({
-            borderTopLeftRadius: theme.shape.borderRadius,
-            borderBottomLeftRadius: theme.shape.borderRadius,
+            borderTopLeftRadius: `${theme.shape.borderRadius}px`,
+            borderBottomLeftRadius: `${theme.shape.borderRadius}px`,
           })}
         >
           <Typography

@@ -24,7 +24,7 @@ export function Editor(props: EditorProps) {
               borderWidth: editable ? 1 : 0,
               borderStyle: "solid",
               borderColor: theme.palette.divider,
-              borderRadius: theme.shape.borderRadius,
+              borderRadius: `${theme.shape.borderRadius}px`,
               overflow: "hidden",
             }
           : {
@@ -43,7 +43,7 @@ export function Editor(props: EditorProps) {
             right={(theme) => theme.spacing(1)}
             bgcolor={(theme) => theme.palette.grey[600]}
             color={"white"}
-            borderRadius={(theme) => theme.shape.borderRadius}
+            borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             px={0.5}
           >
             Saving...
@@ -115,7 +115,7 @@ export function Editor(props: EditorProps) {
 
           /* Render the username above the caret */
           ".collaboration-cursor__label": {
-            borderRadius: theme.shape.borderRadius,
+            borderRadius: `${theme.shape.borderRadius}px`,
             borderBottomLeftRadius: 0,
             color: theme.palette.text.secondary,
             ...theme.typography.caption,

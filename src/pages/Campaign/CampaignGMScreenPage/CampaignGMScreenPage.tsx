@@ -1,7 +1,7 @@
 import { Grid, Hidden, LinearProgress } from "@mui/material";
 import { MovesSection } from "components/MovesSection/MovesSection";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TabsSection } from "./components/TabsSection";
 import {
@@ -48,12 +48,20 @@ export function CampaignGMScreenPage() {
     }
   }, [loading, campaigns, campaignId, uid]);
 
-  if (loading) {
-    return (
-      <LinearProgress
-        sx={{ width: "100vw", position: "absolute", left: 0, marginTop: -3 }}
-      />
-    );
+  const [syncLoading, setSyncLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSyncLoading(false);
+    }, 2 * 1000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  if (loading || (!campaign && syncLoading)) {
+    return <LinearProgress />;
   }
 
   if (!campaignId || !campaign || !uid || !campaign?.gmIds?.includes(uid)) {

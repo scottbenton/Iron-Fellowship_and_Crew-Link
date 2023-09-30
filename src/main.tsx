@@ -5,6 +5,7 @@ import { Router } from "Router";
 
 import "@fontsource/staatliches";
 import "@fontsource/rubik/variable.css";
+import "@fontsource/bebas-neue";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

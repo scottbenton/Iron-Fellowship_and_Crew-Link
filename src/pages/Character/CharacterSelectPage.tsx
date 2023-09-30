@@ -13,17 +13,13 @@ import { EmptyState } from "../../components/EmptyState/EmptyState";
 import AddCharacterIcon from "@mui/icons-material/PersonAdd";
 
 import { useConfirm } from "material-ui-confirm";
-import {
-  CHARACTER_ROUTES,
-  constructCharacterPath,
-  constructCharacterSheetPath,
-} from "./routes";
+import { CHARACTER_ROUTES, constructCharacterPath } from "./routes";
 import { PageHeader } from "components/Layout/PageHeader";
 import { PageContent } from "components/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 
-export function CharacterSelectPage() {
+export function Component() {
   const characters = useStore((store) => store.characters.characterMap);
   const isLoading = useStore((store) => store.characters.loading);
   const errorMessage = useStore((store) => store.characters.error);

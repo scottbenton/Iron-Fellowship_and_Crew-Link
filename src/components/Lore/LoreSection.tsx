@@ -4,6 +4,7 @@ import {
   Grid,
   Hidden,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
 } from "@mui/material";
@@ -96,20 +97,21 @@ export function LoreSection(props: LoreSectionProps) {
           <Box overflow={"auto"} flexGrow={1} minWidth={200} maxWidth={400}>
             <List>
               {sortedLoreIds.map((loreId) => (
-                <ListItemButton
-                  key={loreId}
-                  selected={loreId === openLoreId}
-                  onClick={() => setOpenLoreId(loreId)}
-                >
-                  <ListItemText
-                    primary={lore[loreId].name}
-                    secondary={
-                      !isSinglePlayer &&
-                      isWorldOwner &&
-                      (!lore[loreId].sharedWithPlayers ? "Hidden" : "Shared")
-                    }
-                  />
-                </ListItemButton>
+                <ListItem key={loreId} disablePadding>
+                  <ListItemButton
+                    selected={loreId === openLoreId}
+                    onClick={() => setOpenLoreId(loreId)}
+                  >
+                    <ListItemText
+                      primary={lore[loreId].name}
+                      secondary={
+                        !isSinglePlayer &&
+                        isWorldOwner &&
+                        (!lore[loreId].sharedWithPlayers ? "Hidden" : "Shared")
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
               ))}
             </List>
           </Box>

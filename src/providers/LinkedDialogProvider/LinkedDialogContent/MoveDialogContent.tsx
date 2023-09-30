@@ -8,8 +8,9 @@ import { oracleMap } from "data/oracles";
 import { useRoller } from "providers/DieRollProvider";
 import { OracleTable } from "dataforged";
 import { useCustomOracles } from "components/OracleSection/useCustomOracles";
-import { assetMap } from "data/assets";
 import { useStore } from "stores/store";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export interface MoveDialogContentProps {
   id: string;
@@ -54,10 +55,17 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
     });
   });
 
+  const { gameSystem } = useGameSystem();
+
   const moveOracles: (OracleTable | undefined)[] =
     move.Oracles?.map(
       // Temporary fix for id mismatch in datasworn
-      (oracleId) => allOracles[oracleId.replace("fifty-fifty", "50_50")]
+      (oracleId) =>
+        allOracles[
+          gameSystem === GAME_SYSTEMS.IRONSWORN
+            ? oracleId.replace("fifty-fifty", "50_50")
+            : oracleId
+        ]
     ) ?? [];
 
   return (

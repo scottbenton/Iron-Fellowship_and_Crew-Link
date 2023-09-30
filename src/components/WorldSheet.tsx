@@ -1,17 +1,25 @@
-import { Alert, Grid, Typography } from "@mui/material";
-import { truthIds } from "data/truths";
-import { TRUTH_IDS } from "types/World.type";
+import { Alert, Typography } from "@mui/material";
 import { SectionHeading } from "./SectionHeading";
 import { WorldNameSection } from "pages/World/WorldSheetPage/components/WorldNameSection";
-import { TruthCard } from "pages/World/WorldSheetPage/components/TruthCard";
 import { useStore } from "stores/store";
 import { RtcRichTextEditor } from "./RichTextEditor/RtcRichTextEditor";
 import { useCallback } from "react";
+import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
+import { IronswornWorldTruthsSection } from "./Worlds/IronswornWorldTruthsSection";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { StarforgedWorldTruthsSection } from "./Worlds/StarforgedWorldTruthsSection";
 
 export interface WorldSheetProps {
   canEdit: boolean;
   hideCampaignHints?: boolean;
 }
+
+const truthSection: GameSystemChooser<
+  (props: { canEdit: boolean; hideCampaignHints?: boolean }) => JSX.Element
+> = {
+  [GAME_SYSTEMS.IRONSWORN]: IronswornWorldTruthsSection,
+  [GAME_SYSTEMS.STARFORGED]: StarforgedWorldTruthsSection,
+};
 
 export function WorldSheet(props: WorldSheetProps) {
   const { canEdit, hideCampaignHints } = props;
@@ -30,6 +38,8 @@ export function WorldSheet(props: WorldSheetProps) {
         : new Promise<void>((res) => res()),
     [updateWorldDescription, worldId]
   );
+
+  const TruthSection = useGameSystemValue(truthSection);
 
   if (!world || !worldId) return null;
 
@@ -67,28 +77,7 @@ export function WorldSheet(props: WorldSheetProps) {
           />
         </>
       )}
-      <SectionHeading
-        breakContainer
-        label={"World Truths"}
-        sx={{ mt: canEdit ? 4 : 2 }}
-      />
-      {canEdit && !hideCampaignHints && (
-        <Alert severity={"info"} sx={{ mt: 2 }}>
-          If you add this world to a campaign, the world truths will be shared
-          with your players, but the quest starters will not.
-        </Alert>
-      )}
-      <Grid container spacing={2} mt={0}>
-        {truthIds.map((truthId) => (
-          <Grid item xs={12} md={6} lg={4} key={truthId}>
-            <TruthCard
-              truthId={truthId as TRUTH_IDS}
-              storedTruth={world.truths[truthId as TRUTH_IDS]}
-              canEdit={canEdit}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      <TruthSection canEdit={canEdit} hideCampaignHints={hideCampaignHints} />
     </>
   );
 }

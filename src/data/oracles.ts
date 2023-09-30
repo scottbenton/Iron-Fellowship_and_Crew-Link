@@ -1,26 +1,61 @@
-import { ironswornOracleCategories } from "./dataforged";
+import { getSystem } from "hooks/useGameSystem";
+import {
+  ironswornOracleCategories,
+  starforgedOracleCategories,
+} from "./dataforged";
 import type {
   OracleSet,
   OracleTable as DataforgedOracleTable,
   Title,
 } from "dataforged";
+import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 
-const oracleCategoryOrder = [
-  "ironsworn/oracles/moves",
-  "ironsworn/oracles/character",
-  "ironsworn/oracles/name",
-  "ironsworn/oracles/action_and_theme",
-  "ironsworn/oracles/combat_event",
-  "ironsworn/oracles/feature",
-  "ironsworn/oracles/place",
-  "ironsworn/oracles/settlement",
-  "ironsworn/oracles/site_name",
-  "ironsworn/oracles/site_nature",
-  "ironsworn/oracles/monstrosity",
-  "ironsworn/oracles/threat",
-  "ironsworn/oracles/trap",
-  "ironsworn/oracles/turning_point",
-];
+const gameSystem = getSystem();
+const moveCategories: GameSystemChooser<typeof ironswornOracleCategories> = {
+  [GAME_SYSTEMS.IRONSWORN]: ironswornOracleCategories,
+  [GAME_SYSTEMS.STARFORGED]: starforgedOracleCategories,
+};
+const categoryOrders: GameSystemChooser<string[]> = {
+  [GAME_SYSTEMS.IRONSWORN]: [
+    "Moves",
+    "Character",
+    "Name",
+    "Action and Theme",
+    "Combat Event",
+    "Feature",
+    "Place",
+    "Settlement",
+    "Site Name",
+    "Site Nature",
+    "Monstrosity",
+    "Threat",
+    "Trap",
+    "Turning Point",
+  ],
+  [GAME_SYSTEMS.STARFORGED]: [
+    "Campaign",
+    "Characters",
+    "Core",
+    "Creatures",
+    "Derelicts",
+    "Factions",
+    "Location themes",
+    "Misc",
+    "Moves",
+    "Planets",
+    "Settlements",
+    "Space",
+    "Starships",
+    "Vaults",
+    "Location Themes",
+  ],
+};
+const category = moveCategories[gameSystem];
+const categoryOrder = categoryOrders[gameSystem];
+
+export const orderedCategories = categoryOrder.map(
+  (categoryId) => category[categoryId]
+);
 
 export let oracleCategoryMap: { [categoryId: string]: OracleSet } = {};
 export let oracleMap: { [tableId: string]: DataforgedOracleTable } = {};
@@ -58,7 +93,7 @@ function flattenOracleTables(
   return newSetTables;
 }
 
-Object.values(ironswornOracleCategories).forEach((oracleCategory) => {
+Object.values(orderedCategories).forEach((oracleCategory) => {
   const flattenedTables = flattenOracleTables(oracleCategory);
   oracleMap = { ...oracleMap, ...flattenedTables };
 
@@ -67,10 +102,6 @@ Object.values(ironswornOracleCategories).forEach((oracleCategory) => {
     Tables: flattenedTables,
   };
 });
-
-export const orderedOracleCategories = oracleCategoryOrder.map(
-  (oracleId) => oracleCategoryMap[oracleId]
-);
 
 export const hiddenOracleIds: { [oracleId: string]: boolean } = {
   "ironsworn/oracles/moves/ask_the_oracle/almost_certain": true,
