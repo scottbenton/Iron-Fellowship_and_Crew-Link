@@ -10,11 +10,11 @@ export interface HeadProps {
 
 const appDetails: GameSystemChooser<{ title: string; icon: string }> = {
   [GAME_SYSTEMS.IRONSWORN]: {
-    title: "Iron Fellowship",
+    title: "Iron Fellowship for Ironsworn",
     icon: "/iron-fellowship-logo.svg",
   },
   [GAME_SYSTEMS.STARFORGED]: {
-    title: "Crew Link",
+    title: "Crew Link for Starforged",
     icon: "/crew-link-logo.svg",
   },
 };

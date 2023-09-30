@@ -4,10 +4,13 @@ import { CustomOracleSection } from "components/CustomOraclesSection";
 import { CustomStats } from "components/CustomStats";
 import { CustomTrackSettings } from "components/CustomTrackSettings";
 import { SectionHeading } from "components/SectionHeading";
+import { useGameSystem } from "hooks/useGameSystem";
 import { useStore } from "stores/store";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export function SettingsSection() {
   const uid = useStore((store) => store.auth.uid);
+  const { gameSystem } = useGameSystem();
 
   const customMoves = useStore((store) => store.settings.customMoves);
   const customOracles = useStore((store) => store.settings.customOracles);
@@ -44,35 +47,39 @@ export function SettingsSection() {
         hiddenMoveIds={hiddenMoves}
         showOrHideCustomMove={showOrHideCustomMove}
       />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={shouldShowDelveMoves}
-            onChange={(evt, value) => {
-              updateSettings({ hideDelveMoves: !value }).catch(() => {});
-            }}
-          />
-        }
-        label={"Show Delve Moves?"}
-        sx={{ px: 2 }}
-      />
+      {gameSystem === GAME_SYSTEMS.IRONSWORN && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={shouldShowDelveMoves}
+              onChange={(evt, value) => {
+                updateSettings({ hideDelveMoves: !value }).catch(() => {});
+              }}
+            />
+          }
+          label={"Show Delve Moves?"}
+          sx={{ px: 2 }}
+        />
+      )}
       <CustomOracleSection
         customOracles={customOracles[uid] ?? []}
         hiddenOracleIds={hiddenOracles}
         showOrHideCustomOracle={showOrHideCustomOracle}
       />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={shouldShowDelveOracles}
-            onChange={(evt, value) => {
-              updateSettings({ hideDelveOracles: !value }).catch(() => {});
-            }}
-          />
-        }
-        label={"Show Delve Oracles?"}
-        sx={{ px: 2 }}
-      />
+      {gameSystem === GAME_SYSTEMS.IRONSWORN && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={shouldShowDelveOracles}
+              onChange={(evt, value) => {
+                updateSettings({ hideDelveOracles: !value }).catch(() => {});
+              }}
+            />
+          }
+          label={"Show Delve Oracles?"}
+          sx={{ px: 2 }}
+        />
+      )}
     </Stack>
   );
 }

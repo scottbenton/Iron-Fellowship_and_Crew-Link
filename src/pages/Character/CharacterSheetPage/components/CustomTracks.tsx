@@ -34,7 +34,12 @@ export function CustomTracks() {
   return (
     <>
       {customTracks.map((customTrack) => (
-        <Grid item xs={12} md={getMdSize(customTrack.size)}>
+        <Grid
+          item
+          xs={12}
+          md={getMdSize(customTrack.size)}
+          key={customTrack.label}
+        >
           <CustomTrack
             value={customTrackValues[customTrack.label] ?? -1}
             onChange={(index) => updateTrackValue(customTrack.label, index)}

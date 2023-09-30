@@ -104,6 +104,7 @@ export function StarforgedWorldTruthsSection(
             <Stack spacing={2}>
               {group.map((truth) => (
                 <StarforgedTruthCard
+                  key={truth.$id}
                   truth={truth}
                   truthOptionId={truths[truth.$id].id}
                   selectedSubItemId={truths[truth.$id].selectedSubItemId}

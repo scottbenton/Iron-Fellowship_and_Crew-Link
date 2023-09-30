@@ -64,7 +64,7 @@ export function AssetsSection() {
     [GAME_SYSTEMS.IRONSWORN]:
       "When playing with the default rules, you should choose three assets when creating your character.",
     [GAME_SYSTEMS.STARFORGED]:
-      "When playing with the default rules, you should choose the Starship asset and three other assets when creating your character.",
+      "When playing with the default rules, you should choose the Starship asset, two path assets, and one other non-deed asset when creating your character.",
   });
 
   return (

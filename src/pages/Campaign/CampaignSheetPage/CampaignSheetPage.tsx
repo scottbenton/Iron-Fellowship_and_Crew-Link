@@ -1,5 +1,5 @@
 import { LinearProgress } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { CampaignSheetHeader } from "./components/CampaignSheetHeader";
 import { CharacterSection } from "./components/CharacterSection";
@@ -41,12 +41,20 @@ export function CampaignSheetPage() {
     (store) => store.campaigns.currentCampaign.currentCampaign
   );
 
-  if (loading) {
-    return (
-      <LinearProgress
-        sx={{ width: "100vw", position: "absolute", left: 0, marginTop: -3 }}
-      />
-    );
+  const [syncLoading, setSyncLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSyncLoading(false);
+    }, 2 * 1000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  if (loading || (!campaign && syncLoading)) {
+    return <LinearProgress />;
   }
 
   if (!campaignId || !campaign) {

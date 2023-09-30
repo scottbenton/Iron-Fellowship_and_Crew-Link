@@ -4,12 +4,41 @@ import { OracleCategory } from "./OracleCategory";
 import SearchIcon from "@mui/icons-material/Search";
 import { useFilterOracles } from "./useFilterOracles";
 import { useStore } from "stores/store";
+import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
+
+type oracleKeys =
+  | "almostCertain"
+  | "likely"
+  | "fiftyFifty"
+  | "unlikely"
+  | "smallChance";
+
+const askTheOracleOracles: GameSystemChooser<{ [key in oracleKeys]: string }> =
+  {
+    [GAME_SYSTEMS.IRONSWORN]: {
+      almostCertain: "ironsworn/oracles/moves/ask_the_oracle/almost_certain",
+      likely: "ironsworn/oracles/moves/ask_the_oracle/likely",
+      fiftyFifty: "ironsworn/oracles/moves/ask_the_oracle/50_50",
+      unlikely: "ironsworn/oracles/moves/ask_the_oracle/unlikely",
+      smallChance: "ironsworn/oracles/moves/ask_the_oracle/small_chance",
+    },
+    [GAME_SYSTEMS.STARFORGED]: {
+      almostCertain: "starforged/oracles/moves/ask_the_oracle/almost_certain",
+      likely: "starforged/oracles/moves/ask_the_oracle/likely",
+      fiftyFifty: "starforged/oracles/moves/ask_the_oracle/fifty-fifty",
+      unlikely: "starforged/oracles/moves/ask_the_oracle/unlikely",
+      smallChance: "starforged/oracles/moves/ask_the_oracle/small_chance",
+    },
+  };
 
 export function OracleSection() {
   const { rollOracleTable } = useRoller();
 
   const pinnedOracles = useStore((store) => store.settings.pinnedOraclesIds);
   const { search, filteredOracles, setSearch } = useFilterOracles();
+
+  const askTheOracle = useGameSystemValue(askTheOracleOracles);
 
   return (
     <>
@@ -18,13 +47,7 @@ export function OracleSection() {
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
           color={"inherit"}
-          onClick={() =>
-            rollOracleTable(
-              "ironsworn/oracles/moves/ask_the_oracle/small_chance",
-              true,
-              true
-            )
-          }
+          onClick={() => rollOracleTable(askTheOracle.smallChance, true, true)}
         >
           Small Chance
         </Button>
@@ -32,13 +55,7 @@ export function OracleSection() {
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
           color={"inherit"}
-          onClick={() =>
-            rollOracleTable(
-              "ironsworn/oracles/moves/ask_the_oracle/unlikely",
-              true,
-              true
-            )
-          }
+          onClick={() => rollOracleTable(askTheOracle.unlikely, true, true)}
         >
           Unlikely
         </Button>
@@ -46,13 +63,7 @@ export function OracleSection() {
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
           color={"inherit"}
-          onClick={() =>
-            rollOracleTable(
-              "ironsworn/oracles/moves/ask_the_oracle/50_50",
-              true,
-              true
-            )
-          }
+          onClick={() => rollOracleTable(askTheOracle.fiftyFifty, true, true)}
         >
           50/50
         </Button>
@@ -60,13 +71,7 @@ export function OracleSection() {
           sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
           color={"inherit"}
-          onClick={() =>
-            rollOracleTable(
-              "ironsworn/oracles/moves/ask_the_oracle/likely",
-              true,
-              true
-            )
-          }
+          onClick={() => rollOracleTable(askTheOracle.likely, true, true)}
         >
           Likely
         </Button>
@@ -75,11 +80,7 @@ export function OracleSection() {
           variant={"outlined"}
           color={"inherit"}
           onClick={() =>
-            rollOracleTable(
-              "ironsworn/oracles/moves/ask_the_oracle/almost_certain",
-              true,
-              true
-            )
+            rollOracleTable(askTheOracle.almostCertain, true, true)
           }
         >
           Almost Certain

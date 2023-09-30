@@ -1,7 +1,7 @@
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 const PROD_HOSTNAME_IRONSWORN = "iron-fellowship.scottbenton.dev";
-const PROD_HOSTNAME_STARFORGED = "starforged-crewlink.scottbenton.dev";
+const PROD_HOSTNAME_STARFORGED = "starforged-crew-link.scottbenton.dev";
 const prodHostnames = [PROD_HOSTNAME_IRONSWORN, PROD_HOSTNAME_STARFORGED];
 
 export function getGameSystem() {

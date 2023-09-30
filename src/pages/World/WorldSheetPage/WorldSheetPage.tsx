@@ -4,7 +4,7 @@ import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useConfirm } from "material-ui-confirm";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSyncStore } from "./hooks/useSyncStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LocationsSection } from "components/Locations";
 import { BreakContainer } from "components/BreakContainer";
 import { WORLD_ROUTES, constructWorldPath } from "../routes";
@@ -58,7 +58,19 @@ export function WorldSheetPage() {
   const navigate = useNavigate();
   const deleteWorld = useStore((store) => store.worlds.deleteWorld);
 
-  if (isLoading) {
+  const [syncLoading, setSyncLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSyncLoading(false);
+    }, 2 * 1000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  if (isLoading || (!world && syncLoading)) {
     return <LinearProgress />;
   }
 

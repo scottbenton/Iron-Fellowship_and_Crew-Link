@@ -35,7 +35,7 @@ export function RtcEditorComponent(props: RtcRichTextEditorProps) {
 
   return (
     <Editor
-      outlined
+      outlined={!withHeading}
       editable={!readOnly}
       editor={editor}
       saving={saving}

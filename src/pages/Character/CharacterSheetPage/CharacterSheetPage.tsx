@@ -10,6 +10,7 @@ import { PageContent, PageHeader } from "components/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { useSyncStore } from "./hooks/useSyncStore";
+import { useEffect, useState } from "react";
 
 export function CharacterSheetPage() {
   useSyncStore();
@@ -18,12 +19,20 @@ export function CharacterSheetPage() {
     (store) => store.characters.currentCharacter.currentCharacter
   );
 
-  if (loading) {
-    return (
-      <LinearProgress
-        sx={{ width: "100vw", position: "absolute", left: 0, marginTop: -3 }}
-      />
-    );
+  const [syncLoading, setSyncLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSyncLoading(false);
+    }, 2 * 1000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  if (loading || (!character && syncLoading)) {
+    return <LinearProgress />;
   }
 
   if (!character) {
