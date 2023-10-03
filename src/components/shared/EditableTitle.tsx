@@ -1,4 +1,4 @@
-import { Box, Input, InputProps, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { ChangeEvent, HTMLAttributes, useState } from "react";
 
 export interface EditableTitleProps extends HTMLAttributes<HTMLInputElement> {

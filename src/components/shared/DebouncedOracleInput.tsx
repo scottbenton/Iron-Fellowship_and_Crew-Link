@@ -7,17 +7,28 @@ export type DebouncedOracleInputProps = Omit<TextFieldProps, "onChange"> & {
   initialValue: string;
   updateValue: (value: string) => void;
   oracleTableId: string | string[];
+  joinOracleTables?: boolean;
 };
 
 export function DebouncedOracleInput(props: DebouncedOracleInputProps) {
-  const { initialValue, updateValue, oracleTableId, ...textFieldProps } = props;
+  const {
+    initialValue,
+    updateValue,
+    oracleTableId,
+    joinOracleTables,
+    ...textFieldProps
+  } = props;
 
   const [value, setValue] = useDebouncedState(updateValue, initialValue);
 
   const { rollOracleTable } = useRoller();
 
   const handleOracleRoll = () => {
-    if (Array.isArray(oracleTableId)) {
+    if (Array.isArray(oracleTableId) && joinOracleTables) {
+      return oracleTableId
+        .map((tableId) => rollOracleTable(tableId, false) ?? "")
+        .join(" ");
+    } else if (Array.isArray(oracleTableId)) {
       const oracleIndex = Math.floor(Math.random() * oracleTableId.length);
       return rollOracleTable(oracleTableId[oracleIndex], false) ?? "";
     }

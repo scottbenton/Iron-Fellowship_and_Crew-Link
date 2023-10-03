@@ -2,6 +2,7 @@ import { Truth, World } from "types/World.type";
 import { LocationsSlice } from "./locations/locations.slice.type";
 import { NPCsSlice } from "./npcs/npcs.slice.type";
 import { LoreSlice } from "./lore/lore.slice.type";
+import { SectorSlice } from "./sector/sector.slice.type";
 
 export interface CurrentWorldSliceData {
   currentWorldId?: string;
@@ -27,4 +28,6 @@ export interface CurrentWorldSliceActions {
 }
 
 export type CurrentWorldSlice = CurrentWorldSliceData &
-  CurrentWorldSliceActions;
+  CurrentWorldSliceActions & {
+    currentWorldSectors: SectorSlice;
+  };

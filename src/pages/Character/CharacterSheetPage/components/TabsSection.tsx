@@ -17,6 +17,7 @@ import { NPCSection } from "components/features/worlds/NPCSection";
 import { LoreSection } from "components/features/worlds/Lore";
 import { TracksSection } from "../Tabs/TracksSection";
 import { useStore } from "stores/store";
+import { SectorSection } from "components/features/worlds/SectorSection";
 
 enum TABS {
   MOVES = "moves",
@@ -27,6 +28,7 @@ enum TABS {
   NOTES = "notes",
   WORLD = "world",
   LOCATIONS = "location",
+  SECTORS = "sectors",
   NPCS = "npcs",
   LORE = "lore",
 }
@@ -94,6 +96,7 @@ export function TabsSection() {
         <StyledTab label="Tracks" value={TABS.TRACKS} />
         <StyledTab label="Notes" value={TABS.NOTES} />
         <StyledTab label={"World"} value={TABS.WORLD} />
+        <StyledTab label={"Sectors"} value={TABS.SECTORS} />
         <StyledTab label={"Locations"} value={TABS.LOCATIONS} />
         <StyledTab label={"NPCs"} value={TABS.NPCS} />
         <StyledTab label={"Lore"} value={TABS.LORE} />
@@ -116,6 +119,9 @@ export function TabsSection() {
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.WORLD}>
         <WorldSection />
+      </ContainedTabPanel>
+      <ContainedTabPanel isVisible={selectedTab === TABS.SECTORS}>
+        <SectorSection />
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.LOCATIONS}
