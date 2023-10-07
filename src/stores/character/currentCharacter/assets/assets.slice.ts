@@ -8,6 +8,7 @@ import { updateAssetInput } from "api-calls/character/assets/updateAssetInput";
 import { updateAssetCheckbox } from "api-calls/character/assets/updateAssetCheckbox";
 import { updateAssetTrack } from "api-calls/character/assets/updateAssetTrack";
 import { updateCustomAsset } from "api-calls/character/assets/updateCustomAsset";
+import { updateAssetCondition } from "api-calls/character/assets/updateAssetCondition";
 
 export const createAssetsSlice: CreateSliceType<AssetSlice> = (
   set,
@@ -85,6 +86,14 @@ export const createAssetsSlice: CreateSliceType<AssetSlice> = (
       return new Promise((res, reject) => reject("Character ID not defined"));
     }
     return updateCustomAsset({ characterId, assetId, asset });
+  },
+  updateAssetCondition: (assetId, condition, checked) => {
+    const characterId =
+      getState().characters.currentCharacter.currentCharacterId;
+    if (!characterId) {
+      return new Promise((res, reject) => reject("Character ID not defined"));
+    }
+    return updateAssetCondition({ characterId, assetId, condition, checked });
   },
 
   resetStore: () => {

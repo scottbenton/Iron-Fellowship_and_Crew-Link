@@ -36,6 +36,7 @@ export interface AssetCardProps {
   handleAbilityCheck?: (index: number, checked: boolean) => void;
   handleInputChange?: (label: string, value: string) => Promise<void>;
   handleTrackValueChange?: (num: number) => Promise<void>;
+  handleConditionCheck?: (condition: string, checked: boolean) => Promise<void>;
 
   handleCustomAssetUpdate?: (asset: Asset) => Promise<void>;
 
@@ -53,6 +54,7 @@ export function AssetCard(props: AssetCardProps) {
     handleAbilityCheck,
     handleInputChange,
     handleTrackValueChange,
+    handleConditionCheck,
     handleDeleteClick,
     handleCustomAssetUpdate,
   } = props;
@@ -199,8 +201,17 @@ export function AssetCard(props: AssetCardProps) {
                 {conditionMeter.Conditions.map((condition, index) => (
                   <FormControlLabel
                     key={condition}
+                    disabled={!handleConditionCheck}
                     control={
-                      <Checkbox checked={false} onChange={(evt, value) => {}} />
+                      <Checkbox
+                        checked={
+                          (storedAsset.conditions ?? {})[condition] ?? false
+                        }
+                        onChange={(evt, value) =>
+                          handleConditionCheck &&
+                          handleConditionCheck(condition, value).catch(() => {})
+                        }
+                      />
                     }
                     label={condition}
                     sx={{ textTransform: "capitalize", marginRight: 3 }}

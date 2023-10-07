@@ -52,6 +52,21 @@ export function AssetsSection() {
     return new Promise<void>((res) => res());
   };
 
+  const handleConditionChecked = (
+    index: number,
+    condition: string,
+    checked: boolean
+  ) => {
+    const newAssets = [...field.value];
+    const newAsset = { ...newAssets[index] };
+    const newAssetConditions = { ...newAsset.conditions };
+    newAssetConditions[condition] = checked;
+    newAsset.conditions = newAssetConditions;
+    newAssets[index] = newAsset;
+    handlers.setValue(newAssets);
+    return new Promise<void>((res) => res());
+  };
+
   const handleCustomAssetUpdate = (index: number, customAsset: Asset) => {
     const newAssets = [...field.value];
     const newAsset = { ...newAssets[index], customAsset };
@@ -106,6 +121,9 @@ export function AssetsSection() {
                     }
                     handleInputChange={(label, value) =>
                       handleInputChange(index, label, value)
+                    }
+                    handleConditionCheck={(condition, checked) =>
+                      handleConditionChecked(index, condition, checked)
                     }
                     handleCustomAssetUpdate={(asset) =>
                       handleCustomAssetUpdate(index, asset)

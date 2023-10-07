@@ -50,8 +50,11 @@ const categoryOrders: GameSystemChooser<string[]> = {
     "Location Themes",
   ],
 };
-const category = moveCategories[gameSystem];
-const categoryOrder = categoryOrders[gameSystem];
+export const category = moveCategories[gameSystem];
+export const categoryOrder = categoryOrders[gameSystem];
+export const orderedCategories = categoryOrder.map(
+  (oracleCategoryId) => category[oracleCategoryId]
+);
 
 export let oracleCategoryMap: { [categoryId: string]: OracleSet } = {};
 export let oracleMap: { [tableId: string]: DataforgedOracleTable } = {};
@@ -72,16 +75,26 @@ function flattenOracleTables(
         ...table,
         Title: {
           $id: table.Title.$id,
-          Short: `${subsetTitlePrefix.Short}: ${table.Title.Short}`,
-          Canonical: `${subsetTitlePrefix.Canonical}: ${table.Title.Canonical}`,
-          Standard: `${subsetTitlePrefix.Standard}: ${table.Title.Standard}`,
+          Short: `${subsetTitlePrefix.Short} ꞏ ${table.Title.Short}`,
+          Canonical: `${subsetTitlePrefix.Canonical} ꞏ ${table.Title.Canonical}`,
+          Standard: `${subsetTitlePrefix.Standard} ꞏ ${table.Title.Standard}`,
         },
       };
     }
   });
 
   Object.values(set.Sets ?? {}).forEach((subSet) => {
-    const flattenedSets = flattenOracleTables(subSet, subSet.Title);
+    const flattenedSets = flattenOracleTables(
+      subSet,
+      subsetTitlePrefix
+        ? {
+            $id: subSet.Title.$id,
+            Short: `${subsetTitlePrefix.Short} ꞏ ${subSet.Title.Short}`,
+            Canonical: `${subsetTitlePrefix.Canonical} ꞏ ${subSet.Title.Canonical}`,
+            Standard: `${subsetTitlePrefix.Standard} ꞏ ${subSet.Title.Standard}`,
+          }
+        : subSet.Title
+    );
     newSetTables = {
       ...newSetTables,
       ...flattenedSets,
@@ -91,7 +104,7 @@ function flattenOracleTables(
   return newSetTables;
 }
 
-export const orderedCategories = categoryOrder.map((oracleCategoryId) => {
+Object.keys(category).forEach((oracleCategoryId) => {
   const oracleCategory = category[oracleCategoryId];
   const flattenedTables = flattenOracleTables(oracleCategory);
   oracleMap = { ...oracleMap, ...flattenedTables };
@@ -99,7 +112,6 @@ export const orderedCategories = categoryOrder.map((oracleCategoryId) => {
     ...oracleCategory,
     Tables: flattenedTables,
   };
-  return oracleCategoryMap[oracleCategory.$id];
 });
 
 export const hiddenOracleIds: { [oracleId: string]: boolean } = {
@@ -109,5 +121,3 @@ export const hiddenOracleIds: { [oracleId: string]: boolean } = {
   "ironsworn/oracles/moves/ask_the_oracle/unlikely": true,
   "ironsworn/oracles/moves/ask_the_oracle/small_chance": true,
 };
-
-console.debug(Object.keys(oracleMap).filter((id) => id.includes("sector")));

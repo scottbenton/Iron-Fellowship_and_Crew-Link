@@ -20,6 +20,7 @@ import {
 import { deleteAllLocations } from "./locations/deleteAllLocations";
 import { deleteAllLoreDocuments } from "./lore/deleteAllLoreDocuments";
 import { deleteAllNPCs } from "./npcs/deleteAllNPCs";
+import { deleteAllSectors } from "./sectors/deleteAllSectors";
 
 export const deleteWorld = createApiFunction<string, void>((worldId) => {
   return new Promise(async (resolve, reject) => {
@@ -50,6 +51,7 @@ export const deleteWorld = createApiFunction<string, void>((worldId) => {
       promises.push(deleteAllLocations({ worldId }));
       promises.push(deleteAllLoreDocuments({ worldId }));
       promises.push(deleteAllNPCs({ worldId }));
+      promises.push(deleteAllSectors({ worldId }));
 
       await Promise.all(promises);
       await deleteDoc(getWorldDoc(worldId));

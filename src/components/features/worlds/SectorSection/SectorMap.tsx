@@ -22,8 +22,15 @@ import { VaultIcon } from "./assets/VaultIcon";
 import { useState } from "react";
 import { useStore } from "stores/store";
 import HelpIcon from "@mui/icons-material/Help";
+import { SectorMap as ISectorMap } from "types/Sector.type";
 
-export function SectorMap() {
+export interface SectorMapProps {
+  map: ISectorMap;
+}
+
+export function SectorMap(props: SectorMapProps) {
+  const { map } = props;
+
   const theme = useTheme();
 
   const [currentSelectionTool, setCurrentSelectionTool] =
@@ -33,9 +40,6 @@ export function SectorMap() {
   const cols = 18;
   const s = 20;
 
-  const mapItems = useStore(
-    (store) => store.worlds.currentWorld.currentWorldSectors.sectorMapItems
-  );
   const updateHex = useStore(
     (store) => store.worlds.currentWorld.currentWorldSectors.updateHex
   );
@@ -102,12 +106,12 @@ export function SectorMap() {
                   col * horizontalSpacing + (row % 2 === 1 ? offsetX : 0) + s; // Offset every other row
                 const y: number = row * verticalSpacing + s; // Start with one hexagon's height
 
-                const type = mapItems[row]?.[col]?.type;
+                const type = map[row]?.[col]?.type;
 
                 let pathConnections: SectorHexagonProps["pathConnections"] =
                   undefined;
                 if (type === SECTOR_HEX_TYPES.PATH) {
-                  pathConnections = getConnections(mapItems, row, col);
+                  pathConnections = getConnections(map, row, col);
                 }
                 return (
                   <SectorHexagon

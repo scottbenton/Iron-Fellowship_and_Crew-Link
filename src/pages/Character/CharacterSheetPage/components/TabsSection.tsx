@@ -120,7 +120,10 @@ export function TabsSection() {
       <ContainedTabPanel isVisible={selectedTab === TABS.WORLD}>
         <WorldSection />
       </ContainedTabPanel>
-      <ContainedTabPanel isVisible={selectedTab === TABS.SECTORS}>
+      <ContainedTabPanel
+        greyBackground={worldExists}
+        isVisible={selectedTab === TABS.SECTORS}
+      >
         <SectorSection />
       </ContainedTabPanel>
       <ContainedTabPanel

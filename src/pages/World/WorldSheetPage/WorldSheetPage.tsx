@@ -18,6 +18,7 @@ import { useListenToLocations } from "stores/world/currentWorld/locations/useLis
 import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
 import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
 import { LoreSection } from "components/features/worlds/Lore";
+import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
 
 export enum TABS {
   DETAILS = "details",
@@ -31,6 +32,7 @@ export function WorldSheetPage() {
   useListenToLocations();
   useListenToNPCs();
   useListenToLoreDocuments();
+  useListenToSectors();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(

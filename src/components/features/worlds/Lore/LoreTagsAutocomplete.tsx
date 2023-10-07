@@ -1,11 +1,4 @@
-import {
-  Autocomplete,
-  Chip,
-  TextField,
-  createFilterOptions,
-} from "@mui/material";
-import { getHSLFromString, getHueFromString } from "functions/getHueFromString";
-import { useCallback, useState } from "react";
+import { Autocomplete, TextField, createFilterOptions } from "@mui/material";
 import { LoreTag } from "./LoreTag";
 
 export interface LoreTagsAutocompleteProps {

@@ -25,6 +25,11 @@ export interface AssetSliceActions {
   ) => Promise<void>;
   updateAssetTrack: (assetId: string, trackValue: number) => Promise<void>;
   updateCustomAsset: (assetId: string, asset: Asset) => Promise<void>;
+  updateAssetCondition: (
+    assetId: string,
+    condition: string,
+    checked: boolean
+  ) => Promise<void>;
 
   resetStore: () => void;
 }

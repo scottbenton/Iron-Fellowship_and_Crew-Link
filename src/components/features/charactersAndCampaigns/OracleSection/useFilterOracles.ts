@@ -66,32 +66,55 @@ export function useFilterOracles() {
 
     const results: OracleSet[] = [];
 
-    allOracles.forEach((oracleSection) => {
+    const filterSet = (set: OracleSet): OracleSet | undefined => {
       if (
-        oracleSection.Title.Standard.toLocaleLowerCase().includes(
+        set.Title.Standard.toLocaleLowerCase().includes(
           debouncedSearch.toLocaleLowerCase()
         ) &&
-        Object.keys(oracleSection.Tables ?? {}).length > 0
+        (Object.keys(set.Tables ?? {}).length > 0 ||
+          Object.keys(set.Sets ?? {}).length > 0)
       ) {
-        results.push(oracleSection);
-        return;
-      }
-      const matchedOracles: { [key: string]: OracleTable } = {};
+        return set;
+      } else {
+        const filteredSets: { [key: string]: OracleSet } = {};
+        Object.keys(set.Sets ?? {}).forEach((setId) => {
+          const newSet = filterSet(set.Sets?.[setId] as OracleSet);
+          if (newSet) {
+            filteredSets[setId] = newSet;
+          }
+        });
+        const filteredTables: { [key: string]: OracleTable } = {};
+        Object.keys(set.Tables ?? {}).forEach((tableId) => {
+          const table = (set.Tables ?? {})[tableId];
+          if (
+            table &&
+            table.Title.Short.toLocaleLowerCase().includes(
+              debouncedSearch.toLocaleLowerCase()
+            )
+          ) {
+            filteredTables[tableId] = table;
+          }
+        });
 
-      Object.keys(oracleSection.Tables ?? {}).forEach((oracleKey: string) => {
-        const oracle = oracleSection.Tables?.[oracleKey];
         if (
-          oracle &&
-          oracle.Title.Short.toLocaleLowerCase().includes(
-            debouncedSearch.toLocaleLowerCase()
-          )
+          Object.keys(filteredSets).length > 0 ||
+          Object.keys(filteredTables).length > 0
         ) {
-          matchedOracles[oracleKey] = oracle;
+          return {
+            ...set,
+            Sets: filteredSets,
+            Tables: filteredTables,
+          };
         }
-      });
+        return undefined;
+      }
+    };
 
-      if (Object.keys(matchedOracles).length > 0) {
-        results.push({ ...oracleSection, Tables: matchedOracles });
+    allOracles.forEach((oracleSection) => {
+      const filteredSection = filterSet(oracleSection);
+
+      if (filteredSection) {
+        results.push(filteredSection);
       }
     });
     setFilteredOracles(results);

@@ -1,5 +1,7 @@
-import { SectorSliceData } from "./sector.slice.type";
+import { SECTOR_TABS, SectorSliceData } from "./sector.slice.type";
 
 export const defaultSectorSlice: SectorSliceData = {
-  sectorMapItems: {},
+  sectors: {},
+  sectorSearch: "",
+  openSectorTab: SECTOR_TABS.LOCATIONS,
 };

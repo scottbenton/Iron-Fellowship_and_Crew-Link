@@ -7,18 +7,9 @@ import { ShipIcon } from "./assets/ShipIcon";
 import { SightingIcon } from "./assets/SightingIcon";
 import { SettlementIcon } from "./assets/SettlementIcon";
 import PathIcon from "@mui/icons-material/Timeline";
+import { SECTOR_HEX_TYPES } from "types/Sector.type";
 
-export enum SECTOR_HEX_TYPES {
-  PLANET = "planet",
-  STAR = "star",
-  VAULT = "vault",
-  SETTLEMENT = "settlement",
-  DERELICT = "derelict",
-  SHIP = "ship",
-  CREATURE = "creature",
-  OTHER = "other",
-  PATH = "path",
-}
+export { SECTOR_HEX_TYPES };
 
 export const hexTypeMap: {
   [key in SECTOR_HEX_TYPES]: {
