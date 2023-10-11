@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { CustomTrack } from "components/CustomTrack";
+import { CustomTrack } from "components/features/charactersAndCampaigns/CustomTrack";
 import { useStore } from "stores/store";
 import { CUSTOM_TRACK_SIZE } from "types/CustomTrackSettings.type";
 

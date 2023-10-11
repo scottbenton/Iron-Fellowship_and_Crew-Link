@@ -1,5 +1,5 @@
-import { SectionHeading } from "components/SectionHeading";
-import { Track } from "components/Track";
+import { SectionHeading } from "components/shared/SectionHeading";
+import { Track } from "components/features/Track";
 import { supplyTrack } from "data/defaultTracks";
 import { StoredCampaign } from "types/Campaign.type";
 import { CampaignProgressTracks } from "./CampaignProgressTracks";

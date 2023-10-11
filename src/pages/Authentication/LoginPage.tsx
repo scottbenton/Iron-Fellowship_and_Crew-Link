@@ -1,4 +1,4 @@
-import { LoginOrSignupPage } from "components/LoginOrSignupPage";
+import { LoginOrSignupPage } from "components/shared/LoginOrSignupPage";
 import { Head } from "providers/HeadProvider/Head";
 
 export function Component() {

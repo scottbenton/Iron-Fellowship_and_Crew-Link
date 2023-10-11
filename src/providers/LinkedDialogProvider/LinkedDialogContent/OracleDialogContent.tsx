@@ -1,9 +1,10 @@
 import { Box, Button, DialogContent, Typography } from "@mui/material";
-import { MarkdownRenderer } from "components/MarkdownRenderer";
-import { useCustomOracles } from "components/OracleSection/useCustomOracles";
+import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
+import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { oracleMap } from "data/oracles";
 import { useRoller } from "providers/DieRollProvider";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
+import { getIsLocalEnvironment } from "functions/getGameSystem";
 
 export interface OracleDialogContentProps {
   id: string;
@@ -47,6 +48,7 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
         {oracle.Title.Short}
       </LinkedDialogContentTitle>
       <DialogContent>
+        {getIsLocalEnvironment() && <Typography>{id}</Typography>}
         {oracle.Description && (
           <MarkdownRenderer markdown={oracle.Description} />
         )}

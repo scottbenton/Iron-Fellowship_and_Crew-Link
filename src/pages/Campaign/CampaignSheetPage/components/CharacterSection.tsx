@@ -1,7 +1,7 @@
 import { Button, Grid } from "@mui/material";
-import { CharacterList } from "components/CharacterList";
-import { EmptyState } from "components/EmptyState/EmptyState";
-import { SectionHeading } from "components/SectionHeading";
+import { CharacterList } from "components/features/characters/CharacterList";
+import { EmptyState } from "components/shared/EmptyState/EmptyState";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { StoredCampaign } from "types/Campaign.type";

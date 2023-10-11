@@ -35,6 +35,7 @@ export function HeadProvider(props: PropsWithChildren) {
         <title>{details.title}</title>
         <meta property="og:site_name" content={details.title} />
         <meta property="og:title" content={details.title} />
+        <link rel="icon" type="image/svg+xml" href={details.icon} />
         <meta
           property="og:description"
           content={`A collaborative app for players and GMs playing ${details.game}`}

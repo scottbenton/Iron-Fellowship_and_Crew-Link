@@ -1,4 +1,4 @@
-import { InitiativeStatusChip } from "components/InitiativeStatusChip";
+import { InitiativeStatusChip } from "components/features/characters/InitiativeStatusChip";
 import { INITIATIVE_STATUS } from "types/Character.type";
 import { useStore } from "stores/store";
 import { useState } from "react";

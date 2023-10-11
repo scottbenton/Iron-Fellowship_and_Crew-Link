@@ -1,5 +1,5 @@
 import { Grid, Hidden, LinearProgress } from "@mui/material";
-import { MovesSection } from "components/MovesSection/MovesSection";
+import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection/MovesSection";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,7 +9,7 @@ import {
   constructCampaignPath,
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
-import { PageContent, PageHeader } from "components/Layout";
+import { PageContent, PageHeader } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useSyncStore } from "./hooks/useSyncStore";
 import { useStore } from "stores/store";

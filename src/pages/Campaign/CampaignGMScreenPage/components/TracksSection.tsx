@@ -1,9 +1,9 @@
 import { Stack } from "@mui/material";
-import { SectionHeading } from "components/SectionHeading";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { supplyTrack } from "data/defaultTracks";
-import { Track } from "components/Track";
+import { Track } from "components/features/Track";
 import { TRACK_TYPES } from "types/Track.type";
-import { ProgressTrackList } from "components/ProgressTrack";
+import { ProgressTrackList } from "components/features/ProgressTrack";
 import { useStore } from "stores/store";
 
 export interface TracksSectionProps {

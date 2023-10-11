@@ -1,4 +1,4 @@
-import { ProgressTrackList } from "components/ProgressTrack";
+import { ProgressTrackList } from "components/features/ProgressTrack";
 import { useStore } from "stores/store";
 import { TRACK_TYPES } from "types/Track.type";
 

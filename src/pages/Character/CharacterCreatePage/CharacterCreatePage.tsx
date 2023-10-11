@@ -1,20 +1,20 @@
 import { Alert, Box, Button, Stack } from "@mui/material";
 import { Formik } from "formik";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { SectionHeading } from "components/SectionHeading";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { StoredAsset } from "types/Asset.type";
 import { Stat } from "types/stats.enum";
 import { AssetsSection } from "./components/AssetsSection";
 import { StatsField } from "./components/StatsField";
 import { StatsMap } from "types/Character.type";
-import { PageHeader } from "components/Layout/PageHeader";
-import { PageContent } from "components/Layout";
+import { PageHeader } from "components/shared/Layout/PageHeader";
+import { PageContent } from "components/shared/Layout";
 import {
   CAMPAIGN_ROUTES,
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
 import { constructCharacterSheetPath } from "../routes";
-import { TextFieldWithOracle } from "components/TextFieldWithOracle/TextFieldWithOracle";
+import { TextFieldWithOracle } from "components/shared/TextFieldWithOracle/TextFieldWithOracle";
 import { useRoller } from "providers/DieRollProvider";
 import { useCallback, useState } from "react";
 import { Head } from "providers/HeadProvider/Head";

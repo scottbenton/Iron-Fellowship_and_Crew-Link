@@ -1,6 +1,6 @@
 import { ButtonBase } from "@mui/material";
-import { PortraitAvatarDisplay } from "components/PortraitAvatar/PortraitAvatarDisplay";
-import { PortraitUploaderDialog } from "components/PortraitUploaderDialog";
+import { PortraitAvatarDisplay } from "components/features/characters/PortraitAvatar/PortraitAvatarDisplay";
+import { PortraitUploaderDialog } from "components/features/characters/PortraitUploaderDialog";
 import { useField } from "formik";
 import { useEffect, useState } from "react";
 

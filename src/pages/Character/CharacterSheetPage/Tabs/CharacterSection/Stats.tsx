@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import { CustomStats } from "components/CustomStats";
-import { SectionHeading } from "components/SectionHeading";
-import { StatComponent } from "components/StatComponent";
+import { CustomStats } from "components/features/charactersAndCampaigns/CustomStats";
+import { SectionHeading } from "components/shared/SectionHeading";
+import { StatComponent } from "components/features/characters/StatComponent";
 import { useStore } from "stores/store";
 import { Stat } from "types/stats.enum";
 

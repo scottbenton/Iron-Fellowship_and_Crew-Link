@@ -1,12 +1,12 @@
 import { Box, Button, Grid, Hidden, LinearProgress } from "@mui/material";
 import { Link } from "react-router-dom";
-import { EmptyState } from "components/EmptyState/EmptyState";
-import { MovesSection } from "components/MovesSection";
+import { EmptyState } from "components/shared/EmptyState/EmptyState";
+import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
 import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
 import { CharacterHeader } from "./components/CharacterHeader";
 import { CHARACTER_ROUTES, characterPaths } from "../routes";
-import { PageContent, PageHeader } from "components/Layout";
+import { PageContent, PageHeader } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { useSyncStore } from "./hooks/useSyncStore";

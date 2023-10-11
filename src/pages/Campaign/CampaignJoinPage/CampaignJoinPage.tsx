@@ -1,13 +1,13 @@
 import { Button, LinearProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { EmptyState } from "components/EmptyState/EmptyState";
+import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import {
   CAMPAIGN_ROUTES,
   constructCampaignPath,
   constructCampaignSheetPath,
 } from "../routes";
-import { PageContent, PageHeader } from "components/Layout";
+import { PageContent, PageHeader } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { StoredCampaign } from "types/Campaign.type";

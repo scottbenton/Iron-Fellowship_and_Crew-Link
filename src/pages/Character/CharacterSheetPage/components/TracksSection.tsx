@@ -5,7 +5,7 @@ import {
   spiritTrack,
   supplyTrack,
 } from "data/defaultTracks";
-import { Track } from "components/Track";
+import { Track } from "components/features/Track";
 import ResetIcon from "@mui/icons-material/Replay";
 import { useStore } from "stores/store";
 import { CustomTracks } from "./CustomTracks";

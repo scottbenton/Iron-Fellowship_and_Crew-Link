@@ -6,16 +6,16 @@ import {
   Button,
   Alert,
 } from "@mui/material";
-import { SectionHeading } from "components/SectionHeading";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
-import { CustomMovesSection } from "components/CustomMovesSection";
-import { CustomOracleSection } from "components/CustomOraclesSection";
+import { CustomMovesSection } from "components/features/charactersAndCampaigns/CustomMovesSection";
+import { CustomOracleSection } from "components/features/charactersAndCampaigns/CustomOraclesSection";
 import { constructCharacterCardUrl } from "pages/Character/routes";
 import { useStore } from "stores/store";
 import { Debilities } from "./Debilities";
 import { Stats } from "./Stats";
 import { CharacterSettings } from "./CharacterSettings";
-import { CustomTrackSettings } from "components/CustomTrackSettings";
+import { CustomTrackSettings } from "components/features/charactersAndCampaigns/CustomTrackSettings";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 

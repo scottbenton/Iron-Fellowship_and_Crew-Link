@@ -1,7 +1,7 @@
 import { Button, Grid } from "@mui/material";
 import { useState } from "react";
-import { AssetCard } from "components/AssetCard/AssetCard";
-import { AssetCardDialog } from "components/AssetCardDialog";
+import { AssetCard } from "components/features/assets/AssetCard";
+import { AssetCardDialog } from "components/features/assets/AssetCardDialog";
 import { StoredAsset } from "types/Asset.type";
 import { useConfirm } from "material-ui-confirm";
 import { useStore } from "stores/store";
@@ -39,6 +39,9 @@ export function AssetsSection() {
   );
   const updateCustomAsset = useStore(
     (store) => store.characters.currentCharacter.assets.updateCustomAsset
+  );
+  const updateAssetCondition = useStore(
+    (store) => store.characters.currentCharacter.assets.updateAssetCondition
   );
 
   const [isAssetDialogOpen, setIsAssetDialogOpen] = useState<boolean>(false);
@@ -103,6 +106,9 @@ export function AssetsSection() {
               updateAssetCheckbox(assetId, abilityIndex, checked)
             }
             handleTrackValueChange={(value) => updateAssetTrack(assetId, value)}
+            handleConditionCheck={(condition, checked) =>
+              updateAssetCondition(assetId, condition, checked)
+            }
             handleDeleteClick={() => handleClick(assetId)}
             handleCustomAssetUpdate={(asset) =>
               updateCustomAsset(assetId, asset)

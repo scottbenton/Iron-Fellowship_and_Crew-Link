@@ -9,6 +9,8 @@ import type {
   Title,
 } from "dataforged";
 import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
+import { TableColumnType } from "types/Oracles.type";
+import { License } from "types/Datasworn";
 
 const gameSystem = getSystem();
 const moveCategories: GameSystemChooser<typeof ironswornOracleCategories> = {
@@ -50,11 +52,17 @@ const categoryOrders: GameSystemChooser<string[]> = {
     "Location Themes",
   ],
 };
-const category = moveCategories[gameSystem];
-const categoryOrder = categoryOrders[gameSystem];
+export const category = moveCategories[gameSystem];
+export const categoryOrder = categoryOrders[gameSystem];
+
+export const orderedCategories = categoryOrder.map(
+  (oracleCategoryId) => category[oracleCategoryId]
+);
 
 export let oracleCategoryMap: { [categoryId: string]: OracleSet } = {};
 export let oracleMap: { [tableId: string]: DataforgedOracleTable } = {};
+
+export const planetDescriptions: { [key: string]: string } = {};
 
 function flattenOracleTables(
   set: OracleSet,
@@ -62,26 +70,96 @@ function flattenOracleTables(
 ): {
   [tableId: string]: DataforgedOracleTable;
 } {
+  if (set.$id.match(/starforged\/oracles\/planets\/[a-z]+$/gi)) {
+    const type = set.$id.replace("starforged/oracles/planets/", "");
+    planetDescriptions[type] = set.Summary ?? "";
+  }
+
   let newSetTables: { [tableId: string]: DataforgedOracleTable } = {};
 
+  const sampleNames = set["Sample Names" as "Sample names"];
+  if (Array.isArray(sampleNames) && sampleNames.length > 0) {
+    const id = set.$id + "/sample_names";
+    const size = Math.floor(100 / sampleNames.length);
+    newSetTables[id] = {
+      $id: id,
+      Title: {
+        $id: id + "/title",
+        Canonical: "Sample Names",
+        Standard: "Sample Names",
+        Short: "Sample Names",
+      },
+      Display: {
+        $id: id + "/display",
+        Columns: [
+          {
+            $id: id + "/display/columns/1",
+            Label: "Roll",
+            Type: TableColumnType.Range,
+            Content: id,
+          },
+          {
+            $id: id + "/display/columns/2",
+            Label: "Result",
+            Type: TableColumnType.String,
+            Content: id,
+            Key: "Result",
+          },
+        ],
+      },
+      Ancestors: [],
+      Source: {
+        Title: "Iron Fellowship",
+        Authors: [],
+        License: License.None,
+      },
+      Table: sampleNames.map((name, index) => ({
+        $id: id + "/" + index,
+        Floor: index * size + 1,
+        Ceiling: index * size + size,
+        Result: name,
+      })),
+    };
+  }
+
   Object.values(set.Tables ?? {}).forEach((table) => {
+    const regex = new RegExp(/(\[⏵)|(\]\([^\)]*\))/, "gi"); //"([⏵)|(]([^)]*))"
+    const fixedTable = table.Table.map((tableRow) => {
+      const newRow = { ...tableRow };
+      newRow.Result = tableRow.Result.replaceAll(regex, "");
+      return newRow;
+    });
     if (!subsetTitlePrefix) {
-      newSetTables[table.$id] = table;
+      newSetTables[table.$id] = {
+        ...table,
+        Table: fixedTable,
+      };
     } else {
       newSetTables[table.$id] = {
         ...table,
+        Table: fixedTable,
         Title: {
           $id: table.Title.$id,
-          Short: `${subsetTitlePrefix.Short}: ${table.Title.Short}`,
-          Canonical: `${subsetTitlePrefix.Canonical}: ${table.Title.Canonical}`,
-          Standard: `${subsetTitlePrefix.Standard}: ${table.Title.Standard}`,
+          Short: `${subsetTitlePrefix.Short} ꞏ ${table.Title.Short}`,
+          Canonical: `${subsetTitlePrefix.Canonical} ꞏ ${table.Title.Canonical}`,
+          Standard: `${subsetTitlePrefix.Standard} ꞏ ${table.Title.Standard}`,
         },
       };
     }
   });
 
   Object.values(set.Sets ?? {}).forEach((subSet) => {
-    const flattenedSets = flattenOracleTables(subSet, subSet.Title);
+    const flattenedSets = flattenOracleTables(
+      subSet,
+      subsetTitlePrefix
+        ? {
+            $id: subSet.Title.$id,
+            Short: `${subsetTitlePrefix.Short} ꞏ ${subSet.Title.Short}`,
+            Canonical: `${subsetTitlePrefix.Canonical} ꞏ ${subSet.Title.Canonical}`,
+            Standard: `${subsetTitlePrefix.Standard} ꞏ ${subSet.Title.Standard}`,
+          }
+        : subSet.Title
+    );
     newSetTables = {
       ...newSetTables,
       ...flattenedSets,
@@ -91,7 +169,7 @@ function flattenOracleTables(
   return newSetTables;
 }
 
-export const orderedCategories = categoryOrder.map((oracleCategoryId) => {
+Object.keys(category).forEach((oracleCategoryId) => {
   const oracleCategory = category[oracleCategoryId];
   const flattenedTables = flattenOracleTables(oracleCategory);
   oracleMap = { ...oracleMap, ...flattenedTables };
@@ -99,7 +177,6 @@ export const orderedCategories = categoryOrder.map((oracleCategoryId) => {
     ...oracleCategory,
     Tables: flattenedTables,
   };
-  return oracleCategoryMap[oracleCategory.$id];
 });
 
 export const hiddenOracleIds: { [oracleId: string]: boolean } = {
@@ -109,3 +186,5 @@ export const hiddenOracleIds: { [oracleId: string]: boolean } = {
   "ironsworn/oracles/moves/ask_the_oracle/unlikely": true,
   "ironsworn/oracles/moves/ask_the_oracle/small_chance": true,
 };
+
+console.debug(category);

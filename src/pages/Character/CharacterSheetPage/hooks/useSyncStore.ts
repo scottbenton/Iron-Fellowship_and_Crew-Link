@@ -11,6 +11,8 @@ import { useStore } from "stores/store";
 import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
 import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
 import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
+import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
+import { useListenToSectorLocations } from "stores/world/currentWorld/sector/sectorLocations/useListenToSectorLocations";
 
 export function useSyncStore() {
   const { characterId } = useParams();
@@ -75,6 +77,8 @@ export function useSyncStore() {
   useListenToLocations();
   useListenToNPCs();
   useListenToLoreDocuments();
+  useListenToSectors();
+  useListenToSectorLocations();
 
   useListenToNewLogs();
   useListenToCurrentCampaignCharacters();

@@ -13,7 +13,7 @@ import { TransitionGroup } from "react-transition-group";
 import ClearIcon from "@mui/icons-material/Close";
 import { RollSnackbar } from "./RollSnackbar";
 import { oracleCategoryMap, oracleMap } from "data/oracles";
-import { useCustomOracles } from "components/OracleSection/useCustomOracles";
+import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { TRACK_TYPES } from "types/Track.type";
 import { useStore } from "stores/store";
 

@@ -1,11 +1,11 @@
 import { Alert, Box, Button, Grid, Typography } from "@mui/material";
-import { AssetCard } from "components/AssetCard/AssetCard";
+import { AssetCard } from "components/features/assets/AssetCard";
 import { useState } from "react";
 import { StoredAsset } from "types/Asset.type";
-import { AssetCardDialog } from "components/AssetCardDialog";
-import { SectionHeading } from "components/SectionHeading";
+import { AssetCardDialog } from "components/features/assets/AssetCardDialog";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { useField } from "formik";
-import { EmptyState } from "components/EmptyState/EmptyState";
+import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import { Asset } from "dataforged";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
@@ -47,6 +47,21 @@ export function AssetsSection() {
     const newAssetInputs = { ...newAsset.inputs };
     newAssetInputs[label] = value;
     newAsset.inputs = newAssetInputs;
+    newAssets[index] = newAsset;
+    handlers.setValue(newAssets);
+    return new Promise<void>((res) => res());
+  };
+
+  const handleConditionChecked = (
+    index: number,
+    condition: string,
+    checked: boolean
+  ) => {
+    const newAssets = [...field.value];
+    const newAsset = { ...newAssets[index] };
+    const newAssetConditions = { ...newAsset.conditions };
+    newAssetConditions[condition] = checked;
+    newAsset.conditions = newAssetConditions;
     newAssets[index] = newAsset;
     handlers.setValue(newAssets);
     return new Promise<void>((res) => res());
@@ -106,6 +121,9 @@ export function AssetsSection() {
                     }
                     handleInputChange={(label, value) =>
                       handleInputChange(index, label, value)
+                    }
+                    handleConditionCheck={(condition, checked) =>
+                      handleConditionChecked(index, condition, checked)
                     }
                     handleCustomAssetUpdate={(asset) =>
                       handleCustomAssetUpdate(index, asset)

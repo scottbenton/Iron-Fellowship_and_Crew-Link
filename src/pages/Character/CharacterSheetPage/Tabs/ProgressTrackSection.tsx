@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { ProgressTrackList } from "components/ProgressTrack";
+import { ProgressTrackList } from "components/features/ProgressTrack";
 import { TRACK_TYPES } from "types/Track.type";
 import { useStore } from "stores/store";
 

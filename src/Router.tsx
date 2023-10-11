@@ -1,6 +1,6 @@
-import { Layout } from "./components/Layout";
-import { getUser } from "./lib/auth.lib";
-import { BASE_ROUTES, basePaths } from "./routes";
+import { Layout } from "components/shared/Layout";
+import { getUser } from "lib/auth.lib";
+import { BASE_ROUTES, basePaths } from "routes";
 
 import {
   Route,
@@ -8,7 +8,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import { ErrorRoute } from "components/ErrorRoute";
+import { ErrorRoute } from "components/shared/ErrorRoute";
 import { CHARACTER_ROUTES, characterPaths } from "pages/Character/routes";
 import { CAMPAIGN_ROUTES, campaignPaths } from "pages/Campaign/routes";
 import { WORLD_ROUTES, worldPaths } from "pages/World/routes";

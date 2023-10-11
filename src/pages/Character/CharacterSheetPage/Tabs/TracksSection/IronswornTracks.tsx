@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import { SectionHeading } from "components/SectionHeading";
+import { SectionHeading } from "components/shared/SectionHeading";
 import { ExperienceTrack } from "./ExperienceTrack";
-import { ProgressTrack } from "components/ProgressTrack";
+import { ProgressTrack } from "components/features/ProgressTrack";
 import { useStore } from "stores/store";
 
 export function IronswornTracks() {

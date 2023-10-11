@@ -8,14 +8,14 @@ import {
   LinearProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { CharacterList } from "../../components/CharacterList/CharacterList";
-import { EmptyState } from "../../components/EmptyState/EmptyState";
+import { CharacterList } from "../../components/features/characters/CharacterList/CharacterList";
+import { EmptyState } from "../../components/shared/EmptyState/EmptyState";
 import AddCharacterIcon from "@mui/icons-material/PersonAdd";
 
 import { useConfirm } from "material-ui-confirm";
 import { CHARACTER_ROUTES, constructCharacterPath } from "./routes";
-import { PageHeader } from "components/Layout/PageHeader";
-import { PageContent } from "components/Layout";
+import { PageHeader } from "components/shared/Layout/PageHeader";
+import { PageContent } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 
