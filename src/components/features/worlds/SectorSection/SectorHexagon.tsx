@@ -21,7 +21,7 @@ export function SectorHexagon(props: SectorHexagonProps) {
 
   const { Icon, color } = type
     ? hexTypeMap[type] ?? {}
-    : ({} as (typeof hexTypeMap)[SECTOR_HEX_TYPES.SHIP]);
+    : ({} as (typeof hexTypeMap)[SECTOR_HEX_TYPES]);
 
   const pointString = getPoints(x, y, size);
 
