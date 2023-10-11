@@ -80,6 +80,27 @@ service cloud.firestore {
           allow delete: if checkIsOwner();
         }
       }
+      match /sectors/{sectorId} {
+     		allow read, create, update: if request.auth.uid != null;
+        allow delete: if checkIsOwner();
+          match /public/notes {
+          	allow read, write: if request.auth.uid != null;
+          }
+          match /private/notes {
+          	allow read, write: if checkIsOwner();
+          }
+        
+        match /locations/{locationId} {
+     			allow read, create, update: if request.auth.uid != null;
+        	allow delete: if checkIsOwner();
+          match /public/notes {
+          	allow read, write: if request.auth.uid != null;
+          }
+          match /private/notes {
+          	allow read, write: if checkIsOwner();
+          }
+        }
+      }
     }
     match /users/{userId} {
     	allow read: if true;
