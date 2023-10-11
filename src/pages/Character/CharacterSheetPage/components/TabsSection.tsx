@@ -18,6 +18,8 @@ import { LoreSection } from "components/features/worlds/Lore";
 import { TracksSection } from "../Tabs/TracksSection";
 import { useStore } from "stores/store";
 import { SectorSection } from "components/features/worlds/SectorSection";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 enum TABS {
   MOVES = "moves",
@@ -45,6 +47,9 @@ export function TabsSection() {
     setSelectedTab(tab);
     setSearchParams({ tab });
   };
+
+  const shouldShowSectors =
+    useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
   const isInCampaign = useStore(
     (store) => !!store.characters.currentCharacter.currentCharacter?.campaignId
@@ -96,8 +101,11 @@ export function TabsSection() {
         <StyledTab label="Tracks" value={TABS.TRACKS} />
         <StyledTab label="Notes" value={TABS.NOTES} />
         <StyledTab label={"World"} value={TABS.WORLD} />
-        <StyledTab label={"Sectors"} value={TABS.SECTORS} />
-        <StyledTab label={"Locations"} value={TABS.LOCATIONS} />
+        {shouldShowSectors ? (
+          <StyledTab label={"Sectors"} value={TABS.SECTORS} />
+        ) : (
+          <StyledTab label={"Locations"} value={TABS.LOCATIONS} />
+        )}
         <StyledTab label={"NPCs"} value={TABS.NPCS} />
         <StyledTab label={"Lore"} value={TABS.LORE} />
         <StyledTab label="Character" value={TABS.CHARACTER} />
@@ -120,22 +128,25 @@ export function TabsSection() {
       <ContainedTabPanel isVisible={selectedTab === TABS.WORLD}>
         <WorldSection />
       </ContainedTabPanel>
-      <ContainedTabPanel
-        greyBackground={worldExists}
-        isVisible={selectedTab === TABS.SECTORS}
-      >
-        <SectorSection showHiddenTag={isWorldOwner && isInCampaign} />
-      </ContainedTabPanel>
-      <ContainedTabPanel
-        isVisible={selectedTab === TABS.LOCATIONS}
-        greyBackground={worldExists}
-      >
-        <LocationsSection
-          isSinglePlayer={!isInCampaign}
-          showHiddenTag={isWorldOwner && isInCampaign}
-          openNPCTab={() => setSelectedTab(TABS.NPCS)}
-        />
-      </ContainedTabPanel>
+      {shouldShowSectors ? (
+        <ContainedTabPanel
+          greyBackground={worldExists}
+          isVisible={selectedTab === TABS.SECTORS}
+        >
+          <SectorSection showHiddenTag={isWorldOwner && isInCampaign} />
+        </ContainedTabPanel>
+      ) : (
+        <ContainedTabPanel
+          isVisible={selectedTab === TABS.LOCATIONS}
+          greyBackground={worldExists}
+        >
+          <LocationsSection
+            isSinglePlayer={!isInCampaign}
+            showHiddenTag={isWorldOwner && isInCampaign}
+            openNPCTab={() => setSelectedTab(TABS.NPCS)}
+          />
+        </ContainedTabPanel>
+      )}
       <ContainedTabPanel
         isVisible={selectedTab === TABS.NPCS}
         greyBackground={worldExists}
