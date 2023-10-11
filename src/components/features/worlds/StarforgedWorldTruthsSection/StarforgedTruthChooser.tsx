@@ -34,10 +34,10 @@ export function StarforgedTruthChooser(props: StarforgedTruthChooserProps) {
   );
 
   const [customDescription, setCustomDescription] = useState(
-    storedTruth.customTruth?.Description ?? ""
+    storedTruth?.customTruth?.Description ?? ""
   );
   const [customQuestStarter, setCustomQuestStarter] = useState(
-    storedTruth.customTruth?.["Quest starter"] ?? ""
+    storedTruth?.customTruth?.["Quest starter"] ?? ""
   );
 
   const updateWorldTruth = useStore(

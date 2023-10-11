@@ -34,13 +34,13 @@ export const hexTypeMap: {
     name: "Settlement",
   },
   [SECTOR_HEX_TYPES.STAR]: { Icon: StarIcon, color: "#eab308", name: "Star" },
-  [SECTOR_HEX_TYPES.CREATURE]: { Icon: CreatureIcon, name: "Creature" },
+  // [SECTOR_HEX_TYPES.CREATURE]: { Icon: CreatureIcon, name: "Creature" },
   [SECTOR_HEX_TYPES.DERELICT]: {
     Icon: DerelictIcon,
     color: "#f59e0b",
     name: "Derelict",
   },
-  [SECTOR_HEX_TYPES.SHIP]: { Icon: ShipIcon, color: "#f87171", name: "Ship" },
+  // [SECTOR_HEX_TYPES.SHIP]: { Icon: ShipIcon, color: "#f87171", name: "Ship" },
   [SECTOR_HEX_TYPES.VAULT]: {
     Icon: VaultIcon,
     color: "#38bdf8",

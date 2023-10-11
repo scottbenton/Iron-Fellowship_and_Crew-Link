@@ -1,14 +1,15 @@
-import { DialogTitle, IconButton } from "@mui/material";
-import { PropsWithChildren } from "react";
+import { Box, DialogTitle, IconButton } from "@mui/material";
+import { PropsWithChildren, ReactNode } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
 export interface DialogTitleWithCloseButtonProps extends PropsWithChildren {
   onClose: () => void;
+  actions?: ReactNode;
 }
 export function DialogTitleWithCloseButton(
   props: DialogTitleWithCloseButtonProps
 ) {
-  const { children, onClose } = props;
+  const { children, actions, onClose } = props;
 
   return (
     <DialogTitle
@@ -17,12 +18,12 @@ export function DialogTitleWithCloseButton(
       justifyContent={"space-between"}
     >
       <span>{children}</span>
-      <IconButton
-        onClick={() => onClose()}
-        sx={{ flexShrink: 0, marginLeft: 1 }}
-      >
-        <CloseIcon />
-      </IconButton>
+      <Box display={"flex"} alignItems={"center"} flexShrink={0} ml={1}>
+        {actions}
+        <IconButton onClick={() => onClose()}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
     </DialogTitle>
   );
 }

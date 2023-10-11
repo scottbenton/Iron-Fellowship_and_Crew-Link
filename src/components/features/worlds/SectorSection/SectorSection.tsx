@@ -13,6 +13,7 @@ import { useFilterSectors } from "./useFilterSectors";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { OpenSector } from "./OpenSector";
+import HiddenIcon from "@mui/icons-material/VisibilityOff";
 
 export interface SectorSectionProps {
   isSinglePlayer?: boolean;
@@ -41,10 +42,7 @@ export function SectorSection(props: SectorSectionProps) {
     (store) => store.worlds.currentWorld.currentWorldSectors.setSectorSearch
   );
 
-  const { sortedSectorIds, filteredSectorIds } = useFilterSectors(
-    sectors,
-    search
-  );
+  const { filteredSectorIds } = useFilterSectors(sectors, search);
 
   const createSector = useStore(
     (store) => store.worlds.currentWorld.currentWorldSectors.createSector
@@ -93,15 +91,29 @@ export function SectorSection(props: SectorSectionProps) {
           </Button>
         }
       />
-      <Grid container spacing={2} sx={{ p: 2, mt: 0 }}>
+      <Grid container spacing={2} sx={{ p: 2 }}>
         {filteredSectorIds.map((sectorId) => (
           <Grid item xs={12} md={6} lg={4} key={sectorId}>
-            <Card variant={"outlined"}>
+            <Card variant={"outlined"} sx={{ height: "100%" }}>
               <CardActionArea
                 onClick={() => setOpenSectorId(sectorId)}
-                sx={{ p: 2 }}
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  height: "100%",
+                }}
               >
-                <Typography variant={"h6"}>{sectors[sectorId].name}</Typography>
+                <Box>
+                  <Typography>{sectors[sectorId].name}</Typography>
+                  <Typography color={"textSecondary"}>
+                    {sectors[sectorId].region}
+                  </Typography>
+                </Box>
+                {!sectors[sectorId].sharedWithPlayers && showHiddenTag && (
+                  <HiddenIcon color={"action"} />
+                )}
               </CardActionArea>
             </Card>
           </Grid>

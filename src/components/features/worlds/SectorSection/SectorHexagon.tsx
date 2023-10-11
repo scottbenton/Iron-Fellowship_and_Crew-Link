@@ -75,6 +75,12 @@ export function SectorHexagon(props: SectorHexagonProps) {
             r={size / 4}
             stroke={"currentcolor"}
             strokeWidth={1}
+            style={{
+              background: "none",
+              pointerEvents: "none",
+              height: 0,
+              overflow: "visible",
+            }}
           />
         )}
       {pathConnections &&
@@ -97,6 +103,12 @@ export function SectorHexagon(props: SectorHexagonProps) {
                 y2={y}
                 stroke={"currentcolor"}
                 strokeWidth="1"
+                style={{
+                  background: "none",
+                  pointerEvents: "none",
+                  height: 0,
+                  overflow: "visible",
+                }}
               />
             );
           })}

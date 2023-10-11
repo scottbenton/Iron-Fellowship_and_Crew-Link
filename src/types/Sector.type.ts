@@ -6,8 +6,8 @@ export enum SECTOR_HEX_TYPES {
   VAULT = "vault",
   SETTLEMENT = "settlement",
   DERELICT = "derelict",
-  SHIP = "ship",
-  CREATURE = "creature",
+  // SHIP = "ship",
+  // CREATURE = "creature",
   OTHER = "other",
   PATH = "path",
 }
@@ -19,11 +19,14 @@ export enum REGIONS {
   VOID = "Void",
 }
 
+export interface SectorMapEntry {
+  type: SECTOR_HEX_TYPES;
+  locationId?: string;
+}
+
 export interface SectorMap {
   [row: number]: {
-    [col: number]: {
-      type: SECTOR_HEX_TYPES | undefined;
-    };
+    [col: number]: SectorMapEntry;
   };
 }
 

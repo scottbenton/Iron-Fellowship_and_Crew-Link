@@ -19,9 +19,13 @@ import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs"
 import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
 import { LoreSection } from "components/features/worlds/Lore";
 import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { SectorSection } from "components/features/worlds/SectorSection";
 
 export enum TABS {
   DETAILS = "details",
+  SECTORS = "sectors",
   LOCATIONS = "locations",
   NPCS = "npcs",
   LORE = "lore",
@@ -29,10 +33,9 @@ export enum TABS {
 
 export function WorldSheetPage() {
   useSyncStore();
-  useListenToLocations();
-  useListenToNPCs();
-  useListenToLoreDocuments();
-  useListenToSectors();
+
+  const showSectorsInsteadOfLocations =
+    useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
@@ -127,13 +130,18 @@ export function WorldSheetPage() {
             variant={"standard"}
           >
             <StyledTab value={TABS.DETAILS} label={"World Details"} />
-            <StyledTab value={TABS.LOCATIONS} label={"Locations"} />
+            {!showSectorsInsteadOfLocations && (
+              <StyledTab value={TABS.LOCATIONS} label={"Locations"} />
+            )}
+            {showSectorsInsteadOfLocations && (
+              <StyledTab value={TABS.SECTORS} label={"Sectors"} />
+            )}
             <StyledTab value={TABS.NPCS} label={"NPCs"} />
             <StyledTab value={TABS.LORE} label={"Lore"} />
           </StyledTabs>
         </BreakContainer>
         {selectedTab === TABS.DETAILS && <WorldSheet canEdit={canEdit} />}
-        {selectedTab === TABS.LOCATIONS && (
+        {selectedTab === TABS.LOCATIONS && !showSectorsInsteadOfLocations && (
           <BreakContainer
             sx={(theme) => ({
               backgroundColor: theme.palette.background.paperInlay,
@@ -144,6 +152,16 @@ export function WorldSheetPage() {
               showHiddenTag
               openNPCTab={() => setSelectedTab(TABS.NPCS)}
             />
+          </BreakContainer>
+        )}
+        {selectedTab === TABS.SECTORS && showSectorsInsteadOfLocations && (
+          <BreakContainer
+            sx={(theme) => ({
+              backgroundColor: theme.palette.background.paperInlay,
+              flexGrow: 1,
+            })}
+          >
+            <SectorSection showHiddenTag />
           </BreakContainer>
         )}
         {selectedTab === TABS.NPCS && (

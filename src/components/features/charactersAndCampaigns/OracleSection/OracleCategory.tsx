@@ -21,6 +21,8 @@ export function OracleCategory(props: OracleCategoryProps) {
     ? `${prefix} ꞏ ${category.Title.Standard}`
     : category.Title.Standard;
 
+  const sampleNames = category["Sample Names" as "Sample names"];
+
   return (
     <>
       <List disablePadding>
@@ -39,6 +41,19 @@ export function OracleCategory(props: OracleCategoryProps) {
             {title}
           </ListSubheader>
         )}
+        {Array.isArray(sampleNames) &&
+          sampleNames.length > 0 &&
+          Object.keys(category.Tables ?? {}).length > 0 && (
+            <OracleListItem
+              id={category.$id + "/sample_names"}
+              text={"Sample Names"}
+              onRollClick={() =>
+                rollOracleTable(category.$id + "/sample_names", true, true)
+              }
+              onOpenClick={() => openDialog(category.$id + "/sample_names")}
+              pinned={pinnedCategories && pinnedCategories[category.$id]}
+            />
+          )}
         {Object.keys(category.Tables ?? {}).map((oracleId, index) => {
           const oracle = category.Tables?.[oracleId];
           if (hiddenOracleIds[oracleId] || !oracle) return null;

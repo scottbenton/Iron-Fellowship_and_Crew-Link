@@ -12,6 +12,7 @@ import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs"
 import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
 import { useListenToNewLogs } from "stores/gameLog/useListenToNewLogs";
 import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
+import { useListenToSectorLocations } from "stores/world/currentWorld/sector/sectorLocations/useListenToSectorLocations";
 
 export function useSyncStore() {
   const { campaignId } = useParams();
@@ -33,6 +34,7 @@ export function useSyncStore() {
   useListenToNPCs();
   useListenToLoreDocuments();
   useListenToSectors();
+  useListenToSectorLocations();
 
   useListenToNotes();
 

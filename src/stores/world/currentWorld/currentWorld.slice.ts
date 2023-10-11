@@ -67,6 +67,7 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
       state.worlds.currentWorld.currentWorldLocations.resetStore();
       state.worlds.currentWorld.currentWorldNPCs.resetStore();
       state.worlds.currentWorld.currentWorldLore.resetStore();
+      state.worlds.currentWorld.currentWorldSectors.resetStore();
       set((store) => {
         store.worlds.currentWorld = {
           ...store.worlds.currentWorld,

@@ -8,7 +8,7 @@ import {
 import RollIcon from "@mui/icons-material/Casino";
 
 export type TextFieldWithOracleProps = Omit<TextFieldProps, "onChange"> & {
-  getOracleValue: () => string;
+  getOracleValue: (() => string) | undefined;
   onChange: (value: string) => void;
 };
 
@@ -16,7 +16,9 @@ export function TextFieldWithOracle(props: TextFieldWithOracleProps) {
   const { getOracleValue, onChange, ...textFieldProps } = props;
 
   const handleOracleRoll = () => {
-    onChange(getOracleValue());
+    if (getOracleValue) {
+      onChange(getOracleValue());
+    }
   };
 
   return (
@@ -25,7 +27,7 @@ export function TextFieldWithOracle(props: TextFieldWithOracleProps) {
       {...textFieldProps}
       onChange={(evt) => onChange(evt.currentTarget.value)}
       InputProps={{
-        endAdornment: (
+        endAdornment: getOracleValue ? (
           <InputAdornment position={"end"}>
             <Tooltip title={"Consult the Oracle"} enterDelay={500}>
               <IconButton onClick={() => handleOracleRoll()}>
@@ -33,7 +35,7 @@ export function TextFieldWithOracle(props: TextFieldWithOracleProps) {
               </IconButton>
             </Tooltip>
           </InputAdornment>
-        ),
+        ) : undefined,
       }}
     />
   );

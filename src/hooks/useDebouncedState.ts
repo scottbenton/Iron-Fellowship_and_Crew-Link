@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 export function useDebouncedState<State>(
   persistChanges: (state: State) => void,
   initialState: State
-): [State, (value: State) => void] {
+): [State, (value: State) => void, () => void] {
   const [state, setState] = useState<State>(initialState);
   const stateRef = useRef<State>(state);
 
@@ -45,5 +45,6 @@ export function useDebouncedState<State>(
       stateRef.current = newState;
       setState(newState);
     },
+    () => {},
   ];
 }
