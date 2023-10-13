@@ -84,16 +84,16 @@ export const RoundedImageUploader = forwardRef<
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >
-        <input
-          type="file"
-          accept={"image/*"}
-          hidden
-          ref={ref}
-          onChange={onFileUpload}
-        />
         {!src && <AddPhotoIcon />}
         {src && isHovering && <FullscreenIcon color={"inherit"} />}
       </Box>
+      <input
+        type="file"
+        accept={"image/*"}
+        hidden
+        ref={ref}
+        onChange={onFileUpload}
+      />
       <Dialog open={isFullScreen} onClose={() => setIsFullScreen(false)}>
         <Box
           display={"flex"}

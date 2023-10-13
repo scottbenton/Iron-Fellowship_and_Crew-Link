@@ -43,7 +43,7 @@ export function NPCItem(props: NPCItemProps) {
             transitionDuration: `${theme.transitions.duration.shorter}ms`,
             transitionTimingFunction: theme.transitions.easing.easeInOut,
           },
-          "&:hover": {
+          "&:hover, &:focus": {
             "& #portrait": {
               marginTop: -1.5,
               marginBottom: -1.5,
@@ -57,9 +57,6 @@ export function NPCItem(props: NPCItemProps) {
               id={"portrait"}
               sx={(theme) => ({
                 marginRight: 1,
-                borderWidth: 2,
-                borderColor: theme.palette.divider,
-                borderStyle: "solid",
                 width: 80,
                 height: 80,
                 flexShrink: 0,
@@ -74,6 +71,7 @@ export function NPCItem(props: NPCItemProps) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                boxShadow: theme.shadows[3],
               })}
             >
               {!npc.imageUrl && (

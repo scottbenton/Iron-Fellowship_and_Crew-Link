@@ -32,6 +32,10 @@ export function NPCSection(props: NPCSectionProps) {
     [GAME_SYSTEMS.IRONSWORN]: { species: NPC_SPECIES.IRONLANDER },
     [GAME_SYSTEMS.STARFORGED]: {},
   });
+  const searchPlaceholder = useGameSystemValue({
+    [GAME_SYSTEMS.IRONSWORN]: "Search by name or location",
+    [GAME_SYSTEMS.STARFORGED]: "Search by name or sector",
+  });
 
   const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
   const isWorldOwner = useStore(
@@ -40,10 +44,6 @@ export function NPCSection(props: NPCSectionProps) {
         store.auth.uid
       ) ?? false
   );
-  const doAnyDocsHaveImages = useStore(
-    (store) => store.worlds.currentWorld.doAnyDocsHaveImages
-  );
-
   const locations = useStore(
     (store) => store.worlds.currentWorld.currentWorldLocations.locationMap
   );
@@ -66,11 +66,11 @@ export function NPCSection(props: NPCSectionProps) {
     (store) => store.worlds.currentWorld.currentWorldNPCs.setNPCSearch
   );
 
-  const userCanUploadImages = useCanUploadWorldImages();
-  const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
+  const canShowImages = useCanUploadWorldImages();
 
   const { filteredNPCIds, sortedNPCIds } = useFilterNPCs(
     locations,
+    sectors,
     npcs,
     search
   );
@@ -159,7 +159,7 @@ export function NPCSection(props: NPCSectionProps) {
             Add NPC
           </Button>
         }
-        searchPlaceholder="Search by name or location"
+        searchPlaceholder={searchPlaceholder}
       />
       <NPCList
         filteredNPCIds={filteredNPCIds}

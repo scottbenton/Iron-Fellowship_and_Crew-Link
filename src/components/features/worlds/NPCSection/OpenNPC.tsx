@@ -214,32 +214,36 @@ export function OpenNPC(props: OpenNPCProps) {
 
   return (
     <Box overflow={"auto"}>
-      <Box
-        sx={(theme) => ({
-          height: theme.spacing(isLg ? 10 : 6),
-        })}
-      >
+      {canUseImages && (
         <Box
           sx={(theme) => ({
-            borderRadius: "100%",
-            position: "relative",
-            border: `1px solid ${theme.palette.divider}`,
-            top: theme.spacing(2),
-            left: theme.spacing(2),
-
-            [theme.breakpoints.up("md")]: { left: theme.spacing(3) },
-
-            width: isLg ? 152 : 102,
-            height: isLg ? 152 : 102,
-            flexShrink: "0",
-            zIndex: 0,
+            height: theme.spacing(isLg ? 10 : 6),
           })}
-        />
-      </Box>
+        >
+          <Box
+            sx={(theme) => ({
+              borderRadius: "100%",
+              position: "relative",
+              border: `1px solid ${theme.palette.divider}`,
+              top: theme.spacing(2),
+              left: theme.spacing(2),
+
+              [theme.breakpoints.up("md")]: { left: theme.spacing(3) },
+
+              width: isLg ? 152 : 102,
+              height: isLg ? 152 : 102,
+              flexShrink: "0",
+              zIndex: 0,
+            })}
+          />
+        </Box>
+      )}
       <Box
         sx={(theme) => ({
           bgcolor: theme.palette.background.paper,
-          borderTop: `1px solid ${theme.palette.divider}`,
+          borderTop: canUseImages
+            ? `1px solid ${theme.palette.divider}`
+            : undefined,
           borderLeft: `1px solid ${theme.palette.divider}`,
           zIndex: 1,
           position: "relative",
@@ -252,24 +256,26 @@ export function OpenNPC(props: OpenNPCProps) {
           sx={{
             [theme.breakpoints.up("md")]: { px: 3 },
           }}
-          mb={isLg ? -8 : -4}
+          mb={canUseImages ? (isLg ? -8 : -4) : 0}
         >
-          <RoundedImageUploader
-            src={npc.imageUrl}
-            title={npc.name}
-            handleFileUpload={(file) =>
-              uploadNPCImage(npcId, file).catch(() => {})
-            }
-            handleUploadClick={() => fileInputRef.current?.click()}
-            ref={fileInputRef}
-          />
+          {canUseImages && (
+            <RoundedImageUploader
+              src={npc.imageUrl}
+              title={npc.name}
+              handleFileUpload={(file) =>
+                uploadNPCImage(npcId, file).catch(() => {})
+              }
+              handleUploadClick={() => fileInputRef.current?.click()}
+              ref={fileInputRef}
+            />
+          )}
           <Box
             justifyContent={isLg ? "space-between" : "flex-end"}
             flexGrow={1}
             display={"flex"}
             alignItems={"flex-start"}
             py={1}
-            pl={2}
+            pl={canUseImages ? 2 : 0}
           >
             <Hidden lgDown>
               <DebouncedOracleInput
@@ -284,10 +290,12 @@ export function OpenNPC(props: OpenNPCProps) {
                 sx={{ mt: 2, maxWidth: 300 }}
               />
             </Hidden>
-            <Box>
-              <IconButton onClick={() => nameInputRef.current?.click()}>
-                <AddPhotoIcon />
-              </IconButton>
+            <Box mt={1}>
+              {canUseImages && (
+                <IconButton onClick={() => fileInputRef.current?.click()}>
+                  <AddPhotoIcon />
+                </IconButton>
+              )}
               {showGMFields && (
                 <IconButton onClick={() => handleNPCDelete()}>
                   <DeleteIcon />
