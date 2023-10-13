@@ -1,4 +1,4 @@
-import { Button, DialogContent } from "@mui/material";
+import { Button, DialogContent, Typography } from "@mui/material";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { MoveStatRollers } from "./MoveStatRollers";
 import { moveMap } from "data/moves";
@@ -11,6 +11,7 @@ import { useCustomOracles } from "components/features/charactersAndCampaigns/Ora
 import { useStore } from "stores/store";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { getIsLocalEnvironment } from "functions/getGameSystem";
 
 export interface MoveDialogContentProps {
   id: string;
@@ -49,9 +50,17 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
   }
 
   const visibleStats: { [key: string]: boolean } = {};
+  const customMoveStats: { [key: string]: number } = {};
   move.Trigger?.Options?.forEach((option) => {
     option.Using.forEach((roller) => {
-      visibleStats[roller] = true;
+      if (roller.includes("/custom_stat")) {
+        option["Custom stat"]?.Options.forEach((customStatOption) => {
+          customMoveStats[customStatOption.Label] = customStatOption.Value;
+          visibleStats[customStatOption.Label] = true;
+        });
+      } else {
+        visibleStats[roller] = true;
+      }
     });
   });
 
@@ -78,7 +87,11 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
         {move.Title.Standard}
       </LinkedDialogContentTitle>
       <DialogContent>
-        <MoveStatRollers visibleStats={visibleStats} />
+        {getIsLocalEnvironment() && <Typography>{id}</Typography>}
+        <MoveStatRollers
+          visibleStats={visibleStats}
+          customMoveStats={customMoveStats}
+        />
         <MarkdownRenderer markdown={move.Text} />
         {moveOracles.map(
           (oracle) =>

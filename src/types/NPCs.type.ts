@@ -1,4 +1,5 @@
 import { Bytes, Timestamp } from "firebase/firestore";
+import { DIFFICULTY } from "./Track.type";
 
 export enum NPC_SPECIES {
   IRONLANDER = "ironlander",
@@ -11,11 +12,19 @@ export enum NPC_SPECIES {
 
 export interface NPCDocument {
   name: string;
-  species: NPC_SPECIES;
-  lastLocationId?: string;
+  pronouns?: string;
+  species?: NPC_SPECIES; // Ironsworn only
+  lastLocationId?: string; // Ironsworn only
+  lastSectorId?: string; // Starforged only
   imageFilenames?: string[];
   sharedWithPlayers?: boolean;
+  characterConnections?: { [characterId: string]: boolean }; // Starforged only
   characterBonds?: { [characterId: string]: boolean };
+  characterBondProgress?: { [characterId: string]: number }; // Starforged only
+
+  rank?: DIFFICULTY; // Starforged only
+  callsign?: string; // Starforged only
+
   updatedDate: Date;
   createdDate: Date;
 }
@@ -29,10 +38,13 @@ export interface NPCDocumentFirestore
 export interface StoredGMNPCDocument {
   goal?: string;
   role?: string;
-  descriptor?: string;
+  descriptor?: string; // Ironsworn only
   disposition?: string;
-  activity?: string;
+  activity?: string; // Ironsworn only
   gmNotes?: Bytes;
+
+  firstLook?: string; // Starforged only
+  revealedAspect?: string; // Starforged only
 }
 export interface GMNPCDocument extends Omit<StoredGMNPCDocument, "gmNotes"> {
   gmNotes?: Uint8Array;

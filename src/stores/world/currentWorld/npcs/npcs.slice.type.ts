@@ -24,7 +24,7 @@ export interface NPCsSliceActions {
   setOpenNPCId: (npcId?: string) => void;
   setNPCSearch: (search: string) => void;
 
-  createNPC: () => Promise<string>;
+  createNPC: (npc?: Partial<NPCDocument>) => Promise<string>;
   deleteNPC: (npcId: string) => Promise<void>;
   updateNPC: (
     npcId: string,
@@ -48,6 +48,16 @@ export interface NPCsSliceActions {
     npcId: string,
     characterId: string,
     bonded: boolean
+  ) => Promise<void>;
+  updateNPCCharacterConnection: (
+    npcId: string,
+    characterId: string,
+    connected: boolean
+  ) => Promise<void>;
+  updateNPCCharacterBondValue: (
+    npcId: string,
+    characterId: string,
+    value: number
   ) => Promise<void>;
   uploadNPCImage: (npcId: string, image: File) => Promise<void>;
   subscribeToOpenNPC: (npcId: string) => Unsubscribe;

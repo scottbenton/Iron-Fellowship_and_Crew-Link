@@ -43,9 +43,6 @@ export function LoreSection(props: LoreSectionProps) {
   const setOpenLoreId = useStore(
     (store) => store.worlds.currentWorld.currentWorldLore.setOpenLoreId
   );
-  const doAnyDocsHaveImages = useStore(
-    (store) => store.worlds.currentWorld.doAnyDocsHaveImages
-  );
   const search = useStore(
     (store) => store.worlds.currentWorld.currentWorldLore.loreSearch
   );
@@ -53,7 +50,7 @@ export function LoreSection(props: LoreSectionProps) {
     (store) => store.worlds.currentWorld.currentWorldLore.setLoreSearch
   );
 
-  const canShowImages = useCanUploadWorldImages() || doAnyDocsHaveImages;
+  const canShowImages = useCanUploadWorldImages();
 
   const [createLoreLoading, setCreateLoreLoading] = useState(false);
   const createLore = useStore(

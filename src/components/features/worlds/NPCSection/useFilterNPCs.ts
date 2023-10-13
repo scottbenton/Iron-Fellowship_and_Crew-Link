@@ -2,9 +2,11 @@ import { useSearchNoState } from "hooks/useSearch";
 import { useMemo } from "react";
 import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
+import { Sector } from "types/Sector.type";
 
 export function useFilterNPCs(
   locations: { [key: string]: LocationDocumentWithGMProperties },
+  sectors: { [key: string]: Sector },
   npcs: { [key: string]: NPCDocumentWithGMProperties },
   search: string
 ) {
@@ -26,11 +28,18 @@ export function useFilterNPCs(
         .includes(debouncedSearch.toLowerCase());
     });
 
+    const filteredSectorIds = Object.keys(sectors).filter((sectorId) => {
+      return sectors[sectorId].name
+        .toLocaleLowerCase()
+        .includes(debouncedSearch.toLocaleLowerCase());
+    });
+
     return sortedNPCIds.filter((npcId) => {
       const npc = npcs[npcId];
       return (
         (npc.lastLocationId &&
           filteredLocationIds.includes(npc.lastLocationId)) ||
+        (npc.lastSectorId && filteredSectorIds.includes(npc.lastSectorId)) ||
         npc.name.toLowerCase().includes(debouncedSearch.toLowerCase())
       );
     });

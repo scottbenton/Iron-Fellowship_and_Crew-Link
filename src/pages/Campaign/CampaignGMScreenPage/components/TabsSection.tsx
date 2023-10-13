@@ -122,7 +122,10 @@ export function TabsSection(props: TabsSectionProps) {
           isVisible={selectedTab === TABS.SECTORS}
           greyBackground={campaign.worldId ? true : false}
         >
-          <SectorSection showHiddenTag />
+          <SectorSection
+            showHiddenTag
+            openNPCTab={() => setSelectedTab(TABS.NPCS)}
+          />
         </ContainedTabPanel>
       ) : (
         <ContainedTabPanel

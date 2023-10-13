@@ -1,35 +1,34 @@
 import {
   Box,
-  Card,
-  CardActionArea,
   Checkbox,
   FormControlLabel,
   Grid,
   Tab,
   Tabs,
-  Typography,
 } from "@mui/material";
 import { SectorMap } from "./SectorMap";
 import { useStore } from "stores/store";
 import { ItemHeader } from "../ItemHeader";
 import { SECTOR_TABS } from "stores/world/currentWorld/sector/sector.slice.type";
-import { SECTOR_HEX_TYPES, SectorMap as ISectorMap } from "types/Sector.type";
+import { SECTOR_HEX_TYPES } from "types/Sector.type";
 import { SectorRegionAutocomplete } from "./SectorRegionAutocomplete";
 import { useRoller } from "providers/DieRollProvider";
 import { planetDescriptions } from "data/oracles";
 import { SectorLocationCard } from "./SectorLocationCard";
-import { StarforgedLocationPlanet } from "types/LocationStarforged.type";
 import { SectorLocationDialog } from "./SectorLocationDialog/SectorLocationDialog";
 import { useWorldPermissions } from "../useWorldPermissions";
 import { RtcRichTextEditor } from "components/shared/RichTextEditor";
 import { NotesSectionHeader } from "../NotesSectionHeader";
+import { NPCItem } from "../NPCSection/NPCItem";
+import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 
 interface OpenSectorProps {
   sectorId: string;
+  openNPCTab: () => void;
 }
 
 export function OpenSector(props: OpenSectorProps) {
-  const { sectorId } = props;
+  const { sectorId, openNPCTab } = props;
 
   const { rollOracleTable } = useRoller();
 
@@ -42,6 +41,7 @@ export function OpenSector(props: OpenSectorProps) {
   const sectorLocations = useStore(
     (store) => store.worlds.currentWorld.currentWorldSectors.locations.locations
   );
+
   const setOpenSectorId = useStore(
     (store) => store.worlds.currentWorld.currentWorldSectors.setOpenSectorId
   );
@@ -162,6 +162,22 @@ export function OpenSector(props: OpenSectorProps) {
     (store) => store.worlds.currentWorld.currentWorldSectors.updateSectorNotes
   );
 
+  const npcs = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.npcMap
+  );
+  const filteredNPCIds = useStore((store) =>
+    Object.keys(store.worlds.currentWorld.currentWorldNPCs.npcMap).filter(
+      (npcId) =>
+        store.worlds.currentWorld.currentWorldNPCs.npcMap[npcId]
+          .lastSectorId === sectorId
+    )
+  );
+  const setOpenNPC = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.setOpenNPCId
+  );
+
+  const canUseImages = useCanUploadWorldImages();
+
   return (
     <Box>
       <SectorLocationDialog />
@@ -222,6 +238,7 @@ export function OpenSector(props: OpenSectorProps) {
           })}
         >
           <Tab label={"Locations"} value={SECTOR_TABS.LOCATIONS} />
+          <Tab label={"NPCs"} value={SECTOR_TABS.NPCS} />
           <Tab label={"Notes"} value={SECTOR_TABS.NOTES} />
         </Tabs>
         {openTab === SECTOR_TABS.LOCATIONS && (
@@ -238,6 +255,24 @@ export function OpenSector(props: OpenSectorProps) {
                   />
                 </Grid>
               ))}
+          </Grid>
+        )}
+        {openTab === SECTOR_TABS.NPCS && (
+          <Grid container spacing={2} sx={{ mt: 0, px: 2, pb: 2 }}>
+            {filteredNPCIds.map((npcId) => (
+              <Grid item xs={12} md={6} key={npcId}>
+                <NPCItem
+                  npc={npcs[npcId]}
+                  locations={{}}
+                  sectors={{}}
+                  openNPC={() => {
+                    setOpenNPC(npcId);
+                    openNPCTab();
+                  }}
+                  canUseImages={canUseImages}
+                />
+              </Grid>
+            ))}
           </Grid>
         )}
         {openTab === SECTOR_TABS.NOTES && (

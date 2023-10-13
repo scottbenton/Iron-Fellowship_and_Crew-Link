@@ -6,6 +6,7 @@ import { SectorLocationsSlice } from "./sectorLocations/sectorLocations.slice.ty
 export enum SECTOR_TABS {
   NOTES = "notes",
   LOCATIONS = "locations",
+  NPCS = "npcs",
 }
 
 export interface SectorSliceData {

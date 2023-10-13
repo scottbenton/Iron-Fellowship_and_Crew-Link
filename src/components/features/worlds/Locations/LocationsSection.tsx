@@ -38,9 +38,6 @@ export function LocationsSection(props: LocationsSectionProps) {
       ) ?? false
   );
   const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
-  const doAnyDocsHaveImages = useStore(
-    (store) => store.worlds.currentWorld.doAnyDocsHaveImages
-  );
   const locations = useStore(
     (store) => store.worlds.currentWorld.currentWorldLocations.locationMap
   );
@@ -57,8 +54,7 @@ export function LocationsSection(props: LocationsSectionProps) {
     (store) => store.worlds.currentWorld.currentWorldLocations.setLocationSearch
   );
 
-  const userCanUploadImages = useCanUploadWorldImages();
-  const canShowImages = doAnyDocsHaveImages || userCanUploadImages;
+  const canShowImages = useCanUploadWorldImages();
 
   const [createLocationLoading, setCreateLocationLoading] = useState(false);
   const createLocation = useStore(

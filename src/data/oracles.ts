@@ -186,5 +186,3 @@ export const hiddenOracleIds: { [oracleId: string]: boolean } = {
   "ironsworn/oracles/moves/ask_the_oracle/unlikely": true,
   "ironsworn/oracles/moves/ask_the_oracle/small_chance": true,
 };
-
-console.debug(category);

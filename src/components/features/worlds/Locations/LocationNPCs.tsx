@@ -42,6 +42,7 @@ export function LocationNPCs(props: LocationNPCProps) {
           <NPCItem
             npc={npcs[npcId]}
             locations={locations}
+            sectors={{}}
             openNPC={() => {
               openNPC(npcId);
               openNPCTab();

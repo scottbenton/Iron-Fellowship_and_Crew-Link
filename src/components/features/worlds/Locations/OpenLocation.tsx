@@ -251,6 +251,8 @@ export function OpenLocation(props: OpenLocationProps) {
               )}
               {isSinglePlayer && (
                 <BondsSection
+                  isStarforged={false}
+                  hasConnection={false}
                   onBondToggle={
                     currentCharacterId
                       ? (bonded) =>
@@ -297,6 +299,8 @@ export function OpenLocation(props: OpenLocationProps) {
               )}
               {!isSinglePlayer && (
                 <BondsSection
+                  isStarforged={false}
+                  hasConnection={false}
                   onBondToggle={
                     currentCharacterId
                       ? (bonded) =>

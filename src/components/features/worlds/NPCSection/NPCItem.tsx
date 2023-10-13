@@ -3,19 +3,30 @@ import PhotoIcon from "@mui/icons-material/Photo";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
 import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
+import { Sector } from "types/Sector.type";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export interface NPCItemProps {
   npc: NPCDocumentWithGMProperties;
   locations: { [key: string]: LocationDocumentWithGMProperties };
+  sectors: { [key: string]: Sector };
   openNPC: () => void;
   canUseImages: boolean;
   showHiddenTag?: boolean;
 }
 
 export function NPCItem(props: NPCItemProps) {
-  const { npc, locations, openNPC, canUseImages, showHiddenTag } = props;
+  const { npc, locations, sectors, openNPC, canUseImages, showHiddenTag } =
+    props;
 
-  const npcLocation = npc.lastLocationId
+  const showSectors = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
+
+  const npcLocation = showSectors
+    ? npc.lastSectorId
+      ? sectors[npc.lastSectorId]
+      : undefined
+    : npc.lastLocationId
     ? locations[npc.lastLocationId]
     : undefined;
 
@@ -32,7 +43,7 @@ export function NPCItem(props: NPCItemProps) {
             transitionDuration: `${theme.transitions.duration.shorter}ms`,
             transitionTimingFunction: theme.transitions.easing.easeInOut,
           },
-          "&:hover": {
+          "&:hover, &:focus-visible": {
             "& #portrait": {
               marginTop: -1.5,
               marginBottom: -1.5,
@@ -46,9 +57,6 @@ export function NPCItem(props: NPCItemProps) {
               id={"portrait"}
               sx={(theme) => ({
                 marginRight: 1,
-                borderWidth: 2,
-                borderColor: theme.palette.divider,
-                borderStyle: "solid",
                 width: 80,
                 height: 80,
                 flexShrink: 0,
@@ -63,6 +71,7 @@ export function NPCItem(props: NPCItemProps) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                boxShadow: theme.shadows[3],
               })}
             >
               {!npc.imageUrl && (
@@ -85,6 +94,7 @@ export function NPCItem(props: NPCItemProps) {
           >
             <Box>
               <Typography>{npc.name}</Typography>
+
               {npcLocation && (
                 <Typography variant={"caption"} color={"textSecondary"}>
                   {npcLocation.name}
