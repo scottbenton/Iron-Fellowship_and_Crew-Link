@@ -43,7 +43,7 @@ export function NPCItem(props: NPCItemProps) {
             transitionDuration: `${theme.transitions.duration.shorter}ms`,
             transitionTimingFunction: theme.transitions.easing.easeInOut,
           },
-          "&:hover, &:focus": {
+          "&:hover, &:focus-visible": {
             "& #portrait": {
               marginTop: -1.5,
               marginBottom: -1.5,

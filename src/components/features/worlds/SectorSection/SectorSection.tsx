@@ -18,10 +18,11 @@ import HiddenIcon from "@mui/icons-material/VisibilityOff";
 export interface SectorSectionProps {
   isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
+  openNPCTab: () => void;
 }
 
 export function SectorSection(props: SectorSectionProps) {
-  const { isSinglePlayer, showHiddenTag } = props;
+  const { isSinglePlayer, showHiddenTag, openNPCTab } = props;
 
   const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
   const isWorldOwner = useStore(
@@ -70,7 +71,7 @@ export function SectorSection(props: SectorSectionProps) {
   }
 
   if (openSectorId) {
-    return <OpenSector sectorId={openSectorId} />;
+    return <OpenSector sectorId={openSectorId} openNPCTab={openNPCTab} />;
   }
 
   return (

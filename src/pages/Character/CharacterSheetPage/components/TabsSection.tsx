@@ -133,7 +133,10 @@ export function TabsSection() {
           greyBackground={worldExists}
           isVisible={selectedTab === TABS.SECTORS}
         >
-          <SectorSection showHiddenTag={isWorldOwner && isInCampaign} />
+          <SectorSection
+            showHiddenTag={isWorldOwner && isInCampaign}
+            openNPCTab={() => setSelectedTab(TABS.NPCS)}
+          />
         </ContainedTabPanel>
       ) : (
         <ContainedTabPanel
