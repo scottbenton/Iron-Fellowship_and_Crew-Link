@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack } from "@mui/material";
+import { Box, IconButton, Stack, SxProps } from "@mui/material";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
@@ -10,6 +10,7 @@ export interface ItemHeaderProps {
   joinOracles?: boolean;
   actions?: React.ReactNode;
   closeItem: () => void;
+  sx?: SxProps;
 }
 
 export function ItemHeader(props: ItemHeaderProps) {
@@ -20,11 +21,15 @@ export function ItemHeader(props: ItemHeaderProps) {
     joinOracles,
     closeItem,
     actions,
+    sx,
   } = props;
 
   return (
     <Box
-      sx={(theme) => ({ bgcolor: theme.palette.background.paper, py: 1 })}
+      sx={[
+        (theme) => ({ bgcolor: theme.palette.background.paper, py: 1 }),
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       display={"flex"}
       alignItems={"center"}
       justifyContent={"space-between"}

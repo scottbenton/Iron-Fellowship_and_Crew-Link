@@ -3,19 +3,30 @@ import PhotoIcon from "@mui/icons-material/Photo";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
 import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
+import { Sector } from "types/Sector.type";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export interface NPCItemProps {
   npc: NPCDocumentWithGMProperties;
   locations: { [key: string]: LocationDocumentWithGMProperties };
+  sectors: { [key: string]: Sector };
   openNPC: () => void;
   canUseImages: boolean;
   showHiddenTag?: boolean;
 }
 
 export function NPCItem(props: NPCItemProps) {
-  const { npc, locations, openNPC, canUseImages, showHiddenTag } = props;
+  const { npc, locations, sectors, openNPC, canUseImages, showHiddenTag } =
+    props;
 
-  const npcLocation = npc.lastLocationId
+  const showSectors = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
+
+  const npcLocation = showSectors
+    ? npc.lastSectorId
+      ? sectors[npc.lastSectorId]
+      : undefined
+    : npc.lastLocationId
     ? locations[npc.lastLocationId]
     : undefined;
 
@@ -85,6 +96,7 @@ export function NPCItem(props: NPCItemProps) {
           >
             <Box>
               <Typography>{npc.name}</Typography>
+
               {npcLocation && (
                 <Typography variant={"caption"} color={"textSecondary"}>
                   {npcLocation.name}

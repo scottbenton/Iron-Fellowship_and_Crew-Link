@@ -1,4 +1,4 @@
-import { Button, DialogContent } from "@mui/material";
+import { Button, DialogContent, Typography } from "@mui/material";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { MoveStatRollers } from "./MoveStatRollers";
 import { moveMap } from "data/moves";
@@ -11,6 +11,7 @@ import { useCustomOracles } from "components/features/charactersAndCampaigns/Ora
 import { useStore } from "stores/store";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { getIsLocalEnvironment } from "functions/getGameSystem";
 
 export interface MoveDialogContentProps {
   id: string;
@@ -78,6 +79,7 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
         {move.Title.Standard}
       </LinkedDialogContentTitle>
       <DialogContent>
+        {getIsLocalEnvironment() && <Typography>{id}</Typography>}
         <MoveStatRollers visibleStats={visibleStats} />
         <MarkdownRenderer markdown={move.Text} />
         {moveOracles.map(

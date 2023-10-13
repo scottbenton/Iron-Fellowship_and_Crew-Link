@@ -16,6 +16,9 @@ import AddNPCIcon from "@mui/icons-material/PersonAdd";
 import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 import { useStore } from "stores/store";
 import { useState } from "react";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { NPCDocument, NPC_SPECIES } from "types/NPCs.type";
 
 export interface NPCSectionProps {
   isSinglePlayer?: boolean;
@@ -24,6 +27,11 @@ export interface NPCSectionProps {
 
 export function NPCSection(props: NPCSectionProps) {
   const { isSinglePlayer, showHiddenTag } = props;
+
+  const defaultNPC = useGameSystemValue<Partial<NPCDocument>>({
+    [GAME_SYSTEMS.IRONSWORN]: { species: NPC_SPECIES.IRONLANDER },
+    [GAME_SYSTEMS.STARFORGED]: {},
+  });
 
   const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
   const isWorldOwner = useStore(
@@ -38,6 +46,9 @@ export function NPCSection(props: NPCSectionProps) {
 
   const locations = useStore(
     (store) => store.worlds.currentWorld.currentWorldLocations.locationMap
+  );
+  const sectors = useStore(
+    (store) => store.worlds.currentWorld.currentWorldSectors.sectors
   );
   const npcs = useStore(
     (store) => store.worlds.currentWorld.currentWorldNPCs.npcMap
@@ -70,7 +81,7 @@ export function NPCSection(props: NPCSectionProps) {
   );
   const handleCreateNPC = () => {
     setCreateNPCLoading(true);
-    createNPC()
+    createNPC(defaultNPC)
       .then((npcId) => setOpenNPCId(npcId))
       .catch(() => {})
       .finally(() => setCreateNPCLoading(false));
@@ -153,6 +164,7 @@ export function NPCSection(props: NPCSectionProps) {
         filteredNPCIds={filteredNPCIds}
         npcs={npcs}
         locations={locations}
+        sectors={sectors}
         openNPC={setOpenNPCId}
         canUseImages={canShowImages}
         showHiddenTag={showHiddenTag}

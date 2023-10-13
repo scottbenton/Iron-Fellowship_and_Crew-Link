@@ -66,6 +66,10 @@ export function AssetCard(props: AssetCardProps) {
   const asset = storedAsset?.customAsset ?? assetMap[assetId];
   const isCustom = !!storedAsset?.customAsset;
 
+  if (asset.$id.includes("loyalist")) {
+    console.debug(asset.Abilities);
+  }
+
   if (!asset) return null;
 
   let alternateConditionMeterProperties:

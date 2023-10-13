@@ -24,7 +24,7 @@ export interface NPCsSliceActions {
   setOpenNPCId: (npcId?: string) => void;
   setNPCSearch: (search: string) => void;
 
-  createNPC: () => Promise<string>;
+  createNPC: (npc?: Partial<NPCDocument>) => Promise<string>;
   deleteNPC: (npcId: string) => Promise<void>;
   updateNPC: (
     npcId: string,

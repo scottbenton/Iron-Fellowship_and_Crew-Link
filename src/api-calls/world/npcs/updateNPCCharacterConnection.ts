@@ -2,22 +2,22 @@ import { createApiFunction } from "api-calls/createApiFunction";
 import { updateDoc } from "firebase/firestore";
 import { getNPCDoc } from "./_getRef";
 
-export const updateNPCCharacterBond = createApiFunction<
+export const updateNPCCharacterConnection = createApiFunction<
   {
     worldId: string;
     npcId: string;
     characterId: string;
-    bonded: boolean;
+    isConnection: boolean;
   },
   void
 >((params) => {
-  const { worldId, npcId, characterId, bonded } = params;
+  const { worldId, npcId, characterId, isConnection } = params;
 
   return new Promise((resolve, reject) => {
     updateDoc(getNPCDoc(worldId, npcId), {
-      [`characterBonds.${characterId}`]: bonded,
+      [`characterConnection.${characterId}`]: isConnection,
     } as any)
       .then(() => resolve())
       .catch(reject);
   });
-}, "Error updating npc bonds.");
+}, "Error updating npc connection.");

@@ -76,12 +76,12 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
     });
   },
 
-  createNPC: () => {
+  createNPC: (npc) => {
     const worldId = getState().worlds.currentWorld.currentWorldId;
     if (!worldId) {
       return new Promise((res, reject) => reject("No world found"));
     }
-    return createNPC({ worldId });
+    return createNPC({ worldId, npc });
   },
   deleteNPC: (npcId) => {
     const worldId = getState().worlds.currentWorld.currentWorldId;
