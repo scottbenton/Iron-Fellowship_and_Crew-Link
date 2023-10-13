@@ -43,14 +43,22 @@ const nameOraclesIronsworn = [
   "ironsworn/oracles/name/ironlander/b",
 ];
 
-const nameOracleStarforged = ["starforged/oracles/characters/names/given"];
+const nameOracleStarforged = [
+  "starforged/oracles/characters/names/given",
+  "starforged/oracles/characters/names/family_name",
+];
 
 export function CharacterCreatePage() {
   const campaignId = useSearchParams()[0].get("campaignId");
   const uid = useStore((store) => store.auth.uid);
+
   const nameOracles = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]: nameOraclesIronsworn,
     [GAME_SYSTEMS.STARFORGED]: nameOracleStarforged,
+  });
+  const joinOracles = useGameSystemValue({
+    [GAME_SYSTEMS.IRONSWORN]: false,
+    [GAME_SYSTEMS.STARFORGED]: true,
   });
 
   const navigate = useNavigate();
@@ -61,10 +69,16 @@ export function CharacterCreatePage() {
   const createCharacter = useStore((store) => store.characters.createCharacter);
 
   const handleOracleRoll = useCallback(() => {
-    const oracleIndex = Math.floor(Math.random() * nameOracles.length);
+    if (joinOracles) {
+      return nameOracles
+        .map((id) => rollOracleTable(id, false) ?? "")
+        .join(" ");
+    } else {
+      const oracleIndex = Math.floor(Math.random() * nameOracles.length);
 
-    return rollOracleTable(nameOracles[oracleIndex], false);
-  }, [rollOracleTable, nameOracles]);
+      return rollOracleTable(nameOracles[oracleIndex], false);
+    }
+  }, [rollOracleTable, nameOracles, joinOracles]);
 
   const validate = (values: CharacterCreateFormValues) => {
     const errors: { [key in keyof CharacterCreateFormValues]?: string } = {};

@@ -7,16 +7,17 @@ import { assetMap } from "data/assets";
 
 export interface MoveStatsProps {
   visibleStats: { [key: string]: boolean };
+  customMoveStats?: { [label: string]: number };
 }
 
 export function MoveStatRollers(props: MoveStatsProps) {
-  const { visibleStats } = props;
+  const { visibleStats, customMoveStats } = props;
 
   const stats = useStore((store) => {
     const currentCharacter = store.characters.currentCharacter.currentCharacter;
 
     if (currentCharacter) {
-      const statMap = { ...currentCharacter.stats };
+      const statMap = { ...currentCharacter.stats, ...customMoveStats };
       store.settings.customStats.forEach((customStat) => {
         if (!statMap[customStat]) {
           statMap[customStat] = 0;

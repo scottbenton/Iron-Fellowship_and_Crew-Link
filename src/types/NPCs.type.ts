@@ -12,12 +12,13 @@ export enum NPC_SPECIES {
 
 export interface NPCDocument {
   name: string;
+  pronouns?: string;
   species?: NPC_SPECIES; // Ironsworn only
   lastLocationId?: string; // Ironsworn only
   lastSectorId?: string; // Starforged only
   imageFilenames?: string[];
   sharedWithPlayers?: boolean;
-  characterConnection?: { [characterId: string]: boolean }; // Starforged only
+  characterConnections?: { [characterId: string]: boolean }; // Starforged only
   characterBonds?: { [characterId: string]: boolean };
   characterBondProgress?: { [characterId: string]: number }; // Starforged only
 
@@ -42,7 +43,6 @@ export interface StoredGMNPCDocument {
   activity?: string; // Ironsworn only
   gmNotes?: Bytes;
 
-  pronouns?: string;
   firstLook?: string; // Starforged only
   revealedAspect?: string; // Starforged only
 }

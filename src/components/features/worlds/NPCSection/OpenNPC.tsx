@@ -32,12 +32,17 @@ import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
 import { RoundedImageUploader } from "./RoundedImageUploader";
 import { useWorldPermissions } from "../useWorldPermissions";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { Sector } from "types/Sector.type";
+import { DIFFICULTY } from "types/Track.type";
 
 export interface OpenNPCProps {
   isWorldOwner: boolean;
   worldId: string;
   npcId: string;
   locations: { [key: string]: LocationDocumentWithGMProperties };
+  sectors: Record<string, Sector>;
   npc: NPCDocumentWithGMProperties;
   closeNPC: () => void;
   isWorldOwnerPremium?: boolean;
@@ -69,6 +74,7 @@ export function OpenNPC(props: OpenNPCProps) {
     npc,
     closeNPC,
     isSinglePlayer,
+    sectors,
     canUseImages,
   } = props;
   const confirm = useConfirm();
@@ -143,6 +149,7 @@ export function OpenNPC(props: OpenNPCProps) {
     : undefined;
   const npcLocationBonds = npcLocation?.characterBonds ?? {};
   const npcBonds = npc.characterBonds ?? {};
+  const npcConnections = npc.characterConnections ?? {};
   const isCharacterBondedToLocation =
     npcLocationBonds[currentCharacterId ?? ""] ?? false;
   const isCharacterBondedToNPC = npcBonds[currentCharacterId ?? ""] ?? false;
@@ -152,6 +159,14 @@ export function OpenNPC(props: OpenNPCProps) {
 
   const updateNPCCharacterBond = useStore(
     (store) => store.worlds.currentWorld.currentWorldNPCs.updateNPCCharacterBond
+  );
+  const updateNPCCharacterBondValue = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorldNPCs.updateNPCCharacterBondValue
+  );
+  const updateNPCCharacterConnection = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorldNPCs.updateNPCCharacterConnection
   );
 
   const currentCampaignCharacters = useStore(
@@ -163,8 +178,39 @@ export function OpenNPC(props: OpenNPCProps) {
     )
     .map((characterId) => currentCampaignCharacters[characterId]?.name ?? "");
 
+  const connectedCharacterNames = Object.keys(currentCampaignCharacters)
+    .filter((characterId) => npcConnections[characterId])
+    .map((characterId) => currentCampaignCharacters[characterId]?.name ?? "");
+
   const theme = useTheme();
   const isLg = useMediaQuery(theme.breakpoints.up("lg"));
+
+  const isStarforged = useGameSystemValue({
+    [GAME_SYSTEMS.IRONSWORN]: false,
+    [GAME_SYSTEMS.STARFORGED]: true,
+  });
+
+  const npcNameOracles = useGameSystemValue<string | string[]>({
+    [GAME_SYSTEMS.IRONSWORN]:
+      nameOracles[npc.species ?? NPC_SPECIES.IRONLANDER],
+    [GAME_SYSTEMS.STARFORGED]: [
+      "starforged/oracles/characters/names/given",
+      "starforged/oracles/characters/names/family_name",
+    ],
+  });
+  const npcRoleOracle = useGameSystemValue<string>({
+    [GAME_SYSTEMS.IRONSWORN]: "ironsworn/oracles/character/role",
+    [GAME_SYSTEMS.STARFORGED]: "starforged/oracles/characters/role",
+  });
+  const npcDispositionOracle = useGameSystemValue<string>({
+    [GAME_SYSTEMS.IRONSWORN]: "ironsworn/oracles/character/disposition",
+    [GAME_SYSTEMS.STARFORGED]:
+      "starforged/oracles/characters/initial_disposition",
+  });
+  const npcGoalOracle = useGameSystemValue<string>({
+    [GAME_SYSTEMS.IRONSWORN]: "ironsworn/oracles/character/goal",
+    [GAME_SYSTEMS.STARFORGED]: "starforged/oracles/characters/goal",
+  });
 
   return (
     <Box overflow={"auto"}>
@@ -180,6 +226,8 @@ export function OpenNPC(props: OpenNPCProps) {
             border: `1px solid ${theme.palette.divider}`,
             top: theme.spacing(2),
             left: theme.spacing(2),
+
+            [theme.breakpoints.up("md")]: { left: theme.spacing(3) },
 
             width: isLg ? 152 : 102,
             height: isLg ? 152 : 102,
@@ -201,6 +249,9 @@ export function OpenNPC(props: OpenNPCProps) {
           display={"flex"}
           alignItems={"flex-start"}
           px={2}
+          sx={{
+            [theme.breakpoints.up("md")]: { px: 3 },
+          }}
           mb={isLg ? -8 : -4}
         >
           <RoundedImageUploader
@@ -225,9 +276,8 @@ export function OpenNPC(props: OpenNPCProps) {
                 label={"Name"}
                 variant={"outlined"}
                 color={"primary"}
-                oracleTableId={
-                  nameOracles[npc.species ?? NPC_SPECIES.IRONLANDER]
-                }
+                oracleTableId={npcNameOracles}
+                joinOracleTables={isStarforged}
                 inputRef={nameInputRef}
                 initialValue={npc.name}
                 updateValue={(newName) => handleUpdateNPC({ name: newName })}
@@ -253,18 +303,19 @@ export function OpenNPC(props: OpenNPCProps) {
           sx={(theme) => ({
             mt: 1,
             px: 2,
+            [theme.breakpoints.up("md")]: { px: 3 },
+            pb: 1,
           })}
         >
           <Grid container spacing={2} sx={{ mb: 2 }}>
             <Hidden lgUp>
               <Grid item xs={12}>
                 <DebouncedOracleInput
-                  placeholder={"NPC Name"}
+                  label={"Name"}
                   variant={"outlined"}
                   color={"primary"}
-                  oracleTableId={
-                    nameOracles[npc.species ?? NPC_SPECIES.IRONLANDER]
-                  }
+                  oracleTableId={npcNameOracles}
+                  joinOracleTables={isStarforged}
                   inputRef={nameInputRef}
                   initialValue={npc.name}
                   updateValue={(newName) => handleUpdateNPC({ name: newName })}
@@ -272,42 +323,105 @@ export function OpenNPC(props: OpenNPCProps) {
               </Grid>
             </Hidden>
             <Grid item xs={12} sm={6}>
-              <TextField
-                select
-                label={"Species"}
-                value={npc.species}
-                onChange={(evt) =>
-                  handleUpdateNPC({
-                    species: (evt.target.value ??
-                      NPC_SPECIES.IRONLANDER) as NPC_SPECIES,
-                  })
-                }
-                fullWidth
-              >
-                <MenuItem value={NPC_SPECIES.IRONLANDER}>Ironlander</MenuItem>
-                <MenuItem value={NPC_SPECIES.ELF}>Elf</MenuItem>
-                <MenuItem value={NPC_SPECIES.GIANT}>Giant</MenuItem>
-                <MenuItem value={NPC_SPECIES.VAROU}>Varou</MenuItem>
-                <MenuItem value={NPC_SPECIES.TROLL}>Troll</MenuItem>
-                <MenuItem value={NPC_SPECIES.OTHER}>Other</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Autocomplete
-                options={Object.keys(locations)}
-                getOptionLabel={(locationId) =>
-                  locations[locationId]?.name ?? ""
-                }
-                autoHighlight
-                value={npc.lastLocationId ?? null}
-                onChange={(evt, value) =>
-                  handleUpdateNPC({ lastLocationId: value ?? "" })
-                }
-                renderInput={(props) => (
-                  <TextField {...props} label={"Location"} fullWidth />
-                )}
+              <DebouncedOracleInput
+                oracleTableId={undefined}
+                label={"Pronouns"}
+                initialValue={npc.pronouns ?? ""}
+                updateValue={(value) => handleUpdateNPC({ pronouns: value })}
               />
             </Grid>
+            {isStarforged && (
+              <Grid item xs={12} sm={6}>
+                <DebouncedOracleInput
+                  oracleTableId={"starforged/oracles/characters/names/callsign"}
+                  label={"Callsign"}
+                  initialValue={npc.callsign ?? ""}
+                  updateValue={(value) => handleUpdateNPC({ callsign: value })}
+                />
+              </Grid>
+            )}
+            {isStarforged && (
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label={"Difficulty"}
+                  value={npc.rank ?? "-1"}
+                  onChange={(evt) =>
+                    handleUpdateNPC({ rank: evt.target.value as DIFFICULTY })
+                  }
+                  multiline
+                  required
+                  select
+                  fullWidth
+                >
+                  <MenuItem value={"-1"} disabled></MenuItem>
+
+                  <MenuItem value={DIFFICULTY.TROUBLESOME}>
+                    Troublesome
+                  </MenuItem>
+                  <MenuItem value={DIFFICULTY.DANGEROUS}>Dangerous</MenuItem>
+                  <MenuItem value={DIFFICULTY.FORMIDABLE}>Formidable</MenuItem>
+                  <MenuItem value={DIFFICULTY.EXTREME}>Extreme</MenuItem>
+                  <MenuItem value={DIFFICULTY.EPIC}>Epic</MenuItem>
+                </TextField>
+              </Grid>
+            )}
+            {!isStarforged && (
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  select
+                  label={"Species"}
+                  value={npc.species}
+                  onChange={(evt) =>
+                    handleUpdateNPC({
+                      species: (evt.target.value ??
+                        NPC_SPECIES.IRONLANDER) as NPC_SPECIES,
+                    })
+                  }
+                  fullWidth
+                >
+                  <MenuItem value={NPC_SPECIES.IRONLANDER}>Ironlander</MenuItem>
+                  <MenuItem value={NPC_SPECIES.ELF}>Elf</MenuItem>
+                  <MenuItem value={NPC_SPECIES.GIANT}>Giant</MenuItem>
+                  <MenuItem value={NPC_SPECIES.VAROU}>Varou</MenuItem>
+                  <MenuItem value={NPC_SPECIES.TROLL}>Troll</MenuItem>
+                  <MenuItem value={NPC_SPECIES.OTHER}>Other</MenuItem>
+                </TextField>
+              </Grid>
+            )}
+            {!isStarforged && (
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  options={Object.keys(locations)}
+                  getOptionLabel={(locationId) =>
+                    locations[locationId]?.name ?? ""
+                  }
+                  autoHighlight
+                  value={npc.lastLocationId ?? null}
+                  onChange={(evt, value) =>
+                    handleUpdateNPC({ lastLocationId: value ?? "" })
+                  }
+                  renderInput={(props) => (
+                    <TextField {...props} label={"Location"} fullWidth />
+                  )}
+                />
+              </Grid>
+            )}
+            {isStarforged && (
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  options={Object.keys(sectors)}
+                  getOptionLabel={(sectorId) => sectors[sectorId]?.name ?? ""}
+                  autoHighlight
+                  value={npc.lastSectorId ?? null}
+                  onChange={(evt, value) =>
+                    handleUpdateNPC({ lastSectorId: value ?? "" })
+                  }
+                  renderInput={(props) => (
+                    <TextField {...props} label={"Sector"} fullWidth />
+                  )}
+                />
+              </Grid>
+            )}
             {isWorldOwner && (
               <>
                 {!isSinglePlayer && (
@@ -323,18 +437,20 @@ export function OpenNPC(props: OpenNPCProps) {
                     </Grid>
                   </>
                 )}
-                <Grid item xs={12} sm={6}>
-                  <DebouncedOracleInput
-                    label={"Descriptor"}
-                    initialValue={npc?.gmProperties?.descriptor ?? ""}
-                    updateValue={(descriptor) =>
-                      updateNPCGMProperties(npcId, { descriptor }).catch(
-                        () => {}
-                      )
-                    }
-                    oracleTableId="ironsworn/oracles/character/descriptor"
-                  />
-                </Grid>
+                {!isStarforged && (
+                  <Grid item xs={12} sm={6}>
+                    <DebouncedOracleInput
+                      label={"Descriptor"}
+                      initialValue={npc?.gmProperties?.descriptor ?? ""}
+                      updateValue={(descriptor) =>
+                        updateNPCGMProperties(npcId, { descriptor }).catch(
+                          () => {}
+                        )
+                      }
+                      oracleTableId="ironsworn/oracles/character/descriptor"
+                    />
+                  </Grid>
+                )}
                 <Grid item xs={12} sm={6}>
                   <DebouncedOracleInput
                     label={"Role"}
@@ -342,7 +458,7 @@ export function OpenNPC(props: OpenNPCProps) {
                     updateValue={(role) =>
                       updateNPCGMProperties(npcId, { role }).catch(() => {})
                     }
-                    oracleTableId="ironsworn/oracles/character/role"
+                    oracleTableId={npcRoleOracle}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -354,19 +470,23 @@ export function OpenNPC(props: OpenNPCProps) {
                         () => {}
                       )
                     }
-                    oracleTableId="ironsworn/oracles/character/disposition"
+                    oracleTableId={npcDispositionOracle}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <DebouncedOracleInput
-                    label={"Activity"}
-                    initialValue={npc?.gmProperties?.activity ?? ""}
-                    updateValue={(activity) =>
-                      updateNPCGMProperties(npcId, { activity }).catch(() => {})
-                    }
-                    oracleTableId="ironsworn/oracles/character/activity"
-                  />
-                </Grid>
+                {!isStarforged && (
+                  <Grid item xs={12} sm={6}>
+                    <DebouncedOracleInput
+                      label={"Activity"}
+                      initialValue={npc?.gmProperties?.activity ?? ""}
+                      updateValue={(activity) =>
+                        updateNPCGMProperties(npcId, { activity }).catch(
+                          () => {}
+                        )
+                      }
+                      oracleTableId="ironsworn/oracles/character/activity"
+                    />
+                  </Grid>
+                )}
                 <Grid item xs={12} sm={6}>
                   <DebouncedOracleInput
                     label={"Goal"}
@@ -374,7 +494,7 @@ export function OpenNPC(props: OpenNPCProps) {
                     updateValue={(goal) =>
                       updateNPCGMProperties(npcId, { goal }).catch(() => {})
                     }
-                    oracleTableId="ironsworn/oracles/character/goal"
+                    oracleTableId={npcGoalOracle}
                   />
                 </Grid>
                 {!isSinglePlayer && (
@@ -401,6 +521,7 @@ export function OpenNPC(props: OpenNPCProps) {
                 )}
                 {isSinglePlayer && (
                   <BondsSection
+                    isStarforged={isStarforged}
                     onBondToggle={
                       currentCharacterId
                         ? (bonded) =>
@@ -412,6 +533,34 @@ export function OpenNPC(props: OpenNPCProps) {
                         : undefined
                     }
                     isBonded={singleplayerBond}
+                    bondProgress={
+                      npc.characterBondProgress?.[currentCharacterId ?? ""] ?? 0
+                    }
+                    difficulty={npc.rank}
+                    updateBondProgressValue={
+                      currentCharacterId
+                        ? (value) =>
+                            updateNPCCharacterBondValue(
+                              npcId,
+                              currentCharacterId,
+                              value
+                            )
+                        : undefined
+                    }
+                    hasConnection={
+                      npc.characterConnections?.[currentCharacterId ?? ""] ??
+                      false
+                    }
+                    onConnectionToggle={
+                      currentCharacterId
+                        ? (connected) =>
+                            updateNPCCharacterConnection(
+                              npcId,
+                              currentCharacterId,
+                              connected
+                            ).catch(() => {})
+                        : undefined
+                    }
                     bondedCharacters={bondedCharacterNames}
                     disableToggle={isCharacterBondedToLocation}
                     inheritedBondName={
@@ -454,6 +603,7 @@ export function OpenNPC(props: OpenNPCProps) {
                 )}
                 {!isSinglePlayer && (
                   <BondsSection
+                    isStarforged={isStarforged}
                     onBondToggle={
                       currentCharacterId
                         ? (bonded) =>
@@ -465,6 +615,34 @@ export function OpenNPC(props: OpenNPCProps) {
                         : undefined
                     }
                     isBonded={singleplayerBond}
+                    hasConnection={
+                      npc.characterConnections?.[currentCharacterId ?? ""] ??
+                      false
+                    }
+                    bondProgress={
+                      npc.characterBondProgress?.[currentCharacterId ?? ""] ?? 0
+                    }
+                    difficulty={npc.rank}
+                    updateBondProgressValue={
+                      currentCharacterId
+                        ? (value) =>
+                            updateNPCCharacterBondValue(
+                              npcId,
+                              currentCharacterId,
+                              value
+                            )
+                        : undefined
+                    }
+                    onConnectionToggle={
+                      currentCharacterId
+                        ? (connected) =>
+                            updateNPCCharacterConnection(
+                              npcId,
+                              currentCharacterId,
+                              connected
+                            ).catch(() => {})
+                        : undefined
+                    }
                     bondedCharacters={bondedCharacterNames}
                     disableToggle={isCharacterBondedToLocation}
                     inheritedBondName={
@@ -472,6 +650,7 @@ export function OpenNPC(props: OpenNPCProps) {
                         ? npcLocation?.name
                         : undefined
                     }
+                    connectedCharacters={connectedCharacterNames}
                   />
                 )}
                 {!npc.sharedWithPlayers && (

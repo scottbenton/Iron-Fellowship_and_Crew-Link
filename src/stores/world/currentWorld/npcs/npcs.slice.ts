@@ -14,6 +14,8 @@ import { reportApiError } from "lib/analytics.lib";
 import { Unsubscribe } from "firebase/firestore";
 import { listenToNPCGMProperties } from "api-calls/world/npcs/listenToNPCGMProperties";
 import { updateNPCCharacterBond } from "api-calls/world/npcs/updateNPCCharacterBond";
+import { updateNPCCharacterConnection } from "api-calls/world/npcs/updateNPCCharacterConnection";
+import { updateNPCCharacterBondProgress } from "api-calls/world/npcs/updateNPCCharacterBond copy";
 
 export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
   ...defaultNPCsSlice,
@@ -132,6 +134,31 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
       npcId,
       characterId,
       bonded,
+    });
+  },
+  updateNPCCharacterConnection: (npcId, characterId, isConnection) => {
+    const worldId = getState().worlds.currentWorld.currentWorldId;
+    if (!worldId) {
+      return new Promise((res, reject) => reject("No world found"));
+    }
+    return updateNPCCharacterConnection({
+      worldId,
+      npcId,
+      characterId,
+      isConnection,
+    });
+  },
+
+  updateNPCCharacterBondValue: (npcId, characterId, progress) => {
+    const worldId = getState().worlds.currentWorld.currentWorldId;
+    if (!worldId) {
+      return new Promise((res, reject) => reject("No world found"));
+    }
+    return updateNPCCharacterBondProgress({
+      worldId,
+      npcId,
+      characterId,
+      progress,
     });
   },
   uploadNPCImage: (npcId, image) => {

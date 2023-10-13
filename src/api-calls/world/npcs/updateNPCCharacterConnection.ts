@@ -15,7 +15,7 @@ export const updateNPCCharacterConnection = createApiFunction<
 
   return new Promise((resolve, reject) => {
     updateDoc(getNPCDoc(worldId, npcId), {
-      [`characterConnection.${characterId}`]: isConnection,
+      [`characterConnections.${characterId}`]: isConnection,
     } as any)
       .then(() => resolve())
       .catch(reject);

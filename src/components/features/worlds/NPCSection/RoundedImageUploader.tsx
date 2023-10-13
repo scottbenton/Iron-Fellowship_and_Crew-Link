@@ -42,17 +42,18 @@ export const RoundedImageUploader = forwardRef<
   return (
     <>
       <Box
-        component={src ? "div" : ButtonBase}
+        component={ButtonBase}
         sx={(theme) => ({
           backgroundImage: `url("${src}")`,
           backgroundColor:
             theme.palette.mode === "light"
               ? theme.palette.grey[300]
               : theme.palette.grey[700],
-          color:
-            theme.palette.mode === "light"
-              ? theme.palette.grey[500]
-              : theme.palette.grey[300],
+          color: src
+            ? theme.palette.common.white
+            : theme.palette.mode === "light"
+            ? theme.palette.grey[500]
+            : theme.palette.grey[300],
 
           borderRadius: "50%",
           backgroundSize: "cover",
@@ -79,7 +80,7 @@ export const RoundedImageUploader = forwardRef<
             borderRadius: "50%",
           },
         })}
-        onClick={() => !src && handleUploadClick()}
+        onClick={() => (!src ? handleUploadClick() : setIsFullScreen(true))}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >
@@ -91,14 +92,7 @@ export const RoundedImageUploader = forwardRef<
           onChange={onFileUpload}
         />
         {!src && <AddPhotoIcon />}
-        {src && isHovering && (
-          <IconButton
-            sx={{ color: "white", position: "relative", zIndex: 1 }}
-            onClick={() => setIsFullScreen(true)}
-          >
-            <FullscreenIcon />
-          </IconButton>
-        )}
+        {src && isHovering && <FullscreenIcon color={"inherit"} />}
       </Box>
       <Dialog open={isFullScreen} onClose={() => setIsFullScreen(false)}>
         <Box

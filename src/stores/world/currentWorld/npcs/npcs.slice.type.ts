@@ -49,6 +49,16 @@ export interface NPCsSliceActions {
     characterId: string,
     bonded: boolean
   ) => Promise<void>;
+  updateNPCCharacterConnection: (
+    npcId: string,
+    characterId: string,
+    connected: boolean
+  ) => Promise<void>;
+  updateNPCCharacterBondValue: (
+    npcId: string,
+    characterId: string,
+    value: number
+  ) => Promise<void>;
   uploadNPCImage: (npcId: string, image: File) => Promise<void>;
   subscribeToOpenNPC: (npcId: string) => Unsubscribe;
 

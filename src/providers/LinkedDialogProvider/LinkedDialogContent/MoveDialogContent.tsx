@@ -50,9 +50,17 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
   }
 
   const visibleStats: { [key: string]: boolean } = {};
+  const customMoveStats: { [key: string]: number } = {};
   move.Trigger?.Options?.forEach((option) => {
     option.Using.forEach((roller) => {
-      visibleStats[roller] = true;
+      if (roller.includes("/custom_stat")) {
+        option["Custom stat"]?.Options.forEach((customStatOption) => {
+          customMoveStats[customStatOption.Label] = customStatOption.Value;
+          visibleStats[customStatOption.Label] = true;
+        });
+      } else {
+        visibleStats[roller] = true;
+      }
     });
   });
 
@@ -80,7 +88,10 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
       </LinkedDialogContentTitle>
       <DialogContent>
         {getIsLocalEnvironment() && <Typography>{id}</Typography>}
-        <MoveStatRollers visibleStats={visibleStats} />
+        <MoveStatRollers
+          visibleStats={visibleStats}
+          customMoveStats={customMoveStats}
+        />
         <MarkdownRenderer markdown={move.Text} />
         {moveOracles.map(
           (oracle) =>

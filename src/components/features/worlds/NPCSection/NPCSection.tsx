@@ -134,6 +134,7 @@ export function NPCSection(props: NPCSectionProps) {
           npcId={openNPCId}
           npc={openNPC}
           locations={locations}
+          sectors={sectors}
           closeNPC={() => setOpenNPCId()}
           isSinglePlayer={isSinglePlayer}
           canUseImages={canShowImages}

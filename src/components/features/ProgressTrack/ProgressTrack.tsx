@@ -17,6 +17,25 @@ import { useConfirm } from "material-ui-confirm";
 import { useRoller } from "providers/DieRollProvider";
 import { useLinkedDialog } from "providers/LinkedDialogProvider";
 import { moveMap } from "data/moves";
+import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
+
+const trackMoveIdSystemValues: GameSystemChooser<{
+  [key in TRACK_TYPES]: string;
+}> = {
+  [GAME_SYSTEMS.IRONSWORN]: {
+    [TRACK_TYPES.VOW]: "ironsworn/moves/quest/fulfill_your_vow",
+    [TRACK_TYPES.JOURNEY]: "ironsworn/moves/adventure/reach_your_destination",
+    [TRACK_TYPES.FRAY]: "ironsworn/moves/combat/end_the_fight",
+    [TRACK_TYPES.BOND_PROGRESS]: "",
+  },
+  [GAME_SYSTEMS.STARFORGED]: {
+    [TRACK_TYPES.VOW]: "starforged/moves/quest/fulfill_your_vow",
+    [TRACK_TYPES.JOURNEY]: "starforged/moves/exploration/finish_an_expedition",
+    [TRACK_TYPES.FRAY]: "starforged/moves/combat/take_decisive_action",
+    [TRACK_TYPES.BOND_PROGRESS]: "starforged/moves/connection/forge_a_bond",
+  },
+};
 
 export interface ProgressTracksProps {
   trackType?: TRACK_TYPES;
@@ -28,13 +47,8 @@ export interface ProgressTracksProps {
   onValueChange?: (value: number) => void;
   onDelete?: () => void;
   onEdit?: () => void;
+  hideDifficultyLabel?: boolean;
 }
-
-const trackMoveIds: { [key in TRACK_TYPES]: string } = {
-  [TRACK_TYPES.VOW]: "ironsworn/moves/quest/fulfill_your_vow",
-  [TRACK_TYPES.JOURNEY]: "ironsworn/moves/adventure/reach_your_destination",
-  [TRACK_TYPES.FRAY]: "ironsworn/moves/combat/end_the_fight",
-};
 
 const getDifficultyLabel = (difficulty: DIFFICULTY): string => {
   switch (difficulty) {
@@ -79,7 +93,10 @@ export function ProgressTrack(props: ProgressTracksProps) {
     onValueChange,
     onDelete,
     onEdit,
+    hideDifficultyLabel,
   } = props;
+
+  const trackMoveIds = useGameSystemValue(trackMoveIdSystemValues);
 
   const { rollTrackProgress } = useRoller();
   const { openDialog } = useLinkedDialog();
@@ -151,7 +168,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         justifyContent={"space-between"}
       >
         <Box>
-          {difficulty && (
+          {difficulty && !hideDifficultyLabel && (
             <Typography
               variant={"subtitle1"}
               color={(theme) => theme.palette.text.secondary}

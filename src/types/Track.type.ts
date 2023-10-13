@@ -4,6 +4,7 @@ export enum TRACK_TYPES {
   VOW = "vow",
   JOURNEY = "journey",
   FRAY = "fray",
+  BOND_PROGRESS = "bondProgress",
 }
 
 export enum DIFFICULTY {
