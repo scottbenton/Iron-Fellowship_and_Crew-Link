@@ -192,7 +192,13 @@ export function AssetCard(props: AssetCardProps) {
                       <b>{ability.Label}: </b>
                     </Typography>
                   )}
-                  <MarkdownRenderer markdown={ability.Text} inlineParagraph />
+                  <MarkdownRenderer
+                    markdown={ability.Text.replaceAll(
+                      "ironsworn/moves/adventure/aid_your_ally",
+                      "ironsworn/moves/relationship/aid_your_ally"
+                    )}
+                    inlineParagraph
+                  />
                 </Box>
               </Box>
             ))}

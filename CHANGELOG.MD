@@ -9,10 +9,12 @@
 ### Changes
 
 - Simplified world creation so that you no longer need to go through all the world truths when creating a world.
+- Added sectors in Starforged worlds
 
 ### Bug Fixes
 
 - Fixed a bug on read only rich text editors that still allowed cursors to appear
+- Fixed an incorrect oracle link on the Loyalist asset
 
 ---
 
