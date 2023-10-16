@@ -1,18 +1,16 @@
-import { deleteField, updateDoc } from "firebase/firestore";
+import { deleteDoc } from "firebase/firestore";
 import { getCampaignTracksDoc, getCharacterTracksDoc } from "./_getRef";
-import { TRACK_TYPES } from "types/Track.type";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const removeProgressTrack = createApiFunction<
   {
     campaignId?: string;
     characterId?: string;
-    type: TRACK_TYPES;
     id: string;
   },
   void
 >((params) => {
-  const { campaignId, characterId, type, id } = params;
+  const { campaignId, characterId, id } = params;
 
   return new Promise((resolve, reject) => {
     if (!campaignId && !characterId) {
@@ -20,13 +18,10 @@ export const removeProgressTrack = createApiFunction<
       return;
     }
 
-    updateDoc(
+    deleteDoc(
       campaignId
-        ? getCampaignTracksDoc(campaignId)
-        : getCharacterTracksDoc(characterId as string),
-      {
-        [`${type}.${id}`]: deleteField(),
-      }
+        ? getCampaignTracksDoc(campaignId, id)
+        : getCharacterTracksDoc(characterId as string, id)
     )
       .then(() => {
         resolve();

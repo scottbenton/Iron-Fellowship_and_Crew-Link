@@ -7,6 +7,11 @@ export enum TRACK_TYPES {
   BOND_PROGRESS = "bondProgress",
 }
 
+export enum TRACK_STATUS {
+  ACTIVE = "active",
+  COMPLETED = "completed",
+}
+
 export enum DIFFICULTY {
   TROUBLESOME = "troublesome",
   DANGEROUS = "dangerous",
@@ -20,11 +25,11 @@ export interface StoredTrack {
   description?: string;
   difficulty: DIFFICULTY;
   value: number;
+  status: TRACK_STATUS;
   createdTimestamp: Timestamp;
+  type: TRACK_TYPES;
 }
 
-export type TrackWithId = StoredTrack & { id: string };
-
-export type TracksDocument = {
-  [key in TRACK_TYPES]?: { [id: string]: StoredTrack };
-};
+export interface Track extends Omit<StoredTrack, "createdTimestamp"> {
+  createdDate: Date;
+}

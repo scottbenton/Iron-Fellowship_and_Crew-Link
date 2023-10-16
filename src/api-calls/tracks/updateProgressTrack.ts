@@ -1,19 +1,18 @@
 import { updateDoc } from "firebase/firestore";
 import { getCampaignTracksDoc, getCharacterTracksDoc } from "./_getRef";
-import { StoredTrack, TRACK_TYPES } from "types/Track.type";
+import { Track } from "types/Track.type";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const updateProgressTrack = createApiFunction<
   {
     campaignId?: string;
     characterId?: string;
-    type: TRACK_TYPES;
     trackId: string;
-    track: StoredTrack;
+    track: Partial<Track>;
   },
   void
 >((params) => {
-  const { campaignId, characterId, type, trackId, track } = params;
+  const { campaignId, characterId, trackId, track } = params;
   return new Promise((resolve, reject) => {
     if (!campaignId && !characterId) {
       reject(new Error("Either campaign or character ID must be defined."));
@@ -22,12 +21,9 @@ export const updateProgressTrack = createApiFunction<
 
     updateDoc(
       campaignId
-        ? getCampaignTracksDoc(campaignId)
-        : getCharacterTracksDoc(characterId as string),
-      //@ts-ignore
-      {
-        [`${type}.${trackId}`]: track,
-      }
+        ? getCampaignTracksDoc(campaignId, trackId)
+        : getCharacterTracksDoc(characterId as string, trackId),
+      track
     )
       .then(() => {
         resolve();
