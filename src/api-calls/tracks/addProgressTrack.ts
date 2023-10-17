@@ -1,18 +1,23 @@
-import { setDoc } from "firebase/firestore";
-import { getCampaignTracksDoc, getCharacterTracksDoc } from "./_getRef";
-import { StoredTrack, TRACK_TYPES } from "types/Track.type";
+import { addDoc } from "firebase/firestore";
+import {
+  convertToDatabase,
+  getCampaignTracksCollection,
+  getCharacterTracksCollection,
+} from "./_getRef";
+import { Track } from "types/Track.type";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const addProgressTrack = createApiFunction<
   {
     campaignId?: string;
     characterId?: string;
-    type: TRACK_TYPES;
-    track: StoredTrack;
+    track: Track;
   },
   void
 >((params) => {
-  const { campaignId, characterId, type, track } = params;
+  const { campaignId, characterId, track } = params;
+
+  const storedTrack = convertToDatabase(track);
 
   return new Promise((resolve, reject) => {
     if (!campaignId && !characterId) {
@@ -20,16 +25,11 @@ export const addProgressTrack = createApiFunction<
       return;
     }
 
-    setDoc(
+    addDoc(
       campaignId
-        ? getCampaignTracksDoc(campaignId)
-        : getCharacterTracksDoc(characterId as string),
-      {
-        [type]: {
-          [track.label + track.createdTimestamp.toString()]: track,
-        },
-      },
-      { merge: true }
+        ? getCampaignTracksCollection(campaignId)
+        : getCharacterTracksCollection(characterId as string),
+      storedTrack
     )
       .then(() => {
         resolve();

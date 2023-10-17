@@ -1,14 +1,19 @@
-import { onSnapshot, Unsubscribe } from "firebase/firestore";
-import { getCampaignTracksDoc, getCharacterTracksDoc } from "./_getRef";
-import { StoredTrack, TRACK_TYPES, TrackWithId } from "types/Track.type";
+import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
+import {
+  convertFromDatabase,
+  getCampaignTracksCollection,
+  getCharacterTracksCollection,
+} from "./_getRef";
+import { Track, TRACK_TYPES } from "types/Track.type";
 
 export function listenToProgressTracks(
   campaignId: string | undefined,
   characterId: string | undefined,
-  onTracks: (
-    vows: TrackWithId[],
-    journeys: TrackWithId[],
-    frays: TrackWithId[]
+  status: string,
+  addOrUpdateTracks: (tracks: { [trackId: string]: Track }) => void,
+  removeTrack: (
+    trackId: string,
+    trackType: TRACK_TYPES.FRAY | TRACK_TYPES.JOURNEY | TRACK_TYPES.VOW
   ) => void,
   onError: (error: any) => void
 ): Unsubscribe | undefined {
@@ -16,44 +21,35 @@ export function listenToProgressTracks(
     throw new Error("Must provide either a character or campaign ID.");
     return;
   }
-  return onSnapshot(
+  const q = query(
     campaignId
-      ? getCampaignTracksDoc(campaignId)
-      : getCharacterTracksDoc(characterId as string),
+      ? getCampaignTracksCollection(campaignId)
+      : getCharacterTracksCollection(characterId as string),
+    where("status", "==", status)
+  );
+
+  return onSnapshot(
+    q,
     (snapshot) => {
-      const data = snapshot.data();
+      const addOrUpdateChanges: { [trackId: string]: Track } = {};
 
-      const vows = convertTrackMapToArray(data?.[TRACK_TYPES.VOW] ?? {});
-      const journeys = convertTrackMapToArray(
-        data?.[TRACK_TYPES.JOURNEY] ?? {}
-      );
-      const frays = convertTrackMapToArray(data?.[TRACK_TYPES.FRAY] ?? {});
-
-      onTracks(vows, journeys, frays);
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "removed") {
+          removeTrack(
+            change.doc.id,
+            change.doc.data().type as
+              | TRACK_TYPES.FRAY
+              | TRACK_TYPES.JOURNEY
+              | TRACK_TYPES.VOW
+          );
+        } else {
+          addOrUpdateChanges[change.doc.id] = convertFromDatabase(
+            change.doc.data()
+          );
+        }
+      });
+      addOrUpdateTracks(addOrUpdateChanges);
     },
     (error) => onError(error)
   );
 }
-
-export const convertTrackMapToArray = (trackMap: {
-  [id: string]: StoredTrack;
-}): TrackWithId[] => {
-  return Object.keys(trackMap)
-    .map((trackId) => {
-      return {
-        ...trackMap[trackId],
-        id: trackId,
-      };
-    })
-    .sort((t1, t2) => {
-      const t1Millis = t1.createdTimestamp.toMillis();
-      const t2Millis = t2.createdTimestamp.toMillis();
-      if (t1Millis < t2Millis) {
-        return -1;
-      } else if (t1Millis > t2Millis) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-};

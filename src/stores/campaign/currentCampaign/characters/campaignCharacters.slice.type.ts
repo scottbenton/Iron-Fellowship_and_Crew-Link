@@ -1,7 +1,7 @@
 import { Unsubscribe } from "firebase/firestore";
 import { StoredAsset } from "types/Asset.type";
 import { CharacterDocument } from "types/Character.type";
-import { TRACK_TYPES, TrackWithId } from "types/Track.type";
+import { TRACK_TYPES, Track } from "types/Track.type";
 
 export interface CampaignCharactersSliceData {
   characterMap: { [characterId: string]: CharacterDocument };
@@ -9,9 +9,15 @@ export interface CampaignCharactersSliceData {
 
   characterTracks: {
     [characterId: string]: {
-      [TRACK_TYPES.VOW]: TrackWithId[];
-      [TRACK_TYPES.JOURNEY]: TrackWithId[];
-      [TRACK_TYPES.FRAY]: TrackWithId[];
+      [TRACK_TYPES.FRAY]: {
+        [key: string]: Track;
+      };
+      [TRACK_TYPES.JOURNEY]: {
+        [key: string]: Track;
+      };
+      [TRACK_TYPES.VOW]: {
+        [key: string]: Track;
+      };
     };
   };
 }

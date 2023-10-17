@@ -2,11 +2,9 @@ import { CreateSliceType } from "stores/store.type";
 import { CampaignTracksSlice } from "./campaignTracks.slice.type";
 import { defaultCampaignTracksSlice } from "./campaignTracks.slice.default";
 import { listenToProgressTracks } from "api-calls/tracks/listenToProgressTracks";
-import { StoredTrack, TRACK_TYPES } from "types/Track.type";
+import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 import { addProgressTrack } from "api-calls/tracks/addProgressTrack";
 import { updateProgressTrack } from "api-calls/tracks/updateProgressTrack";
-import { updateProgressTrackValue } from "api-calls/tracks/updateProgressTrackValue";
-import { removeProgressTrack } from "api-calls/tracks/removeProgressTrack";
 
 export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
   set,
@@ -14,17 +12,40 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
 ) => ({
   ...defaultCampaignTracksSlice,
 
-  subscribe: (campaignId) => {
+  subscribe: (campaignId, status = TRACK_STATUS.ACTIVE) => {
     const unsubscribe = listenToProgressTracks(
       campaignId,
       undefined,
-      (vows, journeys, frays) => {
+      status,
+      (tracks) => {
         set((store) => {
-          store.campaigns.currentCampaign.tracks.trackMap = {
-            [TRACK_TYPES.FRAY]: frays,
-            [TRACK_TYPES.JOURNEY]: journeys,
-            [TRACK_TYPES.VOW]: vows,
-          };
+          Object.keys(tracks).forEach((trackId) => {
+            const track = tracks[trackId];
+            switch (track.type) {
+              case TRACK_TYPES.FRAY:
+                store.campaigns.currentCampaign.tracks.trackMap[
+                  TRACK_TYPES.FRAY
+                ][trackId] = track;
+                break;
+              case TRACK_TYPES.JOURNEY:
+                store.campaigns.currentCampaign.tracks.trackMap[
+                  TRACK_TYPES.JOURNEY
+                ][trackId] = track;
+                break;
+              case TRACK_TYPES.VOW:
+                store.campaigns.currentCampaign.tracks.trackMap[
+                  TRACK_TYPES.VOW
+                ][trackId] = track;
+                break;
+              default:
+                break;
+            }
+          });
+        });
+      },
+      (trackId, type) => {
+        set((store) => {
+          delete store.campaigns.currentCampaign.tracks.trackMap[type][trackId];
         });
       },
       (error) => {
@@ -38,30 +59,17 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
     return unsubscribe;
   },
 
-  addTrack: (type, track) => {
+  addTrack: (track) => {
     const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
-    return addProgressTrack({ campaignId, track, type });
+    return addProgressTrack({ campaignId, track });
   },
-  updateTrack: (type, trackId, track) => {
+  updateTrack: (trackId, track) => {
     const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
-    return updateProgressTrack({ campaignId, trackId, track, type });
+    return updateProgressTrack({ campaignId, trackId, track });
   },
-  updateTrackValue(type, trackId, value) {
-    const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
-    return updateProgressTrackValue({ campaignId, trackId, value, type });
-  },
-  removeTrack(type, trackId) {
-    const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
-    return removeProgressTrack({ campaignId, id: trackId, type });
-  },
-  updateCharacterTrack: (characterId, type, trackId, track) => {
-    return updateProgressTrack({ characterId, trackId, track, type });
-  },
-  updateCharacterTrackValue(characterId, type, trackId, value) {
-    return updateProgressTrackValue({ characterId, trackId, value, type });
-  },
-  removeCharacterTrack(characterId, type, trackId) {
-    return removeProgressTrack({ characterId, id: trackId, type });
+
+  updateCharacterTrack: (characterId, trackId, track) => {
+    return updateProgressTrack({ characterId, trackId, track });
   },
 
   resetStore: () => {

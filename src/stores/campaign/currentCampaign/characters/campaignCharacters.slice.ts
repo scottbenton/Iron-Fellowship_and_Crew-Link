@@ -5,7 +5,7 @@ import { listenToCampaignCharacters } from "api-calls/campaign/listenToCampaignC
 import { listenToAssets } from "api-calls/character/assets/listenToAssets";
 import { updateCharacter } from "api-calls/character/updateCharacter";
 import { listenToProgressTracks } from "api-calls/tracks/listenToProgressTracks";
-import { TRACK_TYPES } from "types/Track.type";
+import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 
 export const createCampaignCharactersSlice: CreateSliceType<
   CampaignCharactersSlice
@@ -68,15 +68,52 @@ export const createCampaignCharactersSlice: CreateSliceType<
       return listenToProgressTracks(
         undefined,
         characterId,
-        (vows, journeys, frays) => {
+        TRACK_STATUS.ACTIVE,
+        (tracks) => {
           set((store) => {
-            store.campaigns.currentCampaign.characters.characterTracks[
+            if (
+              !store.campaigns.currentCampaign.characters.characterTracks[
+                characterId
+              ]
+            ) {
+              store.campaigns.currentCampaign.characters.characterTracks[
+                characterId
+              ] = {
+                [TRACK_TYPES.FRAY]: {},
+                [TRACK_TYPES.JOURNEY]: {},
+                [TRACK_TYPES.VOW]: {},
+              };
+            }
+            Object.keys(tracks).forEach((trackId) => {
+              const track = tracks[trackId];
+              switch (track.type) {
+                case TRACK_TYPES.FRAY:
+                  store.campaigns.currentCampaign.characters.characterTracks[
+                    characterId
+                  ][TRACK_TYPES.FRAY][trackId] = track;
+                  break;
+                case TRACK_TYPES.JOURNEY:
+                  store.campaigns.currentCampaign.characters.characterTracks[
+                    characterId
+                  ][TRACK_TYPES.JOURNEY][trackId] = track;
+                  break;
+                case TRACK_TYPES.VOW:
+                  store.campaigns.currentCampaign.characters.characterTracks[
+                    characterId
+                  ][TRACK_TYPES.VOW][trackId] = track;
+                  break;
+                default:
+                  break;
+              }
+            });
+          });
+        },
+
+        (trackId, type) => {
+          set((store) => {
+            delete store.campaigns.currentCampaign.characters.characterTracks[
               characterId
-            ] = {
-              [TRACK_TYPES.VOW]: vows,
-              [TRACK_TYPES.JOURNEY]: journeys,
-              [TRACK_TYPES.FRAY]: frays,
-            };
+            ][type][trackId];
           });
         },
         (error) => {

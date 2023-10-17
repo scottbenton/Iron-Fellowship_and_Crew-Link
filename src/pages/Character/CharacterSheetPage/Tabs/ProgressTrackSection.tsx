@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import { ProgressTrackList } from "components/features/ProgressTrack";
-import { TRACK_TYPES } from "types/Track.type";
+import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 import { useStore } from "stores/store";
 
 export interface ProgressTrackSectionProps {
-  type: TRACK_TYPES;
+  type: TRACK_TYPES.FRAY | TRACK_TYPES.JOURNEY | TRACK_TYPES.VOW;
   typeLabel: string;
   showPersonalIfInCampaign?: boolean;
 }
@@ -18,14 +18,12 @@ export function ProgressTrackSection(props: ProgressTrackSectionProps) {
   const addProgressTrack = useStore(
     (store) => store.characters.currentCharacter.tracks.addTrack
   );
-  const updateProgressTrackValue = useStore(
-    (store) => store.characters.currentCharacter.tracks.updateTrackValue
-  );
   const updateProgressTrack = useStore(
     (store) => store.characters.currentCharacter.tracks.updateTrack
   );
-  const removeProgressTrack = useStore(
-    (store) => store.characters.currentCharacter.tracks.removeTrack
+
+  const isInCampaign = useStore(
+    (store) => !!store.campaigns.currentCampaign.currentCampaignId
   );
 
   const campaignTracks = useStore(
@@ -34,49 +32,44 @@ export function ProgressTrackSection(props: ProgressTrackSectionProps) {
   const addCampaignTrack = useStore(
     (store) => store.campaigns.currentCampaign.tracks.addTrack
   );
-  const updateCampaignTrackValue = useStore(
-    (store) => store.campaigns.currentCampaign.tracks.updateTrackValue
-  );
   const updateCampaignTrack = useStore(
     (store) => store.campaigns.currentCampaign.tracks.updateTrack
-  );
-  const removeCampaignTrackValue = useStore(
-    (store) => store.campaigns.currentCampaign.tracks.removeTrack
   );
 
   return (
     <Box>
-      {Array.isArray(campaignTracks) && (
+      {isInCampaign && (
         <ProgressTrackList
           trackType={type}
           tracks={campaignTracks}
           typeLabel={`Campaign ${typeLabel}`}
-          handleAdd={(newTrack) => addCampaignTrack(type, newTrack)}
+          handleAdd={(newTrack) => addCampaignTrack(newTrack)}
           handleUpdateValue={(trackId, value) =>
-            updateCampaignTrackValue(type, trackId, value)
+            updateCampaignTrack(trackId, { value })
           }
           handleUpdateTrack={(trackId, track) =>
-            updateCampaignTrack(type, trackId, track)
+            updateCampaignTrack(trackId, track)
           }
           handleDeleteTrack={(trackId) =>
-            removeCampaignTrackValue(type, trackId)
+            updateCampaignTrack(trackId, { status: TRACK_STATUS.COMPLETED })
           }
         />
       )}
-      {((Array.isArray(campaignTracks) && showPersonalIfInCampaign) ||
-        !Array.isArray(campaignTracks)) && (
+      {(!isInCampaign || showPersonalIfInCampaign) && (
         <ProgressTrackList
           trackType={type}
           tracks={characterTracks}
           typeLabel={`Character ${typeLabel}`}
-          handleAdd={(newTrack) => addProgressTrack(type, newTrack)}
+          handleAdd={(newTrack) => addProgressTrack(newTrack)}
           handleUpdateValue={(trackId, value) =>
-            updateProgressTrackValue(type, trackId, value)
+            updateProgressTrack(trackId, { value })
           }
           handleUpdateTrack={(trackId, track) =>
-            updateProgressTrack(type, trackId, track)
+            updateProgressTrack(trackId, track)
           }
-          handleDeleteTrack={(trackId) => removeProgressTrack(type, trackId)}
+          handleDeleteTrack={(trackId) =>
+            updateProgressTrack(trackId, { status: TRACK_STATUS.COMPLETED })
+          }
         />
       )}
     </Box>
