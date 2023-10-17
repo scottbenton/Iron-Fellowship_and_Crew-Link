@@ -2,10 +2,9 @@ import { CreateSliceType } from "stores/store.type";
 import { CampaignTracksSlice } from "./campaignTracks.slice.type";
 import { defaultCampaignTracksSlice } from "./campaignTracks.slice.default";
 import { listenToProgressTracks } from "api-calls/tracks/listenToProgressTracks";
-import { StoredTrack, TRACK_TYPES, Track } from "types/Track.type";
+import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 import { addProgressTrack } from "api-calls/tracks/addProgressTrack";
 import { updateProgressTrack } from "api-calls/tracks/updateProgressTrack";
-import { removeProgressTrack } from "api-calls/tracks/removeProgressTrack";
 
 export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
   set,
@@ -13,10 +12,11 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
 ) => ({
   ...defaultCampaignTracksSlice,
 
-  subscribe: (campaignId) => {
+  subscribe: (campaignId, status = TRACK_STATUS.ACTIVE) => {
     const unsubscribe = listenToProgressTracks(
       campaignId,
       undefined,
+      status,
       (tracks) => {
         set((store) => {
           Object.keys(tracks).forEach((trackId) => {
@@ -41,6 +41,11 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
                 break;
             }
           });
+        });
+      },
+      (trackId, type) => {
+        set((store) => {
+          delete store.campaigns.currentCampaign.tracks.trackMap[type][trackId];
         });
       },
       (error) => {

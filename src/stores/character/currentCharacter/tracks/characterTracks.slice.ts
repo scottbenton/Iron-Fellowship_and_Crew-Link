@@ -2,10 +2,9 @@ import { CreateSliceType } from "stores/store.type";
 import { CharacterTracksSlice } from "./characterTracks.slice.type";
 import { defaultCharacterTracksSlice } from "./characterTracks.slice.default";
 import { listenToProgressTracks } from "api-calls/tracks/listenToProgressTracks";
-import { StoredTrack, TRACK_TYPES } from "types/Track.type";
+import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 import { addProgressTrack } from "api-calls/tracks/addProgressTrack";
 import { updateProgressTrack } from "api-calls/tracks/updateProgressTrack";
-import { updateProgressTrackValue } from "api-calls/tracks/updateProgressTrackValue";
 import { removeProgressTrack } from "api-calls/tracks/removeProgressTrack";
 
 export const createCharacterTracksSlice: CreateSliceType<
@@ -13,17 +12,42 @@ export const createCharacterTracksSlice: CreateSliceType<
 > = (set, getState) => ({
   ...defaultCharacterTracksSlice,
 
-  subscribe: (characterId) => {
+  subscribe: (characterId, status = TRACK_STATUS.ACTIVE) => {
     const unsubscribe = listenToProgressTracks(
       undefined,
       characterId,
-      (vows, journeys, frays) => {
+      status,
+      (tracks) => {
         set((store) => {
-          store.characters.currentCharacter.tracks.trackMap = {
-            [TRACK_TYPES.FRAY]: frays,
-            [TRACK_TYPES.JOURNEY]: journeys,
-            [TRACK_TYPES.VOW]: vows,
-          };
+          Object.keys(tracks).forEach((trackId) => {
+            const track = tracks[trackId];
+            switch (track.type) {
+              case TRACK_TYPES.FRAY:
+                store.characters.currentCharacter.tracks.trackMap[
+                  TRACK_TYPES.FRAY
+                ][trackId] = track;
+                break;
+              case TRACK_TYPES.JOURNEY:
+                store.characters.currentCharacter.tracks.trackMap[
+                  TRACK_TYPES.JOURNEY
+                ][trackId] = track;
+                break;
+              case TRACK_TYPES.VOW:
+                store.characters.currentCharacter.tracks.trackMap[
+                  TRACK_TYPES.VOW
+                ][trackId] = track;
+                break;
+              default:
+                break;
+            }
+          });
+        });
+      },
+      (trackId, type) => {
+        set((store) => {
+          delete store.characters.currentCharacter.tracks.trackMap[type][
+            trackId
+          ];
         });
       },
       (error) => {
@@ -37,25 +61,15 @@ export const createCharacterTracksSlice: CreateSliceType<
     return unsubscribe;
   },
 
-  addTrack: (type, track) => {
+  addTrack: (track) => {
     const characterId =
       getState().characters.currentCharacter.currentCharacterId;
-    return addProgressTrack({ characterId, track, type });
+    return addProgressTrack({ characterId, track });
   },
-  updateTrack: (type, trackId, track) => {
+  updateTrack: (trackId, track) => {
     const characterId =
       getState().characters.currentCharacter.currentCharacterId;
-    return updateProgressTrack({ characterId, trackId, track, type });
-  },
-  updateTrackValue: (type, trackId, value) => {
-    const characterId =
-      getState().characters.currentCharacter.currentCharacterId;
-    return updateProgressTrackValue({ characterId, trackId, value, type });
-  },
-  removeTrack: (type, id) => {
-    const characterId =
-      getState().characters.currentCharacter.currentCharacterId;
-    return removeProgressTrack({ characterId, type, id });
+    return updateProgressTrack({ characterId, trackId, track });
   },
 
   resetStore: () => {

@@ -1,5 +1,5 @@
 import { Unsubscribe } from "firebase/firestore";
-import { TRACK_TYPES, Track } from "types/Track.type";
+import { TRACK_STATUS, TRACK_TYPES, Track } from "types/Track.type";
 
 export interface CampaignTracksSliceData {
   trackMap: {
@@ -12,7 +12,7 @@ export interface CampaignTracksSliceData {
 }
 
 export interface CampaignTracksSliceActions {
-  subscribe: (campaignId: string) => Unsubscribe;
+  subscribe: (campaignId: string, status?: TRACK_STATUS) => Unsubscribe;
 
   addTrack: (track: Track) => Promise<void>;
   updateTrack: (trackId: string, track: Partial<Track>) => Promise<void>;

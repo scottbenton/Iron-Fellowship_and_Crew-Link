@@ -13,15 +13,21 @@ import {
 } from "@mui/material";
 import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
-import { StoredTrack, DIFFICULTY } from "types/Track.type";
+import {
+  StoredTrack,
+  DIFFICULTY,
+  Track,
+  TRACK_STATUS,
+  TRACK_TYPES,
+} from "types/Track.type";
 
 export interface EditOrCreateTrackDialogProps {
   open: boolean;
   handleClose: () => void;
-  initialTrack?: StoredTrack;
+  initialTrack?: Track;
+  trackType: TRACK_TYPES;
   trackTypeName: string;
-  handleTrack: (track: StoredTrack) => Promise<boolean | void>;
-  buttonProps?: ButtonProps;
+  handleTrack: (track: Track) => Promise<boolean | void>;
 }
 
 export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
@@ -29,9 +35,9 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
     open,
     handleClose,
     initialTrack,
+    trackType,
     trackTypeName,
     handleTrack,
-    buttonProps,
   } = props;
 
   const [error, setError] = useState<string>();
@@ -63,12 +69,15 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       return;
     }
 
-    const track: StoredTrack = {
+    const track: Track = {
+      createdDate: new Date(),
+      status: TRACK_STATUS.ACTIVE,
+      type: trackType,
+      ...(initialTrack ?? {}),
       label: name,
       description,
       difficulty: difficulty,
       value: initialTrack?.value ?? 0,
-      createdTimestamp: Timestamp.fromDate(new Date()),
     };
 
     setLoading(true);

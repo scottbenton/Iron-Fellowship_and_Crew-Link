@@ -1,27 +1,21 @@
 import { Unsubscribe } from "firebase/firestore";
-import { StoredTrack, TRACK_TYPES, TrackWithId } from "types/Track.type";
+import { TRACK_STATUS, TRACK_TYPES, Track } from "types/Track.type";
 
 export interface CharacterTracksSliceData {
-  trackMap: { [key in TRACK_TYPES]?: TrackWithId[] };
+  trackMap: {
+    [TRACK_TYPES.FRAY]: { [trackId: string]: Track };
+    [TRACK_TYPES.JOURNEY]: { [trackId: string]: Track };
+    [TRACK_TYPES.VOW]: { [trackId: string]: Track };
+  };
   error?: string;
   loading: boolean;
 }
 
 export interface CharacterTracksSliceActions {
-  subscribe: (characterId: string) => Unsubscribe;
+  subscribe: (characterId: string, status?: TRACK_STATUS) => Unsubscribe;
 
-  addTrack: (type: TRACK_TYPES, track: StoredTrack) => Promise<void>;
-  updateTrack: (
-    type: TRACK_TYPES,
-    trackId: string,
-    track: StoredTrack
-  ) => Promise<void>;
-  updateTrackValue: (
-    type: TRACK_TYPES,
-    trackId: string,
-    value: number
-  ) => Promise<void>;
-  removeTrack: (type: TRACK_TYPES, trackId: string) => Promise<void>;
+  addTrack: (track: Track) => Promise<void>;
+  updateTrack: (trackId: string, track: Partial<Track>) => Promise<void>;
 
   resetStore: () => void;
 }

@@ -26,10 +26,10 @@ export function getCampaignGameLogCollection(campaignId: string) {
   ) as CollectionReference<Roll>;
 }
 
-export function getCampaignNoteDocument(campaignId: string, noteId: string) {
+export function getCampaignGameLogDocument(campaignId: string, logId: string) {
   return doc(
     firestore,
-    constructCampaignGameLogDocPath(campaignId, noteId)
+    constructCampaignGameLogDocPath(campaignId, logId)
   ) as DocumentReference<Roll>;
 }
 
@@ -51,10 +51,13 @@ export function getCharacterGameLogCollection(characterId: string) {
   ) as CollectionReference<Roll>;
 }
 
-export function getCharacterNoteDocument(characterId: string, noteId: string) {
+export function getCharacterGameLogDocument(
+  characterId: string,
+  logId: string
+) {
   return doc(
     firestore,
-    constructCampaignGameLogDocPath(characterId, noteId)
+    constructCampaignGameLogDocPath(characterId, logId)
   ) as DocumentReference<Roll>;
 }
 

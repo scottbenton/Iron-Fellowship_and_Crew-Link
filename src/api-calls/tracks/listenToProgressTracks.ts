@@ -1,33 +1,54 @@
-import { onSnapshot, Unsubscribe } from "firebase/firestore";
+import { onSnapshot, query, Unsubscribe, where } from "firebase/firestore";
 import {
   convertFromDatabase,
   getCampaignTracksCollection,
   getCharacterTracksCollection,
 } from "./_getRef";
-import { Track } from "types/Track.type";
+import { Track, TRACK_TYPES } from "types/Track.type";
 
 export function listenToProgressTracks(
   campaignId: string | undefined,
   characterId: string | undefined,
-  onTracks: (tracks: { [trackId: string]: Track }) => void,
+  status: string,
+  addOrUpdateTracks: (tracks: { [trackId: string]: Track }) => void,
+  removeTrack: (
+    trackId: string,
+    trackType: TRACK_TYPES.FRAY | TRACK_TYPES.JOURNEY | TRACK_TYPES.VOW
+  ) => void,
   onError: (error: any) => void
 ): Unsubscribe | undefined {
   if (!campaignId && !characterId) {
     throw new Error("Must provide either a character or campaign ID.");
     return;
   }
-  return onSnapshot(
+  const q = query(
     campaignId
       ? getCampaignTracksCollection(campaignId)
       : getCharacterTracksCollection(characterId as string),
+    where("status", "==", status)
+  );
+
+  return onSnapshot(
+    q,
     (snapshot) => {
-      const tracks: { [trackId: string]: Track } = {};
+      const addOrUpdateChanges: { [trackId: string]: Track } = {};
 
-      snapshot.docs.forEach((doc) => {
-        tracks[doc.id] = convertFromDatabase(doc.data());
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "removed") {
+          removeTrack(
+            change.doc.id,
+            change.doc.data().type as
+              | TRACK_TYPES.FRAY
+              | TRACK_TYPES.JOURNEY
+              | TRACK_TYPES.VOW
+          );
+        } else {
+          addOrUpdateChanges[change.doc.id] = convertFromDatabase(
+            change.doc.data()
+          );
+        }
       });
-
-      onTracks(tracks);
+      addOrUpdateTracks(addOrUpdateChanges);
     },
     (error) => onError(error)
   );

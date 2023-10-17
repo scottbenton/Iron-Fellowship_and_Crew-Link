@@ -1,6 +1,6 @@
 import { Button, Stack } from "@mui/material";
-import { TrackWithId } from "types/Track.type";
-import { StoredTrack, TRACK_TYPES } from "types/Track.type";
+import { Track } from "types/Track.type";
+import { TRACK_TYPES } from "types/Track.type";
 import { EditOrCreateTrackDialog } from "./EditOrCreateTrackDialog";
 import { ProgressTrack } from "./ProgressTrack";
 import { SectionHeading } from "components/shared/SectionHeading";
@@ -9,9 +9,9 @@ import { useState } from "react";
 
 export interface ProgressTrackListProps {
   trackType: TRACK_TYPES;
-  tracks?: TrackWithId[];
+  tracks?: { [trackId: string]: Track };
   typeLabel: string;
-  handleAdd?: (newTrack: StoredTrack) => Promise<boolean | void>;
+  handleAdd?: (newTrack: Track) => Promise<boolean | void>;
   handleUpdateValue: (
     trackId: string,
     value: number
@@ -19,14 +19,14 @@ export interface ProgressTrackListProps {
   handleDeleteTrack?: (trackId: string) => Promise<boolean | void>;
   handleUpdateTrack?: (
     trackId: string,
-    track: StoredTrack
+    track: Track
   ) => Promise<boolean | void>;
   headingBreakContainer?: boolean;
 }
 
 export function ProgressTrackList(props: ProgressTrackListProps) {
   const {
-    tracks,
+    tracks = {},
     trackType,
     typeLabel,
     handleAdd,
@@ -36,40 +36,52 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
     headingBreakContainer,
   } = props;
 
+  const orderedTrackIds = tracks
+    ? Object.keys(tracks).sort((trackId1, trackId2) => {
+        const track1 = tracks[trackId1];
+        const track2 = tracks[trackId2];
+
+        return track2.createdDate.getTime() - track1.createdDate.getTime();
+      })
+    : [];
+
   const [addTrackDialogOpen, setAddTrackDialogOpen] = useState<boolean>(false);
-  const [currentlyEditingTrack, setCurrentlyEditingTrack] =
-    useState<TrackWithId>();
+  const [currentlyEditingTrackId, setCurrentlyEditingTrackId] =
+    useState<string>();
+
+  const currentlyEditingTrack =
+    currentlyEditingTrackId && tracks
+      ? tracks[currentlyEditingTrackId]
+      : undefined;
 
   return (
     <>
       <EditOrCreateTrackDialog
         open={addTrackDialogOpen}
         handleClose={() => setAddTrackDialogOpen(false)}
+        trackType={trackType}
         trackTypeName={`${typeLabel}`}
         handleTrack={(track) =>
           handleAdd ? handleAdd(track) : new Promise((res) => res(true))
         }
-        buttonProps={{
-          variant: "text",
-        }}
       />
 
-      {handleUpdateTrack && currentlyEditingTrack && (
-        <EditOrCreateTrackDialog
-          open={!!currentlyEditingTrack}
-          handleClose={() => setCurrentlyEditingTrack(undefined)}
-          trackTypeName={`${typeLabel}`}
-          initialTrack={currentlyEditingTrack}
-          handleTrack={(track) =>
-            currentlyEditingTrack
-              ? handleUpdateTrack(currentlyEditingTrack?.id, track)
-              : new Promise((res) => res(true))
-          }
-          buttonProps={{
-            variant: "text",
-          }}
-        />
-      )}
+      {handleUpdateTrack &&
+        currentlyEditingTrack &&
+        currentlyEditingTrackId && (
+          <EditOrCreateTrackDialog
+            open={!!currentlyEditingTrack}
+            handleClose={() => setCurrentlyEditingTrackId(undefined)}
+            trackType={currentlyEditingTrack.type}
+            trackTypeName={`${typeLabel}`}
+            initialTrack={currentlyEditingTrack}
+            handleTrack={(track) =>
+              currentlyEditingTrack
+                ? handleUpdateTrack(currentlyEditingTrackId, track)
+                : new Promise((res) => res(true))
+            }
+          />
+        )}
 
       <SectionHeading
         label={`${typeLabel}s`}
@@ -96,27 +108,27 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
           },
         })}
       >
-        {Array.isArray(tracks) && tracks.length > 0 ? (
-          tracks.map((track, index) => (
+        {Array.isArray(orderedTrackIds) && orderedTrackIds.length > 0 ? (
+          orderedTrackIds.map((trackId, index) => (
             <ProgressTrack
               key={index}
               trackType={trackType}
-              label={track.label}
-              description={track.description}
-              difficulty={track.difficulty}
-              value={track.value}
-              onValueChange={(value) => handleUpdateValue(track.id, value)}
+              label={tracks[trackId].label}
+              description={tracks[trackId].description}
+              difficulty={tracks[trackId].difficulty}
+              value={tracks[trackId].value}
+              onValueChange={(value) => handleUpdateValue(trackId, value)}
               onDelete={
                 handleDeleteTrack
                   ? () => {
-                      handleDeleteTrack(track.id);
+                      handleDeleteTrack(trackId);
                     }
                   : undefined
               }
               max={40}
               onEdit={
                 handleUpdateTrack
-                  ? () => setCurrentlyEditingTrack(track)
+                  ? () => setCurrentlyEditingTrackId(trackId)
                   : undefined
               }
             />

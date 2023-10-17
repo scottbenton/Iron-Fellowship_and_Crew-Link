@@ -5,6 +5,8 @@ import { createApiFunction } from "api-calls/createApiFunction";
 import { deleteNotes } from "api-calls/notes/deleteNotes";
 import { getCampaignTracksDoc } from "api-calls/tracks/_getRef";
 import { getCampaignSettingsDoc } from "api-calls/custom-move-oracle-settings/_getRef";
+import { deleteAllProgressTracks } from "api-calls/tracks/deleteAllProgressTracks";
+import { deleteAllLogs } from "api-calls/game-log/deleteAllLogs";
 
 export const deleteCampaign = createApiFunction<
   { campaignId: string; characterIds: string[] },
@@ -29,7 +31,8 @@ export const deleteCampaign = createApiFunction<
     try {
       const campaignDeletePromise = deleteDoc(getCampaignDoc(campaignId));
       const noteDeletePromise = deleteNotes({ campaignId });
-      const tracksDeletePromise = deleteDoc(getCampaignTracksDoc(campaignId));
+      const logDeletePromise = deleteAllLogs({ campaignId });
+      const tracksDeletePromise = deleteAllProgressTracks({ campaignId });
       const settingsDeletePromise = deleteDoc(
         getCampaignSettingsDoc(campaignId)
       );
@@ -39,6 +42,7 @@ export const deleteCampaign = createApiFunction<
         noteDeletePromise,
         tracksDeletePromise,
         settingsDeletePromise,
+        logDeletePromise,
       ]);
       resolve();
     } catch (e) {

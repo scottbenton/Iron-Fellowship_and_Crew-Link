@@ -1,6 +1,6 @@
 import { ProgressTrackList } from "components/features/ProgressTrack";
 import { useStore } from "stores/store";
-import { TRACK_TYPES } from "types/Track.type";
+import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 
 export interface CampaignProgressTracksProps {
   campaignId: string;
@@ -24,14 +24,8 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
   const addCampaignProgressTrack = useStore(
     (store) => store.campaigns.currentCampaign.tracks.addTrack
   );
-  const updateCampaignProgressTrackValue = useStore(
-    (store) => store.campaigns.currentCampaign.tracks.updateTrackValue
-  );
   const updateCampaignProgressTrack = useStore(
     (store) => store.campaigns.currentCampaign.tracks.updateTrack
-  );
-  const removeCampaignProgressTrack = useStore(
-    (store) => store.campaigns.currentCampaign.tracks.removeTrack
   );
 
   return (
@@ -40,17 +34,17 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
         tracks={frays}
         trackType={TRACK_TYPES.FRAY}
         typeLabel={"Shared Combat Track"}
-        handleAdd={(newTrack) =>
-          addCampaignProgressTrack(TRACK_TYPES.FRAY, newTrack)
-        }
+        handleAdd={(newTrack) => addCampaignProgressTrack(newTrack)}
         handleUpdateValue={(trackId, value) =>
-          updateCampaignProgressTrackValue(TRACK_TYPES.FRAY, trackId, value)
+          updateCampaignProgressTrack(trackId, { value })
         }
         handleUpdateTrack={(trackId, track) =>
-          updateCampaignProgressTrack(TRACK_TYPES.FRAY, trackId, track)
+          updateCampaignProgressTrack(trackId, track)
         }
         handleDeleteTrack={(trackId) =>
-          removeCampaignProgressTrack(TRACK_TYPES.FRAY, trackId)
+          updateCampaignProgressTrack(trackId, {
+            status: TRACK_STATUS.COMPLETED,
+          })
         }
         headingBreakContainer={!addPadding}
       />
@@ -58,17 +52,17 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
         tracks={vows}
         trackType={TRACK_TYPES.VOW}
         typeLabel={"Shared Vow"}
-        handleAdd={(newTrack) =>
-          addCampaignProgressTrack(TRACK_TYPES.VOW, newTrack)
-        }
+        handleAdd={(newTrack) => addCampaignProgressTrack(newTrack)}
         handleUpdateValue={(trackId, value) =>
-          updateCampaignProgressTrackValue(TRACK_TYPES.VOW, trackId, value)
+          updateCampaignProgressTrack(trackId, { value })
         }
         handleUpdateTrack={(trackId, track) =>
-          updateCampaignProgressTrack(TRACK_TYPES.VOW, trackId, track)
+          updateCampaignProgressTrack(trackId, track)
         }
         handleDeleteTrack={(trackId) =>
-          removeCampaignProgressTrack(TRACK_TYPES.VOW, trackId)
+          updateCampaignProgressTrack(trackId, {
+            status: TRACK_STATUS.COMPLETED,
+          })
         }
         headingBreakContainer={!addPadding}
       />
@@ -76,17 +70,17 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
         tracks={journeys}
         trackType={TRACK_TYPES.JOURNEY}
         typeLabel={"Shared Journey"}
-        handleAdd={(newTrack) =>
-          addCampaignProgressTrack(TRACK_TYPES.JOURNEY, newTrack)
-        }
+        handleAdd={(newTrack) => addCampaignProgressTrack(newTrack)}
         handleUpdateValue={(trackId, value) =>
-          updateCampaignProgressTrackValue(TRACK_TYPES.JOURNEY, trackId, value)
+          updateCampaignProgressTrack(trackId, { value })
         }
         handleUpdateTrack={(trackId, track) =>
-          updateCampaignProgressTrack(TRACK_TYPES.JOURNEY, trackId, track)
+          updateCampaignProgressTrack(trackId, track)
         }
         handleDeleteTrack={(trackId) =>
-          removeCampaignProgressTrack(TRACK_TYPES.JOURNEY, trackId)
+          updateCampaignProgressTrack(trackId, {
+            status: TRACK_STATUS.COMPLETED,
+          })
         }
         headingBreakContainer={!addPadding}
       />
