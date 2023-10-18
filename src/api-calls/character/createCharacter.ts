@@ -7,7 +7,7 @@ import {
 } from "data/defaultTracks";
 import { StoredAsset } from "types/Asset.type";
 import { CharacterDocument, StatsMap } from "types/Character.type";
-import { getCharacterAssetCollection } from "./assets/_getRef";
+import { getCharacterAssetCollection } from "../assets/_getRef";
 import { getCharacterCollection } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 

@@ -175,6 +175,7 @@ export function AssetsSection() {
             });
             setIsAddAssetDialogOpen(false);
           }}
+          showSharedAssetWarning
         />
       </Box>
     </>

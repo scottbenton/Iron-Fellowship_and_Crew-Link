@@ -1,14 +1,14 @@
 import { CreateSliceType } from "stores/store.type";
 import { AssetSlice } from "./assets.slice.type";
 import { defaultAssetsSlice } from "./assets.slice.default";
-import { listenToAssets } from "api-calls/character/assets/listenToAssets";
-import { addAsset } from "api-calls/character/assets/addAsset";
-import { removeAsset } from "api-calls/character/assets/removeAsset";
-import { updateAssetInput } from "api-calls/character/assets/updateAssetInput";
-import { updateAssetCheckbox } from "api-calls/character/assets/updateAssetCheckbox";
-import { updateAssetTrack } from "api-calls/character/assets/updateAssetTrack";
-import { updateCustomAsset } from "api-calls/character/assets/updateCustomAsset";
-import { updateAssetCondition } from "api-calls/character/assets/updateAssetCondition";
+import { listenToAssets } from "api-calls/assets/listenToAssets";
+import { addAsset } from "api-calls/assets/addAsset";
+import { removeAsset } from "api-calls/assets/removeAsset";
+import { updateAssetInput } from "api-calls/assets/updateAssetInput";
+import { updateAssetCheckbox } from "api-calls/assets/updateAssetCheckbox";
+import { updateAssetTrack } from "api-calls/assets/updateAssetTrack";
+import { updateCustomAsset } from "api-calls/assets/updateCustomAsset";
+import { updateAssetCondition } from "api-calls/assets/updateAssetCondition";
 
 export const createAssetsSlice: CreateSliceType<AssetSlice> = (
   set,
@@ -22,6 +22,7 @@ export const createAssetsSlice: CreateSliceType<AssetSlice> = (
     });
     return listenToAssets(
       characterId,
+      undefined,
       (assets) => {
         set((store) => {
           store.characters.currentCharacter.assets.assets = assets;
