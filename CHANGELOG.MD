@@ -7,11 +7,14 @@
 ### New Features
 
 - Added sectors in Starforged worlds
+- Added new NPC options for Starforged games
+- Added shared assets for Starforged games
 
 ### Changes
 
 - Simplified world creation so that you no longer need to go through all the world truths when creating a world.
 - Progress tracks are no longer deleted upon completion, but are hidden from the user for now
+- Slightly changed look of NPC view
 
 ### Bug Fixes
 
