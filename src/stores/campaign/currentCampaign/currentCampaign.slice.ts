@@ -11,6 +11,7 @@ import { updateCampaign } from "api-calls/campaign/updateCampaign";
 import { createCampaignTracksSlice } from "./tracks/campaignTracks.slice";
 import { createCampaignCharactersSlice } from "./characters/campaignCharacters.slice";
 import { updateCampaignWorld } from "api-calls/campaign/updateCampaignWorld";
+import { createSharedAssetsSlice } from "./sharedAssets/sharedAssets.slice";
 
 export const createCurrentCampaignSlice: CreateSliceType<
   CurrentCampaignSlice
@@ -19,6 +20,7 @@ export const createCurrentCampaignSlice: CreateSliceType<
   return {
     ...defaultCurrentCampaignSlice,
 
+    assets: createSharedAssetsSlice(...params),
     characters: createCampaignCharactersSlice(...params),
     tracks: createCampaignTracksSlice(...params),
 
@@ -155,6 +157,7 @@ export const createCurrentCampaignSlice: CreateSliceType<
       const state = getState();
       state.campaigns.currentCampaign.tracks.resetStore();
       state.campaigns.currentCampaign.characters.resetStore();
+      state.campaigns.currentCampaign.assets.resetStore();
       state.notes.resetStore();
       state.settings.resetStore();
       state.gameLog.resetStore();

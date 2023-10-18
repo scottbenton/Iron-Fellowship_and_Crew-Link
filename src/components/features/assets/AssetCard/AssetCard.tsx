@@ -9,6 +9,7 @@ import {
   IconButton,
   SxProps,
   Theme,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { ReactNode, useState } from "react";
@@ -23,10 +24,13 @@ import { CreateCustomAsset } from "../AssetCardDialog/CreateCustomAsset";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { assetMap, assetTypeLabels } from "data/assets";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
+import GroupIcon from "@mui/icons-material/Group";
 
 export interface AssetCardProps {
   assetId: string;
   storedAsset?: StoredAsset;
+
+  showSharedIcon?: boolean;
 
   readOnly?: boolean;
   hideTracks?: boolean;
@@ -50,6 +54,7 @@ export function AssetCard(props: AssetCardProps) {
     readOnly,
     hideTracks,
     actions,
+    showSharedIcon,
     sx,
     handleAbilityCheck,
     handleInputChange,
@@ -65,6 +70,8 @@ export function AssetCard(props: AssetCardProps) {
     useState<boolean>(false);
   const asset = storedAsset?.customAsset ?? assetMap[assetId];
   const isCustom = !!storedAsset?.customAsset;
+
+  const isShared = asset.Usage.Shared;
 
   if (!asset) return null;
 
@@ -137,12 +144,23 @@ export function AssetCard(props: AssetCardProps) {
           </Box>
         </Box>
         <Box p={1} flexGrow={1} display={"flex"} flexDirection={"column"}>
-          <Typography
-            variant={"h5"}
-            fontFamily={(theme) => theme.fontFamilyTitle}
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
           >
-            {asset.Title.Standard}
-          </Typography>
+            <Typography
+              variant={"h5"}
+              fontFamily={(theme) => theme.fontFamilyTitle}
+            >
+              {asset.Title.Standard}
+            </Typography>
+            {isShared && showSharedIcon && (
+              <Tooltip title={"Shared"}>
+                <GroupIcon color={"primary"} />
+              </Tooltip>
+            )}
+          </Box>
           {asset.Requirement && (
             <MarkdownRenderer markdown={asset.Requirement} />
           )}

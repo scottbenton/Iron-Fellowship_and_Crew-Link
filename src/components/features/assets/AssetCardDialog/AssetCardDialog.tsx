@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Dialog,
@@ -19,16 +21,24 @@ import { AssetCard } from "../AssetCard/AssetCard";
 import { CreateCustomAsset } from "./CreateCustomAsset";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
+import { useStore } from "stores/store";
 
 export interface AssetCardDialogProps {
   open: boolean;
   loading?: boolean;
   handleClose: () => void;
   handleAssetSelection: (asset: Omit<StoredAsset, "order">) => void;
+  showSharedAssetWarning?: boolean;
 }
 
 export function AssetCardDialog(props: AssetCardDialogProps) {
-  const { open, loading, handleClose, handleAssetSelection } = props;
+  const {
+    open,
+    loading,
+    handleClose,
+    handleAssetSelection,
+    showSharedAssetWarning,
+  } = props;
 
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -78,6 +88,16 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
         <Box py={1}>
           {selectedTab < assetGroups.length ? (
             <>
+              {showSharedAssetWarning &&
+                assetGroups[selectedTab].Usage.Shared && (
+                  <Alert severity={"warning"}>
+                    <AlertTitle>Shared Assets</AlertTitle>
+                    These assets are shared amongst characters playing together
+                    in a campaign. If you plan on playing with multiple
+                    characters, add these assets to your campaign, instead of to
+                    your character.
+                  </Alert>
+                )}
               <MarkdownRenderer
                 markdown={assetGroups[selectedTab].Description}
               />
@@ -88,6 +108,7 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
                       <AssetCard
                         assetId={asset.$id}
                         readOnly
+                        showSharedIcon
                         actions={
                           <Button
                             color={"inherit"}

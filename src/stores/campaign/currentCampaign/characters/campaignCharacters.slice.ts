@@ -2,7 +2,7 @@ import { CreateSliceType } from "stores/store.type";
 import { CampaignCharactersSlice } from "./campaignCharacters.slice.type";
 import { defaultCampaignCharactersSlice } from "./campaignCharacters.slice.default";
 import { listenToCampaignCharacters } from "api-calls/campaign/listenToCampaignCharacters";
-import { listenToAssets } from "api-calls/character/assets/listenToAssets";
+import { listenToAssets } from "api-calls/assets/listenToAssets";
 import { updateCharacter } from "api-calls/character/updateCharacter";
 import { listenToProgressTracks } from "api-calls/tracks/listenToProgressTracks";
 import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
@@ -39,6 +39,7 @@ export const createCampaignCharactersSlice: CreateSliceType<
     const unsubscribes = characterIds.map((characterId) => {
       return listenToAssets(
         characterId,
+        undefined,
         (assets) => {
           set((store) => {
             if (assets) {

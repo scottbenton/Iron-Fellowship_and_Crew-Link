@@ -13,6 +13,7 @@ import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useList
 import { useListenToNewLogs } from "stores/gameLog/useListenToNewLogs";
 import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
 import { useListenToSectorLocations } from "stores/world/currentWorld/sector/sectorLocations/useListenToSectorLocations";
+import { useListenToSharedAssets } from "stores/campaign/currentCampaign/sharedAssets/useListenToSharedAssets";
 
 export function useSyncStore() {
   const { campaignId } = useParams();
@@ -29,6 +30,7 @@ export function useSyncStore() {
   useListenToCurrentCampaignCharacterAssets();
   useListenToCurrentCampaignCharacterTracks();
   useListenToCampaignTracks();
+  useListenToSharedAssets();
 
   useListenToLocations();
   useListenToNPCs();

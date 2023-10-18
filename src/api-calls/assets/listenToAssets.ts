@@ -1,14 +1,24 @@
 import { onSnapshot } from "firebase/firestore";
-import { getCharacterAssetCollection } from "./_getRef";
+import {
+  getCampaignAssetCollection,
+  getCharacterAssetCollection,
+} from "./_getRef";
 import { StoredAsset } from "types/Asset.type";
 
 export function listenToAssets(
-  characterId: string,
+  characterId: string | undefined,
+  campaignId: string | undefined,
   onAssets: (assets: { [assetId: string]: StoredAsset }) => void,
   onError: (error: any) => void
 ) {
+  if (!characterId && !campaignId) {
+    onError(new Error("Either character or campaign id must be defined."));
+    return () => {};
+  }
   return onSnapshot(
-    getCharacterAssetCollection(characterId),
+    characterId
+      ? getCharacterAssetCollection(characterId)
+      : getCampaignAssetCollection(campaignId as string),
     (snapshot) => {
       const assetMap: { [assetId: string]: StoredAsset } = {};
 

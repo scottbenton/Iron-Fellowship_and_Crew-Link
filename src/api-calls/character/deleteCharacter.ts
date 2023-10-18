@@ -5,7 +5,7 @@ import { deleteDoc, getDocs } from "firebase/firestore";
 import {
   getCharacterAssetCollection,
   getCharacterAssetDoc,
-} from "./assets/_getRef";
+} from "../assets/_getRef";
 import { deleteNotes } from "api-calls/notes/deleteNotes";
 import { getCharacterSettingsDoc } from "api-calls/custom-move-oracle-settings/_getRef";
 import { getCharacterDoc } from "./_getRef";
