@@ -162,50 +162,44 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   return (
     <Box>
-      <Box
-        display={"flex"}
-        alignItems={"flex-start"}
-        justifyContent={"space-between"}
-      >
-        <Box>
-          {difficulty && !hideDifficultyLabel && (
-            <Typography
-              variant={"subtitle1"}
-              color={(theme) => theme.palette.text.secondary}
-              fontFamily={(theme) => theme.fontFamilyTitle}
-            >
-              {getDifficultyLabel(difficulty)}
-            </Typography>
-          )}
-          {(label || onEdit) && (
-            <Typography
-              variant={"h6"}
-              color={(theme) => theme.palette.text.primary}
-              fontFamily={(theme) => theme.fontFamilyTitle}
-            >
-              {label + " "}
-              {onEdit && (
-                <Link
-                  color={"inherit"}
-                  component={"button"}
-                  sx={{ ml: 2 }}
-                  onClick={() => onEdit()}
-                >
-                  Edit
-                </Link>
-              )}
-            </Typography>
-          )}
-          {description && (
-            <Typography
-              variant={"subtitle1"}
-              color={(theme) => theme.palette.text.secondary}
-              whiteSpace={"pre-wrap"}
-            >
-              {description}
-            </Typography>
-          )}
-        </Box>
+      <Box>
+        {difficulty && !hideDifficultyLabel && (
+          <Typography
+            variant={"subtitle1"}
+            color={(theme) => theme.palette.text.secondary}
+            fontFamily={(theme) => theme.fontFamilyTitle}
+          >
+            {getDifficultyLabel(difficulty)}
+          </Typography>
+        )}
+        {(label || onEdit) && (
+          <Typography
+            variant={"h6"}
+            color={(theme) => theme.palette.text.primary}
+            fontFamily={(theme) => theme.fontFamilyTitle}
+          >
+            {label + " "}
+            {onEdit && (
+              <Link
+                color={"inherit"}
+                component={"button"}
+                sx={{ ml: 2 }}
+                onClick={() => onEdit()}
+              >
+                Edit
+              </Link>
+            )}
+          </Typography>
+        )}
+        {description && (
+          <Typography
+            variant={"subtitle1"}
+            color={(theme) => theme.palette.text.secondary}
+            whiteSpace={"pre-wrap"}
+          >
+            {description}
+          </Typography>
+        )}
       </Box>
       <Box display={"flex"} mt={label ? 1 : 0}>
         {onValueChange && (

@@ -2,6 +2,7 @@ import { Box, Fab, Slide } from "@mui/material";
 import { PropsWithChildren, useState } from "react";
 import { DieRollContext } from "./DieRollContext";
 import {
+  ClockProgressionRoll,
   OracleTableRoll,
   Roll,
   ROLL_RESULT,
@@ -193,6 +194,47 @@ export function DieRollProvider(props: PropsWithChildren) {
     return result;
   };
 
+  const rollClockProgression = (clockTitle: string, oracleId: string) => {
+    const oracleCategoryId = oracleId.match(
+      /(ironsworn|starforged)\/oracles\/[^\/]*/gm
+    )?.[0];
+
+    const oracle = oracleMap[oracleId] ?? allCustomOracleMap?.[oracleId];
+
+    const oracleCategory = oracleCategoryId
+      ? combinedOracleCategories[oracleCategoryId]
+      : undefined;
+
+    if (!oracle || !oracleCategory) return false;
+
+    const roll = getRoll(100);
+    const entry =
+      oracle.Table.find(
+        (entry) => (entry.Floor ?? 0) <= roll && roll <= (entry.Ceiling ?? 100)
+      )?.Result ?? "Failed to get oracle entry.";
+
+    const oracleRoll: ClockProgressionRoll = {
+      type: ROLL_TYPE.CLOCK_PROGRESSION,
+      roll,
+      result: entry,
+      oracleTitle: oracle.Title.Short,
+      rollLabel: clockTitle,
+      timestamp: new Date(),
+      characterId,
+      uid,
+      gmsOnly: false,
+    };
+
+    addRollToLog({
+      campaignId,
+      characterId: characterId || undefined,
+      roll: oracleRoll,
+    }).catch(() => {});
+    addRoll(oracleRoll);
+
+    return entry === "Yes";
+  };
+
   const clearRolls = () => {
     setRolls([]);
   };
@@ -209,7 +251,13 @@ export function DieRollProvider(props: PropsWithChildren) {
 
   return (
     <DieRollContext.Provider
-      value={{ rolls, rollStat, rollOracleTable, rollTrackProgress }}
+      value={{
+        rolls,
+        rollStat,
+        rollOracleTable,
+        rollTrackProgress,
+        rollClockProgression,
+      }}
     >
       {children}
       <Box

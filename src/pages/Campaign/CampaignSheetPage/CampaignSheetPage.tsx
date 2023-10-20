@@ -12,6 +12,7 @@ import { WorldEmptyState } from "components/features/worlds/WorldEmptyState";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { useSyncStore } from "./hooks/useSyncStore";
+import { ClockSection } from "components/features/charactersAndCampaigns/Clocks/ClockSection";
 
 enum TABS {
   CHARACTER = "characters",
@@ -98,11 +99,14 @@ export function CampaignSheetPage() {
           </>
         )}
         {selectedTab === TABS.TRACKS && (
-          <TracksSection
-            campaignId={campaignId}
-            campaign={campaign}
-            addTopMargin={false}
-          />
+          <>
+            <TracksSection
+              campaignId={campaignId}
+              campaign={campaign}
+              addTopMargin={false}
+            />
+            <ClockSection headingBreakContainer />
+          </>
         )}
       </PageContent>
     </>

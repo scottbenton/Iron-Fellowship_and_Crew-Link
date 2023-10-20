@@ -1,5 +1,7 @@
 import { ProgressTrackList } from "components/features/ProgressTrack";
+import { useGameSystem } from "hooks/useGameSystem";
 import { useStore } from "stores/store";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 
 export interface CampaignProgressTracksProps {
@@ -9,6 +11,8 @@ export interface CampaignProgressTracksProps {
 
 export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
   const { campaignId, addPadding } = props;
+
+  const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
   const vows = useStore(
     (store) => store.campaigns.currentCampaign.tracks.trackMap[TRACK_TYPES.VOW]
@@ -69,7 +73,7 @@ export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
       <ProgressTrackList
         tracks={journeys}
         trackType={TRACK_TYPES.JOURNEY}
-        typeLabel={"Shared Journey"}
+        typeLabel={isStarforged ? "Shared Exploration" : "Shared Journey"}
         handleAdd={(newTrack) => addCampaignProgressTrack(newTrack)}
         handleUpdateValue={(trackId, value) =>
           updateCampaignProgressTrack(trackId, { value })

@@ -40,7 +40,7 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [name, setName] = useState(initialTrack?.label ?? "");
+  const [title, setTitle] = useState(initialTrack?.label ?? "");
   const [description, setDescription] = useState(
     initialTrack?.description ?? ""
   );
@@ -49,7 +49,7 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
   );
 
   const handleDialogClose = () => {
-    setName("");
+    setTitle("");
     setDescription("");
     setDifficulty(undefined);
     setError(undefined);
@@ -58,8 +58,8 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
   };
 
   const handleSubmit = () => {
-    if (!name) {
-      setError("Name is required");
+    if (!title) {
+      setError("Title is required");
       return;
     } else if (!difficulty) {
       setError("Difficulty is required");
@@ -71,7 +71,7 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       status: TRACK_STATUS.ACTIVE,
       type: trackType,
       ...(initialTrack ?? {}),
-      label: name,
+      label: title,
       description,
       difficulty: difficulty,
       value: initialTrack?.value ?? 0,
@@ -103,10 +103,10 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
               </Alert>
             )}
             <TextField
-              label={"Name"}
+              label={"Title"}
               required
-              value={name}
-              onChange={(evt) => setName(evt.target.value)}
+              value={title}
+              onChange={(evt) => setTitle(evt.target.value)}
               sx={{ mt: 1 }}
             />
             <TextField

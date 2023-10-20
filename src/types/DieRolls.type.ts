@@ -10,6 +10,7 @@ export enum ROLL_TYPE {
   STAT,
   ORACLE_TABLE,
   TRACK_PROGRESS,
+  CLOCK_PROGRESSION,
 }
 
 export interface BaseRoll {
@@ -46,4 +47,15 @@ export interface TrackProgressRoll extends BaseRoll {
   trackType: TRACK_TYPES;
 }
 
-export type Roll = StatRoll | OracleTableRoll | TrackProgressRoll;
+export interface ClockProgressionRoll extends BaseRoll {
+  type: ROLL_TYPE.CLOCK_PROGRESSION;
+  roll: number;
+  oracleTitle: string;
+  result: string;
+}
+
+export type Roll =
+  | StatRoll
+  | OracleTableRoll
+  | TrackProgressRoll
+  | ClockProgressionRoll;

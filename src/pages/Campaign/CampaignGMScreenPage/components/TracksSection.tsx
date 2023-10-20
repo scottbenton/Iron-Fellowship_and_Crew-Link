@@ -5,6 +5,7 @@ import { Track } from "components/features/Track";
 import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 import { ProgressTrackList } from "components/features/ProgressTrack";
 import { useStore } from "stores/store";
+import { ClockSection } from "components/features/charactersAndCampaigns/Clocks/ClockSection";
 
 export interface TracksSectionProps {
   campaignId: string;
@@ -43,7 +44,7 @@ export function TracksSection(props: TracksSectionProps) {
   );
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ pb: 2 }}>
       <SectionHeading label={"Supply"} />
       <Track
         sx={(theme) => ({
@@ -132,6 +133,7 @@ export function TracksSection(props: TracksSectionProps) {
           </div>
         ))}
       </div>
+      <ClockSection />
     </Stack>
   );
 }

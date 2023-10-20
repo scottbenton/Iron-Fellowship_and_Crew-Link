@@ -5,8 +5,8 @@ import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 import { IronswornTracks } from "./IronswornTracks";
 import { LegacyTracks } from "./LegacyTracks";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
-import { ClockCircle } from "components/features/charactersAndCampaigns/Clocks/ClockCircle";
-import { ClockSection } from "./ClockSection";
+import { ClockSection } from "components/features/charactersAndCampaigns/Clocks/ClockSection";
+import { useGameSystem } from "hooks/useGameSystem";
 
 const systemTracks: GameSystemChooser<() => JSX.Element> = {
   [GAME_SYSTEMS.IRONSWORN]: IronswornTracks,
@@ -15,9 +15,10 @@ const systemTracks: GameSystemChooser<() => JSX.Element> = {
 
 export function TracksSection() {
   const Tracks = useGameSystemValue(systemTracks);
+  const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ pb: 2 }}>
       <Tracks />
       <ProgressTrackSection
         type={TRACK_TYPES.FRAY}
@@ -28,9 +29,11 @@ export function TracksSection() {
         typeLabel={"Vow"}
         showPersonalIfInCampaign
       />
-      <ProgressTrackSection type={TRACK_TYPES.JOURNEY} typeLabel={"Journey"} />
+      <ProgressTrackSection
+        type={TRACK_TYPES.JOURNEY}
+        typeLabel={isStarforged ? "Exploration" : "Journey"}
+      />
       <ClockSection />
-      <ClockCircle segments={8} value={2} />
     </Stack>
   );
 }

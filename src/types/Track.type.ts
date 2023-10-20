@@ -34,6 +34,14 @@ export enum DIFFICULTY {
   EPIC = "epic",
 }
 
+export enum CLOCK_ORACLES_KEYS {
+  ALMOST_CERTAIN = "almost_certain",
+  LIKELY = "likely",
+  FIFTY_FIFTY = "fifty_fifty",
+  UNLIKELY = "unlikely",
+  SMALL_CHANCE = "small_chance",
+}
+
 export interface BaseTrack {
   label: string;
   type: TRACK_SECTION_TRACKS;
@@ -57,6 +65,7 @@ export interface ProgressTrackDocument
 
 export interface Clock extends BaseTrack {
   segments: number;
+  oracleKey?: CLOCK_ORACLES_KEYS;
 }
 export interface ClockDocument extends Omit<Clock, "createdDate"> {
   createdTimestamp: Timestamp;
