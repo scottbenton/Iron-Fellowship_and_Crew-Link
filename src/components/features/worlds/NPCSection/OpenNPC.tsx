@@ -459,6 +459,20 @@ export function OpenNPC(props: OpenNPCProps) {
                     />
                   </Grid>
                 )}
+                {isStarforged && (
+                  <Grid item xs={12} sm={6}>
+                    <DebouncedOracleInput
+                      label={"First Look"}
+                      initialValue={npc?.gmProperties?.firstLook ?? ""}
+                      updateValue={(firstLook) =>
+                        updateNPCGMProperties(npcId, { firstLook }).catch(
+                          () => {}
+                        )
+                      }
+                      oracleTableId="starforged/oracles/characters/first_look"
+                    />
+                  </Grid>
+                )}
                 <Grid item xs={12} sm={6}>
                   <DebouncedOracleInput
                     label={"Role"}
@@ -505,6 +519,22 @@ export function OpenNPC(props: OpenNPCProps) {
                     oracleTableId={npcGoalOracle}
                   />
                 </Grid>
+                {isStarforged && (
+                  <Grid item xs={12} sm={6}>
+                    <DebouncedOracleInput
+                      label={"Revealed Aspect"}
+                      initialValue={npc?.gmProperties?.revealedAspect ?? ""}
+                      updateValue={(revealedAspect) =>
+                        updateNPCGMProperties(npcId, { revealedAspect }).catch(
+                          () => {}
+                        )
+                      }
+                      oracleTableId={
+                        "starforged/oracles/characters/revealed_aspect"
+                      }
+                    />
+                  </Grid>
+                )}
                 {!isSinglePlayer && (
                   <Grid
                     item
