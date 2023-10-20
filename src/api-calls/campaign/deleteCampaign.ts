@@ -7,6 +7,7 @@ import { getCampaignTracksDoc } from "api-calls/tracks/_getRef";
 import { getCampaignSettingsDoc } from "api-calls/custom-move-oracle-settings/_getRef";
 import { deleteAllProgressTracks } from "api-calls/tracks/deleteAllProgressTracks";
 import { deleteAllLogs } from "api-calls/game-log/deleteAllLogs";
+import { deleteAllAssets } from "api-calls/assets/deleteAllAssets";
 
 export const deleteCampaign = createApiFunction<
   { campaignId: string; characterIds: string[] },
@@ -29,21 +30,16 @@ export const deleteCampaign = createApiFunction<
     }
 
     try {
-      const campaignDeletePromise = deleteDoc(getCampaignDoc(campaignId));
-      const noteDeletePromise = deleteNotes({ campaignId });
-      const logDeletePromise = deleteAllLogs({ campaignId });
-      const tracksDeletePromise = deleteAllProgressTracks({ campaignId });
-      const settingsDeletePromise = deleteDoc(
-        getCampaignSettingsDoc(campaignId)
-      );
+      const promises: Promise<any>[] = [];
 
-      await Promise.all([
-        campaignDeletePromise,
-        noteDeletePromise,
-        tracksDeletePromise,
-        settingsDeletePromise,
-        logDeletePromise,
-      ]);
+      promises.push(deleteDoc(getCampaignDoc(campaignId)));
+      promises.push(deleteNotes({ campaignId }));
+      promises.push(deleteAllLogs({ campaignId }));
+      promises.push(deleteAllAssets({ campaignId }));
+      promises.push(deleteAllProgressTracks({ campaignId }));
+      promises.push(deleteDoc(getCampaignSettingsDoc(campaignId)));
+
+      await Promise.all(promises);
       resolve();
     } catch (e) {
       reject(e);

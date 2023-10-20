@@ -5,7 +5,7 @@ import { listenToCampaignCharacters } from "api-calls/campaign/listenToCampaignC
 import { listenToAssets } from "api-calls/assets/listenToAssets";
 import { updateCharacter } from "api-calls/character/updateCharacter";
 import { listenToProgressTracks } from "api-calls/tracks/listenToProgressTracks";
-import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
+import { ProgressTrack, TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 
 export const createCampaignCharactersSlice: CreateSliceType<
   CampaignCharactersSlice
@@ -91,17 +91,17 @@ export const createCampaignCharactersSlice: CreateSliceType<
                 case TRACK_TYPES.FRAY:
                   store.campaigns.currentCampaign.characters.characterTracks[
                     characterId
-                  ][TRACK_TYPES.FRAY][trackId] = track;
+                  ][TRACK_TYPES.FRAY][trackId] = track as ProgressTrack;
                   break;
                 case TRACK_TYPES.JOURNEY:
                   store.campaigns.currentCampaign.characters.characterTracks[
                     characterId
-                  ][TRACK_TYPES.JOURNEY][trackId] = track;
+                  ][TRACK_TYPES.JOURNEY][trackId] = track as ProgressTrack;
                   break;
                 case TRACK_TYPES.VOW:
                   store.campaigns.currentCampaign.characters.characterTracks[
                     characterId
-                  ][TRACK_TYPES.VOW][trackId] = track;
+                  ][TRACK_TYPES.VOW][trackId] = track as ProgressTrack;
                   break;
                 default:
                   break;

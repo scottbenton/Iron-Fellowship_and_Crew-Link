@@ -2,7 +2,12 @@ import { CreateSliceType } from "stores/store.type";
 import { CharacterTracksSlice } from "./characterTracks.slice.type";
 import { defaultCharacterTracksSlice } from "./characterTracks.slice.default";
 import { listenToProgressTracks } from "api-calls/tracks/listenToProgressTracks";
-import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
+import {
+  Clock,
+  ProgressTrack,
+  TRACK_STATUS,
+  TRACK_TYPES,
+} from "types/Track.type";
 import { addProgressTrack } from "api-calls/tracks/addProgressTrack";
 import { updateProgressTrack } from "api-calls/tracks/updateProgressTrack";
 import { removeProgressTrack } from "api-calls/tracks/removeProgressTrack";
@@ -25,18 +30,22 @@ export const createCharacterTracksSlice: CreateSliceType<
               case TRACK_TYPES.FRAY:
                 store.characters.currentCharacter.tracks.trackMap[
                   TRACK_TYPES.FRAY
-                ][trackId] = track;
+                ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.JOURNEY:
                 store.characters.currentCharacter.tracks.trackMap[
                   TRACK_TYPES.JOURNEY
-                ][trackId] = track;
+                ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.VOW:
                 store.characters.currentCharacter.tracks.trackMap[
                   TRACK_TYPES.VOW
-                ][trackId] = track;
+                ][trackId] = track as ProgressTrack;
                 break;
+              case TRACK_TYPES.CLOCK:
+                store.characters.currentCharacter.tracks.trackMap[
+                  TRACK_TYPES.CLOCK
+                ][trackId] = track as Clock;
               default:
                 break;
             }

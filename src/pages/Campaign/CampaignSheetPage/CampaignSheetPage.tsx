@@ -12,6 +12,9 @@ import { WorldEmptyState } from "components/features/worlds/WorldEmptyState";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { useSyncStore } from "./hooks/useSyncStore";
+import { ClockSection } from "components/features/charactersAndCampaigns/Clocks/ClockSection";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 enum TABS {
   CHARACTER = "characters",
@@ -21,6 +24,8 @@ enum TABS {
 
 export function CampaignSheetPage() {
   useSyncStore();
+
+  const showClocks = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
   const uid = useStore((store) => store.auth.uid);
 
@@ -98,11 +103,14 @@ export function CampaignSheetPage() {
           </>
         )}
         {selectedTab === TABS.TRACKS && (
-          <TracksSection
-            campaignId={campaignId}
-            campaign={campaign}
-            addTopMargin={false}
-          />
+          <>
+            <TracksSection
+              campaignId={campaignId}
+              campaign={campaign}
+              addTopMargin={false}
+            />
+            {showClocks && <ClockSection headingBreakContainer />}
+          </>
         )}
       </PageContent>
     </>

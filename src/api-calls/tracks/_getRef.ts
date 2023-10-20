@@ -6,7 +6,7 @@ import {
   DocumentReference,
   Timestamp,
 } from "firebase/firestore";
-import { StoredTrack, Track } from "types/Track.type";
+import { TrackDocument, Track } from "types/Track.type";
 
 export function constructCampaignTracksCollection(campaignId: string) {
   return `/campaigns/${campaignId}/tracks`;
@@ -22,13 +22,13 @@ export function getCampaignTracksCollection(campaignId: string) {
   return collection(
     firestore,
     constructCampaignTracksCollection(campaignId)
-  ) as CollectionReference<StoredTrack>;
+  ) as CollectionReference<TrackDocument>;
 }
 export function getCampaignTracksDoc(campaignId: string, trackId: string) {
   return doc(
     firestore,
     constructCampaignTracksDocPath(campaignId, trackId)
-  ) as DocumentReference<StoredTrack>;
+  ) as DocumentReference<TrackDocument>;
 }
 
 export function constructCharacterTracksCollection(characterId: string) {
@@ -45,16 +45,16 @@ export function getCharacterTracksCollection(characterId: string) {
   return collection(
     firestore,
     constructCharacterTracksCollection(characterId)
-  ) as CollectionReference<StoredTrack>;
+  ) as CollectionReference<TrackDocument>;
 }
 export function getCharacterTracksDoc(characterId: string, trackId: string) {
   return doc(
     firestore,
     constructCharacterTracksDocPath(characterId, trackId)
-  ) as DocumentReference<StoredTrack>;
+  ) as DocumentReference<TrackDocument>;
 }
 
-export function convertToDatabase(track: Track): StoredTrack {
+export function convertToDatabase(track: Track): TrackDocument {
   const { createdDate, ...rest } = track;
 
   return {
@@ -63,7 +63,7 @@ export function convertToDatabase(track: Track): StoredTrack {
   };
 }
 
-export function convertFromDatabase(track: StoredTrack): Track {
+export function convertFromDatabase(track: TrackDocument): Track {
   const { createdTimestamp, ...rest } = track;
 
   return {

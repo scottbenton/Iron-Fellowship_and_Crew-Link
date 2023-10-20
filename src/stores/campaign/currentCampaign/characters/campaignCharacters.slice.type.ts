@@ -1,7 +1,7 @@
 import { Unsubscribe } from "firebase/firestore";
 import { StoredAsset } from "types/Asset.type";
 import { CharacterDocument } from "types/Character.type";
-import { TRACK_TYPES, Track } from "types/Track.type";
+import { ProgressTrack, TRACK_TYPES, Track } from "types/Track.type";
 
 export interface CampaignCharactersSliceData {
   characterMap: { [characterId: string]: CharacterDocument };
@@ -10,13 +10,13 @@ export interface CampaignCharactersSliceData {
   characterTracks: {
     [characterId: string]: {
       [TRACK_TYPES.FRAY]: {
-        [key: string]: Track;
+        [key: string]: ProgressTrack;
       };
       [TRACK_TYPES.JOURNEY]: {
-        [key: string]: Track;
+        [key: string]: ProgressTrack;
       };
       [TRACK_TYPES.VOW]: {
-        [key: string]: Track;
+        [key: string]: ProgressTrack;
       };
     };
   };

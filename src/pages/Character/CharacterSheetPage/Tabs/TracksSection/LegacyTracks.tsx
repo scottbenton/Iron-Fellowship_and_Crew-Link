@@ -38,7 +38,7 @@ export function LegacyTracks() {
   return (
     <>
       <SectionHeading label={"Legacy Tracks"} />
-      <Stack spacing={2} px={2}>
+      <Stack spacing={2} px={2} sx={{ overflowX: "auto" }}>
         <LegacyTrack
           label={"Quests"}
           value={legacyTracks.quests?.value ?? 0}

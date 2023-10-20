@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import { ProgressTrackList } from "components/features/ProgressTrack";
-import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
+import { TRACK_SECTION_PROGRESS_TRACKS, TRACK_STATUS } from "types/Track.type";
 import { useStore } from "stores/store";
 
 export interface ProgressTrackSectionProps {
-  type: TRACK_TYPES.FRAY | TRACK_TYPES.JOURNEY | TRACK_TYPES.VOW;
+  type: TRACK_SECTION_PROGRESS_TRACKS;
   typeLabel: string;
   showPersonalIfInCampaign?: boolean;
 }

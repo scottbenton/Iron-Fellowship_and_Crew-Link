@@ -6,6 +6,7 @@ export const defaultCharacterTracksSlice: CharacterTracksSliceData = {
     [TRACK_TYPES.FRAY]: {},
     [TRACK_TYPES.JOURNEY]: {},
     [TRACK_TYPES.VOW]: {},
+    [TRACK_TYPES.CLOCK]: {},
   },
   error: "",
   loading: false,

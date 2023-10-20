@@ -11,6 +11,7 @@ import { getCharacterSettingsDoc } from "api-calls/custom-move-oracle-settings/_
 import { getCharacterDoc } from "./_getRef";
 import { deleteAllLogs } from "api-calls/game-log/deleteAllLogs";
 import { deleteAllProgressTracks } from "api-calls/tracks/deleteAllProgressTracks";
+import { deleteAllAssets } from "api-calls/assets/deleteAllAssets";
 
 export const deleteCharacter = createApiFunction<
   { characterId: string; campaignId?: string },
@@ -27,14 +28,11 @@ export const deleteCharacter = createApiFunction<
           characterId,
         });
       }
-      const assetDocs = await getDocs(getCharacterAssetCollection(characterId));
       const promises: Promise<any>[] = [];
 
       promises.push(deleteNotes({ characterId }));
       promises.push(deleteDoc(getCharacterSettingsDoc(characterId)));
-      assetDocs.forEach((asset) => {
-        promises.push(deleteDoc(getCharacterAssetDoc(characterId, asset.id)));
-      });
+      promises.push(deleteAllAssets({ characterId }));
       promises.push(deleteAllLogs({ characterId }));
       promises.push(deleteAllProgressTracks({ characterId }));
 

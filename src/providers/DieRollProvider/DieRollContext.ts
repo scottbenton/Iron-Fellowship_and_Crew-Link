@@ -20,6 +20,7 @@ export interface IDieRollContext {
     trackTitle: string,
     trackProgress: number
   ) => ROLL_RESULT;
+  rollClockProgression: (clockTitle: string, oracleId: string) => boolean;
 }
 
 export const DieRollContext = createContext<IDieRollContext>({
@@ -27,4 +28,5 @@ export const DieRollContext = createContext<IDieRollContext>({
   rollStat: () => ROLL_RESULT.MISS,
   rollOracleTable: () => "",
   rollTrackProgress: () => ROLL_RESULT.MISS,
+  rollClockProgression: () => false,
 });
