@@ -23,6 +23,7 @@ export interface BaseRoll {
 }
 export interface StatRoll extends BaseRoll {
   type: ROLL_TYPE.STAT;
+  moveName?: string;
   action: number;
   challenge1: number;
   challenge2: number;
