@@ -6,6 +6,8 @@ import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 import { ProgressTrackList } from "components/features/ProgressTrack";
 import { useStore } from "stores/store";
 import { ClockSection } from "components/features/charactersAndCampaigns/Clocks/ClockSection";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export interface TracksSectionProps {
   campaignId: string;
@@ -13,6 +15,8 @@ export interface TracksSectionProps {
 }
 export function TracksSection(props: TracksSectionProps) {
   const { campaignId, supply } = props;
+
+  const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
   const updateCampaignSupply = useStore(
     (store) => store.campaigns.currentCampaign.updateCampaignSupply
@@ -97,7 +101,7 @@ export function TracksSection(props: TracksSectionProps) {
         <ProgressTrackList
           tracks={journeys}
           trackType={TRACK_TYPES.JOURNEY}
-          typeLabel={"Shared Journey"}
+          typeLabel={isStarforged ? "Shared Exploration" : "Shared Journey"}
           handleAdd={(newTrack) => addCampaignProgressTrack(newTrack)}
           handleUpdateValue={(trackId, value) =>
             updateCampaignProgressTrack(trackId, { value })
@@ -133,7 +137,7 @@ export function TracksSection(props: TracksSectionProps) {
           </div>
         ))}
       </div>
-      <ClockSection />
+      {isStarforged && <ClockSection />}
     </Stack>
   );
 }

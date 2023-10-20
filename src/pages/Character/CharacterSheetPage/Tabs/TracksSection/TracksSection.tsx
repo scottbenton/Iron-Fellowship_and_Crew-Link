@@ -33,7 +33,7 @@ export function TracksSection() {
         type={TRACK_TYPES.JOURNEY}
         typeLabel={isStarforged ? "Exploration" : "Journey"}
       />
-      <ClockSection />
+      {isStarforged && <ClockSection />}
     </Stack>
   );
 }
