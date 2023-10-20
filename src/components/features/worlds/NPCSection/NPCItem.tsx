@@ -66,7 +66,7 @@ export function NPCItem(props: NPCItemProps) {
                     ? theme.palette.grey[300]
                     : theme.palette.grey[700],
                 backgroundImage: `url(${npc.imageUrl})`,
-                backgroundPosition: "center center",
+                backgroundPosition: "center top",
                 backgroundSize: "cover",
                 display: "flex",
                 alignItems: "center",
