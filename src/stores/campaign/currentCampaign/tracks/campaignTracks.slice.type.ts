@@ -1,11 +1,18 @@
 import { Unsubscribe } from "firebase/firestore";
-import { TRACK_STATUS, TRACK_TYPES, Track } from "types/Track.type";
+import {
+  Clock,
+  ProgressTrack,
+  TRACK_STATUS,
+  TRACK_TYPES,
+  Track,
+} from "types/Track.type";
 
 export interface CampaignTracksSliceData {
   trackMap: {
-    [TRACK_TYPES.FRAY]: { [trackId: string]: Track };
-    [TRACK_TYPES.JOURNEY]: { [trackId: string]: Track };
-    [TRACK_TYPES.VOW]: { [trackId: string]: Track };
+    [TRACK_TYPES.FRAY]: { [trackId: string]: ProgressTrack };
+    [TRACK_TYPES.JOURNEY]: { [trackId: string]: ProgressTrack };
+    [TRACK_TYPES.VOW]: { [trackId: string]: ProgressTrack };
+    [TRACK_TYPES.CLOCK]: { [clockId: string]: Clock };
   };
   error?: string;
   loading: boolean;

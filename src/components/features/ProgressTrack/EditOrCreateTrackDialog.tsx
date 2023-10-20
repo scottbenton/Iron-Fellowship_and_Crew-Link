@@ -2,7 +2,6 @@ import {
   Alert,
   AlertTitle,
   Button,
-  ButtonProps,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,23 +10,21 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import {
-  StoredTrack,
+  ProgressTrack,
   DIFFICULTY,
-  Track,
   TRACK_STATUS,
-  TRACK_TYPES,
+  TRACK_SECTION_PROGRESS_TRACKS,
 } from "types/Track.type";
 
 export interface EditOrCreateTrackDialogProps {
   open: boolean;
   handleClose: () => void;
-  initialTrack?: Track;
-  trackType: TRACK_TYPES;
+  initialTrack?: ProgressTrack;
+  trackType: TRACK_SECTION_PROGRESS_TRACKS;
   trackTypeName: string;
-  handleTrack: (track: Track) => Promise<boolean | void>;
+  handleTrack: (track: ProgressTrack) => Promise<boolean | void>;
 }
 
 export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
@@ -69,7 +66,7 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       return;
     }
 
-    const track: Track = {
+    const track: ProgressTrack = {
       createdDate: new Date(),
       status: TRACK_STATUS.ACTIVE,
       type: trackType,

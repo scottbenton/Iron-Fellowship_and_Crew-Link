@@ -5,6 +5,8 @@ import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 import { IronswornTracks } from "./IronswornTracks";
 import { LegacyTracks } from "./LegacyTracks";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { ClockCircle } from "components/features/charactersAndCampaigns/Clocks/ClockCircle";
+import { ClockSection } from "./ClockSection";
 
 const systemTracks: GameSystemChooser<() => JSX.Element> = {
   [GAME_SYSTEMS.IRONSWORN]: IronswornTracks,
@@ -27,6 +29,8 @@ export function TracksSection() {
         showPersonalIfInCampaign
       />
       <ProgressTrackSection type={TRACK_TYPES.JOURNEY} typeLabel={"Journey"} />
+      <ClockSection />
+      <ClockCircle segments={8} value={2} />
     </Stack>
   );
 }

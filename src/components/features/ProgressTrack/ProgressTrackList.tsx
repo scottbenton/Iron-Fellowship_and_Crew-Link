@@ -1,6 +1,8 @@
 import { Button, Stack } from "@mui/material";
-import { Track } from "types/Track.type";
-import { TRACK_TYPES } from "types/Track.type";
+import {
+  ProgressTrack as IProgressTrack,
+  TRACK_SECTION_PROGRESS_TRACKS,
+} from "types/Track.type";
 import { EditOrCreateTrackDialog } from "./EditOrCreateTrackDialog";
 import { ProgressTrack } from "./ProgressTrack";
 import { SectionHeading } from "components/shared/SectionHeading";
@@ -8,10 +10,10 @@ import { EmptyState } from "components/shared/EmptyState";
 import { useState } from "react";
 
 export interface ProgressTrackListProps {
-  trackType: TRACK_TYPES;
-  tracks?: { [trackId: string]: Track };
+  trackType: TRACK_SECTION_PROGRESS_TRACKS;
+  tracks?: { [trackId: string]: IProgressTrack };
   typeLabel: string;
-  handleAdd?: (newTrack: Track) => Promise<boolean | void>;
+  handleAdd?: (newTrack: IProgressTrack) => Promise<boolean | void>;
   handleUpdateValue: (
     trackId: string,
     value: number
@@ -19,7 +21,7 @@ export interface ProgressTrackListProps {
   handleDeleteTrack?: (trackId: string) => Promise<boolean | void>;
   handleUpdateTrack?: (
     trackId: string,
-    track: Track
+    track: IProgressTrack
   ) => Promise<boolean | void>;
   headingBreakContainer?: boolean;
 }
@@ -72,7 +74,9 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
           <EditOrCreateTrackDialog
             open={!!currentlyEditingTrack}
             handleClose={() => setCurrentlyEditingTrackId(undefined)}
-            trackType={currentlyEditingTrack.type}
+            trackType={
+              currentlyEditingTrack.type as TRACK_SECTION_PROGRESS_TRACKS
+            }
             trackTypeName={`${typeLabel}`}
             initialTrack={currentlyEditingTrack}
             handleTrack={(track) =>

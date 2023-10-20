@@ -5,7 +5,21 @@ export enum TRACK_TYPES {
   JOURNEY = "journey",
   FRAY = "fray",
   BOND_PROGRESS = "bondProgress",
+  CLOCK = "clock",
 }
+
+export type PROGRESS_TRACKS =
+  | TRACK_TYPES.BOND_PROGRESS
+  | TRACK_TYPES.FRAY
+  | TRACK_TYPES.JOURNEY
+  | TRACK_TYPES.VOW;
+export type TRACK_SECTION_PROGRESS_TRACKS =
+  | TRACK_TYPES.FRAY
+  | TRACK_TYPES.JOURNEY
+  | TRACK_TYPES.VOW;
+export type TRACK_SECTION_TRACKS =
+  | TRACK_SECTION_PROGRESS_TRACKS
+  | TRACK_TYPES.CLOCK;
 
 export enum TRACK_STATUS {
   ACTIVE = "active",
@@ -20,16 +34,33 @@ export enum DIFFICULTY {
   EPIC = "epic",
 }
 
-export interface StoredTrack {
+export interface BaseTrack {
   label: string;
+  type: TRACK_SECTION_TRACKS;
   description?: string;
-  difficulty: DIFFICULTY;
   value: number;
   status: TRACK_STATUS;
-  createdTimestamp: Timestamp;
-  type: TRACK_TYPES;
-}
-
-export interface Track extends Omit<StoredTrack, "createdTimestamp"> {
   createdDate: Date;
 }
+
+export interface BaseTrackDocument extends Omit<BaseTrack, "createdDate"> {
+  createdTimestamp: Timestamp;
+}
+
+export interface ProgressTrack extends BaseTrack {
+  difficulty: DIFFICULTY;
+}
+export interface ProgressTrackDocument
+  extends Omit<ProgressTrack, "createdDate"> {
+  createdTimestamp: Timestamp;
+}
+
+export interface Clock extends BaseTrack {
+  segments: number;
+}
+export interface ClockDocument extends Omit<Clock, "createdDate"> {
+  createdTimestamp: Timestamp;
+}
+
+export type TrackDocument = ProgressTrackDocument | ClockDocument;
+export type Track = ProgressTrack | Clock;

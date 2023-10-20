@@ -2,7 +2,13 @@ import { CreateSliceType } from "stores/store.type";
 import { CampaignTracksSlice } from "./campaignTracks.slice.type";
 import { defaultCampaignTracksSlice } from "./campaignTracks.slice.default";
 import { listenToProgressTracks } from "api-calls/tracks/listenToProgressTracks";
-import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
+import {
+  Clock,
+  PROGRESS_TRACKS,
+  ProgressTrack,
+  TRACK_STATUS,
+  TRACK_TYPES,
+} from "types/Track.type";
 import { addProgressTrack } from "api-calls/tracks/addProgressTrack";
 import { updateProgressTrack } from "api-calls/tracks/updateProgressTrack";
 
@@ -25,18 +31,22 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
               case TRACK_TYPES.FRAY:
                 store.campaigns.currentCampaign.tracks.trackMap[
                   TRACK_TYPES.FRAY
-                ][trackId] = track;
+                ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.JOURNEY:
                 store.campaigns.currentCampaign.tracks.trackMap[
                   TRACK_TYPES.JOURNEY
-                ][trackId] = track;
+                ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.VOW:
                 store.campaigns.currentCampaign.tracks.trackMap[
                   TRACK_TYPES.VOW
-                ][trackId] = track;
+                ][trackId] = track as ProgressTrack;
                 break;
+              case TRACK_TYPES.CLOCK:
+                store.campaigns.currentCampaign.tracks.trackMap[
+                  TRACK_TYPES.CLOCK
+                ][trackId] = track as Clock;
               default:
                 break;
             }

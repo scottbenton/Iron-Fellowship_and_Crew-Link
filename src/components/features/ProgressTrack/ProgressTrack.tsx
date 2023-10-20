@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
 import PlusIcon from "@mui/icons-material/Add";
-import { DIFFICULTY, TRACK_TYPES } from "types/Track.type";
+import { DIFFICULTY, PROGRESS_TRACKS, TRACK_TYPES } from "types/Track.type";
 import CompleteIcon from "@mui/icons-material/Check";
 import DieIcon from "@mui/icons-material/Casino";
 import { useConfirm } from "material-ui-confirm";
@@ -21,7 +21,7 @@ import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 
 const trackMoveIdSystemValues: GameSystemChooser<{
-  [key in TRACK_TYPES]: string;
+  [key in PROGRESS_TRACKS]: string;
 }> = {
   [GAME_SYSTEMS.IRONSWORN]: {
     [TRACK_TYPES.VOW]: "ironsworn/moves/quest/fulfill_your_vow",
@@ -38,7 +38,7 @@ const trackMoveIdSystemValues: GameSystemChooser<{
 };
 
 export interface ProgressTracksProps {
-  trackType?: TRACK_TYPES;
+  trackType?: PROGRESS_TRACKS;
   label?: string;
   difficulty?: DIFFICULTY;
   description?: string;
