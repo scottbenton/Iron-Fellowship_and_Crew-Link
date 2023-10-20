@@ -8,15 +8,17 @@ export interface MoveStatRollerProps {
   companions: { health: number; name: string }[];
   vehicles: { integrity: number; name: string }[];
   statName: string;
+  moveName: string;
 }
 
 export function MoveStatRoller(props: MoveStatRollerProps) {
-  const { stats, statName, companions, vehicles } = props;
+  const { stats, statName, moveName, companions, vehicles } = props;
 
   if (stats[statName] !== undefined) {
     return (
       <StatComponent
         label={statName}
+        moveName={moveName}
         value={stats[statName]}
         sx={{ mb: 1, mr: 1 }}
       />
@@ -29,6 +31,7 @@ export function MoveStatRoller(props: MoveStatRollerProps) {
         {companions.map((companion, index) => (
           <StatComponent
             key={index}
+            moveName={moveName}
             label={`${companion.name}'s Health`}
             value={companion.health}
             sx={{ mb: 1, mr: 1 }}
@@ -44,6 +47,7 @@ export function MoveStatRoller(props: MoveStatRollerProps) {
         {vehicles.map((vehicle, index) => (
           <StatComponent
             key={index}
+            moveName={moveName}
             label={`${vehicle.name}'s Integrity`}
             value={vehicle.integrity}
             sx={{ mb: 1, mr: 1 }}

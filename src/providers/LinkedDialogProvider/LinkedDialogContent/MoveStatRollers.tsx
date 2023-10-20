@@ -6,12 +6,13 @@ import { MoveStatRoller } from "./MoveStatRoller";
 import { assetMap } from "data/assets";
 
 export interface MoveStatsProps {
+  moveName: string;
   visibleStats: { [key: string]: boolean };
   customMoveStats?: { [label: string]: number };
 }
 
 export function MoveStatRollers(props: MoveStatsProps) {
-  const { visibleStats, customMoveStats } = props;
+  const { moveName, visibleStats, customMoveStats } = props;
 
   const stats = useStore((store) => {
     const currentCharacter = store.characters.currentCharacter.currentCharacter;
@@ -103,6 +104,7 @@ export function MoveStatRollers(props: MoveStatsProps) {
               statName={visibleStat}
               companions={companions}
               vehicles={vehicles}
+              moveName={moveName}
             />
           )
       )}

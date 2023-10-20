@@ -60,6 +60,7 @@ export function DieRollProvider(props: PropsWithChildren) {
   const rollStat = (
     label: string,
     modifier: number,
+    moveName?: string,
     adds?: number,
     showSnackbar = true
   ) => {
@@ -92,6 +93,9 @@ export function DieRollProvider(props: PropsWithChildren) {
 
     if (adds) {
       statRoll.adds = adds;
+    }
+    if (moveName) {
+      statRoll.moveName = moveName;
     }
 
     addRollToLog({

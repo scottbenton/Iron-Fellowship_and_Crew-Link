@@ -42,7 +42,9 @@ export function StatRollSnackbar(props: StatRollSnackbarProps) {
         variant={expanded ? "h6" : "subtitle1"}
         fontFamily={(theme) => theme.fontFamilyTitle}
       >
-        {roll.rollLabel}
+        {roll.moveName
+          ? `${roll.moveName} (${roll.rollLabel})`
+          : roll.rollLabel}
       </Typography>
       <Box display={"flex"} flexDirection={"row"}>
         {expanded && (

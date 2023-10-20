@@ -89,6 +89,7 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
       <DialogContent>
         {getIsLocalEnvironment() && <Typography>{id}</Typography>}
         <MoveStatRollers
+          moveName={move.Title.Short}
           visibleStats={visibleStats}
           customMoveStats={customMoveStats}
         />

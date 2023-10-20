@@ -7,6 +7,7 @@ export interface IDieRollContext {
   rollStat: (
     rollLabel: string,
     modifier: number,
+    moveName?: string,
     adds?: number,
     showSnackbar?: boolean
   ) => ROLL_RESULT;
