@@ -21,6 +21,7 @@ import { RtcRichTextEditor } from "components/shared/RichTextEditor";
 import { NotesSectionHeader } from "../NotesSectionHeader";
 import { NPCItem } from "../NPCSection/NPCItem";
 import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
+import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 
 interface OpenSectorProps {
   sectorId: string;
@@ -212,6 +213,16 @@ export function OpenSector(props: OpenSectorProps) {
             <SectorRegionAutocomplete />
           </Grid>
           {showGMFields && (
+            <Grid item xs={12} md={6}>
+              <DebouncedOracleInput
+                label={"Sector Trouble"}
+                oracleTableId={"starforged/oracles/campaign/sector_trouble"}
+                initialValue={sector.trouble ?? ""}
+                updateValue={(trouble) => updateSector({ trouble })}
+              />
+            </Grid>
+          )}
+          {showGMFields && !isSingleplayer && (
             <Grid item xs={12} md={6}>
               <FormControlLabel
                 control={

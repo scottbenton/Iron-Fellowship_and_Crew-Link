@@ -34,6 +34,7 @@ export interface Sector {
   name: string;
   sharedWithPlayers: boolean;
   region?: string;
+  trouble?: string;
   map: SectorMap;
   createdDate: Date;
 }
