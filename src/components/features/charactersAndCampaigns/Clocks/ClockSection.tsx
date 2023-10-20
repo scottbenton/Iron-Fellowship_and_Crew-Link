@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { useState } from "react";
 import { useStore } from "stores/store";
@@ -102,7 +102,8 @@ export function ClockSection(props: ClockSectionProps) {
             }
           />
           {orderedCampaignClockIds.length > 0 ? (
-            <Box
+            <Stack
+              spacing={4}
               sx={(theme) => ({
                 px: headingBreakContainer ? 0 : 2,
                 [theme.breakpoints.up("md")]: {
@@ -138,7 +139,7 @@ export function ClockSection(props: ClockSectionProps) {
                   }
                 />
               ))}
-            </Box>
+            </Stack>
           ) : (
             <EmptyState message={`No Shared Clocks found`} />
           )}
@@ -159,7 +160,8 @@ export function ClockSection(props: ClockSectionProps) {
             }
           />
           {orderedCharacterClockIds.length > 0 ? (
-            <Box
+            <Stack
+              spacing={4}
               sx={(theme) => ({
                 px: headingBreakContainer ? 0 : 2,
                 [theme.breakpoints.up("md")]: {
@@ -194,7 +196,7 @@ export function ClockSection(props: ClockSectionProps) {
                   }
                 />
               ))}
-            </Box>
+            </Stack>
           ) : (
             <EmptyState message={`No Character Clocks found`} />
           )}
