@@ -68,18 +68,6 @@ export function SettlementContent(props: SettlementContentProps) {
           </Grid>
           <Grid item xs={12} sm={6}>
             <DebouncedOracleInput
-              label={"First Look"}
-              oracleTableId={"starforged/oracles/settlements/first_look"}
-              initialValue={location.firstLook ?? ""}
-              updateValue={(value) => {
-                updateLocation(locationId, { firstLook: value }).catch(
-                  () => {}
-                );
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <DebouncedOracleInput
               label={"Initial Contact"}
               oracleTableId={"starforged/oracles/settlements/initial_contact"}
               initialValue={location.initialContact ?? ""}
