@@ -31,7 +31,7 @@ export function TracksSection() {
       />
       <ProgressTrackSection
         type={TRACK_TYPES.JOURNEY}
-        typeLabel={isStarforged ? "Exploration" : "Journey"}
+        typeLabel={isStarforged ? "Expedition" : "Journey"}
       />
       {isStarforged && <ClockSection />}
     </Stack>

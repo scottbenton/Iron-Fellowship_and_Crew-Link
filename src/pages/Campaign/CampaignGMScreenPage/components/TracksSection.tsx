@@ -101,7 +101,7 @@ export function TracksSection(props: TracksSectionProps) {
         <ProgressTrackList
           tracks={journeys}
           trackType={TRACK_TYPES.JOURNEY}
-          typeLabel={isStarforged ? "Shared Exploration" : "Shared Journey"}
+          typeLabel={isStarforged ? "Shared Expedition" : "Shared Journey"}
           handleAdd={(newTrack) => addCampaignProgressTrack(newTrack)}
           handleUpdateValue={(trackId, value) =>
             updateCampaignProgressTrack(trackId, { value })
