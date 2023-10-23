@@ -1,7 +1,8 @@
 import { Box, SxProps, Typography } from "@mui/material";
+import { getPublicAssetPath } from "functions/getPublicAssetPath";
 
 export interface EmptyStateProps {
-  imageSrc?: string;
+  showImage?: boolean;
   title?: string;
   message?: string;
   callToAction?: React.ReactNode;
@@ -9,16 +10,19 @@ export interface EmptyStateProps {
 }
 
 export function EmptyState(props: EmptyStateProps) {
-  const { imageSrc, title, message, callToAction, sx } = props;
+  const { showImage, title, message, callToAction, sx } = props;
+
+  const imageSrc = getPublicAssetPath("empty-state.svg");
+
   return (
     <Box
       display={"flex"}
       flexDirection={"column"}
       alignItems={"center"}
-      mt={imageSrc ? 8 : 2}
+      mt={showImage ? 8 : 2}
       sx={sx}
     >
-      {imageSrc && (
+      {showImage && (
         <Box
           width={200}
           height={200}

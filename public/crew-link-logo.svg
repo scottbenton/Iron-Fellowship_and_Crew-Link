@@ -7,58 +7,50 @@
    version="1.1"
    viewBox="0 0 120 120"
    id="svg4"
-   sodipodi:docname="crew-link-logo.svg"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs4" />
-  <sodipodi:namedview
-     id="namedview4"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="1.4356643"
-     inkscape:cx="188.06625"
-     inkscape:cy="219.06236"
-     inkscape:window-width="1500"
-     inkscape:window-height="931"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="g4" />
   <g
-     transform="matrix(1.2073 0 0 1.2073 -12.439 -9.8678)"
+     transform="matrix(1.2073,0,0,1.2073,-12.439,-9.8678)"
      stroke-width="0"
      id="g4">
-    <circle
-       cx="60"
-       cy="57.87"
-       r="49.697"
-       fill="#ff6584"
-       id="circle1"
-       style="fill:#a16207;fill-opacity:1" />
+    <g
+       id="g39"
+       transform="rotate(-90,62.055723,74.038701)">
+      <g
+         id="g40"
+         transform="matrix(1.6777316,0,0,1.6777316,-90.837557,-7.6486261)">
+        <g
+           id="g41"
+           transform="rotate(-90,100.72514,47.506731)">
+          <path
+             id="path38-1"
+             clip-path="none"
+             style="fill:#ca8a04;stroke:#ca8a04;stroke-width:2.76919;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:4.4"
+             d="m 126.53638,41.472929 -10.85955,5.934059 -10.85955,-5.934059 V 29.604784 l 10.85955,-5.934074 10.85955,5.934074 z" />
+          <path
+             id="path38-1-2"
+             clip-path="none"
+             style="fill:#ca8a04;stroke:#ca8a04;stroke-width:2.76919;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:4.4"
+             d="M 96.717781,41.472929 85.858226,47.406988 74.998673,41.472929 V 29.604784 l 10.859553,-5.934074 10.859555,5.934074 z" />
+          <path
+             id="path38-1-2-7"
+             clip-path="none"
+             style="fill:#ca8a04;stroke:#ca8a04;stroke-width:2.76919;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:4.4"
+             d="M 111.62708,65.49347 100.76753,71.427529 89.907975,65.49347 V 53.625325 l 10.859555,-5.934074 10.85955,5.934074 z" />
+        </g>
+      </g>
+    </g>
     <path
-       sodipodi:type="star"
-       style="fill:#f9f9f9;fill-opacity:1;stroke-width:0"
-       id="path4"
-       inkscape:flatsided="false"
-       sodipodi:sides="4"
-       sodipodi:cx="25.703014"
-       sodipodi:cy="36.638062"
-       sodipodi:r1="36.617912"
-       sodipodi:r2="12.816269"
-       sodipodi:arg1="0"
-       sodipodi:arg2="0.78539816"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
+       id="path38-6"
+       clip-path="none"
+       style="fill:#ca8a04;stroke:#ca8a04;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:4.4"
+       d="m -109.3283,107.92437 -45.47423,24.84879 -45.47424,-24.84879 V 58.226674 l 45.47424,-24.848856 45.47423,24.848857 z" />
+    <path
+       style="fill:#f9f9f9;fill-opacity:1;stroke:none;stroke-width:4.04613;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       id="path4-2"
        d="m 62.320927,36.638062 -27.555442,9.06247 -9.062471,27.555442 -9.06247,-27.555442 -27.555442,-9.06247 27.555442,-9.062471 9.06247,-27.55544177 9.062471,27.55544177 z"
-       transform="matrix(1.0178968,0,0,1.1309964,33.837812,16.433602)" />
+       transform="matrix(1.1867567,0,0,1.1875462,-185.30576,39.5661)" />
   </g>
 </svg>

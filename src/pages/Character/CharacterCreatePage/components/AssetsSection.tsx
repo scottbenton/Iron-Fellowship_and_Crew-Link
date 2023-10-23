@@ -145,7 +145,7 @@ export function AssetsSection() {
           <EmptyState
             title={"Add Assets"}
             message={"Assets can also be added later from the Character Sheet."}
-            imageSrc={"/assets/nature.svg"}
+            showImage
             callToAction={
               <Button
                 color={"inherit"}

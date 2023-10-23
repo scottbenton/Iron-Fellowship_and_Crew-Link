@@ -90,7 +90,7 @@ export function WorldSelectPage() {
         {error && <Alert>Error loading your worlds.</Alert>}
         {!worldIds || worldIds.length === 0 ? (
           <EmptyState
-            imageSrc="/assets/nature.svg"
+            showImage
             title={"Create your First World"}
             message={
               "Worlds allow you to share location notes and truths across multiple characters or campaigns."

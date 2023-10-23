@@ -18,6 +18,7 @@ import { CharacterSettings } from "./CharacterSettings";
 import { CustomTrackSettings } from "components/features/charactersAndCampaigns/CustomTrackSettings";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { useAppName } from "hooks/useAppName";
 
 export function CharacterSection() {
   const { gameSystem } = useGameSystem();
@@ -70,6 +71,8 @@ export function CharacterSection() {
     (store) => store.settings.delve.showDelveOracles
   );
   const updateSettings = useStore((store) => store.settings.updateSettings);
+
+  const appName = useAppName();
 
   return (
     <Stack spacing={2} pb={2}>
@@ -130,10 +133,10 @@ export function CharacterSection() {
       <Box px={2}>
         <Alert severity="info">
           <div>
-            Iron Fellowship includes an overlay for OBS or other webcam editors
-            so you can overlay information about your character as you play. You
-            can add the given link as a browser source over your camera to
-            display this information.
+            {appName} includes an overlay for OBS or other webcam editors so you
+            can overlay information about your character as you play. You can
+            add the given link as a browser source over your camera to display
+            this information.
           </div>
           <Button
             onClick={() => copyLinkToClipboard()}

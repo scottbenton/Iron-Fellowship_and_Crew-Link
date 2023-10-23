@@ -22,6 +22,7 @@ import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { useAppName } from "hooks/useAppName";
 
 export function Header() {
   const state = useStore((store) => store.auth.status);
@@ -33,10 +34,7 @@ export function Header() {
     [GAME_SYSTEMS.STARFORGED]: CrewLinkLogo,
   });
 
-  const title = useGameSystemValue({
-    [GAME_SYSTEMS.IRONSWORN]: "Iron Fellowship",
-    [GAME_SYSTEMS.STARFORGED]: "Crew Link",
-  });
+  const title = useAppName();
 
   return (
     <AppBar

@@ -85,12 +85,11 @@ export function Track(props: TrackProps) {
         disabled={disabled || loading}
         value={value}
         onChange={(evt, value) => handleChange(value)}
-        sx={[
-          {
-            width: "100%",
-            display: "flex",
-          },
-        ]}
+        sx={(theme) => ({
+          width: "100%",
+          display: "flex",
+          bgcolor: theme.palette.background.paper,
+        })}
       >
         {numbers.map((num, index) => (
           <ToggleButton

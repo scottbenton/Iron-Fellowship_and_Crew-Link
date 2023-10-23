@@ -24,6 +24,9 @@ import { StoredMove } from "types/Moves.type";
 import { MoveStatKeys, PlayerConditionMeter, Stat } from "types/stats.enum";
 import type { OracleTable } from "dataforged";
 import { useStore } from "stores/store";
+import { useDataswornId } from "hooks/useDataswornId";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 type EnabledStats = {
   [stat: string]: boolean;
@@ -72,6 +75,8 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
     initialValues.enabledStats[stat] = true;
   });
 
+  const { getCustomId } = useDataswornId();
+
   const handleCancel = () => {
     onClose();
   };
@@ -90,7 +95,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
       Object.keys(values.enabledStats) as MoveStatKeys[]
     ).filter((key) => values.enabledStats[key]);
     const customMoveDocument: StoredMove = {
-      $id: generateCustomDataswornId("ironsworn/moves", values.name),
+      $id: getCustomId("moves", values.name),
       name: values.name,
       text: values.description,
       stats,
@@ -142,6 +147,8 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
 
     return isMissingOracle;
   };
+
+  const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -403,6 +410,25 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                           }
                           label="Companion Health"
                         />
+                        {isStarforged && (
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={
+                                  form.values.enabledStats["integrity"] ?? false
+                                }
+                                onChange={(evt, checked) =>
+                                  form.setFieldValue(
+                                    `enabledStats.integrity`,
+                                    checked
+                                  )
+                                }
+                                name={`enabledStats.integrity`}
+                              />
+                            }
+                            label="Integrity"
+                          />
+                        )}
                       </FormGroup>
                     </Box>
                   </FormControl>

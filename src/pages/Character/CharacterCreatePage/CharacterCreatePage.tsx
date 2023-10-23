@@ -23,6 +23,7 @@ import { addCharacterToCampaign } from "api-calls/campaign/addCharacterToCampaig
 import { ImageInput } from "./components/ImageInput";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { useAppName } from "hooks/useAppName";
 
 type CharacterCreateFormValues = {
   name: string;
@@ -126,11 +127,17 @@ export function CharacterCreatePage() {
       .finally(() => setCreateCharacterLoading(false));
   };
 
+  const appName = useAppName();
+  const gameSystem = useGameSystemValue({
+    [GAME_SYSTEMS.IRONSWORN]: "an Ironsworn",
+    [GAME_SYSTEMS.STARFORGED]: "a Starforged",
+  });
+
   return (
     <>
       <Head
         title={"Create a Character"}
-        description={"Create an Ironsworn character on Iron Fellowship"}
+        description={`Create ${gameSystem} character on ${appName}`}
       />
       <PageHeader label={"Create your Character"} />
       <PageContent isPaper>

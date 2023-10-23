@@ -5,6 +5,7 @@ import { oracleMap, orderedCategories } from "data/oracles";
 import { License } from "types/Datasworn";
 import { useCustomOracles } from "./useCustomOracles";
 import { useStore } from "stores/store";
+import { useAppName } from "hooks/useAppName";
 
 export function useFilterOracles() {
   const { search, setSearch, debouncedSearch } = useSearch();
@@ -15,6 +16,8 @@ export function useFilterOracles() {
   const showDelveOracles = useStore(
     (store) => store.settings.delve.showDelveOracles
   );
+
+  const appName = useAppName();
 
   const combinedOracles = useMemo(() => {
     const pinnedOracleIds = Object.keys(pinnedOracles);
@@ -44,7 +47,7 @@ export function useFilterOracles() {
             },
             Ancestors: [],
             Source: {
-              Title: "Iron Fellowship",
+              Title: appName,
               Authors: [],
               License: License.None,
             },
@@ -54,7 +57,7 @@ export function useFilterOracles() {
     return pinnedOracleSection
       ? [pinnedOracleSection, ...orderedCategories]
       : orderedCategories;
-  }, [pinnedOracles]);
+  }, [pinnedOracles, appName]);
 
   const [filteredOracles, setFilteredOracles] = useState(combinedOracles);
 

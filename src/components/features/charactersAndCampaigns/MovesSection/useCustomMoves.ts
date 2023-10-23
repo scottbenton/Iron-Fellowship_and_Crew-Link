@@ -1,10 +1,14 @@
 import { Move, MoveCategory } from "dataforged";
 import { useEffect, useMemo, useState } from "react";
 import { License, RollMethod, RollType } from "types/Datasworn";
-import { customMoveCategoryPrefix, StoredMove } from "types/Moves.type";
+import { StoredMove } from "types/Moves.type";
 import { useStore } from "stores/store";
+import { useDataswornId } from "hooks/useDataswornId";
 
-function convertStoredMoveToMove(storedMove: StoredMove): Move {
+function convertStoredMoveToMove(
+  categoryId: string,
+  storedMove: StoredMove
+): Move {
   return {
     $id: storedMove.$id,
     Title: {
@@ -13,7 +17,7 @@ function convertStoredMoveToMove(storedMove: StoredMove): Move {
       Standard: storedMove.name,
       Short: storedMove.name,
     },
-    Category: "ironsworn/moves/custom",
+    Category: categoryId,
     Display: {},
     Source: {
       Title: "Custom Move",
@@ -64,9 +68,13 @@ export function useCustomMoves() {
     {}
   );
 
+  const { getCustomIdPrefix } = useDataswornId();
+
   useEffect(() => {
     const moveCategories: MoveCategory[] = [];
     let newMoveMap: { [key: string]: Move } = {};
+
+    const customMoveCategoryPrefix = getCustomIdPrefix("moves");
 
     Object.keys(memoizedMoveMap).forEach((moveAuthorId) => {
       const customMoves = memoizedMoveMap[moveAuthorId];
@@ -79,8 +87,10 @@ export function useCustomMoves() {
 
         customMoves.forEach((storedMove) => {
           if (!hiddenMoveIds.includes(storedMove.$id)) {
-            mappedCustomMoves[storedMove.$id] =
-              convertStoredMoveToMove(storedMove);
+            mappedCustomMoves[storedMove.$id] = convertStoredMoveToMove(
+              customMoveCategoryPrefix,
+              storedMove
+            );
           }
         });
 

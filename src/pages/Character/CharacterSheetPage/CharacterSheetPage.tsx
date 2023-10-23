@@ -40,7 +40,7 @@ export function CharacterSheetPage() {
       <EmptyState
         title={"Character not Found"}
         message={"Please try again from the character selection page"}
-        imageSrc={"/assets/nature.svg"}
+        showImage
         callToAction={
           <Button
             component={Link}

@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { World } from "types/World.type";
 import { EmptyState } from "../../shared/EmptyState/EmptyState";
 import { useStore } from "stores/store";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export interface WorldEmptyStateProps {
   isGM?: boolean;
@@ -42,6 +44,8 @@ export function WorldEmptyState(props: WorldEmptyStateProps) {
       })
       .catch(() => {});
   };
+
+  const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
   return (
     <>
@@ -78,12 +82,14 @@ export function WorldEmptyState(props: WorldEmptyStateProps) {
         </Stack>
       ) : (
         <EmptyState
-          imageSrc={"/assets/nature.svg"}
+          showImage
           title={"No Worlds Found"}
           message={
             isMultiplayer && !isGM
               ? "No world found. Your GM can add a world to the campaign in the GM Screen."
-              : `Worlds allow you to share locations, NPCs, and world truths across different campaigns and characters. ${
+              : `Worlds allow you to share ${
+                  isStarforged ? "sectors" : "locations"
+                }, npcs, lore, and world truths across different campaigns and characters. ${
                   !isOnWorldTab
                     ? `You can add a world from the world tab ${
                         isMultiplayer

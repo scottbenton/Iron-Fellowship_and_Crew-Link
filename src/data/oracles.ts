@@ -109,7 +109,7 @@ function flattenOracleTables(
       },
       Ancestors: [],
       Source: {
-        Title: "Iron Fellowship",
+        Title: set.Source.Title,
         Authors: [],
         License: License.None,
       },
@@ -123,10 +123,10 @@ function flattenOracleTables(
   }
 
   Object.values(set.Tables ?? {}).forEach((table) => {
-    const regex = new RegExp(/(\[⏵)|(\]\([^\)]*\))/, "gi"); //"([⏵)|(]([^)]*))"
+    // const regex = new RegExp(/(\[)|(\[⏵)|(\]\([^\)]*\))/, "gi"); //"([⏵)|(]([^)]*))"
     const fixedTable = table.Table.map((tableRow) => {
       const newRow = { ...tableRow };
-      newRow.Result = tableRow.Result.replaceAll(regex, "");
+      // newRow.Result = tableRow.Result.replaceAll(regex, "");
       return newRow;
     });
     if (!subsetTitlePrefix) {

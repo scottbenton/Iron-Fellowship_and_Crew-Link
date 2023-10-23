@@ -1,5 +1,3 @@
-import { assetTypeToIdMap, AssetType } from "types/Asset.type";
-
 export function encodeDataswornId(id: string) {
   return encodeURIComponent(id);
 }
@@ -16,10 +14,10 @@ export function generateCustomDataswornId(
 }
 
 export function generateAssetDataswornId(
-  assetGroup: AssetType,
+  assetGroupId: string,
   idContents: string
 ) {
-  return `${assetTypeToIdMap[assetGroup]}/${encodeContents(idContents)}`;
+  return `${assetGroupId}/${encodeContents(idContents)}`;
 }
 
 export function encodeContents(content: string) {

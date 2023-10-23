@@ -11,6 +11,7 @@ import { PageContent, PageHeader } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { StoredCampaign } from "types/Campaign.type";
+import { useAppName } from "hooks/useAppName";
 
 export function CampaignJoinPage() {
   const { campaignId } = useParams();
@@ -60,6 +61,8 @@ export function CampaignJoinPage() {
     }
   }, [campaignId]);
 
+  const appName = useAppName();
+
   if (getCampaignLoading || !campaignId) {
     return (
       <LinearProgress
@@ -78,7 +81,7 @@ export function CampaignJoinPage() {
       <EmptyState
         title={"Error loading Campaign"}
         message={getCampaignError}
-        imageSrc={"/assets/nature.svg"}
+        showImage
         callToAction={
           <Button
             size={"large"}
@@ -107,9 +110,7 @@ export function CampaignJoinPage() {
     <>
       <Head
         title={`Join ${campaign.name}`}
-        description={
-          "Join your group and begin your adventure on Iron Fellowship"
-        }
+        description={`Join your group and begin your adventure on ${appName}`}
         openGraphImageSrc="/assets/ironsworn-opengraph-join-campaign.png"
       />
       <PageHeader label={"Join " + campaign.name} />
@@ -117,7 +118,7 @@ export function CampaignJoinPage() {
         <EmptyState
           title={`Join the fun`}
           message={"Find your group and begin your journey"}
-          imageSrc={"/assets/nature.svg"}
+          showImage
           callToAction={
             <Button
               size={"large"}

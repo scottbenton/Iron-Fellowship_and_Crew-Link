@@ -16,6 +16,7 @@ const assetCategories: GameSystemChooser<typeof ironswornAssetCategories> = {
 export const assetMap: { [key: string]: DataforgedAsset } = {};
 export const assetTypeLabels: { [key: string]: string } = {
   "ironsworn/assets/role": "Role",
+  "starforged/assets/role": "Role",
 };
 
 Object.values(assetCategories[gameSystem]).forEach((category) => {
