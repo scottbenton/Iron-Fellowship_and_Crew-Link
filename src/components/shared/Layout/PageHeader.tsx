@@ -1,5 +1,4 @@
 import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
-import { Border } from "assets/Border";
 import { getPublicAssetPath } from "functions/getPublicAssetPath";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import React, { PropsWithChildren } from "react";
