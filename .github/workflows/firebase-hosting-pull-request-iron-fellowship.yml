@@ -25,7 +25,7 @@ jobs:
       VITE_POSTHOG_HOST: "${{secrets.POSTHOG_HOST}}"
       VITE_TITLE: "Iron Fellowship DEV"
       VITE_FAVICON_PATH: "/iron-fellowship-logo.svg"
-      VITE_OPENGRAPH_PATH: "/ironsworn/opengraph-default.png"
+      VITE_OPENGRAPH_PATH: "/assets/ironsworn/opengraph-default.png"
     steps:
       - uses: actions/checkout@v2
       - run: npm ci && npm run build

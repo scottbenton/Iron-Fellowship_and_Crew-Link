@@ -25,7 +25,7 @@ jobs:
       VITE_POSTHOG_HOST: "${{secrets.POSTHOG_HOST}}"
       VITE_TITLE: "Crew Link DEV"
       VITE_FAVICON_PATH: "/crew-link-logo.svg"
-      VITE_OPENGRAPH_PATH: "/starforged/opengraph-default.png"
+      VITE_OPENGRAPH_PATH: "/assets/starforged/opengraph-default.png"
     steps:
       - uses: actions/checkout@v2
       - run: npm ci && npm run build
