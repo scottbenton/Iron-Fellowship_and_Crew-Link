@@ -23,6 +23,7 @@ import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useState } from "react";
 import { StoredOracle } from "types/Oracles.type";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useDataswornId } from "hooks/useDataswornId";
 
 interface FormValues {
   name: string;
@@ -87,9 +88,12 @@ export function CustomOracleDialog(props: CustomOracleDialogProps) {
 
     return errors;
   };
+
+  const { getCustomId } = useDataswornId();
+
   const handleSubmit = (values: FormValues) => {
     const customOracleDocument: StoredOracle = {
-      $id: generateCustomDataswornId("ironsworn/oracles", values.name),
+      $id: getCustomId("oracles", values.name),
       name: values.name,
       text: values.description,
       table: values.table as { roll: number; result: string }[],

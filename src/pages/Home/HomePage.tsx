@@ -1,5 +1,7 @@
 import { Box, Typography, Grid, Button, Stack } from "@mui/material";
 import { PageContent, PageHeader } from "components/shared/Layout";
+import { useAppName } from "hooks/useAppName";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
 import {
   CHARACTER_ROUTES,
   constructCharacterPath,
@@ -7,9 +9,21 @@ import {
 import { Link } from "react-router-dom";
 import { BASE_ROUTES, basePaths } from "routes";
 import { useStore } from "stores/store";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { ExampleStatsSection } from "./ExampleStatsSection";
+import { ExampleSupplySection } from "./ExampleSupplySection";
+import { ExampleTrackSection } from "./ExampleTrackSection";
+import { Licensing } from "./Licensing";
+import { getPublicAssetPath } from "functions/getPublicAssetPath";
 
 export function HomePage() {
   const isLoggedIn = useStore((store) => !!store.auth.user);
+
+  const appName = useAppName();
+  const gameSystem = useGameSystemValue({
+    [GAME_SYSTEMS.IRONSWORN]: "Ironsworn",
+    [GAME_SYSTEMS.STARFORGED]: "Starforged",
+  });
 
   return (
     <>
@@ -26,7 +40,7 @@ export function HomePage() {
             fontFamily={(theme) => theme.fontFamilyTitle}
             color={(theme) => theme.palette.common.white}
           >
-            Welcome{isLoggedIn && " back"} to Iron Fellowship
+            Welcome{isLoggedIn && " back"} to {appName}
           </Typography>
           <Typography
             textAlign={"center"}
@@ -34,7 +48,7 @@ export function HomePage() {
             fontFamily={(theme) => theme.fontFamilyTitle}
             color={(theme) => theme.palette.common.white}
           >
-            Get playing with your Ironsworn group in minutes
+            Get playing with your {gameSystem} group in minutes
           </Typography>
           {isLoggedIn ? (
             <Button
@@ -87,13 +101,14 @@ export function HomePage() {
             <Box
               border={(theme) => `1px solid ${theme.palette.divider}`}
               component={"img"}
-              src={"/assets/CharacterSheet.png"}
-              alt={
-                "Screenshot of a character sheet in Iron Fellowship for a character named Eirik"
-              }
+              src={getPublicAssetPath("CharacterSheet.png")}
+              alt={`Screenshot of a character sheet in ${appName}`}
               width={"100%"}
               borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <ExampleStatsSection />
           </Grid>
         </Grid>
         <Grid
@@ -119,13 +134,14 @@ export function HomePage() {
             <Box
               border={(theme) => `1px solid ${theme.palette.divider}`}
               component={"img"}
-              src={"/assets/CampaignView.png"}
-              alt={
-                "Screenshot of a campaign in Iron Fellowship titled Land of Ten Thousand Gods with four characters added."
-              }
+              src={getPublicAssetPath("CampaignView.png")}
+              alt={`Screenshot of a campaign in ${appName}`}
               width={"100%"}
               borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <ExampleSupplySection />
           </Grid>
         </Grid>
         <Grid container rowSpacing={4} columnSpacing={4} pt={8}>
@@ -146,13 +162,16 @@ export function HomePage() {
             <Box
               border={(theme) => `1px solid ${theme.palette.divider}`}
               component={"img"}
-              src={"/assets/GMScreen.png"}
+              src={getPublicAssetPath("GMScreen.png")}
               alt={
                 "Screenshot of a campaign in Iron Fellowship titled Land of Ten Thousand Gods with four characters added."
               }
               width={"100%"}
               borderRadius={(theme) => `${theme.shape.borderRadius}px`}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <ExampleTrackSection />
           </Grid>
         </Grid>
         <Grid
@@ -178,7 +197,7 @@ export function HomePage() {
             <Box
               border={(theme) => `1px solid ${theme.palette.divider}`}
               component={"img"}
-              src={"/assets/WorldSheet.png"}
+              src={getPublicAssetPath("WorldSheet.png")}
               alt={
                 "Screenshot of a campaign in Iron Fellowship titled Land of Ten Thousand Gods with four characters added."
               }
@@ -187,34 +206,7 @@ export function HomePage() {
             />
           </Grid>
         </Grid>
-        <Box
-          display={"flex"}
-          alignItems={"center"}
-          flexDirection={"column"}
-          mb={2}
-        >
-          <Typography
-            textAlign={"center"}
-            variant={"h5"}
-            fontFamily={(theme) => theme.fontFamilyTitle}
-            mt={8}
-          >
-            Ironsworn Licensing
-          </Typography>
-          <Typography
-            maxWidth={"50ch"}
-            color={"textSecondary"}
-            textAlign={"center"}
-          >
-            This work is based on{" "}
-            <a href={"https://www.ironswornrpg.com"}>Ironsworn</a>, created by
-            Shawn Tomkin, and licensed for our use under the{" "}
-            <a href={"https://creativecommons.org/licenses/by-nc-sa/4.0/"}>
-              Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-              International license.
-            </a>
-          </Typography>
-        </Box>
+        <Licensing />
       </PageContent>
     </>
   );

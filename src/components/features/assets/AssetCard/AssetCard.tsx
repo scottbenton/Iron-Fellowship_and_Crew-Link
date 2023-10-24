@@ -25,6 +25,7 @@ import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { assetMap, assetTypeLabels } from "data/assets";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import GroupIcon from "@mui/icons-material/Group";
+import { getIsLocalEnvironment } from "functions/getGameSystem";
 
 export interface AssetCardProps {
   assetId: string;
@@ -63,6 +64,8 @@ export function AssetCard(props: AssetCardProps) {
     handleDeleteClick,
     handleCustomAssetUpdate,
   } = props;
+
+  const isLocal = getIsLocalEnvironment();
 
   const { error } = useSnackbar();
 
@@ -161,6 +164,7 @@ export function AssetCard(props: AssetCardProps) {
               </Tooltip>
             )}
           </Box>
+          {isLocal && <Typography variant={"caption"}>{asset.$id}</Typography>}
           {asset.Requirement && (
             <MarkdownRenderer markdown={asset.Requirement} />
           )}

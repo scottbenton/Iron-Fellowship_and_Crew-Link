@@ -16,6 +16,7 @@ import { PageContent, PageHeader } from "components/shared/Layout";
 import { CampaignCard } from "./components/CampaignCard";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
+import { useAppName } from "hooks/useAppName";
 
 export function CampaignSelectPage() {
   const sortedCampaignIds = useStore((store) =>
@@ -38,6 +39,8 @@ export function CampaignSelectPage() {
   const [createCampaignDialogOpen, setCreateCampaignDialogOpen] =
     useState<boolean>(false);
 
+  const appName = useAppName();
+
   if (loading) {
     return <LinearProgress color={"primary"} />;
   }
@@ -46,9 +49,7 @@ export function CampaignSelectPage() {
     <>
       <Head
         title={"Your Campaigns"}
-        description={
-          "A list of all the campaigns you have joined in Iron Fellowship"
-        }
+        description={`A list of all the campaigns you have joined in ${appName}`}
       />
       <PageHeader
         label={"Your Campaigns"}
@@ -74,7 +75,7 @@ export function CampaignSelectPage() {
         )}
         {sortedCampaignIds.length === 0 ? (
           <EmptyState
-            imageSrc="/assets/nature.svg"
+            showImage
             title={"Create your First Campaign"}
             message={
               "Campaigns allow you to share tracks, worlds, and more between GMs and players"

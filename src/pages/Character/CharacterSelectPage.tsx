@@ -18,6 +18,7 @@ import { PageHeader } from "components/shared/Layout/PageHeader";
 import { PageContent } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
+import { useAppName } from "hooks/useAppName";
 
 export function Component() {
   const characters = useStore((store) => store.characters.characterMap);
@@ -43,6 +44,8 @@ export function Component() {
       .catch(() => {});
   };
 
+  const appName = useAppName();
+
   if (isLoading) {
     return <LinearProgress color={"primary"} />;
   }
@@ -51,7 +54,7 @@ export function Component() {
     <>
       <Head
         title={"Your Characters"}
-        description={"A list of your characters in Iron Fellowship"}
+        description={`A list of your characters in ${appName}`}
       />
       <PageHeader
         label={"Your Characters"}
@@ -80,7 +83,7 @@ export function Component() {
         )}
         {!characters || Object.keys(characters).length === 0 ? (
           <EmptyState
-            imageSrc="/assets/nature.svg"
+            showImage
             title={"Create your First Character"}
             message={"Get started on your journey by creating a new character."}
             callToAction={

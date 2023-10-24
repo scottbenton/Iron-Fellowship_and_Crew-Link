@@ -1,14 +1,14 @@
 import type { OracleSet, OracleTable, OracleTableRow } from "dataforged";
+import { useDataswornId } from "hooks/useDataswornId";
 import { useEffect, useMemo, useState } from "react";
 import { useStore } from "stores/store";
 import { License } from "types/Datasworn";
-import {
-  customOracleCategoryPrefix,
-  StoredOracle,
-  TableColumnType,
-} from "types/Oracles.type";
+import { StoredOracle, TableColumnType } from "types/Oracles.type";
 
-function convertStoredOracleToOracle(storedOracle: StoredOracle): OracleTable {
+function convertStoredOracleToOracle(
+  categoryId: string,
+  storedOracle: StoredOracle
+): OracleTable {
   const table: OracleTableRow[] = [];
 
   let minAmount = 1;
@@ -53,7 +53,7 @@ function convertStoredOracleToOracle(storedOracle: StoredOracle): OracleTable {
         },
       ],
     },
-    Ancestors: [customOracleCategoryPrefix],
+    Ancestors: [categoryId],
     Source: {
       Title: "Custom Oracle",
       Authors: ["Campaign GM"],
@@ -93,9 +93,13 @@ export function useCustomOracles() {
     [oracleId: string]: OracleTable;
   }>({});
 
+  const { getCustomIdPrefix } = useDataswornId();
+
   useEffect(() => {
     const newOracleCategories: OracleSet[] = [];
     let newCustomOracleMap: { [oracleId: string]: OracleTable } = {};
+
+    const customOracleCategoryPrefix = getCustomIdPrefix("oracles");
 
     Object.keys(memoizedOracleMap).forEach((creatorId) => {
       const customOracles = memoizedOracleMap[creatorId];
@@ -110,7 +114,10 @@ export function useCustomOracles() {
           {};
 
         customOracles.forEach((oracle) => {
-          const convertedOracle = convertStoredOracleToOracle(oracle);
+          const convertedOracle = convertStoredOracleToOracle(
+            customOracleCategoryPrefix,
+            oracle
+          );
           if (!hiddenOracleIds.includes(oracle.$id)) {
             mappedCustomOracles[oracle.$id] = convertedOracle;
           }

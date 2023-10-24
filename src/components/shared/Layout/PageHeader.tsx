@@ -1,5 +1,5 @@
 import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
-import { Border } from "assets/Border";
+import { getPublicAssetPath } from "functions/getPublicAssetPath";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import React, { PropsWithChildren } from "react";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
@@ -22,25 +22,21 @@ export function PageHeader(props: PageHeaderProps) {
     [GAME_SYSTEMS.STARFORGED]: false,
   });
 
+  const borderUrl = getPublicAssetPath("border.svg");
+
   return (
     <>
       <Box
         sx={(theme) => ({
           color: theme.palette.darkGrey.contrastText,
           pt: isEmpty ? 0 : 4,
-          pb: isIronsworn ? 12 : 14,
-          mb: isIronsworn ? (isEmpty ? -18 : -12) : isEmpty ? -14 : -8,
+          pb: isEmpty ? 8 : 10,
+          mb: isEmpty ? -8 : -4,
           width: "100vw",
           backgroundColor: isLightTheme
             ? theme.palette.darkGrey.main
             : undefined,
-
-          ...(!isIronsworn
-            ? {
-                borderBottomLeftRadius: "50% 9%",
-                borderBottomRightRadius: "50% 9%",
-              }
-            : {}),
+          position: "relative",
         })}
       >
         <Container
@@ -87,26 +83,23 @@ export function PageHeader(props: PageHeaderProps) {
             </>
           )}
         </Container>
-      </Box>
-      {isIronsworn && (
         <Box
           sx={(theme) => ({
-            backgroundImage: isLightTheme
-              ? `url("${"/assets/border.svg"}")`
-              : undefined,
-            position: "relative",
-            top: theme.spacing(isEmpty ? 18 : 12),
+            backgroundImage: isLightTheme ? `url("${borderUrl}")` : undefined,
+            position: "absolute",
+            top: "100%",
             mt: "-1px",
             mx: -2,
-            transform: "rotate(180deg)",
-            height: theme.spacing(6),
+            transform: isIronsworn ? "rotate(180deg)" : undefined,
+            height: theme.spacing(8),
             backgroundRepeat: "repeat-x",
             backgroundSize: "contain",
-            backgroundPositionY: "bottom",
-            minWidth: 1000,
+            backgroundPositionY: isIronsworn ? "bottom" : undefined,
+            minWidth: isIronsworn ? 1000 : 500,
+            width: "110%",
           })}
         />
-      )}
+      </Box>
     </>
   );
 }

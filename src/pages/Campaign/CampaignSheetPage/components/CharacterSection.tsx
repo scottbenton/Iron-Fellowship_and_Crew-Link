@@ -62,7 +62,7 @@ export function CharacterSection(props: CharacterSectionProps) {
       />
       {campaign.characters.length === 0 && (
         <EmptyState
-          imageSrc="/assets/nature.svg"
+          showImage
           title={"No Characters"}
           message={"Add a character to the campaign to get started"}
           callToAction={

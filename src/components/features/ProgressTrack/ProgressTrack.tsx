@@ -229,6 +229,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         )}
         <Box
           display={"flex"}
+          bgcolor={(theme) => theme.palette.background.paper}
           color={(theme) =>
             theme.palette.mode === "light"
               ? theme.palette.grey[600]

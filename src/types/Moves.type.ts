@@ -12,5 +12,3 @@ export interface MoveDocument {
   moves: { [moveId: string]: StoredMove };
   moveOrder: string[];
 }
-
-export const customMoveCategoryPrefix = "/ironsworn/moves/custom";

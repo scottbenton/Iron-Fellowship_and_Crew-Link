@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 import type { Asset, AssetAbility, InputSelectOption } from "dataforged";
 import { InputType, License } from "types/Datasworn";
-import { AssetType, assetTypeToIdMap, getAssetType } from "types/Asset.type";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { FieldArray, Formik, getIn } from "formik";
 import * as Yup from "yup";
@@ -28,6 +27,10 @@ import {
   generateAssetDataswornId,
 } from "functions/dataswornIdEncoder";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { assetGroups } from "data/assets";
+import { useDataswornId } from "hooks/useDataswornId";
+import { useGameSystem } from "hooks/useGameSystem";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export interface CreateCustomAssetProps {
   handleSelect: (asset: Asset) => void;
@@ -53,7 +56,7 @@ interface FormAssetTrack {
 }
 2;
 interface FormValues {
-  assetType: AssetType;
+  assetType?: string;
   name: string;
   description?: string;
 
@@ -114,7 +117,7 @@ function convertAssetToFormValue(asset?: Asset) {
   });
 
   const initialValues: FormValues = {
-    assetType: getAssetType(asset?.["Asset type"]) ?? AssetType.Companion,
+    assetType: asset?.["Asset type"],
     name: asset?.Title.Standard ?? "",
     description: asset?.Requirement,
 
@@ -136,11 +139,12 @@ function convertAssetToFormValue(asset?: Asset) {
 }
 
 function convertFormValuesToAsset(values: FormValues) {
-  const assetCategoryId = assetTypeToIdMap[values.assetType ?? AssetType.Path];
-  const assetId = generateAssetDataswornId(
-    values.assetType ?? AssetType.Path,
-    values.name
-  );
+  if (!values.assetType) {
+    throw new Error("Asset type must be defined");
+    return;
+  }
+
+  const assetId = generateAssetDataswornId(values.assetType, values.name);
 
   let inputs: Asset["Inputs"];
 
@@ -191,7 +195,7 @@ function convertFormValuesToAsset(values: FormValues) {
       Canonical: values.name,
     },
     Display: {},
-    "Asset type": assetCategoryId,
+    "Asset type": values.assetType,
     Usage: {
       Shared: false,
     },
@@ -232,11 +236,18 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
   const { handleSelect, startingAsset } = props;
 
   const initialValues = convertAssetToFormValue(startingAsset);
+  const { getId } = useDataswornId();
 
   const handleSubmit = (values: FormValues) => {
-    const asset = convertFormValuesToAsset(values);
-    handleSelect(asset as unknown as Asset);
+    try {
+      const asset = convertFormValuesToAsset(values);
+      handleSelect(asset as unknown as Asset);
+    } catch (e) {
+      console.error(e);
+    }
   };
+
+  const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
   return (
     <>
@@ -263,13 +274,12 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                   helperText={form.touched.assetType && form.errors.assetType}
                   fullWidth
                 >
-                  <MenuItem value={AssetType.Companion}>Companion</MenuItem>
-                  <MenuItem value={AssetType.Path}>Path</MenuItem>
-                  <MenuItem value={AssetType.CombatTalent}>
-                    Combat Talent
-                  </MenuItem>
-                  <MenuItem value={AssetType.Ritual}>Ritual</MenuItem>
-                  <MenuItem value={AssetType.Role}>Role</MenuItem>
+                  {Object.values(assetGroups).map((group) => (
+                    <MenuItem value={group.$id} key={group.$id}>
+                      {group.Title.Standard}
+                    </MenuItem>
+                  ))}
+                  <MenuItem value={getId("assets", "role")}>Role</MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -414,7 +424,11 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                           getIn(form.touched, "track.label") &&
                           getIn(form.errors, "track.label")
                             ? getIn(form.errors, "track.label")
-                            : 'For companion health, please label this field "companion health"'
+                            : `For companion health, please label this field "companion health"${
+                                isStarforged
+                                  ? ". For integrity, please label this field integrity."
+                                  : ""
+                              }`
                         }
                       />
                       <NumberField
