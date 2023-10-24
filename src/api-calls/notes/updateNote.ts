@@ -11,6 +11,7 @@ import {
 } from "./_getRef";
 import { firebaseAuth } from "config/firebase.config";
 import { createApiFunction } from "api-calls/createApiFunction";
+import { projectId } from "config/firebase.config";
 
 export const updateNote = createApiFunction<
   {
@@ -41,15 +42,11 @@ export const updateNote = createApiFunction<
 
     // If we are making this call when closing the page, we want to use a fetch call with keepalive
     if (isBeaconRequest) {
-      const contentPath = `projects/${
-        import.meta.env.VITE_FIREBASE_PROJECTID
-      }/databases/(default)/documents${noteContentPath}`;
-      const titlePath = `projects/${
-        import.meta.env.VITE_FIREBASE_PROJECTID
-      }/databases/(default)/documents${noteDocPath}`;
+      const contentPath = `projects/${projectId}/databases/(default)/documents${noteContentPath}`;
+      const titlePath = `projects/${projectId}/databases/(default)/documents${noteDocPath}`;
 
-      const token = (firebaseAuth.currentUser?.toJSON() as any).stsTokenManager
-        .accessToken;
+      const token = window.sessionStorage.getItem("id-token") ?? "";
+
       if (content) {
         fetch(
           `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=notes`,

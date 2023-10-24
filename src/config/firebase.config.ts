@@ -27,6 +27,8 @@ const firebaseConfigs: GameSystemChooser<FirebaseOptions> = {
   },
 };
 
+export const projectId = firebaseConfigs[gameSystem].projectId;
+
 export const firebaseApp = initializeApp(firebaseConfigs[gameSystem]);
 
 export const firebaseAuth = getAuth(firebaseApp);
