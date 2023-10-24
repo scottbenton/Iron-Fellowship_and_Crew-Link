@@ -104,10 +104,10 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
         handleSave(id, yDoc, true);
         // Delay closing because firefox does not support keep-alive
         // NOTE - this is a bad way of handling this, but I can't find a better way to check support for keep alive
-        if (navigator.userAgent?.includes("Mozilla")) {
-          const time = Date.now();
-          while (Date.now() - time < 500) {}
-        }
+        // if (navigator.userAgent?.includes("Mozilla")) {
+        const time = Date.now();
+        while (Date.now() - time < 500) {}
+        // }
       }
     };
     window.addEventListener("beforeunload", onUnloadFunction);
