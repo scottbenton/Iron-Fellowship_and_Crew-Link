@@ -88,9 +88,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
           }
         >
           <ButtonBase
-            onClick={() =>
-              onValueChange(value > 0 ? value - (isLegacy ? 1 : 2) : 0)
-            }
+            onClick={() => onValueChange(value > 0 ? value - 1 : 0)}
             sx={(theme) => ({
               height: isMobile ? 34 : 48,
               backgroundColor:
@@ -147,23 +145,23 @@ export function LegacyTrack(props: LegacyTrackProps) {
                     onExperienceChecked(index * 2, checked)
                   }
                 />
-                <Checkbox
-                  sx={{ p: 0 }}
-                  icon={<UncheckedIcon fontSize={"inherit"} />}
-                  checkedIcon={<CheckedIcon fontSize={"inherit"} />}
-                  disabled={value !== 4}
-                  checked={checkedExperience[index * 2 + 1] ?? false}
-                  onChange={(evt, checked) =>
-                    onExperienceChecked(index * 2 + 1, checked)
-                  }
-                />
+                {!isLegacy && (
+                  <Checkbox
+                    sx={{ p: 0 }}
+                    icon={<UncheckedIcon fontSize={"inherit"} />}
+                    checkedIcon={<CheckedIcon fontSize={"inherit"} />}
+                    disabled={value !== 4}
+                    checked={checkedExperience[index * 2 + 1] ?? false}
+                    onChange={(evt, checked) =>
+                      onExperienceChecked(index * 2 + 1, checked)
+                    }
+                  />
+                )}
               </Box>
             </Box>
           ))}
           <ButtonBase
-            onClick={() =>
-              onValueChange(value < 40 ? value + (isLegacy ? 1 : 2) : 40)
-            }
+            onClick={() => onValueChange(value < 40 ? value + 1 : 40)}
             sx={(theme) => ({
               height: isMobile ? 34 : 48,
               backgroundColor:

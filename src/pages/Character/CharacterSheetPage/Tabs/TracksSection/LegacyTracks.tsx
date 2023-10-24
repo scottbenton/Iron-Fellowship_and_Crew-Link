@@ -32,6 +32,8 @@ export function LegacyTracks() {
   const updateLegacyTrackIsLegacy = (track: string, checked: boolean) => {
     updateCharacter({
       [`legacyTracks.${track}.isLegacy`]: checked,
+      [`legacyTracks.${track}.spentExperience`]: {},
+      [`legacyTracks.${track}.value`]: 0,
     }).catch(() => {});
   };
 
