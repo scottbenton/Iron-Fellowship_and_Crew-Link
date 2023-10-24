@@ -1,6 +1,6 @@
 import { Bytes, updateDoc } from "firebase/firestore";
 import { constructWorldDocPath, getWorldDoc } from "./_getRef";
-import { firebaseAuth } from "config/firebase.config";
+import { firebaseAuth, projectId } from "config/firebase.config";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const updateWorldDescription = createApiFunction<
@@ -16,12 +16,11 @@ export const updateWorldDescription = createApiFunction<
   return new Promise((resolve, reject) => {
     // If we are making this call when closing the page, we want to use a fetch call with keepalive
     if (isBeaconRequest) {
-      const worldDocPath = `projects/${
-        import.meta.env.VITE_FIREBASE_PROJECTID
-      }/databases/(default)/documents${constructWorldDocPath(worldId)}`;
+      const worldDocPath = `projects/${projectId}/databases/(default)/documents${constructWorldDocPath(
+        worldId
+      )}`;
 
-      const token = (firebaseAuth.currentUser?.toJSON() as any).stsTokenManager
-        .accessToken;
+      const token = window.sessionStorage.getItem("id-token") ?? "";
       if (description) {
         fetch(
           `https://firestore.googleapis.com/v1/${worldDocPath}?updateMask.fieldPaths=worldDescription`,

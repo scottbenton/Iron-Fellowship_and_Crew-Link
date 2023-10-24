@@ -3,7 +3,7 @@ import {
   constructPublicNotesLocationDocPath,
   getPublicNotesLocationDoc,
 } from "./_getRef";
-import { firebaseAuth } from "config/firebase.config";
+import { firebaseAuth, projectId } from "config/firebase.config";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 interface Params {
@@ -18,15 +18,12 @@ export const updateLocationNotes = createApiFunction<Params, void>((params) => {
 
   return new Promise((resolve, reject) => {
     if (isBeacon) {
-      const contentPath = `projects/${
-        import.meta.env.VITE_FIREBASE_PROJECTID
-      }/databases/(default)/documents${constructPublicNotesLocationDocPath(
+      const contentPath = `projects/${projectId}/databases/(default)/documents${constructPublicNotesLocationDocPath(
         worldId,
         locationId
       )}`;
 
-      const token = (firebaseAuth.currentUser?.toJSON() as any).stsTokenManager
-        .accessToken;
+      const token = window.sessionStorage.getItem("id-token") ?? "";
       if (notes) {
         fetch(
           `https://firestore.googleapis.com/v1/${contentPath}?updateMask.fieldPaths=notes`,

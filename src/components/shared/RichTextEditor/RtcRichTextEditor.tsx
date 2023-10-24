@@ -4,6 +4,7 @@ import * as Y from "yjs";
 import { RtcEditorComponent } from "./RtcEditorComponent";
 import { TiptapTransformer } from "@hocuspocus/transformer";
 import { useCreateRefFrom } from "hooks/useCreateRefFrom";
+import { firebaseAuth } from "config/firebase.config";
 
 export interface RtcRichTextEditorProps {
   id: string;
@@ -108,10 +109,10 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
         handleSave(id, yDoc, true);
         // Delay closing because firefox does not support keep-alive
         // NOTE - this is a bad way of handling this, but I can't find a better way to check support for keep alive
-        if (navigator.userAgent?.includes("Mozilla")) {
-          const time = Date.now();
-          while (Date.now() - time < 500) {}
-        }
+        // if (navigator.userAgent?.includes("Mozilla")) {
+        //   const time = Date.now();
+        //   while (Date.now() - time < 500) {}
+        // }
       }
     };
     document.addEventListener("visibilitychange", onUnloadFunction);
@@ -124,6 +125,9 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     if (yDoc && hasUnsavedChanges) {
+      firebaseAuth.currentUser?.getIdToken(true).then((token) => {
+        window.sessionStorage.setItem("id-token", token);
+      }); // Force refresh of token in case the user exits soon.
       timeout = setTimeout(() => {
         handleSave(id, yDoc);
       }, 30 * 1000);

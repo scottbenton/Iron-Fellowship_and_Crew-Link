@@ -4,6 +4,7 @@
 
 ### New Features
 
+- Added Starforged!
 - Added sectors in Starforged worlds
 - Added new NPC options for Starforged games
 - Added shared assets for Starforged games
@@ -21,6 +22,7 @@
 - Fixed a bug on read only rich text editors that still allowed cursors to appear
 - Fixed an incorrect oracle link on the Loyalist asset
 - Fixed progress tracks breaking whenever a user used a period in the title
+- Fixed notes sometimes not saving when the browser is closed on mobile
 
 ---
 
