@@ -1,3 +1,4 @@
+import { getPublicAssetPath } from "functions/getPublicAssetPath";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { PropsWithChildren } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
@@ -46,18 +47,18 @@ export function HeadProvider(props: PropsWithChildren) {
         <meta property="og:type" content="website" />
         <meta
           property="og:image"
-          content="/assets/ironsworn-opengraph-default.png"
+          content={getPublicAssetPath("ironsworn-opengraph-default.png")}
         />
         <meta
           property="og:image:secure_url"
-          content="/assets/ironsworn-opengraph-default.png"
+          content={getPublicAssetPath("ironsworn-opengraph-default.png")}
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="twitter:card" content="summary_large_image" />
         <meta
           property="twitter:image"
-          content="/assets/ironsworn-opengraph-default.png"
+          content={getPublicAssetPath("ironsworn-opengraph-default.png")}
         />
       </Helmet>
       {children}

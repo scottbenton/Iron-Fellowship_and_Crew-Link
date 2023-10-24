@@ -12,6 +12,7 @@ import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { StoredCampaign } from "types/Campaign.type";
 import { useAppName } from "hooks/useAppName";
+import { getPublicAssetPath } from "functions/getPublicAssetPath";
 
 export function CampaignJoinPage() {
   const { campaignId } = useParams();
@@ -111,7 +112,7 @@ export function CampaignJoinPage() {
       <Head
         title={`Join ${campaign.name}`}
         description={`Join your group and begin your adventure on ${appName}`}
-        openGraphImageSrc="/assets/ironsworn-opengraph-join-campaign.png"
+        openGraphImageSrc={getPublicAssetPath("opengraph-join-campaign.png")}
       />
       <PageHeader label={"Join " + campaign.name} />
       <PageContent isPaper>
