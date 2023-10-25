@@ -13,6 +13,8 @@ export function Head(props: HeadProps) {
 
   const details = useGameSystemValue(appDetails);
 
+  console.debug(openGraphImageSrc);
+
   return (
     <Helmet>
       <title>

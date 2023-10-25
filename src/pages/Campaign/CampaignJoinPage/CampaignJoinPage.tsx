@@ -112,7 +112,6 @@ export function CampaignJoinPage() {
       <Head
         title={`Join ${campaign.name}`}
         description={`Join your group and begin your adventure on ${appName}`}
-        openGraphImageSrc={getPublicAssetPath("opengraph-join-campaign.png")}
       />
       <PageHeader label={"Join " + campaign.name} />
       <PageContent isPaper>
