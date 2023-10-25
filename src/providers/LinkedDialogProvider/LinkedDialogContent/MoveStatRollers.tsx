@@ -4,11 +4,22 @@ import { PlayerConditionMeter } from "types/stats.enum";
 import { useStore } from "stores/store";
 import { MoveStatRoller } from "./MoveStatRoller";
 import { assetMap } from "data/assets";
+import { LEGACY_TRACK_TYPES, LegacyTrack } from "types/LegacyTrack.type";
 
 export interface MoveStatsProps {
   moveName: string;
   visibleStats: { [key: string]: boolean };
   customMoveStats?: { [label: string]: number };
+}
+
+function getLegacyValue(track: LegacyTrack | undefined) {
+  if (track) {
+    if (track.isLegacy) {
+      return 10;
+    }
+    return Math.floor(track.value / 4);
+  }
+  return 0;
 }
 
 export function MoveStatRollers(props: MoveStatsProps) {
@@ -93,6 +104,25 @@ export function MoveStatRollers(props: MoveStatsProps) {
     return { companions, vehicles };
   });
 
+  const legacies = useStore((store) => {
+    const currentCharacter = store.characters.currentCharacter.currentCharacter;
+
+    if (currentCharacter) {
+      return {
+        [LEGACY_TRACK_TYPES.BONDS]: getLegacyValue(
+          currentCharacter.legacyTracks?.[LEGACY_TRACK_TYPES.BONDS]
+        ),
+        [LEGACY_TRACK_TYPES.QUESTS]: getLegacyValue(
+          currentCharacter.legacyTracks?.[LEGACY_TRACK_TYPES.QUESTS]
+        ),
+        [LEGACY_TRACK_TYPES.DISCOVERIES]: getLegacyValue(
+          currentCharacter.legacyTracks?.[LEGACY_TRACK_TYPES.DISCOVERIES]
+        ),
+      };
+    }
+    return {};
+  });
+
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
       {Object.keys(visibleStats).map(
@@ -101,6 +131,7 @@ export function MoveStatRollers(props: MoveStatsProps) {
             <MoveStatRoller
               key={visibleStat}
               stats={stats ?? {}}
+              legacies={legacies}
               statName={visibleStat}
               companions={companions}
               vehicles={vehicles}
