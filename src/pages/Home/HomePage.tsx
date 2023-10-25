@@ -101,7 +101,7 @@ export function HomePage() {
             <Box
               border={(theme) => `1px solid ${theme.palette.divider}`}
               component={"img"}
-              src={getPublicAssetPath("CharacterSheet.png")}
+              src={getPublicAssetPath("CharacterSheet.webp")}
               alt={`Screenshot of a character sheet in ${appName}`}
               width={"100%"}
               borderRadius={(theme) => `${theme.shape.borderRadius}px`}
@@ -134,7 +134,7 @@ export function HomePage() {
             <Box
               border={(theme) => `1px solid ${theme.palette.divider}`}
               component={"img"}
-              src={getPublicAssetPath("CampaignView.png")}
+              src={getPublicAssetPath("CampaignView.webp")}
               alt={`Screenshot of a campaign in ${appName}`}
               width={"100%"}
               borderRadius={(theme) => `${theme.shape.borderRadius}px`}
@@ -162,7 +162,7 @@ export function HomePage() {
             <Box
               border={(theme) => `1px solid ${theme.palette.divider}`}
               component={"img"}
-              src={getPublicAssetPath("GMScreen.png")}
+              src={getPublicAssetPath("GMScreen.webp")}
               alt={
                 "Screenshot of a campaign in Iron Fellowship titled Land of Ten Thousand Gods with four characters added."
               }
@@ -197,7 +197,7 @@ export function HomePage() {
             <Box
               border={(theme) => `1px solid ${theme.palette.divider}`}
               component={"img"}
-              src={getPublicAssetPath("WorldSheet.png")}
+              src={getPublicAssetPath("WorldSheet.webp")}
               alt={
                 "Screenshot of a campaign in Iron Fellowship titled Land of Ten Thousand Gods with four characters added."
               }
