@@ -13,6 +13,7 @@ export function ContainedTabPanel(props: ContainedTabPanelProps) {
 
   return (
     <Box
+      role={"tabpanel"}
       flexGrow={1}
       overflow={"auto"}
       bgcolor={(theme) =>
