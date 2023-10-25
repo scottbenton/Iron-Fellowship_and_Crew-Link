@@ -1,6 +1,6 @@
 ![Iron Fellowship](./readme_assets/banner.png)
 
-<!-- [Iron Fellowship](https://iron-fellowship.scottbenton.dev) | [Crew Link](https://starforged-crew-link.scottbenton.dev/) -->
+[Iron Fellowship](https://iron-fellowship.scottbenton.dev) | [Crew Link](https://starforged-crew-link.scottbenton.dev/)
 
 Welcome! Iron Fellowship and Crew Link are applications for anyone playing the Tabletop RPGs [Ironsworn or Starforged](https://www.ironswornrpg.com/) to use.
 Featuring clean character sheets, campaigns with shared assets and tracks, and cloud sync across all your devices.
