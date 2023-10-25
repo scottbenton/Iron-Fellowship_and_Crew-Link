@@ -1,5 +1,5 @@
 import { StoredAsset } from "./Asset.type";
-import { LegacyTrack } from "./LegacyTrack.type";
+import { LEGACY_TRACK_TYPES, LegacyTrack } from "./LegacyTrack.type";
 
 export type StatsMap = {
   [key: string]: number;
@@ -26,9 +26,9 @@ export interface CharacterDocument {
     spent?: number;
   };
   legacyTracks?: {
-    quests?: LegacyTrack;
-    bonds?: LegacyTrack;
-    discoveries?: LegacyTrack;
+    [LEGACY_TRACK_TYPES.QUESTS]?: LegacyTrack;
+    [LEGACY_TRACK_TYPES.BONDS]?: LegacyTrack;
+    [LEGACY_TRACK_TYPES.DISCOVERIES]?: LegacyTrack;
   };
   bonds?: number;
   debilities?: {

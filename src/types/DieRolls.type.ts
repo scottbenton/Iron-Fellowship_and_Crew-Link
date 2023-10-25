@@ -1,4 +1,5 @@
 import { TRACK_TYPES } from "types/Track.type";
+import { LEGACY_TRACK_TYPES } from "./LegacyTrack.type";
 
 export enum ROLL_RESULT {
   HIT,
@@ -45,7 +46,7 @@ export interface TrackProgressRoll extends BaseRoll {
   challenge2: number;
   trackProgress: number;
   result: ROLL_RESULT;
-  trackType: TRACK_TYPES;
+  trackType: TRACK_TYPES | LEGACY_TRACK_TYPES;
 }
 
 export interface ClockProgressionRoll extends BaseRoll {

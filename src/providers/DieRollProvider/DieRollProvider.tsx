@@ -17,6 +17,7 @@ import { oracleCategoryMap, oracleMap } from "data/oracles";
 import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { TRACK_TYPES } from "types/Track.type";
 import { useStore } from "stores/store";
+import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -159,7 +160,7 @@ export function DieRollProvider(props: PropsWithChildren) {
   };
 
   const rollTrackProgress = (
-    trackType: TRACK_TYPES,
+    trackType: TRACK_TYPES | LEGACY_TRACK_TYPES,
     trackLabel: string,
     trackProgress: number
   ) => {

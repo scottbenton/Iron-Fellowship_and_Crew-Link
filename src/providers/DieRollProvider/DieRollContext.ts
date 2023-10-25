@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { ROLL_RESULT, Roll } from "types/DieRolls.type";
+import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
 import { TRACK_TYPES } from "types/Track.type";
 
 export interface IDieRollContext {
@@ -17,7 +18,7 @@ export interface IDieRollContext {
     gmsOnly?: boolean
   ) => string | undefined;
   rollTrackProgress: (
-    trackType: TRACK_TYPES,
+    trackType: TRACK_TYPES | LEGACY_TRACK_TYPES,
     trackTitle: string,
     trackProgress: number
   ) => ROLL_RESULT;
