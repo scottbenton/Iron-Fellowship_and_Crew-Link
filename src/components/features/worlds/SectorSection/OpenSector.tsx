@@ -107,7 +107,6 @@ export function OpenSector(props: OpenSectorProps) {
         false
       );
 
-      console.debug(convertedClass, planetDescriptions);
       const description = convertedClass
         ? planetDescriptions[convertedClass] ?? ""
         : "";
