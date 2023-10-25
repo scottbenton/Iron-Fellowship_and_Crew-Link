@@ -98,13 +98,18 @@ export function OpenSector(props: OpenSectorProps) {
       if (!planetClass) {
         return;
       }
-      const convertedClass = planetClass?.split(" ")[0].toLocaleLowerCase();
+      const convertedClass = planetClass
+        ?.split(" ")[0]
+        .toLocaleLowerCase()
+        .replace("[⏵", "");
       const name = rollOracleTable(
         `starforged/oracles/planets/${convertedClass}/sample_names`,
         false
       );
+
+      console.debug(convertedClass, planetDescriptions);
       const description = convertedClass
-        ? planetDescriptions[convertedClass]
+        ? planetDescriptions[convertedClass] ?? ""
         : "";
 
       locationId = await createLocation({
