@@ -59,7 +59,7 @@ export function OracleCategory(props: OracleCategoryProps) {
           if (hiddenOracleIds[oracleId] || !oracle) return null;
           return (
             <OracleListItem
-              id={oracleId}
+              id={oracle.$id}
               key={index}
               text={
                 oracleId === "ironsworn/oracles/moves/reveal_a_danger_alt"
