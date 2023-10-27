@@ -38,6 +38,8 @@ export function HeaderMenu() {
     <>
       <ButtonBase
         sx={{ borderRadius: "100%", ml: 2 }}
+        aria-label={"User Settings Menu Toggle"}
+        focusRipple
         ref={anchorRef}
         onClick={() => setMenuOpen(true)}
       >

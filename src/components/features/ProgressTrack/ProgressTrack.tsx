@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
 import PlusIcon from "@mui/icons-material/Add";
@@ -160,12 +160,15 @@ export function ProgressTrack(props: ProgressTracksProps) {
     setChecks(checks);
   }, [max, value]);
 
+  const labelId = useId();
+
   return (
     <Box>
       <Box>
         {difficulty && !hideDifficultyLabel && (
           <Typography
             variant={"subtitle1"}
+            component={"p"}
             color={(theme) => theme.palette.text.secondary}
             fontFamily={(theme) => theme.fontFamilyTitle}
           >
@@ -175,6 +178,8 @@ export function ProgressTrack(props: ProgressTracksProps) {
         {(label || onEdit) && (
           <Typography
             variant={"h6"}
+            component={"p"}
+            id={labelId}
             color={(theme) => theme.palette.text.primary}
             fontFamily={(theme) => theme.fontFamilyTitle}
           >
@@ -194,6 +199,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         {description && (
           <Typography
             variant={"subtitle1"}
+            component={"p"}
             color={(theme) => theme.palette.text.secondary}
             whiteSpace={"pre-wrap"}
           >
@@ -204,12 +210,14 @@ export function ProgressTrack(props: ProgressTracksProps) {
       <Box display={"flex"} mt={label ? 1 : 0}>
         {onValueChange && (
           <ButtonBase
+            aria-label={"Decrement Track"}
             onClick={() =>
               onValueChange &&
               onValueChange(
                 value > 0 ? value - getDifficultyStep(difficulty) : 0
               )
             }
+            focusRipple
             sx={(theme) => ({
               backgroundColor:
                 theme.palette.darkGrey[
@@ -238,6 +246,14 @@ export function ProgressTrack(props: ProgressTracksProps) {
           borderTop={1}
           borderBottom={1}
           borderColor={(theme) => theme.palette.divider}
+          role={"progressbar"}
+          aria-labelledby={labelId}
+          aria-valuemin={0}
+          aria-valuemax={max}
+          aria-valuenow={value}
+          aria-valuetext={`${value} (${Math.floor(
+            value / 4
+          )} boxes fully filled)`}
         >
           {checks.map((value, index) => (
             <Box
@@ -250,12 +266,13 @@ export function ProgressTrack(props: ProgressTracksProps) {
                   index !== 0 ? theme.palette.divider : undefined,
               })}
             >
-              <ProgressTrackTick value={value} key={index} />
+              <ProgressTrackTick value={value} key={index} aria-hidden />
             </Box>
           ))}
         </Box>
         {onValueChange && (
           <ButtonBase
+            aria-label={"Increment Track"}
             onClick={() =>
               onValueChange(
                 value < max ? value + getDifficultyStep(difficulty) : max

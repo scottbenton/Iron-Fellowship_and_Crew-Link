@@ -61,6 +61,7 @@ export function ExampleStatsSection() {
           fullWidth
           variant={"outlined"}
           color={"primary"}
+          autoComplete={"off"}
         />
         <Box
           display={"flex"}

@@ -13,6 +13,7 @@ const tickProps = (sizeValue: number) => ({
   height: sizeValue,
   strokeWidth: 4,
   style: { stroke: "currentcolor" },
+  "aria-hidden": true,
 });
 
 export function ProgressTrackTick(props: ProgressTrackTickProps) {

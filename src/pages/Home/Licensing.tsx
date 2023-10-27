@@ -28,10 +28,19 @@ export function Licensing() {
     ),
   });
   return (
-    <Box display={"flex"} alignItems={"center"} flexDirection={"column"} mb={2}>
+    <Box
+      display={"flex"}
+      alignItems={"center"}
+      flexDirection={"column"}
+      mb={2}
+      component={"section"}
+      aria-labelledby={"licensing"}
+    >
       <Typography
         textAlign={"center"}
         variant={"h5"}
+        component={"h2"}
+        id={"licensing"}
         fontFamily={(theme) => theme.fontFamilyTitle}
         mt={8}
       >

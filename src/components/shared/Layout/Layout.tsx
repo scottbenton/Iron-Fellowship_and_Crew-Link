@@ -69,7 +69,9 @@ export function Layout(props: LayoutProps) {
       })}
     >
       <Header />
-      <Outlet />
+      <main>
+        <Outlet />
+      </main>
       <Footer />
       <UserNameDialog
         open={userNameDialogOpen}

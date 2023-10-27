@@ -37,6 +37,7 @@ export function HomePage() {
           <Typography
             textAlign={"center"}
             variant={"h3"}
+            component={"h1"}
             fontFamily={(theme) => theme.fontFamilyTitle}
             color={(theme) => theme.palette.common.white}
           >
@@ -45,10 +46,11 @@ export function HomePage() {
           <Typography
             textAlign={"center"}
             variant={"h6"}
+            component={"p"}
             fontFamily={(theme) => theme.fontFamilyTitle}
             color={(theme) => theme.palette.common.white}
           >
-            Get playing with your {gameSystem} group in minutes
+            {`Get playing with your ${gameSystem} group in minutes`}
           </Typography>
           {isLoggedIn ? (
             <Button
@@ -63,7 +65,7 @@ export function HomePage() {
           ) : (
             <Stack direction={"row"} spacing={1} mt={4}>
               <Button
-                color={"primary"}
+                color={"inherit"}
                 component={Link}
                 to={basePaths[BASE_ROUTES.LOGIN]}
               >
@@ -82,10 +84,19 @@ export function HomePage() {
         </Box>
       </PageHeader>
       <PageContent isPaper maxWidth={"md"}>
-        <Grid container rowSpacing={4} columnSpacing={4} pt={2}>
+        <Grid
+          container
+          component={"section"}
+          aria-labelledby={"create-characters"}
+          rowSpacing={4}
+          columnSpacing={4}
+          pt={2}
+        >
           <Grid item xs={12} sm={6}>
             <Typography
               variant={"h5"}
+              component={"h2"}
+              id={"create-characters"}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
               Create Characters
@@ -113,6 +124,8 @@ export function HomePage() {
         </Grid>
         <Grid
           container
+          component={"section"}
+          aria-labelledby={"join-campaigns"}
           rowSpacing={4}
           columnSpacing={4}
           pt={8}
@@ -121,6 +134,8 @@ export function HomePage() {
           <Grid item xs={12} sm={6}>
             <Typography
               variant={"h5"}
+              component={"h2"}
+              id={"join-campaigns"}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
               Join Campaigns
@@ -144,10 +159,19 @@ export function HomePage() {
             <ExampleSupplySection />
           </Grid>
         </Grid>
-        <Grid container rowSpacing={4} columnSpacing={4} pt={8}>
+        <Grid
+          container
+          component={"section"}
+          aria-labelledby={"gm-tools"}
+          rowSpacing={4}
+          columnSpacing={4}
+          pt={8}
+        >
           <Grid item xs={12} sm={6}>
             <Typography
               variant={"h5"}
+              component={"h2"}
+              id={"gm-tools"}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
               GM Tools
@@ -176,6 +200,8 @@ export function HomePage() {
         </Grid>
         <Grid
           container
+          component={"section"}
+          aria-labelledby={"share-worlds"}
           rowSpacing={4}
           columnSpacing={4}
           pt={8}
@@ -184,6 +210,8 @@ export function HomePage() {
           <Grid item xs={12} sm={6}>
             <Typography
               variant={"h5"}
+              component={"h2"}
+              id={"share-worlds"}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
               Share Worlds
