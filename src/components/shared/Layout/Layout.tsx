@@ -16,6 +16,7 @@ import { sendPageViewEvent } from "lib/analytics.lib";
 import { UserNameDialog } from "components/shared/UserNameDialog";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
+import { SkipToContentButton } from "./SkipToContentButton";
 
 export interface LayoutProps {}
 
@@ -68,8 +69,9 @@ export function Layout(props: LayoutProps) {
         backgroundColor: theme.palette.background.default,
       })}
     >
+      <SkipToContentButton />
       <Header />
-      <main>
+      <main id={"main-content"}>
         <Outlet />
       </main>
       <Footer />

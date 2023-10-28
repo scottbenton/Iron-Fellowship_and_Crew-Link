@@ -87,7 +87,6 @@ export function HomePage() {
         <Grid
           container
           component={"section"}
-          aria-labelledby={"create-characters"}
           rowSpacing={4}
           columnSpacing={4}
           pt={2}
@@ -96,7 +95,6 @@ export function HomePage() {
             <Typography
               variant={"h5"}
               component={"h2"}
-              id={"create-characters"}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
               Create Characters
@@ -125,7 +123,6 @@ export function HomePage() {
         <Grid
           container
           component={"section"}
-          aria-labelledby={"join-campaigns"}
           rowSpacing={4}
           columnSpacing={4}
           pt={8}
@@ -135,7 +132,6 @@ export function HomePage() {
             <Typography
               variant={"h5"}
               component={"h2"}
-              id={"join-campaigns"}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
               Join Campaigns
@@ -162,7 +158,6 @@ export function HomePage() {
         <Grid
           container
           component={"section"}
-          aria-labelledby={"gm-tools"}
           rowSpacing={4}
           columnSpacing={4}
           pt={8}
@@ -171,7 +166,6 @@ export function HomePage() {
             <Typography
               variant={"h5"}
               component={"h2"}
-              id={"gm-tools"}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
               GM Tools
@@ -201,7 +195,6 @@ export function HomePage() {
         <Grid
           container
           component={"section"}
-          aria-labelledby={"share-worlds"}
           rowSpacing={4}
           columnSpacing={4}
           pt={8}
@@ -211,7 +204,6 @@ export function HomePage() {
             <Typography
               variant={"h5"}
               component={"h2"}
-              id={"share-worlds"}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
               Share Worlds

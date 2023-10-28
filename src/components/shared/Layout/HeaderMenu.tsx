@@ -22,6 +22,8 @@ import {
   CHARACTER_ROUTES,
   constructCharacterPath,
 } from "pages/Character/routes";
+import AccessibilityIcon from "@mui/icons-material/AccessibilityNew";
+import { AccessibilitySettingsDialog } from "../AccessibilitySettingsDialog/AccessibilitySettingsDialog";
 
 export function HeaderMenu() {
   const userId = useStore((store) => store.auth.uid);
@@ -33,6 +35,9 @@ export function HeaderMenu() {
 
   const { gameSystem, chooseGameSystem } = useGameSystem();
   const isLocal = getIsLocalEnvironment();
+
+  const [accessibilitySettingsOpen, setAccessibilitySettingsOpen] =
+    useState(false);
 
   return (
     <>
@@ -50,6 +55,17 @@ export function HeaderMenu() {
         onClose={() => setMenuOpen(false)}
         anchorEl={anchorRef.current}
       >
+        <MenuItem
+          onClick={() => {
+            setMenuOpen(false);
+            setAccessibilitySettingsOpen(true);
+          }}
+        >
+          <ListItemIcon>
+            <AccessibilityIcon />
+          </ListItemIcon>
+          <ListItemText>Accessibility Settings</ListItemText>
+        </MenuItem>
         <MenuItem
           onClick={() => {
             setMenuOpen(false);
@@ -99,6 +115,10 @@ export function HeaderMenu() {
           </MenuItem>
         )}
       </Menu>
+      <AccessibilitySettingsDialog
+        open={accessibilitySettingsOpen}
+        onClose={() => setAccessibilitySettingsOpen(false)}
+      />
     </>
   );
 }

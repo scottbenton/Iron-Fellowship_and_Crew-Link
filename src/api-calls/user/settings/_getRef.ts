@@ -1,18 +1,18 @@
 import { firestore } from "config/firebase.config";
 import {
-  collection,
   CollectionReference,
-  doc,
   DocumentReference,
+  collection,
+  doc,
 } from "firebase/firestore";
-import { OracleSettings } from "types/UserOracleSettings.type";
+import { IAccessibilitySettings } from "types/UserAccessibilitySettings.type";
 
 export function constructUserSettingsCollectionPath(userId: string) {
   return `/users/${userId}/settings`;
 }
 
-export function constructUserOracleSettingsDocPath(userId: string) {
-  return `/users/${userId}/settings/oracle`;
+export function constructUserAccessibilitySettingsDocPath(userId: string) {
+  return `/users/${userId}/settings/accessibility`;
 }
 
 export function getUserSettingsCollectionRef(userId: string) {
@@ -22,9 +22,9 @@ export function getUserSettingsCollectionRef(userId: string) {
   ) as CollectionReference<any>;
 }
 
-export function getUserOracleSettingsDoc(userId: string) {
+export function getUserAccessibilitySettingsDoc(userId: string) {
   return doc(
     firestore,
-    constructUserOracleSettingsDocPath(userId)
-  ) as DocumentReference<OracleSettings>;
+    constructUserAccessibilitySettingsDocPath(userId)
+  ) as DocumentReference<IAccessibilitySettings>;
 }

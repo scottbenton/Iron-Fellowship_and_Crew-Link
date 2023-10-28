@@ -68,7 +68,7 @@ export function StatComponent(props: StatComponentProps) {
             ["background-color", "border-color", "outline-width"],
             { duration: theme.transitions.duration.shorter }
           ),
-          "&>p[id$='-label']": {
+          "&>[id$='-label']": {
             transition: theme.transitions.create(
               ["background-color", "color"],
               { duration: theme.transitions.duration.shorter }
@@ -82,7 +82,7 @@ export function StatComponent(props: StatComponentProps) {
             updateTrack || disableRoll
               ? {}
               : {
-                  "&>p[id$='-label']": {
+                  "&>[id$='-label']": {
                     backgroundColor: theme.palette.background.paperInlayDarker,
                     color: theme.palette.text.primary,
                   },
@@ -114,7 +114,7 @@ export function StatComponent(props: StatComponentProps) {
         display={"block"}
         textAlign={"center"}
         variant={"subtitle1"}
-        component={"p"}
+        component={"span"}
         lineHeight={1}
         id={`${label}-label`}
       >
@@ -135,7 +135,7 @@ export function StatComponent(props: StatComponentProps) {
             updateTrack ? { lineHeight: "1.5rem" } : {},
           ]}
           variant={"h6"}
-          component={"p"}
+          component={"span"}
           textAlign={"center"}
         >
           <Typography component={"span"} variant={"body1"} mr={0.2}>

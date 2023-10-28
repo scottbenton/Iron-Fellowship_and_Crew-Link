@@ -1,4 +1,4 @@
-import { arrayRemove, arrayUnion, setDoc, updateDoc } from "firebase/firestore";
+import { setDoc, updateDoc } from "firebase/firestore";
 import { getCampaignSettingsDoc, getCharacterSettingsDoc } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 import { SettingsDoc } from "types/Settings.type";
