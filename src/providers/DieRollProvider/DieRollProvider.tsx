@@ -153,7 +153,11 @@ export function DieRollProvider(props: PropsWithChildren) {
     const roll = getRoll(100);
     const entry =
       oracle.Table.find(
-        (entry) => (entry.Floor ?? 0) <= roll && roll <= (entry.Ceiling ?? 100)
+        (entry) =>
+          entry.Floor !== null &&
+          entry.Ceiling !== null &&
+          entry.Floor <= roll &&
+          roll <= entry.Ceiling
       )?.Result ?? "Failed to get oracle entry.";
 
     const oracleRoll: OracleTableRoll = {

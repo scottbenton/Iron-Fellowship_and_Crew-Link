@@ -96,6 +96,10 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
             {table.map((entry, index) => {
               const { Floor, Ceiling, Result } = entry;
 
+              if (Floor === null || Ceiling === null) {
+                return null;
+              }
+
               const diff = (Ceiling ?? 100) - (Floor ?? 1);
 
               return (
