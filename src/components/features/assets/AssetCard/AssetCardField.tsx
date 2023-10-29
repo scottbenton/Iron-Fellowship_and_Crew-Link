@@ -1,10 +1,10 @@
 import { MenuItem, TextField } from "@mui/material";
-import { InputClock, InputNumber, InputSelect, InputText } from "dataforged";
 import { useState } from "react";
 import { InputType } from "types/Datasworn";
+import { FieldType } from "./FieldType";
 
 export interface AssetCardFieldProps {
-  field: InputNumber | InputClock | InputText | InputSelect;
+  field: FieldType;
   value?: string;
   onChange?: (newValue: string) => Promise<void>;
   disabled: boolean;

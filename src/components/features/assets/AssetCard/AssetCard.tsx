@@ -7,6 +7,7 @@ import {
   DialogTitle,
   FormControlLabel,
   IconButton,
+  Stack,
   SxProps,
   Theme,
   Tooltip,
@@ -26,6 +27,7 @@ import { assetMap, assetTypeLabels } from "data/assets";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
 import GroupIcon from "@mui/icons-material/Group";
 import { getIsLocalEnvironment } from "functions/getGameSystem";
+import { FieldType } from "./FieldType";
 
 export interface AssetCardProps {
   assetId: string;
@@ -78,14 +80,24 @@ export function AssetCard(props: AssetCardProps) {
 
   if (!asset) return null;
 
+  const abilityInputs: FieldType[] = [];
+
   let alternateConditionMeterProperties:
     | AssetAlterPropertiesConditionMeter
     | undefined;
 
-  asset.Abilities.forEach((ability) => {
+  asset.Abilities.forEach((ability, index) => {
     if (ability["Alter properties"]) {
       alternateConditionMeterProperties =
         ability["Alter properties"]?.["Condition meter"];
+    }
+    if (
+      ((ability.Enabled || storedAsset?.enabledAbilities[index]) ?? false) &&
+      Object.values(ability.Inputs ?? {}).length > 0
+    ) {
+      Object.values(ability.Inputs ?? {}).forEach((input) => {
+        abilityInputs.push(input);
+      });
     }
   });
 
@@ -179,6 +191,22 @@ export function AssetCard(props: AssetCardProps) {
                 }
                 return new Promise((res, reject) =>
                   reject("HandleInputChange is undefined")
+                );
+              }}
+              disabled={readOnly || !handleInputChange}
+            />
+          ))}
+          {abilityInputs.map((field, index) => (
+            <AssetCardField
+              key={field.$id}
+              field={field}
+              value={storedAsset?.inputs?.[encodeDataswornId(field.$id)]}
+              onChange={(value) => {
+                if (handleInputChange) {
+                  return handleInputChange(encodeDataswornId(field.$id), value);
+                }
+                return new Promise((res, reject) =>
+                  reject("handleInputChange is undefined")
                 );
               }}
               disabled={readOnly || !handleInputChange}
