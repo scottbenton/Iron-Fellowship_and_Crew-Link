@@ -17,12 +17,19 @@
 - Slightly changed look of NPC view
 - Added move name to the roll log
 
+### Accessibility
+
+- Added a skip link to the application
+- Added screen reader feedback to text inputs with attached oracle roll buttons
+- Added screen reader feedback to other rolls
+
 ### Bug Fixes
 
 - Fixed a bug on read only rich text editors that still allowed cursors to appear
 - Fixed an incorrect oracle link on the Loyalist asset
 - Fixed progress tracks breaking whenever a user used a period in the title
 - Fixed notes sometimes not saving when the browser is closed on mobile
+- Fixed pinned oracles not working
 
 ---
 
