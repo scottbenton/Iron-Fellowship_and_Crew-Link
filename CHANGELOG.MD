@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.1.0
+
+### New Features
+
+### Changes
+
+### Accessibility
+
+### Bug Fixes
+
+- Fixed Planet Class not being properly set when creating new planets
+
 ## 2.0.0
 
 ### New Features

@@ -106,6 +106,10 @@ export function OpenSector(props: OpenSectorProps) {
         `starforged/oracles/planets/${convertedClass}/sample_names`,
         false
       );
+      const planetClassName =
+        convertedClass.charAt(0).toUpperCase() +
+        convertedClass.slice(1) +
+        " World";
 
       const description = convertedClass
         ? planetDescriptions[convertedClass] ?? ""
@@ -115,7 +119,7 @@ export function OpenSector(props: OpenSectorProps) {
         name: name ?? "New Planet",
         type: SECTOR_HEX_TYPES.PLANET,
         subType: convertedClass,
-        planetClassName: planetClass,
+        planetClassName,
         description,
       });
     } else if (hexType === SECTOR_HEX_TYPES.SETTLEMENT) {
