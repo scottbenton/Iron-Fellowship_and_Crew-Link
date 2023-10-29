@@ -3,37 +3,80 @@
 Any development help on this project is more than welcome!
 New features should be developed in feature branches, and then will be merged into the `prod` branch to deploy to production.
 
-New features should be gated behind feature flags, until they are fully tested, which I can create from [posthog](posthog.com/). We can work out the details whenever you create a pull request for your work!
+New features can be gated behind feature flags, until they are fully tested, which I can create from [posthog](posthog.com/). We can work out the details whenever you create a pull request for your work!
 
 ### Setup
 
 1. Clone this project `git clone https://github.com/scottbenton/Iron-Fellowship.git`
 1. Install dependencies `npm i`
+1. Create an `.env.local` file (see `.env.local` below)
 1. Set up firebase (see Firebase Setup below)
 1. Run `npm run dev` and go to your browser to see the output.
+
+### .env.local
+
+Create a new file in the root of this repository, named `.env.local`.
+This file will hold environment variables representing credentials needed to connect your instance with firebase.
+
+Copy the following into your project
+
+```
+VITE_IRON_FELLOWSHIP_FIREBASE_APIKEY=
+VITE_IRON_FELLOWSHIP_FIREBASE_AUTHDOMAIN=
+VITE_IRON_FELLOWSHIP_FIREBASE_PROJECTID=
+VITE_IRON_FELLOWSHIP_FIREBASE_STORAGEBUCKET=
+VITE_IRON_FELLOWSHIP_FIREBASE_MESSAGINGSENDERID=
+VITE_IRON_FELLOWSHIP_FIREBASE_APPID=
+
+VITE_CREW_LINK_FIREBASE_APIKEY=
+VITE_CREW_LINK_FIREBASE_AUTHDOMAIN=
+VITE_CREW_LINK_FIREBASE_PROJECTID=
+VITE_CREW_LINK_FIREBASE_STORAGEBUCKET=
+VITE_CREW_LINK_FIREBASE_MESSAGINGSENDERID=
+VITE_CREW_LINK_FIREBASE_APPID=
+
+# Default values for the environment.
+VITE_TITLE="Starforged Crew Link"
+VITE_FAVICON_PATH=/crew-link-logo.svg
+VITE_OPENGRAPH_PATH=/assets/starforged/opengraph-default.png
+```
+
+As you create firebase projects, you will get values to fill these config values in.
+Copy those values from into your `.env.local` file in the following properties:
 
 ### Firebase Setup
 
 Firebase provides authentication, database, and image storage to this application.
 
-The first step is to create a firebase project. You can do this by going to the [firebase console](https://console.firebase.google.com/). Once you have created a project, you will need to register a web app.
+The first step is to create firebase projects for Ironsworn and Starforged. You can create a new project by going to the [firebase console](https://console.firebase.google.com/). Once you have created a project, you need to follow the following steps.
+
+#### Add an App
+
+1. From the homepage, under the `Get started` section, click `</>`.
+1. Give your app a nickname, and if you plan on hosting your own version (and not just contributing to the existing deployments), click "Also set up Firebase Hosting"
+1. Click next, and copy the apiKey, authDomain, projectId, storageBucket, messagingSenderId, and appId values into your `.env.local` file you created earlier
+1. Complete your setup
 
 ![Firebase Web App Setup](./readme_assets/FirebaseWeb.png)
 
-In order to run the application locally, you will need to set up a `.env.local` file with the information firebase needs to connect to these services.
+#### Authentication
 
-Once registered the web app, it will give you a config object. Copy the values from this object into your `.env.local` file in the following properties:
+1. Under the `Build` tab on the left, select `Authentication`
+1. Click `Get Started`
+1. Select and enable `Google`
+1. Add a new provider, and enable `Email/Password` with `Email link` sign in
 
-```
-VITE_FIREBASE_APIKEY=
-VITE_FIREBASE_AUTHDOMAIN=
-VITE_FIREBASE_PROJECTID=
-VITE_FIREBASE_STORAGEBUCKET=
-VITE_FIREBASE_MESSAGINGSENDERID=
-VITE_FIREBASE_APPID=
-```
+#### Firestore
 
-Also remember to enable Google Authentication as provider in your firebase project. You can do this by going to the Authentication tab in the firebase console.
+1. Under the `Build` tab on the left, select `Firestore Database`
+1. Create a new database, choosing the location of your choice.
+1. Once your database has been provisioned, click the `rules` tab, and copy the contents of the `firestore.rules` file into the tab
+
+#### Cloud Storage
+
+1. Under the `Build` tab on the left, select `Storage`
+1. Set up cloud storage, and wait for it to be created
+1. Once your storage has been created, click the `rules` tab, and copy the contents of the `storage.rules` file into the tab
 
 ### Posthog Setup (OPTIONAL)
 

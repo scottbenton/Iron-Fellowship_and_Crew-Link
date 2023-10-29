@@ -41,7 +41,7 @@ Featuring clean character sheets, campaigns with shared assets and tracks, and c
 
 ### Future Changes
 
-There is more to come for the Iron Fellowship.
+There is more to come for Iron Fellowship and Crew Link.
 We have lots of items on the backlog, which you can view [here](https://github.com/users/scottbenton/projects/5).
 To suggest changes and give feedback, you can chime in on existing issues or create new ones [here](https://github.com/scottbenton/Iron-Fellowship/issues).
 Keep checking back!
