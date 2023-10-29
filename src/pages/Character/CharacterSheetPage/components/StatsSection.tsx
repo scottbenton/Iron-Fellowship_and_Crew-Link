@@ -101,6 +101,7 @@ export function StatsSection() {
             label={track.label}
             value={
               customTrackValues[track.label] !== undefined &&
+              customTrackValues[track.label] !== null &&
               typeof track.values[customTrackValues[track.label]].value ===
                 "number"
                 ? (track.values[customTrackValues[track.label]].value as number)

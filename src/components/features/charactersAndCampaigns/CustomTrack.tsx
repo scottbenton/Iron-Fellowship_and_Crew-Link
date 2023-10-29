@@ -53,7 +53,11 @@ export function CustomTrack(props: CustomTrackProps) {
         exclusive
         disabled={disabled || loading}
         value={value}
-        onChange={(evt, value) => onChange(value)}
+        onChange={(evt, newValue) => {
+          if (newValue !== undefined && newValue !== null) {
+            onChange(newValue);
+          }
+        }}
         sx={[
           {
             width: "100%",
