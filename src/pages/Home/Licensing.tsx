@@ -28,10 +28,17 @@ export function Licensing() {
     ),
   });
   return (
-    <Box display={"flex"} alignItems={"center"} flexDirection={"column"} mb={2}>
+    <Box
+      display={"flex"}
+      alignItems={"center"}
+      flexDirection={"column"}
+      mb={2}
+      component={"section"}
+    >
       <Typography
         textAlign={"center"}
         variant={"h5"}
+        component={"h2"}
         fontFamily={(theme) => theme.fontFamilyTitle}
         mt={8}
       >

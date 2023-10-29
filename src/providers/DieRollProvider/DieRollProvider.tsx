@@ -18,6 +18,8 @@ import { useCustomOracles } from "components/features/charactersAndCampaigns/Ora
 import { TRACK_TYPES } from "types/Track.type";
 import { useStore } from "stores/store";
 import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
+import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
+import { getRollResultLabel } from "./RollSnackbar/StatRollSnackbar";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -25,6 +27,10 @@ const getRoll = (dieMax: number) => {
 
 export function DieRollProvider(props: PropsWithChildren) {
   const { children } = props;
+  const { setAnnouncement } = useScreenReaderAnnouncement();
+  const verboseScreenReaderRolls = useStore(
+    (store) => store.accessibilitySettings.settings.verboseRollResults
+  );
 
   const uid = useStore((store) => store.auth.uid);
   const characterId = useStore(
@@ -106,6 +112,21 @@ export function DieRollProvider(props: PropsWithChildren) {
     }).catch(() => {});
 
     if (showSnackbar) {
+      setAnnouncement(
+        verboseScreenReaderRolls
+          ? `Rolled ${
+              moveName ? moveName + " using stat " + label : label
+            }. On your action die you rolled a ${action} plus ${modifier}${
+              adds ? " plus " + adds + " adds" : ""
+            } for a total of ${actionTotal}. On your challenge die you rolled a ${challenge1} and a ${challenge2}, for a ${getRollResultLabel(
+              result
+            )}`
+          : `Rolled ${
+              moveName ? moveName + "using stat" + label : label
+            }. Your action die had a total of ${actionTotal} against ${challenge1} and ${challenge2}, for a ${getRollResultLabel(
+              result
+            )}`
+      );
       addRoll(statRoll);
     }
 
@@ -154,6 +175,13 @@ export function DieRollProvider(props: PropsWithChildren) {
         roll: oracleRoll,
       }).catch(() => {});
       addRoll(oracleRoll);
+      setAnnouncement(
+        `Rolled ${
+          verboseScreenReaderRolls
+            ? `a ${oracleRoll.roll} on the ${oracleRoll.rollLabel} table`
+            : oracleRoll.rollLabel
+        } and got result ${oracleRoll.result}`
+      );
     }
 
     return entry;
@@ -195,6 +223,15 @@ export function DieRollProvider(props: PropsWithChildren) {
       characterId: characterId || undefined,
       roll: trackProgressRoll,
     }).catch(() => {});
+    setAnnouncement(
+      `Rolled progress for ${trackProgressRoll.trackType} ${
+        trackProgressRoll.rollLabel
+      }. Your progress was ${trackProgressRoll.trackProgress} against a ${
+        trackProgressRoll.challenge1
+      } and a ${trackProgressRoll.challenge2} for a ${getRollResultLabel(
+        trackProgressRoll.result
+      )}`
+    );
 
     return result;
   };
@@ -218,7 +255,7 @@ export function DieRollProvider(props: PropsWithChildren) {
         (entry) => (entry.Floor ?? 0) <= roll && roll <= (entry.Ceiling ?? 100)
       )?.Result ?? "Failed to get oracle entry.";
 
-    const oracleRoll: ClockProgressionRoll = {
+    const clockRoll: ClockProgressionRoll = {
       type: ROLL_TYPE.CLOCK_PROGRESSION,
       roll,
       result: entry,
@@ -233,9 +270,24 @@ export function DieRollProvider(props: PropsWithChildren) {
     addRollToLog({
       campaignId,
       characterId: characterId || undefined,
-      roll: oracleRoll,
+      roll: clockRoll,
     }).catch(() => {});
-    addRoll(oracleRoll);
+    addRoll(clockRoll);
+    if (verboseScreenReaderRolls) {
+      setAnnouncement(
+        `Rolled for clock ${clockRoll.rollLabel} with a ${
+          clockRoll.roll
+        } against oracle ${clockRoll.oracleTitle}. Your clock ${
+          entry === "Yes" ? "progressed by one segment." : "did not progress"
+        }`
+      );
+    } else {
+      setAnnouncement(
+        `Your clock ${clockRoll.rollLabel} ${
+          entry === "Yes" ? "progressed by one segment." : "did not progress"
+        }`
+      );
+    }
 
     return entry === "Yes";
   };
