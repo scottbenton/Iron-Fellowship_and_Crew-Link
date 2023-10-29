@@ -227,6 +227,7 @@ export function SectorMap(props: SectorMapProps) {
           })}
         </ToggleButtonGroup>
         <Tooltip
+          enterTouchDelay={0}
           title={
             <Box p={1} maxWidth={300}>
               <Typography variant={"body2"}>

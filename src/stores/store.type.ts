@@ -7,6 +7,7 @@ import { WorldSlice } from "./world/world.slice.type";
 import { SettingsSlice } from "./settings/settings.slice.type";
 import { NotesSlice } from "./notes/notes.slice.type";
 import { GameLogSlice } from "./gameLog/gameLog.slice.type";
+import { AccessibilitySettingsSlice } from "./accessibilitySettings/accessibilitySettings.slice.type";
 
 export type IStore = {
   auth: AuthSlice;
@@ -17,6 +18,7 @@ export type IStore = {
   settings: SettingsSlice;
   notes: NotesSlice;
   gameLog: GameLogSlice;
+  accessibilitySettings: AccessibilitySettingsSlice;
 };
 
 export type CreateSliceType<T> = StateCreator<

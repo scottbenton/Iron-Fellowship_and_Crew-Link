@@ -18,6 +18,7 @@ import { useListenToCampaigns } from "stores/campaign/useListenToCampaigns";
 import { useListenToAuth } from "stores/auth/useListenToAuth";
 import { useListenToWorlds } from "stores/world/useListenToWorlds";
 import { useListenToOracleSettings } from "stores/settings/useListenToOracleSettings";
+import { useListenToAccessibilitySettings } from "stores/accessibilitySettings/useListenToAccessibilitySettings";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -107,6 +108,8 @@ const router = createBrowserRouter(
 
 export function Router() {
   useListenToAuth();
+
+  useListenToAccessibilitySettings();
 
   useListenToCharacters();
   useListenToCampaigns();

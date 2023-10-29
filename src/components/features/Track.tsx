@@ -6,7 +6,7 @@ import {
   SxProps,
   Theme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 export interface TrackProps {
   label?: string;
@@ -49,6 +49,8 @@ export function Track(props: TrackProps) {
     setNumbers(getArr(min, max));
   }, [min, max]);
 
+  const labelId = useId();
+
   return (
     <Box sx={sx} display={"flex"} overflow={"auto"}>
       {label && (
@@ -75,12 +77,15 @@ export function Track(props: TrackProps) {
           <Typography
             fontFamily={(theme) => theme.fontFamilyTitle}
             variant={"subtitle1"}
+            id={labelId}
+            component={"p"}
           >
             {label}
           </Typography>
         </Box>
       )}
       <ToggleButtonGroup
+        aria-labelledby={labelId}
         exclusive
         disabled={disabled || loading}
         value={value}

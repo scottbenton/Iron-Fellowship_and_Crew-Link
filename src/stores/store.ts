@@ -10,6 +10,7 @@ import { shallow } from "zustand/shallow";
 import { createSettingsSlice } from "./settings/settings.slice";
 import { createNotesSlice } from "./notes/notes.slice";
 import { createGameLogSlice } from "./gameLog/gameLog.slice";
+import { createAccessibilitySettingsSlice } from "./accessibilitySettings/accessibilitySettings.slice";
 
 export const useStore = createWithEqualityFn<IStore>()(
   immer((...params) => ({
@@ -21,6 +22,7 @@ export const useStore = createWithEqualityFn<IStore>()(
     settings: createSettingsSlice(...params),
     notes: createNotesSlice(...params),
     gameLog: createGameLogSlice(...params),
+    accessibilitySettings: createAccessibilitySettingsSlice(...params),
   })),
   shallow
 );

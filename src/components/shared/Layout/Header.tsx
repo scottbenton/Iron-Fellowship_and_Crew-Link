@@ -2,6 +2,7 @@ import {
   AppBar,
   Box,
   Button,
+  ButtonBase,
   Container,
   Hidden,
   Stack,
@@ -23,6 +24,15 @@ import { AUTH_STATE } from "stores/auth/auth.slice.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { useAppName } from "hooks/useAppName";
+import { PropsWithChildren, forwardRef } from "react";
+
+const LinkComponent = forwardRef<
+  HTMLAnchorElement,
+  PropsWithChildren<{ href: string }>
+>((props, ref) => {
+  const { href, ...rest } = props;
+  return <Link ref={ref} to={href} {...rest} />;
+});
 
 export function Header() {
   const state = useStore((store) => store.auth.status);
@@ -42,7 +52,6 @@ export function Header() {
       position={"static"}
       color={isLightTheme ? "darkGrey" : "transparent"}
       enableColorOnDark
-      component={"div"}
       sx={{ border: "unset" }} // Undo border I added to the paper component in dark mode
     >
       <Container maxWidth={"xl"}>
@@ -54,20 +63,40 @@ export function Header() {
             justifyContent: "space-between",
           }}
         >
-          <Box display={"flex"} alignItems={"center"}>
-            <Logo width={32} height={32} />
+          <ButtonBase
+            focusRipple
+            LinkComponent={LinkComponent}
+            href={"/"}
+            sx={(theme) => ({
+              display: "flex",
+              alignItems: "center",
+              "&:hover": {
+                bgcolor: theme.palette.darkGrey.light,
+              },
+              py: 0.5,
+              px: 1,
+              borderRadius: theme.shape.borderRadius + "px",
+            })}
+          >
+            <Logo aria-hidden width={32} height={32} />
             <Typography
               fontFamily={(theme) => theme.fontFamilyTitle}
               variant={"h5"}
+              component={"p"}
               ml={2}
             >
               {title}
             </Typography>
-          </Box>
+          </ButtonBase>
           {state === AUTH_STATE.AUTHENTICATED ? (
             <Box>
               <Hidden smDown>
-                <>
+                <Stack
+                  direction={"row"}
+                  spacing={1}
+                  component={"nav"}
+                  sx={{ display: "inline" }}
+                >
                   <Button
                     color={"inherit"}
                     component={Link}
@@ -107,12 +136,12 @@ export function Header() {
                   >
                     Worlds
                   </Button>
-                </>
+                </Stack>
               </Hidden>
               <HeaderMenu />
             </Box>
           ) : (
-            <Stack direction={"row"} spacing={1}>
+            <Stack direction={"row"} spacing={1} component={"nav"}>
               <Button
                 color={"inherit"}
                 component={Link}

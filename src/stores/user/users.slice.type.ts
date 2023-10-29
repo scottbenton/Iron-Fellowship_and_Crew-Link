@@ -1,5 +1,4 @@
 import { UserDocument } from "types/User.type";
-import { OracleSettings } from "types/UserSettings.type";
 
 export interface UserSliceData {
   userMap: { [userId: string]: { loading: boolean; doc?: UserDocument } };

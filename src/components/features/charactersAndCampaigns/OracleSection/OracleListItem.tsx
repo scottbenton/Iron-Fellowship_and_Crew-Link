@@ -24,14 +24,6 @@ export function OracleListItem(props: OracleListItemProps) {
   const { id, text, onRollClick, onOpenClick, pinned } = props;
 
   const isTouchDevice = useIsTouchDevice();
-
-  if (
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ||
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.platform)
-  ) {
-    // ...
-  }
-
   const [isHovering, setIsHovering] = useState<boolean>(false);
 
   const [loading, setLoading] = useState(false);
