@@ -4,6 +4,7 @@ import {
   Theme,
   ToggleButton,
   ToggleButtonGroup,
+  ToggleButtonProps,
   Typography,
 } from "@mui/material";
 import { CustomTrack as ICustomTrack } from "types/CustomTrackSettings.type";
@@ -16,6 +17,35 @@ export interface CustomTrackProps {
   disabled?: boolean;
   loading?: boolean;
 }
+
+const FakeToggleButton = (props: ToggleButtonProps) => {
+  const { children, className } = props;
+
+  return (
+    <Box
+      className={className}
+      sx={(theme) => ({
+        borderStyle: "solid",
+        borderColor: theme.palette.divider,
+        borderWidth: 1,
+        borderLeftWidth: 0,
+        px: 0.5,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: theme.palette.grey[500],
+        color: theme.palette.darkGrey.contrastText,
+      })}
+    >
+      <Typography
+        fontFamily={(theme) => theme.fontFamilyTitle}
+        variant={"subtitle1"}
+      >
+        {children}
+      </Typography>
+    </Box>
+  );
+};
 
 export function CustomTrack(props: CustomTrackProps) {
   const { sx, customTrack, value, onChange, disabled, loading } = props;
@@ -85,28 +115,9 @@ export function CustomTrack(props: CustomTrackProps) {
               {cell.value}
             </ToggleButton>
           ) : (
-            <Box
-              key={index}
-              sx={(theme) => ({
-                borderStyle: "solid",
-                borderColor: theme.palette.divider,
-                borderWidth: 1,
-                borderLeftWidth: 0,
-                px: 0.5,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                bgcolor: theme.palette.grey[500],
-                color: theme.palette.darkGrey.contrastText,
-              })}
-            >
-              <Typography
-                fontFamily={(theme) => theme.fontFamilyTitle}
-                variant={"subtitle1"}
-              >
-                {cell.value}
-              </Typography>
-            </Box>
+            <FakeToggleButton key={index} value={cell.value}>
+              {cell.value}
+            </FakeToggleButton>
           )
         )}
       </ToggleButtonGroup>
