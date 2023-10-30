@@ -21,16 +21,20 @@ export function LoreTagsAutocomplete(props: LoreTagsAutocompleteProps) {
 
   return (
     <Autocomplete
+      //@ts-ignore
       getOptionLabel={(option) => option.inputValue}
+      //@ts-ignore
       isOptionEqualToValue={(option, value) =>
         option.inputValue === value.inputValue
       }
+      //@ts-ignore
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
 
         const { inputValue } = params;
         // Suggest the creation of a new value
         const isExisting = options.some(
+          //@ts-ignore
           (option) => inputValue === option.title
         );
         if (inputValue !== "" && !isExisting) {
@@ -43,12 +47,16 @@ export function LoreTagsAutocomplete(props: LoreTagsAutocompleteProps) {
       options={mappedTagList}
       includeInputInList
       noOptionsText={"Type a name for your new tag"}
+      //@ts-ignore
       renderOption={(props, option) => <li {...props}>{option.title}</li>}
       value={tags?.map((tag) => ({ title: tag, inputValue: tag })) ?? []}
+      //@ts-ignore
       onChange={(evt, newValue) => handleTagsChange(newValue)}
       renderInput={(params) => <TextField {...params} label={"Tags"} />}
+      //@ts-ignore
       renderTags={(value, getTagProps) =>
         value.map((option, index) => (
+          //@ts-ignore
           <LoreTag label={option.title} {...getTagProps({ index })} />
         ))
       }

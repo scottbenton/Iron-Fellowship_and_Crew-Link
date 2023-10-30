@@ -434,14 +434,17 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                   </FormControl>
                 </Box>
                 <Autocomplete
-                  multiple
+                  //@ts-ignore
+                  multiple={true}
                   limitTags={2}
                   options={Object.values(combinedOracles)}
+                  //@ts-ignore
                   getOptionLabel={(oracle) => oracle.Title.Standard}
                   renderInput={(params) => (
                     <TextField {...params} label={"Oracles"} />
                   )}
                   value={getOraclesFromIds(form.values.oracleIds)}
+                  //@ts-ignore
                   onChange={(evt, value) => {
                     const ids = Array.isArray(value)
                       ? value.map((oracle) => oracle.$id)

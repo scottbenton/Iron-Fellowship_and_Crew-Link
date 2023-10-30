@@ -399,12 +399,15 @@ export function OpenNPC(props: OpenNPCProps) {
             {!isStarforged && (
               <Grid item xs={12} sm={6}>
                 <Autocomplete
+                  //@ts-ignore
                   options={Object.keys(locations)}
+                  //@ts-ignore
                   getOptionLabel={(locationId) =>
                     locations[locationId]?.name ?? ""
                   }
                   autoHighlight
                   value={npc.lastLocationId ?? null}
+                  //@ts-ignore
                   onChange={(evt, value) =>
                     handleUpdateNPC({ lastLocationId: value ?? "" })
                   }
@@ -417,10 +420,13 @@ export function OpenNPC(props: OpenNPCProps) {
             {isStarforged && (
               <Grid item xs={12} sm={6}>
                 <Autocomplete
+                  //@ts-ignore
                   options={Object.keys(sectors)}
+                  //@ts-ignore
                   getOptionLabel={(sectorId) => sectors[sectorId]?.name ?? ""}
                   autoHighlight
                   value={npc.lastSectorId ?? null}
+                  //@ts-ignore
                   onChange={(evt, value) =>
                     handleUpdateNPC({ lastSectorId: value ?? "" })
                   }

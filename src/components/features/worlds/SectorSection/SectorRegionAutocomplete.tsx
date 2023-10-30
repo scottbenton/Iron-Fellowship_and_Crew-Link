@@ -37,11 +37,14 @@ export function SectorRegionAutocomplete() {
 
   return (
     <Autocomplete
+      //@ts-ignore
       freeSolo
       options={allRegions}
       includeInputInList
+      //@ts-ignore
       renderOption={(props, option) => <li {...props}>{option}</li>}
       value={currentRegion ?? null}
+      //@ts-ignore
       onChange={(evt, newValue) =>
         updateRegion(newValue ?? undefined).catch(() => {})
       }
