@@ -39,5 +39,14 @@ export const ironswornLightTheme = createTheme({
         },
       },
     },
+    MuiButtonBase: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focusVisible": {
+            outline: `2px solid ${ironswornPink.dark}`,
+          },
+        },
+      },
+    },
   },
 });
