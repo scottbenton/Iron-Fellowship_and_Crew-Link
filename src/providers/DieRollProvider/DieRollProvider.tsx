@@ -75,7 +75,7 @@ export function DieRollProvider(props: PropsWithChildren) {
     const challenge2 = getRoll(10);
     const action = getRoll(6);
 
-    const actionTotal = action + (modifier ?? 0) + (adds ?? 0);
+    const actionTotal = Math.min(10, action + (modifier ?? 0) + (adds ?? 0));
 
     let result: ROLL_RESULT = ROLL_RESULT.WEAK_HIT;
     if (actionTotal > challenge1 && actionTotal > challenge2) {
@@ -116,7 +116,9 @@ export function DieRollProvider(props: PropsWithChildren) {
         verboseScreenReaderRolls
           ? `Rolled ${
               moveName ? moveName + " using stat " + label : label
-            }. On your action die you rolled a ${action} plus ${modifier}${
+            }. On your action die you rolled a ${
+              action === 10 ? "max of 10" : action
+            } plus ${modifier}${
               adds ? " plus " + adds + " adds" : ""
             } for a total of ${actionTotal}. On your challenge die you rolled a ${challenge1} and a ${challenge2}, for a ${getRollResultLabel(
               result
