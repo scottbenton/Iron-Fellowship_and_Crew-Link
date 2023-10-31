@@ -54,6 +54,7 @@ export function HomePage() {
           </Typography>
           {isLoggedIn ? (
             <Button
+              className={"dark-focus-outline"}
               color={"primary"}
               variant={"contained"}
               component={Link}
@@ -65,6 +66,7 @@ export function HomePage() {
           ) : (
             <Stack direction={"row"} spacing={1} mt={4}>
               <Button
+                className={"dark-focus-outline"}
                 color={"inherit"}
                 component={Link}
                 to={basePaths[BASE_ROUTES.LOGIN]}
@@ -72,6 +74,7 @@ export function HomePage() {
                 Login
               </Button>
               <Button
+                className={"dark-focus-outline"}
                 variant={"contained"}
                 color={"primary"}
                 component={Link}

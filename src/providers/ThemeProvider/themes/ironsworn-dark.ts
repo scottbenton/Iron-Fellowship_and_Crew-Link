@@ -55,5 +55,25 @@ export const ironswornDarkTheme = createTheme({
         },
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => {
+          return {
+            "&.Mui-focusVisible": {
+              boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
+            },
+          };
+        },
+      },
+    },
+    MuiButtonBase: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          "&.Mui-focusVisible": {
+            boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
+          },
+        }),
+      },
+    },
   },
 });

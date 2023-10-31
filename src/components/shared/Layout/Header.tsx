@@ -67,6 +67,7 @@ export function Header() {
             focusRipple
             LinkComponent={LinkComponent}
             href={"/"}
+            className={"dark-focus-outline"}
             sx={(theme) => ({
               display: "flex",
               alignItems: "center",
@@ -98,6 +99,7 @@ export function Header() {
                   sx={{ display: "inline" }}
                 >
                   <Button
+                    className={"dark-focus-outline"}
                     color={"inherit"}
                     component={Link}
                     to={basePaths[BASE_ROUTES.CHARACTER]}
@@ -111,6 +113,7 @@ export function Header() {
                     Characters
                   </Button>
                   <Button
+                    className={"dark-focus-outline"}
                     color={"inherit"}
                     component={Link}
                     to={basePaths[BASE_ROUTES.CAMPAIGN]}
@@ -124,6 +127,7 @@ export function Header() {
                     Campaigns
                   </Button>
                   <Button
+                    className={"dark-focus-outline"}
                     color={"inherit"}
                     component={Link}
                     to={basePaths[BASE_ROUTES.WORLD]}
@@ -146,6 +150,7 @@ export function Header() {
                 color={"inherit"}
                 component={Link}
                 to={basePaths[BASE_ROUTES.LOGIN]}
+                className={"dark-focus-outline"}
               >
                 Login
               </Button>
@@ -154,6 +159,7 @@ export function Header() {
                 color={"primary"}
                 component={Link}
                 to={basePaths[BASE_ROUTES.SIGNUP]}
+                className={"dark-focus-outline"}
               >
                 Create Account
               </Button>
