@@ -23,6 +23,8 @@ export interface StatRollSnackbarProps {
 export function StatRollSnackbar(props: StatRollSnackbarProps) {
   const { roll, clearRoll, expanded } = props;
 
+  const rollTotal = roll.action + (roll.modifier ?? 0) + (roll.adds ?? 0);
+
   return (
     <Card
       sx={(theme) => ({
@@ -60,9 +62,7 @@ export function StatRollSnackbar(props: StatRollSnackbarProps) {
                 {roll.modifier ? ` + ${roll.modifier}` : ""}
                 {roll.adds ? ` + ${roll.adds}` : ""}
                 {roll.modifier || roll.adds
-                  ? ` = ${
-                      roll.action + (roll.modifier ?? 0) + (roll.adds ?? 0)
-                    }`
+                  ? ` = ${rollTotal > 10 ? "10 (Max)" : rollTotal}`
                   : ""}
               </Typography>
             </Box>
