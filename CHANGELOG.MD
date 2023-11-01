@@ -6,6 +6,8 @@
 
 ### Changes
 
+- Added ability to remove character portraits
+
 ### Accessibility
 
 - Improved tab focus indicators

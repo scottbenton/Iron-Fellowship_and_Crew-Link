@@ -24,6 +24,10 @@ export function CharacterSettings() {
     (store) => store.characters.currentCharacter.updateCurrentCharacterPortrait
   );
 
+  const removePortrait = useStore(
+    (store) => store.characters.currentCharacter.removeCurrentCharacterPortrait
+  );
+
   const characterId = useStore(
     (store) => store.characters.currentCharacter.currentCharacterId
   );
@@ -63,13 +67,24 @@ export function CharacterSettings() {
         flexDirection={"column"}
         alignItems={"flex-start"}
       >
-        <Button
-          color={"inherit"}
-          variant={"outlined"}
-          onClick={() => setPortraitDialogOpen(true)}
-        >
-          Upload Character Portrait
-        </Button>
+        <Box display={"flex"} alignItems={"center"} flexWrap={"wrap"}>
+          <Button
+            color={"inherit"}
+            variant={"outlined"}
+            onClick={() => setPortraitDialogOpen(true)}
+            sx={{ mr: 2 }}
+          >
+            Upload Character Portrait
+          </Button>
+          {portraitSettings?.filename && (
+            <Button
+              color={"inherit"}
+              onClick={() => removePortrait().catch(() => {})}
+            >
+              Remove Character Portrait
+            </Button>
+          )}
+        </Box>
         <PortraitUploaderDialog
           open={portraitDialogOpen}
           handleClose={() => setPortraitDialogOpen(false)}
