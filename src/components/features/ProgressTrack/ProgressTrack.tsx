@@ -19,6 +19,7 @@ import { useLinkedDialog } from "providers/LinkedDialogProvider";
 import { moveMap } from "data/moves";
 import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
 
 const trackMoveIdSystemValues: GameSystemChooser<{
   [key in PROGRESS_TRACKS]: string;
@@ -98,6 +99,8 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   const trackMoveIds = useGameSystemValue(trackMoveIdSystemValues);
 
+  const { setAnnouncement } = useScreenReaderAnnouncement();
+
   const { rollTrackProgress } = useRoller();
   const { openDialog } = useLinkedDialog();
   const move = trackType ? moveMap[trackMoveIds[trackType]] : undefined;
@@ -162,6 +165,10 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   const labelId = useId();
 
+  const getValueText = (value: number) => {
+    return `${value} ticks: (${Math.floor(value / 4)} boxes fully filled)`;
+  };
+
   return (
     <Box>
       <Box>
@@ -211,12 +218,22 @@ export function ProgressTrack(props: ProgressTracksProps) {
         {onValueChange && (
           <ButtonBase
             aria-label={"Decrement Track"}
-            onClick={() =>
-              onValueChange &&
-              onValueChange(
-                value > 0 ? value - getDifficultyStep(difficulty) : 0
-              )
-            }
+            onClick={() => {
+              if (onValueChange) {
+                const newValue = Math.max(
+                  value - getDifficultyStep(difficulty),
+                  0
+                );
+                onValueChange(newValue);
+                if (newValue === value) {
+                  setAnnouncement(`${label} is already at zero ticks`);
+                } else {
+                  setAnnouncement(
+                    `Updated ${label} to ${getValueText(newValue)}`
+                  );
+                }
+              }
+            }}
             focusRipple
             sx={(theme) => ({
               backgroundColor:
@@ -246,14 +263,12 @@ export function ProgressTrack(props: ProgressTracksProps) {
           borderTop={1}
           borderBottom={1}
           borderColor={(theme) => theme.palette.divider}
-          role={"progressbar"}
+          role={"meter"}
           aria-labelledby={labelId}
           aria-valuemin={0}
           aria-valuemax={max}
           aria-valuenow={value}
-          aria-valuetext={`${value} (${Math.floor(
-            value / 4
-          )} boxes fully filled)`}
+          aria-valuetext={getValueText(value)}
         >
           {checks.map((value, index) => (
             <Box
@@ -273,11 +288,24 @@ export function ProgressTrack(props: ProgressTracksProps) {
         {onValueChange && (
           <ButtonBase
             aria-label={"Increment Track"}
-            onClick={() =>
-              onValueChange(
-                value < max ? value + getDifficultyStep(difficulty) : max
-              )
-            }
+            onClick={() => {
+              if (onValueChange) {
+                const newValue = Math.min(
+                  value + getDifficultyStep(difficulty),
+                  max
+                );
+                onValueChange(newValue);
+                if (newValue === value) {
+                  setAnnouncement(
+                    `${label} is already at its maximum value of ${max} ticks`
+                  );
+                } else {
+                  setAnnouncement(
+                    `Updated ${label} to ${getValueText(newValue)}`
+                  );
+                }
+              }
+            }}
             focusRipple
             sx={(theme) => ({
               backgroundColor:

@@ -9,6 +9,7 @@
 ### Accessibility
 
 - Improved tab focus indicators
+- Changed progress tracks to use the meter aria-role, and added announcements to the increment and decrement buttons
 
 ### Bug Fixes
 
