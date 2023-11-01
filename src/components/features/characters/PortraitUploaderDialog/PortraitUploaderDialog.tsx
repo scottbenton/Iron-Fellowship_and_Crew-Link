@@ -17,6 +17,7 @@ import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { PortraitAvatarDisplay } from "components/features/characters/PortraitAvatar/PortraitAvatarDisplay";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
+import { LoadingButton } from "@mui/lab";
 
 export interface PortraitUploaderDialogProps {
   open: boolean;
@@ -155,13 +156,13 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
         >
           Cancel
         </Button>
-        <Button
+        <LoadingButton
           variant={"contained"}
           onClick={() => onUpload()}
-          disabled={loading}
+          loading={loading}
         >
           Upload
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

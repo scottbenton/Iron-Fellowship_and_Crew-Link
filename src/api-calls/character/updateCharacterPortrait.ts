@@ -5,20 +5,35 @@ import {
   getCharacterDoc,
 } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
+import { removeCharacterPortrait } from "./removeCharacterPortrait";
 
 export const updateCharacterPortrait = createApiFunction<
   {
     uid: string;
     characterId: string;
+    oldPortraitFilename?: string;
     portrait?: File;
     scale: number;
     position: { x: number; y: number };
   },
   void
 >((params) => {
-  const { uid, characterId, portrait, scale, position } = params;
+  const { uid, characterId, oldPortraitFilename, portrait, scale, position } =
+    params;
 
   return new Promise(async (resolve, reject) => {
+    try {
+      if (oldPortraitFilename) {
+        await removeCharacterPortrait({
+          uid,
+          characterId,
+          oldPortraitFilename,
+        });
+      }
+    } catch (e) {
+      reject(e);
+      return;
+    }
     try {
       if (portrait) {
         await uploadImage(
