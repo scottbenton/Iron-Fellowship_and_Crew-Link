@@ -17,6 +17,7 @@ export interface CurrentCharacterSliceActions {
     scale: number,
     position: { x: number; y: number }
   ) => Promise<void>;
+  removeCurrentCharacterPortrait: () => Promise<void>;
 
   resetStore: () => void;
 }

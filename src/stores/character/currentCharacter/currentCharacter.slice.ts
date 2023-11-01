@@ -5,6 +5,7 @@ import { updateCharacter } from "api-calls/character/updateCharacter";
 import { createAssetsSlice } from "./assets/assets.slice";
 import { createCharacterTracksSlice } from "./tracks/characterTracks.slice";
 import { updateCharacterPortrait } from "api-calls/character/updateCharacterPortrait";
+import { removeCharacterPortrait } from "api-calls/character/removeCharacterPortrait";
 
 export const createCurrentCharacterSlice: CreateSliceType<
   CurrentCharacterSlice
@@ -58,6 +59,26 @@ export const createCurrentCharacterSlice: CreateSliceType<
         scale,
         position,
       });
+    },
+    removeCurrentCharacterPortrait: () => {
+      const state = getState();
+      const uid = state.auth.user?.uid;
+      const characterId = state.characters.currentCharacter.currentCharacterId;
+      const oldPortraitFilename =
+        state.characters.currentCharacter.currentCharacter?.profileImage
+          ?.filename;
+      if (!uid || !characterId) {
+        return new Promise((res, reject) =>
+          reject("Character ID or UserID were not defined")
+        );
+      }
+      if (!oldPortraitFilename) {
+        return new Promise((res, reject) => {
+          reject("We could not find your old portrait");
+        });
+      }
+
+      return removeCharacterPortrait({ uid, characterId, oldPortraitFilename });
     },
 
     resetStore: () => {
