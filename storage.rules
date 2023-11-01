@@ -6,6 +6,7 @@ service firebase.storage {
       allow write: if request.auth.uid == userId 
       						 && request.resource.size < 5 * 1024 * 1024
                    && request.resource.contentType.matches('image/.*');
+			allow delete: if request.auth.uid == userId;
     }
     match /worlds/{worldId}{
     	match /locations/{locationId}/{allPaths=**} {
@@ -13,18 +14,21 @@ service firebase.storage {
         allow write: if request.auth.uid != null
                      && request.resource.size < 5 * 1024 * 1024
                      && request.resource.contentType.matches('image/.*');
+				allow delete: if request.auth.uid != null;
     	}
 			match /npcs/{npcId}/{allPaths=**} {
         allow read: if request.auth.uid != null;
         allow write: if request.auth.uid != null
                      && request.resource.size < 5 * 1024 * 1024
                      && request.resource.contentType.matches('image/.*');
+				allow delete: if request.auth.uid != null;
     	}
 			match /lore/{loreId}/{allPaths=**} {
         allow read: if request.auth.uid != null;
         allow write: if request.auth.uid != null
                      && request.resource.size < 5 * 1024 * 1024
                      && request.resource.contentType.matches('image/.*');
+				allow delete: if request.auth.uid != null;
     	}
     }
     match /{allPaths=**} {
