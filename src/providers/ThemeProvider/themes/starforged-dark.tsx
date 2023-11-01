@@ -75,7 +75,7 @@ export const starforgedDarkTheme = createTheme({
         root: ({ ownerState, theme }) => {
           return {
             "&.Mui-focusVisible": {
-              boxShadow: `inset 0 0 0 2px ${sharedStatusColors.error.main}, 0 0 0 2px ${sharedStatusColors.error.main}`,
+              boxShadow: `inset 0 0 0 2px ${theme.palette.info.light}, 0 0 0 2px ${theme.palette.info.light}`,
             },
           };
         },
@@ -85,7 +85,7 @@ export const starforgedDarkTheme = createTheme({
       styleOverrides: {
         root: ({ ownerState, theme }) => ({
           "&.Mui-focusVisible": {
-            boxShadow: `inset 0 0 0 2px ${sharedStatusColors.error.main}, 0 0 0 2px ${sharedStatusColors.error.main}`,
+            boxShadow: `inset 0 0 0 2px ${theme.palette.info.light}, 0 0 0 2px ${theme.palette.info.light}`,
           },
         }),
       },

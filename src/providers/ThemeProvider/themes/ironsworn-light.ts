@@ -45,6 +45,9 @@ export const ironswornLightTheme = createTheme({
           return {
             "&.Mui-focusVisible": {
               boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
+              "&.dark-focus-outline": {
+                boxShadow: `inset 0 0 0 2px ${theme.palette.info.light}, 0 0 0 2px ${theme.palette.info.light}`,
+              },
             },
           };
         },
@@ -55,6 +58,9 @@ export const ironswornLightTheme = createTheme({
         root: ({ ownerState, theme }) => ({
           "&.Mui-focusVisible": {
             boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
+            "&.dark-focus-outline": {
+              boxShadow: `inset 0 0 0 2px ${theme.palette.info.light}, 0 0 0 2px ${theme.palette.info.light}`,
+            },
           },
         }),
       },

@@ -60,7 +60,10 @@ export const starforgedLightTheme = createTheme({
         root: ({ ownerState, theme }) => {
           return {
             "&.Mui-focusVisible": {
-              boxShadow: `inset 0 0 0 2px ${sharedStatusColors.error.main}, 0 0 0 2px ${sharedStatusColors.error.main}`,
+              boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
+              "&.dark-focus-outline": {
+                boxShadow: `inset 0 0 0 2px ${theme.palette.info.light}, 0 0 0 2px ${theme.palette.info.light}`,
+              },
             },
           };
         },
@@ -70,7 +73,10 @@ export const starforgedLightTheme = createTheme({
       styleOverrides: {
         root: ({ ownerState, theme }) => ({
           "&.Mui-focusVisible": {
-            boxShadow: `inset 0 0 0 2px ${sharedStatusColors.error.main}, 0 0 0 2px ${sharedStatusColors.error.main}`,
+            boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
+            "&.dark-focus-outline": {
+              boxShadow: `inset 0 0 0 2px ${theme.palette.info.light}, 0 0 0 2px ${theme.palette.info.light}`,
+            },
           },
         }),
       },

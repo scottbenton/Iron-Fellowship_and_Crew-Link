@@ -60,7 +60,7 @@ export const ironswornDarkTheme = createTheme({
         root: ({ ownerState, theme }) => {
           return {
             "&.Mui-focusVisible": {
-              boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
+              boxShadow: `inset 0 0 0 2px ${theme.palette.info.light}, 0 0 0 2px ${theme.palette.info.light}`,
             },
           };
         },
@@ -70,7 +70,7 @@ export const ironswornDarkTheme = createTheme({
       styleOverrides: {
         root: ({ ownerState, theme }) => ({
           "&.Mui-focusVisible": {
-            boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
+            boxShadow: `inset 0 0 0 2px ${theme.palette.info.light}, 0 0 0 2px ${theme.palette.info.light}`,
           },
         }),
       },
