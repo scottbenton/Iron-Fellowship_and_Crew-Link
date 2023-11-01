@@ -43,6 +43,7 @@ export function HeaderMenu() {
     <>
       <ButtonBase
         sx={{ borderRadius: "100%", ml: 2 }}
+        className={"dark-focus-outline"}
         aria-label={"User Settings Menu Toggle"}
         focusRipple
         ref={anchorRef}

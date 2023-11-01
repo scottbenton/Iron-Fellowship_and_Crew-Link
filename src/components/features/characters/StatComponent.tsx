@@ -90,14 +90,6 @@ export function StatComponent(props: StatComponentProps) {
                   outlineColor: theme.palette.primary.main,
                   borderColor: theme.palette.primary.main,
                 },
-          "&:focus-visible":
-            updateTrack || disableRoll
-              ? {}
-              : {
-                  outlineWidth: 2,
-                  outlineColor: theme.palette.primary.main,
-                  borderColor: theme.palette.primary.main,
-                },
         }),
 
         ...(Array.isArray(sx) ? sx : [sx]),
