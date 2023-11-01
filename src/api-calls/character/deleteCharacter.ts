@@ -8,17 +8,27 @@ import {
 } from "../assets/_getRef";
 import { deleteNotes } from "api-calls/notes/deleteNotes";
 import { getCharacterSettingsDoc } from "api-calls/custom-move-oracle-settings/_getRef";
-import { getCharacterDoc } from "./_getRef";
+import {
+  constructCharacterPortraitFolderPath,
+  getCharacterDoc,
+} from "./_getRef";
 import { deleteAllLogs } from "api-calls/game-log/deleteAllLogs";
 import { deleteAllProgressTracks } from "api-calls/tracks/deleteAllProgressTracks";
 import { deleteAllAssets } from "api-calls/assets/deleteAllAssets";
+import { removeCharacterPortrait } from "./removeCharacterPortrait";
+import { deleteImage } from "lib/storage.lib";
 
 export const deleteCharacter = createApiFunction<
-  { characterId: string; campaignId?: string },
+  {
+    uid: string;
+    characterId: string;
+    campaignId?: string;
+    portraitFilename?: string;
+  },
   void
 >((params) => {
   return new Promise(async (resolve, reject) => {
-    const { characterId, campaignId } = params;
+    const { uid, characterId, campaignId, portraitFilename } = params;
 
     try {
       if (campaignId) {
@@ -29,6 +39,15 @@ export const deleteCharacter = createApiFunction<
         });
       }
       const promises: Promise<any>[] = [];
+
+      if (portraitFilename) {
+        promises.push(
+          deleteImage(
+            constructCharacterPortraitFolderPath(uid, characterId),
+            portraitFilename
+          )
+        );
+      }
 
       promises.push(deleteNotes({ characterId }));
       promises.push(deleteDoc(getCharacterSettingsDoc(characterId)));

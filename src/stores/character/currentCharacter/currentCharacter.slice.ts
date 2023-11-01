@@ -51,6 +51,9 @@ export const createCurrentCharacterSlice: CreateSliceType<
       return updateCharacterPortrait({
         uid,
         characterId,
+        oldPortraitFilename:
+          state.characters.currentCharacter.currentCharacter?.profileImage
+            ?.filename,
         portrait,
         scale,
         position,

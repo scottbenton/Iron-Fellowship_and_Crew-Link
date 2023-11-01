@@ -134,6 +134,7 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
       });
     },
     deleteCharacter: (characterId) => {
+      const uid = getState().auth.uid;
       const character = getState().characters.characterMap[characterId];
       if (!character) {
         return new Promise((res, reject) =>
@@ -141,8 +142,10 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
         );
       }
       return deleteCharacter({
+        uid,
         characterId,
         campaignId: character.campaignId,
+        portraitFilename: character.profileImage?.filename,
       });
     },
   };
