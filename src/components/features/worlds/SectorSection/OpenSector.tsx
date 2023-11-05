@@ -214,6 +214,10 @@ export function OpenSector(props: OpenSectorProps) {
 
   const canUseImages = useCanUploadWorldImages();
 
+  if(!sector) {
+    return null;
+  }
+
   return (
     <Box>
       <SectorLocationDialog />
