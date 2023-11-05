@@ -27,7 +27,6 @@ import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/loca
 import { useListenToCurrentNPC } from "stores/world/currentWorld/npcs/useListenToCurrentNPC";
 import { useStore } from "stores/store";
 import { BondsSection } from "components/features/worlds/BondsSection";
-import { ItemHeader } from "../ItemHeader";
 import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
 import { RoundedImageUploader } from "./RoundedImageUploader";
