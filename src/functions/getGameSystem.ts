@@ -7,7 +7,7 @@ const DEV_HOSTNAME_START_IRONSWORN = "iron-fellowship-dev";
 const DEV_HOSTNAME_START_STARFORGED = "crew-link-dev";
 
 export function getGameSystem() {
-  let system: GAME_SYSTEMS = GAME_SYSTEMS.STARFORGED;
+  let system: GAME_SYSTEMS = GAME_SYSTEMS.IRONSWORN;
   if (location.hostname === PROD_HOSTNAME_IRONSWORN) {
     system = GAME_SYSTEMS.IRONSWORN;
   } else if (location.hostname === PROD_HOSTNAME_STARFORGED) {
