@@ -3,6 +3,7 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
+  IconButton,
   Tab,
   Tabs,
 } from "@mui/material";
@@ -22,6 +23,8 @@ import { NotesSectionHeader } from "../NotesSectionHeader";
 import { NPCItem } from "../NPCSection/NPCItem";
 import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useConfirm } from "material-ui-confirm";
 
 interface OpenSectorProps {
   sectorId: string;
@@ -29,8 +32,8 @@ interface OpenSectorProps {
 }
 
 export function OpenSector(props: OpenSectorProps) {
-  const { sectorId, openNPCTab } = props;
-
+  const { sectorId, openNPCTab, } = props;
+  const confirm = useConfirm();
   const { rollOracleTable } = useRoller();
 
   const worldId = useStore(
@@ -60,6 +63,9 @@ export function OpenSector(props: OpenSectorProps) {
 
   const updateSector = useStore(
     (store) => store.worlds.currentWorld.currentWorldSectors.updateSector
+  );
+  const deleteSector = useStore(
+    (store) => store.worlds.currentWorld.currentWorldSectors.deleteSector
   );
   const addHexToMap = useStore(
     (store) => store.worlds.currentWorld.currentWorldSectors.updateHex
@@ -160,6 +166,27 @@ export function OpenSector(props: OpenSectorProps) {
     addHexToMap(row, col, cell).catch(() => {});
   };
 
+  const handleSectorDelete = () => {
+    confirm({
+      title: `Delete ${sector.name}`,
+      description:
+        "Are you sure you want to delete this sector? It will be deleted from ALL of your characters and campaigns that use this world. This cannot be undone.",
+      confirmationText: "Delete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "error",
+      },
+    })
+      .then(() => {
+        deleteSector()
+          .catch(() => {})
+          .then(() => {
+            setOpenSectorId();
+          });
+      })
+      .catch(() => {});
+  };
+
   const { showGMFields, showGMTips, isSingleplayer } = useWorldPermissions();
   const notes = useStore(
     (store) => store.worlds.currentWorld.currentWorldSectors.openSectorNotes
@@ -187,6 +214,10 @@ export function OpenSector(props: OpenSectorProps) {
 
   const canUseImages = useCanUploadWorldImages();
 
+  if(!sector) {
+    return null;
+  }
+
   return (
     <Box>
       <SectorLocationDialog />
@@ -198,6 +229,11 @@ export function OpenSector(props: OpenSectorProps) {
           "starforged/oracles/space/sector_name/suffix",
         ]}
         joinOracles
+        actions={showGMFields && (
+          <IconButton onClick={() => handleSectorDelete()}>
+            <DeleteIcon />
+          </IconButton>
+      )}
         closeItem={() => setOpenSectorId()}
       />
       <SectorMap
