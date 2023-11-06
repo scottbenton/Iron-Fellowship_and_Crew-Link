@@ -229,15 +229,13 @@ export function OpenSector(props: OpenSectorProps) {
           "starforged/oracles/space/sector_name/suffix",
         ]}
         joinOracles
+        actions={showGMFields && (
+          <IconButton onClick={() => handleSectorDelete()}>
+            <DeleteIcon />
+          </IconButton>
+      )}
         closeItem={() => setOpenSectorId()}
       />
-      <Box mt={1}>
-          {showGMFields && (
-            <IconButton onClick={() => handleSectorDelete()}>
-              <DeleteIcon />
-            </IconButton>
-          )}
-        </Box>
       <SectorMap
         map={sector.map}
         addHex={(row, col, type) =>
