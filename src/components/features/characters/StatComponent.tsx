@@ -76,6 +76,7 @@ export function StatComponent(props: StatComponentProps) {
             backgroundColor: theme.palette.background.paperInlay,
             color: theme.palette.text.secondary,
             fontFamily: theme.fontFamilyTitle,
+            fontWeight: 400,
             py: 0.5,
           },
           "&:hover":

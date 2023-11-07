@@ -13,6 +13,7 @@
 
 - Improved tab focus indicators
 - Changed progress tracks to use the meter aria-role, and added announcements to the increment and decrement buttons
+- Changed stat tracks and custom stat tracks to be radio buttons under the surface for better screen reader support
 
 ### Bug Fixes
 

@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 export function useDebouncedState<State>(
   persistChanges: (state: State) => void,
-  initialState: State
-): [State, (value: State) => void, () => void] {
+  initialState: State,
+  delay = 2000
+): [State, (value: State) => void] {
   const [state, setState] = useState<State>(initialState);
   const stateRef = useRef<State>(state);
 
@@ -24,12 +25,12 @@ export function useDebouncedState<State>(
         lastUpdateState.current = state;
         persistChanges(state);
       }
-    }, 2000);
+    }, delay);
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [state]);
+  }, [state, delay]);
 
   useEffect(() => {
     return () => {
@@ -45,6 +46,5 @@ export function useDebouncedState<State>(
       stateRef.current = newState;
       setState(newState);
     },
-    () => {},
   ];
 }
