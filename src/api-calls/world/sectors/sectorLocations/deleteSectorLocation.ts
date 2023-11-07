@@ -1,5 +1,5 @@
 import { deleteDoc } from "firebase/firestore";
-import { getSectorLocationDoc } from "./_getRef";
+import { getPrivateSectorLocationNotesDoc, getPublicSectorLocationNotesDoc, getSectorLocationDoc } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 interface Params {
@@ -16,6 +16,16 @@ export const deleteSectorLocation = createApiFunction<Params, void>(
       let promises: Promise<any>[] = [];
       promises.push(
         deleteDoc(getSectorLocationDoc(worldId, sectorId, locationId))
+      );
+      promises.push(
+        deleteDoc(
+          getPublicSectorLocationNotesDoc(worldId, sectorId, locationId)
+        )
+      );
+      promises.push(
+        deleteDoc(
+          getPrivateSectorLocationNotesDoc(worldId, sectorId, locationId)
+        )
       );
 
       Promise.all(promises)

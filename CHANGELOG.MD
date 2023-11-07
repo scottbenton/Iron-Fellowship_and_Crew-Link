@@ -7,6 +7,7 @@
 ### Changes
 
 - Added ability to remove character portraits
+- Added ability to delete sectors (meathox)
 
 ### Accessibility
 
