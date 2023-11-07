@@ -1,5 +1,6 @@
 import {
   Box,
+  ButtonBase,
   SxProps,
   Theme,
   ToggleButton,
@@ -7,6 +8,9 @@ import {
   ToggleButtonProps,
   Typography,
 } from "@mui/material";
+import { useDebouncedState } from "hooks/useDebouncedState";
+import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
+import { useEffect, useId, useRef, useState } from "react";
 import { CustomTrack as ICustomTrack } from "types/CustomTrackSettings.type";
 
 export interface CustomTrackProps {
@@ -18,39 +22,47 @@ export interface CustomTrackProps {
   loading?: boolean;
 }
 
-const FakeToggleButton = (props: ToggleButtonProps) => {
-  const { children, className } = props;
+export function CustomTrack(props: CustomTrackProps) {
+  const { sx, customTrack, value, onChange, disabled, loading } = props;
+
+  const hasUnsavedChangesRef = useRef(false);
+  const { setAnnouncement } = useScreenReaderAnnouncement();
+
+  const [localIndex, setLocalIndex] = useDebouncedState(
+    (newValue) => {
+      if (newValue && newValue !== value) {
+        hasUnsavedChangesRef.current = false;
+        onChange(newValue);
+      }
+    },
+    value,
+    500
+  );
+
+  const handleChange = (newValue: number) => {
+    hasUnsavedChangesRef.current = true;
+    setLocalIndex(newValue);
+  };
+
+  useEffect(() => {
+    if (value && value !== localIndex && !hasUnsavedChangesRef.current) {
+      setLocalIndex(value);
+      setAnnouncement(
+        `${customTrack.label} was updated to ${customTrack.values[value].value}`
+      );
+    }
+  }, [localIndex, value, setAnnouncement]);
+  const labelId = useId();
 
   return (
     <Box
-      className={className}
-      sx={(theme) => ({
-        borderStyle: "solid",
-        borderColor: theme.palette.divider,
-        borderWidth: 1,
-        borderLeftWidth: 0,
-        px: 0.5,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        bgcolor: theme.palette.grey[500],
-        color: theme.palette.darkGrey.contrastText,
-      })}
+      sx={sx}
+      display={"flex"}
+      overflow={"auto"}
+      role={"group"}
+      component={"div"}
+      aria-labelledby={labelId}
     >
-      <Typography
-        fontFamily={(theme) => theme.fontFamilyTitle}
-        variant={"subtitle1"}
-      >
-        {children}
-      </Typography>
-    </Box>
-  );
-};
-
-export function CustomTrack(props: CustomTrackProps) {
-  const { sx, customTrack, value, onChange, disabled, loading } = props;
-  return (
-    <Box sx={sx} display={"flex"} overflow={"auto"}>
       <Box
         flexShrink={0}
         bgcolor={(theme) =>
@@ -75,11 +87,119 @@ export function CustomTrack(props: CustomTrackProps) {
         <Typography
           fontFamily={(theme) => theme.fontFamilyTitle}
           variant={"subtitle1"}
+          id={labelId}
         >
           {customTrack.label}
         </Typography>
       </Box>
-      <ToggleButtonGroup
+      {customTrack.values.map((cell, index) =>
+        cell.selectable ? (
+          <ButtonBase
+            key={index}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !disabled) {
+                handleChange(index);
+              }
+            }}
+            role={undefined}
+            tabIndex={-1}
+            htmlFor={labelId + "-" + cell + "-" + index}
+            disabled={disabled}
+            component={"label"}
+            sx={(theme) => ({
+              ...(index === localIndex
+                ? {
+                    backgroundColor: theme.palette.background.paperInlayDarker,
+                  }
+                : { backgroundColor: theme.palette.background.paper }),
+
+              borderLeft:
+                index !== 0 ? `1px solid ${theme.palette.divider}` : undefined,
+              borderColor: theme.palette.divider,
+              borderStyle: "solid",
+              borderWidth: 1,
+              borderLeftWidth: index === 0 ? 1 : 0,
+              borderTopRightRadius:
+                index === customTrack.values.length - 1
+                  ? theme.shape.borderRadius
+                  : 0,
+              borderBottomRightRadius:
+                index === customTrack.values.length - 1
+                  ? theme.shape.borderRadius
+                  : 0,
+              flexGrow: 1,
+            })}
+          >
+            <Typography
+              variant={"button"}
+              color={(theme) => {
+                if (index === localIndex) {
+                  return theme.palette.text.primary;
+                } else if (disabled) {
+                  return theme.palette.text.disabled;
+                } else {
+                  return theme.palette.text.secondary;
+                }
+              }}
+            >
+              {typeof cell.value === "number" && cell.value > 0 && "+"}
+              {cell.value}
+            </Typography>
+
+            <input
+              style={{
+                position: "absolute",
+                width: "1px",
+                height: "1px",
+                margin: "-1px",
+                padding: 0,
+                overflow: "hidden",
+                clip: "rect(0,0,0,0)",
+                border: 0,
+              }}
+              disabled={disabled}
+              value={index}
+              type={"radio"}
+              id={labelId + "-" + cell + "-" + index}
+              name={customTrack.label}
+              checked={index === localIndex}
+              onChange={(evt) => handleChange(index)}
+            />
+          </ButtonBase>
+        ) : (
+          <Box
+            key={index}
+            sx={(theme) => ({
+              borderStyle: "solid",
+              borderColor: theme.palette.divider,
+              borderWidth: 1,
+              borderLeftWidth: 0,
+              px: 0.5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: theme.palette.grey[500],
+              color: theme.palette.darkGrey.contrastText,
+              borderTopRightRadius:
+                index === customTrack.values.length - 1
+                  ? theme.shape.borderRadius
+                  : 0,
+              borderBottomRightRadius:
+                index === customTrack.values.length - 1
+                  ? theme.shape.borderRadius
+                  : 0,
+            })}
+          >
+            <Typography
+              fontFamily={(theme) => theme.fontFamilyTitle}
+              variant={"subtitle1"}
+            >
+              {cell.value}
+            </Typography>
+          </Box>
+        )
+      )}
+      {/* <ToggleButtonGroup
         exclusive
         disabled={disabled || loading}
         value={value}
@@ -120,7 +240,7 @@ export function CustomTrack(props: CustomTrackProps) {
             </FakeToggleButton>
           )
         )}
-      </ToggleButtonGroup>
+      </ToggleButtonGroup> */}
     </Box>
   );
 }
