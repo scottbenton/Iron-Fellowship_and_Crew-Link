@@ -6,6 +6,7 @@ import {
   IconButton,
   Tab,
   Tabs,
+  Tooltip,
 } from "@mui/material";
 import { SectorMap } from "./SectorMap";
 import { useStore } from "stores/store";
@@ -231,9 +232,11 @@ export function OpenSector(props: OpenSectorProps) {
         joinOracles
         actions={
           showGMFields && (
-            <IconButton onClick={() => handleSectorDelete()}>
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title={"Delete Sector"}>
+              <IconButton onClick={() => handleSectorDelete()}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           )
         }
         sx={{ alignItems: "center" }}

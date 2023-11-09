@@ -5,22 +5,27 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
-  TextField,
   Tooltip,
 } from "@mui/material";
-import BackIcon from "@mui/icons-material/ChevronLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { RtcRichTextEditor } from "components/shared/RichTextEditor/RtcRichTextEditor";
-import { ImageUploader } from "components/features/worlds/ImageUploader";
 import { LoreTagsAutocomplete } from "./LoreTagsAutocomplete";
 import { useStore } from "stores/store";
 import { LoreDocumentWithGMProperties } from "stores/world/currentWorld/lore/lore.slice.type";
 import { useListenToCurrentLoreDocument } from "stores/world/currentWorld/lore/useListenToCurrentLoreDocument";
 import { ItemHeader } from "../ItemHeader";
 import { useWorldPermissions } from "../useWorldPermissions";
+import { ImageBanner } from "../ImageBanner";
+import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 
 export interface OpenLoreProps {
   worldId: string;
@@ -96,6 +101,16 @@ export function OpenLore(props: OpenLoreProps) {
       .catch(() => {});
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const onFileUpload = (evt: ChangeEvent<HTMLInputElement>) => {
+    const files = evt.target.files;
+    const file = files?.[0];
+    if (file) {
+      uploadLoreImage(loreId, file).catch(() => {});
+    }
+  };
+
   return (
     <Box
       overflow={"auto"}
@@ -103,142 +118,144 @@ export function OpenLore(props: OpenLoreProps) {
       width={"100%"}
       sx={(theme) => ({ borderLeft: `1px solid ${theme.palette.divider}` })}
     >
-      {showImages && (
-        <ImageUploader
-          title={lore.name}
-          src={lore.imageUrl}
-          handleFileUpload={(image) =>
-            uploadLoreImage(loreId, image).catch(() => {})
-          }
-          handleClose={closeLore}
-        />
-      )}
-      <Box
-        sx={(theme) => ({
-          borderTop: `1px solid ${theme.palette.divider}`,
-        })}
-      >
-        <ItemHeader
-          itemName={loreName}
-          updateName={(name) => updateLore(loreId, { name }).catch(() => {})}
-          closeItem={closeLore}
-          actions={
-            showGMFields && (
+      <input
+        type="file"
+        accept={"image/*"}
+        hidden
+        ref={fileInputRef}
+        onChange={onFileUpload}
+      />
+      {showImages && <ImageBanner title={lore.name} src={lore.imageUrl} />}
+
+      <ItemHeader
+        itemName={loreName}
+        updateName={(name) => updateLore(loreId, { name }).catch(() => {})}
+        closeItem={closeLore}
+        actions={
+          <>
+            {showImages && (
+              <Tooltip title={"Upload Image"}>
+                <IconButton onClick={() => fileInputRef?.current?.click()}>
+                  <AddPhotoIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showGMFields && (
               <Tooltip title={"Delete Document"}>
                 <IconButton onClick={() => handleLoreDelete()}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
-            )
-          }
-        />
-        <Box
-          sx={(theme) => ({
-            mt: 1,
-            px: 2,
-            [theme.breakpoints.up("md")]: { px: 3 },
-          })}
-        >
-          <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid item xs={12} lg={6}>
-              <LoreTagsAutocomplete
-                tagList={tagList}
-                tags={lore.tags}
-                updateTags={(tags) =>
-                  updateLore(loreId, { tags }).catch(() => {})
-                }
-              />
-            </Grid>
-            {showGMFields && (
-              <>
-                {showGMTips && (
-                  <>
-                    <Grid item xs={12}>
-                      <SectionHeading label={"GM Only"} breakContainer />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Alert severity={"info"}>
-                        Information in this section will not be shared with your
-                        players.
-                      </Alert>
-                    </Grid>
-                  </>
-                )}
-                {!isSinglePlayer && (
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    sx={{ alignItems: "center", display: "flex" }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={lore.sharedWithPlayers ?? false}
-                          onChange={(evt, value) =>
-                            updateLore(loreId, {
-                              sharedWithPlayers: value,
-                            }).catch(() => {})
-                          }
-                        />
-                      }
-                      label="Visible to Players"
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12}>
-                  <RtcRichTextEditor
-                    id={loreId}
-                    roomPrefix={`iron-fellowship-${worldId}-lore-gmnotes-`}
-                    documentPassword={worldId}
-                    onSave={updateLoreGMNotes}
-                    initialValue={lore.gmProperties?.gmNotes}
-                  />
-                </Grid>
-              </>
             )}
-            {!isSinglePlayer && (
-              <>
-                {showGMTips && (
-                  <>
-                    <Grid item xs={12}>
-                      <SectionHeading
-                        label={"GM & Player Notes"}
-                        breakContainer
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Alert severity={"info"}>
-                        Notes in this section will only be visible to gms &
-                        players in campaigns. Notes for singleplayer games
-                        should go in the above section.
-                      </Alert>
-                    </Grid>
-                  </>
-                )}
-                {!lore.sharedWithPlayers && (
+          </>
+        }
+      />
+      <Box
+        sx={(theme) => ({
+          mt: 1,
+          px: 2,
+          [theme.breakpoints.up("md")]: { px: 3 },
+        })}
+      >
+        <Grid container spacing={2} sx={{ mb: 2 }}>
+          <Grid item xs={12} lg={6}>
+            <LoreTagsAutocomplete
+              tagList={tagList}
+              tags={lore.tags}
+              updateTags={(tags) =>
+                updateLore(loreId, { tags }).catch(() => {})
+              }
+            />
+          </Grid>
+          {showGMFields && (
+            <>
+              {showGMTips && (
+                <>
                   <Grid item xs={12}>
-                    <Alert severity="warning">
-                      These notes are not yet visible to players because this
-                      location is hidden from them.
+                    <SectionHeading label={"GM Only"} breakContainer />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Alert severity={"info"}>
+                      Information in this section will not be shared with your
+                      players.
                     </Alert>
                   </Grid>
-                )}
-                <Grid item xs={12}>
-                  {(lore.notes || lore.notes === null) && (
-                    <RtcRichTextEditor
-                      id={loreId}
-                      roomPrefix={`iron-fellowship-${worldId}-lore-`}
-                      documentPassword={worldId}
-                      onSave={updateLoreNotes}
-                      initialValue={lore.notes || undefined}
-                    />
-                  )}
+                </>
+              )}
+              {!isSinglePlayer && (
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  sx={{ alignItems: "center", display: "flex" }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={lore.sharedWithPlayers ?? false}
+                        onChange={(evt, value) =>
+                          updateLore(loreId, {
+                            sharedWithPlayers: value,
+                          }).catch(() => {})
+                        }
+                      />
+                    }
+                    label="Visible to Players"
+                  />
                 </Grid>
-              </>
-            )}
-          </Grid>
-        </Box>
+              )}
+              <Grid item xs={12}>
+                <RtcRichTextEditor
+                  id={loreId}
+                  roomPrefix={`iron-fellowship-${worldId}-lore-gmnotes-`}
+                  documentPassword={worldId}
+                  onSave={updateLoreGMNotes}
+                  initialValue={lore.gmProperties?.gmNotes}
+                />
+              </Grid>
+            </>
+          )}
+          {!isSinglePlayer && (
+            <>
+              {showGMTips && (
+                <>
+                  <Grid item xs={12}>
+                    <SectionHeading
+                      label={"GM & Player Notes"}
+                      breakContainer
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Alert severity={"info"}>
+                      Notes in this section will only be visible to gms &
+                      players in campaigns. Notes for singleplayer games should
+                      go in the above section.
+                    </Alert>
+                  </Grid>
+                </>
+              )}
+              {!lore.sharedWithPlayers && (
+                <Grid item xs={12}>
+                  <Alert severity="warning">
+                    These notes are not yet visible to players because this
+                    location is hidden from them.
+                  </Alert>
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                {(lore.notes || lore.notes === null) && (
+                  <RtcRichTextEditor
+                    id={loreId}
+                    roomPrefix={`iron-fellowship-${worldId}-lore-`}
+                    documentPassword={worldId}
+                    onSave={updateLoreNotes}
+                    initialValue={lore.notes || undefined}
+                  />
+                )}
+              </Grid>
+            </>
+          )}
+        </Grid>
       </Box>
     </Box>
   );

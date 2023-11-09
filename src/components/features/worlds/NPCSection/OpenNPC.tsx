@@ -10,6 +10,7 @@ import {
   IconButton,
   MenuItem,
   TextField,
+  Tooltip,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -284,18 +285,24 @@ export function OpenNPC(props: OpenNPCProps) {
             </Hidden>
             <Box mt={1}>
               {canUseImages && (
-                <IconButton onClick={() => fileInputRef.current?.click()}>
-                  <AddPhotoIcon />
-                </IconButton>
+                <Tooltip title={"Upload Image"}>
+                  <IconButton onClick={() => fileInputRef.current?.click()}>
+                    <AddPhotoIcon />
+                  </IconButton>
+                </Tooltip>
               )}
               {showGMFields && (
-                <IconButton onClick={() => handleNPCDelete()}>
-                  <DeleteIcon />
-                </IconButton>
+                <Tooltip title={"Delete NPC"}>
+                  <IconButton onClick={() => handleNPCDelete()}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
               )}
-              <IconButton onClick={() => closeNPC()}>
-                <CloseIcon />
-              </IconButton>
+              <Tooltip title={"Close"}>
+                <IconButton onClick={() => closeNPC()}>
+                  <CloseIcon />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
         </Box>
