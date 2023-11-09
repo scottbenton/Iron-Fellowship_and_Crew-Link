@@ -116,12 +116,10 @@ export function LoreSection(props: LoreSectionProps) {
 
         <OpenLore
           worldId={worldId}
-          isWorldOwner={isWorldOwner}
           lore={openLore}
           loreId={openLoreId}
           closeLore={() => setOpenLoreId(undefined)}
-          isWorldOwnerPremium={canShowImages}
-          isSinglePlayer={isSinglePlayer}
+          showImages={canShowImages}
           tagList={[...tags.values()]}
         />
       </Box>

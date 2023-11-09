@@ -4,7 +4,7 @@ export function useWorldPermissions() {
   const isOnCharacterSheet = useStore(
     (store) => !!store.characters.currentCharacter.currentCharacter
   );
-  const isSingleplayer = useStore((store) =>
+  const isSinglePlayer = useStore((store) =>
     store.characters.currentCharacter.currentCharacter
       ? !store.characters.currentCharacter.currentCharacter.campaignId
       : false
@@ -19,9 +19,9 @@ export function useWorldPermissions() {
   );
 
   const showGMTips =
-    !isSingleplayer && (isGM || (isWorldOwner && !isOnCharacterSheet));
+    !isSinglePlayer && (isGM || (isWorldOwner && !isOnCharacterSheet));
   const showGMFields =
-    isSingleplayer || isGM || (isWorldOwner && !isOnCharacterSheet);
+    isSinglePlayer || isGM || (isWorldOwner && !isOnCharacterSheet);
 
-  return { showGMFields, showGMTips, isSingleplayer };
+  return { showGMFields, showGMTips, isSinglePlayer };
 }

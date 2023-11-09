@@ -91,7 +91,7 @@ export function SectorLocationDialog() {
         .updateLocationNotes
   );
 
-  const { showGMFields, showGMTips, isSingleplayer } = useWorldPermissions();
+  const { showGMFields, showGMTips, isSinglePlayer } = useWorldPermissions();
 
   if (!openLocation || !openLocationId) return null;
 
@@ -152,7 +152,7 @@ export function SectorLocationDialog() {
               />
             </Grid>
           )}
-          {!isSingleplayer && (
+          {!isSinglePlayer && (
             <>
               {showGMTips && (
                 <NotesSectionHeader sharedWithPlayers={sharedWithPlayers} />

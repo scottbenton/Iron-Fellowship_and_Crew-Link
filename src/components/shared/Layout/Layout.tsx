@@ -71,9 +71,13 @@ export function Layout(props: LayoutProps) {
     >
       <SkipToContentButton />
       <Header />
-      <main id={"main-content"}>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
+        component={"main"}
+        id={"main-content"}
+      >
         <Outlet />
-      </main>
+      </Box>
       <Footer />
       <UserNameDialog
         open={userNameDialogOpen}

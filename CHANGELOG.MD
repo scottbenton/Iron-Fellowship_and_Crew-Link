@@ -8,6 +8,8 @@
 
 - Added ability to remove character portraits
 - Added ability to delete sectors (meathox)
+- Added some extra text and styling to make rolls of 1's more obvious (meathox)
+- World owners will no longer see Location, NPC, and Lore GM notes on the character sheet if they aren't the GM
 
 ### Accessibility
 

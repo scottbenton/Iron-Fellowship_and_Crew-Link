@@ -20,31 +20,31 @@ import { useStore } from "stores/store";
 import { useListenToCurrentLocation } from "stores/world/currentWorld/locations/useListenToCurrentLocation";
 import { BondsSection } from "components/features/worlds/BondsSection";
 import { LocationNPCs } from "./LocationNPCs";
+import { useWorldPermissions } from "../useWorldPermissions";
+import { ItemHeader } from "../ItemHeader";
 
 export interface OpenLocationProps {
-  isWorldOwner: boolean;
   worldId: string;
   locationId: string;
   location: LocationDocumentWithGMProperties;
   closeLocation: () => void;
   canShowImages?: boolean;
-  isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
   openNPCTab: () => void;
 }
 
 export function OpenLocation(props: OpenLocationProps) {
   const {
-    isWorldOwner,
     worldId,
     locationId,
     location,
     closeLocation,
     canShowImages,
-    isSinglePlayer,
     showHiddenTag,
     openNPCTab,
   } = props;
+
+  const { isSinglePlayer, showGMFields, showGMTips } = useWorldPermissions();
 
   useListenToCurrentLocation(locationId);
 
@@ -130,6 +130,7 @@ export function OpenLocation(props: OpenLocationProps) {
     <Box
       overflow={"auto"}
       bgcolor={(theme) => theme.palette.background.paper}
+      borderLeft={(theme) => `1px solid ${theme.palette.divider}`}
       width={"100%"}
     >
       {canShowImages && (
@@ -143,161 +144,169 @@ export function OpenLocation(props: OpenLocationProps) {
         />
       )}
       <Box
-        display={"flex"}
-        alignItems={"center"}
         sx={(theme) => ({
-          px: 1,
-          py: 1,
+          borderTop: `1px solid ${theme.palette.divider}`,
         })}
       >
-        <IconButton onClick={() => closeLocation()}>
-          <BackIcon />
-        </IconButton>
-        <LocationNameInput
-          inputRef={nameInputRef}
-          initialName={location.name}
+        <ItemHeader
+          itemName={location.name}
           updateName={(newName) =>
             updateLocation(locationId, { name: newName }).catch(() => {})
           }
-        />
-        <IconButton onClick={() => handleLocationDelete()}>
-          <DeleteIcon />
-        </IconButton>
-      </Box>
-      <Box
-        sx={(theme) => ({
-          mt: 1,
-          px: 2,
-          [theme.breakpoints.up("md")]: { px: 3 },
-        })}
-      >
-        <Grid
-          container
-          spacing={2}
-          sx={{ mb: 2, mt: isSinglePlayer || !isWorldOwner ? 0 : -2 }}
-        >
-          {isWorldOwner && (
+          nameOracleIds={[
+            "ironsworn/oracles/settlement/name/landscape_feature",
+            "ironsworn/oracles/settlement/name/manmade_edifice",
+            "ironsworn/oracles/settlement/name/creature",
+            "ironsworn/oracles/settlement/name/historical_event",
+            "ironsworn/oracles/settlement/name/old_world_language",
+            "ironsworn/oracles/settlement/name/environmental_aspect",
+            [
+              "ironsworn/oracles/settlement/quick_name/prefix",
+              "ironsworn/oracles/settlement/quick_name/suffix",
+            ],
+          ]}
+          actions={
             <>
-              {!isSinglePlayer && (
-                <>
-                  <Grid item xs={12}>
-                    <SectionHeading label={"GM Only"} breakContainer />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Alert severity={"info"}>
-                      Information in this section will not be shared with your
-                      players.
-                    </Alert>
-                  </Grid>
-                </>
+              {showGMFields && (
+                <IconButton onClick={() => handleLocationDelete()}>
+                  <DeleteIcon />
+                </IconButton>
               )}
-              <Grid item xs={12} md={6}>
-                <DebouncedOracleInput
-                  label={"Description"}
-                  initialValue={location?.gmProperties?.descriptor ?? ""}
-                  updateValue={(descriptor) =>
-                    updateLocationGMProperties(locationId, {
-                      descriptor,
-                    }).catch(() => {})
-                  }
-                  oracleTableId="ironsworn/oracles/place/descriptor"
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <DebouncedOracleInput
-                  label={"Trouble"}
-                  initialValue={location?.gmProperties?.trouble ?? ""}
-                  updateValue={(trouble) => {
-                    updateLocationGMProperties(locationId, { trouble }).catch(
-                      () => {}
-                    );
-                  }}
-                  oracleTableId={"ironsworn/oracles/settlement/trouble"}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <DebouncedOracleInput
-                  label={"Location Features"}
-                  initialValue={location?.gmProperties?.locationFeatures ?? ""}
-                  updateValue={(locationFeatures) => {
-                    updateLocationGMProperties(locationId, {
-                      locationFeatures,
-                    }).catch(() => {});
-                  }}
-                  oracleTableId={"ironsworn/oracles/place/location"}
-                />
-              </Grid>
-              {!isSinglePlayer && (
-                <Grid
-                  item
-                  xs={12}
-                  md={6}
-                  sx={{ alignItems: "center", display: "flex" }}
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={location.sharedWithPlayers ?? false}
-                        onChange={(evt, value) =>
-                          updateLocation(locationId, {
-                            sharedWithPlayers: value,
-                          }).catch(() => {})
-                        }
-                      />
+            </>
+          }
+          closeItem={closeLocation}
+        />
+        <Box
+          sx={(theme) => ({
+            mt: 1,
+            px: 2,
+            [theme.breakpoints.up("md")]: { px: 3 },
+          })}
+        >
+          <Grid container spacing={2} sx={{ mb: 2 }}>
+            {showGMFields && (
+              <>
+                {showGMTips && (
+                  <>
+                    <Grid item xs={12}>
+                      <SectionHeading label={"GM Only"} breakContainer />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Alert severity={"info"}>
+                        Information in this section will not be shared with your
+                        players.
+                      </Alert>
+                    </Grid>
+                  </>
+                )}
+                <Grid item xs={12} md={6}>
+                  <DebouncedOracleInput
+                    label={"Description"}
+                    initialValue={location?.gmProperties?.descriptor ?? ""}
+                    updateValue={(descriptor) =>
+                      updateLocationGMProperties(locationId, {
+                        descriptor,
+                      }).catch(() => {})
                     }
-                    label="Visible to Players"
+                    oracleTableId="ironsworn/oracles/place/descriptor"
                   />
                 </Grid>
-              )}
-              {isSinglePlayer && (
-                <BondsSection
-                  isStarforged={false}
-                  hasConnection={false}
-                  onBondToggle={
-                    currentCharacterId
-                      ? (bonded) =>
-                          updateLocationCharacterBond(
-                            locationId,
-                            currentCharacterId,
-                            bonded
-                          ).catch(() => {})
-                      : undefined
-                  }
-                  isBonded={singleplayerBond}
-                  bondedCharacters={bondedCharacterNames}
-                />
-              )}
-              <Grid item xs={12}>
-                <RtcRichTextEditor
-                  id={locationId}
-                  roomPrefix={`iron-fellowship-${worldId}-location-gmnotes-`}
-                  documentPassword={worldId}
-                  onSave={updateLocationGMNotes}
-                  initialValue={location.gmProperties?.gmNotes}
-                />
-              </Grid>
-            </>
-          )}
-          {!isSinglePlayer && (
-            <>
-              {isWorldOwner && (
-                <>
-                  <Grid item xs={12}>
-                    <SectionHeading
-                      label={"GM & Player Notes"}
-                      breakContainer
+                <Grid item xs={12} md={6}>
+                  <DebouncedOracleInput
+                    label={"Trouble"}
+                    initialValue={location?.gmProperties?.trouble ?? ""}
+                    updateValue={(trouble) => {
+                      updateLocationGMProperties(locationId, { trouble }).catch(
+                        () => {}
+                      );
+                    }}
+                    oracleTableId={"ironsworn/oracles/settlement/trouble"}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <DebouncedOracleInput
+                    label={"Location Features"}
+                    initialValue={
+                      location?.gmProperties?.locationFeatures ?? ""
+                    }
+                    updateValue={(locationFeatures) => {
+                      updateLocationGMProperties(locationId, {
+                        locationFeatures,
+                      }).catch(() => {});
+                    }}
+                    oracleTableId={"ironsworn/oracles/place/location"}
+                  />
+                </Grid>
+                {!isSinglePlayer && showGMFields && (
+                  <Grid
+                    item
+                    xs={12}
+                    md={6}
+                    sx={{ alignItems: "center", display: "flex" }}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={location.sharedWithPlayers ?? false}
+                          onChange={(evt, value) =>
+                            updateLocation(locationId, {
+                              sharedWithPlayers: value,
+                            }).catch(() => {})
+                          }
+                        />
+                      }
+                      label="Visible to Players"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <Alert severity={"info"}>
-                      Notes in this section will only be visible to gms &
-                      players in campaigns. Notes for singleplayer games should
-                      go in the above section.
-                    </Alert>
-                  </Grid>
-                </>
-              )}
-              {!isSinglePlayer && (
+                )}
+                {isSinglePlayer && (
+                  <BondsSection
+                    isStarforged={false}
+                    hasConnection={false}
+                    onBondToggle={
+                      currentCharacterId
+                        ? (bonded) =>
+                            updateLocationCharacterBond(
+                              locationId,
+                              currentCharacterId,
+                              bonded
+                            ).catch(() => {})
+                        : undefined
+                    }
+                    isBonded={singleplayerBond}
+                    bondedCharacters={bondedCharacterNames}
+                  />
+                )}
+                <Grid item xs={12}>
+                  <RtcRichTextEditor
+                    id={locationId}
+                    roomPrefix={`iron-fellowship-${worldId}-location-gmnotes-`}
+                    documentPassword={worldId}
+                    onSave={updateLocationGMNotes}
+                    initialValue={location.gmProperties?.gmNotes}
+                  />
+                </Grid>
+              </>
+            )}
+            {!isSinglePlayer && (
+              <>
+                {showGMTips && (
+                  <>
+                    <Grid item xs={12}>
+                      <SectionHeading
+                        label={"GM & Player Notes"}
+                        breakContainer
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Alert severity={"info"}>
+                        Notes in this section will only be visible to gms &
+                        players in campaigns. Notes for singleplayer games
+                        should go in the above section.
+                      </Alert>
+                    </Grid>
+                  </>
+                )}
                 <BondsSection
                   isStarforged={false}
                   hasConnection={false}
@@ -314,35 +323,35 @@ export function OpenLocation(props: OpenLocationProps) {
                   isBonded={singleplayerBond}
                   bondedCharacters={bondedCharacterNames}
                 />
-              )}
-              {!location.sharedWithPlayers && (
-                <Grid item xs={12}>
-                  <Alert severity="warning">
-                    These notes are not yet visible to players because this
-                    location is hidden from them.
-                  </Alert>
-                </Grid>
-              )}
-              <Grid item xs={12}>
-                {(location.notes || location.notes === null) && (
-                  <RtcRichTextEditor
-                    id={locationId}
-                    roomPrefix={`iron-fellowship-${worldId}-location-`}
-                    documentPassword={worldId}
-                    onSave={updateLocationNotes}
-                    initialValue={location.notes || undefined}
-                  />
+                {!location.sharedWithPlayers && (
+                  <Grid item xs={12}>
+                    <Alert severity="warning">
+                      These notes are not yet visible to players because this
+                      location is hidden from them.
+                    </Alert>
+                  </Grid>
                 )}
-              </Grid>
-            </>
-          )}
-          <LocationNPCs
-            locationId={locationId}
-            canUseImages={canShowImages ?? false}
-            showHiddenTag={showHiddenTag}
-            openNPCTab={openNPCTab}
-          />
-        </Grid>
+                <Grid item xs={12}>
+                  {(location.notes || location.notes === null) && (
+                    <RtcRichTextEditor
+                      id={locationId}
+                      roomPrefix={`iron-fellowship-${worldId}-location-`}
+                      documentPassword={worldId}
+                      onSave={updateLocationNotes}
+                      initialValue={location.notes || undefined}
+                    />
+                  )}
+                </Grid>
+              </>
+            )}
+            <LocationNPCs
+              locationId={locationId}
+              canUseImages={canShowImages ?? false}
+              showHiddenTag={showHiddenTag}
+              openNPCTab={openNPCTab}
+            />
+          </Grid>
+        </Box>
       </Box>
     </Box>
   );
