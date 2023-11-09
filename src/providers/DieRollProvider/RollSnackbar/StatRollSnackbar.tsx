@@ -1,4 +1,4 @@
-import { Box, ButtonBase, Card, Divider, Typography } from "@mui/material";
+import { Box, ButtonBase, Card, Divider, Typography, useTheme } from "@mui/material";
 import { ROLL_RESULT, StatRoll } from "types/DieRolls.type";
 import { D6Icon } from "assets/D6Icon";
 import { D10Icon } from "assets/D10Icon";
@@ -22,8 +22,21 @@ export interface StatRollSnackbarProps {
 
 export function StatRollSnackbar(props: StatRollSnackbarProps) {
   const { roll, clearRoll, expanded } = props;
+  const theme = useTheme();
 
   const rollTotal = roll.action + (roll.modifier ?? 0) + (roll.adds ?? 0);
+
+  let rollActionBorder = "none";
+  let rollActionPadding = "0";
+  let rollActionBorderRadius = "0";
+  let rollActionMarginRight = "-4px";
+
+  if (roll.action === 1){
+    rollActionBorder = "1px solid " + theme.palette.primary.light;
+    rollActionBorderRadius = "25%";
+    rollActionPadding = "0px 5px 0 4px";
+    rollActionMarginRight = "-6px";
+  }
 
   return (
     <Card
@@ -57,8 +70,16 @@ export function StatRollSnackbar(props: StatRollSnackbarProps) {
               justifyContent={"space-between"}
             >
               <D6Icon />
-              <Typography ml={1} color={(theme) => theme.palette.grey[200]}>
+              <Typography ml={1} 
+                color={(theme) => theme.palette.grey[200]}
+                border={rollActionBorder}
+                borderRadius={rollActionBorderRadius}
+                padding={rollActionPadding}
+                marginRight={rollActionMarginRight}
+              >
                 {roll.action}
+              </Typography>
+              <Typography ml={1} color={(theme) => theme.palette.grey[200]}>
                 {roll.modifier ? ` + ${roll.modifier}` : ""}
                 {roll.adds ? ` + ${roll.adds}` : ""}
                 {roll.modifier || roll.adds
@@ -109,6 +130,15 @@ export function StatRollSnackbar(props: StatRollSnackbarProps) {
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
               Doubles
+            </Typography>
+          )}
+          {roll.action === 1 && (
+            <Typography
+              color={(theme) => theme.palette.grey[200]}
+              variant={"caption"}
+              fontFamily={(theme) => theme.fontFamilyTitle}
+            >
+              Natural 1
             </Typography>
           )}
         </Box>
