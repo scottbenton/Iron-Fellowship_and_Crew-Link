@@ -26,10 +26,16 @@ export function StatRollSnackbar(props: StatRollSnackbarProps) {
 
   const rollTotal = roll.action + (roll.modifier ?? 0) + (roll.adds ?? 0);
 
-  let rollActionColor = theme.palette.grey[200];
+  let rollActionBorder = "none";
+  let rollActionPadding = "0";
+  let rollActionBorderRadius = "0";
+  let rollActionMarginRight = "-4px";
 
   if (roll.action === 1){
-    rollActionColor = theme.palette.warning.light;
+    rollActionBorder = "1px solid " + theme.palette.primary.light;
+    rollActionBorderRadius = "25%";
+    rollActionPadding = "0px 5px 0 4px";
+    rollActionMarginRight = "-6px";
   }
 
   return (
@@ -64,7 +70,13 @@ export function StatRollSnackbar(props: StatRollSnackbarProps) {
               justifyContent={"space-between"}
             >
               <D6Icon />
-              <Typography ml={1} color={rollActionColor}>
+              <Typography ml={1} 
+                color={(theme) => theme.palette.grey[200]}
+                border={rollActionBorder}
+                borderRadius={rollActionBorderRadius}
+                padding={rollActionPadding}
+                marginRight={rollActionMarginRight}
+              >
                 {roll.action}
               </Typography>
               <Typography ml={1} color={(theme) => theme.palette.grey[200]}>
