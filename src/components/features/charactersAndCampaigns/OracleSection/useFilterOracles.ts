@@ -57,7 +57,7 @@ export function useFilterOracles() {
     return pinnedOracleSection
       ? [pinnedOracleSection, ...orderedCategories]
       : orderedCategories;
-  }, [pinnedOracles, appName]);
+  }, [pinnedOracles, appName, allCustomOracleMap]);
 
   const [filteredOracles, setFilteredOracles] = useState(combinedOracles);
 

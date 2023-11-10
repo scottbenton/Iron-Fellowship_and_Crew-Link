@@ -1,7 +1,8 @@
-import { useFeatureFlagEnabled } from "posthog-js/react";
-import { useStore } from "stores/store";
+// import { useFeatureFlagEnabled } from "posthog-js/react";
+// import { useStore } from "stores/store";
 
 export const useCanUploadWorldImages = () => {
+  /**
   const doAnyDocsHaveImages = useStore(
     (store) => store.worlds.currentWorld.doAnyDocsHaveImages
   );
@@ -11,4 +12,6 @@ export const useCanUploadWorldImages = () => {
   const isLocal = location.hostname === "localhost";
 
   return doAnyDocsHaveImages || isLocal ? true : isFeatureFlagEnabled;
+  */
+  return true;
 };
