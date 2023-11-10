@@ -88,11 +88,15 @@ export const createLocationsSlice: CreateSliceType<LocationsSlice> = (
     return createLocation({ worldId });
   },
   deleteLocation: (locationId) => {
-    const worldId = getState().worlds.currentWorld.currentWorldId;
+    const currentWorld = getState().worlds.currentWorld;
+    const worldId = currentWorld.currentWorldId;
+    const imageFilename =
+      currentWorld.currentWorldLocations.locationMap[locationId]
+        ?.imageFilenames?.[0];
     if (!worldId) {
       return new Promise((res, reject) => reject("No world found"));
     }
-    return deleteLocation({ worldId, locationId });
+    return deleteLocation({ worldId, locationId, imageFilename });
   },
   updateLocation: (locationId, partialLocation) => {
     const worldId = getState().worlds.currentWorld.currentWorldId;
@@ -139,11 +143,20 @@ export const createLocationsSlice: CreateSliceType<LocationsSlice> = (
     });
   },
   uploadLocationImage: (locationId, image) => {
-    const worldId = getState().worlds.currentWorld.currentWorldId;
+    const world = getState().worlds.currentWorld;
+    const worldId = world.currentWorldId;
+    const imageFilename =
+      world.currentWorldLocations.locationMap[locationId]?.imageFilenames?.[0];
     if (!worldId) {
       return new Promise((res, reject) => reject("No world found"));
     }
-    return uploadLocationImage({ worldId, locationId, image });
+
+    return uploadLocationImage({
+      worldId,
+      locationId,
+      image,
+      oldImageFilename: imageFilename,
+    });
   },
   subscribeToOpenLocation: (locationId) => {
     const state = getState();

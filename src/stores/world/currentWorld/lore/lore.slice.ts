@@ -81,11 +81,15 @@ export const createLoreSlice: CreateSliceType<LoreSlice> = (set, getState) => ({
     return createLore({ worldId });
   },
   deleteLore: (loreId) => {
-    const worldId = getState().worlds.currentWorld.currentWorldId;
+    const world = getState().worlds.currentWorld;
+    const worldId = world.currentWorldId;
+    const imageFilename =
+      world.currentWorldLore.loreMap[loreId]?.imageFilenames?.[0];
+
     if (!worldId) {
       return new Promise((res, reject) => reject("No world found"));
     }
-    return deleteLore({ worldId, loreId });
+    return deleteLore({ worldId, loreId, imageFilename });
   },
   updateLore: (loreId, partialLore) => {
     const worldId = getState().worlds.currentWorld.currentWorldId;
@@ -120,11 +124,20 @@ export const createLoreSlice: CreateSliceType<LoreSlice> = (set, getState) => ({
     return updateLoreNotes({ worldId, loreId, notes, isBeacon });
   },
   uploadLoreImage: (loreId, image) => {
-    const worldId = getState().worlds.currentWorld.currentWorldId;
+    const world = getState().worlds.currentWorld;
+    const worldId = world.currentWorldId;
+    const imageFilename =
+      world.currentWorldLore.loreMap[loreId]?.imageFilenames?.[0];
+
     if (!worldId) {
       return new Promise((res, reject) => reject("No world found"));
     }
-    return uploadLoreImage({ worldId, loreId, image });
+    return uploadLoreImage({
+      worldId,
+      loreId,
+      image,
+      oldImageFilename: imageFilename,
+    });
   },
   subscribeToOpenLore: (loreId) => {
     const state = getState();

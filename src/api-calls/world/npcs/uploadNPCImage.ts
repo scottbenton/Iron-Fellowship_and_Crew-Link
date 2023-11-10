@@ -1,40 +1,30 @@
 import { constructNPCImagesPath, getNPCDoc } from "./_getRef";
-import {
-  MAX_FILE_SIZE,
-  MAX_FILE_SIZE_LABEL,
-  uploadImage,
-} from "lib/storage.lib";
+import { replaceImage } from "lib/storage.lib";
 import { updateDoc } from "firebase/firestore";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const uploadNPCImage = createApiFunction<
-  { worldId: string; npcId: string; image: File },
+  { worldId: string; npcId: string; image: File; oldImageFilename?: string },
   void
 >((params) => {
-  const { worldId, npcId, image } = params;
+  const { worldId, npcId, image, oldImageFilename } = params;
 
   return new Promise((resolve, reject) => {
-    const filename = image.name;
-
-    if (image.size > MAX_FILE_SIZE) {
-      reject(`Image must be smaller than ${MAX_FILE_SIZE_LABEL} in size.`);
-      return;
-    }
-
-    uploadImage(constructNPCImagesPath(worldId, npcId), image)
+    replaceImage(
+      constructNPCImagesPath(worldId, npcId),
+      oldImageFilename,
+      image
+    )
       .then(() => {
+        const filename = image.name;
         updateDoc(getNPCDoc(worldId, npcId), {
           imageFilenames: [filename],
         })
           .then(() => {
             resolve();
           })
-          .catch((e) => {
-            reject(e);
-          });
+          .catch(reject);
       })
-      .catch((e) => {
-        reject(e);
-      });
+      .catch(reject);
   });
 }, "Failed to upload image");

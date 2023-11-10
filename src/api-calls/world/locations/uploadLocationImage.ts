@@ -2,39 +2,39 @@ import { constructLocationImagesPath, getLocationDoc } from "./_getRef";
 import {
   MAX_FILE_SIZE,
   MAX_FILE_SIZE_LABEL,
+  replaceImage,
   uploadImage,
 } from "lib/storage.lib";
 import { updateDoc } from "firebase/firestore";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const uploadLocationImage = createApiFunction<
-  { worldId: string; locationId: string; image: File },
+  {
+    worldId: string;
+    locationId: string;
+    image: File;
+    oldImageFilename?: string;
+  },
   void
 >((params) => {
-  const { worldId, locationId, image } = params;
+  const { worldId, locationId, image, oldImageFilename } = params;
 
   return new Promise((resolve, reject) => {
-    const filename = image.name;
-
-    if (image.size > MAX_FILE_SIZE) {
-      reject(`Image must be smaller than ${MAX_FILE_SIZE_LABEL} in size.`);
-      return;
-    }
-
-    uploadImage(constructLocationImagesPath(worldId, locationId), image)
+    replaceImage(
+      constructLocationImagesPath(worldId, locationId),
+      oldImageFilename,
+      image
+    )
       .then(() => {
+        const filename = image.name;
         updateDoc(getLocationDoc(worldId, locationId), {
           imageFilenames: [filename],
         })
           .then(() => {
             resolve();
           })
-          .catch((e) => {
-            reject(e);
-          });
+          .catch(reject);
       })
-      .catch((e) => {
-        reject(e);
-      });
+      .catch(reject);
   });
 }, "Failed to upload image");

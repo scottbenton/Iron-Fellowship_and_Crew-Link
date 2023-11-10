@@ -1,5 +1,10 @@
 import { updateDoc } from "firebase/firestore";
-import { uploadImage } from "lib/storage.lib";
+import {
+  MAX_FILE_SIZE,
+  MAX_FILE_SIZE_LABEL,
+  replaceImage,
+  uploadImage,
+} from "lib/storage.lib";
 import {
   constructCharacterPortraitFolderPath,
   getCharacterDoc,
@@ -23,21 +28,10 @@ export const updateCharacterPortrait = createApiFunction<
 
   return new Promise(async (resolve, reject) => {
     try {
-      if (oldPortraitFilename) {
-        await removeCharacterPortrait({
-          uid,
-          characterId,
-          oldPortraitFilename,
-        });
-      }
-    } catch (e) {
-      reject(e);
-      return;
-    }
-    try {
       if (portrait) {
-        await uploadImage(
+        await replaceImage(
           constructCharacterPortraitFolderPath(uid, characterId),
+          oldPortraitFilename,
           portrait
         );
       }

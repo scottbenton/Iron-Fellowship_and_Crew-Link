@@ -86,11 +86,15 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
     return createNPC({ worldId, npc });
   },
   deleteNPC: (npcId) => {
-    const worldId = getState().worlds.currentWorld.currentWorldId;
+    const currentWorld = getState().worlds.currentWorld;
+    const worldId = currentWorld.currentWorldId;
+    const npcImageFilename =
+      currentWorld.currentWorldNPCs.npcMap[npcId]?.imageFilenames?.[0];
+
     if (!worldId) {
       return new Promise((res, reject) => reject("No world found"));
     }
-    return deleteNPC({ worldId, npcId });
+    return deleteNPC({ worldId, npcId, imageFilename: npcImageFilename });
   },
   updateNPC: (npcId, partialNPC) => {
     const worldId = getState().worlds.currentWorld.currentWorldId;
@@ -162,11 +166,19 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
     });
   },
   uploadNPCImage: (npcId, image) => {
-    const worldId = getState().worlds.currentWorld.currentWorldId;
+    const currentWorld = getState().worlds.currentWorld;
+    const worldId = currentWorld.currentWorldId;
+    const oldNPCImageFilename =
+      currentWorld.currentWorldNPCs.npcMap[npcId]?.imageFilenames?.[0];
     if (!worldId) {
       return new Promise((res, reject) => reject("No world found"));
     }
-    return uploadNPCImage({ worldId, npcId, image });
+    return uploadNPCImage({
+      worldId,
+      npcId,
+      image,
+      oldImageFilename: oldNPCImageFilename,
+    });
   },
   subscribeToOpenNPC: (npcId) => {
     const state = getState();
