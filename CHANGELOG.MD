@@ -23,6 +23,8 @@
 - Fixed custom move and custom oracle ids not being created properly
 - Fixed action rolls being able to go over a 10 on the d6.
 
+---
+
 ## 2.0.0
 
 ### New Features
