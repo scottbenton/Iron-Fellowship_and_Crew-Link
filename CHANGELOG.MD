@@ -4,6 +4,8 @@
 
 ### New Features
 
+- Added ability to upload images to NPCs, Ironsworn locations, and lore documents
+
 ### Changes
 
 - Added ability to remove character portraits
@@ -22,6 +24,7 @@
 - Fixed Planet Class not being properly set when creating new planets
 - Fixed custom move and custom oracle ids not being created properly
 - Fixed action rolls being able to go over a 10 on the d6.
+- Fixed custom oracles not being pinned properly
 
 ---
 

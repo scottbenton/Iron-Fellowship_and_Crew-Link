@@ -1,7 +1,7 @@
 {
   "name": "iron-fellowship",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,6 @@
     "@fontsource/rubik": "^4.5.13",
     "@fontsource/staatliches": "^4.5.9",
     "@hocuspocus/transformer": "^2.4.0",
-    "@iconify-icons/game-icons": "^1.2.1",
     "@mui/icons-material": "^5.14.15",
     "@mui/lab": "^5.0.0-alpha.150",
     "@mui/material": "^5.14.15",
