@@ -10,16 +10,15 @@ import {
   IconButton,
   MenuItem,
   TextField,
+  Tooltip,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import BackIcon from "@mui/icons-material/ChevronLeft";
 import { NPCDocument, NPC_SPECIES } from "types/NPCs.type";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
-import { ChangeEvent, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
-import { ImageUploader } from "components/features/worlds/ImageUploader";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { RtcRichTextEditor } from "components/shared/RichTextEditor/RtcRichTextEditor";
 import { NPCDocumentWithGMProperties } from "stores/world/currentWorld/npcs/npcs.slice.type";
@@ -37,15 +36,12 @@ import { Sector } from "types/Sector.type";
 import { DIFFICULTY } from "types/Track.type";
 
 export interface OpenNPCProps {
-  isWorldOwner: boolean;
   worldId: string;
   npcId: string;
   locations: { [key: string]: LocationDocumentWithGMProperties };
   sectors: Record<string, Sector>;
   npc: NPCDocumentWithGMProperties;
   closeNPC: () => void;
-  isWorldOwnerPremium?: boolean;
-  isSinglePlayer?: boolean;
   canUseImages: boolean;
 }
 
@@ -65,21 +61,12 @@ const nameOracles: { [key in NPC_SPECIES]: string | string[] } = {
 };
 
 export function OpenNPC(props: OpenNPCProps) {
-  const {
-    isWorldOwner,
-    worldId,
-    npcId,
-    locations,
-    npc,
-    closeNPC,
-    isSinglePlayer,
-    sectors,
-    canUseImages,
-  } = props;
+  const { worldId, npcId, locations, npc, closeNPC, sectors, canUseImages } =
+    props;
   const confirm = useConfirm();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { showGMFields, showGMTips, isSingleplayer } = useWorldPermissions();
+  const { showGMFields, showGMTips, isSinglePlayer } = useWorldPermissions();
 
   useListenToCurrentNPC(npcId);
 
@@ -212,7 +199,13 @@ export function OpenNPC(props: OpenNPCProps) {
   });
 
   return (
-    <Box overflow={"auto"}>
+    <Box
+      overflow={"auto"}
+      flexGrow={1}
+      height={"100%"}
+      display={"flex"}
+      flexDirection={"column"}
+    >
       {canUseImages && (
         <Box
           sx={(theme) => ({
@@ -246,6 +239,7 @@ export function OpenNPC(props: OpenNPCProps) {
           borderLeft: `1px solid ${theme.palette.divider}`,
           zIndex: 1,
           position: "relative",
+          flexGrow: 1,
         })}
       >
         <Box
@@ -291,18 +285,24 @@ export function OpenNPC(props: OpenNPCProps) {
             </Hidden>
             <Box mt={1}>
               {canUseImages && (
-                <IconButton onClick={() => fileInputRef.current?.click()}>
-                  <AddPhotoIcon />
-                </IconButton>
+                <Tooltip title={"Upload Image"}>
+                  <IconButton onClick={() => fileInputRef.current?.click()}>
+                    <AddPhotoIcon />
+                  </IconButton>
+                </Tooltip>
               )}
               {showGMFields && (
-                <IconButton onClick={() => handleNPCDelete()}>
-                  <DeleteIcon />
-                </IconButton>
+                <Tooltip title={"Delete NPC"}>
+                  <IconButton onClick={() => handleNPCDelete()}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
               )}
-              <IconButton onClick={() => closeNPC()}>
-                <CloseIcon />
-              </IconButton>
+              <Tooltip title={"Close"}>
+                <IconButton onClick={() => closeNPC()}>
+                  <CloseIcon />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
         </Box>
@@ -435,9 +435,9 @@ export function OpenNPC(props: OpenNPCProps) {
                 />
               </Grid>
             )}
-            {isWorldOwner && (
+            {showGMFields && (
               <>
-                {!isSinglePlayer && (
+                {showGMTips && (
                   <>
                     <Grid item xs={12}>
                       <SectionHeading label={"GM Only"} breakContainer />
@@ -540,7 +540,7 @@ export function OpenNPC(props: OpenNPCProps) {
                     />
                   </Grid>
                 )}
-                {!isSinglePlayer && (
+                {showGMFields && !isSinglePlayer && (
                   <Grid
                     item
                     xs={12}
@@ -626,7 +626,7 @@ export function OpenNPC(props: OpenNPCProps) {
             )}
             {!isSinglePlayer && (
               <>
-                {isWorldOwner && (
+                {showGMTips && (
                   <>
                     <Grid item xs={12}>
                       <SectionHeading
@@ -644,58 +644,54 @@ export function OpenNPC(props: OpenNPCProps) {
                     </Grid>
                   </>
                 )}
-                {!isSinglePlayer && (
-                  <BondsSection
-                    isStarforged={isStarforged}
-                    onBondToggle={
-                      currentCharacterId
-                        ? (bonded) =>
-                            updateNPCCharacterBond(
-                              npcId,
-                              currentCharacterId,
-                              bonded
-                            ).catch(() => {})
-                        : undefined
-                    }
-                    isBonded={singleplayerBond}
-                    hasConnection={
-                      npc.characterConnections?.[currentCharacterId ?? ""] ??
-                      false
-                    }
-                    bondProgress={
-                      npc.characterBondProgress?.[currentCharacterId ?? ""] ?? 0
-                    }
-                    difficulty={npc.rank}
-                    updateBondProgressValue={
-                      currentCharacterId
-                        ? (value) =>
-                            updateNPCCharacterBondValue(
-                              npcId,
-                              currentCharacterId,
-                              value
-                            )
-                        : undefined
-                    }
-                    onConnectionToggle={
-                      currentCharacterId
-                        ? (connected) =>
-                            updateNPCCharacterConnection(
-                              npcId,
-                              currentCharacterId,
-                              connected
-                            ).catch(() => {})
-                        : undefined
-                    }
-                    bondedCharacters={bondedCharacterNames}
-                    disableToggle={isCharacterBondedToLocation}
-                    inheritedBondName={
-                      isCharacterBondedToLocation
-                        ? npcLocation?.name
-                        : undefined
-                    }
-                    connectedCharacters={connectedCharacterNames}
-                  />
-                )}
+                <BondsSection
+                  isStarforged={isStarforged}
+                  onBondToggle={
+                    currentCharacterId
+                      ? (bonded) =>
+                          updateNPCCharacterBond(
+                            npcId,
+                            currentCharacterId,
+                            bonded
+                          ).catch(() => {})
+                      : undefined
+                  }
+                  isBonded={singleplayerBond}
+                  hasConnection={
+                    npc.characterConnections?.[currentCharacterId ?? ""] ??
+                    false
+                  }
+                  bondProgress={
+                    npc.characterBondProgress?.[currentCharacterId ?? ""] ?? 0
+                  }
+                  difficulty={npc.rank}
+                  updateBondProgressValue={
+                    currentCharacterId
+                      ? (value) =>
+                          updateNPCCharacterBondValue(
+                            npcId,
+                            currentCharacterId,
+                            value
+                          )
+                      : undefined
+                  }
+                  onConnectionToggle={
+                    currentCharacterId
+                      ? (connected) =>
+                          updateNPCCharacterConnection(
+                            npcId,
+                            currentCharacterId,
+                            connected
+                          ).catch(() => {})
+                      : undefined
+                  }
+                  bondedCharacters={bondedCharacterNames}
+                  disableToggle={isCharacterBondedToLocation}
+                  inheritedBondName={
+                    isCharacterBondedToLocation ? npcLocation?.name : undefined
+                  }
+                  connectedCharacters={connectedCharacterNames}
+                />
                 {!npc.sharedWithPlayers && (
                   <Grid item xs={12}>
                     <Alert severity="warning">

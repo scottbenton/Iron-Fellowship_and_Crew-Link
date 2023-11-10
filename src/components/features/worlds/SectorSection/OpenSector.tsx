@@ -6,6 +6,7 @@ import {
   IconButton,
   Tab,
   Tabs,
+  Tooltip,
 } from "@mui/material";
 import { SectorMap } from "./SectorMap";
 import { useStore } from "stores/store";
@@ -32,7 +33,7 @@ interface OpenSectorProps {
 }
 
 export function OpenSector(props: OpenSectorProps) {
-  const { sectorId, openNPCTab, } = props;
+  const { sectorId, openNPCTab } = props;
   const confirm = useConfirm();
   const { rollOracleTable } = useRoller();
 
@@ -187,7 +188,7 @@ export function OpenSector(props: OpenSectorProps) {
       .catch(() => {});
   };
 
-  const { showGMFields, showGMTips, isSingleplayer } = useWorldPermissions();
+  const { showGMFields, showGMTips, isSinglePlayer } = useWorldPermissions();
   const notes = useStore(
     (store) => store.worlds.currentWorld.currentWorldSectors.openSectorNotes
   );
@@ -214,7 +215,7 @@ export function OpenSector(props: OpenSectorProps) {
 
   const canUseImages = useCanUploadWorldImages();
 
-  if(!sector) {
+  if (!sector) {
     return null;
   }
 
@@ -229,11 +230,16 @@ export function OpenSector(props: OpenSectorProps) {
           "starforged/oracles/space/sector_name/suffix",
         ]}
         joinOracles
-        actions={showGMFields && (
-          <IconButton onClick={() => handleSectorDelete()}>
-            <DeleteIcon />
-          </IconButton>
-      )}
+        actions={
+          showGMFields && (
+            <Tooltip title={"Delete Sector"}>
+              <IconButton onClick={() => handleSectorDelete()}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          )
+        }
+        sx={{ alignItems: "center" }}
         closeItem={() => setOpenSectorId()}
       />
       <SectorMap
@@ -266,7 +272,7 @@ export function OpenSector(props: OpenSectorProps) {
               />
             </Grid>
           )}
-          {showGMFields && !isSingleplayer && (
+          {showGMFields && !isSinglePlayer && (
             <Grid item xs={12} md={6}>
               <FormControlLabel
                 control={
@@ -345,7 +351,7 @@ export function OpenSector(props: OpenSectorProps) {
                 />
               </Grid>
             )}
-            {!isSingleplayer && (
+            {!isSinglePlayer && (
               <>
                 {showGMTips && (
                   <NotesSectionHeader

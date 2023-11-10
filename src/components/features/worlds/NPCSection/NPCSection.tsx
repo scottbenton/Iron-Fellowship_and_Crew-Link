@@ -129,14 +129,12 @@ export function NPCSection(props: NPCSectionProps) {
         </Hidden>
 
         <OpenNPC
-          isWorldOwner={isWorldOwner}
           worldId={worldId}
           npcId={openNPCId}
           npc={openNPC}
           locations={locations}
           sectors={sectors}
           closeNPC={() => setOpenNPCId()}
-          isSinglePlayer={isSinglePlayer}
           canUseImages={canShowImages}
         />
       </Box>

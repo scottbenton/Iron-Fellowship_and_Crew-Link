@@ -1,4 +1,12 @@
-import { Box, IconButton, Stack, SxProps } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Stack,
+  SxProps,
+  Tooltip,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
@@ -6,7 +14,7 @@ import React from "react";
 export interface ItemHeaderProps {
   itemName: string;
   updateName: (name: string) => void;
-  nameOracleIds: string | string[];
+  nameOracleIds?: string | string[] | (string | string[])[];
   joinOracles?: boolean;
   actions?: React.ReactNode;
   closeItem: () => void;
@@ -24,43 +32,51 @@ export function ItemHeader(props: ItemHeaderProps) {
     sx,
   } = props;
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Box
       sx={[
-        (theme) => ({ bgcolor: theme.palette.background.paper, py: 1 }),
+        (theme) => ({
+          bgcolor: theme.palette.background.paper,
+          py: 1,
+          px: 2,
+          [theme.breakpoints.up("md")]: { px: 3 },
+        }),
+
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
       display={"flex"}
-      alignItems={"center"}
+      alignItems={"start"}
+      flexWrap={"wrap-reverse"}
       justifyContent={"space-between"}
-      px={2}
     >
       <DebouncedOracleInput
-        placeholder={"Name"}
-        variant={"standard"}
+        label={"Name"}
+        variant={"outlined"}
         color={"primary"}
         oracleTableId={nameOracleIds}
         joinOracleTables={joinOracles}
         initialValue={itemName}
         updateValue={updateName}
+        fullWidth={isMobile}
         sx={{
-          maxWidth: "30ch",
-          ["& .MuiInputBase-root"]: {
-            fontSize: "1.25rem",
-          },
+          mt: 1,
         }}
       />
       <Stack
         direction={"row"}
-        spacing={2}
-        sx={{ ml: 2 }}
+        sx={{ ml: "auto", pb: 1 }}
         display={"flex"}
-        alignItems={"center"}
+        alignItems={"start"}
       >
         {actions}
-        <IconButton onClick={closeItem}>
-          <CloseIcon />
-        </IconButton>
+        <Tooltip title={"Close"}>
+          <IconButton onClick={closeItem}>
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       </Stack>
     </Box>
   );

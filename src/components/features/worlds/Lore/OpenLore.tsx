@@ -5,42 +5,41 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
-  TextField,
+  Tooltip,
 } from "@mui/material";
-import BackIcon from "@mui/icons-material/ChevronLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { RtcRichTextEditor } from "components/shared/RichTextEditor/RtcRichTextEditor";
-import { ImageUploader } from "components/features/worlds/ImageUploader";
 import { LoreTagsAutocomplete } from "./LoreTagsAutocomplete";
 import { useStore } from "stores/store";
 import { LoreDocumentWithGMProperties } from "stores/world/currentWorld/lore/lore.slice.type";
 import { useListenToCurrentLoreDocument } from "stores/world/currentWorld/lore/useListenToCurrentLoreDocument";
+import { ItemHeader } from "../ItemHeader";
+import { useWorldPermissions } from "../useWorldPermissions";
+import { ImageBanner } from "../ImageBanner";
+import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 
 export interface OpenLoreProps {
-  isWorldOwner: boolean;
   worldId: string;
   loreId: string;
   lore: LoreDocumentWithGMProperties;
   closeLore: () => void;
-  isWorldOwnerPremium?: boolean;
-  isSinglePlayer?: boolean;
   tagList: string[];
+  showImages: boolean;
 }
 
 export function OpenLore(props: OpenLoreProps) {
-  const {
-    isWorldOwner,
-    worldId,
-    loreId,
-    lore,
-    closeLore,
-    isWorldOwnerPremium,
-    isSinglePlayer,
-    tagList,
-  } = props;
+  const { worldId, loreId, lore, closeLore, tagList, showImages } = props;
+
+  const { isSinglePlayer, showGMFields, showGMTips } = useWorldPermissions();
 
   useListenToCurrentLoreDocument(loreId);
 
@@ -102,50 +101,55 @@ export function OpenLore(props: OpenLoreProps) {
       .catch(() => {});
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const onFileUpload = (evt: ChangeEvent<HTMLInputElement>) => {
+    const files = evt.target.files;
+    const file = files?.[0];
+    if (file) {
+      uploadLoreImage(loreId, file).catch(() => {});
+    }
+  };
+
   return (
     <Box
       overflow={"auto"}
       bgcolor={(theme) => theme.palette.background.paper}
       width={"100%"}
+      sx={(theme) => ({ borderLeft: `1px solid ${theme.palette.divider}` })}
     >
-      {isWorldOwnerPremium && (
-        <ImageUploader
-          title={lore.name}
-          src={lore.imageUrl}
-          handleFileUpload={(image) =>
-            uploadLoreImage(loreId, image).catch(() => {})
-          }
-          handleClose={closeLore}
-        />
-      )}
-      <Box
-        display={"flex"}
-        alignItems={"center"}
-        sx={(theme) => ({
-          px: 1,
-          py: 1,
-        })}
-      >
-        <IconButton onClick={() => closeLore()}>
-          <BackIcon />
-        </IconButton>
-        <TextField
-          inputRef={nameInputRef}
-          onBlur={(evt) =>
-            updateLore(loreId, { name: evt.currentTarget.value }).catch(
-              () => {}
-            )
-          }
-          value={loreName}
-          onChange={(evt) => setLoreName(evt.currentTarget.value)}
-          fullWidth
-          variant={"standard"}
-          placeholder="Lore Title"
-        />
-        <IconButton onClick={() => handleLoreDelete()}>
-          <DeleteIcon />
-        </IconButton>
-      </Box>
+      <input
+        type="file"
+        accept={"image/*"}
+        hidden
+        ref={fileInputRef}
+        onChange={onFileUpload}
+      />
+      {showImages && <ImageBanner title={lore.name} src={lore.imageUrl} />}
+
+      <ItemHeader
+        itemName={loreName}
+        updateName={(name) => updateLore(loreId, { name }).catch(() => {})}
+        closeItem={closeLore}
+        actions={
+          <>
+            {showImages && (
+              <Tooltip title={"Upload Image"}>
+                <IconButton onClick={() => fileInputRef?.current?.click()}>
+                  <AddPhotoIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showGMFields && (
+              <Tooltip title={"Delete Document"}>
+                <IconButton onClick={() => handleLoreDelete()}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </>
+        }
+      />
       <Box
         sx={(theme) => ({
           mt: 1,
@@ -153,12 +157,8 @@ export function OpenLore(props: OpenLoreProps) {
           [theme.breakpoints.up("md")]: { px: 3 },
         })}
       >
-        <Grid
-          container
-          spacing={2}
-          sx={{ mb: 2, mt: isSinglePlayer || !isWorldOwner ? 0 : -2 }}
-        >
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={2} sx={{ mb: 2 }}>
+          <Grid item xs={12} lg={6}>
             <LoreTagsAutocomplete
               tagList={tagList}
               tags={lore.tags}
@@ -167,9 +167,9 @@ export function OpenLore(props: OpenLoreProps) {
               }
             />
           </Grid>
-          {isWorldOwner && (
+          {showGMFields && (
             <>
-              {!isSinglePlayer && (
+              {showGMTips && (
                 <>
                   <Grid item xs={12}>
                     <SectionHeading label={"GM Only"} breakContainer />
@@ -217,7 +217,7 @@ export function OpenLore(props: OpenLoreProps) {
           )}
           {!isSinglePlayer && (
             <>
-              {isWorldOwner && (
+              {showGMTips && (
                 <>
                   <Grid item xs={12}>
                     <SectionHeading

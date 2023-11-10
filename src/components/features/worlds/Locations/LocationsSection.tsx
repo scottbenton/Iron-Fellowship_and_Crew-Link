@@ -120,12 +120,10 @@ export function LocationsSection(props: LocationsSectionProps) {
 
         <OpenLocation
           worldId={worldId}
-          isWorldOwner={isWorldOwner}
           location={openLocation}
           locationId={openLocationId}
           closeLocation={() => setOpenLocationId(undefined)}
           canShowImages={canShowImages}
-          isSinglePlayer={isSinglePlayer}
           showHiddenTag={showHiddenTag}
           openNPCTab={openNPCTab}
         />

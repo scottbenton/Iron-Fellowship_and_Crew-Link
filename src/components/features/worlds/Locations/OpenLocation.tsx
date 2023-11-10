@@ -5,46 +5,46 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
+  Tooltip,
 } from "@mui/material";
-import BackIcon from "@mui/icons-material/ChevronLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useLayoutEffect, useRef } from "react";
+import { ChangeEvent, useLayoutEffect, useRef } from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/shared/SectionHeading";
-import { LocationNameInput } from "./LocationNameInput";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 import { RtcRichTextEditor } from "components/shared/RichTextEditor/RtcRichTextEditor";
 import { LocationDocumentWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
-import { ImageUploader } from "components/features/worlds/ImageUploader";
 import { useStore } from "stores/store";
 import { useListenToCurrentLocation } from "stores/world/currentWorld/locations/useListenToCurrentLocation";
 import { BondsSection } from "components/features/worlds/BondsSection";
 import { LocationNPCs } from "./LocationNPCs";
+import { useWorldPermissions } from "../useWorldPermissions";
+import { ItemHeader } from "../ItemHeader";
+import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
+import { ImageBanner } from "../ImageBanner";
 
 export interface OpenLocationProps {
-  isWorldOwner: boolean;
   worldId: string;
   locationId: string;
   location: LocationDocumentWithGMProperties;
   closeLocation: () => void;
   canShowImages?: boolean;
-  isSinglePlayer?: boolean;
   showHiddenTag?: boolean;
   openNPCTab: () => void;
 }
 
 export function OpenLocation(props: OpenLocationProps) {
   const {
-    isWorldOwner,
     worldId,
     locationId,
     location,
     closeLocation,
     canShowImages,
-    isSinglePlayer,
     showHiddenTag,
     openNPCTab,
   } = props;
+
+  const { isSinglePlayer, showGMFields, showGMTips } = useWorldPermissions();
 
   useListenToCurrentLocation(locationId);
 
@@ -126,44 +126,70 @@ export function OpenLocation(props: OpenLocationProps) {
       .catch(() => {});
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const onFileUpload = (evt: ChangeEvent<HTMLInputElement>) => {
+    const files = evt.target.files;
+    const file = files?.[0];
+    if (file) {
+      uploadLocationImage(locationId, file).catch(() => {});
+    }
+  };
+
   return (
     <Box
       overflow={"auto"}
       bgcolor={(theme) => theme.palette.background.paper}
+      borderLeft={(theme) => `1px solid ${theme.palette.divider}`}
       width={"100%"}
     >
+      <input
+        type="file"
+        accept={"image/*"}
+        hidden
+        ref={fileInputRef}
+        onChange={onFileUpload}
+      />
       {canShowImages && (
-        <ImageUploader
-          title={location.name}
-          src={location.imageUrl}
-          handleFileUpload={(image) =>
-            uploadLocationImage(locationId, image).catch(() => {})
-          }
-          handleClose={closeLocation}
-        />
+        <ImageBanner title={location.name} src={location.imageUrl} />
       )}
-      <Box
-        display={"flex"}
-        alignItems={"center"}
-        sx={(theme) => ({
-          px: 1,
-          py: 1,
-        })}
-      >
-        <IconButton onClick={() => closeLocation()}>
-          <BackIcon />
-        </IconButton>
-        <LocationNameInput
-          inputRef={nameInputRef}
-          initialName={location.name}
-          updateName={(newName) =>
-            updateLocation(locationId, { name: newName }).catch(() => {})
-          }
-        />
-        <IconButton onClick={() => handleLocationDelete()}>
-          <DeleteIcon />
-        </IconButton>
-      </Box>
+      <ItemHeader
+        itemName={location.name}
+        updateName={(newName) =>
+          updateLocation(locationId, { name: newName }).catch(() => {})
+        }
+        nameOracleIds={[
+          "ironsworn/oracles/settlement/name/landscape_feature",
+          "ironsworn/oracles/settlement/name/manmade_edifice",
+          "ironsworn/oracles/settlement/name/creature",
+          "ironsworn/oracles/settlement/name/historical_event",
+          "ironsworn/oracles/settlement/name/old_world_language",
+          "ironsworn/oracles/settlement/name/environmental_aspect",
+          [
+            "ironsworn/oracles/settlement/quick_name/prefix",
+            "ironsworn/oracles/settlement/quick_name/suffix",
+          ],
+        ]}
+        actions={
+          <>
+            {canShowImages && (
+              <Tooltip title={"Upload Image"}>
+                <IconButton onClick={() => fileInputRef?.current?.click()}>
+                  <AddPhotoIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showGMFields && (
+              <Tooltip title={"Delete"}>
+                <IconButton onClick={() => handleLocationDelete()}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </>
+        }
+        closeItem={closeLocation}
+      />
       <Box
         sx={(theme) => ({
           mt: 1,
@@ -171,14 +197,10 @@ export function OpenLocation(props: OpenLocationProps) {
           [theme.breakpoints.up("md")]: { px: 3 },
         })}
       >
-        <Grid
-          container
-          spacing={2}
-          sx={{ mb: 2, mt: isSinglePlayer || !isWorldOwner ? 0 : -2 }}
-        >
-          {isWorldOwner && (
+        <Grid container spacing={2} sx={{ mb: 2 }}>
+          {showGMFields && (
             <>
-              {!isSinglePlayer && (
+              {showGMTips && (
                 <>
                   <Grid item xs={12}>
                     <SectionHeading label={"GM Only"} breakContainer />
@@ -227,7 +249,7 @@ export function OpenLocation(props: OpenLocationProps) {
                   oracleTableId={"ironsworn/oracles/place/location"}
                 />
               </Grid>
-              {!isSinglePlayer && (
+              {!isSinglePlayer && showGMFields && (
                 <Grid
                   item
                   xs={12}
@@ -280,7 +302,7 @@ export function OpenLocation(props: OpenLocationProps) {
           )}
           {!isSinglePlayer && (
             <>
-              {isWorldOwner && (
+              {showGMTips && (
                 <>
                   <Grid item xs={12}>
                     <SectionHeading
@@ -297,24 +319,22 @@ export function OpenLocation(props: OpenLocationProps) {
                   </Grid>
                 </>
               )}
-              {!isSinglePlayer && (
-                <BondsSection
-                  isStarforged={false}
-                  hasConnection={false}
-                  onBondToggle={
-                    currentCharacterId
-                      ? (bonded) =>
-                          updateLocationCharacterBond(
-                            locationId,
-                            currentCharacterId,
-                            bonded
-                          ).catch(() => {})
-                      : undefined
-                  }
-                  isBonded={singleplayerBond}
-                  bondedCharacters={bondedCharacterNames}
-                />
-              )}
+              <BondsSection
+                isStarforged={false}
+                hasConnection={false}
+                onBondToggle={
+                  currentCharacterId
+                    ? (bonded) =>
+                        updateLocationCharacterBond(
+                          locationId,
+                          currentCharacterId,
+                          bonded
+                        ).catch(() => {})
+                    : undefined
+                }
+                isBonded={singleplayerBond}
+                bondedCharacters={bondedCharacterNames}
+              />
               {!location.sharedWithPlayers && (
                 <Grid item xs={12}>
                   <Alert severity="warning">

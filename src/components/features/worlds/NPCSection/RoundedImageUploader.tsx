@@ -46,14 +46,15 @@ export const RoundedImageUploader = forwardRef<
         sx={(theme) => ({
           backgroundImage: `url("${src}")`,
           backgroundColor:
-            theme.palette.mode === "light"
-              ? theme.palette.grey[300]
-              : theme.palette.grey[700],
+            (src && isHovering) || theme.palette.mode === "dark"
+              ? theme.palette.grey[700]
+              : theme.palette.grey[300],
           color: src
             ? theme.palette.common.white
             : theme.palette.mode === "light"
             ? theme.palette.grey[500]
             : theme.palette.grey[300],
+          backgroundBlendMode: src && isHovering ? "overlay" : "initial",
 
           borderRadius: "50%",
           backgroundSize: "cover",

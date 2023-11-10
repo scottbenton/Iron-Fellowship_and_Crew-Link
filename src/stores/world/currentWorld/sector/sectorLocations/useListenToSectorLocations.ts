@@ -22,7 +22,7 @@ export function useListenToSectorLocations() {
     (store) =>
       store.worlds.currentWorld.currentWorldSectors.locations.openLocationId
   );
-  const { isSingleplayer, showGMFields } = useWorldPermissions();
+  const { isSinglePlayer, showGMFields } = useWorldPermissions();
   const subscribeToSectorLocationNotes = useStore(
     (store) =>
       store.worlds.currentWorld.currentWorldSectors.locations
@@ -52,7 +52,7 @@ export function useListenToSectorLocations() {
           subscribeToSectorLocationNotes(openSectorLocationId, true)
         );
       }
-      if (!isSingleplayer) {
+      if (!isSinglePlayer) {
         unsubscribes.push(
           subscribeToSectorLocationNotes(openSectorLocationId, false)
         );
@@ -65,7 +65,7 @@ export function useListenToSectorLocations() {
   }, [
     openSectorLocationId,
     showGMFields,
-    isSingleplayer,
+    isSinglePlayer,
     subscribeToSectorLocationNotes,
     resetStoreNotes,
   ]);
