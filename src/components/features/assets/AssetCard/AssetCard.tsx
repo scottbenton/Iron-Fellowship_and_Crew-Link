@@ -79,7 +79,6 @@ export function AssetCard(props: AssetCardProps) {
   const isShared = asset.Usage.Shared;
 
   if (!asset) return null;
-  console.debug(asset);
 
   const abilityInputs: FieldType[] = [];
 
@@ -117,13 +116,6 @@ export function AssetCard(props: AssetCardProps) {
         });
     }
   };
-
-  if (asset.$id === "ironsworn/assets/ritual/ritual_punishment") {
-    console.debug(hideTracks);
-    console.debug(storedAsset);
-    console.debug(conditionMeter);
-    console.debug(storedAsset?.trackValue);
-  }
 
   return (
     <>
