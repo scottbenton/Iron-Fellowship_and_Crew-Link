@@ -4,6 +4,20 @@
 
 ### New Features
 
+### Changes
+
+### Accessibility
+
+### Bug Fixes
+
+- Fixed custom asset tracks not appearing if they weren't added initially
+
+---
+
+## 2.1.0
+
+### New Features
+
 - Added ability to upload images to NPCs, Ironsworn locations, and lore documents
 
 ### Changes
