@@ -8,7 +8,7 @@ import {
 export type LoreDocumentWithGMProperties = LoreDocument & {
   gmProperties?: GMLoreDocument | null;
   notes?: Uint8Array | null;
-  imageUrl: string;
+  imageUrl?: string;
 };
 
 export interface LoreSliceData {
@@ -45,6 +45,7 @@ export interface LoreSliceActions {
     isBeaconRequest?: boolean
   ) => Promise<void>;
   uploadLoreImage: (loreId: string, image: File) => Promise<void>;
+  removeLoreImage: (loreId: string) => Promise<void>;
   subscribeToOpenLore: (loreId: string) => Unsubscribe;
 
   resetStore: () => void;

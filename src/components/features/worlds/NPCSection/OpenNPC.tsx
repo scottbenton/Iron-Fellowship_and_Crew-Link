@@ -91,6 +91,9 @@ export function OpenNPC(props: OpenNPCProps) {
   const uploadNPCImage = useStore(
     (store) => store.worlds.currentWorld.currentWorldNPCs.uploadNPCImage
   );
+  const removeNPCImage = useStore(
+    (store) => store.worlds.currentWorld.currentWorldNPCs.removeNPCImage
+  );
   const updateNPCGMProperties = useStore(
     (store) => store.worlds.currentWorld.currentWorldNPCs.updateNPCGMProperties
   );
@@ -260,6 +263,7 @@ export function OpenNPC(props: OpenNPCProps) {
               }
               handleUploadClick={() => fileInputRef.current?.click()}
               ref={fileInputRef}
+              removeImage={() => removeNPCImage(npcId)}
             />
           )}
           <Box

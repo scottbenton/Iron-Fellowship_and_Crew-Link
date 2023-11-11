@@ -6,6 +6,8 @@
 
 ### Changes
 
+- Added ability to remove lore, location, and NPC images by making them fullscreen and clicking the delete button
+
 ### Accessibility
 
 ### Bug Fixes

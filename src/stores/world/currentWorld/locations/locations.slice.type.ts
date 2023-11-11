@@ -8,7 +8,7 @@ import {
 export type LocationDocumentWithGMProperties = LocationDocument & {
   gmProperties?: GMLocationDocument | null;
   notes?: Uint8Array | null;
-  imageUrl: string;
+  imageUrl?: string;
 };
 
 export interface LocationsSliceData {
@@ -50,6 +50,7 @@ export interface LocationsSliceActions {
     bonded: boolean
   ) => Promise<void>;
   uploadLocationImage: (locationId: string, image: File) => Promise<void>;
+  removeLocationImage: (locationId: string) => Promise<void>;
   subscribeToOpenLocation: (locationId: string) => Unsubscribe;
   resetStore: () => void;
 }

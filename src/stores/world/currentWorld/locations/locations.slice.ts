@@ -14,6 +14,7 @@ import { reportApiError } from "lib/analytics.lib";
 import { Unsubscribe } from "firebase/firestore";
 import { listenToLocationGMProperties } from "api-calls/world/locations/listenToLocationGMProperties";
 import { updateLocationCharacterBond } from "api-calls/world/locations/updateLocationCharacterBond";
+import { removeLocationImage } from "api-calls/world/locations/removeLocationImage";
 
 export const createLocationsSlice: CreateSliceType<LocationsSlice> = (
   set,
@@ -41,7 +42,10 @@ export const createLocationsSlice: CreateSliceType<LocationsSlice> = (
             ];
           const gmProperties = existingLocation?.gmProperties;
           const notes = existingLocation?.notes;
-          const imageUrl = existingLocation?.imageUrl;
+          const imageUrl =
+            (location.imageFilenames?.length ?? 0) > 0
+              ? existingLocation?.imageUrl
+              : undefined;
           store.worlds.currentWorld.currentWorldLocations.locationMap[
             locationId
           ] = { ...location, gmProperties, notes, imageUrl };
@@ -156,6 +160,26 @@ export const createLocationsSlice: CreateSliceType<LocationsSlice> = (
       locationId,
       image,
       oldImageFilename: imageFilename,
+    });
+  },
+  removeLocationImage: (locationId) => {
+    const world = getState().worlds.currentWorld;
+    const worldId = world.currentWorldId;
+    const filename =
+      world.currentWorldLocations.locationMap[locationId]?.imageFilenames?.[0];
+
+    if (!worldId) {
+      return new Promise((res, reject) => reject("No world found"));
+    }
+    if (!filename) {
+      return new Promise((res, reject) =>
+        reject("Location did not have an image")
+      );
+    }
+    return removeLocationImage({
+      worldId,
+      locationId,
+      filename,
     });
   },
   subscribeToOpenLocation: (locationId) => {
