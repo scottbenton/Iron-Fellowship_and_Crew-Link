@@ -13,6 +13,7 @@ import { PageContent, PageHeader } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useSyncStore } from "./hooks/useSyncStore";
 import { useStore } from "stores/store";
+import { Sidebar } from "pages/Character/CharacterSheetPage/components/Sidebar";
 
 export function CampaignGMScreenPage() {
   useSyncStore();
@@ -100,7 +101,7 @@ export function CampaignGMScreenPage() {
                 },
               })}
             >
-              <MovesSection />
+              <Sidebar />
             </Grid>
           </Hidden>
           <Grid

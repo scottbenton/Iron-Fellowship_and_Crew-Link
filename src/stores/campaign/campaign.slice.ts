@@ -25,6 +25,7 @@ export const createCampaignSlice: CreateSliceType<CampaignSlice> = (
             onDocChange: (campaignId, campaignDocument) => {
               set((store) => {
                 store.campaigns.campaignMap[campaignId] = campaignDocument;
+                store.campaigns.loading = false;
               });
               const state = getState();
               if (
@@ -40,6 +41,7 @@ export const createCampaignSlice: CreateSliceType<CampaignSlice> = (
 
               set((store) => {
                 delete store.campaigns.campaignMap[campaignId];
+                store.campaigns.loading = false;
               });
               if (
                 campaignId === state.campaigns.currentCampaign.currentCampaignId

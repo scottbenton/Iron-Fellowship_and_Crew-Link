@@ -84,7 +84,7 @@ export function TabsSection(props: TabsSectionProps) {
         {isMobile && <StyledTab label={"Moves"} value={TABS.MOVES} />}
         <StyledTab label="Characters" value={TABS.CHARACTERS} />
         <StyledTab label="Tracks" value={TABS.TRACKS} />
-        <StyledTab label="Oracle" value={TABS.ORACLE} />
+        {/* <StyledTab label="Oracle" value={TABS.ORACLE} /> */}
         <StyledTab label="Notes" value={TABS.NOTES} />
         <StyledTab label="World" value={TABS.WORLD} />
         {shouldShowSectors ? (

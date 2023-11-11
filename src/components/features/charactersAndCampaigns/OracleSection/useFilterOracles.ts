@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearch } from "hooks/useSearch";
 import type { OracleSet, OracleTable } from "dataforged";
-import { oracleMap, orderedCategories } from "data/oracles";
+import {
+  askTheOracleIds,
+  askTheOracleSection,
+  oracleMap,
+  orderedCategories,
+} from "data/oracles";
 import { License } from "types/Datasworn";
 import { useCustomOracles } from "./useCustomOracles";
 import { useStore } from "stores/store";
@@ -55,8 +60,8 @@ export function useFilterOracles() {
         : undefined;
 
     return pinnedOracleSection
-      ? [pinnedOracleSection, ...orderedCategories]
-      : orderedCategories;
+      ? [pinnedOracleSection, askTheOracleSection, ...orderedCategories]
+      : [askTheOracleSection, ...orderedCategories];
   }, [pinnedOracles, appName, allCustomOracleMap]);
 
   const [filteredOracles, setFilteredOracles] = useState(combinedOracles);

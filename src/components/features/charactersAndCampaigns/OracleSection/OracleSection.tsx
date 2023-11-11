@@ -1,4 +1,11 @@
-import { Box, Button, Input, InputAdornment } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Input,
+  InputAdornment,
+  Typography,
+} from "@mui/material";
 import { useRoller } from "providers/DieRollProvider";
 import { OracleCategory } from "./OracleCategory";
 import SearchIcon from "@mui/icons-material/Search";
@@ -6,6 +13,7 @@ import { useFilterOracles } from "./useFilterOracles";
 import { useStore } from "stores/store";
 import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { AskTheOracleIconButtons } from "./AskTheOracleIconButtons";
 
 type oracleKeys =
   | "almostCertain"
@@ -42,50 +50,48 @@ export function OracleSection() {
 
   return (
     <>
-      <Box display={"flex"} flexWrap={"wrap"} p={1}>
-        <Button
-          sx={{ mx: 0.5, my: 0.5 }}
-          variant={"outlined"}
+      {/* <Box display={"flex"} flexDirection={"column"} p={1}>
+        <Typography variant={"subtitle2"} component={"span"}>
+          Ask the Oracle
+        </Typography>
+        <ButtonGroup
+          size={"small"}
           color={"inherit"}
-          onClick={() => rollOracleTable(askTheOracle.smallChance, true, true)}
-        >
-          Small Chance
-        </Button>
-        <Button
-          sx={{ mx: 0.5, my: 0.5 }}
           variant={"outlined"}
-          color={"inherit"}
-          onClick={() => rollOracleTable(askTheOracle.unlikely, true, true)}
+          aria-label={"Ask the Oracle"}
         >
-          Unlikely
-        </Button>
-        <Button
-          sx={{ mx: 0.5, my: 0.5 }}
-          variant={"outlined"}
-          color={"inherit"}
-          onClick={() => rollOracleTable(askTheOracle.fiftyFifty, true, true)}
-        >
-          50/50
-        </Button>
-        <Button
-          sx={{ mx: 0.5, my: 0.5 }}
-          variant={"outlined"}
-          color={"inherit"}
-          onClick={() => rollOracleTable(askTheOracle.likely, true, true)}
-        >
-          Likely
-        </Button>
-        <Button
-          sx={{ mx: 0.5, my: 0.5 }}
-          variant={"outlined"}
-          color={"inherit"}
-          onClick={() =>
-            rollOracleTable(askTheOracle.almostCertain, true, true)
-          }
-        >
-          Almost Certain
-        </Button>
-      </Box>
+          <Button
+            onClick={() =>
+              rollOracleTable(askTheOracle.smallChance, true, true)
+            }
+          >
+            10%
+          </Button>
+          <Button
+            onClick={() => rollOracleTable(askTheOracle.unlikely, true, true)}
+          >
+            25%
+          </Button>
+          <Button
+            onClick={() => rollOracleTable(askTheOracle.fiftyFifty, true, true)}
+          >
+            50%
+          </Button>
+          <Button
+            onClick={() => rollOracleTable(askTheOracle.likely, true, true)}
+          >
+            75%
+          </Button>
+          <Button
+            onClick={() =>
+              rollOracleTable(askTheOracle.almostCertain, true, true)
+            }
+          >
+            90%
+          </Button>
+        </ButtonGroup>
+        <AskTheOracleIconButtons />
+      </Box> */}
 
       <Input
         fullWidth
@@ -106,13 +112,15 @@ export function OracleSection() {
           borderBottomColor: theme.palette.darkGrey.light,
         })}
       />
-      {filteredOracles.map((category) => (
-        <OracleCategory
-          category={category}
-          key={category.Title.Standard}
-          pinnedCategories={pinnedOracles}
-        />
-      ))}
+      <Box sx={{ overflow: "auto", flexGrow: 1 }}>
+        {filteredOracles.map((category, index) => (
+          <OracleCategory
+            category={category}
+            key={index}
+            pinnedCategories={pinnedOracles}
+          />
+        ))}
+      </Box>
     </>
   );
 }

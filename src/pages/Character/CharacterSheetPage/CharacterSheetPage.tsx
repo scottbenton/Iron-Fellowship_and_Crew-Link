@@ -11,6 +11,7 @@ import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { useSyncStore } from "./hooks/useSyncStore";
 import { useEffect, useState } from "react";
+import { Sidebar } from "./components/Sidebar";
 
 export function CharacterSheetPage() {
   useSyncStore();
@@ -88,7 +89,7 @@ export function CharacterSheetPage() {
                 },
               })}
             >
-              <MovesSection />
+              <Sidebar />
             </Grid>
           </Hidden>
           <Grid
