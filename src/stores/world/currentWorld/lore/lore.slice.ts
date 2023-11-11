@@ -13,6 +13,7 @@ import { listenToLoreNotes } from "api-calls/world/lore/listenToLoreNotes";
 import { reportApiError } from "lib/analytics.lib";
 import { Unsubscribe } from "firebase/firestore";
 import { listenToLoreGMProperties } from "api-calls/world/lore/listenToLoreGMProperties";
+import { removeLoreImage } from "api-calls/world/lore/removeLoreImage";
 
 export const createLoreSlice: CreateSliceType<LoreSlice> = (set, getState) => ({
   ...defaultLoreSlice,
@@ -35,7 +36,10 @@ export const createLoreSlice: CreateSliceType<LoreSlice> = (set, getState) => ({
             store.worlds.currentWorld.currentWorldLore.loreMap[loreId];
           const gmProperties = existingLore?.gmProperties;
           const notes = existingLore?.notes;
-          const imageUrl = existingLore?.imageUrl;
+          const imageUrl =
+            (lore.imageFilenames?.length ?? 0) > 0
+              ? existingLore?.imageUrl
+              : undefined;
           store.worlds.currentWorld.currentWorldLore.loreMap[loreId] = {
             ...lore,
             gmProperties,
@@ -137,6 +141,24 @@ export const createLoreSlice: CreateSliceType<LoreSlice> = (set, getState) => ({
       loreId,
       image,
       oldImageFilename: imageFilename,
+    });
+  },
+  removeLoreImage: (loreId) => {
+    const world = getState().worlds.currentWorld;
+    const worldId = world.currentWorldId;
+    const filename =
+      world.currentWorldLore.loreMap[loreId]?.imageFilenames?.[0];
+
+    if (!worldId) {
+      return new Promise((res, reject) => reject("No world found"));
+    }
+    if (!filename) {
+      return new Promise((res, reject) => reject("Lore did not have an image"));
+    }
+    return removeLoreImage({
+      worldId,
+      loreId,
+      filename,
     });
   },
   subscribeToOpenLore: (loreId) => {

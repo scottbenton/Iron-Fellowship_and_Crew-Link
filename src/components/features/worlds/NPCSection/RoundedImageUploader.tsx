@@ -3,27 +3,30 @@ import {
   ButtonBase,
   Dialog,
   IconButton,
-  Typography,
+  Tooltip,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { ChangeEvent, forwardRef, useRef, useState } from "react";
+import { ChangeEvent, forwardRef, useState } from "react";
 import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
-import CloseIcon from "@mui/icons-material/Close";
+import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
+import RemoveImageIcon from "@mui/icons-material/Delete";
 
 export interface RoundedImageUploaderProps {
   src?: string;
   title: string;
   handleFileUpload: (file: File) => void;
   handleUploadClick: () => void;
+  removeImage: () => Promise<void>;
 }
 
 export const RoundedImageUploader = forwardRef<
   HTMLInputElement,
   RoundedImageUploaderProps
 >((props, ref) => {
-  const { src, title, handleFileUpload, handleUploadClick } = props;
+  const { src, title, handleFileUpload, handleUploadClick, removeImage } =
+    props;
 
   const [isHovering, setIsHovering] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -96,20 +99,27 @@ export const RoundedImageUploader = forwardRef<
         onChange={onFileUpload}
       />
       <Dialog open={isFullScreen} onClose={() => setIsFullScreen(false)}>
-        <Box
-          display={"flex"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          py={0.5}
-          pl={2}
-          pr={1}
+        <DialogTitleWithCloseButton
+          onClose={() => setIsFullScreen(false)}
+          actions={
+            <Tooltip title={"Remove Image"}>
+              <IconButton
+                onClick={() => {
+                  removeImage()
+                    .then(() => {
+                      setIsFullScreen(false);
+                    })
+                    .catch(() => {});
+                }}
+              >
+                <RemoveImageIcon />
+              </IconButton>
+            </Tooltip>
+          }
         >
-          <Typography variant={"h6"}>{title}</Typography>
-          <IconButton color={"inherit"} onClick={() => setIsFullScreen(false)}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        <img src={src} alt="Location image" />
+          {title}
+        </DialogTitleWithCloseButton>
+        <img src={src} alt="NPC image" />
       </Dialog>
     </>
   );

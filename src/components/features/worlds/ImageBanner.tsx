@@ -1,16 +1,17 @@
-import { Box, ButtonBase, Dialog, IconButton, Typography } from "@mui/material";
-import { ChangeEvent, useRef, useState } from "react";
-import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
+import { Box, ButtonBase, Dialog, IconButton, Tooltip } from "@mui/material";
+import { useState } from "react";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
-import CloseIcon from "@mui/icons-material/Close";
+import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
+import RemoveImageIcon from "@mui/icons-material/Delete";
 
 export interface ImageBannerProps {
   src?: string;
   title: string;
+  removeImage: () => Promise<void>;
 }
 
 export function ImageBanner(props: ImageBannerProps) {
-  const { src, title } = props;
+  const { src, title, removeImage } = props;
 
   const [isHovering, setIsHovering] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -53,19 +54,26 @@ export function ImageBanner(props: ImageBannerProps) {
         </Box>
       )}
       <Dialog open={isFullScreen} onClose={() => setIsFullScreen(false)}>
-        <Box
-          display={"flex"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          py={0.5}
-          pl={2}
-          pr={1}
+        <DialogTitleWithCloseButton
+          onClose={() => setIsFullScreen(false)}
+          actions={
+            <Tooltip title={"Remove Image"}>
+              <IconButton
+                onClick={() => {
+                  removeImage()
+                    .then(() => {
+                      setIsFullScreen(false);
+                    })
+                    .catch(() => {});
+                }}
+              >
+                <RemoveImageIcon />
+              </IconButton>
+            </Tooltip>
+          }
         >
-          <Typography variant={"h6"}>{title}</Typography>
-          <IconButton color={"inherit"} onClick={() => setIsFullScreen(false)}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
+          {title}
+        </DialogTitleWithCloseButton>
         <img src={src} alt="Location image" />
       </Dialog>
     </>

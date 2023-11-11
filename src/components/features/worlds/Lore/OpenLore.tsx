@@ -67,6 +67,9 @@ export function OpenLore(props: OpenLoreProps) {
   const uploadLoreImage = useStore(
     (store) => store.worlds.currentWorld.currentWorldLore.uploadLoreImage
   );
+  const removeLoreImage = useStore(
+    (store) => store.worlds.currentWorld.currentWorldLore.removeLoreImage
+  );
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const initialLoadRef = useRef<boolean>(true);
@@ -125,7 +128,13 @@ export function OpenLore(props: OpenLoreProps) {
         ref={fileInputRef}
         onChange={onFileUpload}
       />
-      {showImages && <ImageBanner title={lore.name} src={lore.imageUrl} />}
+      {showImages && (
+        <ImageBanner
+          title={lore.name}
+          src={lore.imageUrl}
+          removeImage={() => removeLoreImage(loreId)}
+        />
+      )}
 
       <ItemHeader
         itemName={loreName}
