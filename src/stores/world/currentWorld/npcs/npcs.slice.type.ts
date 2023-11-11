@@ -8,7 +8,7 @@ import {
 export type NPCDocumentWithGMProperties = NPCDocument & {
   gmProperties?: GMNPCDocument | null;
   notes?: Uint8Array | null;
-  imageUrl: string;
+  imageUrl?: string;
 };
 
 export interface NPCsSliceData {
@@ -60,6 +60,7 @@ export interface NPCsSliceActions {
     value: number
   ) => Promise<void>;
   uploadNPCImage: (npcId: string, image: File) => Promise<void>;
+  removeNPCImage: (npcId: string) => Promise<void>;
   subscribeToOpenNPC: (npcId: string) => Unsubscribe;
 
   resetStore: () => void;

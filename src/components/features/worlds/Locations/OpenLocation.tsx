@@ -72,6 +72,10 @@ export function OpenLocation(props: OpenLocationProps) {
     (store) =>
       store.worlds.currentWorld.currentWorldLocations.uploadLocationImage
   );
+  const removeLocationImage = useStore(
+    (store) =>
+      store.worlds.currentWorld.currentWorldLocations.removeLocationImage
+  );
 
   const currentCharacterId = useStore(
     (store) => store.characters.currentCharacter.currentCharacterId
@@ -151,7 +155,11 @@ export function OpenLocation(props: OpenLocationProps) {
         onChange={onFileUpload}
       />
       {canShowImages && (
-        <ImageBanner title={location.name} src={location.imageUrl} />
+        <ImageBanner
+          title={location.name}
+          src={location.imageUrl}
+          removeImage={() => removeLocationImage(locationId)}
+        />
       )}
       <ItemHeader
         itemName={location.name}

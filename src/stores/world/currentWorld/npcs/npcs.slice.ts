@@ -16,6 +16,7 @@ import { listenToNPCGMProperties } from "api-calls/world/npcs/listenToNPCGMPrope
 import { updateNPCCharacterBond } from "api-calls/world/npcs/updateNPCCharacterBond";
 import { updateNPCCharacterConnection } from "api-calls/world/npcs/updateNPCCharacterConnection";
 import { updateNPCCharacterBondProgress } from "api-calls/world/npcs/updateNPCCharacterBond copy";
+import { removeNPCImage } from "api-calls/world/npcs/removeNPCImage";
 
 export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
   ...defaultNPCsSlice,
@@ -38,7 +39,10 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
             store.worlds.currentWorld.currentWorldNPCs.npcMap[npcId];
           const gmProperties = existingNPC?.gmProperties;
           const notes = existingNPC?.notes;
-          const imageUrl = existingNPC?.imageUrl;
+          const imageUrl =
+            (npc.imageFilenames?.length ?? 0) > 0
+              ? existingNPC?.imageUrl
+              : undefined;
           store.worlds.currentWorld.currentWorldNPCs.npcMap[npcId] = {
             ...npc,
             gmProperties,
@@ -178,6 +182,23 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
       npcId,
       image,
       oldImageFilename: oldNPCImageFilename,
+    });
+  },
+  removeNPCImage: (npcId) => {
+    const currentWorld = getState().worlds.currentWorld;
+    const worldId = currentWorld.currentWorldId;
+    const filename =
+      currentWorld.currentWorldNPCs.npcMap[npcId]?.imageFilenames?.[0];
+    if (!worldId) {
+      return new Promise((res, reject) => reject("No world found"));
+    }
+    if (!filename) {
+      return new Promise((res, reject) => reject("No image found to remove"));
+    }
+    return removeNPCImage({
+      worldId,
+      npcId,
+      filename,
     });
   },
   subscribeToOpenNPC: (npcId) => {

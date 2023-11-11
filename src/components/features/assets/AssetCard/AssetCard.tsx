@@ -275,37 +275,35 @@ export function AssetCard(props: AssetCardProps) {
                 ))}
               </Box>
             )}
-          {!hideTracks &&
-            storedAsset &&
-            conditionMeter &&
-            typeof storedAsset.trackValue === "number" && (
-              <Track
-                sx={{ mt: 1 }}
-                label={conditionMeter.Label.replace(
-                  "companion health",
-                  "health"
-                )}
-                value={storedAsset.trackValue ?? conditionMeter.Max}
-                min={conditionMeter.Min}
-                max={conditionMeter.Max}
-                disabled={readOnly || !handleTrackValueChange}
-                onChange={(newValue) =>
-                  new Promise((resolve, reject) => {
-                    if (handleTrackValueChange) {
-                      handleTrackValueChange(newValue)
-                        .then(() => {
-                          resolve(true);
-                        })
-                        .catch(() => {
-                          reject("Error changing track");
-                        });
-                    } else {
-                      reject("Track should be disabled");
-                    }
-                  })
-                }
-              />
-            )}
+          {!hideTracks && storedAsset && conditionMeter && (
+            <Track
+              sx={{ mt: 1 }}
+              label={conditionMeter.Label.replace("companion health", "health")}
+              value={
+                storedAsset.trackValue ??
+                conditionMeter.Value ??
+                conditionMeter.Max
+              }
+              min={conditionMeter.Min}
+              max={conditionMeter.Max}
+              disabled={readOnly || !handleTrackValueChange}
+              onChange={(newValue) =>
+                new Promise((resolve, reject) => {
+                  if (handleTrackValueChange) {
+                    handleTrackValueChange(newValue)
+                      .then(() => {
+                        resolve(true);
+                      })
+                      .catch(() => {
+                        reject("Error changing track");
+                      });
+                  } else {
+                    reject("Track should be disabled");
+                  }
+                })
+              }
+            />
+          )}
         </Box>
         {actions && (
           <Box
