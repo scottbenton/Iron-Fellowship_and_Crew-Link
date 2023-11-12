@@ -1,7 +1,12 @@
 import { Box, Link, Typography, useTheme } from "@mui/material";
+import { useCustomMoves } from "components/features/charactersAndCampaigns/MovesSection/useCustomMoves";
+import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
+import { moveMap } from "data/moves";
+import { oracleMap } from "data/oracles";
 import { useLinkedDialog } from "providers/LinkedDialogProvider";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useStore } from "stores/store";
 
 export interface MarkdownRendererProps {
   inlineParagraph?: boolean;
@@ -15,6 +20,9 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
 
   const { openDialog } = useLinkedDialog();
   const theme = useTheme();
+
+  const { allCustomOracleMap } = useCustomOracles();
+  const { customMoveMap } = useCustomMoves();
 
   return (
     <ReactMarkdown
@@ -122,10 +130,14 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           const href = props.href ?? "";
           if (href.startsWith("ironsworn/") || href.startsWith("starforged/")) {
             if (
-              href.startsWith("ironsworn/moves") ||
-              href.startsWith("ironsworn/oracles") ||
-              href.startsWith("starforged/moves") ||
-              href.startsWith("starforged/oracles")
+              (href.startsWith("ironsworn/moves") ||
+                href.startsWith("ironsworn/oracles") ||
+                href.startsWith("starforged/moves") ||
+                href.startsWith("starforged/oracles")) &&
+              (!!moveMap[href] ||
+                !!oracleMap[href] ||
+                !!customMoveMap[href] ||
+                !!allCustomOracleMap[href])
             ) {
               return (
                 <Link
@@ -143,6 +155,9 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
                 </Link>
               );
             }
+
+            console.debug(href);
+            console.debug(customMoveMap);
             // TODO - add handlers for this situation;
             return <span>{props.children}</span>;
           }
