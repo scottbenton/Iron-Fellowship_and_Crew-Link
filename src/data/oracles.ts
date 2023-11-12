@@ -63,8 +63,6 @@ export let oracleCategoryMap: { [categoryId: string]: OracleSet } = {};
 export let oracleMap: { [tableId: string]: DataforgedOracleTable } = {};
 
 export const planetDescriptions: { [key: string]: string } = {};
-export const askTheOracleIds = ["ironsworn/oracles/moves/ask_the_oracle"];
-export let askTheOracleSection: OracleSet;
 
 function flattenOracleTables(
   set: OracleSet,
@@ -72,10 +70,6 @@ function flattenOracleTables(
 ): {
   [tableId: string]: DataforgedOracleTable;
 } {
-  if (set.$id === "ironsworn/oracles/moves/ask_the_oracle") {
-    askTheOracleSection = set;
-    return {};
-  }
   if (set.$id.match(/starforged\/oracles\/planets\/[a-z]+$/gi)) {
     const type = set.$id.replace("starforged/oracles/planets/", "");
     planetDescriptions[type] = set.Summary ?? "";

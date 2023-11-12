@@ -1,26 +1,7 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  ClickAwayListener,
-  Grow,
-  IconButton,
-  MenuItem,
-  MenuList,
-  Paper,
-  Popper,
-  Tooltip,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
-import { ReactNode, useRef, useState } from "react";
 import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useRoller } from "providers/DieRollProvider";
-import SmallChanceIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
-import UnlikelyIcon from "@mui/icons-material/KeyboardArrowDown";
-import FiftyFiftyIcon from "@mui/icons-material/HorizontalRule";
-import LikelyIcon from "@mui/icons-material/KeyboardArrowUp";
-import AlmostCertainIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 
 export enum ORACLE_KEYS {
   ALMOST_CERTAIN = "almostCertain",
@@ -65,20 +46,12 @@ const askTheOracleOracles: GameSystemChooser<{ [key in ORACLE_KEYS]: string }> =
 const askTheOracleLabels: { [key in ORACLE_KEYS]: string } = {
   [ORACLE_KEYS.ALMOST_CERTAIN]: "Almost Certain",
   [ORACLE_KEYS.LIKELY]: "Likely",
-  [ORACLE_KEYS.FIFTY_FIFTY]: "Fifty-Fifty",
+  [ORACLE_KEYS.FIFTY_FIFTY]: "50/50",
   [ORACLE_KEYS.UNLIKELY]: "Unlikely",
   [ORACLE_KEYS.SMALL_CHANCE]: "Small Chance",
 };
 
-const askTheOracleIcons: { [key in ORACLE_KEYS]: ReactNode } = {
-  [ORACLE_KEYS.ALMOST_CERTAIN]: <AlmostCertainIcon />,
-  [ORACLE_KEYS.LIKELY]: <LikelyIcon />,
-  [ORACLE_KEYS.FIFTY_FIFTY]: <FiftyFiftyIcon />,
-  [ORACLE_KEYS.UNLIKELY]: <UnlikelyIcon />,
-  [ORACLE_KEYS.SMALL_CHANCE]: <SmallChanceIcon />,
-};
-
-export function AskTheOracleIconButtons() {
+export function AskTheOracleButtons() {
   const { rollOracleTable } = useRoller();
   const oracles = useGameSystemValue(askTheOracleOracles);
 
@@ -89,17 +62,23 @@ export function AskTheOracleIconButtons() {
       // border={(theme) => `1px solid ${theme.palette.divider}`}
     >
       {oracleOrder.map((oracleKey) => (
-        <span key={oracleKey}>
-          <Tooltip title={askTheOracleLabels[oracleKey as ORACLE_KEYS]}>
-            <IconButton
-              onClick={() =>
-                rollOracleTable(oracles[oracleKey as ORACLE_KEYS], true, true)
-              }
-            >
-              {askTheOracleIcons[oracleKey as ORACLE_KEYS]}
-            </IconButton>
-          </Tooltip>
-        </span>
+        <Button
+          key={oracleKey}
+          size={"small"}
+          color={"inherit"}
+          sx={(theme) => ({
+            fontFamily: theme.fontFamilyTitle,
+            lineHeight: 1,
+            "&:hover": {
+              bgcolor: theme.palette.darkGrey.main,
+            },
+          })}
+          onClick={() =>
+            rollOracleTable(oracles[oracleKey as ORACLE_KEYS], true, true)
+          }
+        >
+          {askTheOracleLabels[oracleKey as ORACLE_KEYS]}
+        </Button>
       ))}
     </Box>
   );

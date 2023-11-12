@@ -95,9 +95,6 @@ export function TabsSection() {
       >
         {isMobile && <StyledTab label={"Moves"} value={TABS.MOVES} />}
         <StyledTab label="Assets" value={TABS.ASSETS} />
-        {(!isInCampaign || isGM) && (
-          <StyledTab label="Oracle" value={TABS.ORACLE} />
-        )}
         <StyledTab label="Tracks" value={TABS.TRACKS} />
         <StyledTab label="Notes" value={TABS.NOTES} />
         <StyledTab label={"World"} value={TABS.WORLD} />

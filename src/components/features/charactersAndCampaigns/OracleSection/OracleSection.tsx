@@ -1,19 +1,10 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Input,
-  InputAdornment,
-  Typography,
-} from "@mui/material";
-import { useRoller } from "providers/DieRollProvider";
+import { Box, Input, InputAdornment, Typography } from "@mui/material";
 import { OracleCategory } from "./OracleCategory";
 import SearchIcon from "@mui/icons-material/Search";
 import { useFilterOracles } from "./useFilterOracles";
 import { useStore } from "stores/store";
 import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
-import { useGameSystemValue } from "hooks/useGameSystemValue";
-import { AskTheOracleIconButtons } from "./AskTheOracleIconButtons";
+import { AskTheOracleButtons } from "./AskTheOracleButtons";
 
 type oracleKeys =
   | "almostCertain"
@@ -41,57 +32,26 @@ const askTheOracleOracles: GameSystemChooser<{ [key in oracleKeys]: string }> =
   };
 
 export function OracleSection() {
-  const { rollOracleTable } = useRoller();
-
   const pinnedOracles = useStore((store) => store.settings.pinnedOraclesIds);
   const { search, filteredOracles, setSearch } = useFilterOracles();
 
-  const askTheOracle = useGameSystemValue(askTheOracleOracles);
-
   return (
     <>
-      {/* <Box display={"flex"} flexDirection={"column"} p={1}>
-        <Typography variant={"subtitle2"} component={"span"}>
+      <Box
+        color={(theme) => theme.palette.darkGrey.contrastText}
+        bgcolor={(theme) => theme.palette.darkGrey.dark}
+        borderBottom={(theme) => `1px solid ${theme.palette.darkGrey.dark}`}
+      >
+        <Typography
+          variant={"body2"}
+          component={"div"}
+          textAlign={"center"}
+          fontFamily={(theme) => theme.fontFamilyTitle}
+        >
           Ask the Oracle
         </Typography>
-        <ButtonGroup
-          size={"small"}
-          color={"inherit"}
-          variant={"outlined"}
-          aria-label={"Ask the Oracle"}
-        >
-          <Button
-            onClick={() =>
-              rollOracleTable(askTheOracle.smallChance, true, true)
-            }
-          >
-            10%
-          </Button>
-          <Button
-            onClick={() => rollOracleTable(askTheOracle.unlikely, true, true)}
-          >
-            25%
-          </Button>
-          <Button
-            onClick={() => rollOracleTable(askTheOracle.fiftyFifty, true, true)}
-          >
-            50%
-          </Button>
-          <Button
-            onClick={() => rollOracleTable(askTheOracle.likely, true, true)}
-          >
-            75%
-          </Button>
-          <Button
-            onClick={() =>
-              rollOracleTable(askTheOracle.almostCertain, true, true)
-            }
-          >
-            90%
-          </Button>
-        </ButtonGroup>
-        <AskTheOracleIconButtons />
-      </Box> */}
+        <AskTheOracleButtons />
+      </Box>
 
       <Input
         fullWidth

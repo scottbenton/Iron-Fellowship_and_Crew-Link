@@ -11,6 +11,11 @@ export enum SIDEBAR_TABS {
 
 export function Sidebar() {
   const [currentTab, setCurrentTab] = useState(SIDEBAR_TABS.MOVES);
+  // Logic for showing oracles
+  /**   {(!isInCampaign || isGM) && (
+          <StyledTab label="Oracle" value={TABS.ORACLE} />
+        )}
+   */
 
   return (
     <Card
