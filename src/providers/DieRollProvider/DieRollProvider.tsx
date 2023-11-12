@@ -153,7 +153,8 @@ export function DieRollProvider(props: PropsWithChildren) {
     if (!oracle || !oracleCategory) return undefined;
 
     const roll = getRoll(100);
-    const entry =
+
+    let entry =
       oracle.Table.find(
         (entry) =>
           entry.Floor !== null &&
@@ -161,6 +162,12 @@ export function DieRollProvider(props: PropsWithChildren) {
           entry.Floor <= roll &&
           roll <= entry.Ceiling
       )?.Result ?? "Failed to get oracle entry.";
+
+    const isOracleResultRegex = new RegExp(/\[⏵[^\]]*\]([^)]*)\)/gm);
+    if (entry.match(isOracleResultRegex)) {
+      const secondHalfRegex = new RegExp(/\]([^)]*)\)/gm);
+      entry = entry.replaceAll("[⏵", "").replaceAll(secondHalfRegex, "");
+    }
 
     const oracleRoll: OracleTableRoll = {
       type: ROLL_TYPE.ORACLE_TABLE,
