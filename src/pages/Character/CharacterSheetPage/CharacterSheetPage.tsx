@@ -1,7 +1,6 @@
-import { Box, Button, Grid, Hidden, LinearProgress } from "@mui/material";
+import { Button, LinearProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { EmptyState } from "components/shared/EmptyState/EmptyState";
-import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
 import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
 import { CharacterHeader } from "./components/CharacterHeader";
@@ -12,6 +11,7 @@ import { useStore } from "stores/store";
 import { useSyncStore } from "./hooks/useSyncStore";
 import { useEffect, useState } from "react";
 import { Sidebar } from "./components/Sidebar";
+import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
 
 export function CharacterSheetPage() {
   useSyncStore();
@@ -65,50 +65,15 @@ export function CharacterSheetPage() {
       <PageHeader />
       <PageContent viewHeight isPaper>
         <CharacterHeader />
-        <Grid
-          container
-          spacing={2}
-          display={"flex"}
-          sx={(theme) => ({
-            pt: 2,
-            [theme.breakpoints.up("md")]: {
-              overflow: "hidden",
-              height: "100%",
-            },
-          })}
-        >
-          <Hidden mdDown>
-            <Grid
-              item
-              xs={12}
-              md={4}
-              lg={3}
-              sx={(theme) => ({
-                [theme.breakpoints.up("md")]: {
-                  height: "100%",
-                },
-              })}
-            >
-              <Sidebar />
-            </Grid>
-          </Hidden>
-          <Grid
-            item
-            xs={12}
-            md={8}
-            lg={9}
-            sx={(theme) => ({
-              [theme.breakpoints.up("md")]: {
-                height: "100%",
-              },
-            })}
-          >
-            <Box display={"flex"} height={"100%"} flexDirection={"column"}>
+        <SectionWithSidebar
+          sidebar={<Sidebar />}
+          mainContent={
+            <>
               <TracksSection />
               <TabsSection />
-            </Box>
-          </Grid>
-        </Grid>
+            </>
+          }
+        />
       </PageContent>
     </>
   );

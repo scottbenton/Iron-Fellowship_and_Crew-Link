@@ -72,6 +72,9 @@ export function AskTheOracleButtons() {
             "&:hover": {
               bgcolor: theme.palette.darkGrey.main,
             },
+            minHeight: 32,
+            minWidth: 0,
+            px: 1,
           })}
           onClick={() =>
             rollOracleTable(oracles[oracleKey as ORACLE_KEYS], true, true)

@@ -1,10 +1,19 @@
-import { Box, Button, DialogContent, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  DialogContent,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { oracleMap } from "data/oracles";
 import { useRoller } from "providers/DieRollProvider";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { getIsLocalEnvironment } from "functions/getGameSystem";
+import PinnedIcon from "@mui/icons-material/PushPin";
+import { useStore } from "stores/store";
 
 export interface OracleDialogContentProps {
   id: string;
@@ -17,6 +26,11 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
   const { rollOracleTable } = useRoller();
+
+  const pinnedOracles = useStore((store) => store.settings.pinnedOraclesIds);
+  const updatePinnedOracles = useStore(
+    (store) => store.settings.togglePinnedOracle
+  );
 
   const { allCustomOracleMap } = useCustomOracles();
   const oracle = oracleMap[id] ?? allCustomOracleMap?.[id];
@@ -37,6 +51,7 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
   }
 
   const table = oracle.Table;
+  const pinned = !!pinnedOracles[id];
 
   return (
     <>
@@ -44,6 +59,16 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
         handleBack={handleBack}
         handleClose={handleClose}
         isLastItem={isLastItem}
+        actions={
+          <Tooltip title={pinned ? "Unpin Oracle" : "Pin Oracle"}>
+            <IconButton
+              color={pinned ? "primary" : "default"}
+              onClick={() => updatePinnedOracles(id, !pinned).catch(() => {})}
+            >
+              <PinnedIcon />
+            </IconButton>
+          </Tooltip>
+        }
       >
         {oracle.Title.Short}
       </LinkedDialogContentTitle>

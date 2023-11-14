@@ -156,8 +156,6 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
               );
             }
 
-            console.debug(href);
-            console.debug(customMoveMap);
             // TODO - add handlers for this situation;
             return <span>{props.children}</span>;
           }

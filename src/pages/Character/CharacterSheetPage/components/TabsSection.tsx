@@ -71,7 +71,10 @@ export function TabsSection() {
   );
 
   useEffect(() => {
-    if (!isMobile && selectedTab === TABS.MOVES) {
+    if (
+      !isMobile &&
+      (selectedTab === TABS.MOVES || selectedTab === TABS.ORACLE)
+    ) {
       setSelectedTab(TABS.ASSETS);
     }
   }, [selectedTab, isMobile]);
@@ -94,6 +97,9 @@ export function TabsSection() {
         onChange={(evt, value) => handleTabChange(value)}
       >
         {isMobile && <StyledTab label={"Moves"} value={TABS.MOVES} />}
+        {isMobile && (isGM || !isInCampaign) && (
+          <StyledTab label={"Oracles"} value={TABS.ORACLE} />
+        )}
         <StyledTab label="Assets" value={TABS.ASSETS} />
         <StyledTab label="Tracks" value={TABS.TRACKS} />
         <StyledTab label="Notes" value={TABS.NOTES} />
@@ -109,6 +115,9 @@ export function TabsSection() {
       </StyledTabs>
       <ContainedTabPanel isVisible={selectedTab === TABS.MOVES}>
         <MovesSection />
+      </ContainedTabPanel>
+      <ContainedTabPanel isVisible={selectedTab === TABS.ORACLE}>
+        <OracleSection />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.ASSETS} greyBackground>
         <AssetsSection />
