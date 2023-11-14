@@ -179,10 +179,7 @@ Object.keys(category).forEach((oracleCategoryId) => {
   };
 });
 
-export const hiddenOracleIds: { [oracleId: string]: boolean } = {
-  "ironsworn/oracles/moves/ask_the_oracle/almost_certain": true,
-  "ironsworn/oracles/moves/ask_the_oracle/likely": true,
-  "ironsworn/oracles/moves/ask_the_oracle/50_50": true,
-  "ironsworn/oracles/moves/ask_the_oracle/unlikely": true,
-  "ironsworn/oracles/moves/ask_the_oracle/small_chance": true,
+export const hiddenOracleCategoryIds: { [oracleId: string]: boolean } = {
+  "ironsworn/oracles/moves/ask_the_oracle": true,
+  "starforged/oracles/moves/ask_the_oracle": true,
 };
