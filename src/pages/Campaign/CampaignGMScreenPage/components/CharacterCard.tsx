@@ -158,6 +158,7 @@ export function CharacterCard(props: CharacterCardProps) {
 
             return (
               <StatComponent
+                key={customTrack.label}
                 label={customTrack.label}
                 value={value}
                 disableRoll

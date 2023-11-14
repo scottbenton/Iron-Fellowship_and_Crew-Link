@@ -28,7 +28,7 @@ export function NPCList(props: NPCListProps) {
   return (
     <Grid container sx={{ p: 2 }} spacing={2}>
       {filteredNPCIds.map((npcId) => (
-        <Grid item xs={12} sm={6} md={4} key={npcId}>
+        <Grid item xs={12} sm={6} lg={4} key={npcId}>
           <NPCItem
             npc={npcs[npcId]}
             locations={locations}

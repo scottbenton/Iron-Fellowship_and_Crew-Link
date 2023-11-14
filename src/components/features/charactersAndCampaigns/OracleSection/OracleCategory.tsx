@@ -3,7 +3,7 @@ import { useRoller } from "providers/DieRollProvider";
 import { OracleListItem } from "./OracleListItem";
 import { OracleSet } from "dataforged";
 import { useLinkedDialog } from "providers/LinkedDialogProvider";
-import { hiddenOracleIds } from "data/oracles";
+import { hiddenOracleCategoryIds } from "data/oracles";
 
 export interface OracleCategoryProps {
   prefix?: string;
@@ -22,6 +22,10 @@ export function OracleCategory(props: OracleCategoryProps) {
     : category.Title.Standard;
 
   const sampleNames = category["Sample Names" as "Sample names"];
+
+  if (hiddenOracleCategoryIds[category.$id]) {
+    return null;
+  }
 
   return (
     <>
@@ -56,7 +60,7 @@ export function OracleCategory(props: OracleCategoryProps) {
           )}
         {Object.keys(category.Tables ?? {}).map((oracleId, index) => {
           const oracle = category.Tables?.[oracleId];
-          if (hiddenOracleIds[oracleId] || !oracle) return null;
+          if (!oracle) return null;
           return (
             <OracleListItem
               id={oracle.$id}

@@ -7,6 +7,9 @@
 ### Changes
 
 - Added ability to remove lore, location, and NPC images by making them fullscreen and clicking the delete button
+- Moved Oracle tab to be with moves on desktop devices
+- Moved oracle pins to be in the oracle dialog to save space
+- Removed "Ask the Oracle" oracles from the oracle list, since they are pinned up top
 
 ### Accessibility
 

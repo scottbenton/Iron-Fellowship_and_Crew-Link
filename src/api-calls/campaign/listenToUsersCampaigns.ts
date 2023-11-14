@@ -25,7 +25,9 @@ export function listenToUsersCampaigns(
           dataHandler.onDocChange(change.doc.id, change.doc.data());
         }
       });
-      dataHandler.onLoaded();
+      if (snapshot.empty) {
+        dataHandler.onLoaded();
+      }
     },
     (error) => onError(error)
   );

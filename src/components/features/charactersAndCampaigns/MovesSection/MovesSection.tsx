@@ -11,10 +11,7 @@ export function MovesSection() {
   const { openDialog } = useLinkedDialog();
 
   return (
-    <Card
-      variant={"outlined"}
-      sx={{ height: "100%", display: "flex", flexDirection: "column" }}
-    >
+    <>
       <Input
         fullWidth
         startAdornment={
@@ -47,6 +44,6 @@ export function MovesSection() {
           />
         ))}
       </Box>
-    </Card>
+    </>
   );
 }

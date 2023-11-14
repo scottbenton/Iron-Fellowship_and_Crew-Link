@@ -38,40 +38,43 @@ export function OracleListItem(props: OracleListItemProps) {
       sx={(theme) => ({
         "&:nth-of-type(odd)": {
           backgroundColor: theme.palette.action.hover,
-          "&:hover": {
-            backgroundColor: theme.palette.action.selected,
+        },
+        "& #open-table": {
+          display: isTouchDevice ? "inline-flex" : "none",
+        },
+        "&:hover": {
+          backgroundColor: theme.palette.action.selected,
+          "& #open-table": {
+            display: "inline-flex",
           },
+        },
+        "&:focus-visible #open-table": {
+          display: "inline-flex",
         },
       })}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       secondaryAction={
-        <>
-          {(isHovering || isTouchDevice) && (
-            <IconButton onClick={() => onOpenClick()}>
-              <TableIcon />
-            </IconButton>
-          )}
-
-          {(isHovering || isTouchDevice || pinned) && (
-            <IconButton
-              color={pinned ? "primary" : "default"}
-              onClick={() => updatePinnedOracle(id, !pinned).catch(() => {})}
-              disabled={loading}
-            >
-              <PinIcon />
-            </IconButton>
-          )}
-        </>
+        <IconButton
+          id={"open-table"}
+          onClick={() => onOpenClick()}
+          sx={{
+            "&:focus-visible": {
+              display: "inline-flex",
+            },
+            "&:hover": {
+              display: "inline-flex",
+            },
+          }}
+        >
+          <TableIcon />
+        </IconButton>
       }
     >
       <ListItemButton
         onClick={() => onRollClick()}
         sx={{ pr: "96px!important" }}
       >
-        <ListItemIcon>
-          <D10Icon />
-        </ListItemIcon>
         <ListItemText primary={text} />
       </ListItemButton>
     </ListItem>

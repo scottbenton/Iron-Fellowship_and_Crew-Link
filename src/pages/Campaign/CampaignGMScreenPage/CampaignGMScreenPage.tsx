@@ -13,6 +13,8 @@ import { PageContent, PageHeader } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useSyncStore } from "./hooks/useSyncStore";
 import { useStore } from "stores/store";
+import { Sidebar } from "pages/Character/CharacterSheetPage/components/Sidebar";
+import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
 
 export function CampaignGMScreenPage() {
   useSyncStore();
@@ -75,46 +77,13 @@ export function CampaignGMScreenPage() {
         description={`GM Screen for ${campaign.name}`}
       />
       <PageHeader />
-      <PageContent isPaper>
-        <Grid
-          container
-          spacing={2}
-          display={"flex"}
-          sx={(theme) => ({
-            [theme.breakpoints.up("md")]: {
-              height: "100vh",
-              overflow: "hidden",
-            },
-            py: 2,
-          })}
-        >
-          <Hidden mdDown>
-            <Grid
-              item
-              xs={12}
-              md={4}
-              lg={3}
-              sx={(theme) => ({
-                [theme.breakpoints.up("md")]: {
-                  height: "100%",
-                },
-              })}
-            >
-              <MovesSection />
-            </Grid>
-          </Hidden>
-          <Grid
-            item
-            xs={12}
-            md={8}
-            lg={9}
-            sx={(theme) => ({
-              [theme.breakpoints.up("md")]: { height: "100%" },
-            })}
-          >
+      <PageContent isPaper viewHeight>
+        <SectionWithSidebar
+          sidebar={<Sidebar />}
+          mainContent={
             <TabsSection campaign={campaign} campaignId={campaignId} />
-          </Grid>
-        </Grid>
+          }
+        />
       </PageContent>
     </>
   );
