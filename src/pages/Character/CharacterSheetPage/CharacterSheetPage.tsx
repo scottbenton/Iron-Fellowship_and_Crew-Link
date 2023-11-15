@@ -12,6 +12,9 @@ import { useSyncStore } from "./hooks/useSyncStore";
 import { useEffect, useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
+import { useIsMobile } from "hooks/useIsMobile";
+import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
+import { StatsSectionMobile } from "./components/StatsSectionMobile";
 
 export function CharacterSheetPage() {
   useSyncStore();
@@ -19,6 +22,9 @@ export function CharacterSheetPage() {
   const character = useStore(
     (store) => store.characters.currentCharacter.currentCharacter
   );
+
+  const isMobile = useIsMobile();
+  const showNewMobileView = useNewCharacterMobileView();
 
   const [syncLoading, setSyncLoading] = useState(true);
 
@@ -65,15 +71,23 @@ export function CharacterSheetPage() {
       <PageHeader />
       <PageContent viewHeight isPaper>
         <CharacterHeader />
-        <SectionWithSidebar
-          sidebar={<Sidebar />}
-          mainContent={
-            <>
-              <TracksSection />
-              <TabsSection />
-            </>
-          }
-        />
+        {!isMobile || !showNewMobileView ? (
+          <SectionWithSidebar
+            sidebar={<Sidebar />}
+            mainContent={
+              <>
+                <TracksSection />
+                <TabsSection />
+              </>
+            }
+          />
+        ) : (
+          <>
+            <StatsSectionMobile />
+            <TracksSection />
+            <TabsSection />
+          </>
+        )}
       </PageContent>
     </>
   );

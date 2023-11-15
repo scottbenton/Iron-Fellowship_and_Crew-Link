@@ -49,8 +49,6 @@ export function StatComponent(props: StatComponentProps) {
     }
   };
 
-  const valueWithAdds = updateTrack ? value : value + adds;
-
   return (
     <Card
       variant={"outlined"}
@@ -132,9 +130,9 @@ export function StatComponent(props: StatComponentProps) {
           textAlign={"center"}
         >
           <Typography component={"span"} variant={"body1"} mr={0.2}>
-            {valueWithAdds > 0 ? "+" : ""}
+            {value > 0 ? "+" : ""}
           </Typography>
-          {valueWithAdds}
+          {value}
         </Typography>
       ) : (
         <TextField

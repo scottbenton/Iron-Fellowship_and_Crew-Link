@@ -37,6 +37,7 @@ export function PageHeader(props: PageHeaderProps) {
             ? theme.palette.darkGrey.main
             : undefined,
           position: "relative",
+          overflowX: "hidden",
         })}
       >
         <Container

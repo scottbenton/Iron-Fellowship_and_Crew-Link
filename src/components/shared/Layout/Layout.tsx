@@ -65,7 +65,6 @@ export function Layout(props: LayoutProps) {
       display={"flex"}
       flexDirection={"column"}
       sx={(theme) => ({
-        overflowX: "hidden",
         backgroundColor: theme.palette.background.default,
       })}
     >

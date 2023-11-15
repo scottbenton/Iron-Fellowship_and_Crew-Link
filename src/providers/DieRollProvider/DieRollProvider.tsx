@@ -20,6 +20,7 @@ import { useStore } from "stores/store";
 import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
 import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
 import { getRollResultLabel } from "./RollSnackbar/StatRollSnackbar";
+import { useFooterState } from "hooks/useFooterState";
 
 const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -27,6 +28,9 @@ const getRoll = (dieMax: number) => {
 
 export function DieRollProvider(props: PropsWithChildren) {
   const { children } = props;
+
+  const { footerHeight, isFooterVisible } = useFooterState();
+
   const { setAnnouncement } = useScreenReaderAnnouncement();
   const verboseScreenReaderRolls = useStore(
     (store) => store.accessibilitySettings.settings.verboseRollResults
@@ -333,20 +337,23 @@ export function DieRollProvider(props: PropsWithChildren) {
       <Box
         position={"fixed"}
         zIndex={10000}
-        bottom={(theme) => theme.spacing(2)}
+        bottom={(theme) =>
+          `calc(${theme.spacing(2)} + ${isFooterVisible ? footerHeight : 0}px)`
+        }
         right={(theme) => theme.spacing(2)}
         ml={2}
         display={"flex"}
         flexDirection={"column"}
         alignItems={"flex-end"}
-        sx={{
+        sx={(theme) => ({
+          transition: theme.transitions.create(["bottom", "transform"]),
           "&>div": {
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-end",
             justifyContent: "flex-end",
           },
-        }}
+        })}
       >
         <TransitionGroup>
           {rolls.map((roll, index, array) => (
