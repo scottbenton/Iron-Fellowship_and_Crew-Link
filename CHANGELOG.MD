@@ -18,6 +18,7 @@
 - Fixed custom asset tracks not appearing if they weren't added initially
 - Fixed oracle results that point to an oracle table not appearing correctly
 - Removed links to oracles and moves that don't exist
+- Fixed an issue where deleting a custom move caused the app to crash
 
 ---
 

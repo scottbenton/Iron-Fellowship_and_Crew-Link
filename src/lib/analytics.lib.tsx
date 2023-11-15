@@ -47,3 +47,17 @@ export function reportApiError(
     underlyingErrorMessage,
   });
 }
+
+export function reportPageError(
+  errorMessage: string,
+  trace: string | undefined,
+  pathname: string
+) {
+  if (!analyticsEnabled) return;
+
+  posthog.capture("error-crash", {
+    message: errorMessage,
+    trace,
+    pathname,
+  });
+}
