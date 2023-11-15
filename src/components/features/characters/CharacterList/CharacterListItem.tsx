@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useStore } from "stores/store";
 import { CharacterDocument } from "types/Character.type";
 import OpenIcon from "@mui/icons-material/ChevronRight";
+import { LinkComponent } from "components/shared/LinkComponent";
 
 export interface CharacterListItemProps {
   characterId: string;
@@ -14,14 +15,6 @@ export interface CharacterListItemProps {
   usePlayerNameAsSecondaryText?: boolean;
   raised?: boolean;
 }
-
-const LinkComponent = forwardRef<
-  HTMLAnchorElement,
-  PropsWithChildren<{ href: string }>
->((props, ref) => {
-  const { href, ...rest } = props;
-  return <Link ref={ref} to={href} {...rest} />;
-});
 
 export function CharacterListItem(props: CharacterListItemProps) {
   const {

@@ -3,7 +3,6 @@ import {
   AlertTitle,
   Box,
   Button,
-  Fab,
   Hidden,
   LinearProgress,
 } from "@mui/material";
@@ -11,39 +10,19 @@ import { Link } from "react-router-dom";
 import { CharacterList } from "../../components/features/characters/CharacterList/CharacterList";
 import { EmptyState } from "../../components/shared/EmptyState/EmptyState";
 import AddCharacterIcon from "@mui/icons-material/PersonAdd";
-
-import { useConfirm } from "material-ui-confirm";
 import { CHARACTER_ROUTES, constructCharacterPath } from "./routes";
 import { PageHeader } from "components/shared/Layout/PageHeader";
 import { PageContent } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { useAppName } from "hooks/useAppName";
+import { FooterFab } from "components/shared/Layout/FooterFab";
+import { LinkComponent } from "components/shared/LinkComponent";
 
 export function Component() {
   const characters = useStore((store) => store.characters.characterMap);
   const isLoading = useStore((store) => store.characters.loading);
   const errorMessage = useStore((store) => store.characters.error);
-  const deleteCharacter = useStore((store) => store.characters.deleteCharacter);
-
-  const confirm = useConfirm();
-
-  const handleDeleteCharacter = (characterId: string) => {
-    confirm({
-      title: "Delete Character",
-      description: `Are you sure you want to delete ${characters[characterId].name}?`,
-      confirmationText: "Delete",
-      confirmationButtonProps: {
-        variant: "contained",
-        color: "error",
-      },
-    })
-      .then(() => {
-        deleteCharacter(characterId).catch(() => {});
-      })
-      .catch(() => {});
-  };
-
   const appName = useAppName();
 
   if (isLoading) {
@@ -108,18 +87,13 @@ export function Component() {
               <Box height={80} />
             </Hidden>
             <Hidden smUp>
-              <Fab
-                component={Link}
-                to={constructCharacterPath(CHARACTER_ROUTES.CREATE)}
+              <FooterFab
+                LinkComponent={LinkComponent}
+                href={constructCharacterPath(CHARACTER_ROUTES.CREATE)}
                 color={"primary"}
-                sx={(theme) => ({
-                  position: "fixed",
-                  bottom: theme.spacing(9),
-                  right: theme.spacing(2),
-                })}
               >
                 <AddCharacterIcon />
-              </Fab>
+              </FooterFab>
             </Hidden>
           </>
         )}

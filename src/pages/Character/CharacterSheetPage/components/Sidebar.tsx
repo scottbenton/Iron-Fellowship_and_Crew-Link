@@ -1,9 +1,10 @@
-import { Box, Card } from "@mui/material";
+import { Box, Card, Fab } from "@mui/material";
 import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
 import { OracleSection } from "components/features/charactersAndCampaigns/OracleSection";
 import { DarkStyledTabs, DarkStyledTab } from "components/shared/StyledTabs";
 import { useState } from "react";
 import { useStore } from "stores/store";
+import ReferenceIcon from "@mui/icons-material/MenuBook";
 
 export enum SIDEBAR_TABS {
   MOVES = "moves",
@@ -27,44 +28,46 @@ export function Sidebar() {
   });
 
   return (
-    <Card
-      variant={"outlined"}
-      sx={{
-        minWidth: 300,
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {shouldShowOracles && (
-        <div>
-          <DarkStyledTabs
-            value={currentTab}
-            onChange={(evt, value) => setCurrentTab(value)}
-          >
-            <DarkStyledTab label={"Moves"} value={SIDEBAR_TABS.MOVES} />
-            <DarkStyledTab label={"Oracles"} value={SIDEBAR_TABS.ORACLES} />
-          </DarkStyledTabs>
-        </div>
-      )}
-      <Box
-        sx={
-          !shouldShowOracles || currentTab === SIDEBAR_TABS.MOVES
-            ? { overflow: "auto", display: "flex", flexDirection: "column" }
-            : { display: "none" }
-        }
+    <>
+      <Card
+        variant={"outlined"}
+        sx={{
+          minWidth: 300,
+          height: "100%",
+          display: { xs: "none", md: "flex" },
+          flexDirection: "column",
+        }}
       >
-        <MovesSection />
-      </Box>
-      <Box
-        sx={
-          shouldShowOracles && currentTab === SIDEBAR_TABS.ORACLES
-            ? { overflow: "auto", display: "flex", flexDirection: "column" }
-            : { display: "none" }
-        }
-      >
-        <OracleSection />
-      </Box>
-    </Card>
+        {shouldShowOracles && (
+          <div>
+            <DarkStyledTabs
+              value={currentTab}
+              onChange={(evt, value) => setCurrentTab(value)}
+            >
+              <DarkStyledTab label={"Moves"} value={SIDEBAR_TABS.MOVES} />
+              <DarkStyledTab label={"Oracles"} value={SIDEBAR_TABS.ORACLES} />
+            </DarkStyledTabs>
+          </div>
+        )}
+        <Box
+          sx={
+            !shouldShowOracles || currentTab === SIDEBAR_TABS.MOVES
+              ? { overflow: "auto", display: "flex", flexDirection: "column" }
+              : { display: "none" }
+          }
+        >
+          <MovesSection />
+        </Box>
+        <Box
+          sx={
+            shouldShowOracles && currentTab === SIDEBAR_TABS.ORACLES
+              ? { overflow: "auto", display: "flex", flexDirection: "column" }
+              : { display: "none" }
+          }
+        >
+          <OracleSection />
+        </Box>
+      </Card>
+    </>
   );
 }

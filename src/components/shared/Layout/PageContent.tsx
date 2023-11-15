@@ -22,9 +22,7 @@ export function PageContent(props: PageContentProps) {
           borderBottomRightRadius: 0,
           overflow: "hidden",
           flexGrow: 1,
-          [theme.breakpoints.down("sm")]: {
-            paddingBottom: 9,
-          },
+
           pb: 2,
           display: "flex",
           flexDirection: "column",

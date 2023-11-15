@@ -69,14 +69,20 @@ export function Layout(props: LayoutProps) {
         backgroundColor: theme.palette.background.default,
       })}
     >
-      <SkipToContentButton />
-      <Header />
-      <Box
-        sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
-        component={"main"}
-        id={"main-content"}
-      >
-        <Outlet />
+      <Box display={"flex"} flexDirection={"column"}>
+        <SkipToContentButton />
+        <Header />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+          }}
+          component={"main"}
+          id={"main-content"}
+        >
+          <Outlet />
+        </Box>
       </Box>
       <Footer />
       <UserNameDialog

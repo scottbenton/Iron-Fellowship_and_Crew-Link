@@ -1,7 +1,9 @@
 import {
   BottomNavigation,
   BottomNavigationAction,
-  Hidden,
+  Box,
+  Slide,
+  useScrollTrigger,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -18,6 +20,8 @@ import {
 } from "routes";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
+import { useScrolledToBottom } from "hooks/useScrolledToBottom";
+import { useFooterState } from "hooks/useFooterState";
 
 enum ROUTE_TYPES {
   CHARACTER,
@@ -32,6 +36,8 @@ export function Footer() {
   const [selectedTab, setSelectedTab] = useState<ROUTE_TYPES | undefined>(
     ROUTE_TYPES.CHARACTER
   );
+
+  const { isFooterVisible, footerHeight } = useFooterState();
 
   useEffect(() => {
     if (pathname.includes(CHARACTER_PREFIX)) {
@@ -48,46 +54,50 @@ export function Footer() {
   if (state !== AUTH_STATE.AUTHENTICATED) return null;
 
   return (
-    <Hidden smUp>
-      <BottomNavigation
-        sx={(theme) => ({
-          bgcolor: theme.palette.darkGrey.main,
-          color: theme.palette.darkGrey.contrastText,
-          position: "fixed",
-          zIndex: theme.zIndex.appBar,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          "&>a": {
+    <Box sx={{ display: { xs: "block", sm: "none" } }}>
+      <Box height={footerHeight} />
+      <Slide in={isFooterVisible} direction="up">
+        <BottomNavigation
+          sx={(theme) => ({
+            bgcolor: theme.palette.darkGrey.main,
             color: theme.palette.darkGrey.contrastText,
-            "&.Mui-selected": {
-              color: theme.palette.primary.main,
+            position: "fixed",
+            zIndex: theme.zIndex.appBar,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: footerHeight,
+            "&>a": {
+              color: theme.palette.darkGrey.contrastText,
+              "&.Mui-selected": {
+                color: theme.palette.primary.main,
+              },
             },
-          },
-        })}
-        showLabels
-        value={selectedTab}
-        onChange={(evt, newValue) => setSelectedTab(newValue)}
-      >
-        <BottomNavigationAction
-          component={Link}
-          to={basePaths[BASE_ROUTES.CHARACTER]}
-          label={"Characters"}
-          icon={<CharacterIcon />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to={basePaths[BASE_ROUTES.CAMPAIGN]}
-          label={"Campaigns"}
-          icon={<CampaignIcon />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to={basePaths[BASE_ROUTES.WORLD]}
-          label={"Worlds"}
-          icon={<WorldIcon />}
-        />
-      </BottomNavigation>
-    </Hidden>
+          })}
+          showLabels
+          value={selectedTab}
+          onChange={(evt, newValue) => setSelectedTab(newValue)}
+        >
+          <BottomNavigationAction
+            component={Link}
+            to={basePaths[BASE_ROUTES.CHARACTER]}
+            label={"Characters"}
+            icon={<CharacterIcon />}
+          />
+          <BottomNavigationAction
+            component={Link}
+            to={basePaths[BASE_ROUTES.CAMPAIGN]}
+            label={"Campaigns"}
+            icon={<CampaignIcon />}
+          />
+          <BottomNavigationAction
+            component={Link}
+            to={basePaths[BASE_ROUTES.WORLD]}
+            label={"Worlds"}
+            icon={<WorldIcon />}
+          />
+        </BottomNavigation>
+      </Slide>
+    </Box>
   );
 }

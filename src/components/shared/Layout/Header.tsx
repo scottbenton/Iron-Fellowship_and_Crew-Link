@@ -25,14 +25,7 @@ import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { useAppName } from "hooks/useAppName";
 import { PropsWithChildren, forwardRef } from "react";
-
-const LinkComponent = forwardRef<
-  HTMLAnchorElement,
-  PropsWithChildren<{ href: string }>
->((props, ref) => {
-  const { href, ...rest } = props;
-  return <Link ref={ref} to={href} {...rest} />;
-});
+import { LinkComponent } from "../LinkComponent";
 
 export function Header() {
   const state = useStore((store) => store.auth.status);
