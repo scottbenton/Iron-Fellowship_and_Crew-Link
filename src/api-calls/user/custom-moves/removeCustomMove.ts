@@ -16,7 +16,7 @@ export const removeCustomMove = createApiFunction<
     const encodedId = encodeDataswornId(moveId);
     updateDoc(getUserCustomMovesDoc(uid), {
       [`moves.${encodedId}`]: deleteField(),
-      moveOrder: arrayRemove(moveId),
+      moveOrder: arrayRemove(encodedId),
     })
       .then(() => {
         resolve();

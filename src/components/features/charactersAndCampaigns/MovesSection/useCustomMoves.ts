@@ -86,7 +86,7 @@ export function useCustomMoves() {
         const mappedCustomMoves: { [key: string]: Move } = {};
 
         customMoves.forEach((storedMove) => {
-          if (!hiddenMoveIds.includes(storedMove.$id)) {
+          if (storedMove && !hiddenMoveIds.includes(storedMove.$id)) {
             mappedCustomMoves[storedMove.$id] = convertStoredMoveToMove(
               customMoveCategoryPrefix,
               storedMove
