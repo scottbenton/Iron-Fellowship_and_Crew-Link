@@ -95,6 +95,7 @@ export function CharacterHeader(props: CharacterHeaderProps) {
             py: 0.5,
             overflowX: "auto",
             flexWrap: "wrap",
+            transition: theme.transitions.create(["box-shadow"]),
             ...(isMobile && newViewEnabled
               ? {
                   pb: 5,
