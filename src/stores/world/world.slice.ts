@@ -44,7 +44,9 @@ export const createWorldSlice: CreateSliceType<WorldSlice> = (...params) => {
         },
         (error) => {
           console.error(error);
-          set((store) => (store.worlds.error = "Failed to load worlds."));
+          set((store) => {
+            store.worlds.error = "Failed to load worlds.";
+          });
         }
       );
     },

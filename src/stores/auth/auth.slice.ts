@@ -43,6 +43,7 @@ export const createAuthSlice: CreateSliceType<AuthSlice> = (set) => ({
         });
       },
       (error) => {
+        console.error(error);
         set((state) => {
           clearAnalyticsUser();
           state.auth.user = undefined;

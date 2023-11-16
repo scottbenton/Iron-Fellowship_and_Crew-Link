@@ -9,6 +9,10 @@ import { Track } from "components/features/Track";
 import ResetIcon from "@mui/icons-material/Replay";
 import { useStore } from "stores/store";
 import { CustomTracks } from "./CustomTracks";
+import { useIsMobile } from "hooks/useIsMobile";
+import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
+import { MobileStatTrack } from "./MobileStatTrack";
+import { MomentumTrackMobile } from "./MomentumTrackMobile";
 
 export type TRACK_KEYS = "health" | "spirit" | "supply" | "momentum";
 
@@ -63,67 +67,120 @@ export function TracksSection() {
     }
   };
 
-  return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={4}>
-        <Track
-          label={"Health"}
-          value={health}
-          onChange={(newValue) => updateTrackValue("health", newValue)}
-          min={healthTrack.min}
-          max={healthTrack.max}
-        />
-      </Grid>
-      <Grid item xs={12} md={4}>
-        <Track
-          label={"Spirit"}
-          value={spirit}
-          onChange={(newValue) => updateTrackValue("spirit", newValue)}
-          min={spiritTrack.min}
-          max={spiritTrack.max}
-        />
-      </Grid>
-      <Grid item xs={12} md={4}>
-        <Track
-          label={"Supply"}
-          value={supply}
-          onChange={(newValue) => updateTrackValue("supply", newValue)}
-          min={supplyTrack.min}
-          max={supplyTrack.max}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Box display={"flex"}>
-          <Track
-            label={"Momentum"}
-            value={momentum}
-            onChange={(newValue) => updateTrackValue("momentum", newValue)}
-            min={momentumTrack.min}
-            max={maxMomentum ?? momentumTrack.max}
-            sx={{ flexGrow: 1 }}
-          />
-          <ButtonBase
-            sx={(theme) => ({
-              backgroundColor: theme.palette.darkGrey.main,
-              color: theme.palette.darkGrey.contrastText,
-              borderRadius: `${theme.shape.borderRadius}px`,
-              ml: 0.25,
+  const isMobile = useIsMobile();
+  const showNewMobileView = useNewCharacterMobileView();
 
-              "&:hover": {
-                backgroundColor: theme.palette.darkGrey.dark,
-              },
-            })}
-            onClick={() =>
-              updateTrackValue(
-                "momentum",
-                momentumResetValue ?? momentumTrack.startingValue
-              )
-            }
-          >
-            <ResetIcon />
-          </ButtonBase>
-        </Box>
-      </Grid>
+  const showMobile = isMobile && showNewMobileView;
+
+  return (
+    <Grid
+      container
+      spacing={showMobile ? 1 : 2}
+      sx={showMobile ? { mt: 0 } : undefined}
+    >
+      {showMobile ? (
+        <>
+          <Grid item xs={6}>
+            <MobileStatTrack
+              label={"Health"}
+              value={health}
+              onChange={(newValue) => updateTrackValue("health", newValue)}
+              min={healthTrack.min}
+              max={healthTrack.max}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <MobileStatTrack
+              label={"Spirit"}
+              value={spirit}
+              onChange={(newValue) => updateTrackValue("spirit", newValue)}
+              min={spiritTrack.min}
+              max={spiritTrack.max}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <MobileStatTrack
+              label={"Supply"}
+              value={supply}
+              onChange={(newValue) => updateTrackValue("supply", newValue)}
+              min={supplyTrack.min}
+              max={supplyTrack.max}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <MomentumTrackMobile
+              value={momentum}
+              onChange={(newValue) => updateTrackValue("momentum", newValue)}
+              min={momentumTrack.min}
+              max={maxMomentum ?? momentumTrack.max}
+              resetValue={momentumResetValue ?? momentumTrack.startingValue}
+            />
+          </Grid>
+        </>
+      ) : (
+        <>
+          <Grid item xs={12} md={4}>
+            <Track
+              label={"Health"}
+              value={health}
+              onChange={(newValue) => updateTrackValue("health", newValue)}
+              min={healthTrack.min}
+              max={healthTrack.max}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Track
+              label={"Spirit"}
+              value={spirit}
+              onChange={(newValue) => updateTrackValue("spirit", newValue)}
+              min={spiritTrack.min}
+              max={spiritTrack.max}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Track
+              label={"Supply"}
+              value={supply}
+              onChange={(newValue) => updateTrackValue("supply", newValue)}
+              min={supplyTrack.min}
+              max={supplyTrack.max}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Box display={"flex"}>
+              <Track
+                label={"Momentum"}
+                value={momentum}
+                onChange={(newValue) => updateTrackValue("momentum", newValue)}
+                min={momentumTrack.min}
+                max={maxMomentum ?? momentumTrack.max}
+                sx={{ flexGrow: 1 }}
+              />
+              <ButtonBase
+                sx={(theme) => ({
+                  backgroundColor: theme.palette.darkGrey.main,
+                  color: theme.palette.darkGrey.contrastText,
+                  borderRadius: `${theme.shape.borderRadius}px`,
+                  ml: 0.25,
+
+                  "&:hover": {
+                    backgroundColor: theme.palette.darkGrey.dark,
+                  },
+                })}
+                onClick={() =>
+                  updateTrackValue(
+                    "momentum",
+                    momentumResetValue ?? momentumTrack.startingValue
+                  )
+                }
+              >
+                <ResetIcon />
+              </ButtonBase>
+            </Box>
+          </Grid>
+        </>
+      )}
+
       <CustomTracks />
     </Grid>
   );

@@ -1,14 +1,15 @@
-import { Breakpoint, Container, Paper } from "@mui/material";
+import { Breakpoint, Container, Paper, SxProps, Theme } from "@mui/material";
 import { PropsWithChildren } from "react";
 
 export interface PageContentProps extends PropsWithChildren {
   isPaper?: boolean;
   viewHeight?: boolean;
   maxWidth?: false | Breakpoint;
+  sx?: SxProps<Theme>;
 }
 
 export function PageContent(props: PageContentProps) {
-  const { children, isPaper, viewHeight, maxWidth } = props;
+  const { children, isPaper, viewHeight, maxWidth, sx } = props;
 
   return (
     <Container
@@ -36,6 +37,7 @@ export function PageContent(props: PageContentProps) {
               },
             })
           : {},
+        ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
       {children}

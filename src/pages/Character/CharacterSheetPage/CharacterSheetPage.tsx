@@ -1,4 +1,4 @@
-import { Button, LinearProgress } from "@mui/material";
+import { Box, Button, LinearProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import { TabsSection } from "./components/TabsSection";
@@ -69,7 +69,16 @@ export function CharacterSheetPage() {
         description={`${character.name}'s character sheet`}
       />
       <PageHeader />
-      <PageContent viewHeight isPaper>
+      <PageContent
+        viewHeight
+        isPaper
+        sx={(theme) => ({
+          bgcolor:
+            theme.palette.mode === "light"
+              ? "background.paperInlay"
+              : undefined,
+        })}
+      >
         <CharacterHeader />
         {!isMobile || !showNewMobileView ? (
           <SectionWithSidebar

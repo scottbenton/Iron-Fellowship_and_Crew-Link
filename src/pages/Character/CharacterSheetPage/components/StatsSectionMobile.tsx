@@ -44,14 +44,14 @@ export function StatsSectionMobile() {
             key={stat}
             label={stat}
             value={stats[stat]}
-            sx={{ width: 60 }}
+            sx={{ width: 54 }}
           />
         ))}
         <StatComponent
           label={"Adds"}
           updateTrack={(newValue) => updateAdds({ adds: newValue })}
           value={adds}
-          sx={{ width: 60 }}
+          sx={{ width: 54 }}
         />
       </Box>
     </Box>

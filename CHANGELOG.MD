@@ -11,7 +11,7 @@
 - Moved oracle pins to be in the oracle dialog to save space
 - Removed "Ask the Oracle" oracles from the oracle list, since they are pinned up top
 - Added a test mobile view for moves and oracles
-- Redesigned stats section on mobile
+- Redesigned stats and tracks sections on mobile
 
 ### Accessibility
 
