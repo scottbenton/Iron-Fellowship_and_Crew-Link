@@ -1,4 +1,13 @@
-import { Box, Button, Chip, Fab, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Fab,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { PortraitAvatar } from "components/features/characters/PortraitAvatar/PortraitAvatar";
 import { InitiativeButtons } from "./InitiativeButtons";
 import { StatsSection } from "./StatsSection";
@@ -44,7 +53,9 @@ export function CharacterHeader(props: CharacterHeaderProps) {
       ) ?? false
   );
 
+  const theme = useTheme();
   const isMobile = useIsMobile();
+  const isSmall = useMediaQuery(theme.breakpoints.down("md")) && !isMobile;
   const newViewEnabled = useNewCharacterMobileView();
 
   const [openSection, setOpenSection] =
@@ -73,12 +84,15 @@ export function CharacterHeader(props: CharacterHeaderProps) {
         setIsStuck(rect.top <= 0);
       }
     };
-
-    window.addEventListener("scroll", handleScroll);
+    if (isMobile) {
+      window.addEventListener("scroll", handleScroll);
+    } else {
+      setIsStuck(false);
+    }
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <Box
@@ -109,7 +123,7 @@ export function CharacterHeader(props: CharacterHeaderProps) {
             overflowX: "auto",
             flexWrap: "wrap",
             transition: theme.transitions.create(["box-shadow"]),
-            ...(isMobile && newViewEnabled
+            ...((isMobile || isSmall) && newViewEnabled
               ? {
                   pb: 5,
                   pt: 2,
@@ -175,11 +189,13 @@ export function CharacterHeader(props: CharacterHeaderProps) {
         </Box>
         {(!isMobile || !newViewEnabled) && <StatsSection />}
       </Box>
-      {isMobile && newViewEnabled && (
+      {(isMobile || isSmall) && newViewEnabled && (
         <>
           <Box
             display={"flex"}
-            justifyContent={shouldShowOracles ? "center" : "flex-start"}
+            justifyContent={
+              !shouldShowOracles || isSmall ? "flex-start" : "center"
+            }
             gap={2}
             mt={-4}
           >
