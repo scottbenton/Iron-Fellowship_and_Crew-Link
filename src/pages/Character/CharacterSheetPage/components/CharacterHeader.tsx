@@ -50,6 +50,19 @@ export function CharacterHeader(props: CharacterHeaderProps) {
   const [openSection, setOpenSection] =
     useState<MOVE_AND_ORACLE_DRAWER_SECTIONS>();
 
+  const shouldShowOracles = useStore((store) => {
+    const currentCharacter = store.characters.currentCharacter.currentCharacter;
+
+    if (currentCharacter) {
+      return currentCharacter.campaignId
+        ? store.campaigns.currentCampaign.currentCampaign?.gmIds?.includes(
+            store.auth.uid
+          ) ?? false
+        : true;
+    }
+    return true;
+  });
+
   const headerRef = useRef<HTMLElement>(null);
   const [isStuck, setIsStuck] = useState(false);
 
@@ -164,7 +177,12 @@ export function CharacterHeader(props: CharacterHeaderProps) {
       </Box>
       {isMobile && newViewEnabled && (
         <>
-          <Box display={"flex"} justifyContent={"center"} gap={2} mt={-4}>
+          <Box
+            display={"flex"}
+            justifyContent={shouldShowOracles ? "center" : "flex-start"}
+            gap={2}
+            mt={-4}
+          >
             <Fab
               variant={"extended"}
               color={"primary"}
@@ -176,17 +194,19 @@ export function CharacterHeader(props: CharacterHeaderProps) {
               <MovesIcon sx={{ mr: 1 }} />
               Moves
             </Fab>
-            <Fab
-              variant={"extended"}
-              color={"primary"}
-              sx={{ borderRadius: 4 }}
-              onClick={() =>
-                setOpenSection(MOVE_AND_ORACLE_DRAWER_SECTIONS.ORACLES)
-              }
-            >
-              <OracleIcon sx={{ mr: 1 }} />
-              Oracles
-            </Fab>
+            {shouldShowOracles && (
+              <Fab
+                variant={"extended"}
+                color={"primary"}
+                sx={{ borderRadius: 4 }}
+                onClick={() =>
+                  setOpenSection(MOVE_AND_ORACLE_DRAWER_SECTIONS.ORACLES)
+                }
+              >
+                <OracleIcon sx={{ mr: 1 }} />
+                Oracles
+              </Fab>
+            )}
           </Box>
           <MoveAndOracleDrawer
             openSection={openSection}
