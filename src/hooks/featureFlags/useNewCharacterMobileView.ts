@@ -1,8 +1,5 @@
-import { useFeatureFlagEnabled } from "posthog-js/react";
+import { useFeatureFlag } from "./useFeatureFlag";
 
 export function useNewCharacterMobileView() {
-  const isFeatureFlagEnabled =
-    useFeatureFlagEnabled("character-mobile-view-updates") ?? false;
-
-  return isFeatureFlagEnabled;
+  return useFeatureFlag("character-mobile-view-updates");
 }

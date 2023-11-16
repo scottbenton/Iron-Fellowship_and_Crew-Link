@@ -17,10 +17,13 @@ import { UserNameDialog } from "components/shared/UserNameDialog";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
 import { SkipToContentButton } from "./SkipToContentButton";
+import { useQueryParameterFeatureFlags } from "hooks/featureFlags/useQueryParameterFeatureFlags";
 
 export interface LayoutProps {}
 
 export function Layout(props: LayoutProps) {
+  useQueryParameterFeatureFlags();
+
   const { pathname } = useLocation();
   const state = useStore((store) => store.auth.status);
   const { error } = useSnackbar();

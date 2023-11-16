@@ -1,8 +1,10 @@
 # Changelog
 
-## 2.1.0
+## 2.2.0
 
 ### New Features
+
+- Added a way to override feature flags from query parameters - this will allow me to send out beta links
 
 ### Changes
 
