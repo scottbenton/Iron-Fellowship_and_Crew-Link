@@ -20,6 +20,7 @@ import { useStore } from "stores/store";
 import { SectorSection } from "components/features/worlds/SectorSection";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
 
 enum TABS {
   MOVES = "moves",
@@ -79,6 +80,8 @@ export function TabsSection() {
     }
   }, [selectedTab, isMobile]);
 
+  const newViewEnabled = useNewCharacterMobileView();
+
   return (
     <Card
       variant={"outlined"}
@@ -96,8 +99,10 @@ export function TabsSection() {
         value={selectedTab}
         onChange={(evt, value) => handleTabChange(value)}
       >
-        {isMobile && <StyledTab label={"Moves"} value={TABS.MOVES} />}
-        {isMobile && (isGM || !isInCampaign) && (
+        {isMobile && !newViewEnabled && (
+          <StyledTab label={"Moves"} value={TABS.MOVES} />
+        )}
+        {isMobile && !newViewEnabled && (isGM || !isInCampaign) && (
           <StyledTab label={"Oracles"} value={TABS.ORACLE} />
         )}
         <StyledTab label="Assets" value={TABS.ASSETS} />

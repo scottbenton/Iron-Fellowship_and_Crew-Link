@@ -16,6 +16,7 @@ import { WorldCard } from "./components/WorldCard";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { shallow } from "zustand/shallow";
+import { FooterFab } from "components/shared/Layout/FooterFab";
 
 export function WorldSelectPage() {
   const worldIds = useStore(
@@ -118,17 +119,9 @@ export function WorldSelectPage() {
           <Box height={80} />
         </Hidden>
         <Hidden smUp>
-          <Fab
-            color={"primary"}
-            sx={(theme) => ({
-              position: "fixed",
-              bottom: theme.spacing(9),
-              right: theme.spacing(2),
-            })}
-            onClick={() => handleWorldCreate()}
-          >
+          <FooterFab color={"primary"} onClick={() => handleWorldCreate()}>
             <AddWorldIcon />
-          </Fab>
+          </FooterFab>
         </Hidden>
       </PageContent>
     </>

@@ -17,6 +17,7 @@ import { CampaignCard } from "./components/CampaignCard";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { useAppName } from "hooks/useAppName";
+import { FooterFab } from "components/shared/Layout/FooterFab";
 
 export function CampaignSelectPage() {
   const sortedCampaignIds = useStore((store) =>
@@ -108,17 +109,12 @@ export function CampaignSelectPage() {
         <Box height={80} />
       </Hidden>
       <Hidden smUp>
-        <Fab
+        <FooterFab
           onClick={() => setCreateCampaignDialogOpen(true)}
           color={"primary"}
-          sx={(theme) => ({
-            position: "fixed",
-            bottom: theme.spacing(9),
-            right: theme.spacing(2),
-          })}
         >
           <CreateCampaignIcon />
-        </Fab>
+        </FooterFab>
       </Hidden>
       <CreateCampaignDialog
         open={createCampaignDialogOpen}

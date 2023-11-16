@@ -7,12 +7,12 @@ import tsConfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   plugins: [react(), svgr(), tsConfigPaths()],
   optimizeDeps: {
-    exclude: [
-      "firebase",
-      "firebase/app",
-      "firebase/auth",
-      "firebase/firestore",
-      "firebase/analytics",
-    ],
+    // exclude: [
+    //   "firebase",
+    //   "firebase/app",
+    //   "firebase/auth",
+    //   "firebase/firestore",
+    //   "firebase/analytics",
+    // ],
   },
 });

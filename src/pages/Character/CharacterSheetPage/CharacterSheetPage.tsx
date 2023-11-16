@@ -1,4 +1,4 @@
-import { Button, LinearProgress } from "@mui/material";
+import { Box, Button, LinearProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import { TabsSection } from "./components/TabsSection";
@@ -12,6 +12,9 @@ import { useSyncStore } from "./hooks/useSyncStore";
 import { useEffect, useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
+import { useIsMobile } from "hooks/useIsMobile";
+import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
+import { StatsSectionMobile } from "./components/StatsSectionMobile";
 
 export function CharacterSheetPage() {
   useSyncStore();
@@ -19,6 +22,9 @@ export function CharacterSheetPage() {
   const character = useStore(
     (store) => store.characters.currentCharacter.currentCharacter
   );
+
+  const isMobile = useIsMobile();
+  const showNewMobileView = useNewCharacterMobileView();
 
   const [syncLoading, setSyncLoading] = useState(true);
 
@@ -63,17 +69,34 @@ export function CharacterSheetPage() {
         description={`${character.name}'s character sheet`}
       />
       <PageHeader />
-      <PageContent viewHeight isPaper>
+      <PageContent
+        viewHeight
+        isPaper
+        sx={(theme) => ({
+          bgcolor:
+            theme.palette.mode === "light"
+              ? "background.paperInlay"
+              : undefined,
+        })}
+      >
         <CharacterHeader />
-        <SectionWithSidebar
-          sidebar={<Sidebar />}
-          mainContent={
-            <>
-              <TracksSection />
-              <TabsSection />
-            </>
-          }
-        />
+        {!isMobile || !showNewMobileView ? (
+          <SectionWithSidebar
+            sidebar={<Sidebar />}
+            mainContent={
+              <>
+                <TracksSection />
+                <TabsSection />
+              </>
+            }
+          />
+        ) : (
+          <>
+            <StatsSectionMobile />
+            <TracksSection />
+            <TabsSection />
+          </>
+        )}
       </PageContent>
     </>
   );

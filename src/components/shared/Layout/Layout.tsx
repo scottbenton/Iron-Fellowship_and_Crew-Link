@@ -17,10 +17,13 @@ import { UserNameDialog } from "components/shared/UserNameDialog";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
 import { SkipToContentButton } from "./SkipToContentButton";
+import { useQueryParameterFeatureFlags } from "hooks/featureFlags/useQueryParameterFeatureFlags";
 
 export interface LayoutProps {}
 
 export function Layout(props: LayoutProps) {
+  useQueryParameterFeatureFlags();
+
   const { pathname } = useLocation();
   const state = useStore((store) => store.auth.status);
   const { error } = useSnackbar();
@@ -65,18 +68,23 @@ export function Layout(props: LayoutProps) {
       display={"flex"}
       flexDirection={"column"}
       sx={(theme) => ({
-        overflowX: "hidden",
         backgroundColor: theme.palette.background.default,
       })}
     >
-      <SkipToContentButton />
-      <Header />
-      <Box
-        sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
-        component={"main"}
-        id={"main-content"}
-      >
-        <Outlet />
+      <Box display={"flex"} flexDirection={"column"}>
+        <SkipToContentButton />
+        <Header />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+          }}
+          component={"main"}
+          id={"main-content"}
+        >
+          <Outlet />
+        </Box>
       </Box>
       <Footer />
       <UserNameDialog

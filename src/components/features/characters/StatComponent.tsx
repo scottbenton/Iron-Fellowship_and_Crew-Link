@@ -8,6 +8,8 @@ import {
 import { useRoller } from "providers/DieRollProvider";
 import { useStore } from "stores/store";
 import { useEffect, useState } from "react";
+import { useIsMobile } from "hooks/useIsMobile";
+import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
 
 export interface StatComponentProps {
   label: string;
@@ -49,7 +51,10 @@ export function StatComponent(props: StatComponentProps) {
     }
   };
 
-  const valueWithAdds = updateTrack ? value : value + adds;
+  const isMobile = useIsMobile();
+  const useNewExperience = useNewCharacterMobileView();
+
+  const showNewExperience = isMobile && useNewCharacterMobileView;
 
   return (
     <Card
@@ -73,7 +78,10 @@ export function StatComponent(props: StatComponentProps) {
               ["background-color", "color"],
               { duration: theme.transitions.duration.shorter }
             ),
-            backgroundColor: theme.palette.background.paperInlay,
+            backgroundColor:
+              theme.palette.background[
+                showNewExperience ? "paperInlayDarker" : "paperInlay"
+              ],
             color: theme.palette.text.secondary,
             fontFamily: theme.fontFamilyTitle,
             fontWeight: 400,
@@ -132,9 +140,9 @@ export function StatComponent(props: StatComponentProps) {
           textAlign={"center"}
         >
           <Typography component={"span"} variant={"body1"} mr={0.2}>
-            {valueWithAdds > 0 ? "+" : ""}
+            {value > 0 ? "+" : ""}
           </Typography>
-          {valueWithAdds}
+          {value}
         </Typography>
       ) : (
         <TextField
