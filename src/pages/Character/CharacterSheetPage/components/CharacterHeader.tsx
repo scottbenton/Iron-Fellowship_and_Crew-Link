@@ -74,162 +74,164 @@ export function CharacterHeader(props: CharacterHeaderProps) {
     return true;
   });
 
+  const observedRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const [isStuck, setIsStuck] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (headerRef.current) {
-        const rect = headerRef.current.getBoundingClientRect();
-        setIsStuck(rect.top <= 0);
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0]) {
+        setIsStuck(!entries[0].isIntersecting);
       }
-    };
-    if (isMobile) {
-      window.addEventListener("scroll", handleScroll);
-    } else {
-      setIsStuck(false);
+    });
+    if (observedRef.current) {
+      observer.observe(observedRef.current);
     }
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
     };
-  }, [isMobile]);
+  }, []);
 
   return (
-    <Box
-      ref={headerRef}
-      sx={(theme) =>
-        isMobile && newViewEnabled
-          ? {
-              position: "sticky",
-              top: 0,
-              zIndex: theme.zIndex.appBar,
-            }
-          : {}
-      }
-    >
+    <>
+      <div id={"intersection-observer"} ref={observedRef} />
       <Box
-        id={"character-header"}
-        sx={[
-          (theme) => ({
-            top: 0,
-            mx: -3,
-            px: 3,
-            backgroundColor:
-              theme.palette.grey[theme.palette.mode === "light" ? 600 : 800],
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            py: 0.5,
-            overflowX: "auto",
-            flexWrap: "wrap",
-            transition: theme.transitions.create(["box-shadow"]),
-            ...((isMobile || isSmall) && newViewEnabled
-              ? {
-                  pb: 5,
-                  pt: 2,
-                  boxShadow: isStuck ? theme.shadows[8] : undefined,
-                }
-              : {}),
-            [theme.breakpoints.down("sm")]: {
-              mx: -2,
-              px: 2,
-            },
-          }),
-        ]}
-      >
-        <Box display={"flex"} alignItems={"center"}>
-          <PortraitAvatar
-            uid={uid}
-            characterId={characterId}
-            name={characterName}
-            portraitSettings={characterPortraitSettings}
-          />
-          <Box display={"flex"} flexDirection={"column"} marginLeft={1}>
-            <Typography
-              variant={"h4"}
-              lineHeight={1}
-              color={"white"}
-              fontFamily={(theme) => theme.fontFamilyTitle}
-            >
-              {characterName}
-            </Typography>
-            <Stack spacing={1} direction={"row"}>
-              <InitiativeButtons />
-              {campaignId && !isMobile && (
-                <Chip
-                  size={"small"}
-                  color={"primary"}
-                  variant={"outlined"}
-                  icon={<LinkIcon />}
-                  label="Campaign"
-                  component={Link}
-                  to={constructCampaignSheetPath(
-                    campaignId,
-                    CAMPAIGN_ROUTES.SHEET
-                  )}
-                  clickable
-                />
-              )}
-              {campaignId && isGM && (
-                <Chip
-                  size={"small"}
-                  color={"primary"}
-                  icon={<LinkIcon />}
-                  label={"GM Screen"}
-                  component={Link}
-                  to={constructCampaignSheetPath(
-                    campaignId,
-                    CAMPAIGN_ROUTES.GM_SCREEN
-                  )}
-                  clickable
-                />
-              )}
-            </Stack>
-          </Box>
-        </Box>
-        {(!isMobile || !newViewEnabled) && <StatsSection />}
-      </Box>
-      {(isMobile || isSmall) && newViewEnabled && (
-        <>
-          <Box
-            display={"flex"}
-            justifyContent={
-              !shouldShowOracles || isSmall ? "flex-start" : "center"
-            }
-            gap={2}
-            mt={-4}
-          >
-            <Fab
-              variant={"extended"}
-              color={"primary"}
-              sx={{ borderRadius: 4 }}
-              onClick={() =>
-                setOpenSection(MOVE_AND_ORACLE_DRAWER_SECTIONS.MOVES)
+        ref={headerRef}
+        sx={(theme) =>
+          isMobile && newViewEnabled
+            ? {
+                position: "sticky",
+                top: 0,
+                zIndex: theme.zIndex.appBar,
               }
+            : {}
+        }
+      >
+        <Box
+          id={"character-header"}
+          sx={[
+            (theme) => ({
+              top: 0,
+              mx: -3,
+              px: 3,
+              backgroundColor:
+                theme.palette.grey[theme.palette.mode === "light" ? 600 : 800],
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              py: 0.5,
+              overflowX: "auto",
+              flexWrap: "wrap",
+              transition: theme.transitions.create(["box-shadow"]),
+              ...((isMobile || isSmall) && newViewEnabled
+                ? {
+                    pb: 5,
+                    pt: 2,
+                    boxShadow: isStuck ? theme.shadows[8] : undefined,
+                  }
+                : {}),
+              [theme.breakpoints.down("sm")]: {
+                mx: -2,
+                px: 2,
+              },
+            }),
+          ]}
+        >
+          <Box display={"flex"} alignItems={"center"}>
+            <PortraitAvatar
+              uid={uid}
+              characterId={characterId}
+              name={characterName}
+              portraitSettings={characterPortraitSettings}
+            />
+            <Box display={"flex"} flexDirection={"column"} marginLeft={1}>
+              <Typography
+                variant={"h4"}
+                lineHeight={1}
+                color={"white"}
+                fontFamily={(theme) => theme.fontFamilyTitle}
+              >
+                {characterName}
+              </Typography>
+              <Stack spacing={1} direction={"row"}>
+                <InitiativeButtons />
+                {campaignId && !isMobile && (
+                  <Chip
+                    size={"small"}
+                    color={"primary"}
+                    variant={"outlined"}
+                    icon={<LinkIcon />}
+                    label="Campaign"
+                    component={Link}
+                    to={constructCampaignSheetPath(
+                      campaignId,
+                      CAMPAIGN_ROUTES.SHEET
+                    )}
+                    clickable
+                  />
+                )}
+                {campaignId && isGM && (
+                  <Chip
+                    size={"small"}
+                    color={"primary"}
+                    icon={<LinkIcon />}
+                    label={"GM Screen"}
+                    component={Link}
+                    to={constructCampaignSheetPath(
+                      campaignId,
+                      CAMPAIGN_ROUTES.GM_SCREEN
+                    )}
+                    clickable
+                  />
+                )}
+              </Stack>
+            </Box>
+          </Box>
+          {(!isMobile || !newViewEnabled) && <StatsSection />}
+        </Box>
+        {(isMobile || isSmall) && newViewEnabled && (
+          <>
+            <Box
+              display={"flex"}
+              justifyContent={
+                !shouldShowOracles || isSmall ? "flex-start" : "center"
+              }
+              gap={2}
+              mt={-4}
             >
-              <MovesIcon sx={{ mr: 1 }} />
-              Moves
-            </Fab>
-            {shouldShowOracles && (
               <Fab
                 variant={"extended"}
                 color={"primary"}
                 sx={{ borderRadius: 4 }}
                 onClick={() =>
-                  setOpenSection(MOVE_AND_ORACLE_DRAWER_SECTIONS.ORACLES)
+                  setOpenSection(MOVE_AND_ORACLE_DRAWER_SECTIONS.MOVES)
                 }
               >
-                <OracleIcon sx={{ mr: 1 }} />
-                Oracles
+                <MovesIcon sx={{ mr: 1 }} />
+                Moves
               </Fab>
-            )}
-          </Box>
-          <MoveAndOracleDrawer
-            openSection={openSection}
-            closeSection={() => setOpenSection(undefined)}
-          />
-        </>
-      )}
-    </Box>
+              {shouldShowOracles && (
+                <Fab
+                  variant={"extended"}
+                  color={"primary"}
+                  sx={{ borderRadius: 4 }}
+                  onClick={() =>
+                    setOpenSection(MOVE_AND_ORACLE_DRAWER_SECTIONS.ORACLES)
+                  }
+                >
+                  <OracleIcon sx={{ mr: 1 }} />
+                  Oracles
+                </Fab>
+              )}
+            </Box>
+            <MoveAndOracleDrawer
+              openSection={openSection}
+              closeSection={() => setOpenSection(undefined)}
+            />
+          </>
+        )}
+      </Box>
+    </>
   );
 }
