@@ -3,7 +3,6 @@ import {
   BottomNavigationAction,
   Box,
   Slide,
-  useScrollTrigger,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -20,7 +19,6 @@ import {
 } from "routes";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
-import { useScrolledToBottom } from "hooks/useScrolledToBottom";
 import { useFooterState } from "hooks/useFooterState";
 
 enum ROUTE_TYPES {
@@ -55,7 +53,7 @@ export function Footer() {
 
   return (
     <Box sx={{ display: { xs: "block", sm: "none" } }}>
-      <Box height={footerHeight} />
+      <Box height={footerHeight} id={"footer-intersection-observer"} />
       <Slide in={isFooterVisible} direction="up">
         <BottomNavigation
           sx={(theme) => ({

@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 
-export function useScrolledToBottom(offset: number = 0) {
+export function useScrolledToBottom() {
   const [isBottom, setIsBottom] = useState(false);
 
-  const handleScroll = () => {
-    const scrollTop = document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight;
-    const height = document.documentElement.scrollHeight - windowHeight;
-    const isScrolledToBottom = scrollTop >= height - offset;
-
-    setIsBottom(isScrolledToBottom);
-  };
-
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0]) {
+        setIsBottom(entries[0].isIntersecting);
+      }
+    });
+    const footerIntersectionObserver = document.getElementById(
+      "footer-intersection-observer"
+    );
+    if (footerIntersectionObserver) {
+      observer.observe(footerIntersectionObserver);
+    }
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
     };
   }, []);
 

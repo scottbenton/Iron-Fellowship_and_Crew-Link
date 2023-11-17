@@ -13,7 +13,6 @@ export function useQueryParameterFeatureFlags() {
     if (group.length > 1) {
       const groupName = group.slice(0, group.length - 1);
       const trueFalseFlag = group.slice(group.length - 1);
-      console.debug(groupName, trueFalseFlag);
       if (trueFalseFlag === "r") {
         delete groupResults[groupName];
       } else if (trueFalseFlag === "n") {

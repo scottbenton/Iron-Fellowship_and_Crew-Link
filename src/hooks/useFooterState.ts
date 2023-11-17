@@ -7,7 +7,7 @@ const FOOTER_HEIGHT = 56;
 export function useFooterState() {
   const isMobile = useIsMobile();
   const trigger = useScrollTrigger();
-  const isBottomOfPage = useScrolledToBottom(FOOTER_HEIGHT);
+  const isBottomOfPage = useScrolledToBottom();
 
   const isFooterVisible = isMobile && (!trigger || isBottomOfPage);
 
