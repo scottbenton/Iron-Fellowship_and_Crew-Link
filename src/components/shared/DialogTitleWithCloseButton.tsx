@@ -7,7 +7,8 @@ import {
   useState,
 } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
+import { useStore } from "stores/store";
+import { ScreenReaderOnly } from "./ScreenReaderOnly";
 
 export interface DialogTitleWithCloseButtonProps extends PropsWithChildren {
   onClose: () => void;
@@ -18,7 +19,9 @@ export function DialogTitleWithCloseButton(
 ) {
   const { children, actions, onClose } = props;
 
-  const { announcement } = useScreenReaderAnnouncement();
+  const announcement = useStore(
+    (store) => store.appState.screenReaderAnnouncement
+  );
 
   const [changedAnnouncement, setChangedAnnouncement] = useState<
     string | undefined
@@ -33,21 +36,9 @@ export function DialogTitleWithCloseButton(
 
   return (
     <>
-      <Box
-        position={"absolute"}
-        width={1}
-        height={1}
-        padding={0}
-        m={-1}
-        overflow={"hidden"}
-        whiteSpace={"nowrap"}
-        border={0}
-        sx={{ clip: "rect(0, 0, 0, 0)" }}
-        aria-live={"polite"}
-        id={"live-dialog-announcement"}
-      >
+      <ScreenReaderOnly id={"dialog-live-region"} live>
         {changedAnnouncement}
-      </Box>
+      </ScreenReaderOnly>
       <DialogTitle
         display={"flex"}
         alignItems={"center"}

@@ -13,7 +13,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import { useConfirm } from "material-ui-confirm";
 import { CLOCK_ORACLES_KEYS } from "types/Track.type";
 import DieIcon from "@mui/icons-material/Casino";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 
 const clockOracleMap = {
   [CLOCK_ORACLES_KEYS.ALMOST_CERTAIN]:

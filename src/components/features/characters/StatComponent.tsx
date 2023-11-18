@@ -5,11 +5,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRoller } from "providers/DieRollProvider";
 import { useStore } from "stores/store";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "hooks/useIsMobile";
 import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
+import { useRoller } from "stores/appState/useRoller";
 
 export interface StatComponentProps {
   label: string;
@@ -53,8 +53,7 @@ export function StatComponent(props: StatComponentProps) {
 
   const isMobile = useIsMobile();
   const useNewExperience = useNewCharacterMobileView();
-
-  const showNewExperience = isMobile && useNewCharacterMobileView;
+  const showNewExperience = isMobile && useNewExperience;
 
   return (
     <Card

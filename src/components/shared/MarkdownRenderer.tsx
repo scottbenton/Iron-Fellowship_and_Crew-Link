@@ -3,7 +3,6 @@ import { useCustomMoves } from "components/features/charactersAndCampaigns/Moves
 import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { moveMap } from "data/moves";
 import { oracleMap } from "data/oracles";
-import { useLinkedDialog } from "providers/LinkedDialogProvider";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useStore } from "stores/store";
@@ -18,7 +17,8 @@ export interface MarkdownRendererProps {
 export function MarkdownRenderer(props: MarkdownRendererProps) {
   const { inlineParagraph, markdown, inheritColor, disableLinks } = props;
 
-  const { openDialog } = useLinkedDialog();
+  const openDialog = useStore((store) => store.appState.openDialog);
+
   const theme = useTheme();
 
   const { allCustomOracleMap } = useCustomOracles();

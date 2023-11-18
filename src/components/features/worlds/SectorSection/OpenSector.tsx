@@ -14,7 +14,7 @@ import { ItemHeader } from "../ItemHeader";
 import { SECTOR_TABS } from "stores/world/currentWorld/sector/sector.slice.type";
 import { SECTOR_HEX_TYPES } from "types/Sector.type";
 import { SectorRegionAutocomplete } from "./SectorRegionAutocomplete";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { planetDescriptions } from "data/oracles";
 import { SectorLocationCard } from "./SectorLocationCard";
 import { SectorLocationDialog } from "./SectorLocationDialog/SectorLocationDialog";

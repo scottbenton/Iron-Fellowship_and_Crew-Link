@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 
 export enum ORACLE_KEYS {
   ALMOST_CERTAIN = "almostCertain",

@@ -1,9 +1,9 @@
 import { Box, List, ListSubheader } from "@mui/material";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { OracleListItem } from "./OracleListItem";
 import { OracleSet } from "dataforged";
-import { useLinkedDialog } from "providers/LinkedDialogProvider";
 import { hiddenOracleCategoryIds } from "data/oracles";
+import { useStore } from "stores/store";
 
 export interface OracleCategoryProps {
   prefix?: string;
@@ -15,7 +15,7 @@ export function OracleCategory(props: OracleCategoryProps) {
   const { prefix, category, pinnedCategories } = props;
 
   const { rollOracleTable } = useRoller();
-  const { openDialog } = useLinkedDialog();
+  const openDialog = useStore((store) => store.appState.openDialog);
 
   const title = prefix
     ? `${prefix} ꞏ ${category.Title.Standard}`
@@ -78,7 +78,7 @@ export function OracleCategory(props: OracleCategoryProps) {
             />
           );
         })}
-        {Object.keys(category.Sets ?? {}).map((oracleSetId, index) => {
+        {Object.keys(category.Sets ?? {}).map((oracleSetId) => {
           const set = category.Sets?.[oracleSetId];
           if (!set) return null;
 

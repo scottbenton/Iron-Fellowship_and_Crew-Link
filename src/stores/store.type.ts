@@ -8,8 +8,10 @@ import { SettingsSlice } from "./settings/settings.slice.type";
 import { NotesSlice } from "./notes/notes.slice.type";
 import { GameLogSlice } from "./gameLog/gameLog.slice.type";
 import { AccessibilitySettingsSlice } from "./accessibilitySettings/accessibilitySettings.slice.type";
+import { AppStateSlice } from "./appState/appState.slice.type";
 
 export type IStore = {
+  appState: AppStateSlice;
   auth: AuthSlice;
   characters: CharacterSlice;
   campaigns: CampaignSlice;

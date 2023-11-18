@@ -5,6 +5,7 @@ import { useStore } from "stores/store";
 import { MoveStatRoller } from "./MoveStatRoller";
 import { assetMap } from "data/assets";
 import { LEGACY_TRACK_TYPES, LegacyTrack } from "types/LegacyTrack.type";
+import { useEffect } from "react";
 
 export interface MoveStatsProps {
   moveName: string;
@@ -65,9 +66,33 @@ export function MoveStatRollers(props: MoveStatsProps) {
     (store) => store.characters.currentCharacter.updateCurrentCharacter
   );
 
-  const { companions, vehicles } = useStore((store) => {
-    const companions: { name: string; health: number }[] = [];
+  const vehicles = useStore((store) => {
     const vehicles: { name: string; integrity: number }[] = [];
+
+    Object.values(store.characters.currentCharacter.assets.assets).flatMap(
+      (asset) => {
+        const actualAsset = asset.customAsset ?? assetMap[asset.id];
+        if (
+          asset.trackValue &&
+          actualAsset?.["Condition meter"]?.Label === "integrity"
+        ) {
+          const inputKeys = Object.keys(asset.inputs ?? {});
+          const assetInputName =
+            inputKeys.length > 0
+              ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
+              : undefined;
+          vehicles.push({
+            name: assetInputName ?? actualAsset.Title.Short ?? "",
+            integrity: asset.trackValue ?? 0,
+          });
+        }
+      }
+    );
+    return vehicles;
+  });
+
+  const companions = useStore((store) => {
+    const companions: { name: string; health: number }[] = [];
 
     Object.values(store.characters.currentCharacter.assets.assets).flatMap(
       (asset) => {
@@ -85,23 +110,11 @@ export function MoveStatRollers(props: MoveStatsProps) {
             name: assetInputName ?? actualAsset.Title.Short ?? "",
             health: asset.trackValue ?? 0,
           });
-        } else if (
-          asset.trackValue &&
-          actualAsset?.["Condition meter"]?.Label === "integrity"
-        ) {
-          const inputKeys = Object.keys(asset.inputs ?? {});
-          const assetInputName =
-            inputKeys.length > 0
-              ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
-              : undefined;
-          vehicles.push({
-            name: assetInputName ?? actualAsset.Title.Short ?? "",
-            integrity: asset.trackValue ?? 0,
-          });
         }
       }
     );
-    return { companions, vehicles };
+    console.debug(companions);
+    return companions;
   });
 
   const legacies = useStore((store) => {
@@ -122,6 +135,30 @@ export function MoveStatRollers(props: MoveStatsProps) {
     }
     return {};
   });
+
+  useEffect(() => {
+    console.debug("SOMETHING CHANGED");
+  });
+
+  useEffect(() => {
+    console.debug("Stats CHANGED");
+  }, [stats]);
+
+  useEffect(() => {
+    console.debug("ADDS CHANGED");
+  }, [adds]);
+
+  useEffect(() => {
+    console.debug("COMPANIONS CHANGED");
+  }, [companions]);
+
+  useEffect(() => {
+    console.debug("VEHICLES CHANGED");
+  }, [vehicles]);
+
+  useEffect(() => {
+    console.debug("LEGACIES CHANGED");
+  }, [legacies]);
 
   return (
     <Box display={"flex"} flexWrap={"wrap"}>

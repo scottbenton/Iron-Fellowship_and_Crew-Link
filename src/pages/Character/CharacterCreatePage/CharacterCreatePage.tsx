@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Stack } from "@mui/material";
+import { Alert, Box, Button } from "@mui/material";
 import { Formik } from "formik";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SectionHeading } from "components/shared/SectionHeading";
@@ -15,7 +15,7 @@ import {
 } from "pages/Campaign/routes";
 import { constructCharacterSheetPath } from "../routes";
 import { TextFieldWithOracle } from "components/shared/TextFieldWithOracle/TextFieldWithOracle";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { useCallback, useState } from "react";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
@@ -161,7 +161,7 @@ export function CharacterCreatePage() {
               <SectionHeading breakContainer label={"Character Details"} />
               <Alert severity={"info"} sx={{ mt: 2 }}>
                 Your name, stats, and portrait can always be changed later fom
-                the "Character" tab in your character sheet.
+                the Character tab in your character sheet.
               </Alert>
               <Box display={"flex"} alignItems={"center"} mt={3}>
                 <ImageInput name={form.values.name} />
