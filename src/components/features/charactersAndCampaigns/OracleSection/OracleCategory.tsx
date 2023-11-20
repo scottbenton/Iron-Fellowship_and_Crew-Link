@@ -8,11 +8,10 @@ import { useStore } from "stores/store";
 export interface OracleCategoryProps {
   prefix?: string;
   category: OracleSet;
-  pinnedCategories?: { [oracleName: string]: boolean };
 }
 
 export function OracleCategory(props: OracleCategoryProps) {
-  const { prefix, category, pinnedCategories } = props;
+  const { prefix, category } = props;
 
   const { rollOracleTable } = useRoller();
   const openDialog = useStore((store) => store.appState.openDialog);
@@ -55,7 +54,6 @@ export function OracleCategory(props: OracleCategoryProps) {
                 rollOracleTable(category.$id + "/sample_names", true, true)
               }
               onOpenClick={() => openDialog(category.$id + "/sample_names")}
-              pinned={pinnedCategories && pinnedCategories[category.$id]}
             />
           )}
         {Object.keys(category.Tables ?? {}).map((oracleId, index) => {
@@ -74,7 +72,6 @@ export function OracleCategory(props: OracleCategoryProps) {
               onOpenClick={() => {
                 openDialog(oracle.$id);
               }}
-              pinned={pinnedCategories && pinnedCategories[oracle.$id]}
             />
           );
         })}
@@ -84,12 +81,7 @@ export function OracleCategory(props: OracleCategoryProps) {
 
           return (
             <Box key={oracleSetId}>
-              <OracleCategory
-                key={oracleSetId}
-                prefix={title}
-                category={set}
-                pinnedCategories={pinnedCategories}
-              />
+              <OracleCategory key={oracleSetId} prefix={title} category={set} />
             </Box>
           );
         })}

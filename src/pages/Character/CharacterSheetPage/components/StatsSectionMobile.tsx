@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { StatsMap } from "types/Character.type";
 
-import { STATS, Stat } from "types/stats.enum";
+import { STATS } from "types/stats.enum";
 import { StatComponent } from "components/features/characters/StatComponent";
 import { useStore } from "stores/store";
 

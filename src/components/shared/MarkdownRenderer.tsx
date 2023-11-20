@@ -26,7 +26,6 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
 
   return (
     <ReactMarkdown
-      children={markdown}
       remarkPlugins={[remarkGfm]}
       components={{
         p: ({ children }) => (
@@ -162,6 +161,8 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           return <a {...props} />;
         },
       }}
-    />
+    >
+      {markdown}
+    </ReactMarkdown>
   );
 }

@@ -78,6 +78,7 @@ export function getPublicNotesLoreDoc(worldId: string, loreId: string) {
 export function convertToDatabase(
   lore: Partial<LoreDocument>
 ): Partial<LoreDocumentFirestore> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { updatedDate, createdDate, ...restLore } = lore;
   const newLore: Partial<LoreDocumentFirestore> = {
     updatedTimestamp: Timestamp.now(),

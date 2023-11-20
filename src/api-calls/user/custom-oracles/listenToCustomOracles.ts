@@ -6,6 +6,7 @@ import { getUsersCustomOracleDoc } from "./_getRef";
 export function listenToCustomOracles(
   uid: string,
   onCustomOracles: (oracles: StoredOracle[]) => void,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ) {
   return onSnapshot(

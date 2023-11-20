@@ -212,7 +212,7 @@ export const createNPCsSlice: CreateSliceType<NPCsSlice> = (set, getState) => ({
     if (!worldId) {
       return () => {};
     }
-    let notesUnsubscribe = listenToNPCNotes(
+    const notesUnsubscribe = listenToNPCNotes(
       worldId,
       npcId,
       (notes) => {

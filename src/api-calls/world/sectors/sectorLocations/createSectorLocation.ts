@@ -1,4 +1,4 @@
-import { addDoc, Timestamp } from "firebase/firestore";
+import { addDoc } from "firebase/firestore";
 import { getSectorLocationsCollection } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 import { StarforgedLocation } from "types/LocationStarforged.type";

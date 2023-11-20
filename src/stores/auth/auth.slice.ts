@@ -29,7 +29,9 @@ export const createAuthSlice: CreateSliceType<AuthSlice> = (set) => ({
             }
 
             setAnalyticsUser(user);
-            updateUserDoc({ uid: user.uid, user: userDoc }).catch((e) => {});
+            updateUserDoc({ uid: user.uid, user: userDoc }).catch((e) => {
+              console.error(e);
+            });
 
             state.auth.user = user;
             state.auth.uid = user?.uid;

@@ -44,13 +44,6 @@ export function PortraitAvatar(props: PortraitAvatarProps) {
     loadPortrait(uid, characterId, filename);
   }, [uid, characterId, filename, loadPortrait]);
 
-  let marginLeft = 0;
-  let marginTop = 0;
-  if (portraitSettings) {
-    marginLeft = portraitSettings.position.x * -100;
-    marginTop = portraitSettings.position.y * -100;
-  }
-
   return (
     <PortraitAvatarDisplay
       size={size}

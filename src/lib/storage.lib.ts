@@ -14,7 +14,7 @@ export function uploadImage(path: string, image: File): Promise<boolean> {
     const imageRef = ref(storage, `${path}/${image.name}`);
 
     uploadBytes(imageRef, image)
-      .then((doc) => {
+      .then(() => {
         resolve(true);
       })
       .catch((e) => {

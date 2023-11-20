@@ -1,13 +1,10 @@
 import {
-  DocumentSnapshot,
   QueryConstraint,
   Unsubscribe,
-  endBefore,
   limit,
   onSnapshot,
   orderBy,
   query,
-  startAfter,
   where,
 } from "firebase/firestore";
 import { Roll } from "types/DieRolls.type";

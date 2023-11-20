@@ -15,7 +15,7 @@ export const deleteAllNPCs = createApiFunction<Params, void>((params) => {
   const { worldId } = params;
 
   return new Promise((resolve, reject) => {
-    let promises: Promise<any>[] = [];
+    const promises: Promise<unknown>[] = [];
     getDocs(getNPCCollection(worldId))
       .then((docs) => {
         docs.forEach((doc) => {

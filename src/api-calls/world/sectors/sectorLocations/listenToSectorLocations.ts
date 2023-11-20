@@ -1,8 +1,6 @@
 import { Unsubscribe } from "firebase/auth";
-import { onSnapshot, query, where } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
 import { getSectorLocationsCollection } from "./_getRef";
-import { getImageUrl } from "lib/storage.lib";
-import { Sector } from "types/Sector.type";
 import { StarforgedLocation } from "types/LocationStarforged.type";
 
 export function listenToSectorLocations(

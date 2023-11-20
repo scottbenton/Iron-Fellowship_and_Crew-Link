@@ -19,7 +19,6 @@ import { useListenToAuth } from "stores/auth/useListenToAuth";
 import { useListenToWorlds } from "stores/world/useListenToWorlds";
 import { useListenToOracleSettings } from "stores/settings/useListenToOracleSettings";
 import { useListenToAccessibilitySettings } from "stores/accessibilitySettings/useListenToAccessibilitySettings";
-import { useQueryParameterFeatureFlags } from "hooks/featureFlags/useQueryParameterFeatureFlags";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

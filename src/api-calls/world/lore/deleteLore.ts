@@ -18,7 +18,7 @@ export const deleteLore = createApiFunction<Params, void>((params) => {
   const { worldId, loreId, imageFilename } = params;
 
   return new Promise((resolve, reject) => {
-    let promises: Promise<any>[] = [];
+    const promises: Promise<unknown>[] = [];
     promises.push(deleteDoc(getLoreDoc(worldId, loreId)));
     promises.push(deleteDoc(getPrivateDetailsLoreDoc(worldId, loreId)));
     promises.push(deleteDoc(getPublicNotesLoreDoc(worldId, loreId)));

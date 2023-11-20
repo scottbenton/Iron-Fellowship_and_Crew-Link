@@ -96,7 +96,8 @@ export function RtcRichTextEditor(props: RtcRichTextEditorProps) {
       newYDoc?.destroy();
       newProvider?.destroy();
     };
-  }, [roomPrefix, id, handleSave]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomPrefix, id, handleSave, documentPassword]);
 
   // Handle save on page unload
   useEffect(() => {

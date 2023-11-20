@@ -180,6 +180,7 @@ export const createSectorSlice: CreateSliceType<SectorSlice> = (...params) => {
         worldId,
         sectorId: openSectorId,
         sector: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           region: region ?? (deleteField() as any),
         },
       });

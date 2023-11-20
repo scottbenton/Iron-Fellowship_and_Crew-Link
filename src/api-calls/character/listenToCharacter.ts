@@ -5,6 +5,7 @@ import { getCharacterDoc } from "./_getRef";
 export function listenToCharacter(
   characterId: string,
   onCharacter: (character: CharacterDocument) => void,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ) {
   return onSnapshot(

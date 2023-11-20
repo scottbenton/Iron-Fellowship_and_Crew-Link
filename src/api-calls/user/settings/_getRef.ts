@@ -19,6 +19,7 @@ export function getUserSettingsCollectionRef(userId: string) {
   return collection(
     firestore,
     constructUserSettingsCollectionPath(userId)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) as CollectionReference<any>;
 }
 

@@ -1,4 +1,4 @@
-import { Box, Breakpoint, useTheme } from "@mui/material";
+import { Box, Breakpoint } from "@mui/material";
 import {
   PropsWithChildren,
   ReactNode,
@@ -38,12 +38,14 @@ export function StickyHeader(props: PropsWithChildren<StickyHeaderProps>) {
       <div id={"intersection-observer"} ref={observedRef} />
       <Box
         sx={(theme) =>
-          maxStickyBreakpoint && theme.breakpoints.down(maxStickyBreakpoint)
+          maxStickyBreakpoint
             ? {
-                position: "sticky",
-                top: 0,
-                zIndex: theme.zIndex.appBar,
-                overflowY: "visible",
+                [theme.breakpoints.down(maxStickyBreakpoint)]: {
+                  position: "sticky",
+                  top: 0,
+                  zIndex: theme.zIndex.appBar,
+                  overflowY: "visible",
+                },
               }
             : {}
         }
@@ -53,8 +55,8 @@ export function StickyHeader(props: PropsWithChildren<StickyHeaderProps>) {
           sx={[
             (theme) => ({
               top: 0,
-              mx: -3,
-              px: 3,
+              mx: { xs: -2, sm: -3 },
+              px: { xs: 2, sm: 3 },
               backgroundColor:
                 theme.palette.grey[theme.palette.mode === "light" ? 600 : 800],
               display: "flex",
@@ -65,18 +67,16 @@ export function StickyHeader(props: PropsWithChildren<StickyHeaderProps>) {
               overflowY: "visible",
               flexWrap: "wrap",
               transition: theme.transitions.create(["box-shadow"]),
-              ...(theme.breakpoints.down("sm")
-                ? {
-                    pb: 5,
-                    pt: 2,
-                    boxShadow: isStuck ? theme.shadows[8] : undefined,
-                  }
-                : {}),
-              [theme.breakpoints.down("sm")]: {
-                mx: -2,
-                px: 2,
-              },
             }),
+            (theme) =>
+              maxStickyBreakpoint
+                ? {
+                    [theme.breakpoints.down(maxStickyBreakpoint)]: {
+                      pb: 5,
+                      boxShadow: isStuck ? theme.shadows[8] : undefined,
+                    },
+                  }
+                : {},
           ]}
         >
           {children}

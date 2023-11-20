@@ -17,7 +17,10 @@ export function useFilterMoves() {
   useEffect(() => {
     const results: MoveCategory[] = [];
 
-    let allCategories = [...orderedCategories, ...customMoveCategories].filter(
+    const allCategories = [
+      ...orderedCategories,
+      ...customMoveCategories,
+    ].filter(
       (category) =>
         showDelveMoves || category.Source.Title !== "Ironsworn: Delve"
     );
@@ -33,7 +36,7 @@ export function useFilterMoves() {
         return;
       }
 
-      let Moves: { [key: string]: Move } = {};
+      const Moves: { [key: string]: Move } = {};
 
       Object.keys(category.Moves).forEach((moveId) => {
         const move = category.Moves[moveId];

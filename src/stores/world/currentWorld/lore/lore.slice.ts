@@ -172,7 +172,7 @@ export const createLoreSlice: CreateSliceType<LoreSlice> = (set, getState) => ({
     if (!worldId) {
       return () => {};
     }
-    let notesUnsubscribe = listenToLoreNotes(
+    const notesUnsubscribe = listenToLoreNotes(
       worldId,
       loreId,
       (notes) => {

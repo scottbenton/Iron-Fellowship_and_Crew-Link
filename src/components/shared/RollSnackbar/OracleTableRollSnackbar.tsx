@@ -1,11 +1,4 @@
-import {
-  Box,
-  ButtonBase,
-  Card,
-  Divider,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, ButtonBase, Card, Divider, Typography } from "@mui/material";
 import { OracleTableRoll } from "types/DieRolls.type";
 import { D10Icon } from "assets/D10Icon";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
@@ -18,7 +11,6 @@ export interface OracleTableRollSnackbarProps {
 
 export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
   const { roll, clearRoll, expanded } = props;
-  const theme = useTheme();
 
   return (
     <Card

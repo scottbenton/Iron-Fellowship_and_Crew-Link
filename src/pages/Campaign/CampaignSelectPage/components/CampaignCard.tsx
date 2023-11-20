@@ -25,7 +25,7 @@ export function CampaignCard(props: CampaignCard) {
   }, [gmIds, loadUserDocuments]);
 
   const gmNameString = useStore((store) => {
-    let gmNames: string[] = [];
+    const gmNames: string[] = [];
     gmIds?.forEach((gmId) => {
       const displayName = store.users.userMap[gmId]?.doc?.displayName;
       if (displayName) {

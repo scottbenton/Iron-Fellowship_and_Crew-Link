@@ -6,7 +6,6 @@ import { useState } from "react";
 export interface InitiativeStatusChipProps {
   status: INITIATIVE_STATUS;
   handleStatusChange?: (newStatus: INITIATIVE_STATUS) => void;
-  loading: boolean;
   variant?: "filled" | "outlined";
 }
 
@@ -39,7 +38,7 @@ const getStatusText = (status: INITIATIVE_STATUS): string => {
 };
 
 export function InitiativeStatusChip(props: InitiativeStatusChipProps) {
-  const { status, handleStatusChange, loading, variant } = props;
+  const { status, handleStatusChange, variant } = props;
 
   const [menuParent, setMenuParent] = useState<HTMLElement>();
 

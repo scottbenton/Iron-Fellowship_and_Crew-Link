@@ -1,7 +1,7 @@
 import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { useStore } from "stores/store";
 import { oracleCategoryMap, oracleMap } from "data/oracles";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import {
   ClockProgressionRoll,
   OracleTableRoll,
@@ -35,12 +35,15 @@ export function useRoller() {
   const addRollToLog = useStore((store) => store.gameLog.addRoll);
 
   const { allCustomOracleMap, customOracleCategories } = useCustomOracles();
-  const combinedOracleCategories = {
-    ...oracleCategoryMap,
-  };
-  customOracleCategories.forEach((category) => {
-    combinedOracleCategories[category.$id] = category;
-  });
+  const combinedOracleCategories = useMemo(() => {
+    const categories = {
+      ...oracleCategoryMap,
+    };
+    customOracleCategories.forEach((category) => {
+      categories[category.$id] = category;
+    });
+    return categories;
+  }, [customOracleCategories]);
 
   const rollStat = useCallback(
     (

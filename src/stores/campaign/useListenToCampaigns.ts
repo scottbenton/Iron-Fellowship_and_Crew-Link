@@ -11,5 +11,5 @@ export function useListenToCampaigns() {
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [uid]);
+  }, [uid, subscribe]);
 }

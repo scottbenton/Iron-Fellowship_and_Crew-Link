@@ -5,12 +5,11 @@ import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 
 export interface CampaignProgressTracksProps {
-  campaignId: string;
   addPadding?: boolean;
 }
 
 export function CampaignProgressTracks(props: CampaignProgressTracksProps) {
-  const { campaignId, addPadding } = props;
+  const { addPadding } = props;
 
   const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 

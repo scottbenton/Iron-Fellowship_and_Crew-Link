@@ -26,10 +26,10 @@ export function ProgressTrackTick(props: ProgressTrackTickProps) {
 
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         width: finalSize,
         height: finalSize,
-      })}
+      }}
     >
       {value === 1 && <Tick1 {...tickProps(finalSize)} />}
       {value === 2 && <Tick2 {...tickProps(finalSize)} />}

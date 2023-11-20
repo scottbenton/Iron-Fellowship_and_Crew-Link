@@ -8,12 +8,11 @@ import { CAMPAIGN_ROUTES, constructCampaignPath } from "pages/Campaign/routes";
 import { useStore } from "stores/store";
 
 export interface CampaignActionsMenuProps {
-  campaignId: string;
   campaign: StoredCampaign;
 }
 
 export function CampaignActionsMenu(props: CampaignActionsMenuProps) {
-  const { campaignId, campaign } = props;
+  const { campaign } = props;
   const { gmIds } = campaign;
 
   const uid = useStore((store) => store.auth.uid);

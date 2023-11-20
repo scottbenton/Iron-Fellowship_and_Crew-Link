@@ -24,7 +24,7 @@ function getAllProgressTracks(
         const ids = snapshot.docs.map((doc) => doc.id);
         resolve(ids);
       })
-      .catch((e) => {
+      .catch(() => {
         reject("Failed to get tracks.");
       });
   });

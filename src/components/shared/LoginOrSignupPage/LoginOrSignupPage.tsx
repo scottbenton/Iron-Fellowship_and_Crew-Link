@@ -141,8 +141,8 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
                 <Alert severity={"info"}>
                   {!isLoginPage &&
                     "Get a sign in link emailed to you each time you log in. "}
-                  You must open the link on the same device you clicked "Send
-                  sign in link" on.
+                  You must open the link on the same device you clicked{" "}
+                  {'"Send sign in link"'} on.
                 </Alert>
                 {errorMessage && (
                   <Alert severity={"error"}>

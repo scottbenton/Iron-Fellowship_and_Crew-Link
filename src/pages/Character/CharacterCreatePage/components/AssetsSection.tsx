@@ -92,9 +92,9 @@ export function AssetsSection() {
         {field.value.length > 0 ? (
           <>
             <Grid
-              sx={(theme) => ({
+              sx={{
                 mt: 2,
-              })}
+              }}
               container
               spacing={2}
             >

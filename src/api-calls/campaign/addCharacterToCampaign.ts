@@ -10,10 +10,10 @@ export const addCharacterToCampaign = createApiFunction<
   return new Promise((resolve, reject) => {
     const { uid, characterId, campaignId } = params;
 
-    let updateCampaign = updateDoc(getCampaignDoc(campaignId), {
+    const updateCampaign = updateDoc(getCampaignDoc(campaignId), {
       characters: arrayUnion({ uid, characterId }),
     });
-    let updateCharacter = updateDoc(getCharacterDoc(characterId), {
+    const updateCharacter = updateDoc(getCharacterDoc(characterId), {
       campaignId: campaignId,
     });
 

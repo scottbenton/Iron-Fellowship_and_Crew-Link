@@ -1,4 +1,4 @@
-import { Box, Card, Input, InputAdornment } from "@mui/material";
+import { Box, Input, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { MoveCategory } from "./MoveCategory";
 import { useFilterMoves } from "./useFilterMoves";

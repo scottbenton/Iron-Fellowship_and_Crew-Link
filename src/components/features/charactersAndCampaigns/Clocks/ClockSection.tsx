@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { useState } from "react";
 import { useStore } from "stores/store";

@@ -1,11 +1,7 @@
 import { createApiFunction } from "api-calls/createApiFunction";
 import { removeCharacterFromCampaign } from "api-calls/campaign/removeCharacterFromCampaign";
 import { firebaseAuth } from "config/firebase.config";
-import { deleteDoc, getDocs } from "firebase/firestore";
-import {
-  getCharacterAssetCollection,
-  getCharacterAssetDoc,
-} from "../assets/_getRef";
+import { deleteDoc } from "firebase/firestore";
 import { deleteNotes } from "api-calls/notes/deleteNotes";
 import { getCharacterSettingsDoc } from "api-calls/custom-move-oracle-settings/_getRef";
 import {
@@ -15,7 +11,6 @@ import {
 import { deleteAllLogs } from "api-calls/game-log/deleteAllLogs";
 import { deleteAllProgressTracks } from "api-calls/tracks/deleteAllProgressTracks";
 import { deleteAllAssets } from "api-calls/assets/deleteAllAssets";
-import { removeCharacterPortrait } from "./removeCharacterPortrait";
 import { deleteImage } from "lib/storage.lib";
 
 export const deleteCharacter = createApiFunction<
@@ -38,7 +33,7 @@ export const deleteCharacter = createApiFunction<
           characterId,
         });
       }
-      const promises: Promise<any>[] = [];
+      const promises: Promise<unknown>[] = [];
 
       if (portraitFilename) {
         promises.push(

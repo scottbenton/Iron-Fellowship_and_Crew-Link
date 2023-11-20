@@ -69,7 +69,7 @@ export function IronswornWorldTruthsSection(
     mod = 2;
   }
 
-  let groupedTruthIds: string[][] = [];
+  const groupedTruthIds: string[][] = [];
   truthIds.forEach((truthId, index) => {
     const groupedIndex = index % mod;
     if (!Array.isArray(groupedTruthIds[groupedIndex])) {
@@ -92,7 +92,7 @@ export function IronswornWorldTruthsSection(
         {groupedTruthIds.map((group, index) => (
           <Grid item xs={12} md={6} lg={4} key={index}>
             <Stack spacing={2}>
-              {group.map((truthId, index) => (
+              {group.map((truthId) => (
                 <IronswornTruthCard
                   key={truthId}
                   truthId={truthId}

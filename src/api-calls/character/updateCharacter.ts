@@ -1,5 +1,5 @@
 import { updateDoc } from "firebase/firestore";
-import { CharacterDocument, INITIATIVE_STATUS } from "types/Character.type";
+import { CharacterDocument } from "types/Character.type";
 import { getCharacterDoc } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 

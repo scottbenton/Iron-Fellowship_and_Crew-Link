@@ -3,7 +3,7 @@ import { Tab, TabProps } from "@mui/material";
 export function DarkStyledTab(props: TabProps) {
   const { ...tabProps } = props;
 
-  const selected = (tabProps as any).selected;
+  const selected = (tabProps as unknown as { selected: boolean }).selected;
   return (
     <Tab
       sx={(theme) => ({

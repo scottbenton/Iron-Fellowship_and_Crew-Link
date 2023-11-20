@@ -1,8 +1,7 @@
-import { Grid, Hidden, LinearProgress } from "@mui/material";
-import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection/MovesSection";
+import { LinearProgress } from "@mui/material";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { TabsSection } from "./components/TabsSection";
 import {
   CAMPAIGN_ROUTES,
@@ -48,7 +47,7 @@ export function CampaignGMScreenPage() {
       error("You aren't the GM of this campaign");
       navigate(constructCampaignSheetPath(campaignId, CAMPAIGN_ROUTES.SHEET));
     }
-  }, [loading, campaigns, campaignId, uid]);
+  }, [loading, campaigns, campaignId, uid, campaign, error, navigate]);
 
   const [syncLoading, setSyncLoading] = useState(true);
 
@@ -66,7 +65,7 @@ export function CampaignGMScreenPage() {
     return <LinearProgress />;
   }
 
-  if (!campaignId || !campaign || !uid || !campaign?.gmIds?.includes(uid)) {
+  if (!campaign || !uid || !campaign?.gmIds?.includes(uid)) {
     return null;
   }
 
@@ -80,9 +79,7 @@ export function CampaignGMScreenPage() {
       <PageContent isPaper viewHeight>
         <SectionWithSidebar
           sidebar={<Sidebar />}
-          mainContent={
-            <TabsSection campaign={campaign} campaignId={campaignId} />
-          }
+          mainContent={<TabsSection campaign={campaign} />}
         />
       </PageContent>
     </>

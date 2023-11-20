@@ -1,7 +1,7 @@
 import { Unsubscribe } from "firebase/firestore";
 import { StoredAsset } from "types/Asset.type";
 import { CharacterDocument } from "types/Character.type";
-import { ProgressTrack, TRACK_TYPES, Track } from "types/Track.type";
+import { ProgressTrack, TRACK_TYPES } from "types/Track.type";
 
 export interface CampaignCharactersSliceData {
   characterMap: { [characterId: string]: CharacterDocument };

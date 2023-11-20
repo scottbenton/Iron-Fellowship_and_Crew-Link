@@ -152,9 +152,9 @@ export function AssetsSection() {
           />
           {sortedSharedAssetKeys.length > 0 ? (
             <Grid
-              sx={(theme) => ({
+              sx={{
                 p: 2,
-              })}
+              }}
               container
               spacing={2}
             >
@@ -220,9 +220,9 @@ export function AssetsSection() {
       />
       {sortedAssetKeys.length > 0 ? (
         <Grid
-          sx={(theme) => ({
+          sx={{
             p: 2,
-          })}
+          }}
           container
           spacing={2}
         >

@@ -1,5 +1,4 @@
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -46,7 +45,7 @@ export function UserNameDialog(props: UserNameDialogProps) {
 
   return (
     <Dialog open={open} onClose={() => {}}>
-      <DialogTitle>We didn't catch your name</DialogTitle>
+      <DialogTitle>We did not catch your name</DialogTitle>
       <DialogContent>
         <Typography>
           Add a username so that other players in campaigns you join know who

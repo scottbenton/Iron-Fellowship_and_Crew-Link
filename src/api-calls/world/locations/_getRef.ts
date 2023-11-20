@@ -84,6 +84,7 @@ export function getPublicNotesLocationDoc(worldId: string, locationId: string) {
 export function convertToDatabase(
   location: Partial<LocationDocument>
 ): Partial<StoredLocation> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { updatedDate, createdDate, ...restLocation } = location;
   const newLocation: Partial<StoredLocation> = {
     updatedTimestamp: Timestamp.now(),

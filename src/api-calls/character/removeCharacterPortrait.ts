@@ -2,7 +2,7 @@ import { createApiFunction } from "api-calls/createApiFunction";
 import { deleteImage } from "lib/storage.lib";
 import { constructCharacterPortraitFolderPath } from "./_getRef";
 import { updateCharacter } from "./updateCharacter";
-import { FieldValue, deleteField } from "firebase/firestore";
+import { deleteField } from "firebase/firestore";
 
 export const removeCharacterPortrait = createApiFunction<
   {

@@ -193,7 +193,7 @@ export const createLocationsSlice: CreateSliceType<LocationsSlice> = (
     if (!worldId) {
       return () => {};
     }
-    let notesUnsubscribe = listenToLocationNotes(
+    const notesUnsubscribe = listenToLocationNotes(
       worldId,
       locationId,
       (notes) => {

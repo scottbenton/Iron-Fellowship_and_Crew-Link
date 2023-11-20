@@ -1,6 +1,6 @@
 import { Bytes, updateDoc } from "firebase/firestore";
 import { constructWorldDocPath, getWorldDoc } from "./_getRef";
-import { firebaseAuth, projectId } from "config/firebase.config";
+import { projectId } from "config/firebase.config";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const updateWorldDescription = createApiFunction<

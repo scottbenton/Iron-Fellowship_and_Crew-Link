@@ -2,34 +2,22 @@ import {
   IconButton,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { D10Icon } from "assets/D10Icon";
-import PinIcon from "@mui/icons-material/PushPin";
-import { useState } from "react";
 import { useIsTouchDevice } from "hooks/useIsTouchDevice";
 import TableIcon from "@mui/icons-material/ListAlt";
-import { useStore } from "stores/store";
 
 export interface OracleListItemProps {
   id: string;
   onRollClick: () => void;
   text: string;
   onOpenClick: () => void;
-  pinned?: boolean;
 }
 
 export function OracleListItem(props: OracleListItemProps) {
-  const { id, text, onRollClick, onOpenClick, pinned } = props;
+  const { id, text, onRollClick, onOpenClick } = props;
 
   const isTouchDevice = useIsTouchDevice();
-  const [isHovering, setIsHovering] = useState<boolean>(false);
-
-  const [loading, setLoading] = useState(false);
-  const updatePinnedOracle = useStore(
-    (store) => store.settings.togglePinnedOracle
-  );
 
   return (
     <ListItem
@@ -52,8 +40,6 @@ export function OracleListItem(props: OracleListItemProps) {
           display: "inline-flex",
         },
       })}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
       secondaryAction={
         <IconButton
           id={"open-table"}

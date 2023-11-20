@@ -1,5 +1,5 @@
 import { getDocs } from "firebase/firestore";
-import { getSectorLocationDoc, getSectorLocationsCollection } from "./_getRef";
+import { getSectorLocationsCollection } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 import { deleteSectorLocation } from "./deleteSectorLocation";
 
@@ -13,7 +13,7 @@ export const deleteAllSectorLocations = createApiFunction<Params, void>(
     const { worldId, sectorId } = params;
 
     return new Promise((resolve, reject) => {
-      let promises: Promise<any>[] = [];
+      const promises: Promise<unknown>[] = [];
       getDocs(getSectorLocationsCollection(worldId, sectorId))
         .then((docs) => {
           docs.forEach((doc) => {

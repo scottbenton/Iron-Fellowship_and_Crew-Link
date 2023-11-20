@@ -18,15 +18,16 @@ import { useListenToSharedAssets } from "stores/campaign/currentCampaign/sharedA
 export function useSyncStore() {
   const { characterId } = useParams();
 
-  const character = useStore(
-    (store) => store.characters.currentCharacter.currentCharacter
-  );
   const resetStore = useStore(
     (store) => store.characters.currentCharacter.resetStore
   );
 
-  const campaignId = character?.campaignId;
-  const worldId = character?.worldId;
+  const campaignId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.campaignId
+  );
+  const worldId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.worldId
+  );
 
   const setCurrentCharacterId = useStore(
     (store) => store.characters.currentCharacter.setCurrentCharacterId

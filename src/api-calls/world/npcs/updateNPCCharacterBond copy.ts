@@ -16,6 +16,7 @@ export const updateNPCCharacterBondProgress = createApiFunction<
   return new Promise((resolve, reject) => {
     updateDoc(getNPCDoc(worldId, npcId), {
       [`characterBondProgress.${characterId}`]: progress,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any)
       .then(() => resolve())
       .catch(reject);

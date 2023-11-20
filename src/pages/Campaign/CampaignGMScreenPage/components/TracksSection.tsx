@@ -10,11 +10,10 @@ import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export interface TracksSectionProps {
-  campaignId: string;
   supply: number;
 }
 export function TracksSection(props: TracksSectionProps) {
-  const { campaignId, supply } = props;
+  const { supply } = props;
 
   const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 

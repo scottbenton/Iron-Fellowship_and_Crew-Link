@@ -1,11 +1,4 @@
-import {
-  Box,
-  ButtonBase,
-  Card,
-  Divider,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, ButtonBase, Card, Divider, Typography } from "@mui/material";
 import { ClockProgressionRoll } from "types/DieRolls.type";
 import { D10Icon } from "assets/D10Icon";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
@@ -20,7 +13,6 @@ export function ClockProgressionRollSnackbar(
   props: ClockProgressionRollSnackbarProps
 ) {
   const { roll, clearRoll, expanded } = props;
-  const theme = useTheme();
 
   return (
     <Card

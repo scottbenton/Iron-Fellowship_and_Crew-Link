@@ -76,7 +76,7 @@ export function ClockDialog(props: ClockDialogProps) {
       .then(() => {
         handleDialogClose();
       })
-      .catch((e) => {
+      .catch(() => {
         setLoading(false);
         setError("Error creating clock");
       });

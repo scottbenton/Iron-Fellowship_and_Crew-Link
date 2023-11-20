@@ -23,7 +23,7 @@ export const removeLocationImage = createApiFunction<
         deleteImage(
           constructLocationImagesPath(worldId, locationId),
           filename
-        ).catch((e) => console.error("Failed to remove image from storage."));
+        ).catch(() => console.error("Failed to remove image from storage."));
         resolve();
       })
       .catch(reject);

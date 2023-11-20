@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { FieldArray, Formik } from "formik";
-import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useState } from "react";
 import { StoredOracle } from "types/Oracles.type";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -106,7 +105,7 @@ export function CustomOracleDialog(props: CustomOracleDialogProps) {
           setLoading(false);
           onClose();
         })
-        .catch((e) => {
+        .catch(() => {
           setLoading(false);
         });
     } else {
@@ -116,7 +115,7 @@ export function CustomOracleDialog(props: CustomOracleDialogProps) {
           setLoading(false);
           onClose();
         })
-        .catch((e) => {
+        .catch(() => {
           setLoading(false);
         });
     }

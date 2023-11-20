@@ -18,7 +18,7 @@ export const deleteNPC = createApiFunction<Params, void>((params) => {
   const { worldId, npcId, imageFilename } = params;
 
   return new Promise((resolve, reject) => {
-    let promises: Promise<any>[] = [];
+    const promises: Promise<unknown>[] = [];
     promises.push(deleteDoc(getNPCDoc(worldId, npcId)));
     promises.push(deleteDoc(getPrivateDetailsNPCDoc(worldId, npcId)));
     promises.push(deleteDoc(getPublicNotesNPCDoc(worldId, npcId)));

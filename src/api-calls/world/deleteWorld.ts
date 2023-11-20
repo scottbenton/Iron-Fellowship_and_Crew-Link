@@ -32,7 +32,7 @@ export const deleteWorld = createApiFunction<string, void>((worldId) => {
     );
 
     try {
-      const promises: Promise<any>[] = [];
+      const promises: Promise<unknown>[] = [];
       promises.push(
         runTransaction(firestore, async (transaction) => {
           (await campaignsUsingWorld).docs.map((doc) => {

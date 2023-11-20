@@ -1,7 +1,4 @@
-import { IconButton } from "@mui/material";
-import { SnackbarKey, closeSnackbar, enqueueSnackbar } from "notistack";
-import { ReactNode } from "react";
-import CloseIcon from "@mui/icons-material/Close";
+import { enqueueSnackbar } from "notistack";
 
 export function createInfoSnackbar(message: string) {
   enqueueSnackbar(message, {

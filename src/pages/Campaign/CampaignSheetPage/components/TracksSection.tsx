@@ -6,13 +6,12 @@ import { CampaignProgressTracks } from "./CampaignProgressTracks";
 import { useStore } from "stores/store";
 
 export interface TracksSectionProps {
-  campaignId: string;
   campaign: StoredCampaign;
   addTopMargin: boolean;
 }
 
 export function TracksSection(props: TracksSectionProps) {
-  const { campaignId, campaign, addTopMargin } = props;
+  const { campaign, addTopMargin } = props;
 
   const updateCampaignSupply = useStore(
     (store) => store.campaigns.currentCampaign.updateCampaignSupply
@@ -32,7 +31,7 @@ export function TracksSection(props: TracksSectionProps) {
         value={campaign.supply}
         onChange={(newValue) => updateCampaignSupply(newValue).catch(() => {})}
       />
-      <CampaignProgressTracks campaignId={campaignId} />
+      <CampaignProgressTracks />
     </>
   );
 }

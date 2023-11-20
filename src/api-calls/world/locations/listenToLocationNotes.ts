@@ -1,11 +1,6 @@
 import { Unsubscribe } from "firebase/auth";
-import { onSnapshot, query, where } from "firebase/firestore";
-import { LocationDocument } from "types/Locations.type";
-import {
-  convertFromDatabase,
-  getLocationCollection,
-  getPublicNotesLocationDoc,
-} from "./_getRef";
+import { onSnapshot } from "firebase/firestore";
+import { getPublicNotesLocationDoc } from "./_getRef";
 import { getErrorMessage } from "functions/getErrorMessage";
 
 export function listenToLocationNotes(

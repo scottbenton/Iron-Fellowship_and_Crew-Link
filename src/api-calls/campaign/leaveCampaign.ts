@@ -10,9 +10,8 @@ export const leaveCampaign = createApiFunction<
   void
 >(async (params) => {
   const { uid, campaignId, campaign } = params;
-
-  try {
-    const allPromises: Promise<any>[] = [];
+  return new Promise((resolve, reject) => {
+    const allPromises: Promise<unknown>[] = [];
 
     if (campaign.gmIds?.includes(uid)) {
       allPromises.push(
@@ -37,9 +36,9 @@ export const leaveCampaign = createApiFunction<
       })
     );
 
-    await Promise.all(allPromises);
+    Promise.all(allPromises)
+      .then(() => resolve())
+      .catch(reject);
     return;
-  } catch (e) {
-    throw e;
-  }
+  });
 }, "Failed to remove user from campaign.");

@@ -153,7 +153,12 @@ export function useCustomOracles() {
 
     setCustomOracleCategories(newOracleCategories);
     setAllCustomOracleMap(newCustomOracleMap);
-  }, [memoizedOracleMap, hiddenOracleIds, customOracleAuthorNames]);
+  }, [
+    memoizedOracleMap,
+    hiddenOracleIds,
+    customOracleAuthorNames,
+    getCustomIdPrefix,
+  ]);
 
   return { customOracleCategories, allCustomOracleMap };
 }

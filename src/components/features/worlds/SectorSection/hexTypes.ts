@@ -3,7 +3,6 @@ import { PlanetIcon } from "./assets/PlanetIcon";
 import { StarIcon } from "./assets/StarIcon";
 import { VaultIcon } from "./assets/VaultIcon";
 import { DerelictIcon } from "./assets/DerelictIcon";
-import { ShipIcon } from "./assets/ShipIcon";
 import { SightingIcon } from "./assets/SightingIcon";
 import { SettlementIcon } from "./assets/SettlementIcon";
 import PathIcon from "@mui/icons-material/Timeline";

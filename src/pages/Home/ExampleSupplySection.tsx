@@ -13,10 +13,10 @@ export function ExampleSupplySection() {
       <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Track
           label={"Supply"}
-          sx={(theme) => ({
+          sx={{
             maxWidth: 400,
             minWidth: 300,
-          })}
+          }}
           min={supplyTrack.min}
           max={supplyTrack.max}
           value={supply}

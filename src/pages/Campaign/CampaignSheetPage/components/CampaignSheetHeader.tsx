@@ -109,7 +109,7 @@ export function CampaignSheetHeader(props: CampaignSheetHeaderProps) {
                 Open GM Screen
               </Button>
             )}
-            <CampaignActionsMenu campaign={campaign} campaignId={campaignId} />
+            <CampaignActionsMenu campaign={campaign} />
           </>
         }
       />

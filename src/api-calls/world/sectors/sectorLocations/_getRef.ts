@@ -4,11 +4,9 @@ import {
   CollectionReference,
   doc,
   DocumentReference,
-  Timestamp,
 } from "firebase/firestore";
 import { StarforgedLocation } from "types/LocationStarforged.type";
 import { NoteContentDocument } from "types/Notes.type";
-import { Sector, StoredSector } from "types/Sector.type";
 
 export function constructSectorLocationsPath(
   worldId: string,

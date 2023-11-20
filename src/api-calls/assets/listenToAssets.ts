@@ -9,6 +9,7 @@ export function listenToAssets(
   characterId: string | undefined,
   campaignId: string | undefined,
   onAssets: (assets: { [assetId: string]: StoredAsset }) => void,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ) {
   if (!characterId && !campaignId) {

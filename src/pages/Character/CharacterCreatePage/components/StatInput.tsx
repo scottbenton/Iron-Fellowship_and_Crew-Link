@@ -7,7 +7,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useField } from "formik";
-import { useState } from "react";
 import { Stat } from "types/stats.enum";
 
 export interface StatInputProps {
@@ -35,7 +34,7 @@ export function StatInput(props: StatInputProps) {
     sx,
   } = props;
 
-  const [field, meta, handlers] = useField<number | undefined>({
+  const [field, , handlers] = useField<number | undefined>({
     name: `stats.${stat}`,
   });
   const value = field.value;

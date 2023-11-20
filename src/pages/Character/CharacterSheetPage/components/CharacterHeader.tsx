@@ -6,7 +6,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { PortraitAvatar } from "components/features/characters/PortraitAvatar/PortraitAvatar";
 import { InitiativeButtons } from "./InitiativeButtons";
 import { StatsSection } from "./StatsSection";
 import { useStore } from "stores/store";
@@ -21,20 +20,11 @@ import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMob
 
 import { StickyHeader } from "components/shared/StickyHeader";
 import { CharacterHeaderMoveOracleButtons } from "./CharacterHeaderMoveOracleButtons";
+import { CharacterPortrait } from "./CharacterPortrait";
 
-export interface CharacterHeaderProps {}
-
-export function CharacterHeader(props: CharacterHeaderProps) {
+export function CharacterHeader() {
   const characterName = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.name ?? ""
-  );
-  const uid = useStore((store) => store.auth.uid);
-  const characterId = useStore(
-    (store) => store.characters.currentCharacter.currentCharacterId ?? ""
-  );
-
-  const characterPortraitSettings = useStore(
-    (store) => store.characters.currentCharacter.currentCharacter?.profileImage
   );
 
   const campaignId = useStore(
@@ -54,19 +44,14 @@ export function CharacterHeader(props: CharacterHeaderProps) {
 
   return (
     <StickyHeader
-      maxStickyBreakpoint={newViewEnabled ? "sm" : undefined}
+      maxStickyBreakpoint={newViewEnabled ? "md" : undefined}
       outerChildren={
         (isMobile || isSmall) &&
         newViewEnabled && <CharacterHeaderMoveOracleButtons />
       }
     >
       <Box display={"flex"} alignItems={"center"}>
-        <PortraitAvatar
-          uid={uid}
-          characterId={characterId}
-          name={characterName}
-          portraitSettings={characterPortraitSettings}
-        />
+        <CharacterPortrait />
         <Box display={"flex"} flexDirection={"column"} marginLeft={1}>
           <Typography
             variant={"h4"}

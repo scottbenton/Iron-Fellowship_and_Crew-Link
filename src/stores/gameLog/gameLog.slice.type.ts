@@ -1,4 +1,4 @@
-import { DocumentSnapshot, Unsubscribe } from "firebase/firestore";
+import { Unsubscribe } from "firebase/firestore";
 import { Roll } from "types/DieRolls.type";
 
 export interface GameLogSliceData {

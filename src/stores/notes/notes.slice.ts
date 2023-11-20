@@ -2,8 +2,6 @@ import { CreateSliceType } from "stores/store.type";
 import { NotesSlice } from "./notes.slice.type";
 import { defaultNotesSlice } from "./notes.slice.default";
 import { listenToNotes } from "api-calls/notes/listenToNotes";
-import { Store } from "@mui/icons-material";
-import { getErrorMessage } from "functions/getErrorMessage";
 import { listenToNoteContent } from "api-calls/notes/listenToNoteContent";
 import { addNote } from "api-calls/notes/addNote";
 import { updateNote } from "api-calls/notes/updateNote";

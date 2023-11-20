@@ -59,7 +59,7 @@ export const orderedCategories = categoryOrder.map(
   (oracleCategoryId) => category[oracleCategoryId]
 );
 
-export let oracleCategoryMap: { [categoryId: string]: OracleSet } = {};
+export const oracleCategoryMap: { [categoryId: string]: OracleSet } = {};
 export let oracleMap: { [tableId: string]: DataforgedOracleTable } = {};
 
 export const planetDescriptions: { [key: string]: string } = {};

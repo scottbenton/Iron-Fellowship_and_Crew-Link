@@ -11,13 +11,9 @@ export const updatePinnedOracle = createApiFunction<
 
   return new Promise((resolve, reject) => {
     const encodedId = encodeDataswornId(oracleId);
-    updateDoc(
-      getUserOracleSettingsDoc(uid),
-      //@ts-ignore
-      {
-        [`pinnedOracleSections.${encodedId}`]: pinned,
-      }
-    )
+    updateDoc(getUserOracleSettingsDoc(uid), {
+      [`pinnedOracleSections.${encodedId}`]: pinned,
+    })
       .then(() => resolve())
       .catch((e) => reject(e));
   });

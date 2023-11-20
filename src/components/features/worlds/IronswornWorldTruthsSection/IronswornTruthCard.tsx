@@ -3,7 +3,6 @@ import { truthMap, truthOptionMap } from "data/truths";
 import { useState } from "react";
 import { Truth, TRUTH_IDS } from "types/World.type";
 import { IronswornTruthDialogSelector } from "./IronswornTruthDialogSelector";
-import { useStore } from "stores/store";
 
 export interface IronswornTruthCardProps {
   truthId: TRUTH_IDS;

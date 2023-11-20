@@ -37,7 +37,7 @@ export const createSectorLocationsSlice: CreateSliceType<
             .locations[locationId];
         });
       },
-      (error) => {}
+      () => {}
     );
   },
 

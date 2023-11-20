@@ -14,7 +14,6 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
 } from "@mui/material";
 import type { Asset, AssetAbility, InputSelectOption } from "dataforged";
 import { InputType, License } from "types/Datasworn";

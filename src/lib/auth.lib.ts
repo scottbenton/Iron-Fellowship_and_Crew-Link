@@ -6,15 +6,10 @@ import {
   signInWithEmailLink,
   signInWithPopup,
   signOut,
-  updateCurrentUser,
   updateProfile,
   User,
 } from "firebase/auth";
 import { firebaseAuth } from "../config/firebase.config";
-import {
-  CHARACTER_ROUTES,
-  constructCharacterPath,
-} from "pages/Character/routes";
 import { BASE_ROUTES, basePaths } from "routes";
 import { getErrorMessage } from "functions/getErrorMessage";
 
@@ -108,7 +103,7 @@ export async function logout() {
 }
 
 export function getUser(): Promise<User | null> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const unsubscribe = onAuthStateChanged(
       firebaseAuth,
       (user) => {

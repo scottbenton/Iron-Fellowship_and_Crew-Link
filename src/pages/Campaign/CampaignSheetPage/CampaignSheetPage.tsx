@@ -104,11 +104,7 @@ export function CampaignSheetPage() {
         )}
         {selectedTab === TABS.TRACKS && (
           <>
-            <TracksSection
-              campaignId={campaignId}
-              campaign={campaign}
-              addTopMargin={false}
-            />
+            <TracksSection campaign={campaign} addTopMargin={false} />
             {showClocks && <ClockSection headingBreakContainer />}
           </>
         )}

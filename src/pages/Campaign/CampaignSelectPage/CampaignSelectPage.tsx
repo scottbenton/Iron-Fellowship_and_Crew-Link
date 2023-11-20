@@ -3,7 +3,6 @@ import {
   Button,
   Grid,
   Hidden,
-  Fab,
   LinearProgress,
   Alert,
   AlertTitle,

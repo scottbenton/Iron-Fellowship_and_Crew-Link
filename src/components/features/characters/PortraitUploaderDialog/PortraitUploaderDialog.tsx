@@ -7,14 +7,11 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Slider,
-  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { ChangeEventHandler, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
-import { PortraitAvatarDisplay } from "components/features/characters/PortraitAvatar/PortraitAvatarDisplay";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import { LoadingButton } from "@mui/lab";

@@ -10,10 +10,8 @@ import {
   Grid,
   Tab,
   Tabs,
-  Typography,
 } from "@mui/material";
 import { useState } from "react";
-// import { companions, paths, combatTalents, rituals } from "../../data/assets";
 import { assetGroups } from "data/assets";
 import { StoredAsset } from "types/Asset.type";
 import { Asset } from "dataforged";
@@ -21,7 +19,6 @@ import { AssetCard } from "../AssetCard/AssetCard";
 import { CreateCustomAsset } from "./CreateCustomAsset";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
-import { useStore } from "stores/store";
 
 export interface AssetCardDialogProps {
   open: boolean;

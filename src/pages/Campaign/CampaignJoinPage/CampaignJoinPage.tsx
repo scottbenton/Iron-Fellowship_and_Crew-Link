@@ -12,7 +12,6 @@ import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { StoredCampaign } from "types/Campaign.type";
 import { useAppName } from "hooks/useAppName";
-import { getPublicAssetPath } from "functions/getPublicAssetPath";
 
 export function CampaignJoinPage() {
   const { campaignId } = useParams();
@@ -60,7 +59,7 @@ export function CampaignJoinPage() {
     if (campaignId) {
       getCampaign(campaignId).catch(() => {});
     }
-  }, [campaignId]);
+  }, [campaignId, getCampaign]);
 
   const appName = useAppName();
 

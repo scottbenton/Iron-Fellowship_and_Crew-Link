@@ -1,4 +1,4 @@
-import { updateDoc } from "firebase/firestore";
+import { FieldValue, updateDoc } from "firebase/firestore";
 import { getCampaignAssetDoc, getCharacterAssetDoc } from "./_getRef";
 import type { Asset } from "dataforged";
 import { createApiFunction } from "api-calls/createApiFunction";
@@ -24,7 +24,7 @@ export const updateCustomAsset = createApiFunction<
         ? getCharacterAssetDoc(characterId, assetId)
         : getCampaignAssetDoc(campaignId as string, assetId),
       {
-        customAsset: asset as any,
+        customAsset: asset as unknown as FieldValue,
       }
     )
       .then(() => {

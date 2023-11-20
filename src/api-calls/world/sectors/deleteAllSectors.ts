@@ -11,7 +11,7 @@ export const deleteAllSectors = createApiFunction<Params, void>((params) => {
   const { worldId } = params;
 
   return new Promise((resolve, reject) => {
-    let promises: Promise<any>[] = [];
+    const promises: Promise<unknown>[] = [];
     getDocs(getSectorCollection(worldId))
       .then((docs) => {
         docs.forEach((doc) => {
