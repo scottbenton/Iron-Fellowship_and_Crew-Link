@@ -68,10 +68,13 @@ export function MoveStatRollers(props: MoveStatsProps) {
   const assets = useStore(
     (store) => store.characters.currentCharacter.assets.assets
   );
+  const sharedAssets = useStore(
+    (store) => store.campaigns.currentCampaign.assets.assets
+  );
 
   const companions: { name: string; health: number }[] = [];
   const vehicles: { name: string; integrity: number }[] = [];
-  Object.values(assets).flatMap((asset) => {
+  Object.values({ ...assets, ...sharedAssets }).flatMap((asset) => {
     const actualAsset = asset.customAsset ?? assetMap[asset.id];
     if (
       asset.trackValue &&

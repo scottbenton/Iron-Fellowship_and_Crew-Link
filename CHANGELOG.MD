@@ -23,6 +23,8 @@
 - Fixed oracle results that point to an oracle table not appearing correctly
 - Removed links to oracles and moves that don't exist
 - Fixed an issue where deleting a custom move caused the app to crash
+- Made some performance improvements on the character view
+- Fixed shared tracks not showing up in the move rollers
 
 ---
 

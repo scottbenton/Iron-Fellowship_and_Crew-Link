@@ -37,7 +37,6 @@ export function PageHeader(props: PageHeaderProps) {
             ? theme.palette.darkGrey.main
             : undefined,
           position: "relative",
-          overflowX: "hidden",
         })}
       >
         <Container
@@ -90,14 +89,13 @@ export function PageHeader(props: PageHeaderProps) {
             position: "absolute",
             top: "100%",
             mt: "-1px",
-            mx: -2,
-            transform: isIronsworn ? "rotate(180deg)" : undefined,
+            mx: 0,
             height: theme.spacing(8),
             backgroundRepeat: "repeat-x",
             backgroundSize: "contain",
-            backgroundPositionY: isIronsworn ? "bottom" : undefined,
+            backgroundPositionX: "center",
             minWidth: isIronsworn ? 1000 : 500,
-            width: "110%",
+            width: "100%",
           })}
         />
       </Box>
