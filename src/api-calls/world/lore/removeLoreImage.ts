@@ -21,7 +21,7 @@ export const removeLoreImage = createApiFunction<
     })
       .then(() => {
         deleteImage(constructLoreImagesPath(worldId, loreId), filename).catch(
-          (e) => console.error("Failed to remove image from storage.")
+          () => console.error("Failed to remove image from storage.")
         );
         resolve();
       })

@@ -1,16 +1,10 @@
 import { updateDoc } from "firebase/firestore";
-import {
-  MAX_FILE_SIZE,
-  MAX_FILE_SIZE_LABEL,
-  replaceImage,
-  uploadImage,
-} from "lib/storage.lib";
+import { replaceImage } from "lib/storage.lib";
 import {
   constructCharacterPortraitFolderPath,
   getCharacterDoc,
 } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
-import { removeCharacterPortrait } from "./removeCharacterPortrait";
 
 export const updateCharacterPortrait = createApiFunction<
   {

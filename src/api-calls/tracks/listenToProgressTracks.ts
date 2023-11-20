@@ -15,6 +15,7 @@ export function listenToProgressTracks(
     trackId: string,
     trackType: TRACK_TYPES.FRAY | TRACK_TYPES.JOURNEY | TRACK_TYPES.VOW
   ) => void,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ): Unsubscribe | undefined {
   if (!campaignId && !characterId) {

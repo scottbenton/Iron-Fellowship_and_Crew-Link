@@ -6,7 +6,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import RollIcon from "@mui/icons-material/Casino";
-import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
+import { useStore } from "stores/store";
 
 export type TextFieldWithOracleProps = Omit<TextFieldProps, "onChange"> & {
   getOracleValue: (() => string) | undefined;
@@ -16,13 +16,13 @@ export type TextFieldWithOracleProps = Omit<TextFieldProps, "onChange"> & {
 export function TextFieldWithOracle(props: TextFieldWithOracleProps) {
   const { getOracleValue, onChange, label, ...textFieldProps } = props;
 
-  const { setAnnouncement } = useScreenReaderAnnouncement();
+  const announce = useStore((store) => store.appState.announce);
 
   const handleOracleRoll = () => {
     if (getOracleValue) {
       const value = getOracleValue();
       onChange(value);
-      setAnnouncement(`Updated ${label} to ${value}`);
+      announce(`Updated ${label} to ${value}`);
     }
   };
 

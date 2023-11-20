@@ -1,5 +1,5 @@
-import { Box, Card, Typography } from "@mui/material";
-import { RollSnackbar } from "providers/DieRollProvider/RollSnackbar";
+import { Box, Typography } from "@mui/material";
+import { RollSnackbar } from "components/shared/RollSnackbar";
 import { useEffect } from "react";
 import { useStore } from "stores/store";
 import { Roll } from "types/DieRolls.type";
@@ -45,7 +45,7 @@ export function GameLogEntry(props: GameLogEntryProps) {
   const loadUserDoc = useStore((store) => store.users.loadUserDocument);
   useEffect(() => {
     loadUserDoc(logUid);
-  }, [logUid]);
+  }, [logUid, loadUserDoc]);
 
   const getLogTimeString = (d: Date) => {
     return d.toLocaleString(undefined, {

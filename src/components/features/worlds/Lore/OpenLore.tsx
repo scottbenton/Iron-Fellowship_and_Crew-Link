@@ -162,8 +162,8 @@ export function OpenLore(props: OpenLoreProps) {
       <Box
         sx={(theme) => ({
           mt: 1,
-          px: 2,
-          [theme.breakpoints.up("md")]: { px: 3 },
+          px: 3,
+          [theme.breakpoints.down("sm")]: { px: 2 },
         })}
       >
         <Grid container spacing={2} sx={{ mb: 2 }}>

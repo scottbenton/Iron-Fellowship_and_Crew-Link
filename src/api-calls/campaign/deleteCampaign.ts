@@ -3,7 +3,6 @@ import { getCharacterDoc } from "../character/_getRef";
 import { getCampaignDoc } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 import { deleteNotes } from "api-calls/notes/deleteNotes";
-import { getCampaignTracksDoc } from "api-calls/tracks/_getRef";
 import { getCampaignSettingsDoc } from "api-calls/custom-move-oracle-settings/_getRef";
 import { deleteAllProgressTracks } from "api-calls/tracks/deleteAllProgressTracks";
 import { deleteAllLogs } from "api-calls/game-log/deleteAllLogs";
@@ -30,7 +29,7 @@ export const deleteCampaign = createApiFunction<
     }
 
     try {
-      const promises: Promise<any>[] = [];
+      const promises: Promise<unknown>[] = [];
 
       promises.push(deleteDoc(getCampaignDoc(campaignId)));
       promises.push(deleteNotes({ campaignId }));

@@ -18,7 +18,6 @@ import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithClo
 import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { oracleMap } from "data/oracles";
 import { Formik } from "formik";
-import { generateCustomDataswornId } from "functions/dataswornIdEncoder";
 import { useState } from "react";
 import { StoredMove } from "types/Moves.type";
 import { MoveStatKeys, PlayerConditionMeter, Stat } from "types/stats.enum";
@@ -109,7 +108,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
           setLoading(false);
           onClose();
         })
-        .catch((e) => {
+        .catch(() => {
           setLoading(false);
         });
     } else {
@@ -119,7 +118,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
           setLoading(false);
           onClose();
         })
-        .catch((e) => {
+        .catch(() => {
           setLoading(false);
         });
     }
@@ -434,17 +433,14 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                   </FormControl>
                 </Box>
                 <Autocomplete
-                  //@ts-ignore
                   multiple={true}
                   limitTags={2}
                   options={Object.values(combinedOracles)}
-                  //@ts-ignore
                   getOptionLabel={(oracle) => oracle.Title.Standard}
                   renderInput={(params) => (
                     <TextField {...params} label={"Oracles"} />
                   )}
                   value={getOraclesFromIds(form.values.oracleIds)}
-                  //@ts-ignore
                   onChange={(evt, value) => {
                     const ids = Array.isArray(value)
                       ? value.map((oracle) => oracle.$id)

@@ -79,7 +79,7 @@ export function StarforgedWorldTruthsSection(
     mod = 2;
   }
 
-  let groupedTruths: TruthStarforged[][] = [];
+  const groupedTruths: TruthStarforged[][] = [];
   starforgedTruths.forEach((truth, index) => {
     const groupedIndex = index % mod;
     if (!Array.isArray(groupedTruths[groupedIndex])) {

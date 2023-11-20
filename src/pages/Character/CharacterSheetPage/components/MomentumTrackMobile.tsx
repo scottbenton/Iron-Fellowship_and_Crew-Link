@@ -2,9 +2,9 @@ import { Box, ButtonBase, IconButton, Typography } from "@mui/material";
 import SubtractIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useRef } from "react";
-import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
 import { useDebouncedState } from "hooks/useDebouncedState";
 import ResetIcon from "@mui/icons-material/Replay";
+import { useStore } from "stores/store";
 
 export interface MomentumTrackMobileProps {
   value: number;
@@ -17,7 +17,7 @@ export function MomentumTrackMobile(props: MomentumTrackMobileProps) {
   const { value, onChange, min, max, resetValue } = props;
 
   const hasUnsavedChangesRef = useRef(false);
-  const { setAnnouncement } = useScreenReaderAnnouncement();
+  const announce = useStore((store) => store.appState.announce);
 
   const [localValue, setLocalValue] = useDebouncedState(
     (newValue) => {
@@ -40,9 +40,9 @@ export function MomentumTrackMobile(props: MomentumTrackMobileProps) {
   useEffect(() => {
     if (value !== localValue && !hasUnsavedChangesRef.current) {
       setLocalValue(value);
-      setAnnouncement(`Momentum was updated to ${value}`);
+      announce(`Momentum was updated to ${value}`);
     }
-  }, [localValue, value, setAnnouncement]);
+  }, [localValue, value, announce, setLocalValue]);
 
   return (
     <Box

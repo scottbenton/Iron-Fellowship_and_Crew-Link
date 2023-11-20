@@ -9,6 +9,7 @@ export function listenToUsersCharacters(
     onDocRemove: (id: string) => void;
     onLoaded: () => void;
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ) {
   if (!uid) {

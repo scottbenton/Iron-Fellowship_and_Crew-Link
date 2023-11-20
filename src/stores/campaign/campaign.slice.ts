@@ -5,7 +5,6 @@ import { listenToUsersCampaigns } from "api-calls/campaign/listenToUsersCampaign
 import { getErrorMessage } from "functions/getErrorMessage";
 import { createCampaign } from "api-calls/campaign/createCampaign";
 import { createCurrentCampaignSlice } from "./currentCampaign/currentCampaign.slice";
-import { StoredCampaign } from "types/Campaign.type";
 import { getCampaign } from "api-calls/campaign/getCampaign";
 import { addUserToCampaign } from "api-calls/campaign/addUserToCampaign";
 

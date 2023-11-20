@@ -1,15 +1,7 @@
-import {
-  Box,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-  SxProps,
-  Theme,
-  ButtonBase,
-} from "@mui/material";
+import { Box, Typography, SxProps, Theme, ButtonBase } from "@mui/material";
 import { useDebouncedState } from "hooks/useDebouncedState";
-import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
 import { useEffect, useId, useRef, useState } from "react";
+import { useStore } from "stores/store";
 
 export interface TrackProps {
   label?: string;
@@ -22,7 +14,7 @@ export interface TrackProps {
 }
 
 function getArr(min: number, max: number): number[] {
-  let arr: number[] = [];
+  const arr: number[] = [];
 
   for (let i = min; i <= max; i++) {
     arr.push(i);
@@ -36,7 +28,7 @@ export function Track(props: TrackProps) {
 
   const [numbers, setNumbers] = useState<number[]>([]);
   const hasUnsavedChangesRef = useRef(false);
-  const { setAnnouncement } = useScreenReaderAnnouncement();
+  const announce = useStore((store) => store.appState.announce);
 
   const [localValue, setLocalValue] = useDebouncedState(
     (newValue) => {
@@ -63,9 +55,9 @@ export function Track(props: TrackProps) {
   useEffect(() => {
     if (value !== localValue && !hasUnsavedChangesRef.current) {
       setLocalValue(value);
-      setAnnouncement(`${label} was updated to ${value}`);
+      announce(`${label} was updated to ${value}`);
     }
-  }, [localValue, value, setAnnouncement]);
+  }, [localValue, value, announce, setLocalValue, label]);
 
   const labelId = useId();
 
@@ -173,7 +165,7 @@ export function Track(props: TrackProps) {
             id={labelId + "-" + label + "-" + num}
             name={label}
             checked={num === localValue}
-            onChange={(evt) => handleChange(num)}
+            onChange={() => handleChange(num)}
           />
         </ButtonBase>
       ))}

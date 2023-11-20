@@ -1,14 +1,13 @@
-import { Box, Card, Input, InputAdornment } from "@mui/material";
+import { Box, Input, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { MoveCategory } from "./MoveCategory";
 import { useFilterMoves } from "./useFilterMoves";
-import { useLinkedDialog } from "providers/LinkedDialogProvider";
-import { MoveCategory as MoveCategoryType } from "dataforged";
+import { useStore } from "stores/store";
 
 export function MovesSection() {
   const { setSearch, filteredMoves } = useFilterMoves();
 
-  const { openDialog } = useLinkedDialog();
+  const openDialog = useStore((store) => store.appState.openDialog);
 
   return (
     <>

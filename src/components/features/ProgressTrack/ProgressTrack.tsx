@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  ButtonBase,
-  Link,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, ButtonBase, Link, Typography } from "@mui/material";
 import { useEffect, useId, useState } from "react";
 import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
@@ -14,12 +7,11 @@ import { DIFFICULTY, PROGRESS_TRACKS, TRACK_TYPES } from "types/Track.type";
 import CompleteIcon from "@mui/icons-material/Check";
 import DieIcon from "@mui/icons-material/Casino";
 import { useConfirm } from "material-ui-confirm";
-import { useRoller } from "providers/DieRollProvider";
-import { useLinkedDialog } from "providers/LinkedDialogProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { moveMap } from "data/moves";
 import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
-import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
+import { useStore } from "stores/store";
 
 const trackMoveIdSystemValues: GameSystemChooser<{
   [key in PROGRESS_TRACKS]: string;
@@ -99,10 +91,11 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   const trackMoveIds = useGameSystemValue(trackMoveIdSystemValues);
 
-  const { setAnnouncement } = useScreenReaderAnnouncement();
+  const announce = useStore((store) => store.appState.announce);
 
   const { rollTrackProgress } = useRoller();
-  const { openDialog } = useLinkedDialog();
+  const openDialog = useStore((store) => store.appState.openDialog);
+
   const move = trackType ? moveMap[trackMoveIds[trackType]] : undefined;
 
   const [checks, setChecks] = useState<number[]>([]);
@@ -143,7 +136,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
   };
 
   useEffect(() => {
-    let checks: number[] = [];
+    const checks: number[] = [];
 
     let checksIndex = 0;
     let checksValue = 0;
@@ -226,11 +219,9 @@ export function ProgressTrack(props: ProgressTracksProps) {
                 );
                 onValueChange(newValue);
                 if (newValue === value) {
-                  setAnnouncement(`${label} is already at zero ticks`);
+                  announce(`${label} is already at zero ticks`);
                 } else {
-                  setAnnouncement(
-                    `Updated ${label} to ${getValueText(newValue)}`
-                  );
+                  announce(`Updated ${label} to ${getValueText(newValue)}`);
                 }
               }
             }}
@@ -296,13 +287,11 @@ export function ProgressTrack(props: ProgressTracksProps) {
                 );
                 onValueChange(newValue);
                 if (newValue === value) {
-                  setAnnouncement(
+                  announce(
                     `${label} is already at its maximum value of ${max} ticks`
                   );
                 } else {
-                  setAnnouncement(
-                    `Updated ${label} to ${getValueText(newValue)}`
-                  );
+                  announce(`Updated ${label} to ${getValueText(newValue)}`);
                 }
               }
             }}

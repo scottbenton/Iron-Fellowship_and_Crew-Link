@@ -65,43 +65,41 @@ export function MoveStatRollers(props: MoveStatsProps) {
     (store) => store.characters.currentCharacter.updateCurrentCharacter
   );
 
-  const { companions, vehicles } = useStore((store) => {
-    const companions: { name: string; health: number }[] = [];
-    const vehicles: { name: string; integrity: number }[] = [];
+  const assets = useStore(
+    (store) => store.characters.currentCharacter.assets.assets
+  );
 
-    Object.values(store.characters.currentCharacter.assets.assets).flatMap(
-      (asset) => {
-        const actualAsset = asset.customAsset ?? assetMap[asset.id];
-        if (
-          asset.trackValue &&
-          actualAsset?.["Condition meter"]?.Label === "companion health"
-        ) {
-          const inputKeys = Object.keys(asset.inputs ?? {});
-          const assetInputName =
-            inputKeys.length > 0
-              ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
-              : undefined;
-          companions.push({
-            name: assetInputName ?? actualAsset.Title.Short ?? "",
-            health: asset.trackValue ?? 0,
-          });
-        } else if (
-          asset.trackValue &&
-          actualAsset?.["Condition meter"]?.Label === "integrity"
-        ) {
-          const inputKeys = Object.keys(asset.inputs ?? {});
-          const assetInputName =
-            inputKeys.length > 0
-              ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
-              : undefined;
-          vehicles.push({
-            name: assetInputName ?? actualAsset.Title.Short ?? "",
-            integrity: asset.trackValue ?? 0,
-          });
-        }
-      }
-    );
-    return { companions, vehicles };
+  const companions: { name: string; health: number }[] = [];
+  const vehicles: { name: string; integrity: number }[] = [];
+  Object.values(assets).flatMap((asset) => {
+    const actualAsset = asset.customAsset ?? assetMap[asset.id];
+    if (
+      asset.trackValue &&
+      actualAsset?.["Condition meter"]?.Label === "companion health"
+    ) {
+      const inputKeys = Object.keys(asset.inputs ?? {});
+      const assetInputName =
+        inputKeys.length > 0
+          ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
+          : undefined;
+      companions.push({
+        name: assetInputName ?? actualAsset.Title.Short ?? "",
+        health: asset.trackValue ?? 0,
+      });
+    } else if (
+      asset.trackValue &&
+      actualAsset?.["Condition meter"]?.Label === "integrity"
+    ) {
+      const inputKeys = Object.keys(asset.inputs ?? {});
+      const assetInputName =
+        inputKeys.length > 0
+          ? (asset.inputs ?? {})[inputKeys[0]].trim() || undefined
+          : undefined;
+      vehicles.push({
+        name: assetInputName ?? actualAsset.Title.Short ?? "",
+        integrity: asset.trackValue ?? 0,
+      });
+    }
   });
 
   const legacies = useStore((store) => {

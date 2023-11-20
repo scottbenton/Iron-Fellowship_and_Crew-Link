@@ -2,8 +2,7 @@ import { TextFieldProps } from "@mui/material";
 import { TextFieldWithOracle } from "components/shared/TextFieldWithOracle/TextFieldWithOracle";
 import { oracleMap } from "data/oracles";
 import { useDebouncedState } from "hooks/useDebouncedState";
-import { useRoller } from "providers/DieRollProvider";
-import { useRef } from "react";
+import { useRoller } from "stores/appState/useRoller";
 
 export type DebouncedOracleInputProps = Omit<TextFieldProps, "onChange"> & {
   initialValue: string;
@@ -22,7 +21,6 @@ export function DebouncedOracleInput(props: DebouncedOracleInputProps) {
   } = props;
 
   const [value, setValue] = useDebouncedState(updateValue, initialValue);
-  const hasUnsavedChanges = useRef(false);
 
   const { rollOracleTable } = useRoller();
 

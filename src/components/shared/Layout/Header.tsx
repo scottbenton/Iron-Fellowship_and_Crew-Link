@@ -24,7 +24,6 @@ import { AUTH_STATE } from "stores/auth/auth.slice.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { useAppName } from "hooks/useAppName";
-import { PropsWithChildren, forwardRef } from "react";
 import { LinkComponent } from "../LinkComponent";
 
 export function Header() {

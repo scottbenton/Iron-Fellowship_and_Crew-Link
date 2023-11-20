@@ -1,4 +1,4 @@
-import { Box, InputAdornment, Stack, TextField } from "@mui/material";
+import { Box, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 export interface FilterBarProps {
@@ -40,10 +40,10 @@ export function FilterBar(props: FilterBarProps) {
         placeholder={searchPlaceholder}
         value={search}
         onChange={(evt) => setSearch(evt.currentTarget.value)}
-        sx={(theme) => ({
+        sx={{
           mr: 1,
           minWidth: 250,
-        })}
+        }}
         size={"small"}
       />
       {action}

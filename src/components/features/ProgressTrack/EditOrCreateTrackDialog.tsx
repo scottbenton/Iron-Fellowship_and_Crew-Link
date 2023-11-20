@@ -82,7 +82,7 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       .then(() => {
         handleDialogClose();
       })
-      .catch((e) => {
+      .catch(() => {
         setLoading(false);
         setError("Error adding track");
       });

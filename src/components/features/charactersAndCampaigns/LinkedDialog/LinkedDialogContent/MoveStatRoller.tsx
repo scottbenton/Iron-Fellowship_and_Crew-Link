@@ -1,6 +1,6 @@
 import { Button, Chip } from "@mui/material";
 import { StatComponent } from "components/features/characters/StatComponent";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
 
 export interface MoveStatRollerProps {

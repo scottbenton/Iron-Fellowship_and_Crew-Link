@@ -1,4 +1,4 @@
-import { Box, Card, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
+import { Card, useMediaQuery, useTheme } from "@mui/material";
 import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -37,12 +37,11 @@ enum TABS {
 }
 
 export interface TabsSectionProps {
-  campaignId: string;
   campaign: StoredCampaign;
 }
 
 export function TabsSection(props: TabsSectionProps) {
-  const { campaignId, campaign } = props;
+  const { campaign } = props;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -112,7 +111,7 @@ export function TabsSection(props: TabsSectionProps) {
         <CharacterSection />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.TRACKS}>
-        <TracksSection campaignId={campaignId} supply={campaign.supply} />
+        <TracksSection supply={campaign.supply} />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.ORACLE}>
         <OracleSection />

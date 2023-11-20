@@ -2,9 +2,9 @@ import { Box, IconButton } from "@mui/material";
 import SubtractIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { StatComponent } from "components/features/characters/StatComponent";
-import { useEffect, useRef, useState } from "react";
-import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
+import { useEffect, useRef } from "react";
 import { useDebouncedState } from "hooks/useDebouncedState";
+import { useStore } from "stores/store";
 
 export interface MobileStatTrackProps {
   label: string;
@@ -18,8 +18,7 @@ export function MobileStatTrack(props: MobileStatTrackProps) {
   const { label, value, min, max, onChange } = props;
 
   const hasUnsavedChangesRef = useRef(false);
-  const { setAnnouncement } = useScreenReaderAnnouncement();
-
+  const announce = useStore((store) => store.appState.announce);
   const [localValue, setLocalValue] = useDebouncedState(
     (newValue) => {
       if (newValue !== value) {
@@ -41,9 +40,9 @@ export function MobileStatTrack(props: MobileStatTrackProps) {
   useEffect(() => {
     if (value !== localValue && !hasUnsavedChangesRef.current) {
       setLocalValue(value);
-      setAnnouncement(`${label} was updated to ${value}`);
+      announce(`${label} was updated to ${value}`);
     }
-  }, [localValue, value, setAnnouncement]);
+  }, [localValue, value, announce, setLocalValue, label]);
 
   return (
     <Box

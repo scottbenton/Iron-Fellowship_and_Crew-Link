@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Ironsworn, Starforged } from "dataforged";
 import { ironsworn, starforged } from "dataforged";
 

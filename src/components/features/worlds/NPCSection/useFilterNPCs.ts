@@ -43,7 +43,7 @@ export function useFilterNPCs(
         npc.name.toLowerCase().includes(debouncedSearch.toLowerCase())
       );
     });
-  }, [sortedNPCIds, npcs, locations, debouncedSearch]);
+  }, [sortedNPCIds, npcs, locations, debouncedSearch, sectors]);
 
   return { sortedNPCIds, filteredNPCIds };
 }

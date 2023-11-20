@@ -6,20 +6,18 @@ import { createApiFunction } from "api-calls/createApiFunction";
 export const removeCharacterFromCampaign = createApiFunction<
   { uid: string; campaignId: string; characterId: string },
   void
->(async (params) => {
+>((params) => {
   const { uid, campaignId, characterId } = params;
-
-  try {
-    let campaignPromise = updateDoc(getCampaignDoc(campaignId), {
+  return new Promise((resolve, reject) => {
+    const campaignPromise = updateDoc(getCampaignDoc(campaignId), {
       characters: arrayRemove({ characterId, uid }),
     });
-    let characterPromise = updateDoc(getCharacterDoc(characterId), {
+    const characterPromise = updateDoc(getCharacterDoc(characterId), {
       campaignId: deleteField(),
     });
 
-    await Promise.all([campaignPromise, characterPromise]);
-    return;
-  } catch (e) {
-    throw e;
-  }
+    Promise.all([campaignPromise, characterPromise])
+      .then(() => resolve())
+      .catch(reject);
+  });
 }, "Failed to remove character from campaign");

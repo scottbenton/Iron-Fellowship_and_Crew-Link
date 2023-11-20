@@ -9,7 +9,7 @@ import { ProgressTrack, TRACK_STATUS, TRACK_TYPES } from "types/Track.type";
 
 export const createCampaignCharactersSlice: CreateSliceType<
   CampaignCharactersSlice
-> = (set, getState) => ({
+> = (set) => ({
   ...defaultCampaignCharactersSlice,
 
   listenToCampaignCharacters: (characterIds: string[]) => {

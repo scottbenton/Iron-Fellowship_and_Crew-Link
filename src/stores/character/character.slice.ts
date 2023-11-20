@@ -102,7 +102,7 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
           reject("You must be logged in to create a character")
         );
       }
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         createCharacter({
           uid,
           name,
@@ -124,7 +124,7 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
               .then(() => {
                 resolve(characterId);
               })
-              .catch((e) => {
+              .catch(() => {
                 resolve(characterId);
               });
           } else {

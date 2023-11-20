@@ -1,7 +1,6 @@
 import { Unsubscribe } from "firebase/auth";
 import { onSnapshot, query, where } from "firebase/firestore";
 import { convertFromDatabase, getSectorCollection } from "./_getRef";
-import { getImageUrl } from "lib/storage.lib";
 import { Sector } from "types/Sector.type";
 
 export function listenToSectors(

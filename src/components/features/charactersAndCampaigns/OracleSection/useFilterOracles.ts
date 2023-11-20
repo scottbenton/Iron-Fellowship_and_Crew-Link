@@ -61,7 +61,7 @@ export function useFilterOracles() {
   const [filteredOracles, setFilteredOracles] = useState(combinedOracles);
 
   useEffect(() => {
-    let allOracles = [...combinedOracles, ...customOracleCategories].filter(
+    const allOracles = [...combinedOracles, ...customOracleCategories].filter(
       (category) =>
         showDelveOracles || category.Source.Title !== "Ironsworn: Delve"
     );

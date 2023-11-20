@@ -29,7 +29,7 @@ export function SectionHeading(props: SectionHeadingProps) {
             flexDirection: "column",
             paddingX: 2,
           },
-          [theme.breakpoints.down("md")]: {
+          [theme.breakpoints.down("sm")]: {
             marginX: breakContainer ? -2 : 0,
           },
         }),

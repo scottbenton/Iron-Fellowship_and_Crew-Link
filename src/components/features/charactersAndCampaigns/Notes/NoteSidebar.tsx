@@ -102,7 +102,7 @@ export function NoteSidebar(props: NoteSidebarProps) {
     >
       <DragDropContext onDragEnd={handleDragEnd}>
         <StrictModeDroppable droppableId={"notes-sidebar-list"}>
-          {(provided, snapshot) => (
+          {(provided) => (
             <List
               {...provided.droppableProps}
               ref={provided.innerRef}
@@ -130,7 +130,7 @@ export function NoteSidebar(props: NoteSidebarProps) {
                   index={index}
                   isDragDisabled={!updateNoteOrder}
                 >
-                  {(provided, snapshot) => (
+                  {(provided) => (
                     <ListItem
                       disablePadding
                       ref={provided.innerRef}
@@ -173,10 +173,10 @@ export function NoteSidebar(props: NoteSidebarProps) {
             color={"inherit"}
             onClick={() => handleCreateNote()}
             disabled={loading}
-            sx={(theme) => ({
+            sx={{
               borderRadius: 0,
               width: "100%",
-            })}
+            }}
           >
             Add Notes Page
           </Button>

@@ -6,6 +6,7 @@ export function listenToSettings(
   campaignId: string | undefined,
   characterId: string | undefined,
   onSettings: (settings: SettingsDoc) => void,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ) {
   if (!campaignId && !characterId) {

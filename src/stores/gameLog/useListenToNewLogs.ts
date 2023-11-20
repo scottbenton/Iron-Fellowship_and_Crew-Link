@@ -1,4 +1,4 @@
-import { Timestamp, Unsubscribe } from "firebase/firestore";
+import { Unsubscribe } from "firebase/firestore";
 import { useEffect } from "react";
 import { useStore } from "stores/store";
 

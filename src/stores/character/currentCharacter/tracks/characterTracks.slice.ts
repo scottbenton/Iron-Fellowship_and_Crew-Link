@@ -10,7 +10,6 @@ import {
 } from "types/Track.type";
 import { addProgressTrack } from "api-calls/tracks/addProgressTrack";
 import { updateProgressTrack } from "api-calls/tracks/updateProgressTrack";
-import { removeProgressTrack } from "api-calls/tracks/removeProgressTrack";
 
 export const createCharacterTracksSlice: CreateSliceType<
   CharacterTracksSlice
@@ -46,6 +45,7 @@ export const createCharacterTracksSlice: CreateSliceType<
                 store.characters.currentCharacter.tracks.trackMap[
                   TRACK_TYPES.CLOCK
                 ][trackId] = track as Clock;
+                break;
               default:
                 break;
             }

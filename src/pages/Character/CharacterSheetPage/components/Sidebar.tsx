@@ -1,10 +1,9 @@
-import { Box, Card, Fab } from "@mui/material";
+import { Box, Card } from "@mui/material";
 import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
 import { OracleSection } from "components/features/charactersAndCampaigns/OracleSection";
 import { DarkStyledTabs, DarkStyledTab } from "components/shared/StyledTabs";
 import { useState } from "react";
 import { useStore } from "stores/store";
-import ReferenceIcon from "@mui/icons-material/MenuBook";
 
 export enum SIDEBAR_TABS {
   MOVES = "moves",

@@ -1,21 +1,20 @@
 import { Box, List, ListSubheader } from "@mui/material";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { OracleListItem } from "./OracleListItem";
 import { OracleSet } from "dataforged";
-import { useLinkedDialog } from "providers/LinkedDialogProvider";
 import { hiddenOracleCategoryIds } from "data/oracles";
+import { useStore } from "stores/store";
 
 export interface OracleCategoryProps {
   prefix?: string;
   category: OracleSet;
-  pinnedCategories?: { [oracleName: string]: boolean };
 }
 
 export function OracleCategory(props: OracleCategoryProps) {
-  const { prefix, category, pinnedCategories } = props;
+  const { prefix, category } = props;
 
   const { rollOracleTable } = useRoller();
-  const { openDialog } = useLinkedDialog();
+  const openDialog = useStore((store) => store.appState.openDialog);
 
   const title = prefix
     ? `${prefix} ꞏ ${category.Title.Standard}`
@@ -55,7 +54,6 @@ export function OracleCategory(props: OracleCategoryProps) {
                 rollOracleTable(category.$id + "/sample_names", true, true)
               }
               onOpenClick={() => openDialog(category.$id + "/sample_names")}
-              pinned={pinnedCategories && pinnedCategories[category.$id]}
             />
           )}
         {Object.keys(category.Tables ?? {}).map((oracleId, index) => {
@@ -74,22 +72,16 @@ export function OracleCategory(props: OracleCategoryProps) {
               onOpenClick={() => {
                 openDialog(oracle.$id);
               }}
-              pinned={pinnedCategories && pinnedCategories[oracle.$id]}
             />
           );
         })}
-        {Object.keys(category.Sets ?? {}).map((oracleSetId, index) => {
+        {Object.keys(category.Sets ?? {}).map((oracleSetId) => {
           const set = category.Sets?.[oracleSetId];
           if (!set) return null;
 
           return (
             <Box key={oracleSetId}>
-              <OracleCategory
-                key={oracleSetId}
-                prefix={title}
-                category={set}
-                pinnedCategories={pinnedCategories}
-              />
+              <OracleCategory key={oracleSetId} prefix={title} category={set} />
             </Box>
           );
         })}

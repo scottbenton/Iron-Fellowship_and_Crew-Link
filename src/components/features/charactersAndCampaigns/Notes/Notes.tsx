@@ -64,6 +64,7 @@ export function Notes(props: NotesProps) {
             isBeaconRequest,
           })
         : new Promise<void>((res) => res()),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

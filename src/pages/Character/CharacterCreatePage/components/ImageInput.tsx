@@ -13,7 +13,7 @@ export function ImageInput(props: ImageInputProps) {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [field, meta, handlers] = useField({ name: "portrait" });
+  const [field, , handlers] = useField({ name: "portrait" });
   const [imageUrl, setImageUrl] = useState<string>();
 
   const file = field.value?.image;

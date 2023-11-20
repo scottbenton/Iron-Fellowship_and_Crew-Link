@@ -1,7 +1,6 @@
 import { CreateSliceType } from "stores/store.type";
 import { CurrentCampaignSlice } from "./currentCampaign.slice.type";
 import { defaultCurrentCampaignSlice } from "./currentCampaign.slice.default";
-import { listenToCampaignCharacters } from "api-calls/campaign/listenToCampaignCharacters";
 import { updateCampaignGM } from "api-calls/campaign/updateCampaignGM";
 import { deleteCampaign } from "api-calls/campaign/deleteCampaign";
 import { leaveCampaign } from "api-calls/campaign/leaveCampaign";

@@ -1,16 +1,7 @@
-import {
-  Box,
-  ButtonBase,
-  SxProps,
-  Theme,
-  ToggleButton,
-  ToggleButtonGroup,
-  ToggleButtonProps,
-  Typography,
-} from "@mui/material";
+import { Box, ButtonBase, SxProps, Theme, Typography } from "@mui/material";
 import { useDebouncedState } from "hooks/useDebouncedState";
-import { useScreenReaderAnnouncement } from "providers/ScreenReaderAnnouncementProvider";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
+import { useStore } from "stores/store";
 import { CustomTrack as ICustomTrack } from "types/CustomTrackSettings.type";
 
 export interface CustomTrackProps {
@@ -23,10 +14,10 @@ export interface CustomTrackProps {
 }
 
 export function CustomTrack(props: CustomTrackProps) {
-  const { sx, customTrack, value, onChange, disabled, loading } = props;
+  const { sx, customTrack, value, onChange, disabled } = props;
 
   const hasUnsavedChangesRef = useRef(false);
-  const { setAnnouncement } = useScreenReaderAnnouncement();
+  const announce = useStore((store) => store.appState.announce);
 
   const [localIndex, setLocalIndex] = useDebouncedState(
     (newValue) => {
@@ -47,11 +38,11 @@ export function CustomTrack(props: CustomTrackProps) {
   useEffect(() => {
     if (value && value !== localIndex && !hasUnsavedChangesRef.current) {
       setLocalIndex(value);
-      setAnnouncement(
+      announce(
         `${customTrack.label} was updated to ${customTrack.values[value].value}`
       );
     }
-  }, [localIndex, value, setAnnouncement]);
+  }, [localIndex, setLocalIndex, value, customTrack, announce]);
   const labelId = useId();
 
   return (
@@ -163,7 +154,7 @@ export function CustomTrack(props: CustomTrackProps) {
               id={labelId + "-" + cell + "-" + index}
               name={customTrack.label}
               checked={index === localIndex}
-              onChange={(evt) => handleChange(index)}
+              onChange={() => handleChange(index)}
             />
           </ButtonBase>
         ) : (

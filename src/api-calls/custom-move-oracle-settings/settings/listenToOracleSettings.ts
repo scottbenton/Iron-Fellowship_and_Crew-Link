@@ -6,6 +6,7 @@ import { getUserOracleSettingsDoc } from "./_getRef";
 export function listenToOracleSettings(
   uid: string,
   onOracleSettings: (settings: OracleSettings) => void,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ) {
   return onSnapshot(

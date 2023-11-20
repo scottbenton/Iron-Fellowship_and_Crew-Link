@@ -120,7 +120,12 @@ export function useCustomMoves() {
 
     setCustomMoveCategories(moveCategories);
     setCustomMoveMap(newMoveMap);
-  }, [memoizedMoveMap, hiddenMoveIds, customMoveAuthorNames]);
+  }, [
+    memoizedMoveMap,
+    hiddenMoveIds,
+    customMoveAuthorNames,
+    getCustomIdPrefix,
+  ]);
 
   return { customMoveCategories, customMoveMap };
 }

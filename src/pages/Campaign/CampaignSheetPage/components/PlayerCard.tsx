@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Card, Skeleton, Typography } from "@mui/material";
+import { Box, Button, Card, Skeleton, Typography } from "@mui/material";
 import { UserAvatar } from "components/shared/UserAvatar";
 import { useEffect, useState } from "react";
 import { useStore } from "stores/store";
@@ -34,7 +34,7 @@ export function PlayerCard(props: PlayerCardProps) {
   const handleAddGm = () => {
     setGMCallLoading(true);
     addGm(playerId)
-      .catch((e) => {})
+      .catch(() => {})
       .finally(() => {
         setGMCallLoading(false);
       });

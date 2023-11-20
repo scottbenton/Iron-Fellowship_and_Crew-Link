@@ -7,7 +7,6 @@ import {
   DialogTitle,
   FormControlLabel,
   IconButton,
-  Stack,
   SxProps,
   Theme,
   Tooltip,
@@ -111,7 +110,7 @@ export function AssetCard(props: AssetCardProps) {
         .then(() => {
           setEditCustomAssetDialogOpen(false);
         })
-        .catch((e) => {
+        .catch(() => {
           error("Error updating custom asset.");
         });
     }
@@ -180,7 +179,7 @@ export function AssetCard(props: AssetCardProps) {
           {asset.Requirement && (
             <MarkdownRenderer markdown={asset.Requirement} />
           )}
-          {Object.values(asset.Inputs ?? {}).map((field, index) => (
+          {Object.values(asset.Inputs ?? {}).map((field) => (
             <AssetCardField
               key={field.$id}
               field={field}
@@ -196,7 +195,7 @@ export function AssetCard(props: AssetCardProps) {
               disabled={readOnly || !handleInputChange}
             />
           ))}
-          {abilityInputs.map((field, index) => (
+          {abilityInputs.map((field) => (
             <AssetCardField
               key={field.$id}
               field={field}
@@ -254,7 +253,7 @@ export function AssetCard(props: AssetCardProps) {
             conditionMeter &&
             conditionMeter.Conditions.length > 0 && (
               <Box display={"flex"} flexWrap={"wrap"}>
-                {conditionMeter.Conditions.map((condition, index) => (
+                {conditionMeter.Conditions.map((condition) => (
                   <FormControlLabel
                     key={condition}
                     disabled={!handleConditionCheck}

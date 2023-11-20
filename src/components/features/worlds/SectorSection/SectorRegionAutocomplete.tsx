@@ -1,4 +1,4 @@
-import { Autocomplete, TextField, createFilterOptions } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import { useStore } from "stores/store";
 import { REGIONS } from "types/Sector.type";
 
@@ -37,14 +37,11 @@ export function SectorRegionAutocomplete() {
 
   return (
     <Autocomplete
-      //@ts-ignore
       freeSolo
       options={allRegions}
       includeInputInList
-      //@ts-ignore
       renderOption={(props, option) => <li {...props}>{option}</li>}
       value={currentRegion ?? null}
-      //@ts-ignore
       onChange={(evt, newValue) =>
         updateRegion(newValue ?? undefined).catch(() => {})
       }

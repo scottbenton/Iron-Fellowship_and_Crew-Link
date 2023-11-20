@@ -1,4 +1,4 @@
-import { Box, Button, LinearProgress } from "@mui/material";
+import { Button, LinearProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import { TabsSection } from "./components/TabsSection";
@@ -19,8 +19,11 @@ import { StatsSectionMobile } from "./components/StatsSectionMobile";
 export function CharacterSheetPage() {
   useSyncStore();
   const loading = useStore((store) => store.characters.loading);
-  const character = useStore(
-    (store) => store.characters.currentCharacter.currentCharacter
+  const isCharacterLoaded = useStore(
+    (store) => !!store.characters.currentCharacter.currentCharacter
+  );
+  const characterName = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.name
   );
 
   const isMobile = useIsMobile();
@@ -38,11 +41,11 @@ export function CharacterSheetPage() {
     };
   }, []);
 
-  if (loading || (!character && syncLoading)) {
+  if (loading || (!isCharacterLoaded && syncLoading)) {
     return <LinearProgress />;
   }
 
-  if (!character) {
+  if (!isCharacterLoaded) {
     return (
       <EmptyState
         title={"Character not Found"}
@@ -65,8 +68,8 @@ export function CharacterSheetPage() {
   return (
     <>
       <Head
-        title={character.name}
-        description={`${character.name}'s character sheet`}
+        title={characterName ?? ""}
+        description={`${characterName ?? ""}'s character sheet`}
       />
       <PageHeader />
       <PageContent

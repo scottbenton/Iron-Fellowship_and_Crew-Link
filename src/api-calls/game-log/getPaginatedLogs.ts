@@ -7,13 +7,11 @@ import {
   getCharacterGameLogCollection,
 } from "./_getRef";
 import {
-  DocumentSnapshot,
   QueryConstraint,
   getDocs,
   limit,
   orderBy,
   query,
-  startAfter,
   where,
 } from "firebase/firestore";
 

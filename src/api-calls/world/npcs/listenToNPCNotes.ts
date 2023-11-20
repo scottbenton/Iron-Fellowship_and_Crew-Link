@@ -1,11 +1,6 @@
 import { Unsubscribe } from "firebase/auth";
-import { onSnapshot, query, where } from "firebase/firestore";
-import { NPCDocument } from "types/NPCs.type";
-import {
-  convertFromDatabase,
-  getNPCCollection,
-  getPublicNotesNPCDoc,
-} from "./_getRef";
+import { onSnapshot } from "firebase/firestore";
+import { getPublicNotesNPCDoc } from "./_getRef";
 import { getErrorMessage } from "functions/getErrorMessage";
 
 export function listenToNPCNotes(

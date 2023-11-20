@@ -1,7 +1,6 @@
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { OracleTableRoll } from "types/DieRolls.type";
 import { D10Icon } from "assets/D10Icon";
-import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 
 export interface OracleTableRollCardProps {
   roll: OracleTableRoll;
@@ -12,11 +11,11 @@ export function OracleTableRollCard(props: OracleTableRollCardProps) {
 
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
-      })}
+      }}
     >
       <Typography variant={"h4"} fontFamily={(theme) => theme.fontFamilyTitle}>
         {roll.rollLabel}

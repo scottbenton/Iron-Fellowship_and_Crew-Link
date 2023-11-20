@@ -1,4 +1,4 @@
-import { Box, Hidden } from "@mui/material";
+import { Box } from "@mui/material";
 import { ReactNode } from "react";
 
 export interface SectionWithSidebarProps {
@@ -23,10 +23,11 @@ export function SectionWithSidebar(props: SectionWithSidebarProps) {
       })}
     >
       <Box
-        sx={(theme) => ({
+        sx={{
           height: "100%",
           width: sidebarWidth,
-        })}
+          display: { xs: "none", md: "block" },
+        }}
       >
         {sidebar}
       </Box>

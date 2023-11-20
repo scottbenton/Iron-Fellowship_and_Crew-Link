@@ -1,5 +1,5 @@
 import { ApiFunction } from "api-calls/createApiFunction";
-import { setDoc, updateDoc } from "firebase/firestore";
+import { setDoc } from "firebase/firestore";
 import { IAccessibilitySettings } from "types/UserAccessibilitySettings.type";
 import { getUserAccessibilitySettingsDoc } from "./_getRef";
 

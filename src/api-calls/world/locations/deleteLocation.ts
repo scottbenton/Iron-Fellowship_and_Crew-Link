@@ -18,7 +18,7 @@ export const deleteLocation = createApiFunction<Params, void>((params) => {
   const { worldId, locationId, imageFilename } = params;
 
   return new Promise((resolve, reject) => {
-    let promises: Promise<any>[] = [];
+    const promises: Promise<unknown>[] = [];
     promises.push(deleteDoc(getLocationDoc(worldId, locationId)));
     promises.push(deleteDoc(getPrivateDetailsLocationDoc(worldId, locationId)));
     promises.push(deleteDoc(getPublicNotesLocationDoc(worldId, locationId)));

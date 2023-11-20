@@ -5,7 +5,7 @@ import { moveMap } from "data/moves";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { useCustomMoves } from "components/features/charactersAndCampaigns/MovesSection/useCustomMoves";
 import { oracleMap } from "data/oracles";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { OracleTable } from "dataforged";
 import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { useStore } from "stores/store";
@@ -33,6 +33,8 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
   const allOracles = { ...oracleMap, ...allCustomOracleMap };
 
   const move = moveMap[id] ?? customMoveMap[id];
+
+  const { gameSystem } = useGameSystem();
 
   if (!move) {
     return (
@@ -63,8 +65,6 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
       }
     });
   });
-
-  const { gameSystem } = useGameSystem();
 
   const moveOracles: (OracleTable | undefined)[] =
     move.Oracles?.map(

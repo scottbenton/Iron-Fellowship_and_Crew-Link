@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@mui/material";
+import { Grid } from "@mui/material";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 import { useStore } from "stores/store";
 import { StarforgedLocationSettlement } from "types/LocationStarforged.type";

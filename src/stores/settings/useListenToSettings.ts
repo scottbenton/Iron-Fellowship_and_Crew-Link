@@ -29,7 +29,7 @@ export function useListenToSettings() {
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [campaignGMIds, campaignId, uid]);
+  }, [campaignGMIds, campaignId, uid, subscribe]);
 
   useEffect(() => {
     const unsubscribe = subscribeToSettings({

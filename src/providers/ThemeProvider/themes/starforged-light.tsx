@@ -4,7 +4,6 @@ import { baseFontFamilies, sharedStatusColors } from "./constants-shared";
 import { starforgedGold, starforgedGrey } from "./constants-starforged";
 import { HexboxUnchecked } from "assets/HexboxUnchecked";
 import { HexboxChecked } from "assets/HexboxChecked";
-import { ironswornPink } from "./constants-ironsworn";
 
 export const starforgedLightTheme = createTheme({
   palette: {
@@ -57,7 +56,7 @@ export const starforgedLightTheme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
-        root: ({ ownerState, theme }) => {
+        root: ({ theme }) => {
           return {
             "&.Mui-focusVisible": {
               boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
@@ -71,7 +70,7 @@ export const starforgedLightTheme = createTheme({
     },
     MuiButtonBase: {
       styleOverrides: {
-        root: ({ ownerState, theme }) => ({
+        root: ({ theme }) => ({
           "&.Mui-focusVisible": {
             boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}, 0 0 0 2px ${theme.palette.info.main}`,
             "&.dark-focus-outline": {

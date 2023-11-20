@@ -39,7 +39,7 @@ export function useListenToSectors() {
   }, [worldId, worldOwnerIds, listenToSectors]);
 
   useEffect(() => {
-    let unsubscribes: Unsubscribe[] = [];
+    const unsubscribes: Unsubscribe[] = [];
     if (openSectorId) {
       if (showGMFields) {
         unsubscribes.push(listenToSectorNotes(openSectorId, true));

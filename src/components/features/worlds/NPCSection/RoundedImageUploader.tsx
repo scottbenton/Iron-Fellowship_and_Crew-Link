@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { ChangeEvent, forwardRef, useState } from "react";
+import { ChangeEvent, ForwardedRef, forwardRef, useState } from "react";
 import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
@@ -21,10 +21,10 @@ export interface RoundedImageUploaderProps {
   removeImage: () => Promise<void>;
 }
 
-export const RoundedImageUploader = forwardRef<
-  HTMLInputElement,
-  RoundedImageUploaderProps
->((props, ref) => {
+const RoundedImageUploaderComponent = (
+  props: RoundedImageUploaderProps,
+  ref: ForwardedRef<HTMLInputElement>
+) => {
   const { src, title, handleFileUpload, handleUploadClick, removeImage } =
     props;
 
@@ -123,4 +123,9 @@ export const RoundedImageUploader = forwardRef<
       </Dialog>
     </>
   );
-});
+};
+
+export const RoundedImageUploader = forwardRef<
+  HTMLInputElement,
+  RoundedImageUploaderProps
+>(RoundedImageUploaderComponent);

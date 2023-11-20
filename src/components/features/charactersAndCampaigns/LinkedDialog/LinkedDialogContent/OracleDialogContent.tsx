@@ -9,7 +9,7 @@ import {
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
 import { oracleMap } from "data/oracles";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { getIsLocalEnvironment } from "functions/getGameSystem";
 import PinnedIcon from "@mui/icons-material/PushPin";

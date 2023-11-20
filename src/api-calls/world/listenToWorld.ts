@@ -5,6 +5,7 @@ import { decodeWorld, getWorldDoc } from "./_getRef";
 export function listenToWorld(
   worldId: string,
   onDocChange: (data?: World) => void,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ) {
   return onSnapshot(

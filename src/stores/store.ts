@@ -11,9 +11,11 @@ import { createSettingsSlice } from "./settings/settings.slice";
 import { createNotesSlice } from "./notes/notes.slice";
 import { createGameLogSlice } from "./gameLog/gameLog.slice";
 import { createAccessibilitySettingsSlice } from "./accessibilitySettings/accessibilitySettings.slice";
+import { createAppStateSlice } from "./appState/appState.slice";
 
 export const useStore = createWithEqualityFn<IStore>()(
   immer((...params) => ({
+    appState: createAppStateSlice(...params),
     characters: createCharacterSlice(...params),
     campaigns: createCampaignSlice(...params),
     worlds: createWorldSlice(...params),

@@ -45,7 +45,7 @@ export function useListenToSectorLocations() {
   }, [openWorldId, openSectorId, subscribe, resetStore]);
 
   useEffect(() => {
-    let unsubscribes: Unsubscribe[] = [];
+    const unsubscribes: Unsubscribe[] = [];
     if (openSectorLocationId) {
       if (showGMFields) {
         unsubscribes.push(

@@ -14,7 +14,7 @@ import NoInitiativeIcon from "@mui/icons-material/RemoveModerator";
 import { useSearchParams } from "react-router-dom";
 
 export function CharacterCardPage() {
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const isReversed = params.get("reverse") === "true";
   const { characterId, character } = useListenToCharacter();
   const campaignId = character?.campaignId;
@@ -196,17 +196,17 @@ export function CharacterCardPage() {
                     {character.initiativeStatus ===
                     INITIATIVE_STATUS.HAS_INITIATIVE ? (
                       <InitiativeIcon
-                        sx={(theme) => ({
+                        sx={{
                           width: 50,
                           height: 50,
-                        })}
+                        }}
                       />
                     ) : (
                       <NoInitiativeIcon
-                        sx={(theme) => ({
+                        sx={{
                           width: 50,
                           height: 50,
-                        })}
+                        }}
                       />
                     )}
                     <Typography variant={"h4"} ml={1}>

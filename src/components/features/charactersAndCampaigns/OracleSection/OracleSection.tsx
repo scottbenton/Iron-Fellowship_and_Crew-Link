@@ -2,11 +2,9 @@ import { Box, Input, InputAdornment, Typography } from "@mui/material";
 import { OracleCategory } from "./OracleCategory";
 import SearchIcon from "@mui/icons-material/Search";
 import { useFilterOracles } from "./useFilterOracles";
-import { useStore } from "stores/store";
 import { AskTheOracleButtons } from "./AskTheOracleButtons";
 
 export function OracleSection() {
-  const pinnedOracles = useStore((store) => store.settings.pinnedOraclesIds);
   const { search, filteredOracles, setSearch } = useFilterOracles();
 
   return (
@@ -48,11 +46,7 @@ export function OracleSection() {
       />
       <Box sx={{ overflow: "auto", flexGrow: 1 }}>
         {filteredOracles.map((category, index) => (
-          <OracleCategory
-            category={category}
-            key={index}
-            pinnedCategories={pinnedOracles}
-          />
+          <OracleCategory category={category} key={index} />
         ))}
       </Box>
     </>

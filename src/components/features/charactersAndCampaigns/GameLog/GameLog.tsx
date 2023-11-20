@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useStore } from "stores/store";
 import { Virtuoso } from "react-virtuoso";
-import { Box, Card, LinearProgress, Typography } from "@mui/material";
+import { LinearProgress } from "@mui/material";
 import { GameLogEntry } from "./GameLogEntry";
 
 const MAX_ITEMS = 1000000000;

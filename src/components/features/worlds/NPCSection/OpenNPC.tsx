@@ -2,7 +2,6 @@ import {
   Alert,
   Autocomplete,
   Box,
-  ButtonBase,
   Checkbox,
   FormControlLabel,
   Grid,
@@ -221,10 +220,7 @@ export function OpenNPC(props: OpenNPCProps) {
               position: "relative",
               border: `1px solid ${theme.palette.divider}`,
               top: theme.spacing(2),
-              left: theme.spacing(2),
-
-              [theme.breakpoints.up("md")]: { left: theme.spacing(3) },
-
+              left: { xs: theme.spacing(2), sm: theme.spacing(3) },
               width: isLg ? 152 : 102,
               height: isLg ? 152 : 102,
               flexShrink: "0",
@@ -248,9 +244,8 @@ export function OpenNPC(props: OpenNPCProps) {
         <Box
           display={"flex"}
           alignItems={"flex-start"}
-          px={2}
           sx={{
-            [theme.breakpoints.up("md")]: { px: 3 },
+            px: { xs: 2, sm: 3 },
           }}
           mb={canUseImages ? (isLg ? -8 : -4) : 0}
         >
@@ -311,12 +306,11 @@ export function OpenNPC(props: OpenNPCProps) {
           </Box>
         </Box>
         <Box
-          sx={(theme) => ({
+          sx={{
             mt: 1,
-            px: 2,
-            [theme.breakpoints.up("md")]: { px: 3 },
+            px: { xs: 2, sm: 3 },
             pb: 1,
-          })}
+          }}
         >
           <Grid container spacing={2} sx={{ mb: 2 }}>
             <Hidden lgUp>
@@ -402,15 +396,12 @@ export function OpenNPC(props: OpenNPCProps) {
             {!isStarforged && (
               <Grid item xs={12} sm={6}>
                 <Autocomplete
-                  //@ts-ignore
                   options={Object.keys(locations)}
-                  //@ts-ignore
                   getOptionLabel={(locationId) =>
                     locations[locationId]?.name ?? ""
                   }
                   autoHighlight
                   value={npc.lastLocationId ?? null}
-                  //@ts-ignore
                   onChange={(evt, value) =>
                     handleUpdateNPC({ lastLocationId: value ?? "" })
                   }
@@ -423,13 +414,10 @@ export function OpenNPC(props: OpenNPCProps) {
             {isStarforged && (
               <Grid item xs={12} sm={6}>
                 <Autocomplete
-                  //@ts-ignore
                   options={Object.keys(sectors)}
-                  //@ts-ignore
                   getOptionLabel={(sectorId) => sectors[sectorId]?.name ?? ""}
                   autoHighlight
                   value={npc.lastSectorId ?? null}
-                  //@ts-ignore
                   onChange={(evt, value) =>
                     handleUpdateNPC({ lastSectorId: value ?? "" })
                   }

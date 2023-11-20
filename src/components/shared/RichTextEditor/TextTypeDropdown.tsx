@@ -1,6 +1,6 @@
 import { Editor } from "@tiptap/react";
 import React from "react";
-import { Select, MenuItem, TextField, SxProps } from "@mui/material";
+import { MenuItem, TextField, SxProps } from "@mui/material";
 
 export interface TextTypeDropdownProps {
   editor: Editor;

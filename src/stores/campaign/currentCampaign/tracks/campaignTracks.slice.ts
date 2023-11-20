@@ -4,7 +4,6 @@ import { defaultCampaignTracksSlice } from "./campaignTracks.slice.default";
 import { listenToProgressTracks } from "api-calls/tracks/listenToProgressTracks";
 import {
   Clock,
-  PROGRESS_TRACKS,
   ProgressTrack,
   TRACK_STATUS,
   TRACK_TYPES,
@@ -47,6 +46,7 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
                 store.campaigns.currentCampaign.tracks.trackMap[
                   TRACK_TYPES.CLOCK
                 ][trackId] = track as Clock;
+                break;
               default:
                 break;
             }

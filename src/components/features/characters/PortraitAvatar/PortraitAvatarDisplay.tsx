@@ -1,10 +1,4 @@
-import {
-  Box,
-  Skeleton,
-  Typography,
-  TypographyVariant,
-  useTheme,
-} from "@mui/material";
+import { Box, Skeleton, Typography, TypographyVariant } from "@mui/material";
 import { getHueFromString } from "functions/getHueFromString";
 import { useState } from "react";
 import BackgroundIcon from "@mui/icons-material/Face";

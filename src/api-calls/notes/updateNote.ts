@@ -9,7 +9,6 @@ import {
   getCharacterNoteContentDocument,
   getCharacterNoteDocument,
 } from "./_getRef";
-import { firebaseAuth } from "config/firebase.config";
 import { createApiFunction } from "api-calls/createApiFunction";
 import { projectId } from "config/firebase.config";
 
@@ -90,7 +89,7 @@ export const updateNote = createApiFunction<
 
       resolve();
     } else {
-      const promises: Promise<any>[] = [];
+      const promises: Promise<unknown>[] = [];
       promises.push(
         updateDoc(
           characterId

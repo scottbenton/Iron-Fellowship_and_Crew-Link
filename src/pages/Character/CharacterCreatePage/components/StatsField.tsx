@@ -5,7 +5,7 @@ import { Stat } from "types/stats.enum";
 import { StatInput } from "./StatInput";
 
 export function StatsField() {
-  const [field, meta, handlers] = useField({ name: "stats" });
+  const [, meta, handlers] = useField({ name: "stats" });
 
   const [statsRemainingTracker, setStatsRemainingTracker] = useState<number[]>([
     3, 2, 2, 1, 1,
@@ -31,7 +31,7 @@ export function StatsField() {
     newValue: number | undefined
   ) => {
     setStatsRemainingTracker((prevStatsRemaining) => {
-      let newStatsRemaining = [...prevStatsRemaining];
+      const newStatsRemaining = [...prevStatsRemaining];
 
       if (typeof previousValue === "number") {
         newStatsRemaining.push(previousValue);

@@ -18,10 +18,11 @@ import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
 import { SkipToContentButton } from "./SkipToContentButton";
 import { useQueryParameterFeatureFlags } from "hooks/featureFlags/useQueryParameterFeatureFlags";
+import { LinkedDialog } from "components/features/charactersAndCampaigns/LinkedDialog";
+import { LiveRegion } from "../LiveRegion";
+import { RollSnackbarSection } from "../RollSnackbar";
 
-export interface LayoutProps {}
-
-export function Layout(props: LayoutProps) {
+export function Layout() {
   useQueryParameterFeatureFlags();
 
   const { pathname } = useLocation();
@@ -40,7 +41,7 @@ export function Layout(props: LayoutProps) {
     ) {
       navigateToContinueURL(basePaths[BASE_ROUTES.CHARACTER]);
     }
-  }, [pathname, state]);
+  }, [pathname, state, navigateToContinueURL, redirectWithContinueUrl]);
 
   useEffect(() => {
     sendPageViewEvent();
@@ -72,6 +73,7 @@ export function Layout(props: LayoutProps) {
       })}
     >
       <Box display={"flex"} flexDirection={"column"}>
+        <LiveRegion />
         <SkipToContentButton />
         <Header />
         <Box
@@ -91,6 +93,8 @@ export function Layout(props: LayoutProps) {
         open={userNameDialogOpen}
         handleClose={closeUserNameDialog}
       />
+      <LinkedDialog />
+      <RollSnackbarSection />
     </Box>
   );
 }

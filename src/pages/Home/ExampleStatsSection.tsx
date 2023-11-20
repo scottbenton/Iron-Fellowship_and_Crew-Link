@@ -1,11 +1,10 @@
-import { Box, Hidden, Stack } from "@mui/material";
+import { Box } from "@mui/material";
 import { StatComponent } from "components/features/characters/StatComponent";
 import { TryItOut } from "./TryItOut";
 import { useCallback, useState } from "react";
-import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { TextFieldWithOracle } from "components/shared/TextFieldWithOracle/TextFieldWithOracle";
 
 const nameOraclesIronsworn = [
@@ -19,6 +18,7 @@ const nameOracleStarforged = [
 ];
 
 export function ExampleStatsSection() {
+  console.count("Rerendered Stats");
   const nameOracles = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]: nameOraclesIronsworn,
     [GAME_SYSTEMS.STARFORGED]: nameOracleStarforged,

@@ -11,7 +11,7 @@ export function EditableTitle(props: EditableTitleProps) {
   const { srLabel, readOnly, defaultValue, value, onChange, ...inputProps } =
     props;
 
-  const [tempValue, setTempValue] = useState<string>(value);
+  const [tempValue, setTempValue] = useState<string>(value ?? defaultValue);
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     onChange && onChange(evt);
     setTempValue(evt.currentTarget.value);
@@ -57,7 +57,7 @@ export function EditableTitle(props: EditableTitleProps) {
       <input
         value={tempValue}
         onChange={handleChange}
-        aria-label="srLabel"
+        aria-label={srLabel}
         {...inputProps}
       />
     </Box>

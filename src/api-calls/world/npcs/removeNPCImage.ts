@@ -21,7 +21,7 @@ export const removeNPCImage = createApiFunction<
     })
       .then(() => {
         deleteImage(constructNPCImagesPath(worldId, npcId), filename).catch(
-          (e) => console.error("Failed to remove image from storage.")
+          () => console.error("Failed to remove image from storage.")
         );
         resolve();
       })

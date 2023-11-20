@@ -9,6 +9,7 @@ export function listenToNoteContent(
   characterId: string | undefined,
   noteId: string,
   onContent: (content?: Uint8Array) => void,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ): Unsubscribe {
   if (!characterId && !campaignId) {

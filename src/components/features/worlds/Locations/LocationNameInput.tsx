@@ -1,7 +1,6 @@
-import { SxProps } from "@mui/material";
 import { TextFieldWithOracle } from "components/shared/TextFieldWithOracle/TextFieldWithOracle";
 import { useDebouncedState } from "hooks/useDebouncedState";
-import { useRoller } from "providers/DieRollProvider";
+import { useRoller } from "stores/appState/useRoller";
 import { RefObject } from "react";
 
 export interface LocationNameInputProps {

@@ -16,7 +16,7 @@ export const deleteAllLoreDocuments = createApiFunction<Params, void>(
     const { worldId } = params;
 
     return new Promise((resolve, reject) => {
-      let promises: Promise<any>[] = [];
+      const promises: Promise<unknown>[] = [];
       getDocs(getLoreCollection(worldId))
         .then((docs) => {
           docs.forEach((doc) => {

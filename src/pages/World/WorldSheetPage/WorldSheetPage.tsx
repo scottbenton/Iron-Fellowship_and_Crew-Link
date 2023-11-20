@@ -1,6 +1,5 @@
 import { Button, LinearProgress } from "@mui/material";
 import { WorldSheet } from "components/features/worlds/WorldSheet";
-import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useConfirm } from "material-ui-confirm";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSyncStore } from "./hooks/useSyncStore";
@@ -14,11 +13,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { NPCSection } from "components/features/worlds/NPCSection";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
-import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
-import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
-import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
 import { LoreSection } from "components/features/worlds/Lore";
-import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { SectorSection } from "components/features/worlds/SectorSection";
@@ -56,10 +51,7 @@ export function WorldSheetPage() {
   );
   const isLoading = useStore((store) => store.worlds.loading);
 
-  const { error } = useSnackbar();
   const confirm = useConfirm();
-  const uid = useStore((store) => store.auth.uid);
-
   const navigate = useNavigate();
   const deleteWorld = useStore((store) => store.worlds.deleteWorld);
 

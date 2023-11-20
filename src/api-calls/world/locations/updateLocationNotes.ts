@@ -3,7 +3,7 @@ import {
   constructPublicNotesLocationDocPath,
   getPublicNotesLocationDoc,
 } from "./_getRef";
-import { firebaseAuth, projectId } from "config/firebase.config";
+import { projectId } from "config/firebase.config";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 interface Params {

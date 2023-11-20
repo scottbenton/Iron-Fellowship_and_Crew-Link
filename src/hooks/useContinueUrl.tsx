@@ -19,7 +19,7 @@ export function useContinueUrl() {
     (fallbackPath: string) => {
       navigate(searchParams.get("continue") || fallbackPath);
     },
-    [searchParams]
+    [searchParams, navigate]
   );
 
   return {

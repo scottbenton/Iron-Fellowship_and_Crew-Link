@@ -1,6 +1,4 @@
-import { Unsubscribe } from "firebase/firestore";
 import { StoredCampaign } from "types/Campaign.type";
-import { CharacterDocument } from "types/Character.type";
 import { CampaignTracksSlice } from "./tracks/campaignTracks.slice.type";
 import { CampaignCharactersSlice } from "./characters/campaignCharacters.slice.type";
 import { SharedAssetSlice } from "./sharedAssets/sharedAssets.slice.type";

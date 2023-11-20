@@ -49,7 +49,7 @@ export function StarforgedTruthChooser(props: StarforgedTruthChooserProps) {
 
     const updatedTruth: Truth = {
       id: truthOptionId,
-      selectedSubItemId: null as any,
+      selectedSubItemId: null,
     };
     if (truthOptionId === customTruthId) {
       updatedTruth.customTruth = {

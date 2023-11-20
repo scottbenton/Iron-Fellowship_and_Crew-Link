@@ -1,7 +1,6 @@
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
 import { PortraitAvatar } from "components/features/characters/PortraitAvatar/PortraitAvatar";
-import { PropsWithChildren, ReactNode, forwardRef } from "react";
-import { Link } from "react-router-dom";
+import { PropsWithChildren, ReactNode } from "react";
 import { useStore } from "stores/store";
 import { CharacterDocument } from "types/Character.type";
 import OpenIcon from "@mui/icons-material/ChevronRight";

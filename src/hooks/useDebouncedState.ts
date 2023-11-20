@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useDebouncedState<State>(
   persistChanges: (state: State) => void,
@@ -30,6 +30,7 @@ export function useDebouncedState<State>(
     return () => {
       clearTimeout(timeout);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, delay]);
 
   useEffect(() => {
@@ -38,13 +39,13 @@ export function useDebouncedState<State>(
         persistChanges(stateRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return [
-    state,
-    (newState: State) => {
-      stateRef.current = newState;
-      setState(newState);
-    },
-  ];
+  const setStateCallback = useCallback((newState: State) => {
+    setState(newState);
+    stateRef.current = newState;
+  }, []);
+
+  return [state, setStateCallback];
 }

@@ -1,26 +1,16 @@
-import {
-  Box,
-  ButtonBase,
-  Card,
-  Divider,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import { ClockProgressionRoll } from "types/DieRolls.type";
+import { Box, ButtonBase, Card, Divider, Typography } from "@mui/material";
+import { OracleTableRoll } from "types/DieRolls.type";
 import { D10Icon } from "assets/D10Icon";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 
-export interface ClockProgressionRollSnackbarProps {
-  roll: ClockProgressionRoll;
+export interface OracleTableRollSnackbarProps {
+  roll: OracleTableRoll;
   clearRoll?: () => void;
   expanded: boolean;
 }
 
-export function ClockProgressionRollSnackbar(
-  props: ClockProgressionRollSnackbarProps
-) {
+export function OracleTableRollSnackbar(props: OracleTableRollSnackbarProps) {
   const { roll, clearRoll, expanded } = props;
-  const theme = useTheme();
 
   return (
     <Card
@@ -37,13 +27,13 @@ export function ClockProgressionRollSnackbar(
       component={clearRoll ? ButtonBase : "div"}
       onClick={clearRoll ? () => clearRoll() : undefined}
     >
-      {expanded && roll.oracleTitle && (
+      {expanded && roll.oracleCategoryName && (
         <Typography
           lineHeight={1.2}
           variant={"overline"}
           fontFamily={(theme) => theme.fontFamilyTitle}
         >
-          {roll.oracleTitle}
+          {roll.oracleCategoryName}
         </Typography>
       )}
       <Typography

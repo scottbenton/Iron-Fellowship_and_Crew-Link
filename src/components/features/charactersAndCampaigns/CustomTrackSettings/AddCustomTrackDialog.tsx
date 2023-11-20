@@ -143,8 +143,8 @@ export function AddCustomTrackDialog(props: AddCustomTrackDialogProps) {
                         value={cell.value}
                         onChange={(evt) => {
                           setCells((prevCells) => {
-                            let newCells = [...prevCells];
-                            let newCell = {
+                            const newCells = [...prevCells];
+                            const newCell = {
                               ...newCells[index],
                               value: evt.target.value,
                             };
@@ -162,8 +162,8 @@ export function AddCustomTrackDialog(props: AddCustomTrackDialogProps) {
                         checked={!cell.selectable}
                         onChange={(evt, checked) => {
                           setCells((prevCells) => {
-                            let newCells = [...prevCells];
-                            let newCell = {
+                            const newCells = [...prevCells];
+                            const newCell = {
                               ...newCells[index],
                               selectable: !checked,
                             };
@@ -177,7 +177,7 @@ export function AddCustomTrackDialog(props: AddCustomTrackDialogProps) {
                       <IconButton
                         onClick={() => {
                           setCells((prevCells) => {
-                            let newCells = [...prevCells];
+                            const newCells = [...prevCells];
                             newCells.splice(index, 1);
                             return newCells;
                           });
@@ -261,7 +261,7 @@ export function AddCustomTrackDialog(props: AddCustomTrackDialogProps) {
   );
 }
 
-function isNumeric(str: any) {
+function isNumeric(str: unknown) {
   if (typeof str === "number") return true;
   if (typeof str != "string") return false; // we only process strings!
   return (

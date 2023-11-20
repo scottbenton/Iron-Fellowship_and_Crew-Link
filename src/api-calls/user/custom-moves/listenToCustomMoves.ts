@@ -6,6 +6,7 @@ import { getUserCustomMovesDoc } from "./_getRef";
 export function listenToCustomMoves(
   uid: string,
   onCustomMoves: (moves: StoredMove[]) => void,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError: (error: any) => void
 ) {
   return onSnapshot(

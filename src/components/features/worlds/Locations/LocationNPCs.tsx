@@ -1,4 +1,4 @@
-import { Card, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { NPCItem } from "components/features/worlds/NPCSection/NPCItem";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { useStore } from "stores/store";

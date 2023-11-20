@@ -75,6 +75,7 @@ export function getPublicNotesNPCDoc(worldId: string, npcId: string) {
 export function convertToDatabase(
   npc: Partial<NPCDocument>
 ): Partial<NPCDocumentFirestore> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { updatedDate, createdDate, ...restNPC } = npc;
   const newNPC: Partial<NPCDocumentFirestore> = {
     updatedTimestamp: Timestamp.now(),

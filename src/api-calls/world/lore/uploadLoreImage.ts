@@ -1,10 +1,5 @@
 import { constructLoreImagesPath, getLoreDoc } from "./_getRef";
-import {
-  MAX_FILE_SIZE,
-  MAX_FILE_SIZE_LABEL,
-  replaceImage,
-  uploadImage,
-} from "lib/storage.lib";
+import { replaceImage } from "lib/storage.lib";
 import { updateDoc } from "firebase/firestore";
 import { createApiFunction } from "api-calls/createApiFunction";
 

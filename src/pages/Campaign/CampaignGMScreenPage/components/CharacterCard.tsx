@@ -15,7 +15,6 @@ import { InitiativeStatusChip } from "components/features/characters/InitiativeS
 import { PortraitAvatar } from "components/features/characters/PortraitAvatar/PortraitAvatar";
 import { Stat } from "types/stats.enum";
 import { useStore } from "stores/store";
-import { useState } from "react";
 
 export interface CharacterCardProps {
   uid: string;
@@ -41,17 +40,9 @@ export function CharacterCard(props: CharacterCardProps) {
   const updateCharacter = useStore(
     (store) => store.campaigns.currentCampaign.characters.updateCharacter
   );
-  const [
-    updateCharacterInitiativeLoading,
-    setUpdateCharacterInitiativeLoading,
-  ] = useState(false);
+
   const updateCharacterInitiative = (initiativeStatus: INITIATIVE_STATUS) => {
-    setUpdateCharacterInitiativeLoading(true);
-    updateCharacter(characterId, { initiativeStatus })
-      .catch(() => {})
-      .finally(() => {
-        setUpdateCharacterInitiativeLoading(false);
-      });
+    updateCharacter(characterId, { initiativeStatus }).catch(() => {});
   };
 
   return (
@@ -84,7 +75,6 @@ export function CharacterCard(props: CharacterCardProps) {
               character.initiativeStatus ?? INITIATIVE_STATUS.OUT_OF_COMBAT
             }
             handleStatusChange={updateCharacterInitiative}
-            loading={updateCharacterInitiativeLoading}
             variant={"outlined"}
           />
         </Box>

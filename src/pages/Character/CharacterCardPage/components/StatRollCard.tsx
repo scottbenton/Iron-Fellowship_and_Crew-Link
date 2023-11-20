@@ -22,11 +22,11 @@ export function StatRollCard(props: StatRollCardProps) {
   const { roll } = props;
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
-      })}
+      }}
     >
       <Typography variant={"h4"} fontFamily={(theme) => theme.fontFamilyTitle}>
         {roll.rollLabel}
