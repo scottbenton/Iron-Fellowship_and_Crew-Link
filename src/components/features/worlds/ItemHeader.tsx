@@ -41,8 +41,8 @@ export function ItemHeader(props: ItemHeaderProps) {
         (theme) => ({
           bgcolor: theme.palette.background.paper,
           py: 1,
-          px: 2,
-          [theme.breakpoints.up("md")]: { px: 3 },
+          px: 3,
+          [theme.breakpoints.down("sm")]: { px: 2 },
         }),
 
         ...(Array.isArray(sx) ? sx : [sx]),

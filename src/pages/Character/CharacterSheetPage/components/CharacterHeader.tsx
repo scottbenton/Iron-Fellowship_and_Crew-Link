@@ -44,7 +44,7 @@ export function CharacterHeader() {
 
   return (
     <StickyHeader
-      maxStickyBreakpoint={newViewEnabled ? "md" : undefined}
+      maxStickyBreakpoint={newViewEnabled ? "sm" : undefined}
       outerChildren={
         (isMobile || isSmall) &&
         newViewEnabled && <CharacterHeaderMoveOracleButtons />

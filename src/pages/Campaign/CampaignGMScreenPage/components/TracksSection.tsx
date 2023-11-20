@@ -50,13 +50,12 @@ export function TracksSection(props: TracksSectionProps) {
     <Stack spacing={2} sx={{ pb: 2 }}>
       <SectionHeading label={"Supply"} />
       <Track
-        sx={(theme) => ({
+        sx={{
           mt: 4,
           mb: 4,
           maxWidth: 400,
-          px: 2,
-          [theme.breakpoints.up("md")]: { px: 3 },
-        })}
+          px: { xs: 2, sm: 3 },
+        }}
         min={supplyTrack.min}
         max={supplyTrack.max}
         value={supply}

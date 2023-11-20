@@ -62,17 +62,17 @@ export function StickyHeader(props: PropsWithChildren<StickyHeaderProps>) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              py: 0.5,
               overflowX: "auto",
               overflowY: "visible",
               flexWrap: "wrap",
               transition: theme.transitions.create(["box-shadow"]),
+              pt: 0.5,
+              pb: outerChildren ? 5 : 0.5,
             }),
             (theme) =>
               maxStickyBreakpoint
                 ? {
                     [theme.breakpoints.down(maxStickyBreakpoint)]: {
-                      pb: 5,
                       boxShadow: isStuck ? theme.shadows[8] : undefined,
                     },
                   }

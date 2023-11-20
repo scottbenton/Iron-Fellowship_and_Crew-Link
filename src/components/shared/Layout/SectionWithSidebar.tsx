@@ -26,6 +26,7 @@ export function SectionWithSidebar(props: SectionWithSidebarProps) {
         sx={{
           height: "100%",
           width: sidebarWidth,
+          display: { xs: "none", md: "block" },
         }}
       >
         {sidebar}
