@@ -77,7 +77,7 @@ export function CharacterSheetPage() {
         isPaper
         sx={(theme) => ({
           bgcolor:
-            theme.palette.mode === "light"
+            theme.palette.mode === "light" && isMobile
               ? "background.paperInlay"
               : undefined,
         })}

@@ -10,6 +10,8 @@ export interface AppStateData {
   rolls: Roll[];
 
   screenReaderAnnouncement?: string;
+
+  betaTests: Record<string, boolean>;
 }
 
 export interface AppStateActions {
@@ -22,6 +24,8 @@ export interface AppStateActions {
   clearRolls: () => void;
 
   announce: (announcement: string) => void;
+
+  updateBetaTests: (newValues: Record<string, boolean>) => void;
 }
 
 export type AppStateSlice = AppStateData & AppStateActions;

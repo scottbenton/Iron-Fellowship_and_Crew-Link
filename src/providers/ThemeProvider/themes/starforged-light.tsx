@@ -15,6 +15,7 @@ export const starforgedLightTheme = createTheme({
       dark: starforgedGrey[800],
       contrastText: "#fff",
     },
+    divider: starforgedGrey[300],
     ...sharedStatusColors,
     background: {
       paper: "#fff",

@@ -7,7 +7,7 @@ import {
   DialogContent,
   FormControlLabel,
 } from "@mui/material";
-import { DialogTitleWithCloseButton } from "../DialogTitleWithCloseButton";
+import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { useStore } from "stores/store";
 
 export interface AccessibilitySettingsDialogProps {

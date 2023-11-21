@@ -15,6 +15,7 @@ function OracleDrawerUnMemoized(props: OracleDrawerProps) {
     <SwipeableDrawer
       open={open}
       onOpen={openCallback}
+      keepMounted
       disableSwipeToOpen
       disableDiscovery
       onClose={onClose}

@@ -32,7 +32,7 @@ export function Sidebar() {
         variant={"outlined"}
         sx={{
           minWidth: 300,
-          height: "100%",
+          maxHeight: "100%",
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
         }}

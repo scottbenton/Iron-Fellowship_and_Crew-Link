@@ -75,4 +75,10 @@ export const createAppStateSlice: CreateSliceType<AppStateSlice> = (set) => ({
       store.appState.screenReaderAnnouncement = announcement;
     });
   },
+
+  updateBetaTests: (newTests) => {
+    set((store) => {
+      store.appState.betaTests = newTests;
+    });
+  },
 });

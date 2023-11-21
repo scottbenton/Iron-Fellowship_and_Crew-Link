@@ -6,7 +6,7 @@ import { useCustomMoves } from "./useCustomMoves";
 import { useStore } from "stores/store";
 
 export function useFilterMoves() {
-  const { setSearch, debouncedSearch } = useSearch();
+  const { search, setSearch, debouncedSearch } = useSearch();
   const [filteredMoves, setFilteredMoves] = useState(orderedCategories);
   const { customMoveCategories } = useCustomMoves();
 
@@ -58,5 +58,5 @@ export function useFilterMoves() {
     setFilteredMoves(results);
   }, [debouncedSearch, customMoveCategories, showDelveMoves]);
 
-  return { setSearch, filteredMoves };
+  return { setSearch, filteredMoves, isSearchActive: !!search };
 }
