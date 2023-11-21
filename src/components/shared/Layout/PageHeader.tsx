@@ -84,20 +84,26 @@ export function PageHeader(props: PageHeaderProps) {
           )}
         </Container>
         <Box
-          sx={(theme) => ({
-            backgroundImage: isLightTheme ? `url("${borderUrl}")` : undefined,
+          sx={{
             position: "absolute",
             top: "100%",
             mt: "-1px",
             mx: 0,
-            height: theme.spacing(8),
-            backgroundRepeat: "repeat-x",
-            backgroundSize: "contain",
-            backgroundPositionX: "center",
-            minWidth: isIronsworn ? 1000 : 500,
+            overflowX: "hidden",
             width: "100%",
-          })}
-        />
+          }}
+        >
+          <Box
+            sx={(theme) => ({
+              backgroundImage: isLightTheme ? `url("${borderUrl}")` : undefined,
+              height: theme.spacing(8),
+              backgroundRepeat: "repeat-x",
+              backgroundSize: "contain",
+              backgroundPositionX: "center",
+              minWidth: isIronsworn ? 1000 : 500,
+            })}
+          />
+        </Box>
       </Box>
     </>
   );
