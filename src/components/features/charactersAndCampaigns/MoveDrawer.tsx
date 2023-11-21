@@ -15,6 +15,7 @@ function MoveDrawerUnMemoized(props: MoveDrawerProps) {
     <SwipeableDrawer
       open={open}
       onOpen={openCallback}
+      keepMounted
       disableSwipeToOpen
       disableDiscovery
       onClose={onClose}

@@ -5,7 +5,7 @@ import { useFilterOracles } from "./useFilterOracles";
 import { AskTheOracleButtons } from "./AskTheOracleButtons";
 
 export function OracleSection() {
-  const { search, filteredOracles, setSearch } = useFilterOracles();
+  const { isSearchActive, filteredOracles, setSearch } = useFilterOracles();
 
   return (
     <>
@@ -34,7 +34,6 @@ export function OracleSection() {
         }
         aria-label={"Filter Oracles"}
         placeholder={"Filter Oracles"}
-        value={search}
         onChange={(evt) => setSearch(evt.target.value)}
         color={"primary"}
         sx={(theme) => ({
@@ -46,7 +45,11 @@ export function OracleSection() {
       />
       <Box sx={{ overflow: "auto", flexGrow: 1 }}>
         {filteredOracles.map((category, index) => (
-          <OracleCategory category={category} key={index} />
+          <OracleCategory
+            category={category}
+            key={index}
+            forceOpen={isSearchActive}
+          />
         ))}
       </Box>
     </>

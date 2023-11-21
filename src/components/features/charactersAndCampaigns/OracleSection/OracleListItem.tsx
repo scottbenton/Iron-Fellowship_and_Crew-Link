@@ -24,8 +24,8 @@ export function OracleListItem(props: OracleListItemProps) {
       id={id}
       disablePadding
       sx={(theme) => ({
-        "&:nth-of-type(odd)": {
-          backgroundColor: theme.palette.action.hover,
+        "&:nth-of-type(even)": {
+          backgroundColor: theme.palette.background.paperInlay,
         },
         "& #open-table": {
           display: isTouchDevice ? "inline-flex" : "none",

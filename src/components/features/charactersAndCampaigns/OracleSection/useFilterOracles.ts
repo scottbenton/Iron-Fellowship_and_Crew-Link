@@ -127,5 +127,5 @@ export function useFilterOracles() {
     showDelveOracles,
   ]);
 
-  return { search, setSearch, filteredOracles };
+  return { isSearchActive: !!search, setSearch, filteredOracles };
 }

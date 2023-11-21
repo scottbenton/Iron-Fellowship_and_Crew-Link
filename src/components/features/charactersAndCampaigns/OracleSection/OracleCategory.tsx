@@ -1,17 +1,21 @@
-import { Box, List, ListSubheader } from "@mui/material";
+import { Box, Collapse, List, ListSubheader } from "@mui/material";
 import { useRoller } from "stores/appState/useRoller";
 import { OracleListItem } from "./OracleListItem";
 import { OracleSet } from "dataforged";
 import { hiddenOracleCategoryIds } from "data/oracles";
 import { useStore } from "stores/store";
+import { useNewMoveOracleView } from "hooks/featureFlags/useNewMoveOracleView";
+import { useState } from "react";
+import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
 
 export interface OracleCategoryProps {
   prefix?: string;
   category: OracleSet;
+  forceOpen?: boolean;
 }
 
 export function OracleCategory(props: OracleCategoryProps) {
-  const { prefix, category } = props;
+  const { prefix, category, forceOpen } = props;
 
   const { rollOracleTable } = useRoller();
   const openDialog = useStore((store) => store.appState.openDialog);
@@ -22,6 +26,10 @@ export function OracleCategory(props: OracleCategoryProps) {
 
   const sampleNames = category["Sample Names" as "Sample names"];
 
+  const showNewView = useNewMoveOracleView();
+  const [isExpanded, setIsExpanded] = useState(showNewView ? false : true);
+  const isExpandedOrForced = isExpanded || forceOpen || false;
+
   if (hiddenOracleCategoryIds[category.$id]) {
     return null;
   }
@@ -29,52 +37,67 @@ export function OracleCategory(props: OracleCategoryProps) {
   return (
     <>
       <List disablePadding>
-        {Object.keys(category.Tables ?? {}).length > 0 && (
-          <ListSubheader
-            sx={(theme) => ({
-              backgroundColor:
-                theme.palette.darkGrey[
-                  theme.palette.mode === "light" ? "light" : "dark"
-                ],
-              color: theme.palette.darkGrey.contrastText,
-              ...theme.typography.body1,
-              fontFamily: theme.fontFamilyTitle,
-            })}
+        {Object.keys(category.Tables ?? {}).length > 0 &&
+          (showNewView ? (
+            <CollapsibleSectionHeader
+              open={isExpandedOrForced}
+              toggleOpen={() => !forceOpen && setIsExpanded((prev) => !prev)}
+              text={title}
+            />
+          ) : (
+            <ListSubheader
+              sx={(theme) => ({
+                backgroundColor:
+                  theme.palette.darkGrey[
+                    theme.palette.mode === "light" ? "light" : "dark"
+                  ],
+                color: theme.palette.darkGrey.contrastText,
+                ...theme.typography.body1,
+                fontFamily: theme.fontFamilyTitle,
+              })}
+            >
+              {title}
+            </ListSubheader>
+          ))}
+        <Collapse in={isExpandedOrForced}>
+          <Box
+            sx={{
+              mb: showNewView && isExpandedOrForced ? 0.5 : 0,
+            }}
           >
-            {title}
-          </ListSubheader>
-        )}
-        {Array.isArray(sampleNames) &&
-          sampleNames.length > 0 &&
-          Object.keys(category.Tables ?? {}).length > 0 && (
-            <OracleListItem
-              id={category.$id + "/sample_names"}
-              text={"Sample Names"}
-              onRollClick={() =>
-                rollOracleTable(category.$id + "/sample_names", true, true)
-              }
-              onOpenClick={() => openDialog(category.$id + "/sample_names")}
-            />
-          )}
-        {Object.keys(category.Tables ?? {}).map((oracleId, index) => {
-          const oracle = category.Tables?.[oracleId];
-          if (!oracle) return null;
-          return (
-            <OracleListItem
-              id={oracle.$id}
-              key={index}
-              text={
-                oracleId === "ironsworn/oracles/moves/reveal_a_danger_alt"
-                  ? "Reveal a Danger (Alt)"
-                  : oracle.Title.Short
-              }
-              onRollClick={() => rollOracleTable(oracle.$id, true, true)}
-              onOpenClick={() => {
-                openDialog(oracle.$id);
-              }}
-            />
-          );
-        })}
+            {Array.isArray(sampleNames) &&
+              sampleNames.length > 0 &&
+              Object.keys(category.Tables ?? {}).length > 0 && (
+                <OracleListItem
+                  id={category.$id + "/sample_names"}
+                  text={"Sample Names"}
+                  onRollClick={() =>
+                    rollOracleTable(category.$id + "/sample_names", true, true)
+                  }
+                  onOpenClick={() => openDialog(category.$id + "/sample_names")}
+                />
+              )}
+            {Object.keys(category.Tables ?? {}).map((oracleId, index) => {
+              const oracle = category.Tables?.[oracleId];
+              if (!oracle) return null;
+              return (
+                <OracleListItem
+                  id={oracle.$id}
+                  key={index}
+                  text={
+                    oracleId === "ironsworn/oracles/moves/reveal_a_danger_alt"
+                      ? "Reveal a Danger (Alt)"
+                      : oracle.Title.Short
+                  }
+                  onRollClick={() => rollOracleTable(oracle.$id, true, true)}
+                  onOpenClick={() => {
+                    openDialog(oracle.$id);
+                  }}
+                />
+              );
+            })}
+          </Box>
+        </Collapse>
         {Object.keys(category.Sets ?? {}).map((oracleSetId) => {
           const set = category.Sets?.[oracleSetId];
           if (!set) return null;
