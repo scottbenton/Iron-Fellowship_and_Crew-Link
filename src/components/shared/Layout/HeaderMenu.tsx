@@ -1,5 +1,6 @@
 import {
   ButtonBase,
+  IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -24,6 +25,7 @@ import {
 } from "pages/Character/routes";
 import AccessibilityIcon from "@mui/icons-material/AccessibilityNew";
 import { AccessibilitySettingsDialog } from "../AccessibilitySettingsDialog/AccessibilitySettingsDialog";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 export function HeaderMenu() {
   const userId = useStore((store) => store.auth.uid);
@@ -41,16 +43,23 @@ export function HeaderMenu() {
 
   return (
     <>
-      <ButtonBase
-        sx={{ borderRadius: "100%", ml: 2 }}
+      <IconButton
+        color={"inherit"}
+        sx={{ ml: 2 }}
         className={"dark-focus-outline"}
         aria-label={"User Settings Menu Toggle"}
-        focusRipple
         ref={anchorRef}
         onClick={() => setMenuOpen(true)}
       >
-        <UserAvatar uid={userId} />
-      </ButtonBase>
+        <SettingsIcon
+          sx={(theme) => ({
+            transform: `rotate(${menuOpen ? "90deg" : "0deg"})`,
+            transition: theme.transitions.create(["transform"], {
+              duration: theme.transitions.duration.shorter,
+            }),
+          })}
+        />
+      </IconButton>
       <Menu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}

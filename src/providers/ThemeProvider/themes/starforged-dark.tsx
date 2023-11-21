@@ -24,6 +24,7 @@ export const starforgedDarkTheme = createTheme({
       default: starforgedGrey[950],
     },
     grey: starforgedGrey,
+    divider: starforgedGrey[600],
   },
   typography: {
     fontFamily: ["RubikVariable", ...baseFontFamilies].join(","),
@@ -52,7 +53,6 @@ export const starforgedDarkTheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          border: `1px solid ${starforgedGrey[700]}`,
           backgroundImage: "unset!important", // Remove the annoying elevation background filter
         },
       },

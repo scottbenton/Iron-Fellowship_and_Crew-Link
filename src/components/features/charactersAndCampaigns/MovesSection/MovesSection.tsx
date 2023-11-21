@@ -5,7 +5,7 @@ import { useFilterMoves } from "./useFilterMoves";
 import { useStore } from "stores/store";
 
 export function MovesSection() {
-  const { setSearch, filteredMoves } = useFilterMoves();
+  const { setSearch, filteredMoves, isSearchActive } = useFilterMoves();
 
   const openDialog = useStore((store) => store.appState.openDialog);
 
@@ -32,7 +32,12 @@ export function MovesSection() {
         })}
       />
 
-      <Box sx={{ overflow: "auto", flexGrow: 1 }}>
+      <Box
+        sx={{
+          overflow: "auto",
+          flexGrow: 1,
+        }}
+      >
         {filteredMoves.map((category, index) => (
           <MoveCategory
             key={index}
@@ -40,6 +45,7 @@ export function MovesSection() {
             openMove={(move) => {
               openDialog(move.$id);
             }}
+            forceOpen={isSearchActive}
           />
         ))}
       </Box>

@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 export function useQueryParameterFeatureFlags() {
   const [searchParams] = useSearchParams();
 
-  const groups = searchParams.get("featureGroups")?.split(",");
+  const groups = searchParams.get("tests")?.split(",");
 
   const groupResults: { [group: string]: boolean } = JSON.parse(
     localStorage.getItem("forcedGroups") ?? "{}"

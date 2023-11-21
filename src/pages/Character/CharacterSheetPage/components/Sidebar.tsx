@@ -30,12 +30,12 @@ export function Sidebar() {
     <>
       <Card
         variant={"outlined"}
-        sx={{
+        sx={(theme) => ({
           minWidth: 300,
-          height: "100%",
+          maxHeight: "100%",
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
-        }}
+        })}
       >
         {shouldShowOracles && (
           <div>
