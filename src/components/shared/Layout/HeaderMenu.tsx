@@ -1,5 +1,4 @@
 import {
-  ButtonBase,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -9,8 +8,6 @@ import {
 import { useRef, useState } from "react";
 import { logout } from "lib/auth.lib";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useStore } from "stores/store";
-import { UserAvatar } from "components/shared/UserAvatar";
 import { useToggleTheme } from "providers/ThemeProvider";
 import LightThemeIcon from "@mui/icons-material/LightMode";
 import DarkThemeIcon from "@mui/icons-material/DarkMode";
@@ -24,12 +21,12 @@ import {
   constructCharacterPath,
 } from "pages/Character/routes";
 import AccessibilityIcon from "@mui/icons-material/AccessibilityNew";
-import { AccessibilitySettingsDialog } from "../AccessibilitySettingsDialog/AccessibilitySettingsDialog";
+import { AccessibilitySettingsDialog } from "./AccessibilitySettingsDialog";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { BetaTestsDialog } from "./BetaTestsDialog";
+import TestsIcon from "@mui/icons-material/AutoAwesome";
 
 export function HeaderMenu() {
-  const userId = useStore((store) => store.auth.uid);
-
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -40,6 +37,8 @@ export function HeaderMenu() {
 
   const [accessibilitySettingsOpen, setAccessibilitySettingsOpen] =
     useState(false);
+
+  const [betaTestsOpen, setBetaTestsOpen] = useState(false);
 
   return (
     <>
@@ -75,6 +74,17 @@ export function HeaderMenu() {
             <AccessibilityIcon />
           </ListItemIcon>
           <ListItemText>Accessibility Settings</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setMenuOpen(false);
+            setBetaTestsOpen(true);
+          }}
+        >
+          <ListItemIcon>
+            <TestsIcon />
+          </ListItemIcon>
+          <ListItemText>Beta Tests</ListItemText>
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -128,6 +138,10 @@ export function HeaderMenu() {
       <AccessibilitySettingsDialog
         open={accessibilitySettingsOpen}
         onClose={() => setAccessibilitySettingsOpen(false)}
+      />
+      <BetaTestsDialog
+        open={betaTestsOpen}
+        onClose={() => setBetaTestsOpen(false)}
       />
     </>
   );

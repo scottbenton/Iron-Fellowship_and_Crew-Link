@@ -5,7 +5,7 @@ import { OracleSet } from "dataforged";
 import { hiddenOracleCategoryIds } from "data/oracles";
 import { useStore } from "stores/store";
 import { useNewMoveOracleView } from "hooks/featureFlags/useNewMoveOracleView";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
 
 export interface OracleCategoryProps {
@@ -28,6 +28,10 @@ export function OracleCategory(props: OracleCategoryProps) {
 
   const showNewView = useNewMoveOracleView();
   const [isExpanded, setIsExpanded] = useState(showNewView ? false : true);
+  useEffect(() => {
+    setIsExpanded(showNewView ? false : true);
+  }, [showNewView]);
+
   const isExpandedOrForced = isExpanded || forceOpen || false;
 
   if (hiddenOracleCategoryIds[category.$id]) {

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { Move, MoveCategory as IMoveCategory } from "dataforged";
 import OpenIcon from "@mui/icons-material/ChevronRight";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNewMoveOracleView } from "hooks/featureFlags/useNewMoveOracleView";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
 
@@ -23,6 +23,10 @@ export function MoveCategory(props: MoveCategoryProps) {
 
   const showNewView = useNewMoveOracleView();
   const [isExpanded, setIsExpanded] = useState(showNewView ? false : true);
+
+  useEffect(() => {
+    setIsExpanded(showNewView ? false : true);
+  }, [showNewView]);
 
   const isExpandedOrForced = isExpanded || forceOpen;
 

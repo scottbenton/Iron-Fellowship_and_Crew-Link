@@ -6,4 +6,5 @@ export const defaultAppState: AppStateData = {
     previousIds: [],
   },
   rolls: [],
+  betaTests: {},
 };

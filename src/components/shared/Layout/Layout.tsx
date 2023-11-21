@@ -17,13 +17,13 @@ import { UserNameDialog } from "components/shared/UserNameDialog";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
 import { SkipToContentButton } from "./SkipToContentButton";
-import { useQueryParameterFeatureFlags } from "hooks/featureFlags/useQueryParameterFeatureFlags";
+import { useSyncFeatureFlags } from "hooks/featureFlags/useSyncFeatureFlags";
 import { LinkedDialog } from "components/features/charactersAndCampaigns/LinkedDialog";
 import { LiveRegion } from "../LiveRegion";
 import { RollSnackbarSection } from "../RollSnackbar";
 
 export function Layout() {
-  useQueryParameterFeatureFlags();
+  useSyncFeatureFlags();
 
   const { pathname } = useLocation();
   const state = useStore((store) => store.auth.status);
