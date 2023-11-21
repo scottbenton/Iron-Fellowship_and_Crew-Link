@@ -14,6 +14,7 @@
 - Removed "Ask the Oracle" oracles from the oracle list, since they are pinned up top
 - Added a test mobile view for moves and oracles
 - Redesigned stats and tracks sections on mobile
+- Redesigned moves and oracles to make each section collapsible
 
 ### Accessibility
 
@@ -25,6 +26,7 @@
 - Fixed an issue where deleting a custom move caused the app to crash
 - Made some performance improvements on the character view
 - Fixed shared tracks not showing up in the move rollers
+- Prevented oracle inputs from reordering themselves
 
 ---
 
