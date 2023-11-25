@@ -1,62 +1,70 @@
-import { useEffect, useState } from "react";
-import { useSearch } from "hooks/useSearch";
-import { orderedCategories } from "data/moves";
-import { Move, MoveCategory } from "dataforged";
-import { useCustomMoves } from "./useCustomMoves";
-import { useStore } from "stores/store";
+import { useMemo, useState } from "react";
+import { useMoves } from "./useMoves";
+
+export enum CATEGORY_VISIBILITY {
+  HIDDEN,
+  SOME,
+  ALL,
+}
 
 export function useFilterMoves() {
-  const { search, setSearch, debouncedSearch } = useSearch();
-  const [filteredMoves, setFilteredMoves] = useState(orderedCategories);
-  const { customMoveCategories } = useCustomMoves();
+  const [search, setSearch] = useState("");
 
-  const showDelveMoves = useStore(
-    (store) => store.settings.delve.showDelveMoves
-  );
+  const moveCategories = useMoves();
+  const { visibleMoveCategoryIds, visibleMoveIds, isEmpty } = useMemo(() => {
+    const visibleCategories: Record<string, CATEGORY_VISIBILITY> = {};
+    const visibleMoves: Record<string, boolean> = {};
+    let isEmpty: boolean = true;
 
-  useEffect(() => {
-    const results: MoveCategory[] = [];
-
-    const allCategories = [
-      ...orderedCategories,
-      ...customMoveCategories,
-    ].filter(
-      (category) =>
-        showDelveMoves || category.Source.Title !== "Ironsworn: Delve"
-    );
-
-    allCategories.forEach((category) => {
+    moveCategories.forEach((category) => {
       if (
-        category.Title.Standard.toLocaleLowerCase().includes(
-          debouncedSearch.toLocaleLowerCase()
+        !search ||
+        (category.Title.Standard.toLocaleLowerCase().includes(
+          search.toLocaleLowerCase()
         ) &&
-        Object.keys(category.Moves).length > 0
+          Object.keys(category.Moves).length > 0)
       ) {
-        results.push(category);
+        visibleCategories[category.$id] = CATEGORY_VISIBILITY.ALL;
+        isEmpty = false;
         return;
       }
 
-      const Moves: { [key: string]: Move } = {};
+      let hasMove = false;
 
       Object.keys(category.Moves).forEach((moveId) => {
         const move = category.Moves[moveId];
 
         if (
           move.Title.Standard.toLocaleLowerCase().includes(
-            debouncedSearch.toLocaleLowerCase()
+            search.toLocaleLowerCase()
           )
         ) {
-          Moves[moveId] = move;
+          hasMove = true;
+          visibleMoves[move.$id] = true;
         }
       });
 
-      if (Object.keys(Moves).length > 0) {
-        results.push({ ...category, Moves });
+      if (hasMove) {
+        isEmpty = false;
+        visibleCategories[category.$id] = CATEGORY_VISIBILITY.SOME;
+      } else {
+        visibleCategories[category.$id] = CATEGORY_VISIBILITY.HIDDEN;
       }
     });
 
-    setFilteredMoves(results);
-  }, [debouncedSearch, customMoveCategories, showDelveMoves]);
+    return {
+      visibleMoveCategoryIds: visibleCategories,
+      visibleMoveIds: visibleMoves,
+      isEmpty,
+    };
+  }, [moveCategories, search]);
 
-  return { setSearch, filteredMoves, isSearchActive: !!search };
+  return {
+    moveCategories,
+    setSearch,
+    visibleMoveCategoryIds,
+    visibleMoveIds,
+    isSearchActive: !!search,
+    isEmpty,
+  };
 }

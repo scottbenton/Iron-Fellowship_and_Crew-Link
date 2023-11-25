@@ -11,15 +11,19 @@ import OpenIcon from "@mui/icons-material/ChevronRight";
 import { useEffect, useState } from "react";
 import { useNewMoveOracleView } from "hooks/featureFlags/useNewMoveOracleView";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
+import { CATEGORY_VISIBILITY } from "./useFilterMoves";
 
 export interface MoveCategoryProps {
   category: IMoveCategory;
   openMove: (move: Move) => void;
   forceOpen?: boolean;
+  visibleCategories: Record<string, CATEGORY_VISIBILITY>;
+  visibleMoves: Record<string, boolean>;
 }
 
 export function MoveCategory(props: MoveCategoryProps) {
-  const { category, openMove, forceOpen } = props;
+  const { category, openMove, forceOpen, visibleCategories, visibleMoves } =
+    props;
 
   const showNewView = useNewMoveOracleView();
   const [isExpanded, setIsExpanded] = useState(showNewView ? false : true);
@@ -29,6 +33,10 @@ export function MoveCategory(props: MoveCategoryProps) {
   }, [showNewView]);
 
   const isExpandedOrForced = isExpanded || forceOpen;
+
+  if (visibleCategories[category.$id] === CATEGORY_VISIBILITY.HIDDEN) {
+    return null;
+  }
 
   return (
     <>
@@ -59,39 +67,42 @@ export function MoveCategory(props: MoveCategoryProps) {
             mb: showNewView && isExpandedOrForced ? 0.5 : 0,
           }}
         >
-          {Object.values(category.Moves).map((move, index) => (
-            <ListItem
-              id={move.$id}
-              key={index}
-              sx={(theme) => ({
-                "&:nth-of-type(even)": {
-                  backgroundColor: theme.palette.background.paperInlay,
-                },
-              })}
-              disablePadding
-            >
-              <ListItemButton
-                onClick={() => openMove(move)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
+          {Object.values(category.Moves).map((move, index) =>
+            visibleCategories[category.$id] === CATEGORY_VISIBILITY.ALL ||
+            visibleMoves[move.$id] === true ? (
+              <ListItem
+                id={move.$id}
+                key={index}
+                sx={(theme) => ({
+                  "&:nth-of-type(even)": {
+                    backgroundColor: theme.palette.background.paperInlay,
+                  },
+                })}
+                disablePadding
               >
-                <Box
-                  sx={(theme) => ({
-                    ...theme.typography.body2,
-                    color: theme.palette.text.primary,
-                  })}
+                <ListItemButton
+                  onClick={() => openMove(move)}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
                 >
-                  {move.Title.Standard}
-                </Box>
-                <ListItemIcon sx={{ minWidth: "unset" }}>
-                  <OpenIcon />
-                </ListItemIcon>
-              </ListItemButton>
-            </ListItem>
-          ))}
+                  <Box
+                    sx={(theme) => ({
+                      ...theme.typography.body2,
+                      color: theme.palette.text.primary,
+                    })}
+                  >
+                    {move.Title.Standard}
+                  </Box>
+                  <ListItemIcon sx={{ minWidth: "unset" }}>
+                    <OpenIcon />
+                  </ListItemIcon>
+                </ListItemButton>
+              </ListItem>
+            ) : null
+          )}
         </Box>
       </Collapse>
     </>

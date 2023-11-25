@@ -1,5 +1,6 @@
-import { useFeatureFlag } from "./useFeatureFlag";
+// import { useFeatureFlag } from "./useFeatureFlag";
 
 export function useNewMoveOracleView() {
-  return useFeatureFlag("new-move-oracle-view");
+  return true;
+  // return useFeatureFlag("new-move-oracle-view");
 }

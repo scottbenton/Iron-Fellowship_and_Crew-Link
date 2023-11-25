@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
 
-export function useSearchNoState(search: string) {
+export function useSearchNoState(search: string, debounceTime: number = 500) {
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(search);
-    }, 500);
+    }, debounceTime);
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [search]);
+  }, [debounceTime, search]);
   return { debouncedSearch };
 }
 
-export function useSearch() {
+export function useSearch(debounceTime?: number) {
   const [search, setSearch] = useState("");
-  const { debouncedSearch } = useSearchNoState(search);
+  const { debouncedSearch } = useSearchNoState(search, debounceTime);
 
   return { search, setSearch, debouncedSearch };
 }

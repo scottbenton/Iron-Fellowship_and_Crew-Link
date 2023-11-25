@@ -3,10 +3,19 @@ import SearchIcon from "@mui/icons-material/Search";
 import { MoveCategory } from "./MoveCategory";
 import { useFilterMoves } from "./useFilterMoves";
 import { useStore } from "stores/store";
+import { EmptyState } from "components/shared/EmptyState";
 
 export function MovesSection() {
-  const { setSearch, filteredMoves, isSearchActive } = useFilterMoves();
+  const {
+    moveCategories,
+    setSearch,
+    visibleMoveCategoryIds,
+    visibleMoveIds,
+    isSearchActive,
+    isEmpty,
+  } = useFilterMoves();
 
+  console.debug(isEmpty);
   const openDialog = useStore((store) => store.appState.openDialog);
 
   return (
@@ -43,16 +52,22 @@ export function MovesSection() {
           flexGrow: 1,
         }}
       >
-        {filteredMoves.map((category, index) => (
-          <MoveCategory
-            key={index}
-            category={category}
-            openMove={(move) => {
-              openDialog(move.$id);
-            }}
-            forceOpen={isSearchActive}
-          />
-        ))}
+        {!isEmpty ? (
+          moveCategories.map((category, index) => (
+            <MoveCategory
+              key={index}
+              category={category}
+              openMove={(move) => {
+                openDialog(move.$id);
+              }}
+              forceOpen={isSearchActive}
+              visibleCategories={visibleMoveCategoryIds}
+              visibleMoves={visibleMoveIds}
+            />
+          ))
+        ) : (
+          <EmptyState message={"No Moves Found"} sx={{ pb: 2 }} />
+        )}
       </Box>
     </>
   );
