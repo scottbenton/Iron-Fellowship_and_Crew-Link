@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { TabsSection } from "./components/TabsSection";
 import {
   CAMPAIGN_ROUTES,
-  constructCampaignPath,
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
 import { PageContent, PageHeader } from "components/shared/Layout";
@@ -14,6 +13,7 @@ import { useSyncStore } from "./hooks/useSyncStore";
 import { useStore } from "stores/store";
 import { Sidebar } from "pages/Character/CharacterSheetPage/components/Sidebar";
 import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
+import { EmptyState } from "components/shared/EmptyState";
 
 export function CampaignGMScreenPage() {
   useSyncStore();
@@ -33,10 +33,6 @@ export function CampaignGMScreenPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && (!campaignId || !campaigns[campaignId])) {
-      error("You aren't a member of this campaign");
-      navigate(constructCampaignPath(CAMPAIGN_ROUTES.SELECT));
-    }
     if (
       !loading &&
       campaignId &&
@@ -66,7 +62,9 @@ export function CampaignGMScreenPage() {
   }
 
   if (!campaign || !uid || !campaign?.gmIds?.includes(uid)) {
-    return null;
+    return (
+      <EmptyState showImage title={"You are not a GM of this campaign."} />
+    );
   }
 
   return (

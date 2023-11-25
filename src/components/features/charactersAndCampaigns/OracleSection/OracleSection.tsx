@@ -3,9 +3,17 @@ import { OracleCategory } from "./OracleCategory";
 import SearchIcon from "@mui/icons-material/Search";
 import { useFilterOracles } from "./useFilterOracles";
 import { AskTheOracleButtons } from "./AskTheOracleButtons";
+import { EmptyState } from "components/shared/EmptyState";
 
 export function OracleSection() {
-  const { isSearchActive, filteredOracles, setSearch } = useFilterOracles();
+  const {
+    oracleCategories,
+    isSearchActive,
+    visibleOracleCategoryIds,
+    visibleOracleIds,
+    setSearch,
+    isEmpty,
+  } = useFilterOracles();
 
   return (
     <>
@@ -44,13 +52,19 @@ export function OracleSection() {
         })}
       />
       <Box sx={{ overflow: "auto", flexGrow: 1 }}>
-        {filteredOracles.map((category, index) => (
-          <OracleCategory
-            category={category}
-            key={index}
-            forceOpen={isSearchActive}
-          />
-        ))}
+        {!isEmpty ? (
+          oracleCategories.map((category, index) => (
+            <OracleCategory
+              category={category}
+              key={index}
+              forceOpen={isSearchActive}
+              visibleCategories={visibleOracleCategoryIds}
+              visibleOracles={visibleOracleIds}
+            />
+          ))
+        ) : (
+          <EmptyState message={"No Oracles Found"} />
+        )}
       </Box>
     </>
   );

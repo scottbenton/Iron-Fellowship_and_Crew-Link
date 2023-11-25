@@ -7,15 +7,19 @@ import { useStore } from "stores/store";
 import { useNewMoveOracleView } from "hooks/featureFlags/useNewMoveOracleView";
 import { useEffect, useState } from "react";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
+import { CATEGORY_VISIBILITY } from "./useFilterOracles";
 
 export interface OracleCategoryProps {
   prefix?: string;
   category: OracleSet;
   forceOpen?: boolean;
+  visibleCategories: Record<string, CATEGORY_VISIBILITY>;
+  visibleOracles: Record<string, boolean>;
 }
 
 export function OracleCategory(props: OracleCategoryProps) {
-  const { prefix, category, forceOpen } = props;
+  const { prefix, category, forceOpen, visibleCategories, visibleOracles } =
+    props;
 
   const { rollOracleTable } = useRoller();
   const openDialog = useStore((store) => store.appState.openDialog);
@@ -34,7 +38,10 @@ export function OracleCategory(props: OracleCategoryProps) {
 
   const isExpandedOrForced = isExpanded || forceOpen || false;
 
-  if (hiddenOracleCategoryIds[category.$id]) {
+  if (
+    hiddenOracleCategoryIds[category.$id] ||
+    visibleCategories[category.$id] === CATEGORY_VISIBILITY.HIDDEN
+  ) {
     return null;
   }
 
@@ -108,7 +115,13 @@ export function OracleCategory(props: OracleCategoryProps) {
 
           return (
             <Box key={oracleSetId}>
-              <OracleCategory key={oracleSetId} prefix={title} category={set} />
+              <OracleCategory
+                key={oracleSetId}
+                prefix={title}
+                category={set}
+                visibleCategories={visibleCategories}
+                visibleOracles={visibleOracles}
+              />
             </Box>
           );
         })}

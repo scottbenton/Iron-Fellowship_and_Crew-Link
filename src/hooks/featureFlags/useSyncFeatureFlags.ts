@@ -10,7 +10,6 @@ export function useSyncFeatureFlags() {
     const localStorageResults: { [group: string]: boolean } = JSON.parse(
       localStorage.getItem("forcedGroups") ?? "{}"
     );
-    console.debug("UPDATING STATE TO:", localStorageResults);
     updateBetaTests(localStorageResults);
   }, [updateBetaTests]);
 

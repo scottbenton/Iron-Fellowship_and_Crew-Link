@@ -253,6 +253,8 @@ export function ProgressTrack(props: ProgressTracksProps) {
           }
           borderTop={1}
           borderBottom={1}
+          borderLeft={onValueChange ? 0 : 1}
+          borderRight={onValueChange ? 0 : 1}
           borderColor={(theme) => theme.palette.divider}
           role={"meter"}
           aria-labelledby={labelId}

@@ -1,131 +1,107 @@
-import { useEffect, useMemo, useState } from "react";
-import { useSearch } from "hooks/useSearch";
-import type { OracleSet, OracleTable } from "dataforged";
-import { oracleMap, orderedCategories } from "data/oracles";
-import { License } from "types/Datasworn";
-import { useCustomOracles } from "./useCustomOracles";
+import { useMemo, useState } from "react";
+import type { OracleSet } from "dataforged";
+import { useOracles } from "./useOracles";
 import { useStore } from "stores/store";
-import { useAppName } from "hooks/useAppName";
+
+export enum CATEGORY_VISIBILITY {
+  HIDDEN,
+  SOME,
+  ALL,
+}
 
 export function useFilterOracles() {
-  const { search, setSearch, debouncedSearch } = useSearch();
-
-  const { customOracleCategories, allCustomOracleMap } = useCustomOracles();
-  const pinnedOracles = useStore((store) => store.settings.pinnedOraclesIds);
-
+  const [search, setSearch] = useState("");
+  const oracleCategories = useOracles();
   const showDelveOracles = useStore(
     (store) => store.settings.delve.showDelveOracles
   );
 
-  const appName = useAppName();
+  const { visibleOracleCategoryIds, visibleOracleIds, isEmpty } =
+    useMemo(() => {
+      const visibleCategories: Record<string, CATEGORY_VISIBILITY> = {};
+      const visibleOracles: Record<string, boolean> = {};
+      let isEmpty: boolean = true;
 
-  const combinedOracles = useMemo(() => {
-    const pinnedOracleIds = Object.keys(pinnedOracles);
+      const isDelveSet = (set: OracleSet): boolean => {
+        return set.Source.Title === "Ironsworn: Delve";
+      };
 
-    const pinnedOracleTables: { [tableId: string]: OracleTable } = {};
+      const hideRemainingDelveSets = (set: OracleSet): void => {
+        if (isDelveSet(set)) {
+          visibleCategories[set.$id] = CATEGORY_VISIBILITY.HIDDEN;
+        } else {
+          Object.values(set.Sets ?? {}).forEach((set) => {
+            hideRemainingDelveSets(set);
+          });
+        }
+      };
 
-    pinnedOracleIds.forEach((oracleId) => {
-      if (pinnedOracles[oracleId]) {
-        pinnedOracleTables[oracleId] =
-          oracleMap[oracleId] ?? allCustomOracleMap[oracleId];
-      }
-    });
+      const filterSet = (set: OracleSet): boolean => {
+        if (!showDelveOracles && isDelveSet(set)) {
+          visibleCategories[set.$id] = CATEGORY_VISIBILITY.HIDDEN;
+          return false;
+        }
 
-    const pinnedOracleSection: OracleSet | undefined =
-      Object.keys(pinnedOracleTables).length > 0
-        ? {
-            $id: "ironsworn/oracles/pinned",
-            Title: {
-              $id: "ironsworn/oracles/pinned/title",
-              Short: "Pinned",
-              Standard: "Pinned Oracles",
-              Canonical: "Pinned Oracles",
-            },
-            Tables: pinnedOracleTables,
-            Display: {
-              $id: "ironsworn/oracles/pinned/display",
-            },
-            Ancestors: [],
-            Source: {
-              Title: appName,
-              Authors: [],
-              License: License.None,
-            },
+        if (
+          (Object.keys(set.Tables ?? {}).length > 0 ||
+            Object.keys(set.Sets ?? {}).length > 0) &&
+          (!search ||
+            set.Title.Standard.toLocaleLowerCase().includes(
+              search.toLocaleLowerCase()
+            ))
+        ) {
+          isEmpty = false;
+          visibleCategories[set.$id] = CATEGORY_VISIBILITY.ALL;
+          if (!showDelveOracles) {
+            hideRemainingDelveSets(set);
           }
-        : undefined;
-    return pinnedOracleSection
-      ? [pinnedOracleSection, ...orderedCategories]
-      : [...orderedCategories];
-  }, [pinnedOracles, appName, allCustomOracleMap]);
+          return true;
+        }
+        let hasOracles = false;
 
-  const [filteredOracles, setFilteredOracles] = useState(combinedOracles);
-
-  useEffect(() => {
-    const allOracles = [...combinedOracles, ...customOracleCategories].filter(
-      (category) =>
-        showDelveOracles || category.Source.Title !== "Ironsworn: Delve"
-    );
-
-    const results: OracleSet[] = [];
-
-    const filterSet = (set: OracleSet): OracleSet | undefined => {
-      if (
-        set.Title.Standard.toLocaleLowerCase().includes(
-          debouncedSearch.toLocaleLowerCase()
-        ) &&
-        (Object.keys(set.Tables ?? {}).length > 0 ||
-          Object.keys(set.Sets ?? {}).length > 0)
-      ) {
-        return set;
-      } else {
-        const filteredSets: { [key: string]: OracleSet } = {};
-        Object.keys(set.Sets ?? {}).forEach((setId) => {
-          const newSet = filterSet(set.Sets?.[setId] as OracleSet);
-          if (newSet) {
-            filteredSets[setId] = newSet;
+        Object.values(set.Sets ?? {}).forEach((set) => {
+          if (filterSet(set)) {
+            hasOracles = true;
           }
         });
-        const filteredTables: { [key: string]: OracleTable } = {};
-        Object.keys(set.Tables ?? {}).forEach((tableId) => {
-          const table = (set.Tables ?? {})[tableId];
+        Object.values(set.Tables ?? {}).forEach((table) => {
           if (
             table &&
             table.Title.Short.toLocaleLowerCase().includes(
-              debouncedSearch.toLocaleLowerCase()
+              search.toLocaleLowerCase()
             )
           ) {
-            filteredTables[tableId] = table;
+            visibleOracles[table.$id] = true;
+            hasOracles = true;
           }
         });
 
-        if (
-          Object.keys(filteredSets).length > 0 ||
-          Object.keys(filteredTables).length > 0
-        ) {
-          return {
-            ...set,
-            Sets: filteredSets,
-            Tables: filteredTables,
-          };
+        if (hasOracles) {
+          isEmpty = false;
+          visibleCategories[set.$id] = CATEGORY_VISIBILITY.SOME;
+        } else {
+          visibleCategories[set.$id] = CATEGORY_VISIBILITY.HIDDEN;
         }
-        return undefined;
-      }
-    };
 
-    allOracles.forEach((oracleSection) => {
-      const filteredSection = filterSet(oracleSection);
+        return hasOracles;
+      };
+      oracleCategories.forEach((category) => {
+        filterSet(category);
+      });
 
-      if (filteredSection) {
-        results.push(filteredSection);
-      }
-    });
-    setFilteredOracles(results);
-  }, [
-    debouncedSearch,
-    combinedOracles,
-    customOracleCategories,
-    showDelveOracles,
-  ]);
+      return {
+        visibleOracleCategoryIds: visibleCategories,
+        visibleOracleIds: visibleOracles,
+        isEmpty,
+      };
+    }, [oracleCategories, search, showDelveOracles]);
 
-  return { isSearchActive: !!search, setSearch, filteredOracles };
+  return {
+    oracleCategories,
+    setSearch,
+    visibleOracleCategoryIds,
+    visibleOracleIds,
+    isSearchActive: !!search,
+    isEmpty,
+  };
 }
