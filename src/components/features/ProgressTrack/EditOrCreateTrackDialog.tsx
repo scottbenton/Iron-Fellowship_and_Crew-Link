@@ -2,10 +2,12 @@ import {
   Alert,
   AlertTitle,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   MenuItem,
   Stack,
   TextField,
@@ -47,6 +49,7 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
   const [difficulty, setDifficulty] = useState<DIFFICULTY | undefined>(
     initialTrack?.difficulty
   );
+  const [resetProgress, setResetProgress] = useState(false);
 
   const handleDialogClose = () => {
     setTitle("");
@@ -74,7 +77,7 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       label: title,
       description,
       difficulty: difficulty,
-      value: initialTrack?.value ?? 0,
+      value: initialTrack && !resetProgress ? initialTrack.value : 0,
     };
 
     setLoading(true);
@@ -132,6 +135,18 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
               <MenuItem value={DIFFICULTY.EXTREME}>Extreme</MenuItem>
               <MenuItem value={DIFFICULTY.EPIC}>Epic</MenuItem>
             </TextField>
+            {initialTrack && initialTrack.difficulty !== difficulty && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={resetProgress}
+                    onChange={(evt, value) => setResetProgress(value)}
+                  />
+                }
+                label={"Reset Track Progress"}
+                sx={{ textTransform: "capitalize", marginRight: 3 }}
+              />
+            )}
           </Stack>
         </DialogContent>
         <DialogActions>

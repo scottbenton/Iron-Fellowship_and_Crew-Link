@@ -16,6 +16,7 @@
 - Redesigned stats and tracks sections on mobile
 - Redesigned moves and oracles to make each section collapsible
 - Added bond tracks, experience, and legacy tracks to the character cards on the GM screen
+- Added a checkbox to reset track progress when changing the difficulty of a progress track
 
 ### Accessibility
 
