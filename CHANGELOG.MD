@@ -4,7 +4,7 @@
 
 ### New Features
 
-- Added a way to override feature flags from query parameters - this will allow me to send out beta links
+- Added a new beta tests dialog in the user settings menu - this will allow me to test changes before fully releasing them
 
 ### Changes
 
@@ -15,6 +15,7 @@
 - Added a test mobile view for moves and oracles
 - Redesigned stats and tracks sections on mobile
 - Redesigned moves and oracles to make each section collapsible
+- Added bond tracks, experience, and legacy tracks to the character cards on the GM screen
 
 ### Accessibility
 

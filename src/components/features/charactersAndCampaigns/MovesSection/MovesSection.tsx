@@ -15,7 +15,6 @@ export function MovesSection() {
     isEmpty,
   } = useFilterMoves();
 
-  console.debug(isEmpty);
   const openDialog = useStore((store) => store.appState.openDialog);
 
   return (

@@ -15,6 +15,10 @@ import { InitiativeStatusChip } from "components/features/characters/InitiativeS
 import { PortraitAvatar } from "components/features/characters/PortraitAvatar/PortraitAvatar";
 import { Stat } from "types/stats.enum";
 import { useStore } from "stores/store";
+import { useGameSystemValue } from "hooks/useGameSystemValue";
+import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { IronswornTracks } from "./IronswornTracks";
+import { LegacyTracks } from "./LegacyTracks";
 
 export interface CharacterCardProps {
   uid: string;
@@ -24,6 +28,17 @@ export interface CharacterCardProps {
 
 export function CharacterCard(props: CharacterCardProps) {
   const { uid, characterId, character } = props;
+
+  const trackLabel = useGameSystemValue<string>({
+    [GAME_SYSTEMS.IRONSWORN]: "XP and Bonds",
+    [GAME_SYSTEMS.STARFORGED]: "Legacy Tracks",
+  });
+  const TrackComponent = useGameSystemValue<
+    (props: { characterId: string }) => JSX.Element
+  >({
+    [GAME_SYSTEMS.IRONSWORN]: IronswornTracks,
+    [GAME_SYSTEMS.STARFORGED]: LegacyTracks,
+  });
 
   const storedAssets = useStore(
     (store) =>
@@ -171,6 +186,14 @@ export function CharacterCard(props: CharacterCardProps) {
                 />
               ))}
             </Stack>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            {trackLabel}
+          </AccordionSummary>
+          <AccordionDetails>
+            <TrackComponent characterId={characterId} />
           </AccordionDetails>
         </Accordion>
 

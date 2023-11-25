@@ -17,10 +17,10 @@ export interface LegacyTrackProps {
   label: string;
   value: number;
   checkedExperience: { [key: number]: boolean };
-  onValueChange: (value: number) => void;
-  onExperienceChecked: (index: number, checked: boolean) => void;
+  onValueChange?: (value: number) => void;
+  onExperienceChecked?: (index: number, checked: boolean) => void;
   isLegacy: boolean;
-  onIsLegacyChecked: (checked: boolean) => void;
+  onIsLegacyChecked?: (checked: boolean) => void;
 }
 
 export function LegacyTrack(props: LegacyTrackProps) {
@@ -73,7 +73,10 @@ export function LegacyTrack(props: LegacyTrackProps) {
             control={
               <Checkbox
                 checked={isLegacy}
-                onChange={(evt, value) => onIsLegacyChecked(value)}
+                disabled={!onIsLegacyChecked}
+                onChange={(evt, value) =>
+                  onIsLegacyChecked && onIsLegacyChecked(value)
+                }
               />
             }
             label={"10"}
@@ -87,34 +90,41 @@ export function LegacyTrack(props: LegacyTrackProps) {
               : theme.palette.grey[300]
           }
         >
-          <ButtonBase
-            onClick={() => onValueChange(value > 0 ? value - 1 : 0)}
-            sx={(theme) => ({
-              height: isMobile ? 34 : 48,
-              backgroundColor:
-                theme.palette.darkGrey[
-                  theme.palette.mode === "light" ? "main" : "light"
-                ],
-              color: theme.palette.darkGrey.contrastText,
-              px: 0.5,
-              "&:hover": {
-                backgroundColor: theme.palette.darkGrey.dark,
-              },
-              borderTopLeftRadius: `${theme.shape.borderRadius}px`,
-              borderBottomLeftRadius: `${theme.shape.borderRadius}px`,
-            })}
-          >
-            <MinusIcon />
-          </ButtonBase>
-          {checks.map((value, index) => (
+          {onValueChange && (
+            <ButtonBase
+              onClick={() => onValueChange(value > 0 ? value - 1 : 0)}
+              sx={(theme) => ({
+                height: isMobile ? 34 : 48,
+                backgroundColor:
+                  theme.palette.darkGrey[
+                    theme.palette.mode === "light" ? "main" : "light"
+                  ],
+                color: theme.palette.darkGrey.contrastText,
+                px: 0.5,
+                "&:hover": {
+                  backgroundColor: theme.palette.darkGrey.dark,
+                },
+                borderTopLeftRadius: `${theme.shape.borderRadius}px`,
+                borderBottomLeftRadius: `${theme.shape.borderRadius}px`,
+              })}
+            >
+              <MinusIcon />
+            </ButtonBase>
+          )}
+          {checks.map((value, index, arr) => (
             <Box key={index}>
               <Box
                 sx={(theme) => ({
                   borderStyle: "solid",
                   borderColor: theme.palette.divider,
                   borderLeftColor:
-                    index !== 0 ? theme.palette.divider : "transparent",
-                  borderRightColor: "transparent",
+                    index !== 0 || !onValueChange
+                      ? theme.palette.divider
+                      : "transparent",
+                  borderRightColor:
+                    index === arr.length - 1 && !onValueChange
+                      ? theme.palette.divider
+                      : "transparent",
                   borderWidth: 1,
                   width: isMobile ? 34 : 48,
                   height: isMobile ? 34 : 48,
@@ -139,9 +149,10 @@ export function LegacyTrack(props: LegacyTrackProps) {
                   sx={{ p: 0 }}
                   icon={<UncheckedIcon fontSize={"inherit"} />}
                   checkedIcon={<CheckedIcon fontSize={"inherit"} />}
-                  disabled={value !== 4}
+                  disabled={value !== 4 || !onExperienceChecked}
                   checked={checkedExperience[index * 2] ?? false}
                   onChange={(evt, checked) =>
+                    onExperienceChecked &&
                     onExperienceChecked(index * 2, checked)
                   }
                 />
@@ -150,9 +161,10 @@ export function LegacyTrack(props: LegacyTrackProps) {
                     sx={{ p: 0 }}
                     icon={<UncheckedIcon fontSize={"inherit"} />}
                     checkedIcon={<CheckedIcon fontSize={"inherit"} />}
-                    disabled={value !== 4}
+                    disabled={value !== 4 || !onExperienceChecked}
                     checked={checkedExperience[index * 2 + 1] ?? false}
                     onChange={(evt, checked) =>
+                      onExperienceChecked &&
                       onExperienceChecked(index * 2 + 1, checked)
                     }
                   />
@@ -160,25 +172,27 @@ export function LegacyTrack(props: LegacyTrackProps) {
               </Box>
             </Box>
           ))}
-          <ButtonBase
-            onClick={() => onValueChange(value < 40 ? value + 1 : 40)}
-            sx={(theme) => ({
-              height: isMobile ? 34 : 48,
-              backgroundColor:
-                theme.palette.darkGrey[
-                  theme.palette.mode === "light" ? "main" : "light"
-                ],
-              color: theme.palette.darkGrey.contrastText,
-              px: 0.5,
-              "&:hover": {
-                backgroundColor: theme.palette.darkGrey.dark,
-              },
-              borderTopRightRadius: `${theme.shape.borderRadius}px`,
-              borderBottomRightRadius: `${theme.shape.borderRadius}px`,
-            })}
-          >
-            <PlusIcon />
-          </ButtonBase>
+          {onValueChange && (
+            <ButtonBase
+              onClick={() => onValueChange(value < 40 ? value + 1 : 40)}
+              sx={(theme) => ({
+                height: isMobile ? 34 : 48,
+                backgroundColor:
+                  theme.palette.darkGrey[
+                    theme.palette.mode === "light" ? "main" : "light"
+                  ],
+                color: theme.palette.darkGrey.contrastText,
+                px: 0.5,
+                "&:hover": {
+                  backgroundColor: theme.palette.darkGrey.dark,
+                },
+                borderTopRightRadius: `${theme.shape.borderRadius}px`,
+                borderBottomRightRadius: `${theme.shape.borderRadius}px`,
+              })}
+            >
+              <PlusIcon />
+            </ButtonBase>
+          )}
         </Box>
       </Box>
     </Box>
