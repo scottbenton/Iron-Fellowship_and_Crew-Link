@@ -70,10 +70,9 @@ export function Notes(props: NotesProps) {
 
   return (
     <Box
-      height={"100%"}
+      height={condensedView ? "70vh" : "100%"}
       display={"flex"}
       width={"100%"}
-      minHeight={condensedView ? "90vh" : undefined}
     >
       {(!condensedView || !selectedNoteId) && (
         <NoteSidebar
@@ -91,6 +90,8 @@ export function Notes(props: NotesProps) {
           flexShrink={0}
           width={0}
           minHeight={"100%"}
+          display={"flex"}
+          flexDirection={"column"}
           sx={{ overflowY: "auto" }}
         >
           {condensedView &&
