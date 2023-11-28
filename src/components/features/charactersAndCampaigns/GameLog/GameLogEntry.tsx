@@ -1,8 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import { RollSnackbar } from "components/shared/RollSnackbar";
 import { useEffect } from "react";
 import { useStore } from "stores/store";
 import { Roll } from "types/DieRolls.type";
+import { RollDisplay } from "../RollDisplay";
+import { NormalRollActions } from "../RollDisplay/NormalRollActions";
 
 export interface GameLogEntryProps {
   log: Roll;
@@ -67,11 +68,11 @@ export function GameLogEntry(props: GameLogEntryProps) {
       alignItems={isYourEntry ? "flex-end" : "flex-start"}
     >
       <Typography>{rollerName}</Typography>
-      <RollSnackbar roll={log} isExpanded />
-      {/* <Card variant={"outlined"} sx={(theme) => ({ p: 2 })}>
-        <Typography>{log.rollLabel}</Typography>
-        <Typography>{log.result}</Typography>
-      </Card> */}
+      <RollDisplay
+        roll={log}
+        isExpanded
+        actions={<NormalRollActions roll={log} />}
+      />
       <Typography color={"textSecondary"} variant={"caption"}>
         {getLogTimeString(log.timestamp)}
       </Typography>

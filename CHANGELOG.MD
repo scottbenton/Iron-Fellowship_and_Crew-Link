@@ -5,6 +5,7 @@
 ### New Features
 
 - Added a new beta tests dialog in the user settings menu - this will allow me to test changes before fully releasing them
+- Added the ability to copy rolls to the clipboard
 
 ### Changes
 

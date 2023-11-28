@@ -20,7 +20,7 @@ import { SkipToContentButton } from "./SkipToContentButton";
 import { useSyncFeatureFlags } from "hooks/featureFlags/useSyncFeatureFlags";
 import { LinkedDialog } from "components/features/charactersAndCampaigns/LinkedDialog";
 import { LiveRegion } from "../LiveRegion";
-import { RollSnackbarSection } from "../RollSnackbar";
+import { RollSnackbarSection } from "./RollSnackbarSection";
 
 export function Layout() {
   useSyncFeatureFlags();

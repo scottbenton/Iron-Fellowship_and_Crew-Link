@@ -10,7 +10,7 @@ import {
   StatRoll,
   TrackProgressRoll,
 } from "types/DieRolls.type";
-import { getRollResultLabel } from "components/shared/RollSnackbar";
+import { getRollResultLabel } from "components/features/charactersAndCampaigns/RollDisplay";
 import { TRACK_TYPES } from "types/Track.type";
 import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
 

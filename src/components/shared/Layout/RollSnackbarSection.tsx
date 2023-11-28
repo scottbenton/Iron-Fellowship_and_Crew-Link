@@ -1,9 +1,10 @@
 import { Box, Fab, Slide } from "@mui/material";
 import { useFooterState } from "hooks/useFooterState";
 import { TransitionGroup } from "react-transition-group";
-import { RollSnackbar } from "./RollSnackbar";
 import ClearIcon from "@mui/icons-material/Close";
 import { useStore } from "stores/store";
+import { RollDisplay } from "components/features/charactersAndCampaigns/RollDisplay";
+import { NormalRollActions } from "components/features/charactersAndCampaigns/RollDisplay/NormalRollActions";
 
 export function RollSnackbarSection() {
   const rolls = useStore((store) => store.appState.rolls);
@@ -40,13 +41,14 @@ export function RollSnackbarSection() {
             direction={"left"}
             key={`${roll.rollLabel}.${roll.timestamp.getTime()}.${roll.type}`}
           >
-            <span>
-              <RollSnackbar
+            <Box mt={1}>
+              <RollDisplay
                 roll={roll}
-                clearRoll={() => clearRoll(index)}
+                onClick={() => clearRoll(index)}
                 isExpanded={index === array.length - 1}
+                actions={<NormalRollActions roll={roll} />}
               />
-            </span>
+            </Box>
           </Slide>
         ))}
       </TransitionGroup>
