@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useStore } from "stores/store";
 import { Virtuoso } from "react-virtuoso";
-import { LinearProgress } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import { GameLogEntry } from "./GameLogEntry";
 
 const MAX_ITEMS = 1000000000;
@@ -30,7 +30,7 @@ export function GameLog() {
   }, [logLength]);
 
   return (
-    <>
+    <Box sx={{ flexGrow: 1 }}>
       {loading && <LinearProgress />}
       <Virtuoso
         firstItemIndex={firstItemIndex}
@@ -39,6 +39,6 @@ export function GameLog() {
         startReached={getLogs}
         itemContent={(index, log) => <GameLogEntry log={log} />}
       />
-    </>
+    </Box>
   );
 }
