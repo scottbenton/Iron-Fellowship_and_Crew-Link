@@ -5,20 +5,20 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { Roll } from "types/DieRolls.type";
 import {
   DatabaseLog,
   convertFromDatabase,
   getCampaignGameLogCollection,
   getCharacterGameLogCollection,
 } from "./_getRef";
+import { RollWithId } from "stores/gameLog/gameLog.slice.type";
 
 export function listenToLogsAfter(params: {
   latestLoadedDate?: Date;
   isGM: boolean;
   campaignId?: string;
   characterId?: string;
-  onRoll: (rollId: string, roll: Roll) => void;
+  onRoll: (rollId: string, roll: RollWithId) => void;
   onError: (error: string) => void;
 }): Unsubscribe {
   const { latestLoadedDate, isGM, campaignId, characterId, onRoll, onError } =
@@ -49,7 +49,7 @@ export function listenToLogsAfter(params: {
           const doc = convertFromDatabase(
             change.doc.data() as unknown as DatabaseLog
           );
-          onRoll(change.doc.id, doc);
+          onRoll(change.doc.id, { ...doc, id: change.doc.id });
         }
       });
     },

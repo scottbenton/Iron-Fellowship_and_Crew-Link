@@ -57,7 +57,7 @@ export function getCharacterGameLogDocument(
 ) {
   return doc(
     firestore,
-    constructCampaignGameLogDocPath(characterId, logId)
+    constructCharacterGameLogDocPath(characterId, logId)
   ) as DocumentReference<Roll>;
 }
 

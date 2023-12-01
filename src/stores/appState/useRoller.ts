@@ -14,7 +14,7 @@ import { getRollResultLabel } from "components/features/charactersAndCampaigns/R
 import { TRACK_TYPES } from "types/Track.type";
 import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
 
-const getRoll = (dieMax: number) => {
+export const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
 };
 

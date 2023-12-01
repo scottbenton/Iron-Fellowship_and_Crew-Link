@@ -4,6 +4,7 @@ import { addRoll } from "api-calls/game-log/addRoll";
 import { defaultGameLogSlice } from "./gameLog.slice.default";
 import { getPaginatedLogs } from "api-calls/game-log/getPaginatedLogs";
 import { listenToLogsAfter } from "api-calls/game-log/listenToLogsAfter";
+import { updateLog } from "api-calls/game-log/updateLog";
 
 export const createGameLogSlice: CreateSliceType<GameLogSlice> = (
   set,
@@ -18,6 +19,19 @@ export const createGameLogSlice: CreateSliceType<GameLogSlice> = (
       );
     }
     return addRoll({ characterId, campaignId, roll });
+  },
+  updateRoll: (id, roll) => {
+    const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
+    const characterId =
+      getState().characters.currentCharacter.currentCharacterId;
+
+    if (!characterId && !campaignId) {
+      return new Promise((res, reject) =>
+        reject("Either character or campaign Id must be defined.")
+      );
+    }
+
+    return updateLog({ characterId, campaignId, logId: id, log: roll });
   },
 
   loadMoreLogs: () => {

@@ -1,5 +1,4 @@
 import { createApiFunction } from "api-calls/createApiFunction";
-import { Roll } from "types/DieRolls.type";
 import {
   DatabaseLog,
   convertFromDatabase,
@@ -14,6 +13,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { RollWithId } from "stores/gameLog/gameLog.slice.type";
 
 export const getPaginatedLogs = createApiFunction<
   {
@@ -23,7 +23,7 @@ export const getPaginatedLogs = createApiFunction<
     campaignId?: string;
     characterId?: string;
   },
-  Roll[]
+  RollWithId[]
 >((params) => {
   const { oldestLogDate, amountToFetch, isGM, campaignId, characterId } =
     params;
@@ -52,7 +52,10 @@ export const getPaginatedLogs = createApiFunction<
     getDocs(query(collection, ...queryConstraints))
       .then((snapshot) => {
         const logs = snapshot.docs.map((doc) => {
-          return convertFromDatabase(doc.data() as unknown as DatabaseLog);
+          return {
+            ...convertFromDatabase(doc.data() as unknown as DatabaseLog),
+            id: doc.id,
+          };
         });
         resolve(logs.reverse());
       })
