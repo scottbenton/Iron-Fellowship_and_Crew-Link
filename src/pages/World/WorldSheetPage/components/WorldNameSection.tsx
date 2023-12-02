@@ -27,9 +27,6 @@ export function WorldNameSection() {
 
   useEffect(() => {
     setTmpWorldName(worldName);
-    if (worldName === "New World") {
-      inputRef.current?.focus();
-    }
   }, [worldName]);
 
   return (
