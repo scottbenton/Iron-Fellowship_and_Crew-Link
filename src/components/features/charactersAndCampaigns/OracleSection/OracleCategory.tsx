@@ -51,7 +51,8 @@ export function OracleCategory(props: OracleCategoryProps) {
         {Object.keys(category.Tables ?? {}).length > 0 &&
           (showNewView ? (
             <CollapsibleSectionHeader
-              open={isExpandedOrForced}
+              open={isExpanded}
+              forcedOpen={forceOpen}
               toggleOpen={() => !forceOpen && setIsExpanded((prev) => !prev)}
               text={title}
             />
@@ -80,6 +81,7 @@ export function OracleCategory(props: OracleCategoryProps) {
               sampleNames.length > 0 &&
               Object.keys(category.Tables ?? {}).length > 0 && (
                 <OracleListItem
+                  disabled={!isExpandedOrForced}
                   id={category.$id + "/sample_names"}
                   text={"Sample Names"}
                   onRollClick={() =>
@@ -93,6 +95,7 @@ export function OracleCategory(props: OracleCategoryProps) {
               if (!oracle) return null;
               return (
                 <OracleListItem
+                  disabled={!isExpandedOrForced}
                   id={oracle.$id}
                   key={index}
                   text={
@@ -119,6 +122,7 @@ export function OracleCategory(props: OracleCategoryProps) {
                 key={oracleSetId}
                 prefix={title}
                 category={set}
+                forceOpen={forceOpen}
                 visibleCategories={visibleCategories}
                 visibleOracles={visibleOracles}
               />

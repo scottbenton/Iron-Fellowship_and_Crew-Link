@@ -25,6 +25,8 @@
 
 ### Accessibility
 
+- Disabled oracles and moves when collapsing sections to prevent tab focus being lost
+
 ### Bug Fixes
 
 - Fixed custom asset tracks not appearing if they weren't added initially
