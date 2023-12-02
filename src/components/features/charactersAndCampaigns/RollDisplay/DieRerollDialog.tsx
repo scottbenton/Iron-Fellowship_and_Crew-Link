@@ -20,11 +20,12 @@ import { useStore } from "stores/store";
 export interface DieRerollDialogProps {
   open: boolean;
   handleClose: () => void;
-  roll: { id: string } & StatRoll;
+  rollId: string;
+  roll: StatRoll;
 }
 
 export function DieRerollDialog(props: DieRerollDialogProps) {
-  const { open, handleClose, roll } = props;
+  const { open, handleClose, roll, rollId } = props;
 
   const { info } = useSnackbar();
   const updateRoll = useStore((store) => store.gameLog.updateRoll);
@@ -66,9 +67,7 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
 
   const handleSave = () => {
     setLoading(true);
-    const newRoll = { ...updatedRoll } as { id?: string } & StatRoll;
-    delete newRoll.id;
-    updateRoll(roll.id, newRoll)
+    updateRoll(rollId, updatedRoll)
       .then(() => {
         setLoading(false);
         handleClose();
@@ -79,9 +78,19 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      onClick={(evt) => evt.stopPropagation()}
+    >
       <DialogTitleWithCloseButton onClose={handleClose}>
-        Reroll {roll.rollLabel}
+        Reroll{" "}
+        {roll.moveName
+          ? `${roll.moveName} (${
+              roll.rollLabel.charAt(0).toLocaleUpperCase() +
+              roll.rollLabel.slice(1)
+            })`
+          : roll.rollLabel}
       </DialogTitleWithCloseButton>
       <DialogContent>
         <Stack

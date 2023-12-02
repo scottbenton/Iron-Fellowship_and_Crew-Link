@@ -5,6 +5,6 @@ export const defaultAppState: AppStateData = {
     isOpen: false,
     previousIds: [],
   },
-  rolls: [],
+  rolls: {},
   betaTests: {},
 };

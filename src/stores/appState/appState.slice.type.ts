@@ -7,7 +7,9 @@ export interface AppStateData {
     previousIds: string[];
   };
 
-  rolls: Roll[];
+  rolls: {
+    [rollId: string]: Roll;
+  };
 
   screenReaderAnnouncement?: string;
 
@@ -19,8 +21,8 @@ export interface AppStateActions {
   prevDialog: () => void;
   closeDialog: () => void;
 
-  addRoll: (roll: Roll) => void;
-  clearRoll: (index: number) => void;
+  addRoll: (rollId: string, roll: Roll) => void;
+  clearRoll: (rollId: string) => void;
   clearRolls: () => void;
 
   announce: (announcement: string) => void;

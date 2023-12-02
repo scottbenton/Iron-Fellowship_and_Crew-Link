@@ -11,12 +11,13 @@ import CopyIcon from "@mui/icons-material/CopyAll";
 import RerollIcon from "@mui/icons-material/Casino";
 import { useSnackbar } from "providers/SnackbarProvider";
 import { convertRollToClipboard } from "./clipboardFormatter";
-import { RollWithId } from "stores/gameLog/gameLog.slice.type";
 import { DieRerollDialog } from "./DieRerollDialog";
-import { ROLL_TYPE } from "types/DieRolls.type";
+import { ROLL_TYPE, Roll } from "types/DieRolls.type";
+import { useStore } from "stores/store";
 
 export interface NormalRollActionsProps {
-  roll: RollWithId;
+  rollId: string;
+  roll: Roll;
 }
 
 async function pasteRich(rich: string, plain: string) {
@@ -42,7 +43,9 @@ async function pasteRich(rich: string, plain: string) {
 }
 
 export function NormalRollActions(props: NormalRollActionsProps) {
-  const { roll } = props;
+  const { rollId, roll } = props;
+
+  const uid = useStore((store) => store.auth.uid);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuParent = useRef<HTMLButtonElement>(null);
@@ -99,7 +102,7 @@ export function NormalRollActions(props: NormalRollActionsProps) {
             </ListItemIcon>
             <ListItemText>Copy Roll Result</ListItemText>
           </MenuItem>
-          {roll.type === ROLL_TYPE.STAT && (
+          {roll.type === ROLL_TYPE.STAT && roll.uid === uid && (
             <MenuItem
               onClick={(evt) => {
                 evt.stopPropagation();
@@ -119,6 +122,7 @@ export function NormalRollActions(props: NormalRollActionsProps) {
         <DieRerollDialog
           open={isDieRerollDialogOpen}
           handleClose={() => setIsDieRerollDialogOpen(false)}
+          rollId={rollId}
           roll={roll}
         />
       )}

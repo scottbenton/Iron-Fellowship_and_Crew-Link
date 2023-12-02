@@ -46,27 +46,27 @@ export const createAppStateSlice: CreateSliceType<AppStateSlice> = (set) => ({
     });
   },
 
-  addRoll: (roll) => {
+  addRoll: (rollId, roll) => {
     set((store) => {
-      const newRolls = [...store.appState.rolls];
-      if (newRolls.length >= 3) {
-        newRolls.shift();
+      const rolls = store.appState.rolls;
+      const newRollIds = Object.keys(rolls).sort(
+        (r1, r2) =>
+          rolls[r1].timestamp.getTime() - rolls[r2].timestamp.getTime()
+      );
+      if (newRollIds.length >= 3) {
+        delete rolls[newRollIds[0]];
       }
-      newRolls.push(roll);
-
-      store.appState.rolls = newRolls;
+      rolls[rollId] = roll;
     });
   },
-  clearRoll: (index) => {
+  clearRoll: (rollId) => {
     set((store) => {
-      const newRolls = [...store.appState.rolls];
-      newRolls.splice(index, 1);
-      store.appState.rolls = newRolls;
+      delete store.appState.rolls[rollId];
     });
   },
   clearRolls: () => {
     set((store) => {
-      store.appState.rolls = [];
+      store.appState.rolls = {};
     });
   },
 

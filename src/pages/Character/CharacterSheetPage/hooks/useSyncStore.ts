@@ -5,7 +5,7 @@ import { useListenToCampaignTracks } from "stores/campaign/currentCampaign/track
 import { useListenToCurrentCharacterAssets } from "stores/character/currentCharacter/assets/useListenToCurrentCharacterAssets";
 import { useListenToCharacterTracks } from "stores/character/currentCharacter/tracks/useListenToCharacterTracks";
 import { useListenToSettings } from "stores/settings/useListenToSettings";
-import { useListenToNewLogs } from "stores/gameLog/useListenToNewLogs";
+import { useListenToLogs } from "stores/gameLog/useListenToLogs";
 import { useListenToNotes } from "stores/notes/useListenToNotes";
 import { useStore } from "stores/store";
 import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
@@ -83,6 +83,6 @@ export function useSyncStore() {
   useListenToSectors();
   useListenToSectorLocations();
 
-  useListenToNewLogs();
+  useListenToLogs();
   useListenToCurrentCampaignCharacters();
 }

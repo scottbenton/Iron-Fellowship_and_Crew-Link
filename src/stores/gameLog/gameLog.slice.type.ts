@@ -12,14 +12,14 @@ export interface GameLogSliceActions {
     campaignId?: string;
     characterId?: string;
     roll: Roll;
-  }) => Promise<void>;
+  }) => Promise<string>;
   updateRoll: (id: string, roll: Roll) => Promise<void>;
 
   loadMoreLogs: () => void;
   subscribe: (params: {
     campaignId?: string;
     characterId?: string;
-    latestLoadedDate: Date;
+    totalLogsToLoad: number;
   }) => Unsubscribe;
 
   resetStore: () => void;
