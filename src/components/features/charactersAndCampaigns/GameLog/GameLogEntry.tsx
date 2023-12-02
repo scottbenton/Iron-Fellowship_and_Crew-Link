@@ -62,8 +62,7 @@ export function GameLogEntry(props: GameLogEntryProps) {
 
   return (
     <Box
-      m={2}
-      mt={4}
+      p={2}
       display={"flex"}
       flexDirection={"column"}
       alignItems={isYourEntry ? "flex-end" : "flex-start"}

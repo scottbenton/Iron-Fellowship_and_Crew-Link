@@ -9,10 +9,11 @@ import { useRef, useState } from "react";
 import MoreIcon from "@mui/icons-material/MoreHoriz";
 import CopyIcon from "@mui/icons-material/CopyAll";
 import RerollIcon from "@mui/icons-material/Casino";
+import MomentumIcon from "@mui/icons-material/Whatshot";
 import { useSnackbar } from "providers/SnackbarProvider";
 import { convertRollToClipboard } from "./clipboardFormatter";
 import { DieRerollDialog } from "./DieRerollDialog";
-import { ROLL_TYPE, Roll } from "types/DieRolls.type";
+import { ROLL_RESULT, ROLL_TYPE, Roll } from "types/DieRolls.type";
 import { useStore } from "stores/store";
 
 export interface NormalRollActionsProps {
@@ -46,6 +47,36 @@ export function NormalRollActions(props: NormalRollActionsProps) {
   const { rollId, roll } = props;
 
   const uid = useStore((store) => store.auth.uid);
+  const characterId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacterId
+  );
+  const momentum = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.momentum ?? 0
+  );
+  const momentumResetValue = useStore(
+    (store) => store.characters.currentCharacter.momentumResetValue
+  );
+
+  const updateRoll = useStore((store) => store.gameLog.updateRoll);
+  const updateCharacter = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacter
+  );
+
+  let isMomentumBurnUseful = false;
+  if (roll.type === ROLL_TYPE.STAT && roll.momentumBurned === undefined) {
+    if (
+      roll.result === ROLL_RESULT.MISS &&
+      (momentum > roll.challenge1 || momentum > roll.challenge2)
+    ) {
+      isMomentumBurnUseful = true;
+    } else if (
+      roll.result === ROLL_RESULT.WEAK_HIT &&
+      momentum > roll.challenge1 &&
+      momentum > roll.challenge2
+    ) {
+      isMomentumBurnUseful = true;
+    }
+  }
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuParent = useRef<HTMLButtonElement>(null);
@@ -66,6 +97,38 @@ export function NormalRollActions(props: NormalRollActionsProps) {
         });
     } else {
       error("Copying this roll type is not supported");
+    }
+  };
+
+  const handleBurnMomentum = () => {
+    if (
+      characterId &&
+      roll.type === ROLL_TYPE.STAT &&
+      momentum &&
+      momentumResetValue !== undefined
+    ) {
+      let newRollResult = ROLL_RESULT.MISS;
+      if (momentum > roll.challenge1 && momentum > roll.challenge2) {
+        newRollResult = ROLL_RESULT.HIT;
+      } else if (momentum > roll.challenge1 || momentum > roll.challenge2) {
+        newRollResult = ROLL_RESULT.WEAK_HIT;
+      }
+
+      const promises: Promise<unknown>[] = [];
+      promises.push(
+        updateRoll(rollId, {
+          ...roll,
+          momentumBurned: momentum,
+          result: newRollResult,
+        })
+      );
+      promises.push(updateCharacter({ momentum: momentumResetValue }));
+
+      Promise.all(promises)
+        .catch(() => {})
+        .then(() => {
+          success("Burned Momentum");
+        });
     }
   };
 
@@ -116,6 +179,23 @@ export function NormalRollActions(props: NormalRollActionsProps) {
               <ListItemText>Reroll Die</ListItemText>
             </MenuItem>
           )}
+          {roll.type === ROLL_TYPE.STAT &&
+            roll.uid === uid &&
+            roll.characterId === characterId &&
+            isMomentumBurnUseful && (
+              <MenuItem
+                onClick={(evt) => {
+                  evt.stopPropagation();
+                  setIsMenuOpen(false);
+                  handleBurnMomentum();
+                }}
+              >
+                <ListItemIcon>
+                  <MomentumIcon />
+                </ListItemIcon>
+                <ListItemText>Burn Momentum</ListItemText>
+              </MenuItem>
+            )}
         </Menu>
       )}
       {roll.type === ROLL_TYPE.STAT && (

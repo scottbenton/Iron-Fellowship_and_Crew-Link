@@ -50,14 +50,20 @@ export function RollDisplay(props: RollDisplayProps) {
                   rollTotal:
                     roll.action + (roll.modifier ?? 0) + (roll.adds ?? 0),
                 }}
+                crossOutD6={!!roll.momentumBurned}
                 d10Results={[roll.challenge1, roll.challenge2]}
+                fixedResult={
+                  roll.momentumBurned
+                    ? { title: "Momentum", value: roll.momentumBurned }
+                    : undefined
+                }
                 isExpanded={isExpanded}
               />
               <RollResult
                 result={getRollResultLabel(roll.result)}
                 extras={[
-                  ...(roll.challenge1 === roll.challenge2 ? ["Doubles"] : []),
-                  ...(roll.action === 1 ? ["Natural 1"] : []),
+                  ...(roll.challenge1 === roll.challenge2 ? ["Match"] : []),
+                  ...(roll.action === 1 ? ["One on the action die"] : []),
                 ]}
               />
             </RollContainer>

@@ -7,6 +7,7 @@
 - Added a new beta tests dialog in the user settings menu - this will allow me to test changes before fully releasing them
 - Added the ability to copy rolls to the clipboard
 - Added the ability to reroll rolls
+- Added the ability to burn momentum to update rolls
 
 ### Changes
 
@@ -19,6 +20,7 @@
 - Redesigned moves and oracles to make each section collapsible
 - Added bond tracks, experience, and legacy tracks to the character cards on the GM screen
 - Added a checkbox to reset track progress when changing the difficulty of a progress track
+- Changed labels for matches and ones on the action die
 
 ### Accessibility
 

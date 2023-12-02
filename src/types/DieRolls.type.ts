@@ -31,6 +31,7 @@ export interface StatRoll extends BaseRoll {
   modifier?: number;
   adds?: number;
   result: ROLL_RESULT;
+  momentumBurned?: number;
 }
 
 export interface OracleTableRoll extends BaseRoll {
