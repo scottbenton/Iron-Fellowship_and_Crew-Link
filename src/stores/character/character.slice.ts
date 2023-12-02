@@ -8,6 +8,7 @@ import { createCharacter } from "api-calls/character/createCharacter";
 import { getCharacterPortraitUrl } from "api-calls/character/getCharacterPortrait";
 import { createCurrentCharacterSlice } from "./currentCharacter/currentCharacter.slice";
 import { updateCharacterPortrait } from "api-calls/character/updateCharacterPortrait";
+import { momentumTrack } from "data/defaultTracks";
 
 export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
   ...params
@@ -32,6 +33,21 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
                 ) {
                   store.characters.currentCharacter.currentCharacter =
                     characterDocument;
+
+                  const numberOfActiveDebilities = Object.values(
+                    characterDocument.debilities ?? {}
+                  ).filter((debility) => debility).length;
+
+                  let momentumResetValue = momentumTrack.startingValue;
+
+                  if (numberOfActiveDebilities >= 2) {
+                    momentumResetValue = 0;
+                  } else if (numberOfActiveDebilities === 1) {
+                    momentumResetValue = 1;
+                  }
+
+                  store.characters.currentCharacter.momentumResetValue =
+                    momentumResetValue;
                 }
               });
             },
@@ -43,6 +59,8 @@ export const createCharacterSlice: CreateSliceType<CharacterSlice> = (
                   characterId
                 ) {
                   store.characters.currentCharacter.currentCharacter =
+                    undefined;
+                  store.characters.currentCharacter.momentumResetValue =
                     undefined;
                 }
               });

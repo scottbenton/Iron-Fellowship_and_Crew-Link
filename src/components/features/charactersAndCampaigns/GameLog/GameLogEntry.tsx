@@ -6,11 +6,12 @@ import { RollDisplay } from "../RollDisplay";
 import { NormalRollActions } from "../RollDisplay/NormalRollActions";
 
 export interface GameLogEntryProps {
+  logId: string;
   log: Roll;
 }
 
 export function GameLogEntry(props: GameLogEntryProps) {
-  const { log } = props;
+  const { logId, log } = props;
 
   const uid = useStore((store) => store.auth.uid);
 
@@ -61,8 +62,7 @@ export function GameLogEntry(props: GameLogEntryProps) {
 
   return (
     <Box
-      m={2}
-      mt={4}
+      p={2}
       display={"flex"}
       flexDirection={"column"}
       alignItems={isYourEntry ? "flex-end" : "flex-start"}
@@ -71,7 +71,7 @@ export function GameLogEntry(props: GameLogEntryProps) {
       <RollDisplay
         roll={log}
         isExpanded
-        actions={<NormalRollActions roll={log} />}
+        actions={<NormalRollActions rollId={logId} roll={log} />}
       />
       <Typography color={"textSecondary"} variant={"caption"}>
         {getLogTimeString(log.timestamp)}

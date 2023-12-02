@@ -8,7 +8,7 @@ import {
 
 export const addRoll = createApiFunction<
   { roll: Roll; campaignId?: string; characterId?: string },
-  void
+  string
 >((params) => {
   const { characterId, campaignId, roll } = params;
 
@@ -23,8 +23,8 @@ export const addRoll = createApiFunction<
         : getCharacterGameLogCollection(characterId as string),
       roll
     )
-      .then(() => {
-        resolve();
+      .then((doc) => {
+        resolve(doc.id);
       })
       .catch((e) => {
         reject(e);

@@ -14,10 +14,11 @@ export interface RollValuesProps {
     title: string;
     value: string | number;
   };
+  crossOutD6?: boolean;
   isExpanded: boolean;
 }
 export function RollValues(props: RollValuesProps) {
-  const { d10Results, d6Result, fixedResult, isExpanded } = props;
+  const { d10Results, d6Result, crossOutD6, fixedResult, isExpanded } = props;
 
   if (!isExpanded) {
     return null;
@@ -31,28 +32,37 @@ export function RollValues(props: RollValuesProps) {
             display={"flex"}
             alignItems={"center"}
             justifyContent={"space-between"}
+            position={"relative"}
           >
+            {crossOutD6 && (
+              <Box
+                position={"absolute"}
+                height={"1px"}
+                width={"100%"}
+                bgcolor={(theme) => theme.palette.grey[400]}
+                top={"50%"}
+              />
+            )}
             <D6Icon />
-            <Typography
-              ml={1}
-              color={(theme) => theme.palette.grey[200]}
-              sx={
-                d6Result.action === 1
-                  ? {
-                      borderRadius: 1,
-                      borderColor: "primary.light",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      px: 0.5,
-                      mr: -0.5,
-                    }
-                  : {}
-              }
-            >
-              {d6Result.action}
-            </Typography>
             <Typography ml={1} color={(theme) => theme.palette.grey[200]}>
+              <Box
+                component={"span"}
+                sx={
+                  d6Result.action === 1
+                    ? {
+                        borderRadius: 1,
+                        borderColor: "primary.light",
+                        borderWidth: 1,
+                        borderStyle: "solid",
+                        px: 0.5,
+                      }
+                    : {}
+                }
+              >
+                {d6Result.action}
+              </Box>
               {d6Result.modifier ? ` + ${d6Result.modifier}` : ""}
+
               {d6Result.adds ? ` + ${d6Result.adds}` : ""}
               {d6Result.modifier || d6Result.adds
                 ? ` = ${

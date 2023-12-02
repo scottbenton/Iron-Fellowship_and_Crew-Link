@@ -4,6 +4,7 @@ import { CharacterTracksSlice } from "./tracks/characterTracks.slice.type";
 
 export interface CurrentCharacterSliceData {
   currentCharacterId?: string;
+  momentumResetValue?: number;
   currentCharacter?: CharacterDocument;
 }
 export interface CurrentCharacterSliceActions {

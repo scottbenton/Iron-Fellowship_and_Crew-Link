@@ -2,9 +2,8 @@ import { Unsubscribe } from "firebase/firestore";
 import { Roll } from "types/DieRolls.type";
 
 export interface GameLogSliceData {
-  logs: Roll[];
-  newestLogDate?: Date;
-  oldestLogDate?: Date;
+  logs: { [key: string]: Roll };
+  totalLogsToLoad: number;
   loading: boolean;
 }
 
@@ -13,13 +12,14 @@ export interface GameLogSliceActions {
     campaignId?: string;
     characterId?: string;
     roll: Roll;
-  }) => Promise<void>;
+  }) => Promise<string>;
+  updateRoll: (id: string, roll: Roll) => Promise<void>;
 
   loadMoreLogs: () => void;
   subscribe: (params: {
     campaignId?: string;
     characterId?: string;
-    latestLoadedDate: Date;
+    totalLogsToLoad: number;
   }) => Unsubscribe;
 
   resetStore: () => void;

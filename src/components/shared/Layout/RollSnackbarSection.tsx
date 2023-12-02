@@ -5,11 +5,18 @@ import ClearIcon from "@mui/icons-material/Close";
 import { useStore } from "stores/store";
 import { RollDisplay } from "components/features/charactersAndCampaigns/RollDisplay";
 import { NormalRollActions } from "components/features/charactersAndCampaigns/RollDisplay/NormalRollActions";
+import { useMemo } from "react";
 
 export function RollSnackbarSection() {
   const rolls = useStore((store) => store.appState.rolls);
   const clearRoll = useStore((store) => store.appState.clearRoll);
   const clearRolls = useStore((store) => store.appState.clearRolls);
+
+  const sortedRollIds = useMemo(() => {
+    return Object.keys(rolls).sort(
+      (r1, r2) => rolls[r1].timestamp.getTime() - rolls[r2].timestamp.getTime()
+    );
+  }, [rolls]);
 
   const { isFooterVisible, footerHeight } = useFooterState();
 
@@ -36,23 +43,22 @@ export function RollSnackbarSection() {
       })}
     >
       <TransitionGroup>
-        {rolls.map((roll, index, array) => (
-          <Slide
-            direction={"left"}
-            key={`${roll.rollLabel}.${roll.timestamp.getTime()}.${roll.type}`}
-          >
+        {sortedRollIds.map((rollId, index, array) => (
+          <Slide direction={"left"} key={rollId}>
             <Box mt={1}>
               <RollDisplay
-                roll={roll}
-                onClick={() => clearRoll(index)}
+                roll={rolls[rollId]}
+                onClick={() => clearRoll(rollId)}
                 isExpanded={index === array.length - 1}
-                actions={<NormalRollActions roll={roll} />}
+                actions={
+                  <NormalRollActions rollId={rollId} roll={rolls[rollId]} />
+                }
               />
             </Box>
           </Slide>
         ))}
       </TransitionGroup>
-      <Slide direction={"left"} in={rolls.length > 0} unmountOnExit>
+      <Slide direction={"left"} in={sortedRollIds.length > 0} unmountOnExit>
         <Fab
           variant={"extended"}
           size={"medium"}

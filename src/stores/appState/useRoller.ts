@@ -14,7 +14,7 @@ import { getRollResultLabel } from "components/features/charactersAndCampaigns/R
 import { TRACK_TYPES } from "types/Track.type";
 import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
 
-const getRoll = (dieMax: number) => {
+export const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
 };
 
@@ -91,7 +91,11 @@ export function useRoller() {
         campaignId,
         characterId: characterId || undefined,
         roll: statRoll,
-      }).catch(() => {});
+      })
+        .then((rollId) => {
+          addRollToScreen(rollId, statRoll);
+        })
+        .catch(() => {});
 
       if (showSnackbar) {
         announce(
@@ -111,7 +115,6 @@ export function useRoller() {
                 result
               )}`
         );
-        addRollToScreen(statRoll);
       }
 
       return result;
@@ -175,8 +178,11 @@ export function useRoller() {
           campaignId,
           characterId: characterId || undefined,
           roll: oracleRoll,
-        }).catch(() => {});
-        addRollToScreen(oracleRoll);
+        })
+          .then((rollId) => {
+            addRollToScreen(rollId, oracleRoll);
+          })
+          .catch(() => {});
         announce(
           `Rolled ${
             verboseScreenReaderRolls
@@ -232,12 +238,15 @@ export function useRoller() {
         gmsOnly: false,
       };
 
-      addRollToScreen(trackProgressRoll);
       addRollToLog({
         campaignId,
         characterId: characterId || undefined,
         roll: trackProgressRoll,
-      }).catch(() => {});
+      })
+        .then((rollId) => {
+          addRollToScreen(rollId, trackProgressRoll);
+        })
+        .catch(() => {});
       announce(
         `Rolled progress for ${trackProgressRoll.trackType} ${
           trackProgressRoll.rollLabel
@@ -290,8 +299,11 @@ export function useRoller() {
         campaignId,
         characterId: characterId || undefined,
         roll: clockRoll,
-      }).catch(() => {});
-      addRollToScreen(clockRoll);
+      })
+        .then((rollId) => {
+          addRollToScreen(rollId, clockRoll);
+        })
+        .catch(() => {});
       if (verboseScreenReaderRolls) {
         announce(
           `Rolled for clock ${clockRoll.rollLabel} with a ${

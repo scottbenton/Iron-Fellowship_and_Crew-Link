@@ -10,10 +10,10 @@ import { useListenToNotes } from "stores/notes/useListenToNotes";
 import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
 import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
 import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
-import { useListenToNewLogs } from "stores/gameLog/useListenToNewLogs";
 import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
 import { useListenToSectorLocations } from "stores/world/currentWorld/sector/sectorLocations/useListenToSectorLocations";
 import { useListenToSharedAssets } from "stores/campaign/currentCampaign/sharedAssets/useListenToSharedAssets";
+import { useListenToLogs } from "stores/gameLog/useListenToLogs";
 
 export function useSyncStore() {
   const { campaignId } = useParams();
@@ -41,5 +41,5 @@ export function useSyncStore() {
   useListenToNotes();
 
   useListenToSettings();
-  useListenToNewLogs();
+  useListenToLogs();
 }

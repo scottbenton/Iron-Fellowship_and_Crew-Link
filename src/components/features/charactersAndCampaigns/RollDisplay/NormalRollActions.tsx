@@ -1,20 +1,23 @@
 import {
-  Box,
   ButtonBase,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
 } from "@mui/material";
-import { useId, useRef, useState } from "react";
-import { ROLL_TYPE, Roll } from "types/DieRolls.type";
+import { useRef, useState } from "react";
 import MoreIcon from "@mui/icons-material/MoreHoriz";
 import CopyIcon from "@mui/icons-material/CopyAll";
-import { getRollResultLabel } from "./getRollResultLabel";
+import RerollIcon from "@mui/icons-material/Casino";
+import MomentumIcon from "@mui/icons-material/Whatshot";
 import { useSnackbar } from "providers/SnackbarProvider";
 import { convertRollToClipboard } from "./clipboardFormatter";
+import { DieRerollDialog } from "./DieRerollDialog";
+import { ROLL_RESULT, ROLL_TYPE, Roll } from "types/DieRolls.type";
+import { useStore } from "stores/store";
 
 export interface NormalRollActionsProps {
+  rollId: string;
   roll: Roll;
 }
 
@@ -41,12 +44,43 @@ async function pasteRich(rich: string, plain: string) {
 }
 
 export function NormalRollActions(props: NormalRollActionsProps) {
-  const { roll } = props;
-  const id = useId();
-  const blockQuoteId = `roll-action-copy-${id}`;
+  const { rollId, roll } = props;
+
+  const uid = useStore((store) => store.auth.uid);
+  const characterId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacterId
+  );
+  const momentum = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.momentum ?? 0
+  );
+  const momentumResetValue = useStore(
+    (store) => store.characters.currentCharacter.momentumResetValue
+  );
+
+  const updateRoll = useStore((store) => store.gameLog.updateRoll);
+  const updateCharacter = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacter
+  );
+
+  let isMomentumBurnUseful = false;
+  if (roll.type === ROLL_TYPE.STAT && roll.momentumBurned === undefined) {
+    if (
+      roll.result === ROLL_RESULT.MISS &&
+      (momentum > roll.challenge1 || momentum > roll.challenge2)
+    ) {
+      isMomentumBurnUseful = true;
+    } else if (
+      roll.result === ROLL_RESULT.WEAK_HIT &&
+      momentum > roll.challenge1 &&
+      momentum > roll.challenge2
+    ) {
+      isMomentumBurnUseful = true;
+    }
+  }
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuParent = useRef<HTMLButtonElement>(null);
+  const [isDieRerollDialogOpen, setIsDieRerollDialogOpen] = useState(false);
 
   const { error, success } = useSnackbar();
 
@@ -66,29 +100,37 @@ export function NormalRollActions(props: NormalRollActionsProps) {
     }
   };
 
-  let rollTitle = roll.rollLabel;
-  let actionContents: string | undefined = undefined;
-  let challengeContents: string | undefined = undefined;
-  let result: string | undefined = undefined;
+  const handleBurnMomentum = () => {
+    if (
+      characterId &&
+      roll.type === ROLL_TYPE.STAT &&
+      momentum &&
+      momentumResetValue !== undefined
+    ) {
+      let newRollResult = ROLL_RESULT.MISS;
+      if (momentum > roll.challenge1 && momentum > roll.challenge2) {
+        newRollResult = ROLL_RESULT.HIT;
+      } else if (momentum > roll.challenge1 || momentum > roll.challenge2) {
+        newRollResult = ROLL_RESULT.WEAK_HIT;
+      }
 
-  if (roll.type === ROLL_TYPE.STAT) {
-    if (roll.moveName) {
-      rollTitle = `${roll.moveName} (${roll.rollLabel})`;
+      const promises: Promise<unknown>[] = [];
+      promises.push(
+        updateRoll(rollId, {
+          ...roll,
+          momentumBurned: momentum,
+          result: newRollResult,
+        })
+      );
+      promises.push(updateCharacter({ momentum: momentumResetValue }));
+
+      Promise.all(promises)
+        .catch(() => {})
+        .then(() => {
+          success("Burned Momentum");
+        });
     }
-
-    const rollTotal = roll.action + (roll.modifier ?? 0) + (roll.adds ?? 0);
-    actionContents = roll.action + "";
-    if (roll.modifier || roll.adds) {
-      actionContents +=
-        (roll.modifier ? ` + ${roll.modifier}` : "") +
-        (roll.adds ? ` + ${roll.adds}` : "") +
-        ` = ${rollTotal > 10 ? "10 (Max)" : rollTotal}`;
-    }
-
-    challengeContents = roll.challenge1 + ", " + roll.challenge2;
-
-    result = getRollResultLabel(roll.result).toLocaleUpperCase();
-  }
+  };
 
   return (
     <>
@@ -123,27 +165,47 @@ export function NormalRollActions(props: NormalRollActionsProps) {
             </ListItemIcon>
             <ListItemText>Copy Roll Result</ListItemText>
           </MenuItem>
+          {roll.type === ROLL_TYPE.STAT && roll.uid === uid && (
+            <MenuItem
+              onClick={(evt) => {
+                evt.stopPropagation();
+                setIsMenuOpen(false);
+                setIsDieRerollDialogOpen(true);
+              }}
+            >
+              <ListItemIcon>
+                <RerollIcon />
+              </ListItemIcon>
+              <ListItemText>Reroll Die</ListItemText>
+            </MenuItem>
+          )}
+          {roll.type === ROLL_TYPE.STAT &&
+            roll.uid === uid &&
+            roll.characterId === characterId &&
+            isMomentumBurnUseful && (
+              <MenuItem
+                onClick={(evt) => {
+                  evt.stopPropagation();
+                  setIsMenuOpen(false);
+                  handleBurnMomentum();
+                }}
+              >
+                <ListItemIcon>
+                  <MomentumIcon />
+                </ListItemIcon>
+                <ListItemText>Burn Momentum</ListItemText>
+              </MenuItem>
+            )}
         </Menu>
       )}
-      {/* Copy to clipboard component */}
-      <Box component={"blockquote"} display={"none"} id={blockQuoteId}>
-        <p>{rollTitle}</p>
-        {actionContents && (
-          <p>
-            <em>Action:</em> {actionContents}
-          </p>
-        )}
-        {challengeContents && (
-          <p>
-            <em>Challenge:</em> {challengeContents}
-          </p>
-        )}
-        {result && (
-          <p>
-            <b>{result}</b>
-          </p>
-        )}
-      </Box>
+      {roll.type === ROLL_TYPE.STAT && (
+        <DieRerollDialog
+          open={isDieRerollDialogOpen}
+          handleClose={() => setIsDieRerollDialogOpen(false)}
+          rollId={rollId}
+          roll={roll}
+        />
+      )}
     </>
   );
 }

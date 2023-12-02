@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useStore } from "stores/store";
 import { Virtuoso } from "react-virtuoso";
 import { Box, LinearProgress } from "@mui/material";
@@ -9,19 +9,24 @@ const MAX_ITEMS = 1000000000;
 export function GameLog() {
   const loading = useStore((store) => store.gameLog.loading);
 
-  const logs = useStore((store) =>
-    Object.values(store.gameLog.logs).sort(
-      (l1, l2) => l1.timestamp.getTime() - l2.timestamp.getTime()
-    )
-  );
-  const logLength = logs.length;
+  const logs = useStore((store) => store.gameLog.logs);
+
+  const orderedLogKeys = useMemo(() => {
+    return Object.keys(logs).sort(
+      (l1, l2) => logs[l1].timestamp.getTime() - logs[l2].timestamp.getTime()
+    );
+  }, [logs]);
+
+  const logLength = orderedLogKeys.length;
 
   const getLogs = useStore((store) => store.gameLog.loadMoreLogs);
-  useEffect(() => {
-    if (logLength === 0) {
+
+  const hasLogs = logLength > 0;
+  const loadMoreLogs = useCallback(() => {
+    if (hasLogs) {
       getLogs();
     }
-  }, [getLogs, logLength]);
+  }, [getLogs, hasLogs]);
 
   const [firstItemIndex, setFirstItemIndex] = useState(MAX_ITEMS);
 
@@ -35,9 +40,11 @@ export function GameLog() {
       <Virtuoso
         firstItemIndex={firstItemIndex}
         initialTopMostItemIndex={MAX_ITEMS - 1}
-        data={logs}
-        startReached={getLogs}
-        itemContent={(index, log) => <GameLogEntry log={log} />}
+        data={orderedLogKeys}
+        startReached={loadMoreLogs}
+        itemContent={(index, logId) => (
+          <GameLogEntry logId={logId} log={logs[logId]} />
+        )}
       />
     </Box>
   );
