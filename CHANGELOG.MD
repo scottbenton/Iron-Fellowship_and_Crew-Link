@@ -34,6 +34,7 @@
 - Made some performance improvements on the character view
 - Fixed shared tracks not showing up in the move rollers
 - Prevented oracle inputs from reordering themselves
+- Cleaned up a few error messages across the app
 
 ---
 
