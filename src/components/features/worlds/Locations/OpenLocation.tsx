@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { ChangeEvent, useLayoutEffect, useRef } from "react";
+import { ChangeEvent, useRef } from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
@@ -99,18 +99,6 @@ export function OpenLocation(props: OpenLocationProps) {
   const bondedCharacterNames = Object.keys(currentCampaignCharacters)
     .filter((characterId) => location.characterBonds?.[characterId])
     .map((characterId) => currentCampaignCharacters[characterId]?.name ?? "");
-
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const initialLoadRef = useRef<boolean>(true);
-
-  useLayoutEffect(() => {
-    if (initialLoadRef.current && nameInputRef.current) {
-      if (location.name === "New Location") {
-        nameInputRef.current.select();
-      }
-      initialLoadRef.current = false;
-    }
-  }, [location]);
 
   const handleLocationDelete = () => {
     confirm({

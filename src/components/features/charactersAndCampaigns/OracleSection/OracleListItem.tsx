@@ -12,10 +12,11 @@ export interface OracleListItemProps {
   onRollClick: () => void;
   text: string;
   onOpenClick: () => void;
+  disabled?: boolean;
 }
 
 export function OracleListItem(props: OracleListItemProps) {
-  const { id, text, onRollClick, onOpenClick } = props;
+  const { id, text, onRollClick, onOpenClick, disabled } = props;
 
   const isTouchDevice = useIsTouchDevice();
 
@@ -42,6 +43,7 @@ export function OracleListItem(props: OracleListItemProps) {
       })}
       secondaryAction={
         <IconButton
+          disabled={disabled}
           id={"open-table"}
           onClick={() => onOpenClick()}
           sx={{
@@ -58,6 +60,7 @@ export function OracleListItem(props: OracleListItemProps) {
       }
     >
       <ListItemButton
+        disabled={disabled}
         onClick={() => onRollClick()}
         sx={{ pr: "96px!important" }}
       >

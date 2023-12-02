@@ -42,7 +42,8 @@ export function MoveCategory(props: MoveCategoryProps) {
     <>
       {showNewView ? (
         <CollapsibleSectionHeader
-          open={isExpandedOrForced ?? false}
+          open={isExpanded}
+          forcedOpen={forceOpen}
           toggleOpen={() => !forceOpen && setIsExpanded((prev) => !prev)}
           text={category.Title.Standard}
         />
@@ -81,6 +82,7 @@ export function MoveCategory(props: MoveCategoryProps) {
                 disablePadding
               >
                 <ListItemButton
+                  disabled={!isExpandedOrForced}
                   onClick={() => openMove(move)}
                   sx={{
                     display: "flex",

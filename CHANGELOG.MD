@@ -25,6 +25,9 @@
 
 ### Accessibility
 
+- Disabled oracles and moves when collapsing sections to prevent tab focus being lost
+- Removed a couple of instances of unexpected focusing around the app.
+
 ### Bug Fixes
 
 - Fixed custom asset tracks not appearing if they weren't added initially

@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { NPCDocument, NPC_SPECIES } from "types/NPCs.type";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/shared/SectionHeading";
@@ -68,18 +68,6 @@ export function OpenNPC(props: OpenNPCProps) {
   const { showGMFields, showGMTips, isSinglePlayer } = useWorldPermissions();
 
   useListenToCurrentNPC(npcId);
-
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const initialLoadRef = useRef<boolean>(true);
-
-  useLayoutEffect(() => {
-    if (initialLoadRef.current && nameInputRef.current) {
-      if (npc.name === "New NPC") {
-        nameInputRef.current.select();
-      }
-      initialLoadRef.current = false;
-    }
-  }, [npc]);
 
   const updateNPC = useStore(
     (store) => store.worlds.currentWorld.currentWorldNPCs.updateNPC
@@ -276,7 +264,6 @@ export function OpenNPC(props: OpenNPCProps) {
                 color={"primary"}
                 oracleTableId={npcNameOracles}
                 joinOracleTables={isStarforged}
-                inputRef={nameInputRef}
                 initialValue={npc.name}
                 updateValue={(newName) => handleUpdateNPC({ name: newName })}
                 sx={{ mt: 2, maxWidth: 300 }}
@@ -321,7 +308,6 @@ export function OpenNPC(props: OpenNPCProps) {
                   color={"primary"}
                   oracleTableId={npcNameOracles}
                   joinOracleTables={isStarforged}
-                  inputRef={nameInputRef}
                   initialValue={npc.name}
                   updateValue={(newName) => handleUpdateNPC({ name: newName })}
                 />

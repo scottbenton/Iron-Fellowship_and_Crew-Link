@@ -8,13 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  ChangeEvent,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { RtcRichTextEditor } from "components/shared/RichTextEditor/RtcRichTextEditor";
@@ -73,18 +67,6 @@ export function OpenLore(props: OpenLoreProps) {
   const removeLoreImage = useStore(
     (store) => store.worlds.currentWorld.currentWorldLore.removeLoreImage
   );
-
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const initialLoadRef = useRef<boolean>(true);
-
-  useLayoutEffect(() => {
-    if (initialLoadRef.current && nameInputRef.current) {
-      if (lore.name === "New Lore Document") {
-        nameInputRef.current.select();
-      }
-      initialLoadRef.current = false;
-    }
-  }, [lore]);
 
   const handleLoreDelete = () => {
     confirm({
