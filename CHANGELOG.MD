@@ -8,6 +8,7 @@
 - Added the ability to copy rolls to the clipboard
 - Added the ability to reroll rolls
 - Added the ability to burn momentum to update rolls
+- Added a search box to the asset card dialog to make find assets quicker
 
 ### Changes
 

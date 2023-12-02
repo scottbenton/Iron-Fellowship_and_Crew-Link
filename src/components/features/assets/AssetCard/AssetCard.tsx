@@ -12,7 +12,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { ForwardedRef, ReactNode, forwardRef, useState } from "react";
 import { Track } from "components/features/Track";
 import { StoredAsset } from "types/Asset.type";
 import { Asset, AssetAlterPropertiesConditionMeter } from "dataforged";
@@ -49,7 +49,10 @@ export interface AssetCardProps {
   handleDeleteClick?: () => void;
 }
 
-export function AssetCard(props: AssetCardProps) {
+function AssetCardComponent(
+  props: AssetCardProps,
+  ref: ForwardedRef<HTMLDivElement>
+) {
   const {
     assetId,
     storedAsset,
@@ -120,6 +123,7 @@ export function AssetCard(props: AssetCardProps) {
     <>
       <Card
         variant={"outlined"}
+        ref={ref}
         sx={{ height: "100%", display: "flex", flexDirection: "column", ...sx }}
       >
         <Box
@@ -359,3 +363,7 @@ export function AssetCard(props: AssetCardProps) {
     </>
   );
 }
+
+export const AssetCard = forwardRef<HTMLDivElement, AssetCardProps>(
+  AssetCardComponent
+);

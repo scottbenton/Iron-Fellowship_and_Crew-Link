@@ -6,19 +6,20 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Grid,
   Tab,
   Tabs,
 } from "@mui/material";
-import { useState } from "react";
-import { assetGroups } from "data/assets";
+import { useCallback, useState } from "react";
+import { assetGroupMap, assetGroups } from "data/assets";
 import { StoredAsset } from "types/Asset.type";
 import { Asset } from "dataforged";
-import { AssetCard } from "../AssetCard/AssetCard";
 import { CreateCustomAsset } from "./CreateCustomAsset";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { encodeDataswornId } from "functions/dataswornIdEncoder";
+import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
+import { AssetCardSearch } from "./AssetCardSearch";
+import { AssetCardDialogCard } from "./AssetCardDialogCard";
 
 export interface AssetCardDialogProps {
   open: boolean;
@@ -27,6 +28,11 @@ export interface AssetCardDialogProps {
   handleAssetSelection: (asset: Omit<StoredAsset, "order">) => void;
   showSharedAssetWarning?: boolean;
 }
+
+const groups: { name: string; id: string }[] = assetGroups.map((group) => ({
+  id: group.$id,
+  name: group.Title.Standard,
+}));
 
 export function AssetCardDialog(props: AssetCardDialogProps) {
   const {
@@ -37,7 +43,13 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
     showSharedAssetWarning,
   } = props;
 
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTabId, setSelectedTabId] = useState<string>(groups[0].id);
+  const [searchedAssetId, setSearchedAssetId] = useState<string>();
+  const handleSearch = useCallback((groupId: string, assetId: string) => {
+    setSelectedTabId(groupId);
+    setSearchedAssetId(assetId);
+  }, []);
+  const clearSearch = useCallback(() => setSearchedAssetId(undefined), []);
 
   const onAssetSelect = (asset: Asset, isCustom?: boolean) => {
     const inputs: { [key: string]: string } = {};
@@ -66,27 +78,39 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
   };
 
   return (
-    <Dialog open={open} onClose={() => handleClose()} maxWidth={"md"} fullWidth>
-      <DialogTitle>Select an asset</DialogTitle>
+    <Dialog open={open} onClose={handleClose} maxWidth={"md"} fullWidth>
+      <DialogTitleWithCloseButton
+        onClose={handleClose}
+        actions={
+          <Box display={{ xs: "none", sm: "block" }}>
+            <AssetCardSearch handleSearch={handleSearch} />
+          </Box>
+        }
+      >
+        Select an asset
+      </DialogTitleWithCloseButton>
       <DialogContent>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Box display={{ xs: "block", sm: "none" }}>
+            <AssetCardSearch handleSearch={handleSearch} />
+          </Box>
           <Tabs
-            value={selectedTab}
-            onChange={(evt, value) => setSelectedTab(value)}
+            value={selectedTabId}
+            onChange={(evt, value) => setSelectedTabId(value)}
             variant={"scrollable"}
             scrollButtons={"auto"}
           >
-            {Object.values(assetGroups).map((group, index) => (
-              <Tab label={group.Title.Standard} key={index} />
+            {groups.map((group, index) => (
+              <Tab label={group.name} value={group.id} key={index} />
             ))}
-            <Tab label={"custom"} />
+            <Tab label={"custom"} value={"custom"} />
           </Tabs>
         </Box>
         <Box py={1}>
-          {selectedTab < assetGroups.length ? (
+          {selectedTabId !== "custom" ? (
             <>
               {showSharedAssetWarning &&
-                assetGroups[selectedTab].Usage.Shared && (
+                assetGroupMap[selectedTabId].Usage.Shared && (
                   <Alert severity={"warning"}>
                     <AlertTitle>Shared Assets</AlertTitle>
                     These assets are shared amongst characters playing together
@@ -96,25 +120,18 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
                   </Alert>
                 )}
               <MarkdownRenderer
-                markdown={assetGroups[selectedTab].Description}
+                markdown={assetGroupMap[selectedTabId].Description}
               />
               <Grid container spacing={1} mt={2}>
-                {Object.values(assetGroups[selectedTab].Assets).map(
+                {Object.values(assetGroupMap[selectedTabId].Assets).map(
                   (asset, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
-                      <AssetCard
-                        assetId={asset.$id}
-                        readOnly
-                        showSharedIcon
-                        actions={
-                          <Button
-                            color={"inherit"}
-                            onClick={() => onAssetSelect(asset)}
-                            disabled={loading}
-                          >
-                            Select
-                          </Button>
-                        }
+                      <AssetCardDialogCard
+                        asset={asset}
+                        selectAsset={() => onAssetSelect(asset)}
+                        loading={loading}
+                        searched={asset.$id === searchedAssetId}
+                        clearSearched={clearSearch}
                       />
                     </Grid>
                   )
