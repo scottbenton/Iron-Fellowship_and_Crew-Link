@@ -8,6 +8,7 @@
 - Added the ability to copy rolls to the clipboard
 - Added the ability to reroll rolls
 - Added the ability to burn momentum to update rolls
+- Added a search box to the asset card dialog to make find assets quicker
 
 ### Changes
 
@@ -33,6 +34,7 @@
 - Made some performance improvements on the character view
 - Fixed shared tracks not showing up in the move rollers
 - Prevented oracle inputs from reordering themselves
+- Cleaned up a few error messages across the app
 
 ---
 

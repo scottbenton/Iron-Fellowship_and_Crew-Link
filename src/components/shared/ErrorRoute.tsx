@@ -1,24 +1,33 @@
 import { useRouteError } from "react-router-dom";
 import { EmptyState } from "./EmptyState";
 import { useAppName } from "hooks/useAppName";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { reportPageError } from "lib/analytics.lib";
 
 export function ErrorRoute() {
   const error = useRouteError();
-  console.error(error);
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const appName = useAppName();
 
   useEffect(() => {
+    let errorMessage: string | undefined = undefined;
+    let errorTrace: string | undefined = undefined;
+
     if (typeof error === "string") {
-      reportPageError(error, undefined, location.pathname);
+      errorMessage = error;
     } else if (error instanceof Error) {
-      reportPageError(error.message, error.stack, location.pathname);
+      errorMessage = error.message;
+      errorTrace = error.stack;
+    }
+
+    if (errorMessage?.includes("Failed to fetch dynamically imported module")) {
+      window.location.reload();
     } else {
+      setErrorMessage(errorMessage);
       reportPageError(
-        "Could not extract error message",
-        undefined,
+        errorMessage ?? "Could not extract error message.",
+        errorTrace,
         location.pathname
       );
     }
@@ -28,7 +37,9 @@ export function ErrorRoute() {
     <EmptyState
       showImage
       title={"Error"}
-      message={`${appName} failed to load the page properly. We are sorry for the inconvenience!`}
+      message={`${appName} failed to load the page properly. We are sorry for the inconvenience!${
+        errorMessage && ` Full error message: ${errorMessage}`
+      }`}
     />
   );
 }

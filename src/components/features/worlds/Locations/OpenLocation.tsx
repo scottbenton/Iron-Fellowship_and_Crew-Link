@@ -22,6 +22,8 @@ import { useWorldPermissions } from "../useWorldPermissions";
 import { ItemHeader } from "../ItemHeader";
 import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 import { ImageBanner } from "../ImageBanner";
+import { MAX_FILE_SIZE, MAX_FILE_SIZE_LABEL } from "lib/storage.lib";
+import { useSnackbar } from "providers/SnackbarProvider";
 
 export interface OpenLocationProps {
   worldId: string;
@@ -48,6 +50,7 @@ export function OpenLocation(props: OpenLocationProps) {
 
   useListenToCurrentLocation(locationId);
 
+  const { error } = useSnackbar();
   const confirm = useConfirm();
 
   const updateLocation = useStore(
@@ -136,6 +139,13 @@ export function OpenLocation(props: OpenLocationProps) {
     const files = evt.target.files;
     const file = files?.[0];
     if (file) {
+      if (files[0].size > MAX_FILE_SIZE) {
+        error(
+          `File is too large. The max file size is ${MAX_FILE_SIZE_LABEL}.`
+        );
+        evt.target.value = "";
+        return;
+      }
       uploadLocationImage(locationId, file).catch(() => {});
     }
   };

@@ -12,6 +12,8 @@ import AddPhotoIcon from "@mui/icons-material/AddPhotoAlternate";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import RemoveImageIcon from "@mui/icons-material/Delete";
+import { useSnackbar } from "providers/SnackbarProvider";
+import { MAX_FILE_SIZE, MAX_FILE_SIZE_LABEL } from "lib/storage.lib";
 
 export interface RoundedImageUploaderProps {
   src?: string;
@@ -28,6 +30,8 @@ const RoundedImageUploaderComponent = (
   const { src, title, handleFileUpload, handleUploadClick, removeImage } =
     props;
 
+  const { error } = useSnackbar();
+
   const [isHovering, setIsHovering] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -38,6 +42,13 @@ const RoundedImageUploaderComponent = (
     const files = evt.target.files;
     const file = files?.[0];
     if (file) {
+      if (files[0].size > MAX_FILE_SIZE) {
+        error(
+          `File is too large. The max file size is ${MAX_FILE_SIZE_LABEL}.`
+        );
+        evt.target.value = "";
+        return;
+      }
       handleFileUpload(file);
     }
   };

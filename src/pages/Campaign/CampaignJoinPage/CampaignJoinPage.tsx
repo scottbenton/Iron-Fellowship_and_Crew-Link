@@ -23,7 +23,7 @@ export function CampaignJoinPage() {
   const [getCampaignError, setGetCampaignError] = useState<string>();
 
   useEffect(() => {
-    if (campaignId) {
+    if (campaignId && uid) {
       getCampaign(campaignId)
         .then((campaign) => {
           setGetCampaignLoading(false);
@@ -36,7 +36,7 @@ export function CampaignJoinPage() {
           );
         });
     }
-  }, [getCampaign, campaignId]);
+  }, [getCampaign, campaignId, uid]);
 
   const addUserToCampaign = useStore(
     (store) => store.campaigns.addUserToCampaign
@@ -54,12 +54,6 @@ export function CampaignJoinPage() {
         .finally(() => setAddUserToCampaignLoading(false));
     }
   };
-
-  useEffect(() => {
-    if (campaignId) {
-      getCampaign(campaignId).catch(() => {});
-    }
-  }, [campaignId, getCampaign]);
 
   const appName = useAppName();
 
