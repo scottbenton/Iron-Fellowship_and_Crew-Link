@@ -43,8 +43,10 @@ export function CampaignCard(props: CampaignCard) {
         sx={{ p: 2, height: "100%", display: "flex", alignItems: "flex-start" }}
       >
         <Box flexGrow={1}>
-          <Typography variant={"h6"}>{campaign.name}</Typography>
-          <Typography color={"textSecondary"}>
+          <Typography variant={"h6"} component={"p"}>
+            {campaign.name}
+          </Typography>
+          <Typography color={"textSecondary"} component={"p"}>
             {(!campaign.gmIds || campaign.gmIds.length === 0) && "No GM Found"}
             {gmNameString}
           </Typography>
@@ -55,7 +57,7 @@ export function CampaignCard(props: CampaignCard) {
           justifyContent={"flex-end"}
           alignSelf={"stretch"}
         >
-          <OpenIcon />
+          <OpenIcon aria-hidden />
         </Box>
       </CardActionArea>
     </Card>

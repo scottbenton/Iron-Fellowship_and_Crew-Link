@@ -113,6 +113,7 @@ export function PortraitAvatarDisplay(props: PortraitAvatarDisplayProps) {
               setIsTaller(true);
             }
           }}
+          alt={"Character Portrait"}
         />
       ) : !loading ? (
         name ? (

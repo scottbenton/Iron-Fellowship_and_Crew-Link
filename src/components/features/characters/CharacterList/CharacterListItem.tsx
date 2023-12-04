@@ -83,14 +83,14 @@ export function CharacterListItem(props: CharacterListItemProps) {
           pt={1}
           flexGrow={1}
         >
-          <Typography variant={"h6"} lineHeight={1.25}>
+          <Typography variant={"h6"} lineHeight={1.25} component={"p"}>
             {name}
           </Typography>
 
           {usePlayerNameAsSecondaryText && (
             <Typography
               variant={"subtitle2"}
-              component={"div"}
+              component={"p"}
               // mt={-1}
               color={(theme) => theme.palette.text.secondary}
             >
@@ -116,7 +116,7 @@ export function CharacterListItem(props: CharacterListItemProps) {
             justifyContent={"flex-end"}
             alignSelf={"stretch"}
           >
-            <OpenIcon />
+            <OpenIcon aria-hidden />
           </Box>
         )}
       </Wrapper>
