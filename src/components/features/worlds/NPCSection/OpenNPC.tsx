@@ -130,8 +130,7 @@ export function OpenNPC(props: OpenNPCProps) {
     npcLocationBonds[currentCharacterId ?? ""] ?? false;
   const isCharacterBondedToNPC = npcBonds[currentCharacterId ?? ""] ?? false;
 
-  const singleplayerBond =
-    isCharacterBondedToLocation || isCharacterBondedToNPC || false;
+  const singleplayerBond = isCharacterBondedToNPC || false;
 
   const updateNPCCharacterBond = useStore(
     (store) => store.worlds.currentWorld.currentWorldNPCs.updateNPCCharacterBond
@@ -583,7 +582,6 @@ export function OpenNPC(props: OpenNPCProps) {
                         : undefined
                     }
                     bondedCharacters={bondedCharacterNames}
-                    disableToggle={isCharacterBondedToLocation}
                     inheritedBondName={
                       isCharacterBondedToLocation
                         ? npcLocation?.name
@@ -664,7 +662,6 @@ export function OpenNPC(props: OpenNPCProps) {
                       : undefined
                   }
                   bondedCharacters={bondedCharacterNames}
-                  disableToggle={isCharacterBondedToLocation}
                   inheritedBondName={
                     isCharacterBondedToLocation ? npcLocation?.name : undefined
                   }
