@@ -51,7 +51,13 @@ export function BondsSection(props: BondsSectionProps) {
     <>
       {(onBondToggle || (onConnectionToggle && isStarforged)) && (
         <Grid item xs={12}>
-          <>
+          <Stack spacing={0.5} direction={"row"} flexWrap={"wrap"}>
+            {inheritedBondName && (
+              <FormControlLabel
+                control={<Checkbox disabled={true} checked={true} />}
+                label={`Bonded via ${inheritedBondName}`}
+              />
+            )}
             {onBondToggle && (
               <FormControlLabel
                 control={
@@ -66,12 +72,7 @@ export function BondsSection(props: BondsSectionProps) {
                     }}
                   />
                 }
-                label={
-                  "Bonded" +
-                  (inheritedBondName && disableToggle
-                    ? ` via ${inheritedBondName}`
-                    : "")
-                }
+                label={"Bonded"}
               />
             )}
             {isStarforged && onConnectionToggle && (
@@ -89,7 +90,7 @@ export function BondsSection(props: BondsSectionProps) {
                 sx={{ ml: 2 }}
               />
             )}
-          </>
+          </Stack>
         </Grid>
       )}
       {!isBonded &&

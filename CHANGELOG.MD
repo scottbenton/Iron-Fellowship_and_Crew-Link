@@ -22,6 +22,7 @@
 - Added bond tracks, experience, and legacy tracks to the character cards on the GM screen
 - Added a checkbox to reset track progress when changing the difficulty of a progress track
 - Changed labels for matches and ones on the action die
+- Characters that are at a bonded location can now also be bonded with individually
 
 ### Accessibility
 
