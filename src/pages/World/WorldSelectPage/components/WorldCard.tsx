@@ -39,7 +39,9 @@ export function WorldCard(props: WorldCardProps) {
         sx={{ p: 2, height: "100%", display: "flex", alignItems: "flex-start" }}
       >
         <Box flexGrow={1}>
-          <Typography variant={"h6"}>{world.name}</Typography>
+          <Typography variant={"h6"} component={"p"}>
+            {world.name}
+          </Typography>
           <Typography color={"textSecondary"}>
             {worldOwnerString ? worldOwnerString : <Skeleton width={"12ch"} />}
           </Typography>
@@ -50,7 +52,7 @@ export function WorldCard(props: WorldCardProps) {
           justifyContent={"flex-end"}
           alignSelf={"stretch"}
         >
-          <OpenIcon />
+          <OpenIcon aria-hidden />
         </Box>
       </CardActionArea>
     </Card>

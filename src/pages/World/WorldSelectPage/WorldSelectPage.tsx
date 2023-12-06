@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Grid,
-  Hidden,
-  LinearProgress,
-} from "@mui/material";
+import { Alert, Box, Button, Hidden, LinearProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import AddWorldIcon from "@mui/icons-material/Add";
@@ -78,7 +71,7 @@ export function WorldSelectPage() {
             <Button
               variant={"contained"}
               color={"primary"}
-              endIcon={<AddWorldIcon />}
+              endIcon={<AddWorldIcon aria-hidden />}
               onClick={() => handleWorldCreate()}
             >
               Create a World
@@ -106,20 +99,36 @@ export function WorldSelectPage() {
             }
           />
         ) : (
-          <Grid container spacing={2}>
-            {worldIds.map((worldId, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+          <Box
+            component={"ul"}
+            display={"grid"}
+            gridTemplateColumns={"repeat(12, 1fr)"}
+            gap={2}
+            pl={0}
+            my={0}
+            sx={{ listStyle: "none" }}
+          >
+            {worldIds.map((worldId) => (
+              <Box
+                component={"li"}
+                gridColumn={{
+                  xs: "span 12",
+                  sm: "span 6",
+                  md: "span 4",
+                }}
+                key={worldId}
+              >
                 <WorldCard worldId={worldId} />
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         )}
         <Hidden smUp>
           <Box height={80} />
         </Hidden>
         <Hidden smUp>
           <FooterFab color={"primary"} onClick={() => handleWorldCreate()}>
-            <AddWorldIcon />
+            <AddWorldIcon aria-label={"Create a World"} />
           </FooterFab>
         </Hidden>
       </PageContent>

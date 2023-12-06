@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import { ReactNode } from "react";
 import { CharacterDocument } from "types/Character.type";
 import { CharacterListItem } from "./CharacterListItem";
@@ -26,13 +26,23 @@ export function CharacterList(props: CharacterListProps) {
   const minGridValue = maxColumns ? 12 / maxColumns : 4;
 
   return (
-    <Grid container spacing={2}>
+    <Box
+      component={"ul"}
+      display={"grid"}
+      gridTemplateColumns={"repeat(12, 1fr)"}
+      gap={2}
+      pl={0}
+      my={0}
+      sx={{ listStyle: "none" }}
+    >
       {Object.keys(characters).map((characterId, index) => (
-        <Grid
-          item
-          xs={12}
-          sm={6 > minGridValue ? 6 : minGridValue}
-          md={4 > minGridValue ? 6 : minGridValue}
+        <Box
+          component={"li"}
+          gridColumn={{
+            xs: "span 12",
+            sm: `span ${6 > minGridValue ? 6 : minGridValue}`,
+            md: `span ${4 > minGridValue ? 4 : minGridValue}`,
+          }}
           key={index}
         >
           <CharacterListItem
@@ -49,8 +59,8 @@ export function CharacterList(props: CharacterListProps) {
                 : undefined
             }
           />
-        </Grid>
+        </Box>
       ))}
-    </Grid>
+    </Box>
   );
 }

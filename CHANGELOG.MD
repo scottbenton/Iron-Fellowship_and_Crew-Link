@@ -27,6 +27,7 @@
 
 - Disabled oracles and moves when collapsing sections to prevent tab focus being lost
 - Removed a couple of instances of unexpected focusing around the app.
+- Updated list pages (character, campaign, and world) to fix a few accessibility issues
 
 ### Bug Fixes
 

@@ -44,7 +44,7 @@ export function Component() {
               to={constructCharacterPath(CHARACTER_ROUTES.CREATE)}
               variant={"contained"}
               color={"primary"}
-              endIcon={<AddCharacterIcon />}
+              endIcon={<AddCharacterIcon aria-hidden />}
             >
               Create a Character
             </Button>
@@ -92,7 +92,7 @@ export function Component() {
                 href={constructCharacterPath(CHARACTER_ROUTES.CREATE)}
                 color={"primary"}
               >
-                <AddCharacterIcon />
+                <AddCharacterIcon aria-label={"Create a Character"} />
               </FooterFab>
             </Hidden>
           </>

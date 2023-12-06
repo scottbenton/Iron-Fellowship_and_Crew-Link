@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Grid,
   Hidden,
   LinearProgress,
   Alert,
@@ -59,7 +58,7 @@ export function CampaignSelectPage() {
               onClick={() => setCreateCampaignDialogOpen(true)}
               color={"primary"}
               variant={"contained"}
-              endIcon={<CreateCampaignIcon />}
+              endIcon={<CreateCampaignIcon aria-hidden />}
             >
               Create a Campaign
             </Button>
@@ -91,16 +90,32 @@ export function CampaignSelectPage() {
             }
           />
         ) : (
-          <Grid container spacing={2}>
-            {sortedCampaignIds.map((campaignId, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+          <Box
+            component={"ul"}
+            display={"grid"}
+            gridTemplateColumns={"repeat(12, 1fr)"}
+            gap={2}
+            pl={0}
+            my={0}
+            sx={{ listStyle: "none" }}
+          >
+            {sortedCampaignIds.map((campaignId) => (
+              <Box
+                component={"li"}
+                gridColumn={{
+                  xs: "span 12",
+                  sm: "span 6",
+                  md: "span 4",
+                }}
+                key={campaignId}
+              >
                 <CampaignCard
                   campaignId={campaignId}
                   campaign={campaignMap[campaignId]}
                 />
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         )}
       </PageContent>
 
@@ -112,7 +127,7 @@ export function CampaignSelectPage() {
           onClick={() => setCreateCampaignDialogOpen(true)}
           color={"primary"}
         >
-          <CreateCampaignIcon />
+          <CreateCampaignIcon aria-label={"Create a Campaign"} />
         </FooterFab>
       </Hidden>
       <CreateCampaignDialog
