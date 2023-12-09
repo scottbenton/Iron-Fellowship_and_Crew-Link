@@ -48,7 +48,7 @@ jobs:
           PROJECT_ID: "${{secrets.IRON_FELLOWSHIP_FIREBASE_PROJECTID}}"
       - uses: w9jds/firebase-action@master
         with:
-          args: deploy --only storage
+          args: deploy --only storage --debug
         env:
           GCP_SA_KEY: ${{ secrets.IRON_FELLOWSHIP_FIREBASE_SERVICE_ACCOUNT }}
           PROJECT_ID: "${{secrets.IRON_FELLOWSHIP_FIREBASE_PROJECTID}}"
