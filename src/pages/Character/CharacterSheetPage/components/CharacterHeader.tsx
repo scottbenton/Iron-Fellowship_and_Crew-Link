@@ -16,7 +16,6 @@ import {
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
 import { useIsMobile } from "hooks/useIsMobile";
-import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
 
 import { StickyHeader } from "components/shared/StickyHeader";
 import { CharacterHeaderMoveOracleButtons } from "./CharacterHeaderMoveOracleButtons";
@@ -40,14 +39,12 @@ export function CharacterHeader() {
   const theme = useTheme();
   const isMobile = useIsMobile();
   const isSmall = useMediaQuery(theme.breakpoints.down("md")) && !isMobile;
-  const newViewEnabled = useNewCharacterMobileView();
 
   return (
     <StickyHeader
-      maxStickyBreakpoint={newViewEnabled ? "sm" : undefined}
+      maxStickyBreakpoint={"sm"}
       outerChildren={
-        (isMobile || isSmall) &&
-        newViewEnabled && <CharacterHeaderMoveOracleButtons />
+        (isMobile || isSmall) && <CharacterHeaderMoveOracleButtons />
       }
     >
       <Box display={"flex"} alignItems={"center"}>
@@ -95,7 +92,7 @@ export function CharacterHeader() {
           </Stack>
         </Box>
       </Box>
-      {(!isMobile || !newViewEnabled) && <StatsSection />}
+      {!isMobile && <StatsSection />}
     </StickyHeader>
   );
 }

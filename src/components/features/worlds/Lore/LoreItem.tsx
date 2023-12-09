@@ -7,12 +7,11 @@ import { LoreDocumentWithGMProperties } from "stores/world/currentWorld/lore/lor
 export interface LoreItemProps {
   lore: LoreDocumentWithGMProperties;
   openLore: () => void;
-  canUseImages: boolean;
   showHiddenTag?: boolean;
 }
 
 export function LoreItem(props: LoreItemProps) {
-  const { lore, openLore, canUseImages, showHiddenTag } = props;
+  const { lore, openLore, showHiddenTag } = props;
 
   return (
     <Card variant={"outlined"} sx={{ height: "100%" }}>
@@ -26,39 +25,37 @@ export function LoreItem(props: LoreItemProps) {
           justifyContent: "flex-start",
         }}
       >
-        {canUseImages && (
-          <Box
-            sx={(theme) => ({
-              aspectRatio: "16/9",
-              maxWidth: "100%",
-              width: "100%",
-              overflow: "hidden",
-              backgroundImage: `url("${lore.imageUrl}")`,
-              backgroundColor:
-                theme.palette.mode === "light"
-                  ? theme.palette.grey[300]
-                  : theme.palette.grey[700],
-              backgroundSize: "cover",
-              backgroundPosition: "center center",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            })}
-          >
-            {!lore.imageUrl && (
-              <AddPhotoIcon
-                sx={(theme) => ({
-                  width: 30,
-                  height: 30,
-                  color:
-                    theme.palette.mode === "light"
-                      ? theme.palette.grey[500]
-                      : theme.palette.grey[300],
-                })}
-              />
-            )}
-          </Box>
-        )}
+        <Box
+          sx={(theme) => ({
+            aspectRatio: "16/9",
+            maxWidth: "100%",
+            width: "100%",
+            overflow: "hidden",
+            backgroundImage: `url("${lore.imageUrl}")`,
+            backgroundColor:
+              theme.palette.mode === "light"
+                ? theme.palette.grey[300]
+                : theme.palette.grey[700],
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          })}
+        >
+          {!lore.imageUrl && (
+            <AddPhotoIcon
+              sx={(theme) => ({
+                width: 30,
+                height: 30,
+                color:
+                  theme.palette.mode === "light"
+                    ? theme.palette.grey[500]
+                    : theme.palette.grey[300],
+              })}
+            />
+          )}
+        </Box>
         <Box
           p={2}
           flexGrow={1}

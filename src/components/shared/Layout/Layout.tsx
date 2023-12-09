@@ -100,7 +100,7 @@ export function Layout() {
             display: "flex",
             flexDirection: "column",
             flexGrow: 1,
-            overflowY: showNewLayout ? "auto" : "unset",
+            overflowY: showNewLayout ? { xs: "unset", sm: "auto" } : "unset",
           }}
           component={"main"}
           id={"main-content"}

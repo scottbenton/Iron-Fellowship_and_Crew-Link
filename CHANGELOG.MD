@@ -6,6 +6,10 @@
 
 - Added new pages for custom content management
 
+### Changes
+
+- Changed the layout of the app
+
 ## 2.2.0
 
 ### New Features

@@ -30,7 +30,6 @@ export interface OpenLocationProps {
   locationId: string;
   location: LocationDocumentWithGMProperties;
   closeLocation: () => void;
-  canShowImages?: boolean;
   showHiddenTag?: boolean;
   openNPCTab: () => void;
 }
@@ -41,7 +40,6 @@ export function OpenLocation(props: OpenLocationProps) {
     locationId,
     location,
     closeLocation,
-    canShowImages,
     showHiddenTag,
     openNPCTab,
   } = props;
@@ -152,13 +150,11 @@ export function OpenLocation(props: OpenLocationProps) {
         ref={fileInputRef}
         onChange={onFileUpload}
       />
-      {canShowImages && (
-        <ImageBanner
-          title={location.name}
-          src={location.imageUrl}
-          removeImage={() => removeLocationImage(locationId)}
-        />
-      )}
+      <ImageBanner
+        title={location.name}
+        src={location.imageUrl}
+        removeImage={() => removeLocationImage(locationId)}
+      />
       <ItemHeader
         itemName={location.name}
         updateName={(newName) =>
@@ -178,13 +174,11 @@ export function OpenLocation(props: OpenLocationProps) {
         ]}
         actions={
           <>
-            {canShowImages && (
-              <Tooltip title={"Upload Image"}>
-                <IconButton onClick={() => fileInputRef?.current?.click()}>
-                  <AddPhotoIcon />
-                </IconButton>
-              </Tooltip>
-            )}
+            <Tooltip title={"Upload Image"}>
+              <IconButton onClick={() => fileInputRef?.current?.click()}>
+                <AddPhotoIcon />
+              </IconButton>
+            </Tooltip>
             {showGMFields && (
               <Tooltip title={"Delete"}>
                 <IconButton onClick={() => handleLocationDelete()}>
@@ -364,7 +358,6 @@ export function OpenLocation(props: OpenLocationProps) {
           )}
           <LocationNPCs
             locationId={locationId}
-            canUseImages={canShowImages ?? false}
             showHiddenTag={showHiddenTag}
             openNPCTab={openNPCTab}
           />

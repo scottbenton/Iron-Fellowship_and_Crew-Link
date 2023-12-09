@@ -11,7 +11,7 @@ import {
 import { DialogTitleWithCloseButton } from "../../DialogTitleWithCloseButton";
 import { activeFeatureFlags } from "hooks/featureFlags/activeFeatureFlags";
 import { EmptyState } from "../../EmptyState";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useStore } from "stores/store";
 
 export interface BetaTestsDialogProps {
@@ -22,18 +22,16 @@ export interface BetaTestsDialogProps {
 export function BetaTestsDialog(props: BetaTestsDialogProps) {
   const { open, onClose } = props;
 
+  const activeBetaTests = useStore((store) => store.appState.betaTests);
   const updateBetaTests = useStore((store) => store.appState.updateBetaTests);
 
-  const [testStates, setTestStates] = useState<Record<string, boolean>>();
-  const initialTestStates = useRef<Record<string, boolean>>();
+  const [testStates, setTestStates] = useState<Record<string, boolean>>({
+    ...activeBetaTests,
+  });
 
   useEffect(() => {
-    const forcedGroups: { [groupName: string]: boolean } = JSON.parse(
-      localStorage.getItem("forcedGroups") ?? "{}"
-    );
-    setTestStates(forcedGroups);
-    initialTestStates.current = forcedGroups;
-  }, []);
+    setTestStates({ ...activeBetaTests });
+  }, [activeBetaTests]);
 
   const handleTestChange = (testId: string, value: boolean) => {
     setTestStates((prev) => ({
@@ -43,7 +41,10 @@ export function BetaTestsDialog(props: BetaTestsDialogProps) {
   };
 
   const handleSave = () => {
-    if (testStates !== initialTestStates.current && testStates !== undefined) {
+    if (
+      JSON.stringify(testStates) !== JSON.stringify(activeBetaTests) &&
+      testStates !== undefined
+    ) {
       updateBetaTests(testStates);
       onClose();
     } else {

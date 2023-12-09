@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import { WorldEmptyState } from "components/features/worlds/WorldEmptyState";
 import AddNPCIcon from "@mui/icons-material/PersonAdd";
-import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 import { useStore } from "stores/store";
 import { useState } from "react";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
@@ -65,8 +64,6 @@ export function NPCSection(props: NPCSectionProps) {
   const setSearch = useStore(
     (store) => store.worlds.currentWorld.currentWorldNPCs.setNPCSearch
   );
-
-  const canShowImages = useCanUploadWorldImages();
 
   const { filteredNPCIds, sortedNPCIds } = useFilterNPCs(
     locations,
@@ -135,7 +132,6 @@ export function NPCSection(props: NPCSectionProps) {
           locations={locations}
           sectors={sectors}
           closeNPC={() => setOpenNPCId()}
-          canUseImages={canShowImages}
         />
       </Box>
     );
@@ -165,7 +161,6 @@ export function NPCSection(props: NPCSectionProps) {
         locations={locations}
         sectors={sectors}
         openNPC={setOpenNPCId}
-        canUseImages={canShowImages}
         showHiddenTag={showHiddenTag}
       />
     </>

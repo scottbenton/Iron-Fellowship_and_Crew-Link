@@ -41,7 +41,6 @@ export interface OpenNPCProps {
   sectors: Record<string, Sector>;
   npc: NPCDocumentWithGMProperties;
   closeNPC: () => void;
-  canUseImages: boolean;
 }
 
 const nameOracles: { [key in NPC_SPECIES]: string | string[] } = {
@@ -60,8 +59,7 @@ const nameOracles: { [key in NPC_SPECIES]: string | string[] } = {
 };
 
 export function OpenNPC(props: OpenNPCProps) {
-  const { worldId, npcId, locations, npc, closeNPC, sectors, canUseImages } =
-    props;
+  const { worldId, npcId, locations, npc, closeNPC, sectors } = props;
   const confirm = useConfirm();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -195,33 +193,29 @@ export function OpenNPC(props: OpenNPCProps) {
       display={"flex"}
       flexDirection={"column"}
     >
-      {canUseImages && (
+      <Box
+        sx={(theme) => ({
+          height: theme.spacing(isLg ? 10 : 6),
+        })}
+      >
         <Box
           sx={(theme) => ({
-            height: theme.spacing(isLg ? 10 : 6),
+            borderRadius: "100%",
+            position: "relative",
+            border: `1px solid ${theme.palette.divider}`,
+            top: theme.spacing(2),
+            left: { xs: theme.spacing(2), sm: theme.spacing(3) },
+            width: isLg ? 152 : 102,
+            height: isLg ? 152 : 102,
+            flexShrink: "0",
+            zIndex: 0,
           })}
-        >
-          <Box
-            sx={(theme) => ({
-              borderRadius: "100%",
-              position: "relative",
-              border: `1px solid ${theme.palette.divider}`,
-              top: theme.spacing(2),
-              left: { xs: theme.spacing(2), sm: theme.spacing(3) },
-              width: isLg ? 152 : 102,
-              height: isLg ? 152 : 102,
-              flexShrink: "0",
-              zIndex: 0,
-            })}
-          />
-        </Box>
-      )}
+        />
+      </Box>
       <Box
         sx={(theme) => ({
           bgcolor: theme.palette.background.paper,
-          borderTop: canUseImages
-            ? `1px solid ${theme.palette.divider}`
-            : undefined,
+          borderTop: `1px solid ${theme.palette.divider}`,
           borderLeft: `1px solid ${theme.palette.divider}`,
           zIndex: 1,
           position: "relative",
@@ -234,27 +228,26 @@ export function OpenNPC(props: OpenNPCProps) {
           sx={{
             px: { xs: 2, sm: 3 },
           }}
-          mb={canUseImages ? (isLg ? -8 : -4) : 0}
+          mb={isLg ? -8 : -4}
         >
-          {canUseImages && (
-            <RoundedImageUploader
-              src={npc.imageUrl}
-              title={npc.name}
-              handleFileUpload={(file) =>
-                uploadNPCImage(npcId, file).catch(() => {})
-              }
-              handleUploadClick={() => fileInputRef.current?.click()}
-              ref={fileInputRef}
-              removeImage={() => removeNPCImage(npcId)}
-            />
-          )}
+          <RoundedImageUploader
+            src={npc.imageUrl}
+            title={npc.name}
+            handleFileUpload={(file) =>
+              uploadNPCImage(npcId, file).catch(() => {})
+            }
+            handleUploadClick={() => fileInputRef.current?.click()}
+            ref={fileInputRef}
+            removeImage={() => removeNPCImage(npcId)}
+          />
+
           <Box
             justifyContent={isLg ? "space-between" : "flex-end"}
             flexGrow={1}
             display={"flex"}
             alignItems={"flex-start"}
             py={1}
-            pl={canUseImages ? 2 : 0}
+            pl={2}
           >
             <Hidden lgDown>
               <DebouncedOracleInput
@@ -269,13 +262,11 @@ export function OpenNPC(props: OpenNPCProps) {
               />
             </Hidden>
             <Box mt={1}>
-              {canUseImages && (
-                <Tooltip title={"Upload Image"}>
-                  <IconButton onClick={() => fileInputRef.current?.click()}>
-                    <AddPhotoIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
+              <Tooltip title={"Upload Image"}>
+                <IconButton onClick={() => fileInputRef.current?.click()}>
+                  <AddPhotoIcon />
+                </IconButton>
+              </Tooltip>
               {showGMFields && (
                 <Tooltip title={"Delete NPC"}>
                   <IconButton onClick={() => handleNPCDelete()}>

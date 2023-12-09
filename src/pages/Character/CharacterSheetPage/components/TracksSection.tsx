@@ -10,7 +10,6 @@ import ResetIcon from "@mui/icons-material/Replay";
 import { useStore } from "stores/store";
 import { CustomTracks } from "./CustomTracks";
 import { useIsMobile } from "hooks/useIsMobile";
-import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
 import { MobileStatTrack } from "./MobileStatTrack";
 import { MomentumTrackMobile } from "./MomentumTrackMobile";
 
@@ -68,17 +67,14 @@ export function TracksSection() {
   };
 
   const isMobile = useIsMobile();
-  const showNewMobileView = useNewCharacterMobileView();
-
-  const showMobile = isMobile && showNewMobileView;
 
   return (
     <Grid
       container
-      spacing={showMobile ? 1 : 2}
-      sx={showMobile ? { mt: 0 } : undefined}
+      spacing={isMobile ? 1 : 2}
+      sx={isMobile ? { mt: 0 } : undefined}
     >
-      {showMobile ? (
+      {isMobile ? (
         <>
           <Grid item xs={6}>
             <MobileStatTrack
