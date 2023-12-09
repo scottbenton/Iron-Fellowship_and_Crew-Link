@@ -1,5 +1,6 @@
 import { Box, ButtonBase, SxProps, Typography } from "@mui/material";
 import { LinkComponent } from "components/shared/LinkComponent";
+import { useRef } from "react";
 
 export interface NavItemProps {
   label: string;
@@ -7,14 +8,38 @@ export interface NavItemProps {
   href: string;
   active: boolean;
   onMouseEnter?: () => void;
+  onHover?: () => void;
+  onClick?: () => void;
   sx?: SxProps;
 }
 
 export function NavItem(props: NavItemProps) {
-  const { label, icon, href, active, sx, onMouseEnter } = props;
+  const { label, icon, href, active, sx, onMouseEnter, onHover, onClick } =
+    props;
+
+  const isHoveringRef = useRef(false);
+
+  const handleMouseEnter = () => {
+    isHoveringRef.current = true;
+    onMouseEnter && onMouseEnter();
+
+    if (onHover) {
+      setTimeout(() => {
+        if (isHoveringRef.current) {
+          onHover();
+        }
+      }, 500);
+    }
+  };
+
   return (
     <ButtonBase
-      onMouseEnter={onMouseEnter}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={() => (isHoveringRef.current = false)}
+      onClick={() => {
+        onClick && onClick();
+        isHoveringRef.current = false;
+      }}
       disableRipple
       sx={[
         {

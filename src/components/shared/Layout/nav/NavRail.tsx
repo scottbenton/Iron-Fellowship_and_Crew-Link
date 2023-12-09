@@ -39,15 +39,13 @@ export function NavRail() {
 
   const newHomebrewViewActive = useNewCustomContentPage();
 
-  const [hovering, setHovering] = useState<boolean>();
-  const [openMenu, setOpenMenu] = useState<NAV_ROUTES>();
+  const [selectedMenu, setSelectedMenu] = useState<NAV_ROUTES>();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <Box
-      onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => {
-        setHovering(false);
-        setOpenMenu(undefined);
+        setIsMenuOpen(false);
       }}
       sx={{
         display: { xs: "none", sm: "flex" },
@@ -104,21 +102,27 @@ export function NavRail() {
                   label={"Characters"}
                   icon={<CharacterIcon />}
                   active={activeRoute === NAV_ROUTES.CHARACTER}
-                  onMouseEnter={() => setOpenMenu(NAV_ROUTES.CHARACTER)}
+                  onMouseEnter={() => setSelectedMenu(NAV_ROUTES.CHARACTER)}
+                  onHover={() => setIsMenuOpen(true)}
+                  onClick={() => setIsMenuOpen(false)}
                 />
                 <NavItem
                   href={basePaths[BASE_ROUTES.CAMPAIGN]}
                   label={"Campaigns"}
                   icon={<CampaignIcon />}
                   active={activeRoute === NAV_ROUTES.CAMPAIGN}
-                  onMouseEnter={() => setOpenMenu(NAV_ROUTES.CAMPAIGN)}
+                  onMouseEnter={() => setSelectedMenu(NAV_ROUTES.CAMPAIGN)}
+                  onHover={() => setIsMenuOpen(true)}
+                  onClick={() => setIsMenuOpen(false)}
                 />
                 <NavItem
                   href={basePaths[BASE_ROUTES.WORLD]}
                   label={"Worlds"}
                   icon={<WorldIcon />}
                   active={activeRoute === NAV_ROUTES.WORLD}
-                  onMouseEnter={() => setOpenMenu(NAV_ROUTES.WORLD)}
+                  onMouseEnter={() => setSelectedMenu(NAV_ROUTES.WORLD)}
+                  onHover={() => setIsMenuOpen(true)}
+                  onClick={() => setIsMenuOpen(false)}
                 />
                 {newHomebrewViewActive && (
                   <NavItem
@@ -126,7 +130,9 @@ export function NavRail() {
                     label={"Homebrew"}
                     icon={<HomebrewIcon />}
                     active={activeRoute === NAV_ROUTES.HOMEBREW}
-                    onMouseEnter={() => setOpenMenu(NAV_ROUTES.HOMEBREW)}
+                    onMouseEnter={() => setSelectedMenu(NAV_ROUTES.HOMEBREW)}
+                    onHover={() => setIsMenuOpen(true)}
+                    onClick={() => setIsMenuOpen(false)}
                   />
                 )}
               </>
@@ -137,14 +143,14 @@ export function NavRail() {
                   label={"Log In"}
                   icon={<LoginIcon />}
                   active={activeRoute === NAV_ROUTES.LOGIN}
-                  onMouseEnter={() => setOpenMenu(undefined)}
+                  onMouseEnter={() => setIsMenuOpen(false)}
                 />
                 <NavItem
                   href={basePaths[BASE_ROUTES.SIGNUP]}
                   label={"Sign Up"}
                   icon={<SignUpIcon />}
                   active={activeRoute === NAV_ROUTES.SIGNUP}
-                  onMouseEnter={() => setOpenMenu(undefined)}
+                  onMouseEnter={() => setIsMenuOpen(false)}
                 />
               </>
             )}
@@ -164,11 +170,10 @@ export function NavRail() {
         }}
       >
         <Slide
-          in={!!(hovering && openMenu)}
+          in={!!(isMenuOpen && selectedMenu)}
           direction={"right"}
-          style={{
-            transitionDelay: hovering && openMenu ? "500ms" : "0ms",
-          }}
+          unmountOnExit
+          mountOnEnter
         >
           <Box
             bgcolor={"darkGrey.main"}
@@ -187,7 +192,7 @@ export function NavRail() {
               width: "100%",
             })}
           >
-            {openMenu && <NavRailFlyouts openMenu={openMenu} />}
+            {selectedMenu && <NavRailFlyouts openMenu={selectedMenu} />}
           </Box>
         </Slide>
       </Box>
