@@ -9,6 +9,7 @@ import { NotesSlice } from "./notes/notes.slice.type";
 import { GameLogSlice } from "./gameLog/gameLog.slice.type";
 import { AccessibilitySettingsSlice } from "./accessibilitySettings/accessibilitySettings.slice.type";
 import { AppStateSlice } from "./appState/appState.slice.type";
+import { HomebrewSlice } from "./homebrew/homebrew.slice.type";
 
 export type IStore = {
   appState: AppStateSlice;
@@ -21,6 +22,7 @@ export type IStore = {
   notes: NotesSlice;
   gameLog: GameLogSlice;
   accessibilitySettings: AccessibilitySettingsSlice;
+  homebrew: HomebrewSlice;
 };
 
 export type CreateSliceType<T> = StateCreator<

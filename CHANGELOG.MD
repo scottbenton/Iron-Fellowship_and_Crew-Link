@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.0
+
+### New Features
+
+- Added new pages for custom content management
+
 ## 2.2.0
 
 ### New Features
