@@ -86,8 +86,15 @@ export function Layout() {
       >
         <LiveRegion />
         <SkipToContentButton />
-        <TopNav />
-        {showNewLayout ? <NavRail /> : <Header />}
+
+        {showNewLayout ? (
+          <>
+            <TopNav />
+            <NavRail />
+          </>
+        ) : (
+          <Header />
+        )}
         <Box
           sx={{
             display: "flex",
