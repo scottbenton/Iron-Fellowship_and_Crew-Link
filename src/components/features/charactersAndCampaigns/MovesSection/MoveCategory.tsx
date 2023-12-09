@@ -4,12 +4,10 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListSubheader,
 } from "@mui/material";
 import { Move, MoveCategory as IMoveCategory } from "dataforged";
 import OpenIcon from "@mui/icons-material/ChevronRight";
-import { useEffect, useState } from "react";
-import { useNewMoveOracleView } from "hooks/featureFlags/useNewMoveOracleView";
+import { useState } from "react";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
 import { CATEGORY_VISIBILITY } from "./useFilterMoves";
 
@@ -25,12 +23,7 @@ export function MoveCategory(props: MoveCategoryProps) {
   const { category, openMove, forceOpen, visibleCategories, visibleMoves } =
     props;
 
-  const showNewView = useNewMoveOracleView();
-  const [isExpanded, setIsExpanded] = useState(showNewView ? false : true);
-
-  useEffect(() => {
-    setIsExpanded(showNewView ? false : true);
-  }, [showNewView]);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const isExpandedOrForced = isExpanded || forceOpen;
 
@@ -40,32 +33,17 @@ export function MoveCategory(props: MoveCategoryProps) {
 
   return (
     <>
-      {showNewView ? (
-        <CollapsibleSectionHeader
-          open={isExpanded}
-          forcedOpen={forceOpen}
-          toggleOpen={() => !forceOpen && setIsExpanded((prev) => !prev)}
-          text={category.Title.Standard}
-        />
-      ) : (
-        <ListSubheader
-          sx={(theme) => ({
-            backgroundColor:
-              theme.palette.darkGrey[
-                theme.palette.mode === "light" ? "light" : "dark"
-              ],
-            color: theme.palette.darkGrey.contrastText,
-            ...theme.typography.body1,
-            fontFamily: theme.fontFamilyTitle,
-          })}
-        >
-          {category.Title.Standard}
-        </ListSubheader>
-      )}
+      <CollapsibleSectionHeader
+        open={isExpanded}
+        forcedOpen={forceOpen}
+        toggleOpen={() => !forceOpen && setIsExpanded((prev) => !prev)}
+        text={category.Title.Standard}
+      />
+
       <Collapse in={isExpandedOrForced}>
         <Box
           sx={{
-            mb: showNewView && isExpandedOrForced ? 0.5 : 0,
+            mb: isExpandedOrForced ? 0.5 : 0,
           }}
         >
           {Object.values(category.Moves).map((move, index) =>

@@ -1,11 +1,10 @@
-import { Box, Collapse, List, ListSubheader } from "@mui/material";
+import { Box, Collapse, List } from "@mui/material";
 import { useRoller } from "stores/appState/useRoller";
 import { OracleListItem } from "./OracleListItem";
 import { OracleSet } from "dataforged";
 import { hiddenOracleCategoryIds } from "data/oracles";
 import { useStore } from "stores/store";
-import { useNewMoveOracleView } from "hooks/featureFlags/useNewMoveOracleView";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
 import { CATEGORY_VISIBILITY } from "./useFilterOracles";
 
@@ -30,12 +29,7 @@ export function OracleCategory(props: OracleCategoryProps) {
 
   const sampleNames = category["Sample Names" as "Sample names"];
 
-  const showNewView = useNewMoveOracleView();
-  const [isExpanded, setIsExpanded] = useState(showNewView ? false : true);
-  useEffect(() => {
-    setIsExpanded(showNewView ? false : true);
-  }, [showNewView]);
-
+  const [isExpanded, setIsExpanded] = useState(false);
   const isExpandedOrForced = isExpanded || forceOpen || false;
 
   if (
@@ -48,33 +42,18 @@ export function OracleCategory(props: OracleCategoryProps) {
   return (
     <>
       <List disablePadding>
-        {Object.keys(category.Tables ?? {}).length > 0 &&
-          (showNewView ? (
-            <CollapsibleSectionHeader
-              open={isExpanded}
-              forcedOpen={forceOpen}
-              toggleOpen={() => !forceOpen && setIsExpanded((prev) => !prev)}
-              text={title}
-            />
-          ) : (
-            <ListSubheader
-              sx={(theme) => ({
-                backgroundColor:
-                  theme.palette.darkGrey[
-                    theme.palette.mode === "light" ? "light" : "dark"
-                  ],
-                color: theme.palette.darkGrey.contrastText,
-                ...theme.typography.body1,
-                fontFamily: theme.fontFamilyTitle,
-              })}
-            >
-              {title}
-            </ListSubheader>
-          ))}
+        {Object.keys(category.Tables ?? {}).length > 0 && (
+          <CollapsibleSectionHeader
+            open={isExpanded}
+            forcedOpen={forceOpen}
+            toggleOpen={() => !forceOpen && setIsExpanded((prev) => !prev)}
+            text={title}
+          />
+        )}
         <Collapse in={isExpandedOrForced}>
           <Box
             sx={{
-              mb: showNewView && isExpandedOrForced ? 0.5 : 0,
+              mb: isExpandedOrForced ? 0.5 : 0,
             }}
           >
             {Array.isArray(sampleNames) &&
