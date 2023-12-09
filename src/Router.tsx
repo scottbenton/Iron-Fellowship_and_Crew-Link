@@ -19,6 +19,8 @@ import { useListenToAuth } from "stores/auth/useListenToAuth";
 import { useListenToWorlds } from "stores/world/useListenToWorlds";
 import { useListenToOracleSettings } from "stores/settings/useListenToOracleSettings";
 import { useListenToAccessibilitySettings } from "stores/accessibilitySettings/useListenToAccessibilitySettings";
+import { useListenToHomebrew } from "stores/homebrew/useListenToHomebrew";
+import { HOMEBREW_ROUTES, homebrewPaths } from "pages/Homebrew/routes";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -81,8 +83,18 @@ const router = createBrowserRouter(
               lazy={() => import("pages/World/WorldSheetPage")}
             />
           </Route>
-          {/* Unauthenticated Pages */}
+          <Route path={basePaths[BASE_ROUTES.CUSTOM_CONTENT]}>
+            <Route
+              index
+              lazy={() => import("pages/Homebrew/HomebrewSelectPage")}
+            />
+            <Route
+              path={homebrewPaths[HOMEBREW_ROUTES.EDITOR]}
+              lazy={() => import("pages/Homebrew/HomebrewEditorPage")}
+            />
+          </Route>
         </Route>
+        {/* Unauthenticated Pages */}
         <Route>
           <Route
             path={basePaths[BASE_ROUTES.LOGIN]}
@@ -115,6 +127,7 @@ export function Router() {
   useListenToCampaigns();
   useListenToWorlds();
   useListenToOracleSettings();
+  useListenToHomebrew();
 
   return <RouterProvider router={router} />;
 }

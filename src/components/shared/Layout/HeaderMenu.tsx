@@ -25,8 +25,14 @@ import { AccessibilitySettingsDialog } from "./AccessibilitySettingsDialog";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { BetaTestsDialog } from "./BetaTestsDialog";
 import TestsIcon from "@mui/icons-material/AutoAwesome";
+import HomebrewIcon from "@mui/icons-material/Brush";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
+import { BASE_ROUTES, basePaths } from "routes";
+import { useNavigate } from "react-router-dom";
 
 export function HeaderMenu() {
+  const navigate = useNavigate();
+
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -39,6 +45,7 @@ export function HeaderMenu() {
     useState(false);
 
   const [betaTestsOpen, setBetaTestsOpen] = useState(false);
+  const showCustomContentPage = useNewCustomContentPage();
 
   return (
     <>
@@ -64,6 +71,19 @@ export function HeaderMenu() {
         onClose={() => setMenuOpen(false)}
         anchorEl={anchorRef.current}
       >
+        {showCustomContentPage && (
+          <MenuItem
+            onClick={() => {
+              navigate(basePaths[BASE_ROUTES.CUSTOM_CONTENT]);
+              setMenuOpen(false);
+            }}
+          >
+            <ListItemIcon>
+              <HomebrewIcon />
+            </ListItemIcon>
+            <ListItemText>Homebrew Content</ListItemText>
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
             setMenuOpen(false);

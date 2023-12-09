@@ -72,7 +72,7 @@ export function Layout() {
         backgroundColor: theme.palette.background.default,
       })}
     >
-      <Box display={"flex"} flexDirection={"column"}>
+      <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
         <LiveRegion />
         <SkipToContentButton />
         <Header />
