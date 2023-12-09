@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
 import { useIsMobile } from "hooks/useIsMobile";
-import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
 import { StatsSectionMobile } from "./components/StatsSectionMobile";
 
 export function CharacterSheetPage() {
@@ -27,7 +26,6 @@ export function CharacterSheetPage() {
   );
 
   const isMobile = useIsMobile();
-  const showNewMobileView = useNewCharacterMobileView();
 
   const [syncLoading, setSyncLoading] = useState(true);
 
@@ -83,7 +81,7 @@ export function CharacterSheetPage() {
         })}
       >
         <CharacterHeader />
-        {!isMobile || !showNewMobileView ? (
+        {!isMobile ? (
           <SectionWithSidebar
             sidebar={<Sidebar />}
             mainContent={

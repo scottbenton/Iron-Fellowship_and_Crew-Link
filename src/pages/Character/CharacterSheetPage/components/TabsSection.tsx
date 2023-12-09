@@ -1,8 +1,6 @@
 import { Card, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
-import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
 import { AssetsSection } from "../Tabs/AssetsSection";
-import { OracleSection } from "components/features/charactersAndCampaigns/OracleSection";
 import { NotesSection } from "../Tabs/NotesSection";
 import { WorldSection } from "../Tabs/WorldSection";
 import { LocationsSection } from "components/features/worlds/Locations";
@@ -20,7 +18,6 @@ import { useStore } from "stores/store";
 import { SectorSection } from "components/features/worlds/SectorSection";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
-import { useNewCharacterMobileView } from "hooks/featureFlags/useNewCharacterMobileView";
 
 enum TABS {
   MOVES = "moves",
@@ -56,13 +53,6 @@ export function TabsSection() {
     (store) => !!store.characters.currentCharacter.currentCharacter?.campaignId
   );
 
-  const isGM = useStore(
-    (store) =>
-      store.campaigns.currentCampaign.currentCampaign?.gmIds?.includes(
-        store.auth.uid
-      ) ?? false
-  );
-
   const isWorldOwner = useStore((store) =>
     store.worlds.currentWorld.currentWorld?.ownerIds.includes(store.auth.uid)
   );
@@ -79,8 +69,6 @@ export function TabsSection() {
       setSelectedTab(TABS.ASSETS);
     }
   }, [selectedTab, isMobile]);
-
-  const newViewEnabled = useNewCharacterMobileView();
 
   return (
     <Card
@@ -99,12 +87,6 @@ export function TabsSection() {
         value={selectedTab}
         onChange={(evt, value) => handleTabChange(value)}
       >
-        {isMobile && !newViewEnabled && (
-          <StyledTab label={"Moves"} value={TABS.MOVES} />
-        )}
-        {isMobile && !newViewEnabled && (isGM || !isInCampaign) && (
-          <StyledTab label={"Oracles"} value={TABS.ORACLE} />
-        )}
         <StyledTab label="Assets" value={TABS.ASSETS} />
         <StyledTab label="Tracks" value={TABS.TRACKS} />
         <StyledTab label="Notes" value={TABS.NOTES} />
@@ -118,17 +100,8 @@ export function TabsSection() {
         <StyledTab label={"Lore"} value={TABS.LORE} />
         <StyledTab label="Character" value={TABS.CHARACTER} />
       </StyledTabs>
-      <ContainedTabPanel isVisible={selectedTab === TABS.MOVES}>
-        <MovesSection />
-      </ContainedTabPanel>
-      <ContainedTabPanel isVisible={selectedTab === TABS.ORACLE}>
-        <OracleSection />
-      </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.ASSETS} greyBackground>
         <AssetsSection />
-      </ContainedTabPanel>
-      <ContainedTabPanel isVisible={selectedTab === TABS.ORACLE}>
-        <OracleSection />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.TRACKS}>
         <TracksSection />
