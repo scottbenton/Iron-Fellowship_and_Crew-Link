@@ -18,7 +18,6 @@ import AddPhotoIcon from "@mui/icons-material/Photo";
 import { WorldEmptyState } from "components/features/worlds/WorldEmptyState";
 import HiddenIcon from "@mui/icons-material/VisibilityOff";
 import { FilterBar } from "components/features/worlds/FilterBar";
-import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 import { useStore } from "stores/store";
 import { useState } from "react";
 
@@ -53,8 +52,6 @@ export function LocationsSection(props: LocationsSectionProps) {
   const setSearch = useStore(
     (store) => store.worlds.currentWorld.currentWorldLocations.setLocationSearch
   );
-
-  const canShowImages = useCanUploadWorldImages();
 
   const [createLocationLoading, setCreateLocationLoading] = useState(false);
   const createLocation = useStore(
@@ -123,7 +120,6 @@ export function LocationsSection(props: LocationsSectionProps) {
           location={openLocation}
           locationId={openLocationId}
           closeLocation={() => setOpenLocationId(undefined)}
-          canShowImages={canShowImages}
           showHiddenTag={showHiddenTag}
           openNPCTab={openNPCTab}
         />
@@ -162,40 +158,38 @@ export function LocationsSection(props: LocationsSectionProps) {
             <Grid item xs={12} md={6} lg={4} key={locationId}>
               <Card variant={"outlined"}>
                 <CardActionArea onClick={() => setOpenLocationId(locationId)}>
-                  {canShowImages && (
-                    <Box
-                      sx={(theme) => ({
-                        aspectRatio: "16/9",
-                        maxWidth: "100%",
-                        height: "100%",
-                        width: "100%",
-                        overflow: "hidden",
-                        backgroundImage: `url("${locations[locationId].imageUrl}")`,
-                        backgroundColor:
-                          theme.palette.mode === "light"
-                            ? theme.palette.grey[300]
-                            : theme.palette.grey[700],
-                        backgroundSize: "cover",
-                        backgroundPosition: "center center",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      })}
-                    >
-                      {!locations[locationId].imageUrl && (
-                        <AddPhotoIcon
-                          sx={(theme) => ({
-                            width: 30,
-                            height: 30,
-                            color:
-                              theme.palette.mode === "light"
-                                ? theme.palette.grey[500]
-                                : theme.palette.grey[300],
-                          })}
-                        />
-                      )}
-                    </Box>
-                  )}
+                  <Box
+                    sx={(theme) => ({
+                      aspectRatio: "16/9",
+                      maxWidth: "100%",
+                      height: "100%",
+                      width: "100%",
+                      overflow: "hidden",
+                      backgroundImage: `url("${locations[locationId].imageUrl}")`,
+                      backgroundColor:
+                        theme.palette.mode === "light"
+                          ? theme.palette.grey[300]
+                          : theme.palette.grey[700],
+                      backgroundSize: "cover",
+                      backgroundPosition: "center center",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    })}
+                  >
+                    {!locations[locationId].imageUrl && (
+                      <AddPhotoIcon
+                        sx={(theme) => ({
+                          width: 30,
+                          height: 30,
+                          color:
+                            theme.palette.mode === "light"
+                              ? theme.palette.grey[500]
+                              : theme.palette.grey[300],
+                        })}
+                      />
+                    )}
+                  </Box>
                   <Box
                     p={2}
                     flexGrow={1}

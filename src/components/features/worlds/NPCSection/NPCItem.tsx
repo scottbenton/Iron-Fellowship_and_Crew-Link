@@ -12,13 +12,11 @@ export interface NPCItemProps {
   locations: { [key: string]: LocationDocumentWithGMProperties };
   sectors: { [key: string]: Sector };
   openNPC: () => void;
-  canUseImages: boolean;
   showHiddenTag?: boolean;
 }
 
 export function NPCItem(props: NPCItemProps) {
-  const { npc, locations, sectors, openNPC, canUseImages, showHiddenTag } =
-    props;
+  const { npc, locations, sectors, openNPC, showHiddenTag } = props;
 
   const showSectors = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
@@ -52,40 +50,38 @@ export function NPCItem(props: NPCItemProps) {
         })}
       >
         <Box display={"flex"} alignItems={"start"}>
-          {canUseImages && (
-            <Box
-              id={"portrait"}
-              sx={(theme) => ({
-                marginRight: 1,
-                width: 80,
-                height: 80,
-                flexShrink: 0,
-                borderRadius: `${theme.shape.borderRadius}px`,
-                backgroundColor:
-                  theme.palette.mode === "light"
-                    ? theme.palette.grey[300]
-                    : theme.palette.grey[700],
-                backgroundImage: `url(${npc.imageUrl})`,
-                backgroundPosition: "center top",
-                backgroundSize: "cover",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: theme.shadows[3],
-              })}
-            >
-              {!npc.imageUrl && (
-                <PhotoIcon
-                  sx={(theme) => ({
-                    color:
-                      theme.palette.mode === "light"
-                        ? theme.palette.grey[500]
-                        : theme.palette.grey[300],
-                  })}
-                />
-              )}
-            </Box>
-          )}
+          <Box
+            id={"portrait"}
+            sx={(theme) => ({
+              marginRight: 1,
+              width: 80,
+              height: 80,
+              flexShrink: 0,
+              borderRadius: `${theme.shape.borderRadius}px`,
+              backgroundColor:
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[300]
+                  : theme.palette.grey[700],
+              backgroundImage: `url(${npc.imageUrl})`,
+              backgroundPosition: "center top",
+              backgroundSize: "cover",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: theme.shadows[3],
+            })}
+          >
+            {!npc.imageUrl && (
+              <PhotoIcon
+                sx={(theme) => ({
+                  color:
+                    theme.palette.mode === "light"
+                      ? theme.palette.grey[500]
+                      : theme.palette.grey[300],
+                })}
+              />
+            )}
+          </Box>
           <Box
             display={"flex"}
             alignItems={"flex-start"}

@@ -22,7 +22,6 @@ import { useWorldPermissions } from "../useWorldPermissions";
 import { RtcRichTextEditor } from "components/shared/RichTextEditor";
 import { NotesSectionHeader } from "../NotesSectionHeader";
 import { NPCItem } from "../NPCSection/NPCItem";
-import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
@@ -213,8 +212,6 @@ export function OpenSector(props: OpenSectorProps) {
     (store) => store.worlds.currentWorld.currentWorldNPCs.setOpenNPCId
   );
 
-  const canUseImages = useCanUploadWorldImages();
-
   if (!sector) {
     return null;
   }
@@ -330,7 +327,6 @@ export function OpenSector(props: OpenSectorProps) {
                     setOpenNPC(npcId);
                     openNPCTab();
                   }}
-                  canUseImages={canUseImages}
                 />
               </Grid>
             ))}

@@ -14,7 +14,6 @@ import { useFilterLore } from "./useFilterLore";
 import { WorldEmptyState } from "components/features/worlds/WorldEmptyState";
 import { FilterBar } from "components/features/worlds/FilterBar";
 import { LoreItem } from "./LoreItem";
-import { useCanUploadWorldImages } from "hooks/featureFlags/useCanUploadWorldImages";
 import { useStore } from "stores/store";
 import { useState } from "react";
 
@@ -49,8 +48,6 @@ export function LoreSection(props: LoreSectionProps) {
   const setSearch = useStore(
     (store) => store.worlds.currentWorld.currentWorldLore.setLoreSearch
   );
-
-  const canShowImages = useCanUploadWorldImages();
 
   const [createLoreLoading, setCreateLoreLoading] = useState(false);
   const createLore = useStore(
@@ -119,7 +116,6 @@ export function LoreSection(props: LoreSectionProps) {
           lore={openLore}
           loreId={openLoreId}
           closeLore={() => setOpenLoreId(undefined)}
-          showImages={canShowImages}
           tagList={[...tags.values()]}
         />
       </Box>
@@ -156,7 +152,6 @@ export function LoreSection(props: LoreSectionProps) {
             <LoreItem
               lore={lore[loreId]}
               openLore={() => setOpenLoreId(loreId)}
-              canUseImages={canShowImages}
               showHiddenTag={showHiddenTag}
             />
           </Grid>

@@ -5,13 +5,12 @@ import { useStore } from "stores/store";
 
 export interface LocationNPCProps {
   locationId: string;
-  canUseImages: boolean;
   showHiddenTag?: boolean;
   openNPCTab: () => void;
 }
 
 export function LocationNPCs(props: LocationNPCProps) {
-  const { locationId, canUseImages, showHiddenTag, openNPCTab } = props;
+  const { locationId, showHiddenTag, openNPCTab } = props;
 
   const npcs = useStore(
     (store) => store.worlds.currentWorld.currentWorldNPCs.npcMap
@@ -47,7 +46,6 @@ export function LocationNPCs(props: LocationNPCProps) {
               openNPC(npcId);
               openNPCTab();
             }}
-            canUseImages={canUseImages}
             showHiddenTag={showHiddenTag}
           />
         </Grid>

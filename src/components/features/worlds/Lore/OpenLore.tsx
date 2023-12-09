@@ -29,11 +29,10 @@ export interface OpenLoreProps {
   lore: LoreDocumentWithGMProperties;
   closeLore: () => void;
   tagList: string[];
-  showImages: boolean;
 }
 
 export function OpenLore(props: OpenLoreProps) {
-  const { worldId, loreId, lore, closeLore, tagList, showImages } = props;
+  const { worldId, loreId, lore, closeLore, tagList } = props;
 
   const { isSinglePlayer, showGMFields, showGMTips } = useWorldPermissions();
 
@@ -120,13 +119,11 @@ export function OpenLore(props: OpenLoreProps) {
         ref={fileInputRef}
         onChange={onFileUpload}
       />
-      {showImages && (
-        <ImageBanner
-          title={lore.name}
-          src={lore.imageUrl}
-          removeImage={() => removeLoreImage(loreId)}
-        />
-      )}
+      <ImageBanner
+        title={lore.name}
+        src={lore.imageUrl}
+        removeImage={() => removeLoreImage(loreId)}
+      />
 
       <ItemHeader
         itemName={loreName}
@@ -134,13 +131,11 @@ export function OpenLore(props: OpenLoreProps) {
         closeItem={closeLore}
         actions={
           <>
-            {showImages && (
-              <Tooltip title={"Upload Image"}>
-                <IconButton onClick={() => fileInputRef?.current?.click()}>
-                  <AddPhotoIcon />
-                </IconButton>
-              </Tooltip>
-            )}
+            <Tooltip title={"Upload Image"}>
+              <IconButton onClick={() => fileInputRef?.current?.click()}>
+                <AddPhotoIcon />
+              </IconButton>
+            </Tooltip>
             {showGMFields && (
               <Tooltip title={"Delete Document"}>
                 <IconButton onClick={() => handleLoreDelete()}>
