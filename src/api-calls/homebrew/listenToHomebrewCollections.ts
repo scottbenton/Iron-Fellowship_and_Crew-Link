@@ -1,5 +1,5 @@
 import { onSnapshot, query, where } from "firebase/firestore";
-import { BaseExpansionOrRuleset } from "types/HomebrewCollection";
+import { BaseExpansionOrRuleset } from "types/HomebrewCollection.type";
 import { getHomebrewCollection } from "./_getRef";
 
 export function listenToHomebrewCollections(
