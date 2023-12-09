@@ -21,7 +21,7 @@ export function PageContent(props: PageContentProps) {
           borderRadius: isPaper ? `${theme.shape.borderRadius}px` : 0,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
-          // overflow: "hidden",
+          overflow: "clip",
           flexGrow: 1,
 
           pb: 2,
@@ -35,6 +35,8 @@ export function PageContent(props: PageContentProps) {
                 flexDirection: "column",
                 height: "100vh",
               },
+              mt: -4,
+              borderRadius: 0,
             })
           : {},
         ...(Array.isArray(sx) ? sx : [sx]),

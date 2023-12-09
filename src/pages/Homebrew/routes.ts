@@ -11,5 +11,5 @@ export const homebrewPaths: { [key in HOMEBREW_ROUTES]: string } = {
 };
 
 export function constructHomebrewEditorPath(homebrewId: string) {
-  return `${basePaths[BASE_ROUTES.CUSTOM_CONTENT]}/${homebrewId}`;
+  return `${basePaths[BASE_ROUTES.HOMEBREW]}/${homebrewId}`;
 }

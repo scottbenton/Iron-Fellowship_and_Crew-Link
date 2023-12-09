@@ -26,7 +26,7 @@ export function HomebrewEditorPage() {
   return (
     <>
       <PageHeader label={"Coming Soon"} />
-      <PageContent isPaper sx={{ overflow: "hidden" }}>
+      <PageContent isPaper>
         <Box
           sx={{
             mx: { xs: -2, sm: -3 },

@@ -83,7 +83,7 @@ const router = createBrowserRouter(
               lazy={() => import("pages/World/WorldSheetPage")}
             />
           </Route>
-          <Route path={basePaths[BASE_ROUTES.CUSTOM_CONTENT]}>
+          <Route path={basePaths[BASE_ROUTES.HOMEBREW]}>
             <Route
               index
               lazy={() => import("pages/Homebrew/HomebrewSelectPage")}

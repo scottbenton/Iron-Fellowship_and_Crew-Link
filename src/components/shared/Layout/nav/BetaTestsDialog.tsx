@@ -8,9 +8,9 @@ import {
   Stack,
   Switch,
 } from "@mui/material";
-import { DialogTitleWithCloseButton } from "../DialogTitleWithCloseButton";
+import { DialogTitleWithCloseButton } from "../../DialogTitleWithCloseButton";
 import { activeFeatureFlags } from "hooks/featureFlags/activeFeatureFlags";
-import { EmptyState } from "../EmptyState";
+import { EmptyState } from "../../EmptyState";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "stores/store";
 
