@@ -29,10 +29,10 @@ export function PageHeader(props: PageHeaderProps) {
       <Box
         sx={(theme) => ({
           color: theme.palette.darkGrey.contrastText,
-          pt: isEmpty ? 0 : 4,
+          pt: 4,
           pb: isEmpty ? 8 : 10,
           mb: isEmpty ? -8 : -4,
-          width: "100vw",
+          // width: "100vw",
           backgroundColor: isLightTheme
             ? theme.palette.darkGrey.main
             : undefined,

@@ -5,18 +5,19 @@ export enum BASE_ROUTES {
   LOGIN,
   SIGNUP,
   HOME,
-  CUSTOM_CONTENT,
+  HOMEBREW,
 }
 
 export const CHARACTER_PREFIX = "characters";
 export const CAMPAIGN_PREFIX = "campaigns";
 export const WORLD_PREFIX = "worlds";
+export const HOMEBREW_PREFIX = "homebrew";
 
 export const basePaths: { [key in BASE_ROUTES]: string } = {
   [BASE_ROUTES.CHARACTER]: "/characters",
   [BASE_ROUTES.CAMPAIGN]: "/campaigns",
   [BASE_ROUTES.WORLD]: "/worlds",
-  [BASE_ROUTES.CUSTOM_CONTENT]: "/homebrew",
+  [BASE_ROUTES.HOMEBREW]: "/homebrew",
   [BASE_ROUTES.LOGIN]: "/login",
   [BASE_ROUTES.SIGNUP]: "/join",
   [BASE_ROUTES.HOME]: "/",

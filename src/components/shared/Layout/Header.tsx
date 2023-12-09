@@ -14,17 +14,19 @@ import { Link } from "react-router-dom";
 import { BASE_ROUTES, basePaths } from "routes";
 import { ReactComponent as IronFellowshipLogo } from "./iron-fellowship-logo.svg";
 import { ReactComponent as CrewLinkLogo } from "./crew-link-logo.svg";
-import { HeaderMenu } from "./HeaderMenu";
 
 import CharacterIcon from "@mui/icons-material/Person";
 import CampaignIcon from "@mui/icons-material/Groups";
 import WorldIcon from "@mui/icons-material/Public";
+import HomebrewIcon from "@mui/icons-material/Brush";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { useAppName } from "hooks/useAppName";
 import { LinkComponent } from "../LinkComponent";
+import { SettingsMenu } from "./nav/SettingsMenu";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
 
 export function Header() {
   const state = useStore((store) => store.auth.status);
@@ -37,6 +39,7 @@ export function Header() {
   });
 
   const title = useAppName();
+  const newHomebrewPageAvailable = useNewCustomContentPage();
 
   return (
     <AppBar
@@ -86,6 +89,7 @@ export function Header() {
               <Hidden smDown>
                 <Stack
                   direction={"row"}
+                  mr={1}
                   spacing={1}
                   component={"nav"}
                   sx={{ display: "inline" }}
@@ -132,9 +136,25 @@ export function Header() {
                   >
                     Worlds
                   </Button>
+                  {newHomebrewPageAvailable && (
+                    <Button
+                      className={"dark-focus-outline"}
+                      color={"inherit"}
+                      component={Link}
+                      to={basePaths[BASE_ROUTES.HOMEBREW]}
+                      endIcon={<HomebrewIcon />}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "darkGrey.light",
+                        },
+                      }}
+                    >
+                      Homebrew
+                    </Button>
+                  )}
                 </Stack>
               </Hidden>
-              <HeaderMenu />
+              <SettingsMenu />
             </Box>
           ) : (
             <Stack direction={"row"} spacing={1} component={"nav"}>

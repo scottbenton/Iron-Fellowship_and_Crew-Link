@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="120"
+   height="120"
+   version="1.1"
+   viewBox="0 0 120 120"
+   id="svg4"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4" />
+  <g
+     transform="matrix(1.2073,0,0,1.2073,-12.439,-9.8678)"
+     stroke-width="0"
+     id="g4">
+    <g
+       id="g39"
+       transform="rotate(-90,62.055723,74.038701)">
+      <g
+         id="g40"
+         transform="matrix(1.6777316,0,0,1.6777316,-90.837557,-7.6486261)">
+        <g
+           id="g41"
+           transform="rotate(-90,100.72514,47.506731)">
+          <path
+             id="path38-1"
+             clip-path="none"
+             style="fill:#ca8a04;stroke:#ca8a04;stroke-width:2.76919;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:4.4"
+             d="m 126.53638,41.472929 -10.85955,5.934059 -10.85955,-5.934059 V 29.604784 l 10.85955,-5.934074 10.85955,5.934074 z" />
+          <path
+             id="path38-1-2"
+             clip-path="none"
+             style="fill:#ca8a04;stroke:#ca8a04;stroke-width:2.76919;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:4.4"
+             d="M 96.717781,41.472929 85.858226,47.406988 74.998673,41.472929 V 29.604784 l 10.859553,-5.934074 10.859555,5.934074 z" />
+          <path
+             id="path38-1-2-7"
+             clip-path="none"
+             style="fill:#ca8a04;stroke:#ca8a04;stroke-width:2.76919;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:4.4"
+             d="M 111.62708,65.49347 100.76753,71.427529 89.907975,65.49347 V 53.625325 l 10.859555,-5.934074 10.85955,5.934074 z" />
+        </g>
+      </g>
+    </g>
+    <path
+       id="path38-6"
+       clip-path="none"
+       style="fill:#ca8a04;stroke:#ca8a04;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:4.4"
+       d="m -109.3283,107.92437 -45.47423,24.84879 -45.47424,-24.84879 V 58.226674 l 45.47424,-24.848856 45.47423,24.848857 z" />
+    <path
+       style="fill:#f9f9f9;fill-opacity:1;stroke:none;stroke-width:4.04613;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       id="path4-2"
+       d="m 62.320927,36.638062 -27.555442,9.06247 -9.062471,27.555442 -9.06247,-27.555442 -27.555442,-9.06247 27.555442,-9.062471 9.06247,-27.55544177 9.062471,27.55544177 z"
+       transform="matrix(1.1867567,0,0,1.1875462,-185.30576,39.5661)" />
+  </g>
+</svg>

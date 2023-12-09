@@ -1,6 +1,5 @@
 import { Box, LinearProgress } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
-import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { useEffect, useRef } from "react";
 import { useContinueUrl } from "hooks/useContinueUrl";
@@ -21,9 +20,16 @@ import { useSyncFeatureFlags } from "hooks/featureFlags/useSyncFeatureFlags";
 import { LinkedDialog } from "components/features/charactersAndCampaigns/LinkedDialog";
 import { LiveRegion } from "../LiveRegion";
 import { RollSnackbarSection } from "./RollSnackbarSection";
+import { BottomNav } from "./nav/BottomNav";
+import { useNewLayout } from "hooks/featureFlags/useNewLayout";
+import { Footer } from "./Footer";
+import { NavRail } from "./nav/NavRail";
+import { TopNav } from "./nav/TopNav";
 
 export function Layout() {
   useSyncFeatureFlags();
+
+  const showNewLayout = useNewLayout();
 
   const { pathname } = useLocation();
   const state = useStore((store) => store.auth.status);
@@ -72,15 +78,29 @@ export function Layout() {
         backgroundColor: theme.palette.background.default,
       })}
     >
-      <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
+      <Box
+        display={"flex"}
+        flexDirection={showNewLayout ? { xs: "column", sm: "row" } : "column"}
+        maxHeight={showNewLayout ? { xs: undefined, sm: "100vh" } : undefined}
+        flexGrow={1}
+      >
         <LiveRegion />
         <SkipToContentButton />
-        <Header />
+
+        {showNewLayout ? (
+          <>
+            <TopNav />
+            <NavRail />
+          </>
+        ) : (
+          <Header />
+        )}
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             flexGrow: 1,
+            overflowY: showNewLayout ? "auto" : "unset",
           }}
           component={"main"}
           id={"main-content"}
@@ -88,7 +108,7 @@ export function Layout() {
           <Outlet />
         </Box>
       </Box>
-      <Footer />
+      {showNewLayout ? <BottomNav /> : <Footer />}
       <UserNameDialog
         open={userNameDialogOpen}
         handleClose={closeUserNameDialog}
