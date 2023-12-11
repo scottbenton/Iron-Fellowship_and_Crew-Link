@@ -70,7 +70,8 @@ export function Notes(props: NotesProps) {
 
   return (
     <Box
-      height={condensedView ? "70vh" : "100%"}
+      height={"100%"}
+      // height={condensedView ? "70vh" : "100%"}
       display={"flex"}
       width={"100%"}
     >

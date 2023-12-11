@@ -74,6 +74,9 @@ export function TabsSection() {
     <Card
       variant={"outlined"}
       sx={(theme) => ({
+        borderRadius: { xs: 0, md: 1 },
+        borderWidth: { xs: 0, md: 1 },
+        borderTopWidth: { xs: 1 },
         flexGrow: 1,
         mt: 2,
         display: "flex",
