@@ -10,6 +10,10 @@
 
 - Changed the layout of the app
 
+### Bug Fixes
+
+- Fixed cursor issue on the notes page with mobile Safari
+
 ## 2.2.0
 
 ### New Features

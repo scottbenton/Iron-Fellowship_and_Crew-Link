@@ -78,11 +78,13 @@ export function CharacterSheetPage() {
             theme.palette.mode === "light" && isMobile
               ? "background.paperInlay"
               : undefined,
+          pb: { xs: 0, md: 2 },
         })}
       >
         <CharacterHeader />
         {!isMobile ? (
           <SectionWithSidebar
+            sx={{ mt: 2 }}
             sidebar={<Sidebar />}
             mainContent={
               <>
