@@ -4,6 +4,8 @@ import { defaultHomebrewSlice } from "./homebrew.slice.default";
 import { listenToHomebrewCollections } from "api-calls/homebrew/listenToHomebrewCollections";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { createHomebrewExpansion } from "api-calls/homebrew/createHomebrewExpansion";
+import { updateHomebrewExpansion } from "api-calls/homebrew/updateHomebrewExpansion";
+import { deleteHomebrewExpansion } from "api-calls/homebrew/deleteHomebrewExpansion";
 
 export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
   ...defaultHomebrewSlice,
@@ -42,5 +44,11 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
   },
   createExpansion: (expansion) => {
     return createHomebrewExpansion(expansion);
+  },
+  updateExpansion: (id, expansion) => {
+    return updateHomebrewExpansion({ id, expansion });
+  },
+  deleteExpansion: (id) => {
+    return deleteHomebrewExpansion({ id });
   },
 });

@@ -10,7 +10,8 @@ type RuleKeys =
   | "rarities"
   | "delve_sites"
   | "site_themes"
-  | "site_domains";
+  | "site_domains"
+  | "rules";
 
 type additions = {
   uids: string[];
