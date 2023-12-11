@@ -1,26 +1,28 @@
-import { Box } from "@mui/material";
+import { Box, SxProps } from "@mui/material";
 import { ReactNode } from "react";
 
 export interface SectionWithSidebarProps {
   sidebar: ReactNode;
   sidebarWidth?: number;
   mainContent: ReactNode;
+  sx?: SxProps;
 }
 
 export function SectionWithSidebar(props: SectionWithSidebarProps) {
-  const { sidebar, sidebarWidth = 324, mainContent } = props;
+  const { sidebar, sidebarWidth = 324, mainContent, sx } = props;
 
   return (
     <Box
       display={"flex"}
-      sx={(theme) => ({
-        pt: 2,
-
-        [theme.breakpoints.up("md")]: {
-          overflow: "hidden",
-          height: "100%",
-        },
-      })}
+      sx={[
+        (theme) => ({
+          [theme.breakpoints.up("md")]: {
+            overflow: "hidden",
+            height: "100%",
+          },
+        }),
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       <Box
         sx={{

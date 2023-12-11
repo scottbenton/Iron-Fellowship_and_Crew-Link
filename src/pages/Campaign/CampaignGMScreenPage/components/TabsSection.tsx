@@ -70,14 +70,15 @@ export function TabsSection(props: TabsSectionProps) {
   return (
     <Card
       variant={"outlined"}
-      sx={(theme) => ({
+      sx={{
+        borderRadius: { xs: 0, md: 1 },
+        borderWidth: { xs: 0, md: 1 },
+        borderTopWidth: { xs: 1 },
+        mx: { xs: -2, sm: -3, md: 0 },
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        [theme.breakpoints.down("sm")]: {
-          mx: -2,
-        },
-      })}
+      }}
     >
       <StyledTabs
         value={selectedTab}
