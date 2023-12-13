@@ -1,8 +1,8 @@
-import { DatePicker } from "@mui/x-date-pickers";
-import { Box, Grid, TextField } from "@mui/material";
+import { Box, Grid, TextField, Typography } from "@mui/material";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { useEffect, useState } from "react";
 import { useStore } from "stores/store";
+import { dataswornVersion } from "config/datasworn.config";
 
 export interface AboutSectionProps {
   id: string;
@@ -46,8 +46,12 @@ export function AboutSection(props: AboutSectionProps) {
             fullWidth
           />
         </Grid>
+        <Grid item xs={12}>
+          <Typography variant={"overline"}>Datasworn Version</Typography>
+          <Typography>{dataswornVersion}</Typography>
+        </Grid>
       </Grid>
-      <SectionHeading label={"Authors"} breakContainer />
+      {/* <SectionHeading label={"Authors"} breakContainer />
       <SectionHeading label="Advanced Details" breakContainer />
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
@@ -70,7 +74,7 @@ export function AboutSection(props: AboutSectionProps) {
         <Grid item xs={12} sm={6}>
           <TextField label={"License"} fullWidth />
         </Grid>
-      </Grid>
+      </Grid> */}
     </Box>
   );
 }

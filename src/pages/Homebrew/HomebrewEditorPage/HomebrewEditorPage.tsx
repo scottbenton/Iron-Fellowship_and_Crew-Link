@@ -12,6 +12,7 @@ import { AboutSection } from "./AboutSection";
 import { useStore } from "stores/store";
 import { EmptyState } from "components/shared/EmptyState";
 import { BASE_ROUTES, basePaths } from "routes";
+import { RulesSection } from "./RulesSection";
 
 enum TABS {
   ABOUT = "about",
@@ -118,6 +119,7 @@ export function HomebrewEditorPage() {
           </StyledTabs>
           <Box role={"tabpanel"} sx={{ px: { xs: 2, sm: 3 } }}>
             {selectedTab === TABS.ABOUT && <AboutSection id={homebrewId} />}
+            {selectedTab === TABS.RULES && <RulesSection id={homebrewId} />}
           </Box>
         </Box>
       </PageContent>
