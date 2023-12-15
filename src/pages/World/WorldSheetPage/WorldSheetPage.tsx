@@ -17,6 +17,8 @@ import { LoreSection } from "components/features/worlds/Lore";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { SectorSection } from "components/features/worlds/SectorSection";
+import { EmptyState } from "components/shared/EmptyState";
+import { LinkComponent } from "components/shared/LinkComponent";
 
 export enum TABS {
   DETAILS = "details",
@@ -72,7 +74,23 @@ export function WorldSheetPage() {
   }
 
   if (!world || !worldId) {
-    return null;
+    return (
+      <EmptyState
+        showImage
+        title={"World not Found"}
+        message={"Please return to the world selection page to choose a world"}
+        callToAction={
+          <Button
+            LinkComponent={LinkComponent}
+            href={constructWorldPath(WORLD_ROUTES.SELECT)}
+            variant={"contained"}
+            size={"large"}
+          >
+            Select a World
+          </Button>
+        }
+      />
+    );
   }
 
   const handleDeleteClick = () => {

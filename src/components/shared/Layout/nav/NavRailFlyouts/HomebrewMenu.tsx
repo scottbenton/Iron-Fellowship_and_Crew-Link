@@ -25,7 +25,7 @@ export function HomebrewMenu() {
             >
               <ListItemText
                 primary={
-                  homebrewCollections[collectionId].title ??
+                  homebrewCollections[collectionId].base.title ??
                   "Unnamed Collection"
                 }
               />

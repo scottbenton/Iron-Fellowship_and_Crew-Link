@@ -18,7 +18,6 @@ const nameOracleStarforged = [
 ];
 
 export function ExampleStatsSection() {
-  console.count("Rerendered Stats");
   const nameOracles = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]: nameOraclesIronsworn,
     [GAME_SYSTEMS.STARFORGED]: nameOracleStarforged,

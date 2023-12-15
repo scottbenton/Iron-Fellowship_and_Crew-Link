@@ -2,16 +2,27 @@ import { Unsubscribe } from "firebase/firestore";
 import {
   BaseExpansion,
   BaseExpansionOrRuleset,
+  StoredRules,
 } from "types/HomebrewCollection.type";
 
+export interface HomebrewEntry {
+  base: BaseExpansionOrRuleset;
+  rules?: {
+    data?: StoredRules;
+    loaded: boolean;
+    error?: string;
+  };
+}
+
 export interface HomebrewSliceData {
-  collections: Record<string, BaseExpansionOrRuleset>;
+  collections: Record<string, HomebrewEntry>;
   loading: boolean;
   error?: string;
 }
 
 export interface HomebrewSliceActions {
   subscribe: (uid: string) => Unsubscribe;
+  subscribeToHomebrewContent: (homebrewIds: string[]) => Unsubscribe;
 
   createExpansion: (expansion: BaseExpansion) => Promise<string>;
   updateExpansion: (

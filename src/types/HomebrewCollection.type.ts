@@ -1,11 +1,4 @@
-import {
-  ConditionMeterRule,
-  Expansion,
-  ImpactCategory,
-  Ruleset,
-  SpecialTrackRule,
-  StatRule,
-} from "@datasworn/core";
+import { Expansion, Ruleset } from "@datasworn/core";
 
 type RuleKeys =
   | "oracles"
@@ -38,12 +31,38 @@ export interface StoredRules {
     };
   };
   condition_meters: {
-    [conditionMeterKey: string]: ConditionMeterRule;
+    [conditionMeterKey: string]: {
+      description: string;
+      shared: boolean;
+      label: string;
+      value: number;
+      min: number;
+      max: number;
+      rollable: boolean;
+    };
   };
   impacts: {
-    [impactKey: string]: ImpactCategory;
+    [impactCategoryKey: string]: {
+      label: string;
+      description: string;
+      contents: {
+        [impactKey: string]: {
+          label: string;
+          description: string;
+          shared: boolean;
+          // ex: health, spirit
+          prevents_recovery: string[];
+          permanent: boolean;
+        };
+      };
+    };
   };
-  specialTracks: {
-    [trackKey: string]: SpecialTrackRule;
+  special_tracks: {
+    [trackKey: string]: {
+      label: string;
+      description: string;
+      shared: boolean;
+      optional: boolean;
+    };
   };
 }

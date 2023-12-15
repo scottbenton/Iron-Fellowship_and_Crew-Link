@@ -1,4 +1,4 @@
-import { LinearProgress } from "@mui/material";
+import { Button, LinearProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { CampaignSheetHeader } from "./components/CampaignSheetHeader";
@@ -15,6 +15,9 @@ import { useSyncStore } from "./hooks/useSyncStore";
 import { ClockSection } from "components/features/charactersAndCampaigns/Clocks/ClockSection";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { EmptyState } from "components/shared/EmptyState";
+import { LinkComponent } from "components/shared/LinkComponent";
+import { CAMPAIGN_ROUTES, constructCampaignPath } from "../routes";
 
 enum TABS {
   CHARACTER = "characters",
@@ -63,7 +66,23 @@ export function CampaignSheetPage() {
   }
 
   if (!campaignId || !campaign) {
-    return null;
+    return (
+      <EmptyState
+        title={"Campaign not Found"}
+        message={"Please try again from the campaign selection page"}
+        showImage
+        callToAction={
+          <Button
+            LinkComponent={LinkComponent}
+            href={constructCampaignPath(CAMPAIGN_ROUTES.SELECT)}
+            variant={"contained"}
+            size={"large"}
+          >
+            Select a Campaign
+          </Button>
+        }
+      />
+    );
   }
 
   return (

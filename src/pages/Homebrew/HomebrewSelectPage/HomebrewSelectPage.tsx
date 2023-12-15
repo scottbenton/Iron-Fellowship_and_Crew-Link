@@ -34,13 +34,13 @@ export function HomebrewSelectPage() {
   }
 
   const collectionKeys = Object.keys(homebrewCollections).sort((k1, k2) =>
-    (homebrewCollections[k1].title ?? "Unnamed Collection")?.localeCompare(
-      homebrewCollections[k2].title ?? "Unnamed Collection"
+    (homebrewCollections[k1].base.title ?? "Unnamed Collection")?.localeCompare(
+      homebrewCollections[k2].base.title ?? "Unnamed Collection"
     )
   );
 
   const collectionIds = Object.values(homebrewCollections).map(
-    (collection) => collection.id
+    (collection) => collection.base.id
   );
 
   return (
@@ -125,7 +125,7 @@ export function HomebrewSelectPage() {
                   >
                     <Box>
                       <Typography variant={"h6"} component={"p"}>
-                        {homebrewCollections[collectionKey].title ??
+                        {homebrewCollections[collectionKey].base.title ??
                           "Unnamed Collection"}
                       </Typography>
                     </Box>

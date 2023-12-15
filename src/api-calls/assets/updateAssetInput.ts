@@ -23,7 +23,6 @@ export const updateAssetInput = createApiFunction<
       characterId
         ? getCharacterAssetDoc(characterId, assetId)
         : getCampaignAssetDoc(campaignId as string, assetId),
-      // @ts-expect-error Typescript doesn't like this notation, but it works
       {
         [`inputs.${inputLabel}`]: inputValue,
       }

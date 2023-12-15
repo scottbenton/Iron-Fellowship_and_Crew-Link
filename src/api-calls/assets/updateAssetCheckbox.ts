@@ -23,7 +23,6 @@ export const updateAssetCheckbox = createApiFunction<
       characterId
         ? getCharacterAssetDoc(characterId, assetId)
         : getCampaignAssetDoc(campaignId as string, assetId),
-      //@ts-expect-error - typescript doesn't like this notation
       {
         [`enabledAbilities.${abilityIndex}`]: checked,
       }

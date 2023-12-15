@@ -13,6 +13,7 @@ import { useStore } from "stores/store";
 import { EmptyState } from "components/shared/EmptyState";
 import { BASE_ROUTES, basePaths } from "routes";
 import { RulesSection } from "./RulesSection";
+import { useListenToHomebrewContent } from "stores/homebrew/useListenToHomebrewContent";
 
 enum TABS {
   ABOUT = "about",
@@ -25,12 +26,15 @@ enum TABS {
 export function HomebrewEditorPage() {
   const { homebrewId } = useParams();
 
+  useListenToHomebrewContent(homebrewId ? [homebrewId] : []);
+
   const navigate = useNavigate();
 
   const loading = useStore((store) => store.homebrew.loading);
   const homebrewName = useStore((store) =>
     homebrewId && store.homebrew.collections[homebrewId]
-      ? store.homebrew.collections[homebrewId].title ?? "Unnamed Collection"
+      ? store.homebrew.collections[homebrewId].base.title ??
+        "Unnamed Collection"
       : undefined
   );
   const deleteCollection = useStore((store) => store.homebrew.deleteExpansion);

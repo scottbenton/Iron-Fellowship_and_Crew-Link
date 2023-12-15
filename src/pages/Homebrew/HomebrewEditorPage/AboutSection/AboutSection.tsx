@@ -11,7 +11,7 @@ export interface AboutSectionProps {
 export function AboutSection(props: AboutSectionProps) {
   const { id } = props;
 
-  const details = useStore((store) => store.homebrew.collections[id]);
+  const details = useStore((store) => store.homebrew.collections[id].base);
   const updateDetails = useStore((store) => store.homebrew.updateExpansion);
 
   const originalTitle = details.title;
@@ -46,6 +46,12 @@ export function AboutSection(props: AboutSectionProps) {
             fullWidth
           />
         </Grid>
+        {details.package_type === "expansion" && (
+          <Grid item xs={12}>
+            <Typography variant="overline">Expansion For</Typography>
+            <Typography>{details.ruleset}</Typography>
+          </Grid>
+        )}
         <Grid item xs={12}>
           <Typography variant={"overline"}>Datasworn Version</Typography>
           <Typography>{dataswornVersion}</Typography>

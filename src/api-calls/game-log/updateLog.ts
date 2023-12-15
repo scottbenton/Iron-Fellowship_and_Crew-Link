@@ -17,12 +17,12 @@ export const updateLog = createApiFunction<
       reject(new Error("Either campaign or character ID must be defined."));
     }
 
-    updateDoc(
-      campaignId
-        ? getCampaignGameLogDocument(campaignId, logId)
-        : getCharacterGameLogDocument(characterId as string, logId),
-      log
-    )
+    const docRef = campaignId
+      ? getCampaignGameLogDocument(campaignId, logId)
+      : getCharacterGameLogDocument(characterId as string, logId);
+
+    // @ts-expect-error not sure why log is incorrect here
+    updateDoc(docRef, log)
       .then(() => {
         resolve();
       })

@@ -1,4 +1,5 @@
 import {
+  Box,
   Collapse,
   List,
   ListItem,
@@ -38,7 +39,7 @@ export function CampaignMenu() {
       </Typography>
       <List>
         {Object.keys(campaigns).map((campaignId) => (
-          <>
+          <Box key={campaignId}>
             {campaigns[campaignId].gmIds?.includes(uid) ? (
               <>
                 <ListItem key={campaignId} disablePadding>
@@ -106,7 +107,7 @@ export function CampaignMenu() {
                 </ListItemButton>
               </ListItem>
             )}
-          </>
+          </Box>
         ))}
       </List>
     </>
