@@ -93,7 +93,11 @@ export function CampaignGMScreenPage() {
         description={`GM Screen for ${campaign.name}`}
       />
       <PageHeader />
-      <PageContent isPaper viewHeight>
+      <PageContent
+        isPaper
+        viewHeight
+        sx={{ pb: { xs: 0, md: 2 }, pt: { xs: 0, md: 2 } }}
+      >
         <SectionWithSidebar
           sidebar={<Sidebar />}
           mainContent={<TabsSection campaign={campaign} />}

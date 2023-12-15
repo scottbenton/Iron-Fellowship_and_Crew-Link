@@ -70,7 +70,8 @@ export function Notes(props: NotesProps) {
 
   return (
     <Box
-      height={condensedView ? "70vh" : "100%"}
+      height={condensedView && selectedNoteId === ROLL_LOG_ID ? "70vh" : "100%"}
+      minHeight={"50vh"}
       display={"flex"}
       width={"100%"}
     >
