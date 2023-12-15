@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { PageContent, PageHeader } from "components/shared/Layout";
 import { StyledTab, StyledTabs } from "components/shared/StyledTabs";
+import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -13,14 +14,13 @@ enum TABS {
 }
 
 export function HomebrewEditorPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState(
     (searchParams.get("tab") as TABS) ?? TABS.ABOUT
   );
-
+  useUpdateQueryStringValueWithoutNavigation("tab", selectedTab);
   const handleTabChange = (tab: TABS) => {
     setSelectedTab(tab);
-    setSearchParams({ tab });
   };
 
   return (

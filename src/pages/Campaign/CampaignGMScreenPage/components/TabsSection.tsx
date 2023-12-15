@@ -21,6 +21,7 @@ import { LoreSection } from "components/features/worlds/Lore";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { SectorSection } from "components/features/worlds/SectorSection";
+import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
 
 enum TABS {
   MOVES = "moves",
@@ -49,13 +50,13 @@ export function TabsSection(props: TabsSectionProps) {
   const shouldShowSectors =
     useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
     (searchParams.get("tab") as TABS) ?? TABS.CHARACTERS
   );
+  useUpdateQueryStringValueWithoutNavigation("tab", selectedTab);
   const handleTabChange = (tab: TABS) => {
     setSelectedTab(tab);
-    setSearchParams({ tab });
   };
 
   useEffect(() => {
