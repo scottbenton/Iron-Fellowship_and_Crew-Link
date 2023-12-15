@@ -1,12 +1,10 @@
 import {
   Box,
   Collapse,
-  List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography,
 } from "@mui/material";
 import { LinkComponent } from "components/shared/LinkComponent";
 import { useState } from "react";
@@ -16,6 +14,7 @@ import {
   CAMPAIGN_ROUTES,
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
+import { FlyoutMenuList } from "./FlyoutMenuList";
 
 export function CampaignMenu() {
   const uid = useStore((store) => store.auth.uid);
@@ -33,83 +32,85 @@ export function CampaignMenu() {
   };
 
   return (
-    <>
-      <Typography variant={"h6"} component={"p"} px={2}>
-        Campaigns
-      </Typography>
-      <List>
-        {Object.keys(campaigns).map((campaignId) => (
-          <Box key={campaignId}>
-            {campaigns[campaignId].gmIds?.includes(uid) ? (
-              <>
-                <ListItem key={campaignId} disablePadding>
+    <FlyoutMenuList
+      label={"Campaigns"}
+      itemIds={Object.keys(campaigns)}
+      renderListItem={(campaignId) =>
+        campaigns[campaignId].gmIds?.includes(uid) ? (
+          <Box
+            component={"li"}
+            sx={{ listStyleImage: "none" }}
+            key={campaignId}
+          >
+            <ListItemButton
+              onClick={() => toggleExpand(campaignId)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <ListItemText primary={campaigns[campaignId].name} />
+              <ListItemIcon sx={{ minWidth: "unset" }}>
+                <ExpandIcon
+                  sx={(theme) => ({
+                    color: "grey.200",
+                    transform: `rotate(${
+                      expandedCampaigns[campaignId] ? "-" : ""
+                    }90deg)`,
+                    transition: theme.transitions.create(["transform"], {
+                      duration: theme.transitions.duration.shorter,
+                    }),
+                  })}
+                />
+              </ListItemIcon>
+            </ListItemButton>
+            <Collapse
+              key={`${campaignId}-collapse`}
+              in={expandedCampaigns[campaignId]}
+            >
+              <Box component={"ul"} p={0}>
+                <ListItem key={`${campaignId}-sheet`} disablePadding>
                   <ListItemButton
-                    onClick={() => toggleExpand(campaignId)}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
+                    sx={{ pl: 4 }}
+                    LinkComponent={LinkComponent}
+                    href={constructCampaignSheetPath(
+                      campaignId,
+                      CAMPAIGN_ROUTES.SHEET
+                    )}
                   >
-                    <ListItemText primary={campaigns[campaignId].name} />
-                    <ListItemIcon sx={{ minWidth: "unset" }}>
-                      <ExpandIcon
-                        sx={(theme) => ({
-                          color: "grey.200",
-                          transform: `rotate(${
-                            expandedCampaigns[campaignId] ? "-" : ""
-                          }90deg)`,
-                          transition: theme.transitions.create(["transform"], {
-                            duration: theme.transitions.duration.shorter,
-                          }),
-                        })}
-                      />
-                    </ListItemIcon>
+                    <ListItemText primary={"Campaign Sheet"} />
                   </ListItemButton>
                 </ListItem>
-                <Collapse in={expandedCampaigns[campaignId]}>
-                  <ListItem key={`${campaignId}-sheet`} disablePadding>
-                    <ListItemButton
-                      sx={{ pl: 4 }}
-                      LinkComponent={LinkComponent}
-                      href={constructCampaignSheetPath(
-                        campaignId,
-                        CAMPAIGN_ROUTES.SHEET
-                      )}
-                    >
-                      <ListItemText primary={"Campaign Sheet"} />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key={`${campaignId}-gm-screen`} disablePadding>
-                    <ListItemButton
-                      sx={{ pl: 4 }}
-                      LinkComponent={LinkComponent}
-                      href={constructCampaignSheetPath(
-                        campaignId,
-                        CAMPAIGN_ROUTES.GM_SCREEN
-                      )}
-                    >
-                      <ListItemText primary={"GM Screen"} />
-                    </ListItemButton>
-                  </ListItem>
-                </Collapse>
-              </>
-            ) : (
-              <ListItem key={campaignId} disablePadding>
-                <ListItemButton
-                  LinkComponent={LinkComponent}
-                  href={constructCampaignSheetPath(
-                    campaignId,
-                    CAMPAIGN_ROUTES.SHEET
-                  )}
-                >
-                  <ListItemText primary={campaigns[campaignId].name} />
-                </ListItemButton>
-              </ListItem>
-            )}
+                <ListItem key={`${campaignId}-gm-screen`} disablePadding>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    LinkComponent={LinkComponent}
+                    href={constructCampaignSheetPath(
+                      campaignId,
+                      CAMPAIGN_ROUTES.GM_SCREEN
+                    )}
+                  >
+                    <ListItemText primary={"GM Screen"} />
+                  </ListItemButton>
+                </ListItem>
+              </Box>
+            </Collapse>
           </Box>
-        ))}
-      </List>
-    </>
+        ) : (
+          <ListItem key={campaignId} disablePadding>
+            <ListItemButton
+              LinkComponent={LinkComponent}
+              href={constructCampaignSheetPath(
+                campaignId,
+                CAMPAIGN_ROUTES.SHEET
+              )}
+            >
+              <ListItemText primary={campaigns[campaignId].name} />
+            </ListItemButton>
+          </ListItem>
+        )
+      }
+    />
   );
 }

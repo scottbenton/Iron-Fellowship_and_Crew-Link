@@ -192,11 +192,12 @@ export function NavRail() {
               borderStyle: "solid",
               borderWidth: 1,
               borderLeftWidth: 2,
-              py: 4,
+              py: 2,
               height: "100%",
               maxWidth: "250px",
               minWidth: "250px",
               width: "100%",
+              overflowY: "auto",
             })}
           >
             {selectedMenu && <NavRailFlyouts openMenu={selectedMenu} />}

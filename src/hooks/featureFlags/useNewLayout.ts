@@ -1,5 +1,5 @@
-import { useFeatureFlag } from "./useFeatureFlag";
+// import { useFeatureFlag } from "./useFeatureFlag";
 
 export function useNewLayout() {
-  return useFeatureFlag("new-layout");
+  return true; // useFeatureFlag("new-layout");
 }

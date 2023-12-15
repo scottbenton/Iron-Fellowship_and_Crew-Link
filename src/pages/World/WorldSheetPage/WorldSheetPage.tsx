@@ -19,6 +19,7 @@ import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { SectorSection } from "components/features/worlds/SectorSection";
 import { EmptyState } from "components/shared/EmptyState";
 import { LinkComponent } from "components/shared/LinkComponent";
+import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
 
 export enum TABS {
   DETAILS = "details",
@@ -34,13 +35,13 @@ export function WorldSheetPage() {
   const showSectorsInsteadOfLocations =
     useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
     (searchParams.get("tab") as TABS) ?? TABS.DETAILS
   );
+  useUpdateQueryStringValueWithoutNavigation("tab", selectedTab);
   const handleTabChange = (tab: TABS) => {
     setSelectedTab(tab);
-    setSearchParams({ tab });
   };
 
   const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);

@@ -14,6 +14,7 @@ import { EmptyState } from "components/shared/EmptyState";
 import { BASE_ROUTES, basePaths } from "routes";
 import { RulesSection } from "./RulesSection";
 import { useListenToHomebrewContent } from "stores/homebrew/useListenToHomebrewContent";
+import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
 
 enum TABS {
   ABOUT = "about",
@@ -39,14 +40,13 @@ export function HomebrewEditorPage() {
   );
   const deleteCollection = useStore((store) => store.homebrew.deleteExpansion);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState(
     (searchParams.get("tab") as TABS) ?? TABS.ABOUT
   );
-
+  useUpdateQueryStringValueWithoutNavigation("tab", selectedTab);
   const handleTabChange = (tab: TABS) => {
     setSelectedTab(tab);
-    setSearchParams({ tab });
   };
 
   const [syncLoading, setSyncLoading] = useState(true);

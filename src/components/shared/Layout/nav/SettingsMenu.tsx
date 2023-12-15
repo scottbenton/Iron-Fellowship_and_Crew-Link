@@ -28,6 +28,8 @@ import { BetaTestsDialog } from "./BetaTestsDialog";
 import TestsIcon from "@mui/icons-material/AutoAwesome";
 import { useNewLayout } from "hooks/featureFlags/useNewLayout";
 import { useIsMobile } from "hooks/useIsMobile";
+import { useStore } from "stores/store";
+import { AUTH_STATE } from "stores/auth/auth.slice.type";
 
 export function SettingsMenu() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -44,6 +46,10 @@ export function SettingsMenu() {
   const [betaTestsOpen, setBetaTestsOpen] = useState(false);
   const showNewLayout = useNewLayout();
   const isMobile = useIsMobile();
+
+  const isLoggedIn = useStore(
+    (store) => store.auth.status === AUTH_STATE.AUTHENTICATED
+  );
 
   return (
     <>
@@ -87,17 +93,19 @@ export function SettingsMenu() {
             : undefined
         }
       >
-        <MenuItem
-          onClick={() => {
-            setMenuOpen(false);
-            setAccessibilitySettingsOpen(true);
-          }}
-        >
-          <ListItemIcon>
-            <AccessibilityIcon />
-          </ListItemIcon>
-          <ListItemText>Accessibility Settings</ListItemText>
-        </MenuItem>
+        {isLoggedIn && (
+          <MenuItem
+            onClick={() => {
+              setMenuOpen(false);
+              setAccessibilitySettingsOpen(true);
+            }}
+          >
+            <ListItemIcon>
+              <AccessibilityIcon />
+            </ListItemIcon>
+            <ListItemText>Accessibility Settings</ListItemText>
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
             setMenuOpen(false);
@@ -126,17 +134,19 @@ export function SettingsMenu() {
             {themeType === THEME_TYPE.LIGHT ? "Dark Mode" : "Light Mode"}
           </ListItemText>
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setMenuOpen(false);
-            logout().then(() => window.location.reload());
-          }}
-        >
-          <ListItemIcon>
-            <LogoutIcon />
-          </ListItemIcon>
-          <ListItemText>Logout</ListItemText>
-        </MenuItem>
+        {isLoggedIn && (
+          <MenuItem
+            onClick={() => {
+              setMenuOpen(false);
+              logout().then(() => window.location.reload());
+            }}
+          >
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText>Logout</ListItemText>
+          </MenuItem>
+        )}
         {isLocal && (
           <MenuItem
             onClick={() => {
