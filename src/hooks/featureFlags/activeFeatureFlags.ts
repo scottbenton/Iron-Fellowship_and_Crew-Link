@@ -7,8 +7,8 @@ export const activeFeatureFlags: { testId: string; label: string }[] = [
     testId: "custom-content-page",
     label: "Add new homebrew content management page",
   },
-  {
-    testId: "new-layout",
-    label: "Test a new navigation layout",
-  },
+  // {
+  //   testId: "new-layout",
+  //   label: "Test a new navigation layout",
+  // },
 ];

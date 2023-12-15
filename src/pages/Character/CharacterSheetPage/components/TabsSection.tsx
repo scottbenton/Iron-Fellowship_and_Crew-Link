@@ -18,6 +18,7 @@ import { useStore } from "stores/store";
 import { SectorSection } from "components/features/worlds/SectorSection";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
 
 enum TABS {
   MOVES = "moves",
@@ -37,14 +38,15 @@ export function TabsSection() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
     (searchParams.get("tab") as TABS) ?? TABS.ASSETS
   );
   const handleTabChange = (tab: TABS) => {
     setSelectedTab(tab);
-    setSearchParams({ tab });
   };
+
+  useUpdateQueryStringValueWithoutNavigation("tab", selectedTab);
 
   const shouldShowSectors =
     useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;

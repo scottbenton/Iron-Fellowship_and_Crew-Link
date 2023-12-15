@@ -13,6 +13,7 @@
 ### Bug Fixes
 
 - Fixed cursor issue on the notes page with mobile Safari
+- Fixed a performance issue that made switching tabs super slow
 
 ## 2.2.0
 

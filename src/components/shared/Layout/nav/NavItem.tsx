@@ -64,7 +64,7 @@ export function NavItem(props: NavItemProps) {
         sx={(theme) => ({
           borderRadius: 999,
           bgcolor: active ? "primary.main" : "transparent",
-          color: active ? "primary.contrastText" : "grey.300",
+          color: active ? "darkGrey.main" : "grey.300",
           width: 56,
           height: 32,
           display: "flex",

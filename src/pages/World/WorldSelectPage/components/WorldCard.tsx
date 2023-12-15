@@ -32,7 +32,7 @@ export function WorldCard(props: WorldCardProps) {
   }, [ownerIds, loadUsers]);
 
   return (
-    <Card elevation={2}>
+    <Card elevation={2} sx={{ height: "100%" }}>
       <CardActionArea
         component={Link}
         to={constructWorldSheetPath(worldId)}

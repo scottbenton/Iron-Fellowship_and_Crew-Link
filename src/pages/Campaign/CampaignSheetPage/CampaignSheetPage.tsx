@@ -15,6 +15,7 @@ import { useSyncStore } from "./hooks/useSyncStore";
 import { ClockSection } from "components/features/charactersAndCampaigns/Clocks/ClockSection";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
 
 enum TABS {
   CHARACTER = "characters",
@@ -29,13 +30,13 @@ export function CampaignSheetPage() {
 
   const uid = useStore((store) => store.auth.uid);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
     (searchParams.get("tab") as TABS) ?? TABS.CHARACTER
   );
+  useUpdateQueryStringValueWithoutNavigation("tab", selectedTab);
   const handleTabChange = (tab: TABS) => {
     setSelectedTab(tab);
-    setSearchParams({ tab });
   };
 
   const loading = useStore((store) => store.campaigns.loading);
