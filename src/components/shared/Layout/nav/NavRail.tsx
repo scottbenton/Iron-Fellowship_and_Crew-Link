@@ -22,6 +22,7 @@ import SignUpIcon from "@mui/icons-material/PersonAdd";
 import LoginIcon from "@mui/icons-material/AccountCircle";
 import { useState } from "react";
 import { NavRailFlyouts } from "./NavRailFlyouts";
+import { AppsMenu } from "./AppsMenu";
 
 export const NAV_RAIL_WIDTH = 80;
 
@@ -156,7 +157,13 @@ export function NavRail() {
             )}
           </Stack>
         </Box>
-        <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          <AppsMenu />
           <SettingsMenu />
         </Box>
       </Box>

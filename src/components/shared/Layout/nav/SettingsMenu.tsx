@@ -4,6 +4,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Tooltip,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { logout } from "lib/auth.lib";
@@ -44,22 +45,27 @@ export function SettingsMenu() {
 
   return (
     <>
-      <IconButton
-        color={"inherit"}
-        className={"dark-focus-outline"}
-        aria-label={"User Settings Menu Toggle"}
-        ref={anchorRef}
-        onClick={() => setMenuOpen(true)}
+      <Tooltip
+        title={"User Settings"}
+        placement={showNewLayout ? "right" : undefined}
       >
-        <SettingsIcon
-          sx={(theme) => ({
-            transform: `rotate(${menuOpen ? "90deg" : "0deg"})`,
-            transition: theme.transitions.create(["transform"], {
-              duration: theme.transitions.duration.shorter,
-            }),
-          })}
-        />
-      </IconButton>
+        <IconButton
+          color={"inherit"}
+          className={"dark-focus-outline"}
+          aria-label={"User Settings Menu Toggle"}
+          ref={anchorRef}
+          onClick={() => setMenuOpen(true)}
+        >
+          <SettingsIcon
+            sx={(theme) => ({
+              transform: `rotate(${menuOpen ? "90deg" : "0deg"})`,
+              transition: theme.transitions.create(["transform"], {
+                duration: theme.transitions.duration.shorter,
+              }),
+            })}
+          />
+        </IconButton>
+      </Tooltip>
       <Menu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
