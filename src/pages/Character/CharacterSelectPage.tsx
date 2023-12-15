@@ -63,7 +63,7 @@ export function Component() {
         {!characters || Object.keys(characters).length === 0 ? (
           <EmptyState
             showImage
-            title={"Create your First Character"}
+            title={"No Characters Found"}
             message={"Get started on your journey by creating a new character."}
             callToAction={
               <Button

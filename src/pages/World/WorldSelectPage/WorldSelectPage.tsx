@@ -84,7 +84,7 @@ export function WorldSelectPage() {
         {!worldIds || worldIds.length === 0 ? (
           <EmptyState
             showImage
-            title={"Create your First World"}
+            title={"No Worlds Found"}
             message={
               "Worlds allow you to share location notes and truths across multiple characters or campaigns."
             }

@@ -75,7 +75,7 @@ export function CampaignSelectPage() {
         {sortedCampaignIds.length === 0 ? (
           <EmptyState
             showImage
-            title={"Create your First Campaign"}
+            title={"No Campaigns Found"}
             message={
               "Campaigns allow you to share tracks, worlds, and more between GMs and players"
             }
