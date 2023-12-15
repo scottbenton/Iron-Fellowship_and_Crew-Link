@@ -27,6 +27,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { BetaTestsDialog } from "./BetaTestsDialog";
 import TestsIcon from "@mui/icons-material/AutoAwesome";
 import { useNewLayout } from "hooks/featureFlags/useNewLayout";
+import { useIsMobile } from "hooks/useIsMobile";
 
 export function SettingsMenu() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -42,12 +43,13 @@ export function SettingsMenu() {
 
   const [betaTestsOpen, setBetaTestsOpen] = useState(false);
   const showNewLayout = useNewLayout();
+  const isMobile = useIsMobile();
 
   return (
     <>
       <Tooltip
         title={"User Settings"}
-        placement={showNewLayout ? "right" : undefined}
+        placement={showNewLayout ? (isMobile ? "bottom" : "right") : undefined}
       >
         <IconButton
           color={"inherit"}
@@ -71,10 +73,18 @@ export function SettingsMenu() {
         onClose={() => setMenuOpen(false)}
         anchorEl={anchorRef.current}
         anchorOrigin={
-          showNewLayout ? { vertical: "top", horizontal: "left" } : undefined
+          showNewLayout
+            ? isMobile
+              ? { vertical: "bottom", horizontal: "right" }
+              : { vertical: "top", horizontal: "left" }
+            : undefined
         }
         transformOrigin={
-          showNewLayout ? { vertical: "bottom", horizontal: "left" } : undefined
+          showNewLayout
+            ? isMobile
+              ? { vertical: "top", horizontal: "right" }
+              : { vertical: "bottom", horizontal: "left" }
+            : undefined
         }
       >
         <MenuItem

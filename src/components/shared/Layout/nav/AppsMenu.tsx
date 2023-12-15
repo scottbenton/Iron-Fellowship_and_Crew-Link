@@ -13,6 +13,7 @@ import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { useAppName } from "hooks/useAppName";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "hooks/useIsMobile";
 
 export function AppsMenu() {
   const { gameSystem } = useGameSystem();
@@ -62,9 +63,15 @@ export function AppsMenu() {
 
   const [appsMenuOpen, setAppsMenuOpen] = useState(false);
   const appsMenuParent = useRef<HTMLButtonElement>(null);
+
+  const isMobile = useIsMobile();
+
   return (
     <>
-      <Tooltip title={"Other Apps and Resources"} placement={"right"}>
+      <Tooltip
+        title={"Other Apps and Resources"}
+        placement={isMobile ? "bottom" : "right"}
+      >
         <IconButton
           aria-describedby="apps-menu"
           color={"inherit"}
@@ -79,13 +86,29 @@ export function AppsMenu() {
         open={appsMenuOpen}
         onClose={() => setAppsMenuOpen(false)}
         anchorEl={appsMenuParent.current}
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+        anchorOrigin={
+          isMobile
+            ? { vertical: "bottom", horizontal: "right" }
+            : { vertical: "top", horizontal: "left" }
+        }
+        transformOrigin={
+          isMobile
+            ? { vertical: "top", horizontal: "right" }
+            : { vertical: "bottom", horizontal: "left" }
+        }
       >
         {listItems.map((item) =>
           !item.shouldHide ? (
-            <MenuItem component={Link} to={item.link} key={item.label}>
-              <ListItemIcon>
+            <MenuItem
+              component={Link}
+              to={item.link}
+              key={item.label}
+              sx={{
+                whiteSpace: "pre-wrap",
+                alignItems: "flex-start!important",
+              }}
+            >
+              <ListItemIcon sx={{ pt: 1 }}>
                 <img width={24} height={24} src={item.iconLink} alt={""} />
               </ListItemIcon>
               <ListItemText primary={item.label} secondary={item.description} />
