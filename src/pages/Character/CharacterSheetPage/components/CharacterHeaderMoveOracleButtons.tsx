@@ -43,7 +43,7 @@ export function CharacterHeaderMoveOracleButtons() {
         <Fab
           variant={"extended"}
           color={"primary"}
-          sx={{ borderRadius: 4 }}
+          sx={{ borderRadius: 4, zIndex: "unset" }}
           onClick={() => setIsMoveSidebarOpen(true)}
         >
           <MovesIcon sx={{ mr: 1 }} />
@@ -53,7 +53,7 @@ export function CharacterHeaderMoveOracleButtons() {
           <Fab
             variant={"extended"}
             color={"primary"}
-            sx={{ borderRadius: 4 }}
+            sx={{ borderRadius: 4, zIndex: "unset" }}
             onClick={() => setIsOracleSidebarOpen(true)}
           >
             <OracleIcon sx={{ mr: 1 }} />
