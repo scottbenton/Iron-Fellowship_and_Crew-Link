@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Box,
   ButtonBase,
   Container,
   Toolbar,
@@ -14,6 +15,7 @@ import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { useAppName } from "hooks/useAppName";
 import { LinkComponent } from "../../LinkComponent";
 import { SettingsMenu } from "./SettingsMenu";
+import { AppsMenu } from "./AppsMenu";
 
 export function TopNav() {
   const isLightTheme = useTheme().palette.mode === "light";
@@ -68,7 +70,10 @@ export function TopNav() {
               {title}
             </Typography>
           </ButtonBase>
-          <SettingsMenu />
+          <Box>
+            <AppsMenu />
+            <SettingsMenu />
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>

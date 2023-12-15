@@ -4,6 +4,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Tooltip,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { logout } from "lib/auth.lib";
@@ -26,6 +27,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { BetaTestsDialog } from "./BetaTestsDialog";
 import TestsIcon from "@mui/icons-material/AutoAwesome";
 import { useNewLayout } from "hooks/featureFlags/useNewLayout";
+import { useIsMobile } from "hooks/useIsMobile";
 
 export function SettingsMenu() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -41,34 +43,48 @@ export function SettingsMenu() {
 
   const [betaTestsOpen, setBetaTestsOpen] = useState(false);
   const showNewLayout = useNewLayout();
+  const isMobile = useIsMobile();
 
   return (
     <>
-      <IconButton
-        color={"inherit"}
-        className={"dark-focus-outline"}
-        aria-label={"User Settings Menu Toggle"}
-        ref={anchorRef}
-        onClick={() => setMenuOpen(true)}
+      <Tooltip
+        title={"User Settings"}
+        placement={showNewLayout ? (isMobile ? "bottom" : "right") : undefined}
       >
-        <SettingsIcon
-          sx={(theme) => ({
-            transform: `rotate(${menuOpen ? "90deg" : "0deg"})`,
-            transition: theme.transitions.create(["transform"], {
-              duration: theme.transitions.duration.shorter,
-            }),
-          })}
-        />
-      </IconButton>
+        <IconButton
+          color={"inherit"}
+          className={"dark-focus-outline"}
+          aria-label={"User Settings Menu Toggle"}
+          ref={anchorRef}
+          onClick={() => setMenuOpen(true)}
+        >
+          <SettingsIcon
+            sx={(theme) => ({
+              transform: `rotate(${menuOpen ? "90deg" : "0deg"})`,
+              transition: theme.transitions.create(["transform"], {
+                duration: theme.transitions.duration.shorter,
+              }),
+            })}
+          />
+        </IconButton>
+      </Tooltip>
       <Menu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         anchorEl={anchorRef.current}
         anchorOrigin={
-          showNewLayout ? { vertical: "top", horizontal: "left" } : undefined
+          showNewLayout
+            ? isMobile
+              ? { vertical: "bottom", horizontal: "right" }
+              : { vertical: "top", horizontal: "left" }
+            : undefined
         }
         transformOrigin={
-          showNewLayout ? { vertical: "bottom", horizontal: "left" } : undefined
+          showNewLayout
+            ? isMobile
+              ? { vertical: "top", horizontal: "right" }
+              : { vertical: "bottom", horizontal: "left" }
+            : undefined
         }
       >
         <MenuItem
