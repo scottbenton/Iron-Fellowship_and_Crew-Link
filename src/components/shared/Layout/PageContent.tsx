@@ -21,7 +21,6 @@ export function PageContent(props: PageContentProps) {
           borderRadius: isPaper ? `${theme.shape.borderRadius}px` : 0,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
-          overflow: "clip",
           flexGrow: 1,
 
           pb: 2,

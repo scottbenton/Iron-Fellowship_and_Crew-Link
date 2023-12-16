@@ -121,6 +121,10 @@ export function WorldSheetPage() {
             indicatorColor="primary"
             centered
             variant={"standard"}
+            sx={(theme) => ({
+              borderTopRightRadius: theme.shape.borderRadius,
+              borderTopLeftRadius: theme.shape.borderRadius,
+            })}
           >
             <StyledTab value={TABS.DETAILS} label={"World Details"} />
             {!showSectorsInsteadOfLocations && (
