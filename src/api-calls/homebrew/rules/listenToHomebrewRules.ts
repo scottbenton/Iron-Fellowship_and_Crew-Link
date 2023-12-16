@@ -4,7 +4,7 @@ import { getHomebrewRulesDoc } from "./_getRef";
 
 export function listenToHomebrewRules(
   homebrewId: string,
-  updateRules: (collectionId: string, rules: StoredRules) => void,
+  updateRules: (collectionId: string, rules: Partial<StoredRules>) => void,
   onError: (error: unknown) => void,
   onLoaded: () => void
 ) {

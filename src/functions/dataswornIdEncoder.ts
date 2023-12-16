@@ -74,6 +74,4 @@ export function convertIdPart(
   throw new Error(
     `Failed to create valid ID: ID Part = ${idPart}, New ID Part = ${newIdPart}`
   );
-
-  return newIdPart;
 }

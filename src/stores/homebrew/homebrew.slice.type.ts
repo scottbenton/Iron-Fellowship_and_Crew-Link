@@ -1,4 +1,4 @@
-import { Unsubscribe } from "firebase/firestore";
+import { PartialWithFieldValue, Unsubscribe } from "firebase/firestore";
 import {
   BaseExpansion,
   BaseExpansionOrRuleset,
@@ -8,7 +8,7 @@ import {
 export interface HomebrewEntry {
   base: BaseExpansionOrRuleset;
   rules?: {
-    data?: StoredRules;
+    data?: Partial<StoredRules>;
     loaded: boolean;
     error?: string;
   };
@@ -30,6 +30,11 @@ export interface HomebrewSliceActions {
     expansion: Partial<BaseExpansion>
   ) => Promise<void>;
   deleteExpansion: (expansionId: string) => Promise<void>;
+
+  updateExpansionRules: (
+    expansionId: string,
+    rules: PartialWithFieldValue<StoredRules>
+  ) => Promise<void>;
 }
 
 export type HomebrewSlice = HomebrewSliceData & HomebrewSliceActions;

@@ -8,6 +8,7 @@ import { updateHomebrewExpansion } from "api-calls/homebrew/updateHomebrewExpans
 import { deleteHomebrewExpansion } from "api-calls/homebrew/deleteHomebrewExpansion";
 import { Unsubscribe } from "firebase/firestore";
 import { listenToHomebrewRules } from "api-calls/homebrew/rules/listenToHomebrewRules";
+import { updateExpansionRules } from "api-calls/homebrew/rules/updateExpansionRules";
 
 export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
   ...defaultHomebrewSlice,
@@ -105,5 +106,9 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
   },
   deleteExpansion: (id) => {
     return deleteHomebrewExpansion({ id });
+  },
+
+  updateExpansionRules: (homebrewId, rules) => {
+    return updateExpansionRules({ homebrewId, rules });
   },
 });

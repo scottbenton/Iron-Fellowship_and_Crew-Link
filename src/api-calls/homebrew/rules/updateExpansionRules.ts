@@ -1,9 +1,9 @@
 import { createApiFunction } from "api-calls/createApiFunction";
-import { PartialWithFieldValue, updateDoc } from "firebase/firestore";
+import { PartialWithFieldValue, setDoc } from "firebase/firestore";
 import { getHomebrewRulesDoc } from "./_getRef";
 import { StoredRules } from "types/HomebrewCollection.type";
 
-export const updateHomebrewRules = createApiFunction<
+export const updateExpansionRules = createApiFunction<
   {
     homebrewId: string;
     rules: PartialWithFieldValue<StoredRules>;
@@ -12,7 +12,7 @@ export const updateHomebrewRules = createApiFunction<
 >((params) => {
   const { homebrewId, rules } = params;
   return new Promise((resolve, reject) => {
-    updateDoc(getHomebrewRulesDoc(homebrewId), rules)
+    setDoc(getHomebrewRulesDoc(homebrewId), rules, { merge: true })
       .then(() => {
         resolve();
       })

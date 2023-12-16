@@ -11,5 +11,5 @@ export function getHomebrewRulesDoc(homebrewId: string) {
   return doc(
     firestore,
     constructHomebrewRulesDocPath(homebrewId)
-  ) as DocumentReference<StoredRules>;
+  ) as DocumentReference<Partial<StoredRules>>;
 }

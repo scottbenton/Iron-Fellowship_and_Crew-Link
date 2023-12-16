@@ -23,46 +23,51 @@ export type BaseRuleset = Omit<Ruleset, RuleKeys> & additions;
 
 export type BaseExpansionOrRuleset = BaseExpansion | BaseRuleset;
 
+export interface StoredStat {
+  label: string;
+  description: string;
+}
+
+export interface StoredConditionMeter {
+  description: string;
+  shared: boolean;
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  rollable: boolean;
+}
+
+export interface StoredImpact {
+  label: string;
+  description: string;
+  contents: {
+    [impactKey: string]: {
+      label: string;
+      description: string;
+      shared: boolean;
+      // ex: health, spirit
+      prevents_recovery: string[];
+      permanent: boolean;
+    };
+  };
+}
+export interface StoredSpecialTrack {
+  label: string;
+  description: string;
+  shared: boolean;
+  optional: boolean;
+}
+
 export interface StoredRules {
   stats: {
-    [statKey: string]: {
-      label: string;
-      description: string;
-    };
+    [statKey: string]: StoredStat;
   };
   condition_meters: {
-    [conditionMeterKey: string]: {
-      description: string;
-      shared: boolean;
-      label: string;
-      value: number;
-      min: number;
-      max: number;
-      rollable: boolean;
-    };
+    [conditionMeterKey: string]: StoredConditionMeter;
   };
   impacts: {
-    [impactCategoryKey: string]: {
-      label: string;
-      description: string;
-      contents: {
-        [impactKey: string]: {
-          label: string;
-          description: string;
-          shared: boolean;
-          // ex: health, spirit
-          prevents_recovery: string[];
-          permanent: boolean;
-        };
-      };
-    };
+    [impactCategoryKey: string]: StoredImpact;
   };
-  special_tracks: {
-    [trackKey: string]: {
-      label: string;
-      description: string;
-      shared: boolean;
-      optional: boolean;
-    };
-  };
+  special_tracks: { [specialTrackKey: string]: StoredSpecialTrack };
 }

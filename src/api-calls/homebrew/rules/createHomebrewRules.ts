@@ -6,7 +6,7 @@ import { StoredRules } from "types/HomebrewCollection.type";
 export const updateHomebrewRules = createApiFunction<
   {
     homebrewId: string;
-    rules: PartialWithFieldValue<StoredRules>;
+    rules: PartialWithFieldValue<Partial<StoredRules>>;
   },
   void
 >((params) => {

@@ -30,7 +30,7 @@ export function RulesSection(props: RulesSectionProps) {
       }}
     >
       <SectionHeading breakContainer label={"Stats"} />
-      <Stats stats={stats} />
+      <Stats stats={stats} homebrewId={id} />
       <SectionHeading breakContainer label={"Condition Meters"} />
       <SectionHeading breakContainer label={"Impacts"} />
       <SectionHeading breakContainer label={"Special Tracks"} />
