@@ -114,6 +114,10 @@ export function HomebrewEditorPage() {
           <StyledTabs
             value={selectedTab}
             onChange={(evt, value) => handleTabChange(value)}
+            sx={(theme) => ({
+              borderTopRightRadius: theme.shape.borderRadius,
+              borderTopLeftRadius: theme.shape.borderRadius,
+            })}
           >
             <StyledTab label={"About"} value={TABS.ABOUT} />
             <StyledTab label={"Moves"} value={TABS.MOVES} />
