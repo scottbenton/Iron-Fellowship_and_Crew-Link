@@ -1,4 +1,11 @@
-import { Button, Chip, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { StoredRules, StoredStat } from "types/HomebrewCollection.type";
 import { StatDialog } from "./StatDialog";
@@ -6,6 +13,7 @@ import { useStore } from "stores/store";
 import { deleteField } from "firebase/firestore";
 import { useConfirm } from "material-ui-confirm";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export interface StatsProps {
   homebrewId: string;
@@ -49,26 +57,46 @@ export function Stats(props: StatsProps) {
 
   return (
     <>
-      {Object.keys(stats).length === 0 && (
+      {Object.keys(stats).length === 0 ? (
         <Typography color={"textSecondary"}>No Stats Found</Typography>
-      )}
-      <Stack spacing={1} direction={"row"}>
-        {Object.keys(stats)
-          .sort((s1, s2) => stats[s1].label.localeCompare(stats[s2].label))
-          .map((statKey) => (
-            <Chip
-              label={stats[statKey].label}
+      ) : (
+        <List
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(12, 1fr)",
+            pl: 0,
+            my: 0,
+            listStyle: "none",
+          }}
+        >
+          {Object.keys(stats).map((statKey) => (
+            <ListItem
               key={statKey}
-              sx={{ textTransform: "capitalize" }}
-              onDelete={() => handleDelete(statKey)}
-              icon={<EditIcon />}
-              onClick={() => {
-                setStatDialogOpen(true);
-                setEditingStatKey(statKey);
-              }}
-            />
+              sx={{ gridColumn: { xs: "span 12", sm: "span 6", md: "span 4" } }}
+              secondaryAction={
+                <>
+                  <IconButton
+                    onClick={() => {
+                      setStatDialogOpen(true);
+                      setEditingStatKey(statKey);
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleDelete(statKey)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </>
+              }
+            >
+              <ListItemText
+                primary={stats[statKey].label}
+                secondary={stats[statKey].description}
+              />
+            </ListItem>
           ))}
-      </Stack>
+        </List>
+      )}
       <Button
         variant={"outlined"}
         color={"inherit"}

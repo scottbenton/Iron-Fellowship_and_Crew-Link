@@ -12,6 +12,8 @@ import { useRules } from "data/hooks/useRules";
 import { convertIdPart } from "functions/dataswornIdEncoder";
 import { useEffect, useState } from "react";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
+import { Preview } from "../../Preview";
+import { StatPreviewComponent } from "./StatPreviewComponent";
 
 export interface StatDialogProps {
   stats: StoredRules["stats"];
@@ -19,11 +21,6 @@ export interface StatDialogProps {
   onSave: (statId: string, stat: StoredStat) => Promise<void>;
   onClose: () => void;
   editingStatKey?: string;
-}
-
-interface StatInputs {
-  label: string;
-  description: string;
 }
 
 export function StatDialog(props: StatDialogProps) {
@@ -40,9 +37,10 @@ export function StatDialog(props: StatDialogProps) {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, touchedFields, disabled },
     reset,
-  } = useForm<StatInputs>({ disabled: loading });
+  } = useForm<StoredStat>({ disabled: loading });
 
   useEffect(() => {
     if (open) {
@@ -57,7 +55,7 @@ export function StatDialog(props: StatDialogProps) {
     }
   }, [open, reset, existingStat]);
 
-  const onSubmit: SubmitHandler<StatInputs> = (values) => {
+  const onSubmit: SubmitHandler<StoredStat> = (values) => {
     setLoading(true);
     const id = editingStatKey ?? convertIdPart(values.label);
     onSave(id, values)
@@ -126,6 +124,9 @@ export function StatDialog(props: StatDialogProps) {
                 }),
               }}
             />
+            <Preview>
+              <StatPreviewComponent control={control} />
+            </Preview>
           </Stack>
         </DialogContent>
         <DialogActions>
