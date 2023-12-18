@@ -4,7 +4,7 @@ import {
   StoredImpactCategory,
   StoredRules,
 } from "types/HomebrewCollection.type";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { convertIdPart } from "functions/dataswornIdEncoder";
+import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor";
 
 export interface ImpactCategoryDialogProps {
   open: boolean;
@@ -46,6 +47,7 @@ export function ImpactCategoryDialog(props: ImpactCategoryDialogProps) {
     handleSubmit,
     formState: { errors, touchedFields, disabled },
     reset,
+    control,
   } = useForm<CategoryWithoutImpacts>({ disabled: loading });
 
   useEffect(() => {
@@ -111,22 +113,18 @@ export function ImpactCategoryDialog(props: ImpactCategoryDialogProps) {
                 }),
               }}
             />
-            <TextField
-              disabled={disabled}
-              label={"Description"}
-              fullWidth
-              error={touchedFields.description && !!errors.description}
-              helperText={
-                touchedFields.description && errors.description
-                  ? errors.description.message
-                  : undefined
-              }
-              inputProps={{
-                defaultValue: "",
-                ...register("description", {
-                  required: "This field is required.",
-                }),
-              }}
+            <Controller
+              name="description"
+              control={control}
+              defaultValue={""}
+              render={({ field }) => (
+                <MarkdownEditor
+                  label={"Description"}
+                  content={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
             />
           </Stack>
         </DialogContent>

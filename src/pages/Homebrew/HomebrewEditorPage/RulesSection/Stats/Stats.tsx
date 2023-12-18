@@ -15,6 +15,7 @@ import { deleteField } from "firebase/firestore";
 import { useConfirm } from "material-ui-confirm";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { ClampedMarkdownRenderer } from "components/shared/ClampedMarkdownRenderer";
 
 export interface StatsProps {
   homebrewId: string;
@@ -79,7 +80,15 @@ export function Stats(props: StatsProps) {
                   gridColumn: { xs: "span 12", sm: "span 6", md: "span 4" },
                 }}
               >
-                <ListItemText primary={stats[statKey].label} />
+                <ListItemText
+                  primary={stats[statKey].label}
+                  secondary={
+                    <ClampedMarkdownRenderer
+                      markdown={stats[statKey].description}
+                      inheritColor
+                    />
+                  }
+                />
                 <Box display={"flex"}>
                   <IconButton
                     onClick={() => {

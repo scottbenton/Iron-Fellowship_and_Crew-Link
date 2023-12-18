@@ -20,6 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
 import { deleteField } from "firebase/firestore";
 import { ImpactDialog } from "./ImpactDialog";
+import { ClampedMarkdownRenderer } from "components/shared/ClampedMarkdownRenderer";
 
 export interface ImpactsProps {
   homebrewId: string;
@@ -155,7 +156,12 @@ export function Impacts(props: ImpactsProps) {
                 >
                   <ListItemText
                     primary={impactCategories[categoryKey].label}
-                    secondary={impactCategories[categoryKey].description}
+                    secondary={
+                      <ClampedMarkdownRenderer
+                        markdown={impactCategories[categoryKey].description}
+                        inheritColor
+                      />
+                    }
                   />
                   <Box display={"flex"}>
                     <IconButton
@@ -193,9 +199,14 @@ export function Impacts(props: ImpactsProps) {
                               ].label
                             }
                             secondary={
-                              impactCategories[categoryKey].contents[
-                                categoryContentKey
-                              ].description
+                              <ClampedMarkdownRenderer
+                                markdown={
+                                  impactCategories[categoryKey].contents[
+                                    categoryContentKey
+                                  ].description
+                                }
+                                inheritColor
+                              />
                             }
                           />
                           <Box display={"flex"}>

@@ -20,6 +20,7 @@ import {
   StoredImpactCategory,
 } from "types/HomebrewCollection.type";
 import { ConditionMeterAutocomplete } from "../ConditionMeters/ConditionMeterAutocomplete";
+import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor";
 
 export interface ImpactDialogProps {
   open: boolean;
@@ -117,22 +118,18 @@ export function ImpactDialog(props: ImpactDialogProps) {
                 }),
               }}
             />
-            <TextField
-              disabled={disabled}
-              label={"Description"}
-              fullWidth
-              error={touchedFields.description && !!errors.description}
-              helperText={
-                touchedFields.description && errors.description
-                  ? errors.description.message
-                  : undefined
-              }
-              inputProps={{
-                defaultValue: "",
-                ...register("description", {
-                  required: "This field is required.",
-                }),
-              }}
+            <Controller
+              name="description"
+              control={control}
+              defaultValue={""}
+              render={({ field }) => (
+                <MarkdownEditor
+                  label={"Description"}
+                  content={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
             />
             <FormControl error={touchedFields.permanent && !!errors.permanent}>
               <FormControlLabel

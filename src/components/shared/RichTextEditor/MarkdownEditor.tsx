@@ -57,6 +57,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
       editor={editor}
       editable
       outlined
+      minHeight={100}
     />
   );
 }

@@ -18,6 +18,7 @@ import { useStore } from "stores/store";
 import { deleteField } from "firebase/firestore";
 import { useConfirm } from "material-ui-confirm";
 import { ConditionMeterDialog } from "./ConditionMeterDialog";
+import { ClampedMarkdownRenderer } from "components/shared/ClampedMarkdownRenderer";
 
 export interface ConditionMetersProps {
   homebrewId: string;
@@ -96,7 +97,12 @@ export function ConditionMeters(props: ConditionMetersProps) {
               >
                 <ListItemText
                   primary={conditionMeters[conditionMeterKey].label}
-                  secondary={conditionMeters[conditionMeterKey].description}
+                  secondary={
+                    <ClampedMarkdownRenderer
+                      markdown={conditionMeters[conditionMeterKey].description}
+                      inheritColor
+                    />
+                  }
                 />
                 <Box display={"flex"}>
                   <IconButton

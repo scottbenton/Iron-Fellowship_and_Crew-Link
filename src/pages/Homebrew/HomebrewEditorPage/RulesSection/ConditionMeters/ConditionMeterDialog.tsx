@@ -21,6 +21,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { convertIdPart } from "functions/dataswornIdEncoder";
 import { Preview } from "../../Preview";
 import { ConditionMeterPreview } from "./ConditionMeterPreview";
+import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor";
 
 export interface ConditionMeterDialogProps {
   conditionMeters: StoredRules["condition_meters"];
@@ -112,22 +113,18 @@ export function ConditionMeterDialog(props: ConditionMeterDialogProps) {
                 }),
               }}
             />
-            <TextField
-              disabled={disabled}
-              label={"Description"}
-              fullWidth
-              error={touchedFields.description && !!errors.description}
-              helperText={
-                touchedFields.description && errors.description
-                  ? errors.description.message
-                  : undefined
-              }
-              inputProps={{
-                defaultValue: "",
-                ...register("description", {
-                  required: "This field is required.",
-                }),
-              }}
+            <Controller
+              name="description"
+              control={control}
+              defaultValue={""}
+              render={({ field }) => (
+                <MarkdownEditor
+                  label={"Description"}
+                  content={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
             />
             <TextField
               disabled={disabled}
