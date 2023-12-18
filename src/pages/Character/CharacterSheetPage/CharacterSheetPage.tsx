@@ -1,10 +1,9 @@
 import { Button, LinearProgress } from "@mui/material";
-import { Link } from "react-router-dom";
 import { EmptyState } from "components/shared/EmptyState/EmptyState";
 import { TabsSection } from "./components/TabsSection";
 import { TracksSection } from "./components/TracksSection";
 import { CharacterHeader } from "./components/CharacterHeader";
-import { CHARACTER_ROUTES, characterPaths } from "../routes";
+import { CHARACTER_ROUTES, constructCharacterPath } from "../routes";
 import { PageContent, PageHeader } from "components/shared/Layout";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
@@ -14,6 +13,7 @@ import { Sidebar } from "./components/Sidebar";
 import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
 import { useIsMobile } from "hooks/useIsMobile";
 import { StatsSectionMobile } from "./components/StatsSectionMobile";
+import { LinkComponent } from "components/shared/LinkComponent";
 
 export function CharacterSheetPage() {
   useSyncStore();
@@ -51,8 +51,8 @@ export function CharacterSheetPage() {
         showImage
         callToAction={
           <Button
-            component={Link}
-            to={characterPaths[CHARACTER_ROUTES.SELECT]}
+            LinkComponent={LinkComponent}
+            href={constructCharacterPath(CHARACTER_ROUTES.SELECT)}
             variant={"contained"}
             size={"large"}
           >

@@ -1,10 +1,11 @@
-import { LinearProgress } from "@mui/material";
+import { Button, LinearProgress } from "@mui/material";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TabsSection } from "./components/TabsSection";
 import {
   CAMPAIGN_ROUTES,
+  constructCampaignPath,
   constructCampaignSheetPath,
 } from "pages/Campaign/routes";
 import { PageContent, PageHeader } from "components/shared/Layout";
@@ -14,6 +15,7 @@ import { useStore } from "stores/store";
 import { Sidebar } from "pages/Character/CharacterSheetPage/components/Sidebar";
 import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
 import { EmptyState } from "components/shared/EmptyState";
+import { LinkComponent } from "components/shared/LinkComponent";
 
 export function CampaignGMScreenPage() {
   useSyncStore();
@@ -61,10 +63,27 @@ export function CampaignGMScreenPage() {
     return <LinearProgress />;
   }
 
-  if (!campaign || !uid || !campaign?.gmIds?.includes(uid)) {
+  if (!campaign || !campaignId) {
     return (
-      <EmptyState showImage title={"You are not a GM of this campaign."} />
+      <EmptyState
+        title={"Campaign not Found"}
+        message={"Please try again from the campaign selection page"}
+        showImage
+        callToAction={
+          <Button
+            LinkComponent={LinkComponent}
+            href={constructCampaignPath(CAMPAIGN_ROUTES.SELECT)}
+            variant={"contained"}
+            size={"large"}
+          >
+            Select a Campaign
+          </Button>
+        }
+      />
     );
+  }
+  if (!uid || !campaign.gmIds?.includes(uid)) {
+    return null;
   }
 
   return (

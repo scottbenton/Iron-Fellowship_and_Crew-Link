@@ -106,6 +106,16 @@ service cloud.firestore {
     	allow read: if request.auth.uid != null;
       allow create: if request.auth.uid != null;
       allow write: if request.auth.uid in resource.data.uids;
+      
+      function checkIsHomebrewOwner() {
+      	let world = get(/databases/$(database)/documents/homebrew/$(homebrewId)).data;
+        return request.auth.uid in world.ownerIds;
+      }
+      
+      match /rules/rules {
+      	allow read: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner();
+      }
     }
     match /users/{userId} {
     	allow read: if true;

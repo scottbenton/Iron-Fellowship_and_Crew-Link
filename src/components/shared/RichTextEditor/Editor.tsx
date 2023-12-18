@@ -8,10 +8,18 @@ export interface EditorProps {
   editor: TTEditor | null;
   saving?: boolean;
   toolbar?: ReactNode;
+  minHeight?: number;
 }
 
 export function Editor(props: EditorProps) {
-  const { outlined, editable, editor, toolbar, saving } = props;
+  const {
+    outlined,
+    editable,
+    editor,
+    toolbar,
+    saving,
+    minHeight = 300,
+  } = props;
 
   return (
     <Box
@@ -58,7 +66,7 @@ export function Editor(props: EditorProps) {
             overflowX: "hidden",
             ...(outlined
               ? {
-                  minHeight: editable ? "300px" : 0,
+                  minHeight: editable ? `${minHeight}px` : 0,
                   display: "flex",
                   flexDirection: "column",
                 }

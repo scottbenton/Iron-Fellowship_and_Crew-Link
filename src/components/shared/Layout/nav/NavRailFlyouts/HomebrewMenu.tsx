@@ -18,7 +18,8 @@ export function HomebrewMenu() {
           >
             <ListItemText
               primary={
-                homebrewCollections[collectionId].title ?? "Unnamed Collection"
+                homebrewCollections[collectionId].base.title ??
+                "Unnamed Collection"
               }
             />
           </ListItemButton>

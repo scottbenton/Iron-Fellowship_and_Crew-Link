@@ -8,7 +8,7 @@ export interface TrackProps {
   min: number;
   max: number;
   value: number;
-  onChange: (newValue: number) => Promise<boolean | void>;
+  onChange?: (newValue: number) => Promise<boolean | void>;
   sx?: SxProps<Theme>;
   disabled?: boolean;
 }
@@ -32,7 +32,7 @@ export function Track(props: TrackProps) {
 
   const [localValue, setLocalValue] = useDebouncedState(
     (newValue) => {
-      if (newValue !== value) {
+      if (newValue !== value && onChange) {
         hasUnsavedChangesRef.current = false;
         onChange(newValue).catch(() => setLocalValue(value));
       }
@@ -42,7 +42,12 @@ export function Track(props: TrackProps) {
   );
 
   const handleChange = (newValue: number | undefined) => {
-    if (typeof newValue === "number" && newValue >= min && newValue <= max) {
+    if (
+      onChange &&
+      typeof newValue === "number" &&
+      newValue >= min &&
+      newValue <= max
+    ) {
       hasUnsavedChangesRef.current = true;
       setLocalValue(newValue);
     }

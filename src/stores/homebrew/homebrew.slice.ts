@@ -4,6 +4,11 @@ import { defaultHomebrewSlice } from "./homebrew.slice.default";
 import { listenToHomebrewCollections } from "api-calls/homebrew/listenToHomebrewCollections";
 import { getErrorMessage } from "functions/getErrorMessage";
 import { createHomebrewExpansion } from "api-calls/homebrew/createHomebrewExpansion";
+import { updateHomebrewExpansion } from "api-calls/homebrew/updateHomebrewExpansion";
+import { deleteHomebrewExpansion } from "api-calls/homebrew/deleteHomebrewExpansion";
+import { Unsubscribe } from "firebase/firestore";
+import { listenToHomebrewRules } from "api-calls/homebrew/rules/listenToHomebrewRules";
+import { updateExpansionRules } from "api-calls/homebrew/rules/updateExpansionRules";
 
 export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
   ...defaultHomebrewSlice,
@@ -12,7 +17,10 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
       uid,
       (collectionId, collection) => {
         set((store) => {
-          store.homebrew.collections[collectionId] = collection;
+          store.homebrew.collections[collectionId] = {
+            ...(store.homebrew.collections[collectionId] ?? {}),
+            base: collection,
+          };
           store.homebrew.loading = false;
           store.homebrew.error = undefined;
         });
@@ -40,7 +48,67 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
       }
     );
   },
+
+  subscribeToHomebrewContent: (homebrewIds) => {
+    const unsubscribes: Unsubscribe[] = [];
+    homebrewIds.forEach((homebrewId) => {
+      unsubscribes.push(
+        listenToHomebrewRules(
+          homebrewId,
+          (id, rules) => {
+            set((store) => {
+              store.homebrew.collections[homebrewId] = {
+                ...(store.homebrew.collections[homebrewId] ?? {}),
+                rules: {
+                  data: rules,
+                  loaded: true,
+                },
+              };
+            });
+          },
+          (error) => {
+            set((store) => {
+              store.homebrew.collections[homebrewId] = {
+                ...(store.homebrew.collections[homebrewId] ?? {}),
+                rules: {
+                  ...(store.homebrew.collections[homebrewId].rules ?? {}),
+                  loaded: true,
+                  error: getErrorMessage(error, "Failed to load rules"),
+                },
+              };
+            });
+          },
+          () => {
+            set((store) => {
+              store.homebrew.collections[homebrewId] = {
+                ...(store.homebrew.collections[homebrewId] ?? {}),
+                rules: {
+                  ...(store.homebrew.collections[homebrewId].rules ?? {}),
+                  loaded: true,
+                },
+              };
+            });
+          }
+        )
+      );
+    });
+
+    return () => {
+      unsubscribes.forEach((unsubscribe) => unsubscribe());
+    };
+  },
+
   createExpansion: (expansion) => {
     return createHomebrewExpansion(expansion);
+  },
+  updateExpansion: (id, expansion) => {
+    return updateHomebrewExpansion({ id, expansion });
+  },
+  deleteExpansion: (id) => {
+    return deleteHomebrewExpansion({ id });
+  },
+
+  updateExpansionRules: (homebrewId, rules) => {
+    return updateExpansionRules({ homebrewId, rules });
   },
 });

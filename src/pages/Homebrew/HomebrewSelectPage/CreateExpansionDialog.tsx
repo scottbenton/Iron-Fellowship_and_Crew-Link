@@ -11,8 +11,10 @@ import { dataswornVersion } from "config/datasworn.config";
 import { convertIdPart } from "functions/dataswornIdEncoder";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useStore } from "stores/store";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
+import { constructHomebrewEditorPath } from "../routes";
 
 export interface CreateExpansionDialogProps {
   open: boolean;
@@ -22,6 +24,8 @@ export interface CreateExpansionDialogProps {
 
 export function CreateExpansionDialog(props: CreateExpansionDialogProps) {
   const { open, onClose, ids } = props;
+
+  const navigate = useNavigate();
 
   const [collectionName, setCollectionName] = useState("");
   const [error, setError] = useState<string>();
@@ -58,8 +62,9 @@ export function CreateExpansionDialog(props: CreateExpansionDialogProps) {
       uids: [uid],
       title: collectionName,
     })
-      .then(() => {
+      .then((id) => {
         onClose();
+        navigate(constructHomebrewEditorPath(id));
       })
       .catch(() => {});
   };
