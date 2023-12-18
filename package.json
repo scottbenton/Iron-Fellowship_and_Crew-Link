@@ -48,6 +48,7 @@
     "react-transition-group": "^4.4.5",
     "react-virtuoso": "^4.5.0",
     "remark-gfm": "^3.0.1",
+    "tiptap-markdown": "^0.8.8",
     "vite-plugin-svgr": "^2.4.0",
     "vite-tsconfig-paths": "^4.0.5",
     "y-prosemirror": "1.0.20",

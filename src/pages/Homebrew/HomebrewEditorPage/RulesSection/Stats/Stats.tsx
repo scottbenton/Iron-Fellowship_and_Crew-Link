@@ -89,10 +89,7 @@ export function Stats(props: StatsProps) {
                 </>
               }
             >
-              <ListItemText
-                primary={stats[statKey].label}
-                secondary={stats[statKey].description}
-              />
+              <ListItemText primary={stats[statKey].label} />
             </ListItem>
           ))}
         </List>

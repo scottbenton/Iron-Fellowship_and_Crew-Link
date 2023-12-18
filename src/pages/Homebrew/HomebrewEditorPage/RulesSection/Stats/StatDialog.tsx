@@ -1,5 +1,5 @@
 import { StoredRules, StoredStat } from "types/HomebrewCollection.type";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { Preview } from "../../Preview";
 import { StatPreviewComponent } from "./StatPreviewComponent";
+import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor";
 
 export interface StatDialogProps {
   stats: StoredRules["stats"];
@@ -107,22 +108,18 @@ export function StatDialog(props: StatDialogProps) {
                 }),
               }}
             />
-            <TextField
-              disabled={disabled}
-              label={"Description"}
-              fullWidth
-              error={touchedFields.description && !!errors.description}
-              helperText={
-                touchedFields.description && errors.description
-                  ? errors.description.message
-                  : undefined
-              }
-              inputProps={{
-                defaultValue: existingStat?.description ?? "",
-                ...register("description", {
-                  required: "This field is required.",
-                }),
-              }}
+            <Controller
+              name="description"
+              control={control}
+              defaultValue={""}
+              render={({ field }) => (
+                <MarkdownEditor
+                  label={"Description"}
+                  content={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
             />
             <Preview>
               <StatPreviewComponent control={control} />
