@@ -79,10 +79,7 @@ export function Stats(props: StatsProps) {
                   gridColumn: { xs: "span 12", sm: "span 6", md: "span 4" },
                 }}
               >
-                <ListItemText
-                  primary={stats[statKey].label}
-                  secondary={stats[statKey].description}
-                />
+                <ListItemText primary={stats[statKey].label} />
                 <Box display={"flex"}>
                   <IconButton
                     onClick={() => {
