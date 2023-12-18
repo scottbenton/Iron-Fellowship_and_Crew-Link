@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.3.0
+## 3.0.0
 
 ### New Features
 
@@ -9,6 +9,7 @@
 ### Changes
 
 - Changed the layout of the app
+- Added ability to add extra experience points past 30 (Ironsworn)
 
 ### Bug Fixes
 

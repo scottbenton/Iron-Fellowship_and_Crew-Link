@@ -5,7 +5,7 @@ import EmptyIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { ExperienceButtons } from "./ExperienceButtons";
 import { useStore } from "stores/store";
 
-const totalExp = 30;
+const defaultTotalExp = 30;
 
 export function ExperienceTrack() {
   const earnedExp = useStore(
@@ -26,7 +26,7 @@ export function ExperienceTrack() {
   };
 
   const handleEarnedExperienceChange = (proposedValue: number) => {
-    if (proposedValue >= spentExp && proposedValue <= totalExp) {
+    if (proposedValue >= spentExp) {
       updateExperience("earned", proposedValue);
     }
   };
@@ -46,9 +46,11 @@ export function ExperienceTrack() {
         {new Array(earnedExp - spentExp).fill(undefined).map((key, index) => (
           <EarnedIcon key={index} color={"action"} fontSize={"small"} />
         ))}
-        {new Array(totalExp - earnedExp).fill(undefined).map((key, index) => (
-          <EmptyIcon key={index} color={"action"} fontSize={"small"} />
-        ))}
+        {new Array(Math.max(defaultTotalExp, earnedExp) - earnedExp)
+          .fill(undefined)
+          .map((key, index) => (
+            <EmptyIcon key={index} color={"action"} fontSize={"small"} />
+          ))}
       </Box>
       <Box display={"flex"} flexWrap={"wrap"}>
         <ExperienceButtons
