@@ -41,15 +41,17 @@ export interface StoredConditionMeter {
 export interface StoredImpact {
   label: string;
   description: string;
+  shared: boolean;
+  // ex: health, spirit
+  prevents_recovery: string[];
+  permanent: boolean;
+}
+
+export interface StoredImpactCategory {
+  label: string;
+  description: string;
   contents: {
-    [impactKey: string]: {
-      label: string;
-      description: string;
-      shared: boolean;
-      // ex: health, spirit
-      prevents_recovery: string[];
-      permanent: boolean;
-    };
+    [impactKey: string]: StoredImpact;
   };
 }
 export interface StoredSpecialTrack {
@@ -67,7 +69,7 @@ export interface StoredRules {
     [conditionMeterKey: string]: StoredConditionMeter;
   };
   impacts: {
-    [impactCategoryKey: string]: StoredImpact;
+    [impactCategoryKey: string]: StoredImpactCategory;
   };
   special_tracks: { [specialTrackKey: string]: StoredSpecialTrack };
 }

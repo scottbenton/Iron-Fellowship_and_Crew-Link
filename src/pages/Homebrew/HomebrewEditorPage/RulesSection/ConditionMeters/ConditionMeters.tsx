@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   IconButton,
   List,
@@ -82,12 +83,22 @@ export function ConditionMeters(props: ConditionMetersProps) {
             listStyle: "none",
           }}
         >
-          {Object.keys(conditionMeters).map((conditionMeterKey) => (
-            <ListItem
-              key={conditionMeterKey}
-              sx={{ gridColumn: { xs: "span 12", sm: "span 6", md: "span 4" } }}
-              secondaryAction={
-                <>
+          {Object.keys(conditionMeters)
+            .sort((c1, c2) =>
+              conditionMeters[c1].label.localeCompare(conditionMeters[c2].label)
+            )
+            .map((conditionMeterKey) => (
+              <ListItem
+                key={conditionMeterKey}
+                sx={{
+                  gridColumn: { xs: "span 12", sm: "span 6", md: "span 4" },
+                }}
+              >
+                <ListItemText
+                  primary={conditionMeters[conditionMeterKey].label}
+                  secondary={conditionMeters[conditionMeterKey].description}
+                />
+                <Box display={"flex"}>
                   <IconButton
                     onClick={() => {
                       setConditionMeterDialogOpen(true);
@@ -99,15 +110,9 @@ export function ConditionMeters(props: ConditionMetersProps) {
                   <IconButton onClick={() => handleDelete(conditionMeterKey)}>
                     <DeleteIcon />
                   </IconButton>
-                </>
-              }
-            >
-              <ListItemText
-                primary={conditionMeters[conditionMeterKey].label}
-                secondary={conditionMeters[conditionMeterKey].description}
-              />
-            </ListItem>
-          ))}
+                </Box>
+              </ListItem>
+            ))}
         </List>
       )}
       <Button

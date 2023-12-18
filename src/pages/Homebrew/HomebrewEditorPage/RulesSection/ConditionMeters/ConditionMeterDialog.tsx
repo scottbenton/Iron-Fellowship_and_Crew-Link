@@ -101,7 +101,6 @@ export function ConditionMeterDialog(props: ConditionMeterDialogProps) {
                     if (!editingConditionMeterKey && value) {
                       try {
                         const id = convertIdPart(value);
-                        console.debug(id);
                         if (allConditionMeters[id]) {
                           return `You already have a condition meter with id ${id}. Please try a different label.`;
                         }
@@ -110,6 +109,23 @@ export function ConditionMeterDialog(props: ConditionMeterDialogProps) {
                       }
                     }
                   },
+                }),
+              }}
+            />
+            <TextField
+              disabled={disabled}
+              label={"Description"}
+              fullWidth
+              error={touchedFields.description && !!errors.description}
+              helperText={
+                touchedFields.description && errors.description
+                  ? errors.description.message
+                  : undefined
+              }
+              inputProps={{
+                defaultValue: "",
+                ...register("description", {
+                  required: "This field is required.",
                 }),
               }}
             />

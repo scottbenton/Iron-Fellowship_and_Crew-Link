@@ -1,5 +1,10 @@
-import { StoredRules, StoredStat } from "types/HomebrewCollection.type";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useRules } from "data/hooks/useRules";
+import { useEffect, useState } from "react";
+import {
+  StoredImpactCategory,
+  StoredRules,
+} from "types/HomebrewCollection.type";
+import { SubmitHandler, useForm } from "react-hook-form";
 import {
   Button,
   Dialog,
@@ -8,57 +13,58 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useRules } from "data/hooks/useRules";
-import { convertIdPart } from "functions/dataswornIdEncoder";
-import { useEffect, useState } from "react";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
-import { Preview } from "../../Preview";
-import { StatPreviewComponent } from "./StatPreviewComponent";
+import { convertIdPart } from "functions/dataswornIdEncoder";
 
-export interface StatDialogProps {
-  stats: StoredRules["stats"];
+export interface ImpactCategoryDialogProps {
   open: boolean;
-  onSave: (statId: string, stat: StoredStat) => Promise<void>;
   onClose: () => void;
-  editingStatKey?: string;
+  onSave: (
+    impactCategoryId: string,
+    impactCategory: StoredImpactCategory
+  ) => Promise<void>;
+  impactCategories: StoredRules["impacts"];
+  editingCategoryKey?: string;
 }
 
-export function StatDialog(props: StatDialogProps) {
-  const { stats, open, onSave, onClose, editingStatKey } = props;
+type CategoryWithoutImpacts = Omit<StoredImpactCategory, "contents">;
 
-  const existingStat = editingStatKey
-    ? stats[editingStatKey] ?? undefined
+export function ImpactCategoryDialog(props: ImpactCategoryDialogProps) {
+  const { open, onClose, onSave, impactCategories, editingCategoryKey } = props;
+
+  const existingCategory = editingCategoryKey
+    ? impactCategories[editingCategoryKey] ?? undefined
     : undefined;
-  const { stats: baseStats } = useRules();
-  const existingStatKeys = Object.keys({ ...stats, ...baseStats });
+
+  const { impacts } = useRules();
+  const allImpactCategories = { ...impacts, ...impactCategories };
 
   const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors, touchedFields, disabled },
     reset,
-  } = useForm<StoredStat>({ disabled: loading });
+  } = useForm<CategoryWithoutImpacts>({ disabled: loading });
 
   useEffect(() => {
     if (open) {
       reset(
-        existingStat
+        existingCategory
           ? {
-              label: existingStat.label,
-              description: existingStat.description,
+              label: existingCategory.label,
+              description: existingCategory.description,
             }
           : undefined
       );
     }
-  }, [open, reset, existingStat]);
+  }, [open, reset, existingCategory]);
 
-  const onSubmit: SubmitHandler<StoredStat> = (values) => {
+  const onSubmit: SubmitHandler<CategoryWithoutImpacts> = (values) => {
     setLoading(true);
-    const id = editingStatKey ?? convertIdPart(values.label);
-    onSave(id, values)
+    const id = editingCategoryKey ?? convertIdPart(values.label);
+    onSave(id, { ...values, contents: existingCategory?.contents ?? {} })
       .then(() => {
         setLoading(false);
         onClose();
@@ -71,15 +77,14 @@ export function StatDialog(props: StatDialogProps) {
   return (
     <Dialog open={open} onClose={onClose} maxWidth={"xs"} fullWidth>
       <DialogTitleWithCloseButton onClose={onClose}>
-        {existingStat ? "Edit Stat" : "Add Stat"}
+        {editingCategoryKey ? "Edit Impact Category" : "Add Impact Category"}
       </DialogTitleWithCloseButton>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Stack spacing={2}>
-            {/* register your input into the hook by invoking the "register" function */}
             <TextField
               disabled={disabled}
-              label={"Stat Label"}
+              label={"Category Label"}
               fullWidth
               error={touchedFields.label && !!errors.label}
               helperText={
@@ -88,18 +93,18 @@ export function StatDialog(props: StatDialogProps) {
                   : undefined
               }
               inputProps={{
-                defaultValue: existingStat?.label ?? "",
+                defaultValue: "",
                 ...register("label", {
                   required: "This field is required.",
                   validate: (value) => {
-                    if (!editingStatKey && value) {
+                    if (!editingCategoryKey && value) {
                       try {
                         const id = convertIdPart(value);
-                        if (existingStatKeys.includes(id)) {
-                          return `You already have a stat with id ${id}. Please try a different label.`;
+                        if (allImpactCategories[id]) {
+                          return `You already have an impact category with id ${id}. Please try a different label.`;
                         }
                       } catch (e) {
-                        return "Failed to parse a valid ID for your stat. Please use at least three letters or numbers in your label.";
+                        return "Failed to parse a valid ID for your impact category. Please use at least three letters or numbers in your label.";
                       }
                     }
                   },
@@ -117,15 +122,12 @@ export function StatDialog(props: StatDialogProps) {
                   : undefined
               }
               inputProps={{
-                defaultValue: existingStat?.description ?? "",
+                defaultValue: "",
                 ...register("description", {
                   required: "This field is required.",
                 }),
               }}
             />
-            <Preview>
-              <StatPreviewComponent control={control} />
-            </Preview>
           </Stack>
         </DialogContent>
         <DialogActions>

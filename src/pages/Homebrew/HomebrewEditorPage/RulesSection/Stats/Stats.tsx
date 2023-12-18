@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   IconButton,
   List,
@@ -69,12 +70,20 @@ export function Stats(props: StatsProps) {
             listStyle: "none",
           }}
         >
-          {Object.keys(stats).map((statKey) => (
-            <ListItem
-              key={statKey}
-              sx={{ gridColumn: { xs: "span 12", sm: "span 6", md: "span 4" } }}
-              secondaryAction={
-                <>
+          {Object.keys(stats)
+            .sort((s1, s2) => stats[s1].label.localeCompare(stats[s2].label))
+            .map((statKey) => (
+              <ListItem
+                key={statKey}
+                sx={{
+                  gridColumn: { xs: "span 12", sm: "span 6", md: "span 4" },
+                }}
+              >
+                <ListItemText
+                  primary={stats[statKey].label}
+                  secondary={stats[statKey].description}
+                />
+                <Box display={"flex"}>
                   <IconButton
                     onClick={() => {
                       setStatDialogOpen(true);
@@ -86,15 +95,9 @@ export function Stats(props: StatsProps) {
                   <IconButton onClick={() => handleDelete(statKey)}>
                     <DeleteIcon />
                   </IconButton>
-                </>
-              }
-            >
-              <ListItemText
-                primary={stats[statKey].label}
-                secondary={stats[statKey].description}
-              />
-            </ListItem>
-          ))}
+                </Box>
+              </ListItem>
+            ))}
         </List>
       )}
       <Button
