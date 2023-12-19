@@ -108,8 +108,8 @@ service cloud.firestore {
       allow write: if request.auth.uid in resource.data.uids;
       
       function checkIsHomebrewOwner() {
-      	let world = get(/databases/$(database)/documents/homebrew/$(homebrewId)).data;
-        return request.auth.uid in world.ownerIds;
+      	let homebrew = get(/databases/$(database)/documents/homebrew/$(homebrewId)).data;
+        return request.auth.uid in homebrew.uids;
       }
       
       match /rules/rules {
