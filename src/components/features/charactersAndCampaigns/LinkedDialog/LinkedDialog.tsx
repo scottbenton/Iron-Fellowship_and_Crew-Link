@@ -20,6 +20,10 @@ export function LinkedDialog() {
         onOpen={() => {}}
         disableSwipeToOpen
         disableDiscovery
+        variant="temporary"
+        ModalProps={{
+          keepMounted: false,
+        }}
         onClose={handleClose}
         sx={{ pt: 1 }}
         PaperProps={{
