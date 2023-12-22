@@ -10,7 +10,7 @@ import {
 import {
   StoredConditionMeter,
   StoredRules,
-} from "types/HomebrewCollection.type";
+} from "types/homebrew/HomebrewRules.type";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
@@ -96,6 +96,7 @@ export function ConditionMeters(props: ConditionMetersProps) {
                 }}
               >
                 <ListItemText
+                  secondaryTypographyProps={{ component: "span" }}
                   primary={conditionMeters[conditionMeterKey].label}
                   secondary={
                     <ClampedMarkdownRenderer

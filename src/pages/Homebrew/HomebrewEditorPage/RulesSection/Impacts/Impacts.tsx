@@ -12,7 +12,7 @@ import {
   StoredImpact,
   StoredImpactCategory,
   StoredRules,
-} from "types/HomebrewCollection.type";
+} from "types/homebrew/HomebrewRules.type";
 import { ImpactCategoryDialog } from "./ImpactCategoryDialog";
 import { useStore } from "stores/store";
 import EditIcon from "@mui/icons-material/Edit";
@@ -155,6 +155,7 @@ export function Impacts(props: ImpactsProps) {
                   }}
                 >
                   <ListItemText
+                    secondaryTypographyProps={{ component: "span" }}
                     primary={impactCategories[categoryKey].label}
                     secondary={
                       <ClampedMarkdownRenderer
@@ -193,6 +194,7 @@ export function Impacts(props: ImpactsProps) {
                       .map((categoryContentKey) => (
                         <ListItem key={categoryContentKey}>
                           <ListItemText
+                            secondaryTypographyProps={{ component: "span" }}
                             primary={
                               impactCategories[categoryKey].contents[
                                 categoryContentKey

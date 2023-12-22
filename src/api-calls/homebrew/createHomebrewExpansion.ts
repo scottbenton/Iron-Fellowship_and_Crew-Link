@@ -1,6 +1,6 @@
 import { addDoc } from "firebase/firestore";
 import { getHomebrewCollection } from "./_getRef";
-import { BaseExpansion } from "types/HomebrewCollection.type";
+import { BaseExpansion } from "types/homebrew/HomebrewCollection.type";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const createHomebrewExpansion = createApiFunction<BaseExpansion, string>(

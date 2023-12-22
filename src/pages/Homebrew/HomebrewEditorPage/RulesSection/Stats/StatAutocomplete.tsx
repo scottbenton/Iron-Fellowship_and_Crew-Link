@@ -1,6 +1,6 @@
 import { Autocomplete, TextField, capitalize } from "@mui/material";
 import { useRules } from "data/hooks/useRules";
-import { StoredStat } from "types/HomebrewCollection.type";
+import { StoredStat } from "types/homebrew/HomebrewRules.type";
 
 export interface StatAutocompleteProps {
   stats: Record<string, StoredStat>;

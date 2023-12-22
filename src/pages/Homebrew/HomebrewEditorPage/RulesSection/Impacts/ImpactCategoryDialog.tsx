@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {
   StoredImpactCategory,
   StoredRules,
-} from "types/HomebrewCollection.type";
+} from "types/homebrew/HomebrewRules.type";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
   Button,

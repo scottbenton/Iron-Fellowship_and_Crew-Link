@@ -1,5 +1,5 @@
 import { onSnapshot } from "firebase/firestore";
-import { StoredRules } from "types/HomebrewCollection.type";
+import { StoredRules } from "types/homebrew/HomebrewRules.type";
 import { getHomebrewRulesDoc } from "./_getRef";
 
 export function listenToHomebrewRules(

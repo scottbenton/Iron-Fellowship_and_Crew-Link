@@ -9,6 +9,8 @@ import { deleteHomebrewExpansion } from "api-calls/homebrew/deleteHomebrewExpans
 import { Unsubscribe } from "firebase/firestore";
 import { listenToHomebrewRules } from "api-calls/homebrew/rules/listenToHomebrewRules";
 import { updateExpansionRules } from "api-calls/homebrew/rules/updateExpansionRules";
+import { updateHomebrewOracles } from "api-calls/homebrew/oracles/updateHomebrewOracles";
+import { listenToHomebrewOracles } from "api-calls/homebrew/oracles/listenToHomebrewOracles";
 
 export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
   ...defaultHomebrewSlice,
@@ -91,6 +93,46 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
           }
         )
       );
+
+      unsubscribes.push(
+        listenToHomebrewOracles(
+          homebrewId,
+          (id, oracles) => {
+            set((store) => {
+              store.homebrew.collections[homebrewId] = {
+                ...(store.homebrew.collections[homebrewId] ?? {}),
+                oracles: {
+                  data: oracles,
+                  loaded: true,
+                },
+              };
+            });
+          },
+          (error) => {
+            set((store) => {
+              store.homebrew.collections[homebrewId] = {
+                ...(store.homebrew.collections[homebrewId] ?? {}),
+                oracles: {
+                  ...(store.homebrew.collections[homebrewId].oracles ?? {}),
+                  loaded: true,
+                  error: getErrorMessage(error, "Failed to load oracles"),
+                },
+              };
+            });
+          },
+          () => {
+            set((store) => {
+              store.homebrew.collections[homebrewId] = {
+                ...(store.homebrew.collections[homebrewId] ?? {}),
+                oracles: {
+                  ...(store.homebrew.collections[homebrewId].oracles ?? {}),
+                  loaded: true,
+                },
+              };
+            });
+          }
+        )
+      );
     });
 
     return () => {
@@ -110,5 +152,8 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
 
   updateExpansionRules: (homebrewId, rules) => {
     return updateExpansionRules({ homebrewId, rules });
+  },
+  updateExpansionOracles: (homebrewId, oracles) => {
+    return updateHomebrewOracles({ homebrewId, oracles });
   },
 });

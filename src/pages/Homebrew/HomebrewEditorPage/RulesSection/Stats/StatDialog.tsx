@@ -1,4 +1,4 @@
-import { StoredRules, StoredStat } from "types/HomebrewCollection.type";
+import { StoredRules, StoredStat } from "types/homebrew/HomebrewRules.type";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   Button,

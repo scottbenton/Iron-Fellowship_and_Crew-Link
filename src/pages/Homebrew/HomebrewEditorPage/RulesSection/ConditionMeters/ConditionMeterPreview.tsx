@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { Track } from "components/features/Track";
 import { StatComponent } from "components/features/characters/StatComponent";
 import { Control, useWatch } from "react-hook-form";
-import { StoredConditionMeter } from "types/HomebrewCollection.type";
+import { StoredConditionMeter } from "types/homebrew/HomebrewRules.type";
 
 export interface ConditionMeterPreviewProps {
   control: Control<StoredConditionMeter, unknown>;

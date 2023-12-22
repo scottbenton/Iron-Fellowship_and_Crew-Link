@@ -21,7 +21,12 @@ export function ErrorRoute() {
       errorTrace = error.stack;
     }
 
-    if (errorMessage?.includes("Failed to fetch dynamically imported module")) {
+    if (
+      errorMessage?.includes("Failed to fetch dynamically imported module") ||
+      errorMessage
+        ?.toLocaleLowerCase()
+        .includes("error loading dynamically imported module")
+    ) {
       window.location.reload();
     } else {
       setErrorMessage(errorMessage);

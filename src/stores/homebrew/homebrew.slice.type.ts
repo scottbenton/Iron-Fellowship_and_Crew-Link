@@ -1,14 +1,20 @@
+import { OracleTablesCollection } from "@datasworn/core";
 import { PartialWithFieldValue, Unsubscribe } from "firebase/firestore";
 import {
   BaseExpansion,
   BaseExpansionOrRuleset,
-  StoredRules,
-} from "types/HomebrewCollection.type";
+} from "types/homebrew/HomebrewCollection.type";
+import { StoredRules } from "types/homebrew/HomebrewRules.type";
 
 export interface HomebrewEntry {
   base: BaseExpansionOrRuleset;
   rules?: {
     data?: Partial<StoredRules>;
+    loaded: boolean;
+    error?: string;
+  };
+  oracles?: {
+    data?: Record<string, OracleTablesCollection>;
     loaded: boolean;
     error?: string;
   };
@@ -34,6 +40,11 @@ export interface HomebrewSliceActions {
   updateExpansionRules: (
     expansionId: string,
     rules: PartialWithFieldValue<StoredRules>
+  ) => Promise<void>;
+
+  updateExpansionOracles: (
+    expansionId: string,
+    oracles: PartialWithFieldValue<Record<string, OracleTablesCollection>>
   ) => Promise<void>;
 }
 

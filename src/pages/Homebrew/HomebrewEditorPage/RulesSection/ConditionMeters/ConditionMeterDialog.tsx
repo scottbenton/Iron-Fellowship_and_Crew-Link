@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import {
   StoredConditionMeter,
   StoredRules,
-} from "types/HomebrewCollection.type";
+} from "types/homebrew/HomebrewRules.type";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { convertIdPart } from "functions/dataswornIdEncoder";
 import { Preview } from "../../Preview";

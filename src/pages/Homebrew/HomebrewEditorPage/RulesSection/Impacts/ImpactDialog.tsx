@@ -18,7 +18,7 @@ import {
   StoredConditionMeter,
   StoredImpact,
   StoredImpactCategory,
-} from "types/HomebrewCollection.type";
+} from "types/homebrew/HomebrewRules.type";
 import { ConditionMeterAutocomplete } from "../ConditionMeters/ConditionMeterAutocomplete";
 import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor";
 

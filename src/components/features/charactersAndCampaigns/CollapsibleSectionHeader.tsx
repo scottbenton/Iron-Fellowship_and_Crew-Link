@@ -4,21 +4,25 @@ import {
   ListItemButton,
   ListItemIcon,
   ListSubheader,
+  ListSubheaderProps,
 } from "@mui/material";
 import OpenIcon from "@mui/icons-material/ChevronRight";
 
 export interface CollapsibleSectionHeaderProps {
+  component?: ListSubheaderProps["component"];
   text: string;
   forcedOpen?: boolean;
   open: boolean;
   toggleOpen: () => void;
+  disabled?: boolean;
 }
 
 export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
-  const { text, open, forcedOpen, toggleOpen } = props;
+  const { component, text, open, forcedOpen, toggleOpen, disabled } = props;
 
   return (
     <ListSubheader
+      component={component ?? "li"}
       disableGutters
       sx={(theme) => ({
         mt: open ? 0.5 : 0,
@@ -35,7 +39,7 @@ export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
       })}
     >
       {!forcedOpen ? (
-        <ListItemButton onClick={toggleOpen}>
+        <ListItemButton onClick={toggleOpen} disabled={disabled}>
           <Box sx={{ flexGrow: 1 }}>{text}</Box>
           <ListItemIcon sx={{ minWidth: "unset" }}>
             <OpenIcon

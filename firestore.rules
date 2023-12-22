@@ -116,6 +116,10 @@ service cloud.firestore {
       	allow read: if request.auth.uid != null;
         allow write: if checkIsHomebrewOwner();
       }
+      match /oracles/oracles {
+      	allow read: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner();
+      }
     }
     match /users/{userId} {
     	allow read: if true;

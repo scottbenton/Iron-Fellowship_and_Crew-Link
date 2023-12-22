@@ -12,7 +12,10 @@ import { deleteField } from "firebase/firestore";
 import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
 import { useStore } from "stores/store";
-import { StoredRules, StoredSpecialTrack } from "types/HomebrewCollection.type";
+import {
+  StoredRules,
+  StoredSpecialTrack,
+} from "types/homebrew/HomebrewRules.type";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { SpecialTrackDialog } from "./SpecialTrackDialog";
@@ -89,6 +92,7 @@ export function SpecialTracks(props: SpecialTracksProps) {
                 }}
               >
                 <ListItemText
+                  secondaryTypographyProps={{ component: "span" }}
                   primary={specialTracks[specialTrackKey].label}
                   secondary={
                     <ClampedMarkdownRenderer

@@ -2,16 +2,18 @@ import { DialogContent } from "@mui/material";
 import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { MoveDialogContent } from "./MoveDialogContent";
 import { OracleDialogContent } from "./OracleDialogContent";
+import { NewOracleDialogContent } from "./NewOracleDialogContent";
 
 export interface LinkedDialogContentProps {
   id?: string;
   handleBack: () => void;
   handleClose: () => void;
   isLastItem: boolean;
+  newVersion?: boolean;
 }
 
 export function LinkedDialogContent(props: LinkedDialogContentProps) {
-  const { id, handleBack, handleClose, isLastItem } = props;
+  const { id, handleBack, handleClose, isLastItem, newVersion } = props;
 
   if (id?.startsWith("ironsworn/moves") || id?.startsWith("starforged/moves")) {
     return (
@@ -26,8 +28,19 @@ export function LinkedDialogContent(props: LinkedDialogContentProps) {
 
   if (
     id?.startsWith("ironsworn/oracles") ||
-    id?.startsWith("starforged/oracles")
+    id?.startsWith("starforged/oracles") ||
+    (newVersion && id?.startsWith("starforged/collections/oracles"))
   ) {
+    if (newVersion) {
+      return (
+        <NewOracleDialogContent
+          id={id}
+          handleBack={handleBack}
+          handleClose={handleClose}
+          isLastItem={isLastItem}
+        />
+      );
+    }
     return (
       <OracleDialogContent
         id={id}
@@ -41,6 +54,7 @@ export function LinkedDialogContent(props: LinkedDialogContentProps) {
   return (
     <>
       <LinkedDialogContentTitle
+        id={id ?? ""}
         handleBack={handleBack}
         handleClose={handleClose}
         isLastItem={isLastItem}

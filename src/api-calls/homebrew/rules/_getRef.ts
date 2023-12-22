@@ -1,7 +1,7 @@
 import { DocumentReference, doc } from "firebase/firestore";
 import { constructHomebrewCollectionDocPath } from "../_getRef";
 import { firestore } from "config/firebase.config";
-import { StoredRules } from "types/HomebrewCollection.type";
+import { StoredRules } from "types/homebrew/HomebrewRules.type";
 
 export function constructHomebrewRulesDocPath(homebrewId: string) {
   return `${constructHomebrewCollectionDocPath(homebrewId)}/rules/rules`;

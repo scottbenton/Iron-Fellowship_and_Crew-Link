@@ -1,7 +1,7 @@
 import { createApiFunction } from "api-calls/createApiFunction";
 import { PartialWithFieldValue, updateDoc } from "firebase/firestore";
 import { getHomebrewRulesDoc } from "./_getRef";
-import { StoredRules } from "types/HomebrewCollection.type";
+import { StoredRules } from "types/homebrew/HomebrewRules.type";
 
 export const updateHomebrewRules = createApiFunction<
   {

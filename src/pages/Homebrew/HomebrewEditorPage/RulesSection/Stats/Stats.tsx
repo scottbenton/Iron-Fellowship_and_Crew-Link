@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { StoredRules, StoredStat } from "types/HomebrewCollection.type";
+import { StoredRules, StoredStat } from "types/homebrew/HomebrewRules.type";
 import { StatDialog } from "./StatDialog";
 import { useStore } from "stores/store";
 import { deleteField } from "firebase/firestore";
@@ -81,6 +81,7 @@ export function Stats(props: StatsProps) {
                 }}
               >
                 <ListItemText
+                  secondaryTypographyProps={{ component: "span" }}
                   primary={stats[statKey].label}
                   secondary={
                     <ClampedMarkdownRenderer
