@@ -15,6 +15,7 @@
 
 - Fixed cursor issue on the notes page with mobile Safari
 - Fixed a performance issue that made switching tabs super slow
+- Fixed a few crashes that could occur when switching pages after the application updated in the background
 
 ## 2.2.0
 
