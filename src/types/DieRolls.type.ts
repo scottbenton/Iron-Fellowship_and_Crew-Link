@@ -36,7 +36,7 @@ export interface StatRoll extends BaseRoll {
 
 export interface OracleTableRoll extends BaseRoll {
   type: ROLL_TYPE.ORACLE_TABLE;
-  roll: number;
+  roll: number | number[];
   result: string;
   oracleCategoryName?: string;
 }

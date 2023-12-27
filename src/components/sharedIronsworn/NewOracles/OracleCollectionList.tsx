@@ -7,10 +7,11 @@ import { defaultActions } from "./defaultActions";
 export interface OracleCollectionListProps {
   oracles: Record<string, OracleTablesCollection>;
   listItemActions?: extraOracleListItemActionsProp;
+  rollOnRowClick?: boolean;
 }
 
 export function OracleCollectionList(props: OracleCollectionListProps) {
-  const { oracles, listItemActions } = props;
+  const { oracles, listItemActions, rollOnRowClick = true } = props;
 
   const orderedOracleKeys = Object.keys(oracles).sort((o1, o2) => {
     return oracles[o1].name.localeCompare(oracles[o2].name);
@@ -29,6 +30,7 @@ export function OracleCollectionList(props: OracleCollectionListProps) {
           collectionKey={oracleCollectionKey}
           collection={oracles[oracleCollectionKey]}
           listItemActions={listItemActionsWithDefault}
+          rollOnRowClick={rollOnRowClick}
         />
       ))}
     </Box>

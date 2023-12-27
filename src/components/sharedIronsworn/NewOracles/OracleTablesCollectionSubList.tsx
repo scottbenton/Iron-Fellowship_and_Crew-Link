@@ -19,6 +19,7 @@ export interface OracleTablesCollectionSubListProps {
   disabled?: boolean;
   collectionPrefixLabel?: string;
   sx?: SxProps;
+  rollOnRowClick: boolean;
 }
 
 export function OracleTablesCollectionSubList(
@@ -31,6 +32,7 @@ export function OracleTablesCollectionSubList(
     disabled,
     collectionPrefixLabel,
     sx,
+    rollOnRowClick,
   } = props;
 
   const rollableSubCollections: Record<
@@ -100,6 +102,7 @@ export function OracleTablesCollectionSubList(
           oracleRollable={oracles[oracleKey]}
           actions={actions}
           disabled={disabled}
+          rollOnRowClick={rollOnRowClick}
         />
       ))}
       {sortedRollableSubCollectionKeys.map((subCollectionKey) => (
@@ -108,6 +111,7 @@ export function OracleTablesCollectionSubList(
           collection={rollableSubCollections[subCollectionKey]}
           actions={actions}
           disabled={disabled}
+          rollOnRowClick={rollOnRowClick}
         />
       ))}
       {sortedNonRollableSubCollectionKeys.map((subCollectionKey) => (
@@ -118,6 +122,7 @@ export function OracleTablesCollectionSubList(
           labelPrefix={collectionPrefixLabel}
           disabled={disabled}
           listItemActions={actions}
+          rollOnRowClick={rollOnRowClick}
         />
       ))}
     </List>

@@ -13,6 +13,8 @@ import {
 import { getRollResultLabel } from "components/features/charactersAndCampaigns/RollDisplay";
 import { TRACK_TYPES } from "types/Track.type";
 import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
+import { useOracleMap } from "data/hooks/useRollableOracleMap";
+import { rollOracle } from "./rollers/rollOracle";
 
 export const getRoll = (dieMax: number) => {
   return Math.floor(Math.random() * dieMax) + 1;
@@ -33,6 +35,8 @@ export function useRoller() {
   );
   const addRollToScreen = useStore((store) => store.appState.addRoll);
   const addRollToLog = useStore((store) => store.gameLog.addRoll);
+
+  const newOracles = useOracleMap();
 
   const { allCustomOracleMap, customOracleCategories } = useCustomOracles();
   const combinedOracleCategories = useMemo(() => {
@@ -207,6 +211,51 @@ export function useRoller() {
     ]
   );
 
+  const rollOracleTableNew = useCallback(
+    (oracleId: string, showSnackbar = true, gmsOnly = false) => {
+      const oracle = newOracles[oracleId];
+      console.debug(oracle);
+      if (!oracle) return undefined;
+
+      const oracleRoll = rollOracle(oracle, characterId, uid, gmsOnly);
+
+      if (showSnackbar && oracleRoll) {
+        if (characterId || campaignId) {
+          addRollToLog({
+            campaignId,
+            characterId: characterId || undefined,
+            roll: oracleRoll,
+          })
+            .then((rollId) => {
+              addRollToScreen(rollId, oracleRoll);
+            })
+            .catch(() => {});
+        } else {
+          addRollToScreen(oracleRoll.timestamp.toISOString(), oracleRoll);
+        }
+        announce(
+          `Rolled ${
+            verboseScreenReaderRolls
+              ? `a ${oracleRoll.roll} on the ${oracleRoll.rollLabel} table`
+              : oracleRoll.rollLabel
+          } and got result ${oracleRoll.result}`
+        );
+      }
+
+      return oracleRoll;
+    },
+    [
+      newOracles,
+      characterId,
+      uid,
+      announce,
+      addRollToLog,
+      addRollToScreen,
+      campaignId,
+      verboseScreenReaderRolls,
+    ]
+  );
+
   const rollTrackProgress = useCallback(
     (
       trackType: TRACK_TYPES | LEGACY_TRACK_TYPES,
@@ -335,5 +384,11 @@ export function useRoller() {
     ]
   );
 
-  return { rollStat, rollOracleTable, rollClockProgression, rollTrackProgress };
+  return {
+    rollStat,
+    rollOracleTable,
+    rollClockProgression,
+    rollTrackProgress,
+    rollOracleTableNew,
+  };
 }

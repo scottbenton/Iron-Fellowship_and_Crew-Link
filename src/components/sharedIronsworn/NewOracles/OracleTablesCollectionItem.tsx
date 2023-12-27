@@ -11,13 +11,20 @@ export interface OracleTablesCollectionItemProps {
   labelPrefix?: string;
   listItemActions?: extraOracleListItemActionsProp;
   disabled?: boolean;
+  rollOnRowClick: boolean;
 }
 
 export function OracleTablesCollectionItem(
   props: OracleTablesCollectionItemProps
 ) {
-  const { collectionKey, collection, labelPrefix, listItemActions, disabled } =
-    props;
+  const {
+    collectionKey,
+    collection,
+    labelPrefix,
+    listItemActions,
+    disabled,
+    rollOnRowClick,
+  } = props;
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -43,6 +50,7 @@ export function OracleTablesCollectionItem(
           disabled={!isExpanded}
           actions={listItemActions}
           sx={{ mb: 0.5 }}
+          rollOnRowClick={rollOnRowClick}
         />
       </Collapse>
     </Box>

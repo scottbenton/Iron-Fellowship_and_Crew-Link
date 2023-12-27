@@ -3,10 +3,12 @@ import {
   OracleTableSharedResults,
   OracleTableSharedRolls,
 } from "@datasworn/core";
-import { ListItem, ListItemText } from "@mui/material";
+import { ListItemText } from "@mui/material";
 import { OracleSelectableRollableCollectionListItem } from "./OracleSelectableRollableCollectionListItem";
 import { extraOracleListItemActionsProp } from "./oracleListItemActions";
 import { Actions } from "./Actions";
+import { OptionalListItemButton } from "./OptionalListItemButton";
+import { useRoller } from "stores/appState/useRoller";
 
 export interface OracleRollableCollectionListItemProps {
   collection:
@@ -15,25 +17,40 @@ export interface OracleRollableCollectionListItemProps {
     | OracleTableSharedDetails;
   actions?: extraOracleListItemActionsProp;
   disabled?: boolean;
+
+  rollOnRowClick: boolean;
 }
 
 export function OracleRollableCollectionListItem(
   props: OracleRollableCollectionListItemProps
 ) {
-  const { collection, actions, disabled } = props;
+  const { collection, actions, disabled, rollOnRowClick } = props;
+
+  const { rollOracleTableNew } = useRoller();
 
   if (collection.oracle_type === "table_shared_rolls") {
     return (
-      <ListItem
-        sx={{
-          "&:nth-of-type(even)": {
-            bgcolor: "background.paperInlay",
+      <OptionalListItemButton
+        showButton={rollOnRowClick}
+        sx={[
+          {
+            "&:nth-of-type(even)": {
+              bgcolor: "background.paperInlay",
+            },
           },
-        }}
+          rollOnRowClick && { pl: 0, py: 0 },
+        ]}
+        onClick={
+          rollOnRowClick
+            ? () => rollOracleTableNew(collection.id, true)
+            : undefined
+        }
+        secondaryAction={
+          <Actions actions={actions} item={collection} disabled={disabled} />
+        }
       >
         <ListItemText primary={collection.name} />
-        <Actions actions={actions} item={collection} disabled={disabled} />
-      </ListItem>
+      </OptionalListItemButton>
     );
   } else {
     return (
@@ -41,6 +58,7 @@ export function OracleRollableCollectionListItem(
         collection={collection}
         actions={actions}
         disabled={disabled}
+        rollOnRowClick={rollOnRowClick}
       />
     );
   }

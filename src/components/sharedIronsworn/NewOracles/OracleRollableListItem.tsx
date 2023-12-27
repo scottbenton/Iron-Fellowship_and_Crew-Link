@@ -1,26 +1,40 @@
 import { OracleRollable } from "@datasworn/core";
-import { ListItem, ListItemText } from "@mui/material";
+import { ListItemText } from "@mui/material";
 import { extraOracleListItemActionsProp } from "./oracleListItemActions";
 import { Actions } from "./Actions";
+import { OptionalListItemButton } from "./OptionalListItemButton";
+import { useRoller } from "stores/appState/useRoller";
 
 export interface OracleRollableListItemProps {
   oracleRollable: OracleRollable;
   actions?: extraOracleListItemActionsProp;
   disabled?: boolean;
+
+  rollOnRowClick: boolean;
 }
 
 export function OracleRollableListItem(props: OracleRollableListItemProps) {
-  const { oracleRollable, actions, disabled } = props;
+  const { oracleRollable, actions, disabled, rollOnRowClick } = props;
+  const { rollOracleTableNew } = useRoller();
+
   return (
-    <ListItem
+    <OptionalListItemButton
+      showButton={rollOnRowClick}
       sx={{
         "&:nth-of-type(even)": {
           bgcolor: "background.paperInlay",
         },
       }}
+      onClick={
+        rollOnRowClick
+          ? () => rollOracleTableNew(oracleRollable.id, true)
+          : undefined
+      }
+      secondaryAction={
+        <Actions actions={actions} item={oracleRollable} disabled={disabled} />
+      }
     >
       <ListItemText primary={oracleRollable.name} />
-      <Actions actions={actions} item={oracleRollable} disabled={disabled} />
-    </ListItem>
+    </OptionalListItemButton>
   );
 }

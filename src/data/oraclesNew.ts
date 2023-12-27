@@ -1,8 +1,12 @@
 import {
+  OracleColumnDetails,
+  OracleColumnSimple,
   OracleRollable,
+  OracleTableDetails,
   OracleTableSharedDetails,
   OracleTableSharedResults,
   OracleTableSharedRolls,
+  OracleTableSimple,
   OracleTablesCollection,
 } from "@datasworn/core";
 import { oracles as ironswornOracles } from "@datasworn/ironsworn-classic/json/classic.json";
@@ -34,6 +38,10 @@ export const oracleMap: Record<
   | OracleTableSharedResults
   | OracleTableSharedDetails
   | OracleTablesCollection
+  | OracleTableSimple
+  | OracleTableDetails
+  | OracleColumnSimple
+  | OracleColumnDetails
 > = {};
 
 function parseOracleTablesCollectionIntoRollableOracleMap(
@@ -52,6 +60,11 @@ function parseOracleTablesCollectionIntoRollableOracleMap(
       subCollection.oracle_type === "table_shared_details"
     ) {
       oracleMap[subCollection.id] = subCollection;
+      Object.values(subCollection.contents ?? {}).forEach(
+        (content: OracleColumnSimple | OracleColumnDetails) => {
+          oracleMap[content.id] = content;
+        }
+      );
     }
   });
 }
