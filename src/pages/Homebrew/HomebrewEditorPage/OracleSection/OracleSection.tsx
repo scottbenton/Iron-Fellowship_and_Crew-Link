@@ -1,8 +1,8 @@
-import { Box, LinearProgress } from "@mui/material";
-import { EmptyState } from "components/shared/EmptyState";
-import { OracleCollectionList } from "components/sharedIronsworn/NewOracles";
-import { useOracles } from "data/hooks/useOracles";
+import { LinearProgress } from "@mui/material";
+import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
 import { useStore } from "stores/store";
+import { ExampleOracles } from "./ExampleOracles";
+import { OracleSectionContent } from "./OracleSectionContent";
 
 export interface OracleSectionProps {
   id: string;
@@ -18,27 +18,17 @@ export function OracleSection(props: OracleSectionProps) {
     (store) => !store.homebrew.collections[id].oracles?.loaded
   );
 
-  const testOracles = useOracles();
-
-  return (
-    <Box sx={{ mt: 2 }}>
-      <OracleCollectionList oracles={testOracles} />
-    </Box>
-  );
-
   if (loading) {
     return <LinearProgress sx={{ mx: { xs: -2, sm: -3 } }} />;
   }
 
-  if (Object.keys(oracles).length === 0) {
-    return (
-      <EmptyState
-        showImage
-        title={"No Oracles Found"}
-        message={"Create your first Homebrew Oracle Collection"}
+  return (
+    <>
+      <SectionWithSidebar
+        sx={{ mt: 2 }}
+        sidebar={<ExampleOracles />}
+        mainContent={<OracleSectionContent homebrewId={id} oracles={oracles} />}
       />
-    );
-  }
-
-  return <>Oracles Section</>;
+    </>
+  );
 }

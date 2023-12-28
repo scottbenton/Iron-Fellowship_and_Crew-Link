@@ -23,7 +23,7 @@ export function OracleCollectionList(props: OracleCollectionListProps) {
   ];
 
   return (
-    <Box component={"ul"} sx={{ listStyle: "none", p: 0 }}>
+    <Box component={"ul"} sx={{ listStyle: "none", p: 0, m: 0 }}>
       {orderedOracleKeys.map((oracleCollectionKey) => (
         <OracleTablesCollectionItem
           key={oracleCollectionKey}

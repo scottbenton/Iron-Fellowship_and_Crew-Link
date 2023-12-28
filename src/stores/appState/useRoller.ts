@@ -214,7 +214,6 @@ export function useRoller() {
   const rollOracleTableNew = useCallback(
     (oracleId: string, showSnackbar = true, gmsOnly = false) => {
       const oracle = newOracles[oracleId];
-      console.debug(oracle);
       if (!oracle) return undefined;
 
       const oracleRoll = rollOracle(oracle, characterId, uid, gmsOnly);

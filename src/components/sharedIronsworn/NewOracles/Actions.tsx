@@ -16,7 +16,7 @@ export function Actions(props: ActionsProps) {
   }
 
   return (
-    <Box ml={1}>
+    <Box>
       {actions.map((Action, index) => (
         <Action key={index} {...actionProps} />
       ))}

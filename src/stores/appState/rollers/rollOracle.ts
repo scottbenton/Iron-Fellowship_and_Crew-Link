@@ -86,7 +86,6 @@ export function rollOracle(
     rolls = tmpRolls;
   } else {
     const rollResult = rollOracleColumn(oracle);
-    console.debug(rollResult);
     if (rollResult) {
       rolls = rollResult.roll;
       resultString = rollResult.result.result;

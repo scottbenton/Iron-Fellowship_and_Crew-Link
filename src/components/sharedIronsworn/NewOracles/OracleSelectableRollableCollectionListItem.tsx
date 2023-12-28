@@ -28,7 +28,6 @@ export function OracleSelectableRollableCollectionListItem(
   const [selectedOption, setSelectedOption] = useState<string>(keys[0] ?? "");
 
   const selectedOptionId = options[selectedOption]?.id;
-  console.debug(selectedOptionId);
   return (
     <OptionalListItemButton
       showButton={!!selectedOptionId && rollOnRowClick}
@@ -49,7 +48,7 @@ export function OracleSelectableRollableCollectionListItem(
               aria-label={"Oracle Option"}
               size={"small"}
               select
-              sx={{ minWidth: 150 }}
+              sx={{ minWidth: 100 }}
               value={selectedOption}
               onChange={(evt) => {
                 setSelectedOption(evt.target.value);
