@@ -1,7 +1,7 @@
 import { Box, Link, Typography, useTheme } from "@mui/material";
 import { useCustomMoves } from "components/features/charactersAndCampaigns/MovesSection/useCustomMoves";
 import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
-import { useOracleMap } from "data/hooks/useRollableOracleMap";
+import { useOracleMap } from "data/hooks/useOracleMap";
 import { moveMap } from "data/moves";
 import { oracleMap } from "data/oracles";
 import ReactMarkdown from "react-markdown";

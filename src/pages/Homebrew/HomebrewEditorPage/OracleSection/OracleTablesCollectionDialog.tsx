@@ -1,4 +1,4 @@
-import { OracleTablesCollection } from "@datasworn/core";
+import { OracleCollection, OracleTablesCollection } from "@datasworn/core";
 import {
   Button,
   Dialog,
@@ -9,16 +9,21 @@ import {
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor";
-import { convertIdPart } from "functions/dataswornIdEncoder";
+import {
+  convertIdPart,
+  encodeAndConstructDataswornId,
+} from "functions/dataswornIdEncoder";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { OracleCollectionAutocomplete } from "./OracleCollectionAutocomplete";
 
 export interface OracleTablesCollectionDialogProps {
+  homebrewId: string;
   open: boolean;
   onClose: () => void;
 
-  collections: Record<string, OracleTablesCollection>;
-  existingCollection?: OracleTablesCollection;
+  collections: Record<string, OracleCollection>;
+  existingCollection?: { key: string; collection: OracleTablesCollection };
   saveCollection: (
     id: string,
     collection: OracleTablesCollection
@@ -35,8 +40,14 @@ interface OracleTablesCollectionFormContents {
 export function OracleTablesCollectionDialog(
   props: OracleTablesCollectionDialogProps
 ) {
-  const { open, onClose, existingCollection, saveCollection, collections } =
-    props;
+  const {
+    homebrewId,
+    open,
+    onClose,
+    existingCollection,
+    saveCollection,
+    collections,
+  } = props;
 
   const [loading, setLoading] = useState(false);
 
@@ -50,16 +61,18 @@ export function OracleTablesCollectionDialog(
 
   useEffect(() => {
     if (open) {
+      console.debug(existingCollection);
       reset(
         existingCollection
           ? {
-              name: existingCollection.name,
+              name: existingCollection.collection.name,
               description:
-                existingCollection.description ?? existingCollection.summary,
-              enhancesId: existingCollection.enhances,
-              replacesId: existingCollection.replaces,
+                existingCollection.collection.description ??
+                existingCollection.collection.summary,
+              enhancesId: existingCollection.collection.enhances,
+              replacesId: existingCollection.collection.replaces,
             }
-          : undefined
+          : {}
       );
     }
   }, [open, reset, existingCollection]);
@@ -68,15 +81,21 @@ export function OracleTablesCollectionDialog(
     values
   ) => {
     setLoading(true);
-    const id = existingCollection?.id ?? convertIdPart(values.name);
+    const firebaseKey = existingCollection?.key ?? convertIdPart(values.name);
+
+    const id =
+      existingCollection?.collection.id ??
+      encodeAndConstructDataswornId(
+        homebrewId,
+        "collections/oracles",
+        values.name
+      );
 
     const baseTableCollection: OracleTablesCollection = {
       ...existingCollection,
       id,
       name: values.name,
-      description: values.description,
-      enhances: values.enhancesId,
-      replaces: values.replacesId,
+      description: values.description ?? "",
       source: {
         title: "Placeholder",
         authors: [],
@@ -87,7 +106,14 @@ export function OracleTablesCollectionDialog(
       oracle_type: "tables",
     };
 
-    saveCollection(id, baseTableCollection)
+    if (values.enhancesId) {
+      baseTableCollection.enhances = values.enhancesId;
+    }
+    if (values.replacesId) {
+      baseTableCollection.replaces = values.replacesId;
+    }
+
+    saveCollection(firebaseKey, baseTableCollection)
       .then(() => {
         setLoading(false);
         onClose();
@@ -101,7 +127,7 @@ export function OracleTablesCollectionDialog(
     <Dialog open={open} onClose={onClose}>
       <DialogTitleWithCloseButton onClose={onClose}>
         {existingCollection
-          ? `Edit ${existingCollection.name}`
+          ? `Edit ${existingCollection.collection.name}`
           : "Create Oracle Collection"}
       </DialogTitleWithCloseButton>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -122,7 +148,7 @@ export function OracleTablesCollectionDialog(
                 ...register("name", {
                   required: "This field is required.",
                   validate: (value) => {
-                    if (!existingCollection?.id && value) {
+                    if (!existingCollection?.collection.id && value) {
                       try {
                         const id = convertIdPart(value);
                         if (collections[id]) {
@@ -148,34 +174,45 @@ export function OracleTablesCollectionDialog(
                 />
               )}
             />
-            {/* <FormControl
-              error={touchedFields.replacesId && !!errors.replacesId}
-            >
-              <FormControlLabel
-                disabled={disabled}
-                control={
-                  <Controller
-                    name="replacesId"
-                    control={control}
-                    defaultValue={false}
-                    render={({ field }) => (
-                      <Checkbox {...field} defaultChecked={false} />
-                    )}
-                  />
-                }
-                label={"Shared across all players?"}
-              />
-              {touchedFields.shared && errors.shared && (
-                <FormHelperText>{errors.shared.message}</FormHelperText>
+            <Controller
+              name={"replacesId"}
+              control={control}
+              render={({ field }) => (
+                <OracleCollectionAutocomplete
+                  homebrewId={homebrewId}
+                  label={"Replaces Collection"}
+                  value={field.value}
+                  onChange={(ids) => field.onChange(ids)}
+                  onBlur={field.onBlur}
+                  helperText={
+                    "Replaces all oracles within the given collection"
+                  }
+                />
               )}
-            </FormControl> */}
+            />
+            <Controller
+              name={"enhancesId"}
+              control={control}
+              render={({ field }) => (
+                <OracleCollectionAutocomplete
+                  homebrewId={homebrewId}
+                  label={"Enhances Collection"}
+                  value={field.value}
+                  onChange={(ids) => field.onChange(ids)}
+                  onBlur={field.onBlur}
+                  helperText={
+                    "Adds oracles in this collection to the entered collection"
+                  }
+                />
+              )}
+            />
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button type={"reset"} onClick={onClose}>
+          <Button type={"reset"} color={"inherit"} onClick={onClose}>
             Cancel
           </Button>
-          <Button type={"submit"} onClick={() => {}}>
+          <Button type={"submit"} variant={"contained"} onClick={() => {}}>
             Save
           </Button>
         </DialogActions>

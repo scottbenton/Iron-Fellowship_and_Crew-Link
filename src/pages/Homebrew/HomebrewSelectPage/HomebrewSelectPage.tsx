@@ -34,8 +34,10 @@ export function HomebrewSelectPage() {
   }
 
   const collectionKeys = Object.keys(homebrewCollections).sort((k1, k2) =>
-    (homebrewCollections[k1].base.title ?? "Unnamed Collection")?.localeCompare(
-      homebrewCollections[k2].base.title ?? "Unnamed Collection"
+    (
+      homebrewCollections[k1]?.base.title ?? "Unnamed Collection"
+    )?.localeCompare(
+      homebrewCollections[k2]?.base.title ?? "Unnamed Collection"
     )
   );
 

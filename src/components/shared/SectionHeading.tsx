@@ -6,10 +6,11 @@ export interface SectionHeadingProps {
   action?: ReactNode;
   breakContainer?: boolean;
   sx?: SxProps;
+  floating?: boolean;
 }
 
 export function SectionHeading(props: SectionHeadingProps) {
-  const { label, action, breakContainer, sx } = props;
+  const { label, action, breakContainer, floating, sx } = props;
 
   return (
     <Box
@@ -33,6 +34,10 @@ export function SectionHeading(props: SectionHeadingProps) {
             marginX: breakContainer ? -2 : 0,
           },
         }),
+        floating && {
+          borderRadius: 1,
+          paddingX: 2,
+        },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >

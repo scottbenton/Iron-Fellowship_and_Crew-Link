@@ -1,4 +1,4 @@
-import { Box, Grid, TextField, Typography } from "@mui/material";
+import { Box, Grid, TextField, Typography, capitalize } from "@mui/material";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { useEffect, useState } from "react";
 import { useStore } from "stores/store";
@@ -49,7 +49,7 @@ export function AboutSection(props: AboutSectionProps) {
         {details.package_type === "expansion" && (
           <Grid item xs={12}>
             <Typography variant="overline">Expansion For</Typography>
-            <Typography>{details.ruleset}</Typography>
+            <Typography>{capitalize(details.ruleset)}</Typography>
           </Grid>
         )}
         <Grid item xs={12}>

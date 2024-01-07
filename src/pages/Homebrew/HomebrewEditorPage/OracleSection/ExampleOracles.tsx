@@ -1,9 +1,16 @@
 import { Box, Typography } from "@mui/material";
 import { OracleCollectionList } from "components/sharedIronsworn/NewOracles";
-import { useOracles } from "data/hooks/useOracles";
+import { useRootOracleIds } from "data/hooks/useRootOracleIds";
 
-export function ExampleOracles() {
-  const oracles = useOracles();
+export interface ExampleOraclesProps {
+  homebrewId: string;
+}
+
+export function ExampleOracles(props: ExampleOraclesProps) {
+  const { homebrewId } = props;
+
+  const rootOracles = useRootOracleIds([homebrewId]);
+
   return (
     <Box
       borderRadius={1}
@@ -19,7 +26,10 @@ export function ExampleOracles() {
           Preview
         </Typography>
       </Box>
-      <OracleCollectionList oracles={oracles} />
+      <OracleCollectionList
+        collectionIds={rootOracles}
+        homebrewIds={[homebrewId]}
+      />
     </Box>
   );
 }

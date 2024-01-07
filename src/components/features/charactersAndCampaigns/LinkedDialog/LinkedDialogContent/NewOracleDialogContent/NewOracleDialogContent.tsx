@@ -2,7 +2,7 @@ import { DialogContent, IconButton, Tooltip } from "@mui/material";
 import { LinkedDialogContentTitle } from "../LinkedDialogContentTitle";
 import PinnedIcon from "@mui/icons-material/PushPin";
 import { useStore } from "stores/store";
-import { useOracleMap } from "data/hooks/useRollableOracleMap";
+import { useOracleMap } from "data/hooks/useOracleMap";
 import { OracleRollableTable } from "./OracleRollableTable";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { OracleTableSharedRolls } from "./OracleTableSharedRolls";
@@ -26,10 +26,6 @@ export function NewOracleDialogContent(props: NewOracleDialogContentProps) {
   const updatePinnedOracles = useStore(
     (store) => store.settings.togglePinnedOracle
   );
-  // const { rollOracleTable } = useRoller();
-  // console.debug(oracles);
-  // console.debug(id);
-  // console.debug(oracle);
 
   if (!oracle) {
     return (

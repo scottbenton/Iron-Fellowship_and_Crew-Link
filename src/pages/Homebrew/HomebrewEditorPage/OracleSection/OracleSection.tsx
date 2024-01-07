@@ -26,7 +26,7 @@ export function OracleSection(props: OracleSectionProps) {
     <>
       <SectionWithSidebar
         sx={{ mt: 2 }}
-        sidebar={<ExampleOracles />}
+        sidebar={<ExampleOracles homebrewId={id} />}
         mainContent={<OracleSectionContent homebrewId={id} oracles={oracles} />}
       />
     </>

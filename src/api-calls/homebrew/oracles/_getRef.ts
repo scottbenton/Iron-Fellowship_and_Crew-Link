@@ -13,3 +13,11 @@ export function getHomebrewOraclesDoc(homebrewId: string) {
     constructHomebrewOracleDocPath(homebrewId)
   ) as DocumentReference<Record<DictKey, OracleTablesCollection>>;
 }
+
+export function idToFirestorePath(id: string) {
+  return id.replaceAll("/", "\\");
+}
+
+export function firestorePathToId(path: string) {
+  return path.replaceAll("\\", "/");
+}

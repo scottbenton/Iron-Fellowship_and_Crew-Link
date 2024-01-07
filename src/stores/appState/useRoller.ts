@@ -13,7 +13,7 @@ import {
 import { getRollResultLabel } from "components/features/charactersAndCampaigns/RollDisplay";
 import { TRACK_TYPES } from "types/Track.type";
 import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
-import { useOracleMap } from "data/hooks/useRollableOracleMap";
+import { useOracleMap } from "data/hooks/useOracleMap";
 import { rollOracle } from "./rollers/rollOracle";
 
 export const getRoll = (dieMax: number) => {

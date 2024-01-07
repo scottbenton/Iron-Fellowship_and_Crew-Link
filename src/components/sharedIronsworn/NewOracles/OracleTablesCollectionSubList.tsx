@@ -1,6 +1,4 @@
 import {
-  OracleCollection,
-  OracleTableRollable,
   OracleTableSharedRolls,
   OracleTableSharedDetails,
   OracleTableSharedResults,
@@ -11,11 +9,16 @@ import { OracleRollableListItem } from "./OracleRollableListItem";
 import { extraOracleListItemActionsProp } from "./oracleListItemActions";
 import { OracleRollableCollectionListItem } from "./OracleRollableCollectionListItem";
 import { OracleTablesCollectionItem } from "./OracleTablesCollectionItem";
+import { useOracleCollectionMap } from "data/hooks/useOracleCollectionMap";
+import { useOracleRollableMap } from "data/hooks/useOracleRollableMap";
+import { extraOracleCollectionActionsProp } from "./oracleCollectionActions";
 
 export interface OracleTablesCollectionSubListProps {
-  oracles: Record<string, OracleTableRollable>;
-  subCollections: Record<string, OracleCollection>;
+  homebrewIds?: string[];
+  oracleIds: string[];
+  subCollectionIds: string[];
   actions?: extraOracleListItemActionsProp;
+  collectionActions?: extraOracleCollectionActionsProp;
   disabled?: boolean;
   collectionPrefixLabel?: string;
   sx?: SxProps;
@@ -26,14 +29,19 @@ export function OracleTablesCollectionSubList(
   props: OracleTablesCollectionSubListProps
 ) {
   const {
-    oracles,
-    subCollections,
+    homebrewIds,
+    oracleIds,
+    subCollectionIds,
     actions,
+    collectionActions,
     disabled,
     collectionPrefixLabel,
     sx,
     rollOnRowClick,
   } = props;
+
+  const collections = useOracleCollectionMap(homebrewIds);
+  const rollables = useOracleRollableMap(homebrewIds);
 
   const rollableSubCollections: Record<
     string,
@@ -41,43 +49,28 @@ export function OracleTablesCollectionSubList(
   > = {};
   const nonRollableSubCollections: Record<string, OracleTablesCollection> = {};
 
-  const unsortedSubCollections = subCollections ?? {};
-  Object.keys(unsortedSubCollections).forEach((subCollectionKey) => {
-    if (unsortedSubCollections[subCollectionKey].oracle_type === "tables") {
-      nonRollableSubCollections[subCollectionKey] = unsortedSubCollections[
-        subCollectionKey
-      ] as OracleTablesCollection;
+  subCollectionIds.forEach((subCollectionKey) => {
+    const subCollection = collections[subCollectionKey];
+    if (subCollection.oracle_type === "tables") {
+      nonRollableSubCollections[subCollectionKey] = subCollection;
     } else if (
-      unsortedSubCollections[subCollectionKey].oracle_type ===
-      "table_shared_rolls"
+      subCollection.oracle_type === "table_shared_rolls" ||
+      subCollection.oracle_type === "table_shared_details" ||
+      subCollection.oracle_type === "table_shared_results"
     ) {
-      rollableSubCollections[subCollectionKey] = unsortedSubCollections[
-        subCollectionKey
-      ] as OracleTableSharedRolls;
-    } else if (
-      unsortedSubCollections[subCollectionKey].oracle_type ===
-      "table_shared_details"
-    ) {
-      rollableSubCollections[subCollectionKey] = unsortedSubCollections[
-        subCollectionKey
-      ] as OracleTableSharedDetails;
-    } else if (
-      unsortedSubCollections[subCollectionKey].oracle_type ===
-      "table_shared_results"
-    ) {
-      rollableSubCollections[subCollectionKey] = unsortedSubCollections[
-        subCollectionKey
-      ] as OracleTableSharedResults;
+      rollableSubCollections[subCollectionKey] = subCollection;
     } else {
+      // This shouldn't happen, but just to be safe
       console.error(
         "CAME ACROSS UNKNOWN COLLECTION TYPE:",
-        unsortedSubCollections[subCollectionKey].oracle_type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (subCollection as any).oracle_type
       );
     }
   });
 
-  const sortedRollableKeys = Object.keys(oracles).sort((r1, r2) =>
-    oracles[r1].name.localeCompare(oracles[r2].name)
+  const sortedRollableKeys = oracleIds.sort((r1, r2) =>
+    rollables[r1].name.localeCompare(rollables[r2].name)
   );
   const sortedRollableSubCollectionKeys = Object.keys(
     rollableSubCollections
@@ -99,7 +92,7 @@ export function OracleTablesCollectionSubList(
       {sortedRollableKeys.map((oracleKey) => (
         <OracleRollableListItem
           key={oracleKey}
-          oracleRollable={oracles[oracleKey]}
+          oracleRollable={rollables[oracleKey]}
           actions={actions}
           disabled={disabled}
           rollOnRowClick={rollOnRowClick}
@@ -123,6 +116,7 @@ export function OracleTablesCollectionSubList(
           disabled={disabled}
           listItemActions={actions}
           rollOnRowClick={rollOnRowClick}
+          collectionActions={collectionActions}
         />
       ))}
     </List>

@@ -30,7 +30,6 @@ export function OptionalListItemButton(props: OptionalListItemButtonProps) {
   useEffect(() => {
     const resizeObserver = new ResizeObserver((elements) => {
       elements.forEach((element) => {
-        console.debug(element);
         setActionWidth(element.contentRect.width);
       });
     });

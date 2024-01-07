@@ -11,9 +11,10 @@ export function OracleCollection(props: OracleCollectionProps) {
 
   return (
     <OracleTablesCollectionSubList
-      oracles={collection.contents ?? {}}
-      subCollections={collection.collections ?? {}}
+      oracleIds={Object.keys(collection.contents ?? {})}
+      subCollectionIds={Object.keys(collection.collections ?? {})}
       actions={defaultActions}
+      rollOnRowClick
       sx={{
         borderColor: "divider",
         borderWidth: 1,

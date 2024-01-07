@@ -75,3 +75,13 @@ export function convertIdPart(
     `Failed to create valid ID: ID Part = ${idPart}, New ID Part = ${newIdPart}`
   );
 }
+
+export function encodeAndConstructDataswornId(
+  homebrewId: string,
+  midsection: string,
+  idPart: string
+) {
+  return `${homebrewId.toLocaleLowerCase()}/${midsection}/${convertIdPart(
+    idPart
+  )}`;
+}

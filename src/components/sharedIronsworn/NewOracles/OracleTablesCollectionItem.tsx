@@ -4,12 +4,16 @@ import { CollapsibleSectionHeader } from "components/features/charactersAndCampa
 import { useState } from "react";
 import { extraOracleListItemActionsProp } from "./oracleListItemActions";
 import { OracleTablesCollectionSubList } from "./OracleTablesCollectionSubList";
+import { extraOracleCollectionActionsProp } from "./oracleCollectionActions";
+import { CollectionActions } from "./CollectionActions";
 
 export interface OracleTablesCollectionItemProps {
+  homebrewIds?: string[];
   collectionKey: string;
   collection: OracleTablesCollection;
   labelPrefix?: string;
   listItemActions?: extraOracleListItemActionsProp;
+  collectionActions?: extraOracleCollectionActionsProp;
   disabled?: boolean;
   rollOnRowClick: boolean;
 }
@@ -18,10 +22,12 @@ export function OracleTablesCollectionItem(
   props: OracleTablesCollectionItemProps
 ) {
   const {
+    homebrewIds,
     collectionKey,
     collection,
     labelPrefix,
     listItemActions,
+    collectionActions,
     disabled,
     rollOnRowClick,
   } = props;
@@ -32,6 +38,11 @@ export function OracleTablesCollectionItem(
     ? `${labelPrefix} ꞏ ${collection.name}`
     : collection.name;
 
+  const oracleIds = Object.values(collection.contents ?? {}).map((c) => c.id);
+  const subCollectionIds = Object.values(collection.collections ?? {}).map(
+    (c) => c.id
+  );
+
   return (
     <Box component={"li"}>
       <CollapsibleSectionHeader
@@ -41,11 +52,19 @@ export function OracleTablesCollectionItem(
         open={isExpanded}
         toggleOpen={() => setIsExpanded((prevValue) => !prevValue)}
         disabled={disabled}
+        actions={
+          <CollectionActions
+            collection={collection}
+            disabled={disabled}
+            collectionActions={collectionActions}
+          />
+        }
       />
       <Collapse in={isExpanded}>
         <OracleTablesCollectionSubList
-          oracles={collection.contents ?? {}}
-          subCollections={collection.collections ?? {}}
+          homebrewIds={homebrewIds}
+          oracleIds={oracleIds}
+          subCollectionIds={subCollectionIds}
           collectionPrefixLabel={title}
           disabled={!isExpanded}
           actions={listItemActions}
