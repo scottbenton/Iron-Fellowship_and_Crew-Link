@@ -5,9 +5,12 @@ import {
   OracleTableSharedResults,
   OracleTableSharedRolls,
 } from "@datasworn/core";
-import { List, ListItem } from "@mui/material";
+import { Button, Dialog, List, ListItem } from "@mui/material";
 import { EmptyState } from "components/shared/EmptyState";
 import { SectionHeading } from "components/shared/SectionHeading";
+import { useState } from "react";
+import { OracleTableDialogContents } from "./OracleInfoSection/OracleTableDialogContents";
+import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 
 export interface OracleTablesSectionProps {
   collections: Record<string, OracleCollection>;
@@ -16,6 +19,16 @@ export interface OracleTablesSectionProps {
 
 export function OracleTablesSection(props: OracleTablesSectionProps) {
   const { collections, rollables } = props;
+
+  const [oracleTableDialogState, setOracleTableDialogState] = useState<{
+    open: boolean;
+  }>({ open: false });
+  const openOracleTableDialog = () => {
+    setOracleTableDialogState({ open: true });
+  };
+  const closeOracleTableDialog = () => {
+    setOracleTableDialogState((prev) => ({ ...prev, open: false }));
+  };
 
   const actualRollables: Record<
     string,
@@ -39,7 +52,12 @@ export function OracleTablesSection(props: OracleTablesSectionProps) {
     <>
       <SectionHeading
         label="Tables"
-        sx={{ borderRadius: 1, pl: 2, pr: 0.5, mt: 4 }}
+        action={
+          <Button color={"inherit"} onClick={() => openOracleTableDialog()}>
+            Create Table
+          </Button>
+        }
+        floating
       />
 
       {sortedKeys.length > 0 ? (
@@ -49,8 +67,28 @@ export function OracleTablesSection(props: OracleTablesSectionProps) {
           ))}
         </List>
       ) : (
-        <EmptyState message="Add an oracle table to get started" />
+        <EmptyState
+          message="Add an oracle table to get started"
+          callToAction={
+            <Button
+              color={"inherit"}
+              variant={"outlined"}
+              onClick={() => openOracleTableDialog()}
+            >
+              Create Table
+            </Button>
+          }
+        />
       )}
+      <Dialog
+        open={oracleTableDialogState.open}
+        onClose={closeOracleTableDialog}
+      >
+        <DialogTitleWithCloseButton onClose={closeOracleTableDialog}>
+          Create Oracle Table
+        </DialogTitleWithCloseButton>
+        <OracleTableDialogContents onClose={closeOracleTableDialog} />
+      </Dialog>
     </>
   );
 }
