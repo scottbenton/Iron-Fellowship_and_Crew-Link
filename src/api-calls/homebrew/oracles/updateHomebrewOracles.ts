@@ -1,12 +1,12 @@
 import { createApiFunction } from "api-calls/createApiFunction";
-import { updateDoc } from "firebase/firestore";
+import { FieldValue, updateDoc } from "firebase/firestore";
 import { getHomebrewOraclesDoc } from "./_getRef";
 import { OracleTablesCollection } from "@datasworn/core";
 
 export const updateHomebrewOracles = createApiFunction<
   {
     homebrewId: string;
-    oracles: Record<string, OracleTablesCollection>;
+    oracles: Record<string, OracleTablesCollection | FieldValue>;
   },
   void
 >((params) => {

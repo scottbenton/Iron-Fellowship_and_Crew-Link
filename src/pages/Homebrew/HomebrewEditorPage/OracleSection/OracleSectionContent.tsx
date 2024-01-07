@@ -5,7 +5,6 @@ import { OracleInfoSection } from "./Sections/OracleInfoSection";
 import { OracleTablesSection } from "./Sections/OracleTablesSection";
 import { OracleCollectionsSection } from "./Sections/OracleCollectionsSection";
 import { useOracleCollectionMap } from "data/hooks/useOracleCollectionMap";
-import { useStore } from "stores/store";
 import { OracleTablesCollectionDialog } from "./OracleTablesCollectionDialog";
 
 export interface OracleSectionContentProps {
@@ -18,6 +17,7 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
 
   const oracleCollectionMap = useOracleCollectionMap([homebrewId]);
 
+  // Open oracle collection
   const [openOracleState, setOpenOracleState] = useState<{
     openOracleId?: { dataswornId: string; dbId: string };
     ancestorIds: { dataswornId: string; dbId: string }[];
@@ -25,32 +25,13 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
   }>({ ancestorIds: [] });
   const openOracleCollection = openOracleState.openOracleId
     ? oracleCollectionMap[openOracleState.openOracleId.dataswornId]
-        .oracle_type === "tables"
+        ?.oracle_type === "tables"
       ? (oracleCollectionMap[
           openOracleState.openOracleId.dataswornId
         ] as OracleTablesCollection)
       : undefined
     : undefined;
-
-  const [oracleCollectionDialogState, setOracleCollectionDialogState] =
-    useState<{
-      open: boolean;
-      oracleId?: { dataswornId: string; dbId: string };
-    }>({ open: false });
-  const openCollectionDialog = (ids?: {
-    dataswornId: string;
-    dbId: string;
-  }) => {
-    console.debug("SETTING DIALOG STATE WITH IDS", ids);
-    setOracleCollectionDialogState({ open: true, oracleId: ids });
-  };
-  const closeCollectionDialog = () => {
-    setOracleCollectionDialogState((prevState) => ({
-      ...prevState,
-      open: false,
-    }));
-  };
-
+  // Handle Oracle Collection Navigation
   const handleOpenOracle = (oracleId: string, dbId: string) => {
     setOpenOracleState((prevState) => {
       const newAncestorIds = [...prevState.ancestorIds];
@@ -67,7 +48,6 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
       };
     });
   };
-
   const handleBreadcrumbClick = (ids?: {
     dataswornId: string;
     dbId: string;
@@ -92,7 +72,43 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
       return prevState;
     });
   };
+  const goUpOneCollectionLevel = () => {
+    setOpenOracleState((prevState) => {
+      const newAncestorIds = [...prevState.ancestorIds];
+      const previousAncestor = newAncestorIds.pop();
 
+      if (!previousAncestor) {
+        return {
+          ancestorIds: [],
+        };
+      }
+      return {
+        ancestorIds: [],
+        openOracleId: previousAncestor,
+      };
+    });
+  };
+
+  // Oracle Collection Dialog
+  const [oracleCollectionDialogState, setOracleCollectionDialogState] =
+    useState<{
+      open: boolean;
+      oracleId?: { dataswornId: string; dbId: string };
+    }>({ open: false });
+  const openCollectionDialog = (ids?: {
+    dataswornId: string;
+    dbId: string;
+  }) => {
+    setOracleCollectionDialogState({ open: true, oracleId: ids });
+  };
+  const closeCollectionDialog = () => {
+    setOracleCollectionDialogState((prevState) => ({
+      ...prevState,
+      open: false,
+    }));
+  };
+
+  // Sub Collection Filtration
   const oracleCollections = openOracleState.openOracleId
     ? openOracleCollection?.oracle_type === "tables"
       ? openOracleCollection.collections ?? {}
@@ -114,6 +130,7 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
     filteredCollections[k] = oracleCollections[k] as OracleTablesCollection;
   });
 
+  // If the current collection enhances another, we still need to add it
   if (openOracleCollection?.enhances) {
     const enhancesCollection =
       tableCollectionMap[openOracleCollection.enhances];
@@ -131,41 +148,9 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
     }
   }
 
-  const dbPath = openOracleState.ancestorIds
+  const collectionDbPath = openOracleState.ancestorIds
     .map((id) => `${id.dbId}.collections.`)
     .join("");
-
-  const updateOracles = useStore(
-    (store) => store.homebrew.updateExpansionOracles
-  );
-
-  const handleOracleTableCollectionUpdate = (
-    oracleTableId: string,
-    table: OracleTablesCollection
-  ) => {
-    console.debug(dbPath, openOracleState.openOracleId?.dbId);
-    console.debug(oracleCollectionDialogState.oracleId);
-
-    const path =
-      (dbPath ?? "") +
-      // If we have an oracle open (we are not at root)
-      (openOracleState.openOracleId?.dbId
-        ? // Check if we are editing an existing collection
-          oracleCollectionDialogState.oracleId
-          ? // If we are, don't set the path further
-            ""
-          : // If we aren't editing, we are adding - go to the subcollections
-            `${openOracleState.openOracleId.dbId}.collections.`
-        : // We are at the root, no path necessary
-          "") +
-      oracleTableId;
-
-    console.debug(path);
-
-    return updateOracles(homebrewId, {
-      [path]: table,
-    }).catch(() => {});
-  };
 
   return (
     <Stack spacing={2}>
@@ -197,9 +182,9 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
       )}
       {openOracleState.openOracleId?.dataswornId && openOracleCollection && (
         <OracleInfoSection
+          homebrewId={homebrewId}
           oracle={openOracleCollection}
           openCollectionDialog={() => {
-            console.debug(openOracleState);
             openCollectionDialog(
               openOracleState.openOracleId
                 ? {
@@ -209,6 +194,9 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
                 : undefined
             );
           }}
+          dbPath={collectionDbPath}
+          dbKey={openOracleState.openOracleId.dbId}
+          closeCurrentOracleCollection={goUpOneCollectionLevel}
         />
       )}
       {openOracleState.openOracleId && (
@@ -256,8 +244,15 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
         }
         open={oracleCollectionDialogState.open}
         onClose={closeCollectionDialog}
-        saveCollection={handleOracleTableCollectionUpdate}
         collections={filteredCollections}
+        dbPath={collectionDbPath}
+        parentCollectionKey={
+          // If we are not at the root and we are not editing an oracle, set the parent
+          openOracleState.openOracleId?.dbId &&
+          !oracleCollectionDialogState.oracleId
+            ? openOracleState.openOracleId.dbId
+            : ""
+        }
       />
     </Stack>
   );

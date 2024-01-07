@@ -16,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { OracleCollectionAutocomplete } from "./OracleCollectionAutocomplete";
+import { useStore } from "stores/store";
 
 export interface OracleTablesCollectionDialogProps {
   homebrewId: string;
@@ -24,10 +25,9 @@ export interface OracleTablesCollectionDialogProps {
 
   collections: Record<string, OracleCollection>;
   existingCollection?: { key: string; collection: OracleTablesCollection };
-  saveCollection: (
-    id: string,
-    collection: OracleTablesCollection
-  ) => Promise<void>;
+
+  dbPath: string;
+  parentCollectionKey?: string;
 }
 
 interface OracleTablesCollectionFormContents {
@@ -45,8 +45,9 @@ export function OracleTablesCollectionDialog(
     open,
     onClose,
     existingCollection,
-    saveCollection,
     collections,
+    dbPath,
+    parentCollectionKey,
   } = props;
 
   const [loading, setLoading] = useState(false);
@@ -61,7 +62,6 @@ export function OracleTablesCollectionDialog(
 
   useEffect(() => {
     if (open) {
-      console.debug(existingCollection);
       reset(
         existingCollection
           ? {
@@ -76,6 +76,25 @@ export function OracleTablesCollectionDialog(
       );
     }
   }, [open, reset, existingCollection]);
+
+  const updateOracles = useStore(
+    (store) => store.homebrew.updateExpansionOracles
+  );
+
+  const handleOracleTableCollectionUpdate = (
+    oracleTableId: string,
+    table: OracleTablesCollection
+  ) => {
+    const path =
+      (dbPath ?? "") +
+      // If we have a parent oracle, we are not editing (we are not at root)
+      (parentCollectionKey ? `${parentCollectionKey}.collections.` : "") +
+      oracleTableId;
+
+    return updateOracles(homebrewId, {
+      [path]: table,
+    }).catch(() => {});
+  };
 
   const onSubmit: SubmitHandler<OracleTablesCollectionFormContents> = (
     values
@@ -113,7 +132,7 @@ export function OracleTablesCollectionDialog(
       baseTableCollection.replaces = values.replacesId;
     }
 
-    saveCollection(firebaseKey, baseTableCollection)
+    handleOracleTableCollectionUpdate(firebaseKey, baseTableCollection)
       .then(() => {
         setLoading(false);
         onClose();

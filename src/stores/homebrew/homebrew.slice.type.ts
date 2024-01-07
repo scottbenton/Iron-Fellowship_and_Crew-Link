@@ -1,5 +1,9 @@
 import { OracleTablesCollection } from "@datasworn/core";
-import { PartialWithFieldValue, Unsubscribe } from "firebase/firestore";
+import {
+  FieldValue,
+  PartialWithFieldValue,
+  Unsubscribe,
+} from "firebase/firestore";
 import {
   BaseExpansion,
   BaseExpansionOrRuleset,
@@ -44,7 +48,7 @@ export interface HomebrewSliceActions {
 
   updateExpansionOracles: (
     expansionId: string,
-    oracles: Record<string, OracleTablesCollection>
+    oracles: Record<string, OracleTablesCollection | FieldValue>
   ) => Promise<void>;
 }
 

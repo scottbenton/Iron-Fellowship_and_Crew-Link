@@ -2,14 +2,40 @@ import { OracleCollection } from "@datasworn/core";
 import { Box, Button } from "@mui/material";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { SectionHeading } from "components/shared/SectionHeading";
+import { deleteField } from "firebase/firestore";
+import { useStore } from "stores/store";
 
 export interface OracleInfoSectionProps {
+  homebrewId: string;
   oracle: OracleCollection;
   openCollectionDialog: () => void;
+  dbKey: string;
+  dbPath: string;
+  closeCurrentOracleCollection: () => void;
 }
 
 export function OracleInfoSection(props: OracleInfoSectionProps) {
-  const { oracle, openCollectionDialog } = props;
+  const {
+    homebrewId,
+    oracle,
+    openCollectionDialog,
+    dbPath,
+    dbKey,
+    closeCurrentOracleCollection,
+  } = props;
+
+  const updateOracles = useStore(
+    (store) => store.homebrew.updateExpansionOracles
+  );
+
+  const handleDelete = () => {
+    const path = dbPath + dbKey;
+    return updateOracles(homebrewId, { [path]: deleteField() })
+      .then(() => {
+        closeCurrentOracleCollection();
+      })
+      .catch(() => {});
+  };
 
   return (
     <>
@@ -20,7 +46,9 @@ export function OracleInfoSection(props: OracleInfoSectionProps) {
             <Button color={"inherit"} onClick={openCollectionDialog}>
               Edit
             </Button>
-            <Button color={"inherit"}>Delete</Button>
+            <Button color={"inherit"} onClick={handleDelete}>
+              Delete
+            </Button>
           </div>
         }
         floating
