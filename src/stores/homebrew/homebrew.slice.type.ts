@@ -44,7 +44,7 @@ export interface HomebrewSliceActions {
 
   updateExpansionOracles: (
     expansionId: string,
-    oracles: PartialWithFieldValue<Record<string, OracleTablesCollection>>
+    oracles: Record<string, OracleTablesCollection>
   ) => Promise<void>;
 }
 
