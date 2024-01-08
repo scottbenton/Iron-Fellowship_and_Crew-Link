@@ -1,6 +1,7 @@
 import {
   OracleCollection,
   OracleRollable,
+  OracleTableRollable,
   OracleTableSharedDetails,
   OracleTableSharedResults,
   OracleTableSharedRolls,
@@ -9,7 +10,7 @@ import { Button, Dialog, List, ListItem } from "@mui/material";
 import { EmptyState } from "components/shared/EmptyState";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { useState } from "react";
-import { OracleTableDialogContents } from "./OracleInfoSection/OracleTableDialogContents";
+import { OracleTableDialogContents } from "./OracleTablesSection/OracleTableDialogContents";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 
 export interface OracleTablesSectionProps {
@@ -47,6 +48,18 @@ export function OracleTablesSection(props: OracleTablesSectionProps) {
   const sortedKeys = Object.keys(actualRollables).sort((k1, k2) =>
     actualRollables[k1].name.localeCompare(actualRollables[k2].name)
   );
+
+  const oracleTableRollables: Record<string, OracleTableRollable> = {};
+
+  Object.keys(rollables).forEach((rollableKey) => {
+    const rollable = rollables[rollableKey];
+    if (
+      rollable.oracle_type === "table_simple" ||
+      rollable.oracle_type === "table_details"
+    ) {
+      oracleTableRollables[rollableKey] = rollable;
+    }
+  });
 
   return (
     <>
@@ -87,7 +100,10 @@ export function OracleTablesSection(props: OracleTablesSectionProps) {
         <DialogTitleWithCloseButton onClose={closeOracleTableDialog}>
           Create Oracle Table
         </DialogTitleWithCloseButton>
-        <OracleTableDialogContents onClose={closeOracleTableDialog} />
+        <OracleTableDialogContents
+          onClose={closeOracleTableDialog}
+          tables={oracleTableRollables}
+        />
       </Dialog>
     </>
   );

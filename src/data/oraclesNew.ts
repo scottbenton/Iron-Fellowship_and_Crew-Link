@@ -4,6 +4,7 @@ import {
   OracleColumnSimple,
   OracleRollable,
   OracleTableDetails,
+  OracleTableRollable,
   OracleTableSharedDetails,
   OracleTableSharedResults,
   OracleTableSharedRolls,
@@ -38,11 +39,13 @@ export function parseOraclesIntoMaps(
   oracleCollectionMap: Record<string, OracleCollection>;
   oracleTablesCollectionMap: Record<string, OracleTablesCollection>;
   oracleRollableMap: Record<string, OracleRollable>;
+  oracleTableRollableMap: Record<string, OracleTableRollable>;
 } {
   const oracleMap: Record<string, OracleRollable | OracleCollection> = {};
   const oracleCollectionMap: Record<string, OracleCollection> = {};
   const oracleRollableMap: Record<string, OracleRollable> = {};
   const oracleTablesCollectionMap: Record<string, OracleTablesCollection> = {};
+  const oracleTableRollableMap: Record<string, OracleTableRollable> = {};
 
   const parseOracleTableCollectionIntoMaps = (
     category: OracleTablesCollection
@@ -53,6 +56,7 @@ export function parseOraclesIntoMaps(
     Object.values(category.contents ?? {}).forEach((oracleContent) => {
       oracleMap[oracleContent.id] = oracleContent;
       oracleRollableMap[oracleContent.id] = oracleContent;
+      oracleTableRollableMap[oracleContent.id] = oracleContent;
     });
     Object.values(category.collections ?? {}).forEach((subCollection) => {
       oracleCollectionMap[subCollection.id] = subCollection;
@@ -68,6 +72,7 @@ export function parseOraclesIntoMaps(
         Object.values(subCollection.contents ?? {}).forEach(
           (content: OracleColumnSimple | OracleColumnDetails) => {
             oracleMap[content.id] = content;
+            oracleRollableMap[content.id] = content;
           }
         );
       }
@@ -83,6 +88,7 @@ export function parseOraclesIntoMaps(
     oracleCollectionMap,
     oracleRollableMap,
     oracleTablesCollectionMap,
+    oracleTableRollableMap,
   };
 }
 
@@ -109,13 +115,7 @@ export const oracleCollectionMap: Record<
   | OracleTableSharedResults
 > = maps.oracleCollectionMap;
 
-export const oracleRollableMap: Record<
-  string,
-  | OracleRollable
-  | OracleTableSimple
-  | OracleTableDetails
-  | OracleColumnSimple
-  | OracleColumnDetails
-> = maps.oracleRollableMap;
+export const oracleRollableMap = maps.oracleRollableMap;
 
 export const oracleTablesCollectionMap = maps.oracleTablesCollectionMap;
+export const oracleTableRollableMap = maps.oracleTableRollableMap;

@@ -1,0 +1,175 @@
+import {
+  OracleTableDetails,
+  OracleTableRollable,
+  OracleTableSimple,
+} from "@datasworn/core";
+import {
+  Button,
+  DialogActions,
+  DialogContent,
+  Stack,
+  TextField,
+} from "@mui/material";
+import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor";
+import { convertIdPart } from "functions/dataswornIdEncoder";
+import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { parseDiceExpression } from "stores/appState/rollers/diceExpressionParser";
+import { OracleTableRollableAutocomplete } from "../../OracleTableRollableAutocomplete";
+
+interface OracleTableBaseFormContents {
+  name: string;
+  description?: string;
+  replacesId?: string;
+  numberOfDice: number;
+  valueOfDice: number;
+  showDetails: boolean;
+}
+
+interface OracleTableSimpleFormContents extends OracleTableBaseFormContents {
+  showDetails: false;
+  columnLabels: { roll: string; result: string };
+}
+
+interface OracleTableDetailsFormContents extends OracleTableBaseFormContents {
+  showDetails: true;
+  columnLabels: { roll: string; result: string; detail: string };
+}
+
+type Form = OracleTableSimpleFormContents | OracleTableDetailsFormContents;
+
+export interface OracleTableSimpleFormProps {
+  homebrewId: string;
+  onClose: () => void;
+  editingOracle?: {
+    key: string;
+    table: OracleTableSimple | OracleTableDetails;
+  };
+  tables: Record<string, OracleTableRollable>;
+}
+
+export function OracleTableSimpleForm(props: OracleTableSimpleFormProps) {
+  const { homebrewId, onClose, editingOracle, tables } = props;
+
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, touchedFields, disabled },
+    control,
+  } = useForm<Form>({
+    disabled: loading,
+    values: getDefaultValues(editingOracle?.table),
+  });
+
+  const onSubmit: SubmitHandler<Form> = (values) => {};
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogContent>
+        <Stack spacing={2}>
+          <TextField
+            disabled={disabled}
+            label={"Oracle Name"}
+            fullWidth
+            error={touchedFields.name && !!errors.name}
+            helperText={
+              touchedFields.name && errors.name
+                ? errors.name.message
+                : undefined
+            }
+            inputProps={{
+              defaultValue: "",
+              ...register("name", {
+                required: "This field is required.",
+                validate: (value) => {
+                  if (!editingOracle?.key && value) {
+                    try {
+                      const id = convertIdPart(value);
+                      if (tables[id]) {
+                        return `You already have an oracle table with id ${id}. Please try a different label.`;
+                      }
+                    } catch (e) {
+                      return "Failed to parse a valid ID for your oracle table. Please use at least three letters or numbers in your label.";
+                    }
+                  }
+                },
+              }),
+            }}
+          />
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <MarkdownEditor
+                label={"Description"}
+                content={field.value ?? ""}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+              />
+            )}
+          />
+          <Controller
+            name={"replacesId"}
+            control={control}
+            render={({ field }) => (
+              <OracleTableRollableAutocomplete
+                homebrewId={homebrewId}
+                label={"Replaces Collection"}
+                value={field.value}
+                onChange={(ids) => field.onChange(ids)}
+                onBlur={field.onBlur}
+                helperText={"Replaces an existing oracle table with this one"}
+              />
+            )}
+          />
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button color={"inherit"} type={"reset"} onClick={onClose}>
+          Cancel
+        </Button>
+        <Button variant={"contained"} type={"submit"}>
+          Save
+        </Button>
+      </DialogActions>
+    </form>
+  );
+}
+
+function getDefaultValues(
+  existingOracle?: OracleTableSimple | OracleTableDetails
+): Form | undefined {
+  if (!existingOracle) {
+    return undefined;
+  }
+  if (existingOracle.oracle_type === "table_simple") {
+    return {
+      name: existingOracle.name,
+      description: existingOracle.description,
+      replacesId: existingOracle.replaces,
+      numberOfDice: parseDiceExpression(existingOracle.dice)?.diceCount ?? 1,
+      valueOfDice: parseDiceExpression(existingOracle.dice)?.typeOfDice ?? 100,
+      showDetails: false,
+      columnLabels: {
+        roll: existingOracle.column_labels.roll,
+        result: existingOracle.column_labels.result,
+      },
+    };
+  } else {
+    return {
+      name: existingOracle.name,
+      description: existingOracle.description,
+      replacesId: existingOracle.replaces,
+      numberOfDice: parseDiceExpression(existingOracle.dice)?.diceCount ?? 1,
+      valueOfDice: parseDiceExpression(existingOracle.dice)?.typeOfDice ?? 100,
+      showDetails: true,
+      columnLabels: {
+        roll: existingOracle.column_labels.roll,
+        result: existingOracle.column_labels.result,
+        detail: existingOracle.column_labels.detail,
+      },
+    };
+  }
+}
