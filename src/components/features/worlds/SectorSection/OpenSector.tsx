@@ -25,6 +25,7 @@ import { NPCItem } from "../NPCSection/NPCItem";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
+import { useCallback } from "react";
 
 interface OpenSectorProps {
   sectorId: string;
@@ -212,6 +213,18 @@ export function OpenSector(props: OpenSectorProps) {
     (store) => store.worlds.currentWorld.currentWorldNPCs.setOpenNPCId
   );
 
+  const noteSaveCallback = useCallback(
+    (sectorId: string, notes: Uint8Array, isBeaconRequest?: boolean) =>
+      updateNotes(sectorId, notes, false, isBeaconRequest),
+    [updateNotes]
+  );
+
+  const gmNoteSaveCallback = useCallback(
+    (sectorId: string, notes: Uint8Array, isBeaconRequest?: boolean) =>
+      updateNotes(sectorId, notes, true, isBeaconRequest),
+    [updateNotes]
+  );
+
   if (!sector) {
     return null;
   }
@@ -340,9 +353,7 @@ export function OpenSector(props: OpenSectorProps) {
                   id={sectorId}
                   roomPrefix={`sector-private-${worldId}-`}
                   documentPassword={sectorId}
-                  onSave={(sectorId, notes, isBeaconRequest) =>
-                    updateNotes(sectorId, notes, true, isBeaconRequest)
-                  }
+                  onSave={gmNoteSaveCallback}
                   initialValue={gmNotes}
                 />
               </Grid>
@@ -359,9 +370,7 @@ export function OpenSector(props: OpenSectorProps) {
                     id={sectorId}
                     roomPrefix={`sector-public-${worldId}-`}
                     documentPassword={sectorId}
-                    onSave={(sectorId, notes, isBeaconRequest) =>
-                      updateNotes(sectorId, notes, false, isBeaconRequest)
-                    }
+                    onSave={noteSaveCallback}
                     initialValue={notes}
                   />
                 </Grid>

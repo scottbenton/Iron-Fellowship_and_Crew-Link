@@ -16,6 +16,7 @@
 - Fixed cursor issue on the notes page with mobile Safari
 - Fixed a performance issue that made switching tabs super slow
 - Fixed a few crashes that could occur when switching pages after the application updated in the background
+- Fixed an issue on the sectors page where saving would cause users to be kicked from the notes box
 
 ## 2.2.0
 
