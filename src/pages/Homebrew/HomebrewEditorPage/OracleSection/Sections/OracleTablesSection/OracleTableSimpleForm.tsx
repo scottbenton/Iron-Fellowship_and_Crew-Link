@@ -5,8 +5,11 @@ import {
 } from "@datasworn/core";
 import {
   Button,
+  Checkbox,
   DialogActions,
   DialogContent,
+  FormControl,
+  FormControlLabel,
   Stack,
   TextField,
 } from "@mui/material";
@@ -14,29 +17,31 @@ import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor"
 import { convertIdPart } from "functions/dataswornIdEncoder";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { parseDiceExpression } from "stores/appState/rollers/diceExpressionParser";
 import { OracleTableRollableAutocomplete } from "../../OracleTableRollableAutocomplete";
+import { OracleTable } from "./OracleTable";
 
 interface OracleTableBaseFormContents {
   name: string;
   description?: string;
   replacesId?: string;
-  numberOfDice: number;
-  valueOfDice: number;
   showDetails: boolean;
 }
 
-interface OracleTableSimpleFormContents extends OracleTableBaseFormContents {
+export interface OracleTableSimpleFormContents
+  extends OracleTableBaseFormContents {
   showDetails: false;
-  columnLabels: { roll: string; result: string };
+  columnValues: { rollChance: number; result: string }[];
 }
 
-interface OracleTableDetailsFormContents extends OracleTableBaseFormContents {
+export interface OracleTableDetailsFormContents
+  extends OracleTableBaseFormContents {
   showDetails: true;
-  columnLabels: { roll: string; result: string; detail: string };
+  columnValues: { rollChance: number; result: string; detail: string }[];
 }
 
-type Form = OracleTableSimpleFormContents | OracleTableDetailsFormContents;
+export type Form =
+  | OracleTableSimpleFormContents
+  | OracleTableDetailsFormContents;
 
 export interface OracleTableSimpleFormProps {
   homebrewId: string;
@@ -46,10 +51,21 @@ export interface OracleTableSimpleFormProps {
     table: OracleTableSimple | OracleTableDetails;
   };
   tables: Record<string, OracleTableRollable>;
+  dbPath: string;
+  parentCollectionKey?: string;
 }
 
 export function OracleTableSimpleForm(props: OracleTableSimpleFormProps) {
-  const { homebrewId, onClose, editingOracle, tables } = props;
+  const {
+    homebrewId,
+    onClose,
+    editingOracle,
+    tables,
+    dbPath,
+    parentCollectionKey,
+  } = props;
+
+  console.debug(homebrewId, dbPath, parentCollectionKey);
 
   const [loading, setLoading] = useState(false);
 
@@ -58,12 +74,15 @@ export function OracleTableSimpleForm(props: OracleTableSimpleFormProps) {
     handleSubmit,
     formState: { errors, touchedFields, disabled },
     control,
+    watch,
   } = useForm<Form>({
     disabled: loading,
     values: getDefaultValues(editingOracle?.table),
   });
 
-  const onSubmit: SubmitHandler<Form> = (values) => {};
+  const onSubmit: SubmitHandler<Form> = (values) => {
+    setLoading(true);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -124,6 +143,32 @@ export function OracleTableSimpleForm(props: OracleTableSimpleFormProps) {
               />
             )}
           />
+          <FormControl
+            error={touchedFields.showDetails && !!errors.showDetails}
+          >
+            <FormControlLabel
+              disabled={disabled}
+              control={
+                <Controller
+                  name="showDetails"
+                  control={control}
+                  defaultValue={false}
+                  render={({ field }) => (
+                    <Checkbox {...field} defaultChecked={false} />
+                  )}
+                />
+              }
+              label={"Add a details column?"}
+            />
+          </FormControl>
+          <OracleTable
+            control={control}
+            disabled={disabled}
+            touchedFields={touchedFields}
+            errors={errors}
+            register={register}
+            watch={watch}
+          />
         </Stack>
       </DialogContent>
       <DialogActions>
@@ -149,27 +194,25 @@ function getDefaultValues(
       name: existingOracle.name,
       description: existingOracle.description,
       replacesId: existingOracle.replaces,
-      numberOfDice: parseDiceExpression(existingOracle.dice)?.diceCount ?? 1,
-      valueOfDice: parseDiceExpression(existingOracle.dice)?.typeOfDice ?? 100,
+
       showDetails: false,
-      columnLabels: {
-        roll: existingOracle.column_labels.roll,
-        result: existingOracle.column_labels.result,
-      },
+      columnValues: [],
     };
   } else {
     return {
       name: existingOracle.name,
       description: existingOracle.description,
       replacesId: existingOracle.replaces,
-      numberOfDice: parseDiceExpression(existingOracle.dice)?.diceCount ?? 1,
-      valueOfDice: parseDiceExpression(existingOracle.dice)?.typeOfDice ?? 100,
       showDetails: true,
-      columnLabels: {
-        roll: existingOracle.column_labels.roll,
-        result: existingOracle.column_labels.result,
-        detail: existingOracle.column_labels.detail,
-      },
+      columnValues: [],
     };
   }
 }
+
+// function parseFieldsIntoTable(form: Form): OracleTableSimple | OracleTableDetails | undefined {
+//   if (form.showDetails) {
+//     const tableDetails: OracleTableDetails = {
+//       id:
+//     };
+//   }
+// }

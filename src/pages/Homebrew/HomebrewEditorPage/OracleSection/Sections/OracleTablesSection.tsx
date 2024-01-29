@@ -14,12 +14,16 @@ import { OracleTableDialogContents } from "./OracleTablesSection/OracleTableDial
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 
 export interface OracleTablesSectionProps {
+  homebrewId: string;
   collections: Record<string, OracleCollection>;
   rollables: Record<string, OracleRollable>;
+  dbPath: string;
+  parentCollectionKey?: string;
 }
 
 export function OracleTablesSection(props: OracleTablesSectionProps) {
-  const { collections, rollables } = props;
+  const { homebrewId, collections, rollables, dbPath, parentCollectionKey } =
+    props;
 
   const [oracleTableDialogState, setOracleTableDialogState] = useState<{
     open: boolean;
@@ -101,8 +105,11 @@ export function OracleTablesSection(props: OracleTablesSectionProps) {
           Create Oracle Table
         </DialogTitleWithCloseButton>
         <OracleTableDialogContents
+          homebrewId={homebrewId}
           onClose={closeOracleTableDialog}
           tables={oracleTableRollables}
+          dbPath={dbPath}
+          parentCollectionKey={parentCollectionKey}
         />
       </Dialog>
     </>

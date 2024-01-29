@@ -7,14 +7,19 @@ export interface OracleTableDialogContentsProps {
   homebrewId: string;
   onClose: () => void;
   tables: Record<string, OracleTableRollable>;
+  dbPath: string;
+  parentCollectionKey?: string;
 }
 
 export function OracleTableDialogContents(
   props: OracleTableDialogContentsProps
 ) {
-  const { homebrewId, onClose, tables } = props;
+  const { homebrewId, onClose, tables, dbPath, parentCollectionKey } = props;
 
-  const [tableType, setTableType] = useState<ORACLE_TABLE_TYPE>();
+  // TODO - Support other oracle table types
+  const [tableType, setTableType] = useState<ORACLE_TABLE_TYPE>(
+    ORACLE_TABLE_TYPE.SIMPLE
+  );
 
   return (
     <>
@@ -26,6 +31,8 @@ export function OracleTableDialogContents(
           homebrewId={homebrewId}
           onClose={onClose}
           tables={tables}
+          dbPath={dbPath}
+          parentCollectionKey={parentCollectionKey}
         />
       )}
       {tableType === ORACLE_TABLE_TYPE.SHARED_RESULTS && (

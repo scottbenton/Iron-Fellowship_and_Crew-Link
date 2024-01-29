@@ -201,12 +201,21 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
       )}
       {openOracleState.openOracleId && (
         <OracleTablesSection
+          homebrewId={homebrewId}
           collections={
             openOracleCollection?.oracle_type === "tables"
               ? openOracleCollection.collections ?? {}
               : {}
           }
           rollables={openOracleCollection?.contents ?? {}}
+          dbPath={collectionDbPath}
+          parentCollectionKey={
+            // If we are not at the root and we are not editing an oracle, set the parent
+            openOracleState.openOracleId?.dbId &&
+            !oracleCollectionDialogState.oracleId
+              ? openOracleState.openOracleId.dbId
+              : ""
+          }
         />
       )}
       <OracleCollectionsSection
