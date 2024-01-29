@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
 import { RtcRichTextEditor } from "components/shared/RichTextEditor";
 import { NotesSectionHeader } from "../../NotesSectionHeader";
+import { useCallback } from "react";
 
 export function SectorLocationDialog() {
   const confirm = useConfirm();
@@ -90,6 +91,16 @@ export function SectorLocationDialog() {
       store.worlds.currentWorld.currentWorldSectors.locations
         .updateLocationNotes
   );
+  const updateGMNotesCallback = useCallback(
+    (locationId: string, notes: Uint8Array, isBeaconRequest?: boolean) =>
+      updateNotes(locationId, notes, true, isBeaconRequest),
+    [updateNotes]
+  );
+  const updateNotesCallback = useCallback(
+    (locationId: string, notes: Uint8Array, isBeaconRequest?: boolean) =>
+      updateNotes(locationId, notes, false, isBeaconRequest),
+    [updateNotes]
+  );
 
   const { showGMFields, showGMTips, isSinglePlayer } = useWorldPermissions();
 
@@ -145,9 +156,7 @@ export function SectorLocationDialog() {
                 id={openLocationId}
                 roomPrefix={`sector-location-private-${worldId}-${sectorId}-`}
                 documentPassword={openLocationId}
-                onSave={(locationId, notes, isBeaconRequest) =>
-                  updateNotes(locationId, notes, true, isBeaconRequest)
-                }
+                onSave={updateGMNotesCallback}
                 initialValue={gmNotes}
               />
             </Grid>
@@ -162,9 +171,7 @@ export function SectorLocationDialog() {
                   id={openLocationId}
                   roomPrefix={`sector-location-public-${worldId}-${sectorId}-`}
                   documentPassword={openLocationId}
-                  onSave={(locationId, notes, isBeaconRequest) =>
-                    updateNotes(locationId, notes, false, isBeaconRequest)
-                  }
+                  onSave={updateNotesCallback}
                   initialValue={notes}
                 />
               </Grid>
