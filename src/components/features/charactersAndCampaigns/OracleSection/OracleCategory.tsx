@@ -24,7 +24,7 @@ export function OracleCategory(props: OracleCategoryProps) {
   const openDialog = useStore((store) => store.appState.openDialog);
 
   const title = prefix
-    ? `${prefix} ꞏ ${category.Title.Standard}`
+    ? `${prefix} / ${category.Title.Standard}`
     : category.Title.Standard;
 
   const sampleNames = category["Sample Names" as "Sample names"];
