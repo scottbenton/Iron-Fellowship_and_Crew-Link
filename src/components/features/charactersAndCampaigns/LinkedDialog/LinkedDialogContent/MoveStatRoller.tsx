@@ -28,7 +28,10 @@ export function MoveStatRoller(props: MoveStatRollerProps) {
     );
   }
 
-  if (statName === "companion health" && Object.keys(stats).length > 0) {
+  if (
+    statName.toLowerCase() === "companion health" &&
+    Object.keys(stats).length > 0
+  ) {
     return (
       <>
         {companions.map((companion, index) => (
@@ -44,7 +47,11 @@ export function MoveStatRoller(props: MoveStatRollerProps) {
     );
   }
 
-  if (statName === "vehicle integrity" && Object.keys(stats).length > 0) {
+  if (
+    (statName.toLowerCase() === "vehicle integrity" ||
+      statName.toLowerCase() === "integrity") &&
+    Object.keys(stats).length > 0
+  ) {
     return (
       <>
         {vehicles.map((vehicle, index) => (
@@ -61,7 +68,7 @@ export function MoveStatRoller(props: MoveStatRollerProps) {
   }
 
   if (
-    statName === "quests legacy" &&
+    statName.toLowerCase() === "quests legacy" &&
     legacies[LEGACY_TRACK_TYPES.QUESTS] !== undefined
   ) {
     return (
@@ -85,7 +92,7 @@ export function MoveStatRoller(props: MoveStatRollerProps) {
   }
 
   if (
-    statName === "bonds legacy" &&
+    statName.toLowerCase() === "bonds legacy" &&
     legacies[LEGACY_TRACK_TYPES.BONDS] !== undefined
   ) {
     return (
