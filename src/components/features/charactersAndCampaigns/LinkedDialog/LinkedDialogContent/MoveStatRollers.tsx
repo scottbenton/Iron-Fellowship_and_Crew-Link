@@ -78,7 +78,8 @@ export function MoveStatRollers(props: MoveStatsProps) {
     const actualAsset = asset.customAsset ?? assetMap[asset.id];
     if (
       asset.trackValue &&
-      actualAsset?.["Condition meter"]?.Label === "companion health"
+      actualAsset?.["Condition meter"]?.Label.toLowerCase() ===
+        "companion health"
     ) {
       const inputKeys = Object.keys(asset.inputs ?? {});
       const assetInputName =
@@ -91,7 +92,7 @@ export function MoveStatRollers(props: MoveStatsProps) {
       });
     } else if (
       asset.trackValue &&
-      actualAsset?.["Condition meter"]?.Label === "integrity"
+      actualAsset?.["Condition meter"]?.Label.toLowerCase() === "integrity"
     ) {
       const inputKeys = Object.keys(asset.inputs ?? {});
       const assetInputName =
@@ -143,7 +144,7 @@ export function MoveStatRollers(props: MoveStatsProps) {
 
       {stats &&
         Object.keys(visibleStats).filter(
-          (statKey) => statKey !== "vow progress"
+          (statKey) => statKey.toLowerCase() !== "vow progress"
         ).length > 0 && (
           <StatComponent
             label={`Adds`}

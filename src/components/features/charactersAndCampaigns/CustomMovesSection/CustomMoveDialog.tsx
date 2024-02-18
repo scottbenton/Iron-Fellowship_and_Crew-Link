@@ -187,11 +187,11 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                 />
                 <Box>
                   <FormControl
-                    component="fieldset"
-                    variant="standard"
+                    component='fieldset'
+                    variant='standard'
                     fullWidth
                   >
-                    <FormLabel component="legend">Character Stats</FormLabel>
+                    <FormLabel component='legend'>Character Stats</FormLabel>
                     <Box display={"flex"} justifyContent={"space-between"}>
                       <FormGroup>
                         <FormControlLabel
@@ -209,7 +209,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               name={`enabledStats.${Stat.Edge}`}
                             />
                           }
-                          label="Edge"
+                          label='Edge'
                         />
                         <FormControlLabel
                           control={
@@ -226,7 +226,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               name={`enabledStats.${Stat.Heart}`}
                             />
                           }
-                          label="Heart"
+                          label='Heart'
                         />
                         <FormControlLabel
                           control={
@@ -243,7 +243,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               name={`enabledStats.${Stat.Iron}`}
                             />
                           }
-                          label="Iron"
+                          label='Iron'
                         />
                         <FormControlLabel
                           control={
@@ -260,7 +260,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               name={`enabledStats.${Stat.Shadow}`}
                             />
                           }
-                          label="Shadow"
+                          label='Shadow'
                         />
                         <FormControlLabel
                           control={
@@ -277,7 +277,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               name={`enabledStats.${Stat.Wits}`}
                             />
                           }
-                          label="Wits"
+                          label='Wits'
                         />
                       </FormGroup>
                       {customStats.length > 0 && (
@@ -351,7 +351,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               name={`enabledStats.${PlayerConditionMeter.Health}`}
                             />
                           }
-                          label="Health"
+                          label='Health'
                         />
                         <FormControlLabel
                           control={
@@ -370,7 +370,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               name={`enabledStats.${PlayerConditionMeter.Spirit}`}
                             />
                           }
-                          label="Spirit"
+                          label='Spirit'
                         />
                         <FormControlLabel
                           control={
@@ -389,7 +389,7 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               name={`enabledStats.${PlayerConditionMeter.Supply}`}
                             />
                           }
-                          label="Supply"
+                          label='Supply'
                         />
                         <FormControlLabel
                           control={
@@ -407,25 +407,27 @@ export function CustomMoveDialog(props: CustomMoveDialogProps) {
                               name={`enabledStats.companion health`}
                             />
                           }
-                          label="Companion Health"
+                          label='Companion Health'
                         />
                         {isStarforged && (
                           <FormControlLabel
                             control={
                               <Checkbox
                                 checked={
-                                  form.values.enabledStats["integrity"] ?? false
+                                  form.values.enabledStats[
+                                    "vehicle integrity"
+                                  ] ?? false
                                 }
                                 onChange={(evt, checked) =>
                                   form.setFieldValue(
-                                    `enabledStats.integrity`,
+                                    `enabledStats.vehicle integrity`,
                                     checked
                                   )
                                 }
-                                name={`enabledStats.integrity`}
+                                name={`enabledStats['vehicle integrity']`}
                               />
                             }
-                            label="Integrity"
+                            label='Vehicle Integrity'
                           />
                         )}
                       </FormGroup>

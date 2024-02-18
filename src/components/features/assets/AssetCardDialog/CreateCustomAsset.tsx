@@ -321,7 +321,7 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                               key={index}
                               action={
                                 <Button
-                                  color="inherit"
+                                  color='inherit'
                                   onClick={() => remove(index)}
                                 >
                                   Remove
@@ -425,7 +425,7 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                             ? getIn(form.errors, "track.label")
                             : `For companion health, please label this field "companion health"${
                                 isStarforged
-                                  ? ". For integrity, please label this field integrity."
+                                  ? '. For integrity, please label this field "vehicle integrity."'
                                   : ""
                               }`
                         }
@@ -487,7 +487,7 @@ export function CreateCustomAsset(props: CreateCustomAssetProps) {
                 <SectionHeading label={"Asset Abilities"} />
               </Grid>
               <Grid item xs={12}>
-                <FieldArray name="abilities">
+                <FieldArray name='abilities'>
                   {({ remove, push }) => (
                     <TableContainer component={Paper} variant={"outlined"}>
                       <Table size={"small"}>
