@@ -7,28 +7,30 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import {
-  StoredConditionMeter,
-  StoredRules,
-} from "types/homebrew/HomebrewRules.type";
+import { StoredConditionMeter } from "types/homebrew/HomebrewRules.type";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { useStore } from "stores/store";
-import { deleteField } from "firebase/firestore";
 import { useConfirm } from "material-ui-confirm";
 import { ConditionMeterDialog } from "./ConditionMeterDialog";
 import { ClampedMarkdownRenderer } from "components/shared/ClampedMarkdownRenderer";
 
 export interface ConditionMetersProps {
   homebrewId: string;
-  conditionMeters: StoredRules["condition_meters"];
 }
 
 export function ConditionMeters(props: ConditionMetersProps) {
-  const { homebrewId, conditionMeters } = props;
+  const { homebrewId } = props;
 
   const confirm = useConfirm();
+  const conditionMeters = useStore(
+    (store) =>
+      store.homebrew.collections[homebrewId]?.conditionMeters?.data ?? {}
+  );
+  const conditionMetersLoading = useStore(
+    (store) => !store.homebrew.collections[homebrewId]?.conditionMeters?.loaded
+  );
 
   const [conditionMeterDialogOpen, setConditionMeterDialogOpen] =
     useState(false);
@@ -36,19 +38,26 @@ export function ConditionMeters(props: ConditionMetersProps) {
     string | undefined
   >(undefined);
 
-  const updateRules = useStore((store) => store.homebrew.updateExpansionRules);
-  const addConditionMeter = (
-    conditionMeterId: string,
-    conditionMeter: StoredConditionMeter
-  ) => {
-    return updateRules(homebrewId, {
-      condition_meters: { [conditionMeterId]: conditionMeter },
-    });
-  };
-  const deleteConditionMeter = (conditionMeterId: string) => {
-    return updateRules(homebrewId, {
-      condition_meters: { [conditionMeterId]: deleteField() },
-    });
+  const createConditionMeter = useStore(
+    (store) => store.homebrew.createConditionMeter
+  );
+  const updateConditionMeter = useStore(
+    (store) => store.homebrew.updateConditionMeter
+  );
+  const deleteConditionMeter = useStore(
+    (store) => store.homebrew.deleteConditionMeter
+  );
+
+  if (conditionMetersLoading) {
+    return <></>;
+  }
+
+  const handleDialogOutput = (conditionMeter: StoredConditionMeter) => {
+    if (editingConditionMeterKey) {
+      return updateConditionMeter(editingConditionMeterKey, conditionMeter);
+    } else {
+      return createConditionMeter(conditionMeter);
+    }
   };
 
   const handleDelete = (conditionMeterId: string) => {
@@ -78,6 +87,7 @@ export function ConditionMeters(props: ConditionMetersProps) {
         <List
           sx={{
             display: "grid",
+            gap: 2,
             gridTemplateColumns: "repeat(12, 1fr)",
             pl: 0,
             my: 0,
@@ -91,16 +101,20 @@ export function ConditionMeters(props: ConditionMetersProps) {
             .map((conditionMeterKey) => (
               <ListItem
                 key={conditionMeterKey}
-                sx={{
+                sx={(theme) => ({
                   gridColumn: { xs: "span 12", sm: "span 6", md: "span 4" },
-                }}
+                  border: `1px solid ${theme.palette.divider}`,
+                  borderRadius: 1,
+                })}
               >
                 <ListItemText
                   secondaryTypographyProps={{ component: "span" }}
                   primary={conditionMeters[conditionMeterKey].label}
                   secondary={
                     <ClampedMarkdownRenderer
-                      markdown={conditionMeters[conditionMeterKey].description}
+                      markdown={
+                        conditionMeters[conditionMeterKey].description ?? ""
+                      }
                       inheritColor
                     />
                   }
@@ -133,10 +147,11 @@ export function ConditionMeters(props: ConditionMetersProps) {
         Add Condition Meter
       </Button>
       <ConditionMeterDialog
+        homebrewId={homebrewId}
         conditionMeters={conditionMeters}
         open={conditionMeterDialogOpen}
         onClose={() => setConditionMeterDialogOpen(false)}
-        onSave={addConditionMeter}
+        onSave={handleDialogOutput}
         editingConditionMeterKey={editingConditionMeterKey}
       />
     </>

@@ -10,9 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@datasworn/core": "^0.0.5",
-    "@datasworn/ironsworn-classic": "^0.0.5",
-    "@datasworn/starforged": "^0.0.5",
+    "@datasworn/core": "^0.0.6",
+    "@datasworn/ironsworn-classic": "^0.0.6",
+    "@datasworn/starforged": "^0.0.6",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/bebas-neue": "^5.0.12",

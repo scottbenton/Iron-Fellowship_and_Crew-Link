@@ -1,12 +1,8 @@
-import {
-  StoredRules,
-  StoredSpecialTrack,
-} from "types/homebrew/HomebrewRules.type";
+import { StoredLegacyTrack } from "types/homebrew/HomebrewRules.type";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   Button,
   Checkbox,
-  Dialog,
   DialogActions,
   DialogContent,
   FormControl,
@@ -17,31 +13,35 @@ import {
 } from "@mui/material";
 import { useRules } from "data/hooks/useRules";
 import { convertIdPart } from "functions/dataswornIdEncoder";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor";
 
-export interface SpecialTrackDialogProps {
-  specialTracks: StoredRules["special_tracks"];
-  open: boolean;
-  onSave: (
-    specialTrackId: string,
-    specialTrack: StoredSpecialTrack
-  ) => Promise<void>;
+export interface LegacyTrackDialogFormProps {
+  homebrewId: string;
+  legacyTracks: Record<string, StoredLegacyTrack>;
+  onSave: (legacyTrack: StoredLegacyTrack) => Promise<void>;
   onClose: () => void;
-  editingSpecialTrackKey?: string;
+  editingLegacyTrackKey?: string;
 }
 
-export function SpecialTrackDialog(props: SpecialTrackDialogProps) {
-  const { specialTracks, open, onSave, onClose, editingSpecialTrackKey } =
+export interface Form {
+  label: string;
+  description?: string;
+  shared: boolean;
+  optional: boolean;
+}
+
+export function LegacyTrackDialogForm(props: LegacyTrackDialogFormProps) {
+  const { homebrewId, legacyTracks, onSave, onClose, editingLegacyTrackKey } =
     props;
 
-  const existingSpecialTrack = editingSpecialTrackKey
-    ? specialTracks[editingSpecialTrackKey] ?? undefined
+  const existingLegacyTrack = editingLegacyTrackKey
+    ? legacyTracks[editingLegacyTrackKey] ?? undefined
     : undefined;
   const { special_tracks: baseSpecialTracks } = useRules();
   const existingSpecialTrackKeys = Object.keys({
-    ...specialTracks,
+    ...legacyTracks,
     ...baseSpecialTracks,
   });
 
@@ -52,19 +52,29 @@ export function SpecialTrackDialog(props: SpecialTrackDialogProps) {
     handleSubmit,
     control,
     formState: { errors, touchedFields, disabled },
-    reset,
-  } = useForm<StoredSpecialTrack>({ disabled: loading });
+  } = useForm<Form>({
+    disabled: loading,
+    values: existingLegacyTrack
+      ? {
+          label: existingLegacyTrack.label,
+          description: existingLegacyTrack.description,
+          shared: existingLegacyTrack.shared,
+          optional: existingLegacyTrack.optional,
+        }
+      : undefined,
+  });
 
-  useEffect(() => {
-    if (open) {
-      reset(existingSpecialTrack);
-    }
-  }, [open, reset, existingSpecialTrack]);
-
-  const onSubmit: SubmitHandler<StoredSpecialTrack> = (values) => {
+  const onSubmit: SubmitHandler<Form> = (values) => {
     setLoading(true);
-    const id = editingSpecialTrackKey ?? convertIdPart(values.label);
-    onSave(id, values)
+    const dataswornId = convertIdPart(values.label);
+    onSave({
+      label: values.label,
+      description: values.description,
+      shared: values.shared,
+      optional: values.optional,
+      collectionId: homebrewId,
+      dataswornId,
+    })
       .then(() => {
         setLoading(false);
         onClose();
@@ -75,9 +85,10 @@ export function SpecialTrackDialog(props: SpecialTrackDialogProps) {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth={"xs"} fullWidth>
+    <>
+      {" "}
       <DialogTitleWithCloseButton onClose={onClose}>
-        {existingSpecialTrack ? "Edit Track" : "Add Track"}
+        {existingLegacyTrack ? "Edit Track" : "Add Track"}
       </DialogTitleWithCloseButton>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
@@ -94,11 +105,10 @@ export function SpecialTrackDialog(props: SpecialTrackDialogProps) {
                   : undefined
               }
               inputProps={{
-                defaultValue: existingSpecialTrack?.label ?? "",
                 ...register("label", {
                   required: "This field is required.",
                   validate: (value) => {
-                    if (!editingSpecialTrackKey && value) {
+                    if (!editingLegacyTrackKey && value) {
                       try {
                         const id = convertIdPart(value);
                         if (existingSpecialTrackKeys.includes(id)) {
@@ -113,13 +123,13 @@ export function SpecialTrackDialog(props: SpecialTrackDialogProps) {
               }}
             />
             <Controller
-              name="description"
+              name='description'
               control={control}
               defaultValue={""}
               render={({ field }) => (
                 <MarkdownEditor
                   label={"Description"}
-                  content={field.value}
+                  content={field.value ?? ""}
                   onChange={field.onChange}
                   onBlur={field.onBlur}
                 />
@@ -130,7 +140,7 @@ export function SpecialTrackDialog(props: SpecialTrackDialogProps) {
                 disabled={disabled}
                 control={
                   <Controller
-                    name="shared"
+                    name='shared'
                     control={control}
                     defaultValue={false}
                     render={({ field }) => (
@@ -149,7 +159,7 @@ export function SpecialTrackDialog(props: SpecialTrackDialogProps) {
                 disabled={disabled}
                 control={
                   <Controller
-                    name="optional"
+                    name='optional'
                     control={control}
                     defaultValue={false}
                     render={({ field }) => (
@@ -179,6 +189,6 @@ export function SpecialTrackDialog(props: SpecialTrackDialogProps) {
           </Button>
         </DialogActions>
       </form>
-    </Dialog>
+    </>
   );
 }

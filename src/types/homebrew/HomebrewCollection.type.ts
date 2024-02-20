@@ -1,24 +1,18 @@
-import { Expansion, Ruleset } from "@datasworn/core";
+export enum PackageTypes {
+  Expansion = "expansion",
+}
 
-type RuleKeys =
-  | "oracles"
-  | "moves"
-  | "assets"
-  | "atlas"
-  | "npcs"
-  | "truths"
-  | "rarities"
-  | "delve_sites"
-  | "site_themes"
-  | "site_domains"
-  | "rules";
+export interface BaseHomebrewCollectionDocument {
+  type: PackageTypes;
+  id: string;
+  title: string;
+  editors: string[];
+  creator: string;
+  rulesetId: string;
+}
 
-type additions = {
-  uids: string[];
-  creatorUid: string;
-};
+export interface ExpansionDocument extends BaseHomebrewCollectionDocument {
+  type: PackageTypes.Expansion;
+}
 
-export type BaseExpansion = Omit<Expansion, RuleKeys> & additions;
-export type BaseRuleset = Omit<Ruleset, RuleKeys> & additions;
-
-export type BaseExpansionOrRuleset = BaseExpansion | BaseRuleset;
+export type HomebrewCollectionDocument = ExpansionDocument;

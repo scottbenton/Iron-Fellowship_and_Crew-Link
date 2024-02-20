@@ -5,10 +5,10 @@ import {
   collection,
   doc,
 } from "firebase/firestore";
-import { BaseExpansionOrRuleset } from "types/homebrew/HomebrewCollection.type";
+import { HomebrewCollectionDocument } from "types/homebrew/HomebrewCollection.type";
 
 export function constructHomebrewCollectionPath() {
-  return "/homebrew";
+  return "/homebrew/homebrew/collections";
 }
 
 export function constructHomebrewCollectionDocPath(
@@ -21,12 +21,12 @@ export function getHomebrewCollection() {
   return collection(
     firestore,
     constructHomebrewCollectionPath()
-  ) as CollectionReference<BaseExpansionOrRuleset>;
+  ) as CollectionReference<HomebrewCollectionDocument>;
 }
 
 export function getHomebrewCollectionDoc(homebrewCollectionId: string) {
   return doc(
     firestore,
     constructHomebrewCollectionDocPath(homebrewCollectionId)
-  ) as DocumentReference<BaseExpansionOrRuleset>;
+  ) as DocumentReference<HomebrewCollectionDocument>;
 }

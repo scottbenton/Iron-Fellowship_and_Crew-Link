@@ -8,29 +8,34 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import {
-  StoredImpact,
-  StoredImpactCategory,
-  StoredRules,
-} from "types/homebrew/HomebrewRules.type";
+import { StoredImpactCategory } from "types/homebrew/HomebrewRules.type";
 import { ImpactCategoryDialog } from "./ImpactCategoryDialog";
 import { useStore } from "stores/store";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
-import { deleteField } from "firebase/firestore";
 import { ImpactDialog } from "./ImpactDialog";
 import { ClampedMarkdownRenderer } from "components/shared/ClampedMarkdownRenderer";
 
 export interface ImpactsProps {
   homebrewId: string;
-  impactCategories: StoredRules["impacts"];
-  conditionMeters: StoredRules["condition_meters"];
 }
 
 export function Impacts(props: ImpactsProps) {
-  const { homebrewId, impactCategories, conditionMeters } = props;
+  const { homebrewId } = props;
   const confirm = useConfirm();
+
+  const impactCategories = useStore(
+    (store) =>
+      store.homebrew.collections[homebrewId]?.impactCategories?.data ?? {}
+  );
+  const isLoading = useStore(
+    (store) => !store.homebrew.collections[homebrewId]?.impactCategories?.loaded
+  );
+  const conditionMeters = useStore(
+    (store) =>
+      store.homebrew.collections[homebrewId]?.conditionMeters?.data ?? {}
+  );
 
   const [impactCategoryDialogOpen, setImpactCategoryDialogOpen] =
     useState(false);
@@ -42,34 +47,32 @@ export function Impacts(props: ImpactsProps) {
     undefined
   );
 
-  const updateRules = useStore((store) => store.homebrew.updateExpansionRules);
-  const addImpactCategory = (
-    impactCategoryId: string,
+  const createImpactCategory = useStore(
+    (store) => store.homebrew.createImpactCategory
+  );
+  const updateImpactCategory = useStore(
+    (store) => store.homebrew.updateImpactCategory
+  );
+  const deleteImpactCategory = useStore(
+    (store) => store.homebrew.deleteImpactCategory
+  );
+  const updateImpact = useStore((store) => store.homebrew.updateImpact);
+  const deleteImpact = useStore((store) => store.homebrew.deleteImpact);
+
+  const createOrUpdateImpactCategory = (
     impactCategory: StoredImpactCategory
   ) => {
-    return updateRules(homebrewId, {
-      impacts: { [impactCategoryId]: impactCategory },
-    });
+    if (editingImpactCategoryKey) {
+      return updateImpactCategory(editingImpactCategoryKey, impactCategory);
+    } else {
+      return createImpactCategory(impactCategory);
+    }
   };
-  const deleteImpactCategory = (categoryId: string) => {
-    return updateRules(homebrewId, {
-      impacts: { [categoryId]: deleteField() },
-    });
-  };
-  const addImpact = (
-    impactCategoryId: string,
-    impactId: string,
-    impact: StoredImpact
-  ) => {
-    return updateRules(homebrewId, {
-      impacts: { [impactCategoryId]: { contents: { [impactId]: impact } } },
-    });
-  };
-  const deleteImpact = (categoryId: string, impactId: string) => {
-    return updateRules(homebrewId, {
-      impacts: { [categoryId]: { contents: { [impactId]: deleteField() } } },
-    });
-  };
+
+  if (isLoading) {
+    return null;
+  }
+
   const handleCategoryDelete = (categoryId: string) => {
     confirm({
       title: `Delete ${impactCategories[categoryId].label}`,
@@ -159,7 +162,9 @@ export function Impacts(props: ImpactsProps) {
                     primary={impactCategories[categoryKey].label}
                     secondary={
                       <ClampedMarkdownRenderer
-                        markdown={impactCategories[categoryKey].description}
+                        markdown={
+                          impactCategories[categoryKey].description ?? ""
+                        }
                         inheritColor
                       />
                     }
@@ -205,7 +210,7 @@ export function Impacts(props: ImpactsProps) {
                                 markdown={
                                   impactCategories[categoryKey].contents[
                                     categoryContentKey
-                                  ].description
+                                  ].description ?? ""
                                 }
                                 inheritColor
                               />
@@ -266,10 +271,11 @@ export function Impacts(props: ImpactsProps) {
         Add Impact Category
       </Button>
       <ImpactCategoryDialog
+        homebrewId={homebrewId}
         open={impactCategoryDialogOpen}
         onClose={() => setImpactCategoryDialogOpen(false)}
         impactCategories={impactCategories}
-        onSave={addImpactCategory}
+        onSave={createOrUpdateImpactCategory}
         editingCategoryKey={editingImpactCategoryKey}
       />
       {editingImpactCategoryKey && (
@@ -277,7 +283,7 @@ export function Impacts(props: ImpactsProps) {
           open={impactDialogOpen}
           onClose={() => setImpactDialogOpen(false)}
           impacts={impactCategories[editingImpactCategoryKey]?.contents}
-          onSave={addImpact}
+          onSave={updateImpact}
           editingCategoryKey={editingImpactCategoryKey}
           editingImpactKey={editingImpactKey}
           conditionMeters={conditionMeters}

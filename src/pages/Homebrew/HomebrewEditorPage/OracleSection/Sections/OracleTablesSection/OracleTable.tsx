@@ -48,7 +48,6 @@ export function OracleTable(props: OracleTableProps) {
         );
 
         if (total !== 100) {
-          console.debug("DID NOT SUM");
           return "Total roll chance must sum to 100%";
         }
       },
@@ -58,7 +57,7 @@ export function OracleTable(props: OracleTableProps) {
   return (
     <TableContainer component={Paper} variant={"outlined"}>
       {errors.columnValues?.root?.message && (
-        <Alert severity="error">{errors.columnValues.root.message}</Alert>
+        <Alert severity='error'>{errors.columnValues.root.message}</Alert>
       )}
       <Table size={"small"}>
         <TableHead>

@@ -7,7 +7,6 @@ import {
   TextField,
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
-import { dataswornVersion } from "config/datasworn.config";
 import { convertIdPart } from "functions/dataswornIdEncoder";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { useState } from "react";
@@ -15,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useStore } from "stores/store";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { constructHomebrewEditorPath } from "../routes";
+import { PackageTypes } from "types/homebrew/HomebrewCollection.type";
 
 export interface CreateExpansionDialogProps {
   open: boolean;
@@ -55,12 +55,11 @@ export function CreateExpansionDialog(props: CreateExpansionDialogProps) {
     }
     createExpansion({
       id: idSlug,
-      datasworn_version: dataswornVersion,
-      package_type: "expansion",
-      ruleset: baseRuleset,
-      creatorUid: uid,
-      uids: [uid],
+      type: PackageTypes.Expansion,
       title: collectionName,
+      creator: uid,
+      editors: [uid],
+      rulesetId: baseRuleset,
     })
       .then((id) => {
         onClose();
@@ -75,7 +74,7 @@ export function CreateExpansionDialog(props: CreateExpansionDialogProps) {
         Create Expansion Collection
       </DialogTitleWithCloseButton>
       <DialogContent>
-        {error && <Alert severity="error">{error}</Alert>}
+        {error && <Alert severity='error'>{error}</Alert>}
         <TextField
           sx={{ mt: 1 }}
           label={"Collection Name"}

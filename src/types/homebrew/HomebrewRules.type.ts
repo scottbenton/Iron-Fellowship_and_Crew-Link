@@ -1,10 +1,14 @@
 export interface StoredStat {
+  dataswornId: string;
+  collectionId: string;
   label: string;
-  description: string;
+  description?: string;
 }
 
 export interface StoredConditionMeter {
-  description: string;
+  dataswornId: string;
+  collectionId: string;
+  description?: string;
   shared: boolean;
   label: string;
   value: number;
@@ -15,36 +19,27 @@ export interface StoredConditionMeter {
 
 export interface StoredImpact {
   label: string;
-  description: string;
+  dataswornId: string;
+  description?: string;
   shared: boolean;
   // ex: health, spirit
-  prevents_recovery: string[];
+  preventsRecovery: string[];
   permanent: boolean;
 }
 
 export interface StoredImpactCategory {
+  collectionId: string;
   label: string;
-  description: string;
+  description?: string;
   contents: {
     [impactKey: string]: StoredImpact;
   };
 }
-export interface StoredSpecialTrack {
+export interface StoredLegacyTrack {
+  dataswornId: string;
+  collectionId: string;
   label: string;
-  description: string;
+  description?: string;
   shared: boolean;
   optional: boolean;
-}
-
-export interface StoredRules {
-  stats: {
-    [statKey: string]: StoredStat;
-  };
-  condition_meters: {
-    [conditionMeterKey: string]: StoredConditionMeter;
-  };
-  impacts: {
-    [impactCategoryKey: string]: StoredImpactCategory;
-  };
-  special_tracks: { [specialTrackKey: string]: StoredSpecialTrack };
 }

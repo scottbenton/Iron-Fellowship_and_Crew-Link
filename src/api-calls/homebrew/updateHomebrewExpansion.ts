@@ -1,10 +1,10 @@
 import { updateDoc } from "firebase/firestore";
 import { getHomebrewCollectionDoc } from "./_getRef";
-import { BaseExpansion } from "types/homebrew/HomebrewCollection.type";
+import { ExpansionDocument } from "types/homebrew/HomebrewCollection.type";
 import { createApiFunction } from "api-calls/createApiFunction";
 
 export const updateHomebrewExpansion = createApiFunction<
-  { id: string; expansion: Partial<BaseExpansion> },
+  { id: string; expansion: Partial<ExpansionDocument> },
   void
 >((params) => {
   const { id, expansion } = params;

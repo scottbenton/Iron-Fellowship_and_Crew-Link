@@ -1,8 +1,4 @@
-import {
-  OracleTableDetails,
-  OracleTableRollable,
-  OracleTableSimple,
-} from "@datasworn/core";
+import type { Datasworn } from "@datasworn/core";
 import {
   Button,
   Checkbox,
@@ -48,9 +44,9 @@ export interface OracleTableSimpleFormProps {
   onClose: () => void;
   editingOracle?: {
     key: string;
-    table: OracleTableSimple | OracleTableDetails;
+    table: Datasworn.OracleTableSimple | Datasworn.OracleTableDetails;
   };
-  tables: Record<string, OracleTableRollable>;
+  tables: Record<string, Datasworn.OracleTableRollable>;
   dbPath: string;
   parentCollectionKey?: string;
 }
@@ -64,8 +60,6 @@ export function OracleTableSimpleForm(props: OracleTableSimpleFormProps) {
     dbPath,
     parentCollectionKey,
   } = props;
-
-  console.debug(homebrewId, dbPath, parentCollectionKey);
 
   const [loading, setLoading] = useState(false);
 
@@ -118,7 +112,7 @@ export function OracleTableSimpleForm(props: OracleTableSimpleFormProps) {
             }}
           />
           <Controller
-            name="description"
+            name='description'
             control={control}
             render={({ field }) => (
               <MarkdownEditor
@@ -135,7 +129,7 @@ export function OracleTableSimpleForm(props: OracleTableSimpleFormProps) {
             render={({ field }) => (
               <OracleTableRollableAutocomplete
                 homebrewId={homebrewId}
-                label={"Replaces Collection"}
+                label={"Replaces Table"}
                 value={field.value}
                 onChange={(ids) => field.onChange(ids)}
                 onBlur={field.onBlur}
@@ -150,7 +144,7 @@ export function OracleTableSimpleForm(props: OracleTableSimpleFormProps) {
               disabled={disabled}
               control={
                 <Controller
-                  name="showDetails"
+                  name='showDetails'
                   control={control}
                   defaultValue={false}
                   render={({ field }) => (
@@ -184,7 +178,7 @@ export function OracleTableSimpleForm(props: OracleTableSimpleFormProps) {
 }
 
 function getDefaultValues(
-  existingOracle?: OracleTableSimple | OracleTableDetails
+  existingOracle?: Datasworn.OracleTableSimple | Datasworn.OracleTableDetails
 ): Form | undefined {
   if (!existingOracle) {
     return undefined;

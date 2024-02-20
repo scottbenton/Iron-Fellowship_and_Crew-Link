@@ -7,10 +7,24 @@ import { createHomebrewExpansion } from "api-calls/homebrew/createHomebrewExpans
 import { updateHomebrewExpansion } from "api-calls/homebrew/updateHomebrewExpansion";
 import { deleteHomebrewExpansion } from "api-calls/homebrew/deleteHomebrewExpansion";
 import { Unsubscribe } from "firebase/firestore";
-import { listenToHomebrewRules } from "api-calls/homebrew/rules/listenToHomebrewRules";
-import { updateExpansionRules } from "api-calls/homebrew/rules/updateExpansionRules";
-import { updateHomebrewOracles } from "api-calls/homebrew/oracles/updateHomebrewOracles";
-import { listenToHomebrewOracles } from "api-calls/homebrew/oracles/listenToHomebrewOracles";
+import { listenToHomebrewStats } from "api-calls/homebrew/rules/stats/listenToHomebrewStats";
+import { createHomebrewStat } from "api-calls/homebrew/rules/stats/createHomebrewStat";
+import { updateHomebrewStat } from "api-calls/homebrew/rules/stats/updateHomebrewStat";
+import { deleteHomebrewStat } from "api-calls/homebrew/rules/stats/deleteHomebrewStat";
+import { createHomebrewConditionMeter } from "api-calls/homebrew/rules/conditionMeters/createHomebrewConditionMeter";
+import { updateHomebrewConditionMeter } from "api-calls/homebrew/rules/conditionMeters/updateHomebrewStat";
+import { deleteHomebrewConditionMeter } from "api-calls/homebrew/rules/conditionMeters/deleteHomebrewConditionMeter";
+import { listenToHomebrewConditionMeters } from "api-calls/homebrew/rules/conditionMeters/listenToHomebrewConditionMeters";
+import { createHomebrewImpactCategory } from "api-calls/homebrew/rules/impacts/createHomebrewImpactCategory";
+import { updateHomebrewImpactCategory } from "api-calls/homebrew/rules/impacts/updateHomebrewImpactCategory";
+import { deleteHomebrewImpactCategory } from "api-calls/homebrew/rules/impacts/deleteHomebrewImpactCategory";
+import { listenToHomebrewImpacts } from "api-calls/homebrew/rules/impacts/listenToHomebrewImpacts";
+import { updateHomebrewImpact } from "api-calls/homebrew/rules/impacts/updateHomebrewImpact";
+import { deleteHomebrewImpact } from "api-calls/homebrew/rules/impacts/deleteHomebrewImpact";
+import { createHomebrewLegacyTrack } from "api-calls/homebrew/rules/legacyTracks/createHomebrewLegacyTrack";
+import { updateHomebrewLegacyTrack } from "api-calls/homebrew/rules/legacyTracks/updateHomebrewLegacyTrack";
+import { deleteHomebrewLegacyTrack } from "api-calls/homebrew/rules/legacyTracks/deleteHomebrewLegacyTrack";
+import { listenToHomebrewLegacyTracks } from "api-calls/homebrew/rules/legacyTracks/listenToHomebrewLegacyTracks";
 
 export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
   ...defaultHomebrewSlice,
@@ -55,14 +69,14 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
     const unsubscribes: Unsubscribe[] = [];
     homebrewIds.forEach((homebrewId) => {
       unsubscribes.push(
-        listenToHomebrewRules(
+        listenToHomebrewStats(
           homebrewId,
-          (id, rules) => {
+          (id, stats) => {
             set((store) => {
               store.homebrew.collections[homebrewId] = {
                 ...(store.homebrew.collections[homebrewId] ?? {}),
-                rules: {
-                  data: rules,
+                stats: {
+                  data: stats,
                   loaded: true,
                 },
               };
@@ -72,37 +86,25 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
             set((store) => {
               store.homebrew.collections[homebrewId] = {
                 ...(store.homebrew.collections[homebrewId] ?? {}),
-                rules: {
-                  ...(store.homebrew.collections[homebrewId].rules ?? {}),
+                stats: {
+                  ...(store.homebrew.collections[homebrewId].stats ?? {}),
                   loaded: true,
-                  error: getErrorMessage(error, "Failed to load rules"),
-                },
-              };
-            });
-          },
-          () => {
-            set((store) => {
-              store.homebrew.collections[homebrewId] = {
-                ...(store.homebrew.collections[homebrewId] ?? {}),
-                rules: {
-                  ...(store.homebrew.collections[homebrewId].rules ?? {}),
-                  loaded: true,
+                  error: getErrorMessage(error, "Failed to load stats"),
                 },
               };
             });
           }
         )
       );
-
       unsubscribes.push(
-        listenToHomebrewOracles(
+        listenToHomebrewConditionMeters(
           homebrewId,
-          (id, oracles) => {
+          (id, conditionMeters) => {
             set((store) => {
               store.homebrew.collections[homebrewId] = {
                 ...(store.homebrew.collections[homebrewId] ?? {}),
-                oracles: {
-                  data: oracles,
+                conditionMeters: {
+                  data: conditionMeters,
                   loaded: true,
                 },
               };
@@ -112,21 +114,75 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
             set((store) => {
               store.homebrew.collections[homebrewId] = {
                 ...(store.homebrew.collections[homebrewId] ?? {}),
-                oracles: {
-                  ...(store.homebrew.collections[homebrewId].oracles ?? {}),
+                stats: {
+                  ...(store.homebrew.collections[homebrewId].conditionMeters ??
+                    {}),
                   loaded: true,
-                  error: getErrorMessage(error, "Failed to load oracles"),
+                  error: getErrorMessage(
+                    error,
+                    "Failed to load condition meters."
+                  ),
+                },
+              };
+            });
+          }
+        )
+      );
+      unsubscribes.push(
+        listenToHomebrewImpacts(
+          homebrewId,
+          (id, impactCategories) => {
+            set((store) => {
+              store.homebrew.collections[homebrewId] = {
+                ...(store.homebrew.collections[homebrewId] ?? {}),
+                impactCategories: {
+                  data: impactCategories,
+                  loaded: true,
                 },
               };
             });
           },
-          () => {
+          (error) => {
             set((store) => {
               store.homebrew.collections[homebrewId] = {
                 ...(store.homebrew.collections[homebrewId] ?? {}),
-                oracles: {
-                  ...(store.homebrew.collections[homebrewId].oracles ?? {}),
+                impactCategories: {
+                  ...(store.homebrew.collections[homebrewId].impactCategories ??
+                    {}),
                   loaded: true,
+                  error: getErrorMessage(error, "Failed to load impacts."),
+                },
+              };
+            });
+          }
+        )
+      );
+      unsubscribes.push(
+        listenToHomebrewLegacyTracks(
+          homebrewId,
+          (id, legacyTracks) => {
+            set((store) => {
+              store.homebrew.collections[homebrewId] = {
+                ...(store.homebrew.collections[homebrewId] ?? {}),
+                legacyTracks: {
+                  data: legacyTracks,
+                  loaded: true,
+                },
+              };
+            });
+          },
+          (error) => {
+            set((store) => {
+              store.homebrew.collections[homebrewId] = {
+                ...(store.homebrew.collections[homebrewId] ?? {}),
+                legacyTracks: {
+                  ...(store.homebrew.collections[homebrewId].legacyTracks ??
+                    {}),
+                  loaded: true,
+                  error: getErrorMessage(
+                    error,
+                    "Failed to load legacy tracks."
+                  ),
                 },
               };
             });
@@ -150,10 +206,49 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (set) => ({
     return deleteHomebrewExpansion({ id });
   },
 
-  updateExpansionRules: (homebrewId, rules) => {
-    return updateExpansionRules({ homebrewId, rules });
+  createStat: (stat) => {
+    return createHomebrewStat({ stat });
   },
-  updateExpansionOracles: (homebrewId, oracles) => {
-    return updateHomebrewOracles({ homebrewId, oracles });
+  updateStat: (statId, stat) => {
+    return updateHomebrewStat({ statId, stat });
+  },
+  deleteStat: (statId) => {
+    return deleteHomebrewStat({ statId });
+  },
+
+  createConditionMeter: (conditionMeter) => {
+    return createHomebrewConditionMeter({ conditionMeter });
+  },
+  updateConditionMeter: (conditionMeterId, conditionMeter) => {
+    return updateHomebrewConditionMeter({ conditionMeterId, conditionMeter });
+  },
+  deleteConditionMeter: (conditionMeterId) => {
+    return deleteHomebrewConditionMeter({ conditionMeterId });
+  },
+
+  createImpactCategory: (impactCategory) => {
+    return createHomebrewImpactCategory({ impactCategory });
+  },
+  updateImpactCategory: (impactCategoryId, impactCategory) => {
+    return updateHomebrewImpactCategory({ impactCategoryId, impactCategory });
+  },
+  deleteImpactCategory: (impactCategoryId) => {
+    return deleteHomebrewImpactCategory({ impactCategoryId });
+  },
+  updateImpact: (impactCategoryId, impact) => {
+    return updateHomebrewImpact({ impactCategoryId, impact });
+  },
+  deleteImpact: (impactCategoryId, impactId) => {
+    return deleteHomebrewImpact({ impactCategoryId, impactId });
+  },
+
+  createLegacyTrack: (legacyTrack) => {
+    return createHomebrewLegacyTrack({ legacyTrack });
+  },
+  updateLegacyTrack: (legacyTrackId, legacyTrack) => {
+    return updateHomebrewLegacyTrack({ legacyTrackId, legacyTrack });
+  },
+  deleteLegacyTrack: (legacyTrackId) => {
+    return deleteHomebrewLegacyTrack({ legacyTrackId });
   },
 });

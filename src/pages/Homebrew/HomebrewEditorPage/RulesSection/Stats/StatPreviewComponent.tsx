@@ -1,8 +1,9 @@
 import { Control, useWatch } from "react-hook-form";
 import { StatComponent } from "components/features/characters/StatComponent";
-import { StoredStat } from "types/homebrew/HomebrewRules.type";
+import { Form } from "./StatDialogForm";
+
 export interface StatPreviewComponentProps {
-  control: Control<StoredStat, unknown>;
+  control: Control<Form, unknown>;
 }
 export function StatPreviewComponent(props: StatPreviewComponentProps) {
   const { control } = props;

@@ -3,6 +3,7 @@ import { SectionHeading } from "components/shared/SectionHeading";
 import { useEffect, useState } from "react";
 import { useStore } from "stores/store";
 import { dataswornVersion } from "config/datasworn.config";
+import { PackageTypes } from "types/homebrew/HomebrewCollection.type";
 
 export interface AboutSectionProps {
   id: string;
@@ -31,7 +32,7 @@ export function AboutSection(props: AboutSectionProps) {
         },
       }}
     >
-      <SectionHeading label="Collection Details" breakContainer />
+      <SectionHeading label='Collection Details' breakContainer />
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
@@ -46,10 +47,10 @@ export function AboutSection(props: AboutSectionProps) {
             fullWidth
           />
         </Grid>
-        {details.package_type === "expansion" && (
+        {details.type === PackageTypes.Expansion && (
           <Grid item xs={12}>
-            <Typography variant="overline">Expansion For</Typography>
-            <Typography>{capitalize(details.ruleset)}</Typography>
+            <Typography variant='overline'>Expansion For</Typography>
+            <Typography>{capitalize(details.rulesetId)}</Typography>
           </Grid>
         )}
         <Grid item xs={12}>
