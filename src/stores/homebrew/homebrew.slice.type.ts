@@ -1,9 +1,13 @@
+import { Datasworn } from "@datasworn/core";
 import { Unsubscribe } from "firebase/firestore";
 import {
   ExpansionDocument,
   HomebrewCollectionDocument,
 } from "types/homebrew/HomebrewCollection.type";
-import { HomebrewOracleCollection } from "types/homebrew/HomebrewOracles.type";
+import {
+  StoredOracleCollection,
+  StoredOracleTable,
+} from "types/homebrew/HomebrewOracles.type";
 import {
   StoredConditionMeter,
   StoredImpact,
@@ -12,33 +16,24 @@ import {
   StoredStat,
 } from "types/homebrew/HomebrewRules.type";
 
+export interface HomebrewData<T> {
+  data?: Record<string, T>;
+  loaded: boolean;
+  error?: string;
+}
+
 export interface HomebrewEntry {
   base: HomebrewCollectionDocument;
-  stats?: {
-    data?: Record<string, StoredStat>;
-    loaded: boolean;
-    error?: string;
-  };
-  conditionMeters?: {
-    data?: Record<string, StoredConditionMeter>;
-    loaded: boolean;
-    error?: string;
-  };
-  impactCategories?: {
-    data?: Record<string, StoredImpactCategory>;
-    loaded: boolean;
-    error?: string;
-  };
-  oracles?: {
-    data?: Record<string, HomebrewOracleCollection>;
-    loaded: boolean;
-    error?: string;
-  };
-  legacyTracks?: {
-    data?: Record<string, StoredLegacyTrack>;
-    loaded: boolean;
-    error?: string;
-  };
+
+  stats?: HomebrewData<StoredStat>;
+  conditionMeters?: HomebrewData<StoredConditionMeter>;
+  impactCategories?: HomebrewData<StoredImpactCategory>;
+  legacyTracks?: HomebrewData<StoredLegacyTrack>;
+
+  oracleCollections?: HomebrewData<StoredOracleCollection>;
+  oracleTables?: HomebrewData<StoredOracleTable>;
+
+  dataswornOracles?: Record<string, Datasworn.OracleTablesCollection>;
 }
 
 export interface HomebrewSliceData {
@@ -87,6 +82,27 @@ export interface HomebrewSliceActions {
     legacyTrack: StoredLegacyTrack
   ) => Promise<void>;
   deleteLegacyTrack: (legacyTrackId: string) => Promise<void>;
+
+  createOracleCollection: (
+    oracleCollection: StoredOracleCollection
+  ) => Promise<void>;
+  updateOracleCollection: (
+    oracleCollectionId: string,
+    oracleCollection: StoredOracleCollection
+  ) => Promise<void>;
+  deleteOracleCollection: (
+    homebrewId: string,
+    oracleCollectionId: string
+  ) => Promise<void>;
+
+  createOracleTable: (oracleTable: StoredOracleTable) => Promise<void>;
+  updateOracleTable: (
+    oracleTableId: string,
+    oracleTable: StoredOracleTable
+  ) => Promise<void>;
+  deleteOracleTable: (oracleTableId: string) => Promise<void>;
+
+  updateDataswornOracles: (homebrewId: string) => void;
 }
 
 export type HomebrewSlice = HomebrewSliceData & HomebrewSliceActions;

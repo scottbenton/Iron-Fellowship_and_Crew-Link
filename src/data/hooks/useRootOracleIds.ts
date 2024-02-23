@@ -10,13 +10,13 @@ export function useRootOracleIds(homebrewIds?: string[]) {
     });
 
     (homebrewIds ?? []).forEach((homebrewId) => {
-      const homebrewOracles =
-        store.homebrew.collections[homebrewId]?.oracles?.data ?? {};
+      const homebrewOracleCollections =
+        store.homebrew.collections[homebrewId]?.dataswornOracles ?? {};
 
-      Object.keys(homebrewOracles).forEach((homebrewOracleId) => {
-        const oracle = homebrewOracles[homebrewOracleId];
-        if (!oracle.replaces) {
-          rootCollectionIds.push(homebrewOracleId);
+      Object.keys(homebrewOracleCollections).filter((collectionId) => {
+        const oracle = homebrewOracleCollections[collectionId];
+        if (!oracle.replaces && !oracle.enhances) {
+          rootCollectionIds.push(homebrewId);
         }
       });
     });

@@ -1,11 +1,4 @@
-import {
-  OracleCollection,
-  OracleRollable,
-  OracleTableRollable,
-  OracleTableSharedDetails,
-  OracleTableSharedResults,
-  OracleTableSharedRolls,
-} from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { Button, Dialog, List, ListItem } from "@mui/material";
 import { EmptyState } from "components/shared/EmptyState";
 import { SectionHeading } from "components/shared/SectionHeading";
@@ -15,8 +8,8 @@ import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithClo
 
 export interface OracleTablesSectionProps {
   homebrewId: string;
-  collections: Record<string, OracleCollection>;
-  rollables: Record<string, OracleRollable>;
+  collections: Record<string, Datasworn.OracleCollection>;
+  rollables: Record<string, Datasworn.OracleRollable>;
   dbPath: string;
   parentCollectionKey?: string;
 }
@@ -37,10 +30,10 @@ export function OracleTablesSection(props: OracleTablesSectionProps) {
 
   const actualRollables: Record<
     string,
-    | OracleRollable
-    | OracleTableSharedDetails
-    | OracleTableSharedResults
-    | OracleTableSharedRolls
+    | Datasworn.OracleRollable
+    | Datasworn.OracleTableSharedDetails
+    | Datasworn.OracleTableSharedResults
+    | Datasworn.OracleTableSharedRolls
   > = { ...rollables };
 
   Object.values(collections).forEach((collection) => {
@@ -53,7 +46,8 @@ export function OracleTablesSection(props: OracleTablesSectionProps) {
     actualRollables[k1].name.localeCompare(actualRollables[k2].name)
   );
 
-  const oracleTableRollables: Record<string, OracleTableRollable> = {};
+  const oracleTableRollables: Record<string, Datasworn.OracleTableRollable> =
+    {};
 
   Object.keys(rollables).forEach((rollableKey) => {
     const rollable = rollables[rollableKey];
@@ -68,7 +62,7 @@ export function OracleTablesSection(props: OracleTablesSectionProps) {
   return (
     <>
       <SectionHeading
-        label="Tables"
+        label='Tables'
         action={
           <Button color={"inherit"} onClick={() => openOracleTableDialog()}>
             Create Table
@@ -85,7 +79,7 @@ export function OracleTablesSection(props: OracleTablesSectionProps) {
         </List>
       ) : (
         <EmptyState
-          message="Add an oracle table to get started"
+          message='Add an oracle table to get started'
           callToAction={
             <Button
               color={"inherit"}

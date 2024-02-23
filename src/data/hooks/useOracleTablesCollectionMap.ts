@@ -10,7 +10,7 @@ export function useOracleTablesCollectionMap(homebrewIds?: string[]) {
 
     (homebrewIds ?? []).forEach((homebrewId) => {
       const homebrewOracles =
-        store.homebrew.collections[homebrewId]?.oracles?.data ?? {};
+        store.homebrew.collections[homebrewId]?.dataswornOracles ?? {};
       const homebrewOracleCollections =
         parseOraclesIntoMaps(homebrewOracles).oracleTablesCollectionMap;
 

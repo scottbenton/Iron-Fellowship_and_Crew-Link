@@ -1,16 +1,4 @@
-import {
-  OracleCollection,
-  OracleColumnDetails,
-  OracleColumnSimple,
-  OracleRollable,
-  OracleTableDetails,
-  OracleTableRollable,
-  OracleTableSharedDetails,
-  OracleTableSharedResults,
-  OracleTableSharedRolls,
-  OracleTableSimple,
-  OracleTablesCollection,
-} from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { oracles as ironswornOracles } from "@datasworn/ironsworn-classic/json/classic.json";
 import { oracles as starforgedOracles } from "@datasworn/starforged/json/starforged.json";
 import { getSystem } from "hooks/useGameSystem";
@@ -18,37 +6,47 @@ import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 
 const gameSystem = getSystem();
 const gameSystemOracles: GameSystemChooser<
-  Record<string, OracleTablesCollection>
+  Record<string, Datasworn.OracleTablesCollection>
 > = {
   [GAME_SYSTEMS.IRONSWORN]: ironswornOracles as Record<
     string,
-    OracleTablesCollection
+    Datasworn.OracleTablesCollection
   >,
   [GAME_SYSTEMS.STARFORGED]: starforgedOracles as Record<
     string,
-    OracleTablesCollection
+    Datasworn.OracleTablesCollection
   >,
 };
 
 export const oracles = gameSystemOracles[gameSystem];
 
 export function parseOraclesIntoMaps(
-  oracles: Record<string, OracleTablesCollection>
+  oracles: Record<string, Datasworn.OracleTablesCollection>
 ): {
-  oracleMap: Record<string, OracleRollable | OracleCollection>;
-  oracleCollectionMap: Record<string, OracleCollection>;
-  oracleTablesCollectionMap: Record<string, OracleTablesCollection>;
-  oracleRollableMap: Record<string, OracleRollable>;
-  oracleTableRollableMap: Record<string, OracleTableRollable>;
+  oracleMap: Record<
+    string,
+    Datasworn.OracleRollable | Datasworn.OracleCollection
+  >;
+  oracleCollectionMap: Record<string, Datasworn.OracleCollection>;
+  oracleTablesCollectionMap: Record<string, Datasworn.OracleTablesCollection>;
+  oracleRollableMap: Record<string, Datasworn.OracleRollable>;
+  oracleTableRollableMap: Record<string, Datasworn.OracleTableRollable>;
 } {
-  const oracleMap: Record<string, OracleRollable | OracleCollection> = {};
-  const oracleCollectionMap: Record<string, OracleCollection> = {};
-  const oracleRollableMap: Record<string, OracleRollable> = {};
-  const oracleTablesCollectionMap: Record<string, OracleTablesCollection> = {};
-  const oracleTableRollableMap: Record<string, OracleTableRollable> = {};
+  const oracleMap: Record<
+    string,
+    Datasworn.OracleRollable | Datasworn.OracleCollection
+  > = {};
+  const oracleCollectionMap: Record<string, Datasworn.OracleCollection> = {};
+  const oracleRollableMap: Record<string, Datasworn.OracleRollable> = {};
+  const oracleTablesCollectionMap: Record<
+    string,
+    Datasworn.OracleTablesCollection
+  > = {};
+  const oracleTableRollableMap: Record<string, Datasworn.OracleTableRollable> =
+    {};
 
   const parseOracleTableCollectionIntoMaps = (
-    category: OracleTablesCollection
+    category: Datasworn.OracleTablesCollection
   ) => {
     oracleTablesCollectionMap[category.id] = category;
     oracleMap[category.id] = category;
@@ -70,7 +68,11 @@ export function parseOraclesIntoMaps(
       ) {
         oracleMap[subCollection.id] = subCollection;
         Object.values(subCollection.contents ?? {}).forEach(
-          (content: OracleColumnSimple | OracleColumnDetails) => {
+          (
+            content:
+              | Datasworn.OracleColumnSimple
+              | Datasworn.OracleColumnDetails
+          ) => {
             oracleMap[content.id] = content;
             oracleRollableMap[content.id] = content;
           }
@@ -96,23 +98,23 @@ const maps = parseOraclesIntoMaps(oracles);
 /** ORACLES MAP - ALL ORACLES / TABLES THAT COULD POSSIBLY END UP BEING OPENED IN A DIALOG */
 export const oracleMap: Record<
   string,
-  | OracleRollable
-  | OracleTableSharedRolls
-  | OracleTableSharedResults
-  | OracleTableSharedDetails
-  | OracleTablesCollection
-  | OracleTableSimple
-  | OracleTableDetails
-  | OracleColumnSimple
-  | OracleColumnDetails
+  | Datasworn.OracleRollable
+  | Datasworn.OracleTableSharedRolls
+  | Datasworn.OracleTableSharedResults
+  | Datasworn.OracleTableSharedDetails
+  | Datasworn.OracleTablesCollection
+  | Datasworn.OracleTableSimple
+  | Datasworn.OracleTableDetails
+  | Datasworn.OracleColumnSimple
+  | Datasworn.OracleColumnDetails
 > = maps.oracleMap;
 
 export const oracleCollectionMap: Record<
   string,
-  | OracleTablesCollection
-  | OracleTableSharedRolls
-  | OracleTableSharedDetails
-  | OracleTableSharedResults
+  | Datasworn.OracleTablesCollection
+  | Datasworn.OracleTableSharedRolls
+  | Datasworn.OracleTableSharedDetails
+  | Datasworn.OracleTableSharedResults
 > = maps.oracleCollectionMap;
 
 export const oracleRollableMap = maps.oracleRollableMap;

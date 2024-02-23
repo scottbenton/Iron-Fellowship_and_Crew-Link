@@ -1,11 +1,4 @@
-import {
-  OracleTableSharedResults as IOracleTableSharedResults,
-  OracleTableSharedDetails as IOracleTableSharedDetails,
-  OracleTableRowSimple,
-  OracleColumnSimple,
-  OracleColumnDetails,
-  OracleTableRowDetails,
-} from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import {
   SimpleTable,
@@ -13,7 +6,9 @@ import {
 } from "components/shared/SimpleTable";
 
 export interface OracleTableSharedResultsProps {
-  oracle: IOracleTableSharedResults | IOracleTableSharedDetails;
+  oracle:
+    | Datasworn.OracleTableSharedResults
+    | Datasworn.OracleTableSharedDetails;
 }
 
 export function OracleTableSharedResults(props: OracleTableSharedResultsProps) {
@@ -26,10 +21,11 @@ export function OracleTableSharedResults(props: OracleTableSharedResultsProps) {
     return null;
   }
 
-  const columns: SimpleTableColumnDefinition<OracleTableRowSimple>[] = [];
+  const columns: SimpleTableColumnDefinition<Datasworn.OracleTableRowSimple>[] =
+    [];
 
   const contentValues:
-    | (OracleColumnSimple | OracleColumnDetails)[]
+    | (Datasworn.OracleColumnSimple | Datasworn.OracleColumnDetails)[]
     | undefined = oracle.contents ? Object.values(oracle.contents) : undefined;
 
   contentValues?.forEach((subOracle) => {
@@ -57,9 +53,9 @@ export function OracleTableSharedResults(props: OracleTableSharedResultsProps) {
     columns.push({
       label: oracle.column_labels.detail,
       renderer: (row) =>
-        (row as OracleTableRowDetails).detail ? (
+        (row as Datasworn.OracleTableRowDetails).detail ? (
           <MarkdownRenderer
-            markdown={(row as OracleTableRowDetails).detail ?? ""}
+            markdown={(row as Datasworn.OracleTableRowDetails).detail ?? ""}
           />
         ) : null,
     });

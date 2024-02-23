@@ -24,9 +24,9 @@ export function getHomebrewConditionMeterCollection() {
   ) as CollectionReference<StoredConditionMeter>;
 }
 
-export function getHomebrewConditionMeterDoc(statId: string) {
+export function getHomebrewConditionMeterDoc(conditionMeterId: string) {
   return doc(
     firestore,
-    constructHomebrewConditionMeterDocPath(statId)
+    constructHomebrewConditionMeterDocPath(conditionMeterId)
   ) as DocumentReference<StoredConditionMeter>;
 }

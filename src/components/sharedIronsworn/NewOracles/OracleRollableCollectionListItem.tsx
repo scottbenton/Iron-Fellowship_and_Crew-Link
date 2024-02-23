@@ -1,8 +1,4 @@
-import {
-  OracleTableSharedDetails,
-  OracleTableSharedResults,
-  OracleTableSharedRolls,
-} from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { ListItemText } from "@mui/material";
 import { OracleSelectableRollableCollectionListItem } from "./OracleSelectableRollableCollectionListItem";
 import { extraOracleListItemActionsProp } from "./oracleListItemActions";
@@ -12,9 +8,9 @@ import { useRoller } from "stores/appState/useRoller";
 
 export interface OracleRollableCollectionListItemProps {
   collection:
-    | OracleTableSharedRolls
-    | OracleTableSharedResults
-    | OracleTableSharedDetails;
+    | Datasworn.OracleTableSharedRolls
+    | Datasworn.OracleTableSharedResults
+    | Datasworn.OracleTableSharedDetails;
   actions?: extraOracleListItemActionsProp;
   disabled?: boolean;
 

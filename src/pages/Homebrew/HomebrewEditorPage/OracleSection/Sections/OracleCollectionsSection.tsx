@@ -1,4 +1,4 @@
-import { OracleCollection, OracleTablesCollection } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { Button } from "@mui/material";
 import { SectionHeading } from "components/shared/SectionHeading";
 import { OracleTablesCollectionCard } from "../Cards";
@@ -7,8 +7,8 @@ import { useOracleCollectionMap } from "data/hooks/useOracleCollectionMap";
 
 export interface OracleCollectionsSectionProps {
   homebrewId: string;
-  collection?: OracleTablesCollection;
-  oracleCollections: Record<string, OracleCollection>;
+  collection?: Datasworn.OracleTablesCollection;
+  oracleCollections: Record<string, Datasworn.OracleCollection>;
   openCollection: (collectionId: string, dbId: string) => void;
   openCreateCollectionDialog: () => void;
 }
@@ -22,7 +22,7 @@ export function OracleCollectionsSection(props: OracleCollectionsSectionProps) {
     openCreateCollectionDialog,
   } = props;
 
-  const filteredCollections: Record<string, OracleCollection> = {
+  const filteredCollections: Record<string, Datasworn.OracleCollection> = {
     ...oracleCollections,
   };
 
@@ -34,7 +34,9 @@ export function OracleCollectionsSection(props: OracleCollectionsSectionProps) {
       oracleCollections[k1].name.localeCompare(oracleCollections[k2].name)
     );
   sortedCollectionIds.forEach((k) => {
-    filteredCollections[k] = oracleCollections[k] as OracleTablesCollection;
+    filteredCollections[k] = oracleCollections[
+      k
+    ] as Datasworn.OracleTablesCollection;
   });
 
   if (collection?.enhances) {
@@ -66,10 +68,10 @@ export function OracleCollectionsSection(props: OracleCollectionsSectionProps) {
       />
       {sortedCollectionIds.length === 0 && (
         <EmptyState
-          message="Add an oracle collection to group your tables together"
+          message='Add an oracle collection to group your tables together'
           callToAction={
             <Button
-              variant="outlined"
+              variant='outlined'
               color={"inherit"}
               onClick={openCreateCollectionDialog}
             >
@@ -81,7 +83,7 @@ export function OracleCollectionsSection(props: OracleCollectionsSectionProps) {
       {sortedCollectionIds.map((id) => (
         <OracleTablesCollectionCard
           key={id}
-          oracle={oracleCollections[id] as OracleTablesCollection}
+          oracle={oracleCollections[id] as Datasworn.OracleTablesCollection}
           onClick={() =>
             oracleCollections[id]
               ? openCollection(oracleCollections[id].id, id)

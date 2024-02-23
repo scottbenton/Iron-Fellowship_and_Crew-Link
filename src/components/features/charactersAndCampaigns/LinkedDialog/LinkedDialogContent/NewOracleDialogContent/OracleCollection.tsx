@@ -1,9 +1,9 @@
-import { OracleTablesCollection } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { OracleTablesCollectionSubList } from "components/sharedIronsworn/NewOracles/OracleTablesCollectionSubList";
 import { defaultActions } from "components/sharedIronsworn/NewOracles/defaultActions";
 
 export interface OracleCollectionProps {
-  collection: OracleTablesCollection;
+  collection: Datasworn.OracleTablesCollection;
 }
 
 export function OracleCollection(props: OracleCollectionProps) {

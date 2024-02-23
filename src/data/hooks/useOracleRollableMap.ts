@@ -7,7 +7,7 @@ export function useOracleRollableMap(homebrewIds: string[] = []) {
 
     homebrewIds.forEach((homebrewId) => {
       const homebrewOracles =
-        store.homebrew.collections[homebrewId]?.oracles?.data ?? {};
+        store.homebrew.collections[homebrewId]?.dataswornOracles ?? {};
       const homebrewOracleRollables =
         parseOraclesIntoMaps(homebrewOracles).oracleRollableMap;
 

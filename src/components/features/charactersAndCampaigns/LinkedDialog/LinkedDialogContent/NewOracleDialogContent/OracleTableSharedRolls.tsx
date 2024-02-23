@@ -1,7 +1,4 @@
-import {
-  OracleTableSharedRolls as IOracleTableSharedRows,
-  OracleTableRowSimple,
-} from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import {
   SimpleTable,
@@ -9,7 +6,7 @@ import {
 } from "components/shared/SimpleTable";
 
 export interface OracleTableSharedRollsDialogContentProps {
-  oracle: IOracleTableSharedRows;
+  oracle: Datasworn.OracleTableSharedRolls;
 }
 
 export function OracleTableSharedRolls(
@@ -24,18 +21,19 @@ export function OracleTableSharedRolls(
     return null;
   }
 
-  const columns: SimpleTableColumnDefinition<OracleTableRowSimple>[] = [
-    {
-      label: oracle.column_labels.roll,
-      renderer: (row) =>
-        row.min !== null && row.max !== null
-          ? row.max - row.min === 0
-            ? row.min
-            : `${row.min} - ${row.max}`
-          : null,
-      textColor: "text.secondary",
-    },
-  ];
+  const columns: SimpleTableColumnDefinition<Datasworn.OracleTableRowSimple>[] =
+    [
+      {
+        label: oracle.column_labels.roll,
+        renderer: (row) =>
+          row.min !== null && row.max !== null
+            ? row.max - row.min === 0
+              ? row.min
+              : `${row.min} - ${row.max}`
+            : null,
+        textColor: "text.secondary",
+      },
+    ];
 
   Object.values(oracle.contents ?? {}).forEach((subOracle) => {
     columns.push({

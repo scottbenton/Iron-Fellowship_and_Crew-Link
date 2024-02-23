@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { SelectTableTypeForm, ORACLE_TABLE_TYPE } from "./SelectTableTypeForm";
 import { OracleTableSimpleForm } from "./OracleTableSimpleForm";
-import { OracleTableRollable } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 
 export interface OracleTableDialogContentsProps {
   homebrewId: string;
   onClose: () => void;
-  tables: Record<string, OracleTableRollable>;
+  tables: Record<string, Datasworn.OracleTableRollable>;
   dbPath: string;
   parentCollectionKey?: string;
 }

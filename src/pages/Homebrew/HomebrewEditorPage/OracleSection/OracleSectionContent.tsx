@@ -1,4 +1,4 @@
-import { OracleCollection, OracleTablesCollection } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { Breadcrumbs, Link, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { OracleInfoSection } from "./Sections/OracleInfoSection";
@@ -9,7 +9,7 @@ import { OracleTablesCollectionDialog } from "./OracleTablesCollectionDialog";
 
 export interface OracleSectionContentProps {
   homebrewId: string;
-  oracles: Record<string, OracleTablesCollection>;
+  oracles: Record<string, Datasworn.OracleTablesCollection>;
 }
 
 export function OracleSectionContent(props: OracleSectionContentProps) {
@@ -28,7 +28,7 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
         ?.oracle_type === "tables"
       ? (oracleCollectionMap[
           openOracleState.openOracleId.dataswornId
-        ] as OracleTablesCollection)
+        ] as Datasworn.OracleTablesCollection)
       : undefined
     : undefined;
   // Handle Oracle Collection Navigation
@@ -115,7 +115,7 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
       : {}
     : oracles;
 
-  const filteredCollections: Record<string, OracleCollection> = {
+  const filteredCollections: Record<string, Datasworn.OracleCollection> = {
     ...oracleCollections,
   };
 
@@ -127,7 +127,9 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
       oracleCollections[k1].name.localeCompare(oracleCollections[k2].name)
     );
   sortedCollectionIds.forEach((k) => {
-    filteredCollections[k] = oracleCollections[k] as OracleTablesCollection;
+    filteredCollections[k] = oracleCollections[
+      k
+    ] as Datasworn.OracleTablesCollection;
   });
 
   // If the current collection enhances another, we still need to add it
@@ -158,8 +160,8 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
         <Breadcrumbs aria-label={"Oracle Breadcrumbs"}>
           <Link
             component={"button"}
-            underline="hover"
-            color="inherit"
+            underline='hover'
+            color='inherit'
             onClick={() => handleBreadcrumbClick(undefined)}
           >
             Collections
@@ -175,7 +177,7 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
               {oracleCollectionMap[id.dataswornId]?.name ?? "Unknown Oracle"}
             </Link>
           ))}
-          <Typography color="text.primary">
+          <Typography color='text.primary'>
             {openOracleCollection?.name}
           </Typography>
         </Breadcrumbs>
@@ -245,7 +247,7 @@ export function OracleSectionContent(props: OracleSectionContentProps) {
               ? {
                   collection: oracleCollectionMap[
                     oracleCollectionDialogState.oracleId.dataswornId
-                  ] as OracleTablesCollection,
+                  ] as Datasworn.OracleTablesCollection,
                   key: oracleCollectionDialogState.oracleId.dbId,
                 }
               : undefined

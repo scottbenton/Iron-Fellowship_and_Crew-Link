@@ -1,4 +1,4 @@
-import { OracleCollection } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { Box, Button } from "@mui/material";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { SectionHeading } from "components/shared/SectionHeading";
@@ -7,7 +7,7 @@ import { useStore } from "stores/store";
 
 export interface OracleInfoSectionProps {
   homebrewId: string;
-  oracle: OracleCollection;
+  oracle: Datasworn.OracleCollection;
   openCollectionDialog: () => void;
   dbKey: string;
   dbPath: string;

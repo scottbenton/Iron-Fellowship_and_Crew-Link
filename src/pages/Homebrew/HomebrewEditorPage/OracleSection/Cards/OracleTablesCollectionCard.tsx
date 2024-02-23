@@ -1,10 +1,10 @@
-import { OracleTablesCollection } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
 import ChevronRight from "@mui/icons-material/ChevronRight";
 import { useOracleCollectionMap } from "data/hooks/useOracleCollectionMap";
 
 export interface OracleTablesCollectionCardProps {
-  oracle: OracleTablesCollection;
+  oracle: Datasworn.OracleTablesCollection;
   onClick: () => void;
 }
 

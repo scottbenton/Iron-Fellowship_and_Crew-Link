@@ -1,9 +1,4 @@
-import {
-  OracleTableSharedRolls,
-  OracleTableSharedDetails,
-  OracleTableSharedResults,
-  OracleTablesCollection,
-} from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { List, SxProps } from "@mui/material";
 import { OracleRollableListItem } from "./OracleRollableListItem";
 import { extraOracleListItemActionsProp } from "./oracleListItemActions";
@@ -45,9 +40,14 @@ export function OracleTablesCollectionSubList(
 
   const rollableSubCollections: Record<
     string,
-    OracleTableSharedRolls | OracleTableSharedDetails | OracleTableSharedResults
+    | Datasworn.OracleTableSharedRolls
+    | Datasworn.OracleTableSharedDetails
+    | Datasworn.OracleTableSharedResults
   > = {};
-  const nonRollableSubCollections: Record<string, OracleTablesCollection> = {};
+  const nonRollableSubCollections: Record<
+    string,
+    Datasworn.OracleTablesCollection
+  > = {};
 
   subCollectionIds.forEach((subCollectionKey) => {
     const subCollection = collections[subCollectionKey];

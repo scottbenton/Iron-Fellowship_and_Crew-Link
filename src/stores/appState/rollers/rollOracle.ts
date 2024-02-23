@@ -1,27 +1,18 @@
-import {
-  OracleColumnDetails,
-  OracleColumnSimple,
-  OracleRollable,
-  OracleTableDetails,
-  OracleTableRowDetails,
-  OracleTableRowSimple,
-  OracleTableSharedDetails,
-  OracleTableSharedResults,
-  OracleTableSharedRolls,
-  OracleTableSimple,
-  OracleTablesCollection,
-} from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { OracleTableRoll, ROLL_TYPE } from "types/DieRolls.type";
 import { rollDie } from "./rollDie";
 
 function rollOracleColumn(
   column:
-    | OracleColumnSimple
-    | OracleColumnDetails
-    | OracleTableSimple
-    | OracleTableDetails
+    | Datasworn.OracleColumnSimple
+    | Datasworn.OracleColumnDetails
+    | Datasworn.OracleTableSimple
+    | Datasworn.OracleTableDetails
 ):
-  | { roll: number; result: OracleTableRowSimple | OracleTableRowDetails }
+  | {
+      roll: number;
+      result: Datasworn.OracleTableRowSimple | Datasworn.OracleTableRowDetails;
+    }
   | undefined {
   const roll = rollDie(column.dice);
   if (!roll) {
@@ -43,11 +34,11 @@ function rollOracleColumn(
 
 export function rollOracle(
   oracle:
-    | OracleRollable
-    | OracleTableSharedRolls
-    | OracleTableSharedResults
-    | OracleTableSharedDetails
-    | OracleTablesCollection,
+    | Datasworn.OracleRollable
+    | Datasworn.OracleTableSharedRolls
+    | Datasworn.OracleTableSharedResults
+    | Datasworn.OracleTableSharedDetails
+    | Datasworn.OracleTablesCollection,
   characterId: string | null,
   uid: string,
   gmsOnly: boolean

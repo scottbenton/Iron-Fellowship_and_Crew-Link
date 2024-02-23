@@ -7,7 +7,8 @@ export function useOracleMap(homebrewIds: string[] = []) {
 
     homebrewIds.forEach((homebrewId) => {
       const homebrewOracles =
-        store.homebrew.collections[homebrewId]?.oracles?.data ?? {};
+        store.homebrew.collections[homebrewId]?.dataswornOracles ?? {};
+
       const homebrewOracleMap = parseOraclesIntoMaps(homebrewOracles).oracleMap;
 
       Object.keys(homebrewOracleMap).forEach((oracleId) => {

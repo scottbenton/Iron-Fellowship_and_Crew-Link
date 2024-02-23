@@ -1,15 +1,16 @@
-import { oracleCollectionMap, parseOraclesIntoMaps } from "data/oraclesNew";
+import { Datasworn } from "@datasworn/core";
+import { oracleCollectionMap } from "data/oraclesNew";
 import { useStore } from "stores/store";
 
-export function useOracleCollectionMap(homebrewIds?: string[]) {
+export function useOracleCollectionMap(
+  homebrewIds?: string[]
+): Record<string, Datasworn.OracleCollection> {
   const collectionMap = useStore((store) => {
     const collections = { ...oracleCollectionMap };
 
     (homebrewIds ?? []).forEach((homebrewId) => {
-      const homebrewOracles =
-        store.homebrew.collections[homebrewId]?.oracles?.data ?? {};
       const homebrewOracleCollections =
-        parseOraclesIntoMaps(homebrewOracles).oracleCollectionMap;
+        store.homebrew.collections[homebrewId]?.dataswornOracles ?? {};
 
       Object.keys(homebrewOracleCollections).forEach((collectionId) => {
         const collection = homebrewOracleCollections[collectionId];

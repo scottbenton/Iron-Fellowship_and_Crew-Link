@@ -1,10 +1,4 @@
-import {
-  OracleColumnDetails,
-  OracleColumnSimple,
-  OracleTableDetails,
-  OracleTableRowDetails,
-  OracleTableSimple,
-} from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import {
   SimpleTable,
@@ -13,10 +7,10 @@ import {
 
 export interface OracleRollableTableProps {
   oracle:
-    | OracleTableSimple
-    | OracleColumnSimple
-    | OracleTableDetails
-    | OracleColumnDetails;
+    | Datasworn.OracleTableSimple
+    | Datasworn.OracleColumnSimple
+    | Datasworn.OracleTableDetails
+    | Datasworn.OracleColumnDetails;
 }
 
 export function OracleRollableTable(props: OracleRollableTableProps) {
@@ -46,9 +40,9 @@ export function OracleRollableTable(props: OracleRollableTableProps) {
     columns.push({
       label: oracle.column_labels.detail,
       renderer: (row) =>
-        (row as OracleTableRowDetails).detail ? (
+        (row as Datasworn.OracleTableRowDetails).detail ? (
           <MarkdownRenderer
-            markdown={(row as OracleTableRowDetails).detail ?? ""}
+            markdown={(row as Datasworn.OracleTableRowDetails).detail ?? ""}
           />
         ) : null,
     });

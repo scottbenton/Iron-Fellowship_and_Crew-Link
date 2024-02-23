@@ -1,8 +1,8 @@
-import { OracleTablesCollection } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { ReactElement } from "react";
 
 export interface OracleCollectionActionProps {
-  collection: OracleTablesCollection;
+  collection: Datasworn.OracleTablesCollection;
   disabled?: boolean;
 }
 

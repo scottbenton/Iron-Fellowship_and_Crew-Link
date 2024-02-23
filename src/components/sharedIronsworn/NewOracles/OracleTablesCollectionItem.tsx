@@ -1,4 +1,4 @@
-import { OracleTablesCollection } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { Box, Collapse } from "@mui/material";
 import { CollapsibleSectionHeader } from "components/features/charactersAndCampaigns/CollapsibleSectionHeader";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import { CollectionActions } from "./CollectionActions";
 export interface OracleTablesCollectionItemProps {
   homebrewIds?: string[];
   collectionKey: string;
-  collection: OracleTablesCollection;
+  collection: Datasworn.OracleTablesCollection;
   labelPrefix?: string;
   listItemActions?: extraOracleListItemActionsProp;
   collectionActions?: extraOracleCollectionActionsProp;

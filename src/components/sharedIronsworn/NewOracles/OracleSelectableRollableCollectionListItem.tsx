@@ -1,7 +1,4 @@
-import {
-  OracleTableSharedResults,
-  OracleTableSharedDetails,
-} from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { Box, ListItemText, MenuItem, TextField } from "@mui/material";
 import { useState } from "react";
 import { extraOracleListItemActionsProp } from "./oracleListItemActions";
@@ -10,7 +7,9 @@ import { OptionalListItemButton } from "./OptionalListItemButton";
 import { useRoller } from "stores/appState/useRoller";
 
 export interface OracleSelectableRollableCollectionListItemProps {
-  collection: OracleTableSharedResults | OracleTableSharedDetails;
+  collection:
+    | Datasworn.OracleTableSharedResults
+    | Datasworn.OracleTableSharedDetails;
   actions?: extraOracleListItemActionsProp;
   disabled?: boolean;
   rollOnRowClick: boolean;

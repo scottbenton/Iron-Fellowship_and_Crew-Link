@@ -1,17 +1,18 @@
-export interface HomebrewOracleCollection {
+export interface StoredOracleCollection {
+  collectionId: string; // Homebrew collection id
   label: string;
-  tables: string[];
-  subCollectionIds: string[];
+  parentOracleCollectionId?: string;
   description?: string;
   enhancesId?: string;
   replacesId?: string;
 }
 
-export interface HomebrewOracleTable {
+export interface StoredOracleTable {
+  collectionId: string; // Homebrew Collection ID
+  oracleCollectionId: string; // Parent collection ID
   label: string;
   description?: string;
   replaces?: string;
-  diceExpression: string;
   columnLabels: {
     roll: string;
     result: string;
@@ -19,8 +20,7 @@ export interface HomebrewOracleTable {
   };
   rows: {
     result: string;
-    min?: number;
-    max?: number;
+    chance: number;
     detail?: string;
   }[];
 }

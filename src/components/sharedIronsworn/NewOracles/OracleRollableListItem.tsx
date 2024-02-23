@@ -1,4 +1,4 @@
-import { OracleRollable } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import { ListItemText } from "@mui/material";
 import { extraOracleListItemActionsProp } from "./oracleListItemActions";
 import { Actions } from "./Actions";
@@ -6,7 +6,7 @@ import { OptionalListItemButton } from "./OptionalListItemButton";
 import { useRoller } from "stores/appState/useRoller";
 
 export interface OracleRollableListItemProps {
-  oracleRollable: OracleRollable;
+  oracleRollable: Datasworn.OracleRollable;
   actions?: extraOracleListItemActionsProp;
   disabled?: boolean;
 

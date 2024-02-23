@@ -1,4 +1,4 @@
-import { OracleCollection, OracleTablesCollection } from "@datasworn/core";
+import { Datasworn } from "@datasworn/core";
 import {
   Button,
   Dialog,
@@ -23,8 +23,11 @@ export interface OracleTablesCollectionDialogProps {
   open: boolean;
   onClose: () => void;
 
-  collections: Record<string, OracleCollection>;
-  existingCollection?: { key: string; collection: OracleTablesCollection };
+  collections: Record<string, Datasworn.OracleCollection>;
+  existingCollection?: {
+    key: string;
+    collection: Datasworn.OracleTablesCollection;
+  };
 
   dbPath: string;
   parentCollectionKey?: string;
@@ -83,7 +86,7 @@ export function OracleTablesCollectionDialog(
 
   const handleOracleTableCollectionUpdate = (
     oracleTableId: string,
-    table: OracleTablesCollection
+    table: Datasworn.OracleTablesCollection
   ) => {
     const path =
       (dbPath ?? "") +
@@ -110,7 +113,7 @@ export function OracleTablesCollectionDialog(
         values.name
       );
 
-    const baseTableCollection: OracleTablesCollection = {
+    const baseTableCollection: Datasworn.OracleTablesCollection = {
       ...existingCollection,
       id,
       name: values.name,
@@ -182,7 +185,7 @@ export function OracleTablesCollectionDialog(
               }}
             />
             <Controller
-              name="description"
+              name='description'
               control={control}
               render={({ field }) => (
                 <MarkdownEditor

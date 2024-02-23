@@ -11,24 +11,31 @@ export interface OracleSectionProps {
 export function OracleSection(props: OracleSectionProps) {
   const { id } = props;
 
-  const oracles = useStore(
-    (store) => store.homebrew.collections[id].oracles?.data ?? {}
+  const oracleCollections = useStore(
+    (store) => store.homebrew.collections[id].oracleCollections?.data ?? {}
   );
-  const loading = useStore(
-    (store) => !store.homebrew.collections[id].oracles?.loaded
+  const oracleCollectionsLoading = useStore(
+    (store) => !store.homebrew.collections[id].oracleCollections?.loaded
   );
 
-  if (loading) {
+  const oracleTables = useStore(
+    (store) => store.homebrew.collections[id].oracleTables?.data ?? {}
+  );
+  const oracleTablesLoading = useStore(
+    (store) => !store.homebrew.collections[id].oracleTables?.loaded
+  );
+
+  if (oracleCollectionsLoading || oracleTablesLoading) {
     return <LinearProgress sx={{ mx: { xs: -2, sm: -3 } }} />;
   }
 
   return (
     <>
-      <SectionWithSidebar
+      {/* <SectionWithSidebar
         sx={{ mt: 2 }}
         sidebar={<ExampleOracles homebrewId={id} />}
         mainContent={<OracleSectionContent homebrewId={id} oracles={oracles} />}
-      />
+      /> */}
     </>
   );
 }
