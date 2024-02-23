@@ -17,8 +17,8 @@ export const removeLog = createApiFunction<
     }
 
     const docRef = characterId
-      ? getCharacterGameLogDocument(characterId, logId)
-      : getCampaignGameLogDocument(campaignId as string, logId);
+      ? getCampaignGameLogDocument(campaignId as string, logId)
+      : getCharacterGameLogDocument(characterId as string, logId);
 
     deleteDoc(docRef)
       .then(() => {

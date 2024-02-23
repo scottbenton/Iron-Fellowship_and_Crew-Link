@@ -207,7 +207,7 @@ export function NormalRollActions(props: NormalRollActionsProps) {
                 <ListItemText>Burn Momentum</ListItemText>
               </MenuItem>
             )}
-          {(!campaignId || isGM && !characterId) && (
+          {(!campaignId || isGM) && (
             <MenuItem
               onClick={(evt) => {
                 evt.stopPropagation();
