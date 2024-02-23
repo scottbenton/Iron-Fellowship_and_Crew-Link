@@ -10,6 +10,7 @@
 
 - Changed the layout of the app
 - Added ability to add extra experience points past 30 (Ironsworn)
+- Added the ability to delete Rolls from the log (AnnB)
 
 ### Bug Fixes
 
