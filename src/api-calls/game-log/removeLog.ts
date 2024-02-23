@@ -16,7 +16,7 @@ export const removeLog = createApiFunction<
       reject(new Error("Either campaign or character ID must be defined."));
     }
 
-    const docRef = characterId
+    const docRef = campaignId
       ? getCampaignGameLogDocument(campaignId as string, logId)
       : getCharacterGameLogDocument(characterId as string, logId);
 
