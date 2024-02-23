@@ -2,6 +2,7 @@ import { CreateSliceType } from "stores/store.type";
 import { GameLogSlice } from "./gameLog.slice.type";
 import { addRoll } from "api-calls/game-log/addRoll";
 import { defaultGameLogSlice } from "./gameLog.slice.default";
+import { removeLog } from "api-calls/game-log/removeLog";
 import { updateLog } from "api-calls/game-log/updateLog";
 import { listenToLogs } from "api-calls/game-log/listenToLogs";
 
@@ -31,6 +32,20 @@ export const createGameLogSlice: CreateSliceType<GameLogSlice> = (
     }
 
     return updateLog({ characterId, campaignId, logId: id, log: roll });
+  },
+  removeRoll: (id) => {
+    const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
+    const characterId =
+      getState().characters.currentCharacter.currentCharacterId;
+
+    if (!characterId && !campaignId) {
+      return new Promise((res, reject) =>
+        reject("Either character or campaign Id must be defined.")
+      );
+    }
+
+    return removeLog({ characterId, campaignId, logId: id });
+
   },
 
   loadMoreLogs: () => {
