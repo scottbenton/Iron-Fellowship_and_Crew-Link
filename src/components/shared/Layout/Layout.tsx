@@ -1,6 +1,5 @@
 import { Box, LinearProgress } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { Header } from "./Header";
 import { UserNameDialog } from "components/shared/UserNameDialog";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
@@ -10,8 +9,6 @@ import { LinkedDialog } from "components/features/charactersAndCampaigns/LinkedD
 import { LiveRegion } from "../LiveRegion";
 import { RollSnackbarSection } from "./RollSnackbarSection";
 import { BottomNav } from "./nav/BottomNav";
-import { useNewLayout } from "hooks/featureFlags/useNewLayout";
-import { Footer } from "./Footer";
 import { NavRail } from "./nav/NavRail";
 import { TopNav } from "./nav/TopNav";
 import { LayoutPathListener } from "./LayoutPathListener";
@@ -19,7 +16,6 @@ import { LayoutPathListener } from "./LayoutPathListener";
 export function Layout() {
   useSyncFeatureFlags();
 
-  const showNewLayout = useNewLayout();
   const state = useStore((store) => store.auth.status);
 
   const userNameDialogOpen = useStore((store) => store.auth.userNameDialogOpen);
@@ -42,28 +38,21 @@ export function Layout() {
     >
       <Box
         display={"flex"}
-        flexDirection={showNewLayout ? { xs: "column", sm: "row" } : "column"}
-        maxHeight={showNewLayout ? { xs: undefined, sm: "100vh" } : undefined}
+        flexDirection={{ xs: "column", sm: "row" }}
+        maxHeight={{ xs: undefined, sm: "100vh" }}
         flexGrow={1}
       >
         <LiveRegion />
         <SkipToContentButton />
         <LayoutPathListener />
-
-        {showNewLayout ? (
-          <>
-            <TopNav />
-            <NavRail />
-          </>
-        ) : (
-          <Header />
-        )}
+        <TopNav />
+        <NavRail />
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             flexGrow: 1,
-            overflowY: showNewLayout ? { xs: "unset", sm: "auto" } : "unset",
+            overflowY: { xs: "unset", sm: "auto" },
           }}
           component={"main"}
           id={"main-content"}
@@ -71,7 +60,7 @@ export function Layout() {
           <Outlet />
         </Box>
       </Box>
-      {showNewLayout ? <BottomNav /> : <Footer />}
+      <BottomNav />
       <UserNameDialog
         open={userNameDialogOpen}
         handleClose={closeUserNameDialog}

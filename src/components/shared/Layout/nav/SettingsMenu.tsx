@@ -26,7 +26,6 @@ import { AccessibilitySettingsDialog } from "./AccessibilitySettingsDialog";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { BetaTestsDialog } from "./BetaTestsDialog";
 import TestsIcon from "@mui/icons-material/AutoAwesome";
-import { useNewLayout } from "hooks/featureFlags/useNewLayout";
 import { useIsMobile } from "hooks/useIsMobile";
 import { useStore } from "stores/store";
 import { AUTH_STATE } from "stores/auth/auth.slice.type";
@@ -44,7 +43,6 @@ export function SettingsMenu() {
     useState(false);
 
   const [betaTestsOpen, setBetaTestsOpen] = useState(false);
-  const showNewLayout = useNewLayout();
   const isMobile = useIsMobile();
 
   const isLoggedIn = useStore(
@@ -55,7 +53,7 @@ export function SettingsMenu() {
     <>
       <Tooltip
         title={"User Settings"}
-        placement={showNewLayout ? (isMobile ? "bottom" : "right") : undefined}
+        placement={isMobile ? "bottom" : "right"}
       >
         <IconButton
           color={"inherit"}
@@ -79,18 +77,14 @@ export function SettingsMenu() {
         onClose={() => setMenuOpen(false)}
         anchorEl={anchorRef.current}
         anchorOrigin={
-          showNewLayout
-            ? isMobile
-              ? { vertical: "bottom", horizontal: "right" }
-              : { vertical: "top", horizontal: "left" }
-            : undefined
+          isMobile
+            ? { vertical: "bottom", horizontal: "right" }
+            : { vertical: "top", horizontal: "left" }
         }
         transformOrigin={
-          showNewLayout
-            ? isMobile
-              ? { vertical: "top", horizontal: "right" }
-              : { vertical: "bottom", horizontal: "left" }
-            : undefined
+          isMobile
+            ? { vertical: "top", horizontal: "right" }
+            : { vertical: "bottom", horizontal: "left" }
         }
       >
         {isLoggedIn && (
