@@ -14,7 +14,8 @@ export interface GameLogSliceActions {
     roll: Roll;
   }) => Promise<string>;
   updateRoll: (id: string, roll: Roll) => Promise<void>;
-
+  removeRoll: (id: string) => Promise<void>;
+  
   loadMoreLogs: () => void;
   subscribe: (params: {
     campaignId?: string;
