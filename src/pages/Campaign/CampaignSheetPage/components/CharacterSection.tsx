@@ -19,6 +19,11 @@ export function CharacterSection(props: CharacterSectionProps) {
   const { campaign, campaignId } = props;
 
   const uid = useStore((store) => store.auth.uid);
+  const isUserGM = useStore((store) =>
+    store.campaigns.currentCampaign.currentCampaign?.gmIds?.includes(
+      store.auth.uid
+    )
+  );
 
   const [addCharacterDialogOpen, setAddCharacterDialogOpen] =
     useState<boolean>(false);
@@ -78,9 +83,9 @@ export function CharacterSection(props: CharacterSectionProps) {
       <CharacterList
         usePlayerNameAsSecondaryText
         characters={characters}
-        actions={(characterId) =>
-          getUidFromCharacterId(characterId) === uid ? (
-            <>
+        actions={(characterId) => (
+          <>
+            {getUidFromCharacterId(characterId) === uid && (
               <Button
                 color={"inherit"}
                 component={Link}
@@ -88,17 +93,22 @@ export function CharacterSection(props: CharacterSectionProps) {
               >
                 View
               </Button>
+            )}
+            {(getUidFromCharacterId(characterId) === uid || isUserGM) && (
               <Button
                 color={"error"}
-                onClick={() => removeCharacterFromCampaign(characterId)}
+                onClick={() =>
+                  removeCharacterFromCampaign(
+                    getUidFromCharacterId(characterId) ?? "",
+                    characterId
+                  )
+                }
               >
                 Remove from Campaign
               </Button>
-            </>
-          ) : (
-            <></>
-          )
-        }
+            )}
+          </>
+        )}
       />
       <AddCharacterDialog
         open={addCharacterDialogOpen}

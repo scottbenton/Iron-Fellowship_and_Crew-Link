@@ -11,25 +11,28 @@ export function PlayerCard(props: PlayerCardProps) {
   const { playerId } = props;
   const player = useStore((store) => store.users.userMap[playerId]?.doc);
   const loadPlayer = useStore((store) => store.users.loadUserDocument);
-  const [gmCallLoading, setGMCallLoading] = useState(false);
-
-  useEffect(() => {
-    loadPlayer(playerId);
-  }, [playerId, loadPlayer]);
 
   const isUserGM = useStore((store) =>
     store.campaigns.currentCampaign.currentCampaign?.gmIds?.includes(
       store.auth.uid
     )
   );
-
-  const addGm = useStore(
-    (store) => store.campaigns.currentCampaign.updateCampaignGM
-  );
-
   const isPlayerGM = useStore((store) =>
     store.campaigns.currentCampaign.currentCampaign?.gmIds?.includes(playerId)
   );
+  const addGm = useStore(
+    (store) => store.campaigns.currentCampaign.updateCampaignGM
+  );
+  const [gmCallLoading, setGMCallLoading] = useState(false);
+
+  const removePlayer = useStore(
+    (store) => store.campaigns.currentCampaign.removePlayerFromCampaign
+  );
+  const [removePlayerCallLoading, setRemovePlayerCallLoading] = useState(false);
+
+  useEffect(() => {
+    loadPlayer(playerId);
+  }, [playerId, loadPlayer]);
 
   const handleAddGm = () => {
     setGMCallLoading(true);
@@ -37,6 +40,15 @@ export function PlayerCard(props: PlayerCardProps) {
       .catch(() => {})
       .finally(() => {
         setGMCallLoading(false);
+      });
+  };
+
+  const handleRemovePlayer = () => {
+    setRemovePlayerCallLoading(true);
+    removePlayer(playerId)
+      .catch(() => {})
+      .finally(() => {
+        setRemovePlayerCallLoading(false);
       });
   };
 
@@ -63,6 +75,15 @@ export function PlayerCard(props: PlayerCardProps) {
           >
             Add as GM
           </Button>
+          {!isPlayerGM && (
+            <Button
+              color={"error"}
+              disabled={removePlayerCallLoading}
+              onClick={handleRemovePlayer}
+            >
+              Remove from Campaign
+            </Button>
+          )}
         </Box>
       )}
     </Card>
