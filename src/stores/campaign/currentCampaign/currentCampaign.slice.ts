@@ -117,6 +117,17 @@ export const createCurrentCampaignSlice: CreateSliceType<
 
       return leaveCampaign({ uid, campaignId, campaign });
     },
+    removePlayerFromCampaign: (uid: string) => {
+      const state = getState();
+      const campaignId = state.campaigns.currentCampaign.currentCampaignId;
+      const campaign = state.campaigns.currentCampaign.currentCampaign;
+
+      if (!campaign || !campaignId) {
+        return new Promise((res, reject) => reject("Campaign is not open"));
+      }
+
+      return leaveCampaign({ uid, campaignId, campaign });
+    },
     addCharacter: (characterId) => {
       const state = getState();
       const uid = state.auth.uid;
