@@ -138,9 +138,8 @@ export const createCurrentCampaignSlice: CreateSliceType<
       }
       return addCharacterToCampaign({ uid, characterId, campaignId });
     },
-    removeCharacter: (characterId) => {
+    removeCharacter: (uid, characterId) => {
       const state = getState();
-      const uid = state.auth.uid;
       const campaignId = state.campaigns.currentCampaign.currentCampaignId;
 
       if (!campaignId) {
