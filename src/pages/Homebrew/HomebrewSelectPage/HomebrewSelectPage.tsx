@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   CardActionArea,
+  LinearProgress,
   Typography,
 } from "@mui/material";
 import { PageContent, PageHeader } from "components/shared/Layout";
@@ -23,7 +24,7 @@ export function HomebrewSelectPage() {
   const showPage = useNewCustomContentPage();
 
   const homebrewCollections = useStore((store) => store.homebrew.collections);
-  // const homebrewLoading = useStore((store) => store.homebrew.loading);
+  const homebrewLoading = useStore((store) => store.homebrew.loading);
   const errorMessage = useStore((store) => store.homebrew.error);
 
   const [createExpansionDialogOpen, setCreateExpansionDialogOpen] =
@@ -44,6 +45,10 @@ export function HomebrewSelectPage() {
   const collectionIds = Object.values(homebrewCollections).map(
     (collection) => collection.base.id
   );
+
+  if (homebrewLoading) {
+    return <LinearProgress />;
+  }
 
   return (
     <>
@@ -71,7 +76,7 @@ export function HomebrewSelectPage() {
           ids={collectionIds}
         />
         {errorMessage && (
-          <Alert severity="error">
+          <Alert severity='error'>
             <AlertTitle>Error</AlertTitle>
             {errorMessage}
           </Alert>

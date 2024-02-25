@@ -34,7 +34,7 @@ export function HomebrewEditorPage() {
 
   const loading = useStore((store) => store.homebrew.loading);
   const homebrewName = useStore((store) =>
-    homebrewId && store.homebrew.collections[homebrewId]
+    homebrewId && store.homebrew.collections[homebrewId]?.base
       ? store.homebrew.collections[homebrewId].base.title ??
         "Unnamed Collection"
       : undefined
@@ -89,7 +89,7 @@ export function HomebrewEditorPage() {
     <>
       <PageHeader
         label={homebrewName}
-        subLabel="Coming Soon"
+        subLabel='Coming Soon'
         actions={
           <Button
             variant={"outlined"}

@@ -1,63 +1,69 @@
-import { Datasworn } from "@datasworn/core";
+import { LoadingButton } from "@mui/lab";
 import { Box, Button } from "@mui/material";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { SectionHeading } from "components/shared/SectionHeading";
-import { deleteField } from "firebase/firestore";
+import { useState } from "react";
 import { useStore } from "stores/store";
+import { StoredOracleCollection } from "types/homebrew/HomebrewOracles.type";
 
 export interface OracleInfoSectionProps {
   homebrewId: string;
-  oracle: Datasworn.OracleCollection;
+  oracleCollectionId: string;
+  oracleCollection: StoredOracleCollection;
   openCollectionDialog: () => void;
-  dbKey: string;
-  dbPath: string;
   closeCurrentOracleCollection: () => void;
 }
 
 export function OracleInfoSection(props: OracleInfoSectionProps) {
   const {
     homebrewId,
-    oracle,
+    oracleCollectionId,
+    oracleCollection,
     openCollectionDialog,
-    dbPath,
-    dbKey,
     closeCurrentOracleCollection,
   } = props;
 
-  const updateOracles = useStore(
-    (store) => store.homebrew.updateExpansionOracles
+  const deleteOracleCollection = useStore(
+    (store) => store.homebrew.deleteOracleCollection
   );
 
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
   const handleDelete = () => {
-    const path = dbPath + dbKey;
-    return updateOracles(homebrewId, { [path]: deleteField() })
+    setIsDeleteLoading(true);
+    deleteOracleCollection(homebrewId, oracleCollectionId)
       .then(() => {
         closeCurrentOracleCollection();
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        setIsDeleteLoading(false);
+      });
   };
 
   return (
     <>
       <SectionHeading
-        label={oracle.name}
+        label={oracleCollection.label}
         action={
           <div>
             <Button color={"inherit"} onClick={openCollectionDialog}>
               Edit
             </Button>
-            <Button color={"inherit"} onClick={handleDelete}>
+            <LoadingButton
+              color={"inherit"}
+              onClick={handleDelete}
+              loading={isDeleteLoading}
+            >
               Delete
-            </Button>
+            </LoadingButton>
           </div>
         }
         floating
       />
-      {oracle.description || oracle.summary ? (
+      {oracleCollection.description ? (
         <Box px={2}>
-          <MarkdownRenderer
-            markdown={oracle.description ?? oracle.summary ?? ""}
-          />
+          <MarkdownRenderer markdown={oracleCollection.description} />
         </Box>
       ) : null}
     </>

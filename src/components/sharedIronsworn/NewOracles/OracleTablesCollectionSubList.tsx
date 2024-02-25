@@ -4,12 +4,10 @@ import { OracleRollableListItem } from "./OracleRollableListItem";
 import { extraOracleListItemActionsProp } from "./oracleListItemActions";
 import { OracleRollableCollectionListItem } from "./OracleRollableCollectionListItem";
 import { OracleTablesCollectionItem } from "./OracleTablesCollectionItem";
-import { useOracleCollectionMap } from "data/hooks/useOracleCollectionMap";
-import { useOracleRollableMap } from "data/hooks/useOracleRollableMap";
 import { extraOracleCollectionActionsProp } from "./oracleCollectionActions";
+import { useStore } from "stores/store";
 
 export interface OracleTablesCollectionSubListProps {
-  homebrewIds?: string[];
   oracleIds: string[];
   subCollectionIds: string[];
   actions?: extraOracleListItemActionsProp;
@@ -24,7 +22,6 @@ export function OracleTablesCollectionSubList(
   props: OracleTablesCollectionSubListProps
 ) {
   const {
-    homebrewIds,
     oracleIds,
     subCollectionIds,
     actions,
@@ -35,8 +32,12 @@ export function OracleTablesCollectionSubList(
     rollOnRowClick,
   } = props;
 
-  const collections = useOracleCollectionMap(homebrewIds);
-  const rollables = useOracleRollableMap(homebrewIds);
+  const collections = useStore(
+    (store) => store.rules.oracleMaps.oracleCollectionMap
+  );
+  const rollables = useStore(
+    (store) => store.rules.oracleMaps.oracleRollableMap
+  );
 
   const rollableSubCollections: Record<
     string,

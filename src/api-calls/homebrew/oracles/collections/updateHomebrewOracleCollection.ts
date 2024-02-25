@@ -16,7 +16,7 @@ export const updateHomebrewOracleCollection = createApiFunction<
       getHomebrewOracleCollectionDoc(oracleCollectionId),
       oracleCollection
     )
-      .then(resolve)
+      .then(() => resolve())
       .catch(reject);
   });
 }, "Failed to update oracle collection.");

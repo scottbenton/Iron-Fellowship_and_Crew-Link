@@ -1,10 +1,10 @@
-import { Datasworn } from "@datasworn/core";
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
 import ChevronRight from "@mui/icons-material/ChevronRight";
-import { useOracleCollectionMap } from "data/hooks/useOracleCollectionMap";
+import { StoredOracleCollection } from "types/homebrew/HomebrewOracles.type";
+import { useStore } from "stores/store";
 
 export interface OracleTablesCollectionCardProps {
-  oracle: Datasworn.OracleTablesCollection;
+  oracle: StoredOracleCollection;
   onClick: () => void;
 }
 
@@ -13,7 +13,9 @@ export function OracleTablesCollectionCard(
 ) {
   const { oracle, onClick } = props;
 
-  const originalOracleCollectionMap = useOracleCollectionMap();
+  const oracleCollectionMap = useStore(
+    (store) => store.rules.oracleMaps.oracleCollectionMap
+  );
 
   return (
     <Card variant={"outlined"}>
@@ -31,20 +33,20 @@ export function OracleTablesCollectionCard(
           <Typography variant={"overline"} color={"textSecondary"}>
             Collection
           </Typography>
-          <Typography variant={"h6"}>{oracle.name}</Typography>
-          {oracle.replaces && (
+          <Typography variant={"h6"}>{oracle.label}</Typography>
+          {oracle.replacesId && (
             <Typography color={"textSecondary"}>
               Replaces &quot;
-              {originalOracleCollectionMap[oracle.replaces]?.name ??
-                oracle.replaces}
+              {oracleCollectionMap[oracle.replacesId]?.name ??
+                oracle.replacesId}
               &quot;
             </Typography>
           )}
-          {oracle.enhances && (
+          {oracle.enhancesId && (
             <Typography color={"textSecondary"}>
               Enhances &quot;
-              {originalOracleCollectionMap[oracle.enhances]?.name ??
-                oracle.enhances}
+              {oracleCollectionMap[oracle.enhancesId]?.name ??
+                oracle.enhancesId}
               &quot;
             </Typography>
           )}

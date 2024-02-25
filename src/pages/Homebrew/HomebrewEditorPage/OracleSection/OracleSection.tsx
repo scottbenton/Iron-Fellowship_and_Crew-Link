@@ -2,7 +2,7 @@ import { LinearProgress } from "@mui/material";
 import { SectionWithSidebar } from "components/shared/Layout/SectionWithSidebar";
 import { useStore } from "stores/store";
 import { ExampleOracles } from "./ExampleOracles";
-import { OracleSectionContent } from "./OracleSectionContent";
+import { OracleEditorPane } from "./OracleEditorPane";
 
 export interface OracleSectionProps {
   id: string;
@@ -31,11 +31,17 @@ export function OracleSection(props: OracleSectionProps) {
 
   return (
     <>
-      {/* <SectionWithSidebar
+      <SectionWithSidebar
         sx={{ mt: 2 }}
-        sidebar={<ExampleOracles homebrewId={id} />}
-        mainContent={<OracleSectionContent homebrewId={id} oracles={oracles} />}
-      /> */}
+        sidebar={<ExampleOracles />}
+        mainContent={
+          <OracleEditorPane
+            homebrewId={id}
+            oracleCollections={oracleCollections}
+            oracleTables={oracleTables}
+          />
+        }
+      />
     </>
   );
 }

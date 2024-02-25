@@ -1,7 +1,6 @@
 import { Box, Link, Typography, useTheme } from "@mui/material";
 import { useCustomMoves } from "components/features/charactersAndCampaigns/MovesSection/useCustomMoves";
 import { useCustomOracles } from "components/features/charactersAndCampaigns/OracleSection/useCustomOracles";
-import { useOracleMap } from "data/hooks/useOracleMap";
 import { moveMap } from "data/moves";
 import { oracleMap } from "data/oracles";
 import ReactMarkdown from "react-markdown";
@@ -24,7 +23,9 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
 
   const { allCustomOracleMap } = useCustomOracles();
   const { customMoveMap } = useCustomMoves();
-  const newOracleMap = useOracleMap();
+  const newOracleMap = useStore(
+    (store) => store.rules.oracleMaps.allOraclesMap
+  );
 
   return (
     <ReactMarkdown

@@ -1,20 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import { OracleCollectionList } from "components/sharedIronsworn/NewOracles";
-import { useRootOracleIds } from "data/hooks/useRootOracleIds";
+import { useStore } from "stores/store";
 
-export interface ExampleOraclesProps {
-  homebrewId: string;
-}
-
-export function ExampleOracles(props: ExampleOraclesProps) {
-  const { homebrewId } = props;
-
-  const rootOracles = useRootOracleIds([homebrewId]);
+export function ExampleOracles() {
+  const rootOracles = useStore((store) => store.rules.rootOracleCollectionIds);
 
   return (
     <Box
       borderRadius={1}
-      overflow="hidden"
+      overflow='hidden'
       border={"1px solid"}
       borderColor={"divider"}
     >
@@ -26,10 +20,7 @@ export function ExampleOracles(props: ExampleOraclesProps) {
           Preview
         </Typography>
       </Box>
-      <OracleCollectionList
-        collectionIds={rootOracles}
-        homebrewIds={[homebrewId]}
-      />
+      <OracleCollectionList collectionIds={rootOracles} />
     </Box>
   );
 }

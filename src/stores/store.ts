@@ -13,6 +13,7 @@ import { createGameLogSlice } from "./gameLog/gameLog.slice";
 import { createAccessibilitySettingsSlice } from "./accessibilitySettings/accessibilitySettings.slice";
 import { createAppStateSlice } from "./appState/appState.slice";
 import { createHomebrewSlice } from "./homebrew/homebrew.slice";
+import { createRulesSlice } from "./rules/rules.slice";
 
 export const useStore = createWithEqualityFn<IStore>()(
   immer((...params) => ({
@@ -27,6 +28,7 @@ export const useStore = createWithEqualityFn<IStore>()(
     gameLog: createGameLogSlice(...params),
     accessibilitySettings: createAccessibilitySettingsSlice(...params),
     homebrew: createHomebrewSlice(...params),
+    rules: createRulesSlice(...params),
   })),
   shallow
 );

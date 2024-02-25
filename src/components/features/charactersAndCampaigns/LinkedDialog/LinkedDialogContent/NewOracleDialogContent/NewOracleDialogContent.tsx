@@ -2,7 +2,6 @@ import { DialogContent, IconButton, Tooltip } from "@mui/material";
 import { LinkedDialogContentTitle } from "../LinkedDialogContentTitle";
 import PinnedIcon from "@mui/icons-material/PushPin";
 import { useStore } from "stores/store";
-import { useOracleMap } from "data/hooks/useOracleMap";
 import { OracleRollableTable } from "./OracleRollableTable";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { OracleTableSharedRolls } from "./OracleTableSharedRolls";
@@ -19,7 +18,7 @@ export interface NewOracleDialogContentProps {
 export function NewOracleDialogContent(props: NewOracleDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
-  const oracles = useOracleMap();
+  const oracles = useStore((store) => store.rules.oracleMaps.allOraclesMap);
   const oracle = oracles[id];
 
   const pinnedOracles = useStore((store) => store.settings.pinnedOraclesIds);

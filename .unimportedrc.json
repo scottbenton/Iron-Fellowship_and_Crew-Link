@@ -1,0 +1,20 @@
+{
+  "entry": ["src/main.tsx"],
+  "moduleDirectory": ["node_modules"],
+  "rootDir": "./src",
+  "aliases": {
+    "types": ["./types", "./types/*"],
+    "pages": ["./pages", "./pages/*"],
+    "components": ["./components", "./components/*"],
+    "stores": ["./stores", "./stores/*"],
+    "lib": ["./lib", "./lib/*"],
+    "hooks": ["./hooks", "./hooks/*"],
+    "functions": ["./functions", "./functions/*"],
+    "data": ["./data", "./data/*"],
+    "assets": ["./assets", "./assets/*"],
+    "config": ["./config", "./config/*"],
+    "api-calls": ["./api-calls", "./api-calls/*"],
+    "providers": ["./providers", "./providers/*"],
+    "routes": ["./routes"]
+  }
+}

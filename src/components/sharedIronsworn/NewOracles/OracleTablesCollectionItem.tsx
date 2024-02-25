@@ -6,9 +6,9 @@ import { extraOracleListItemActionsProp } from "./oracleListItemActions";
 import { OracleTablesCollectionSubList } from "./OracleTablesCollectionSubList";
 import { extraOracleCollectionActionsProp } from "./oracleCollectionActions";
 import { CollectionActions } from "./CollectionActions";
+import { useStore } from "stores/store";
 
 export interface OracleTablesCollectionItemProps {
-  homebrewIds?: string[];
   collectionKey: string;
   collection: Datasworn.OracleTablesCollection;
   labelPrefix?: string;
@@ -22,7 +22,6 @@ export function OracleTablesCollectionItem(
   props: OracleTablesCollectionItemProps
 ) {
   const {
-    homebrewIds,
     collectionKey,
     collection,
     labelPrefix,
@@ -38,10 +37,36 @@ export function OracleTablesCollectionItem(
     ? `${labelPrefix} ꞏ ${collection.name}`
     : collection.name;
 
+  const oracleCollectionMap = useStore(
+    (store) => store.rules.oracleMaps.oracleCollectionMap
+  );
+
+  const enhancingCollections = Object.values(oracleCollectionMap).filter(
+    (c) => {
+      return c.enhances === collection.id;
+    }
+  );
+
   const oracleIds = Object.values(collection.contents ?? {}).map((c) => c.id);
   const subCollectionIds = Object.values(collection.collections ?? {}).map(
     (c) => c.id
   );
+
+  enhancingCollections.forEach((enhancingCollection) => {
+    if (enhancingCollection.contents) {
+      Object.values(enhancingCollection.contents).forEach((table) => {
+        oracleIds.push(table.id);
+      });
+    }
+    if (
+      enhancingCollection.oracle_type === "tables" &&
+      enhancingCollection.collections
+    ) {
+      Object.values(enhancingCollection.collections).forEach((collection) => {
+        subCollectionIds.push(collection.id);
+      });
+    }
+  });
 
   return (
     <Box component={"li"}>
@@ -62,11 +87,10 @@ export function OracleTablesCollectionItem(
       />
       <Collapse in={isExpanded}>
         <OracleTablesCollectionSubList
-          homebrewIds={homebrewIds}
           oracleIds={oracleIds}
           subCollectionIds={subCollectionIds}
           collectionPrefixLabel={title}
-          disabled={!isExpanded}
+          disabled={!isExpanded || disabled}
           actions={listItemActions}
           sx={{ mb: 0.5 }}
           rollOnRowClick={rollOnRowClick}

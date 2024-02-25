@@ -13,7 +13,6 @@ import {
 import { getRollResultLabel } from "components/features/charactersAndCampaigns/RollDisplay";
 import { TRACK_TYPES } from "types/Track.type";
 import { LEGACY_TRACK_TYPES } from "types/LegacyTrack.type";
-import { useOracleMap } from "data/hooks/useOracleMap";
 import { rollOracle } from "./rollers/rollOracle";
 
 export const getRoll = (dieMax: number) => {
@@ -36,7 +35,7 @@ export function useRoller() {
   const addRollToScreen = useStore((store) => store.appState.addRoll);
   const addRollToLog = useStore((store) => store.gameLog.addRoll);
 
-  const newOracles = useOracleMap();
+  const newOracles = useStore((store) => store.rules.oracleMaps.allOraclesMap);
 
   const { allCustomOracleMap, customOracleCategories } = useCustomOracles();
   const combinedOracleCategories = useMemo(() => {

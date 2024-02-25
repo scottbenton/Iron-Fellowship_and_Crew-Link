@@ -156,9 +156,7 @@ export function OracleTable(props: OracleTableProps) {
                     }
                     inputProps={{
                       defaultValue: "",
-                      ...register(`columnValues.${index}.detail`, {
-                        required: "This field is required.",
-                      }),
+                      ...register(`columnValues.${index}.detail`),
                     }}
                   />
                 </TableCell>

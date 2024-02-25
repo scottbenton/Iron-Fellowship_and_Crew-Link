@@ -1,8 +1,7 @@
 import { Autocomplete, Box, ListItemText, TextField } from "@mui/material";
-import { useOracleCollectionMap } from "data/hooks/useOracleCollectionMap";
+import { useStore } from "stores/store";
 
 export interface OracleCollectionAutocompleteProps {
-  homebrewId: string;
   label?: string;
   value?: string;
   onChange: (value: string | undefined) => void;
@@ -14,10 +13,11 @@ export interface OracleCollectionAutocompleteProps {
 export function OracleCollectionAutocomplete(
   props: OracleCollectionAutocompleteProps
 ) {
-  const { homebrewId, label, value, onChange, disabled, onBlur, helperText } =
-    props;
+  const { label, value, onChange, disabled, onBlur, helperText } = props;
 
-  const oracleCollectionMap = useOracleCollectionMap([homebrewId]);
+  const oracleCollectionMap = useStore(
+    (store) => store.rules.oracleMaps.oracleCollectionMap
+  );
 
   return (
     <Autocomplete

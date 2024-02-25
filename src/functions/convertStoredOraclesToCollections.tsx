@@ -76,7 +76,7 @@ function populateCollection(
   tables: Record<string, StoredOracleTable>,
   storedTableParentMap: Record<string, string[]>
 ): Datasworn.OracleCollection {
-  const collectionIds = storedCollectionParentMap[collectionId];
+  const collectionIds = storedCollectionParentMap[collectionId] ?? [];
 
   if (collection.oracle_type === "tables") {
     collectionIds.forEach((subCollectionId) => {
@@ -114,7 +114,7 @@ function populateCollection(
     });
   }
 
-  const tableIds = storedTableParentMap[collectionId];
+  const tableIds = storedTableParentMap[collectionId] ?? [];
 
   tableIds.forEach((tableId) => {
     const table = tables[tableId];

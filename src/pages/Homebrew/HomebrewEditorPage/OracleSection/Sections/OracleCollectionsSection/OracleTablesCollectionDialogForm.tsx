@@ -1,7 +1,5 @@
-import { Datasworn } from "@datasworn/core";
 import {
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   Stack,
@@ -9,28 +7,21 @@ import {
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { MarkdownEditor } from "components/shared/RichTextEditor/MarkdownEditor";
-import {
-  convertIdPart,
-  encodeAndConstructDataswornId,
-} from "functions/dataswornIdEncoder";
-import { useEffect, useState } from "react";
+import { convertIdPart } from "functions/dataswornIdEncoder";
+import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { OracleCollectionAutocomplete } from "./OracleCollectionAutocomplete";
+import { OracleCollectionAutocomplete } from "../../OracleCollectionAutocomplete";
 import { useStore } from "stores/store";
+import { StoredOracleCollection } from "types/homebrew/HomebrewOracles.type";
 
-export interface OracleTablesCollectionDialogProps {
+export interface OracleTablesCollectionDialogFormProps {
   homebrewId: string;
-  open: boolean;
   onClose: () => void;
 
-  collections: Record<string, Datasworn.OracleCollection>;
-  existingCollection?: {
-    key: string;
-    collection: Datasworn.OracleTablesCollection;
-  };
+  collections: Record<string, StoredOracleCollection>;
+  existingCollectionId?: string;
 
-  dbPath: string;
-  parentCollectionKey?: string;
+  parentCollectionId?: string;
 }
 
 interface OracleTablesCollectionFormContents {
@@ -40,18 +31,20 @@ interface OracleTablesCollectionFormContents {
   replacesId?: string;
 }
 
-export function OracleTablesCollectionDialog(
-  props: OracleTablesCollectionDialogProps
+export function OracleTablesCollectionDialogForm(
+  props: OracleTablesCollectionDialogFormProps
 ) {
   const {
     homebrewId,
-    open,
     onClose,
-    existingCollection,
+    existingCollectionId,
     collections,
-    dbPath,
-    parentCollectionKey,
+    parentCollectionId,
   } = props;
+
+  const existingCollection = existingCollectionId
+    ? collections[existingCollectionId]
+    : undefined;
 
   const [loading, setLoading] = useState(false);
 
@@ -59,97 +52,80 @@ export function OracleTablesCollectionDialog(
     register,
     handleSubmit,
     formState: { errors, touchedFields, disabled },
-    reset,
     control,
-  } = useForm<OracleTablesCollectionFormContents>({ disabled: loading });
+  } = useForm<OracleTablesCollectionFormContents>({
+    disabled: loading,
+    defaultValues: existingCollection
+      ? {
+          name: existingCollection.label,
+          description: existingCollection.description,
+          enhancesId: existingCollection.enhancesId,
+          replacesId: existingCollection.replacesId,
+        }
+      : {},
+  });
 
-  useEffect(() => {
-    if (open) {
-      reset(
-        existingCollection
-          ? {
-              name: existingCollection.collection.name,
-              description:
-                existingCollection.collection.description ??
-                existingCollection.collection.summary,
-              enhancesId: existingCollection.collection.enhances,
-              replacesId: existingCollection.collection.replaces,
-            }
-          : {}
-      );
-    }
-  }, [open, reset, existingCollection]);
-
-  const updateOracles = useStore(
-    (store) => store.homebrew.updateExpansionOracles
+  const createOracleCollection = useStore(
+    (store) => store.homebrew.createOracleCollection
   );
-
-  const handleOracleTableCollectionUpdate = (
-    oracleTableId: string,
-    table: Datasworn.OracleTablesCollection
-  ) => {
-    const path =
-      (dbPath ?? "") +
-      // If we have a parent oracle, we are not editing (we are not at root)
-      (parentCollectionKey ? `${parentCollectionKey}.collections.` : "") +
-      oracleTableId;
-
-    return updateOracles(homebrewId, {
-      [path]: table,
-    }).catch(() => {});
-  };
+  const updateOracleCollection = useStore(
+    (store) => store.homebrew.updateOracleCollection
+  );
 
   const onSubmit: SubmitHandler<OracleTablesCollectionFormContents> = (
     values
   ) => {
     setLoading(true);
-    const firebaseKey = existingCollection?.key ?? convertIdPart(values.name);
 
-    const id =
-      existingCollection?.collection.id ??
-      encodeAndConstructDataswornId(
-        homebrewId,
-        "collections/oracles",
-        values.name
-      );
-
-    const baseTableCollection: Datasworn.OracleTablesCollection = {
-      ...existingCollection,
-      id,
-      name: values.name,
-      description: values.description ?? "",
-      source: {
-        title: "Placeholder",
-        authors: [],
-        date: "2024-01-01",
-        url: "",
-        license: "",
-      },
-      oracle_type: "tables",
+    const oracleCollection: StoredOracleCollection = {
+      collectionId: homebrewId,
+      label: values.name,
     };
 
-    if (values.enhancesId) {
-      baseTableCollection.enhances = values.enhancesId;
-    }
-    if (values.replacesId) {
-      baseTableCollection.replaces = values.replacesId;
+    const newParentCollection = existingCollection
+      ? existingCollection.parentOracleCollectionId
+      : parentCollectionId;
+
+    if (newParentCollection) {
+      oracleCollection.parentOracleCollectionId = newParentCollection;
     }
 
-    handleOracleTableCollectionUpdate(firebaseKey, baseTableCollection)
-      .then(() => {
-        setLoading(false);
-        onClose();
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    if (values.description) {
+      oracleCollection.description = values.description;
+    }
+    if (values.enhancesId) {
+      oracleCollection.enhancesId = values.enhancesId;
+    }
+    if (values.replacesId) {
+      oracleCollection.replacesId = values.replacesId;
+    }
+
+    if (existingCollectionId) {
+      updateOracleCollection(existingCollectionId, oracleCollection)
+        .then(() => {
+          setLoading(false);
+          onClose();
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    } else {
+      createOracleCollection(oracleCollection)
+        .then(() => {
+          setLoading(false);
+          onClose();
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    }
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <>
       <DialogTitleWithCloseButton onClose={onClose}>
         {existingCollection
-          ? `Edit ${existingCollection.collection.name}`
+          ? `Edit ${existingCollection.label}`
           : "Create Oracle Collection"}
       </DialogTitleWithCloseButton>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -170,7 +146,7 @@ export function OracleTablesCollectionDialog(
                 ...register("name", {
                   required: "This field is required.",
                   validate: (value) => {
-                    if (!existingCollection?.collection.id && value) {
+                    if (!existingCollectionId && value) {
                       try {
                         const id = convertIdPart(value);
                         if (collections[id]) {
@@ -201,7 +177,6 @@ export function OracleTablesCollectionDialog(
               control={control}
               render={({ field }) => (
                 <OracleCollectionAutocomplete
-                  homebrewId={homebrewId}
                   label={"Replaces Collection"}
                   value={field.value}
                   onChange={(ids) => field.onChange(ids)}
@@ -217,7 +192,6 @@ export function OracleTablesCollectionDialog(
               control={control}
               render={({ field }) => (
                 <OracleCollectionAutocomplete
-                  homebrewId={homebrewId}
                   label={"Enhances Collection"}
                   value={field.value}
                   onChange={(ids) => field.onChange(ids)}
@@ -239,6 +213,6 @@ export function OracleTablesCollectionDialog(
           </Button>
         </DialogActions>
       </form>
-    </Dialog>
+    </>
   );
 }

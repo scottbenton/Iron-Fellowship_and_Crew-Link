@@ -1,8 +1,7 @@
 import { Autocomplete, Box, ListItemText, TextField } from "@mui/material";
-import { useOracleTableRollableMap } from "data/hooks/useOracleTableRollableMap";
+import { useStore } from "stores/store";
 
 export interface OracleTableRollableAutocompleteProps {
-  homebrewId: string;
   label?: string;
   value?: string;
   onChange: (value: string | undefined) => void;
@@ -14,10 +13,11 @@ export interface OracleTableRollableAutocompleteProps {
 export function OracleTableRollableAutocomplete(
   props: OracleTableRollableAutocompleteProps
 ) {
-  const { homebrewId, label, value, onChange, disabled, onBlur, helperText } =
-    props;
+  const { label, value, onChange, disabled, onBlur, helperText } = props;
 
-  const oracleTableRollableMap = useOracleTableRollableMap([homebrewId]);
+  const oracleTableRollableMap = useStore(
+    (store) => store.rules.oracleMaps.oracleTableRollableMap
+  );
 
   return (
     <Autocomplete

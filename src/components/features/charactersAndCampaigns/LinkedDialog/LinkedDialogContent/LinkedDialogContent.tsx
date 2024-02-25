@@ -29,7 +29,7 @@ export function LinkedDialogContent(props: LinkedDialogContentProps) {
   if (
     id?.startsWith("ironsworn/oracles") ||
     id?.startsWith("starforged/oracles") ||
-    (newVersion && id?.startsWith("starforged/collections/oracles"))
+    (newVersion && id?.includes("collections/oracles"))
   ) {
     if (newVersion) {
       return (

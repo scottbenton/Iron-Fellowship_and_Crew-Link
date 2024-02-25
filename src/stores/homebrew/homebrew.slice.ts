@@ -90,6 +90,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
   },
 
   subscribeToHomebrewContent: (homebrewIds) => {
+    getState().rules.setExpansionIds(homebrewIds);
     const listenerConfigs: ListenerConfig[] = [
       {
         listenerFunction: listenToHomebrewStats,
@@ -165,6 +166,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
     });
 
     return () => {
+      getState().rules.setExpansionIds([]);
       unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
   },
@@ -242,9 +244,26 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
         oracleTables[oracleId]?.oracleCollectionId === oracleCollectionId
     );
 
+    const subCollections =
+      getState().homebrew.collections[homebrewId]?.oracleCollections?.data ??
+      {};
+    const filteredOracleSubCollectionIds = Object.keys(subCollections).filter(
+      (oracleId) => {
+        return (
+          subCollections[oracleId]?.parentOracleCollectionId ===
+          oracleCollectionId
+        );
+      }
+    );
+
     const promises: Promise<void>[] = [];
     filteredOracleTableIds.forEach((oracleTableId) => {
       promises.push(deleteHomebrewOracleTable({ oracleTableId }));
+    });
+    filteredOracleSubCollectionIds.forEach((subCollectionId) => {
+      promises.push(
+        getState().homebrew.deleteOracleCollection(homebrewId, subCollectionId)
+      );
     });
 
     return new Promise((resolve, reject) => {
@@ -287,6 +306,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
       set((store) => {
         store.homebrew.collections[homebrewId].dataswornOracles = collections;
       });
+      getState().rules.rebuildOracles();
     }
   },
 });
