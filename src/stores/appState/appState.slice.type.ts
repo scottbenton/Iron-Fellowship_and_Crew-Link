@@ -3,6 +3,7 @@ import { Roll } from "types/DieRolls.type";
 export interface AppStateData {
   openDialogState: {
     isOpen: boolean;
+    newVersion?: boolean;
     openId?: string;
     previousIds: string[];
   };
@@ -17,7 +18,7 @@ export interface AppStateData {
 }
 
 export interface AppStateActions {
-  openDialog: (id: string) => void;
+  openDialog: (id: string, newVersion?: boolean) => void;
   prevDialog: () => void;
   closeDialog: () => void;
 

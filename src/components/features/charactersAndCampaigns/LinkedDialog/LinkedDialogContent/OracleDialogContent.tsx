@@ -39,6 +39,7 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
     return (
       <>
         <LinkedDialogContentTitle
+          id={id}
           handleBack={handleBack}
           handleClose={handleClose}
           isLastItem={isLastItem}
@@ -56,6 +57,7 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
   return (
     <>
       <LinkedDialogContentTitle
+        id={id}
         handleBack={handleBack}
         handleClose={handleClose}
         isLastItem={isLastItem}

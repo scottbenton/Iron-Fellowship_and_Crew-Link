@@ -27,7 +27,10 @@ export function ErrorRoute() {
       errorMessage?.includes(
         "'text/html' is not a valid JavaScript MIME type."
       ) ||
-      errorMessage?.includes("Importing a module script failed.")
+      errorMessage?.includes("Importing a module script failed.") ||
+      errorMessage
+        ?.toLocaleLowerCase()
+        .includes("error loading dynamically imported module")
     ) {
       window.location.reload();
     } else {

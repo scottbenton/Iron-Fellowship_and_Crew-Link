@@ -87,12 +87,26 @@ export function NPCItem(props: NPCItemProps) {
             alignItems={"flex-start"}
             justifyContent={"space-between"}
             flexGrow={1}
+            overflow={"hidden"}
           >
-            <Box>
-              <Typography>{npc.name}</Typography>
+            <Box overflow={"hidden"}>
+              <Typography
+                whiteSpace={"nowrap"}
+                overflow={"hidden"}
+                textOverflow={"ellipsis"}
+              >
+                {npc.name}
+              </Typography>
 
               {npcLocation && (
-                <Typography variant={"caption"} color={"textSecondary"}>
+                <Typography
+                  variant={"caption"}
+                  color={"textSecondary"}
+                  whiteSpace={"nowrap"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  component={"p"}
+                >
                   {npcLocation.name}
                 </Typography>
               )}

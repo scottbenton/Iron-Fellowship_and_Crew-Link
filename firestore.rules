@@ -102,19 +102,52 @@ service cloud.firestore {
         }
       }
     }
-    match /homebrew/{homebrewId} {
-    	allow read: if request.auth.uid != null;
-      allow create: if request.auth.uid != null;
-      allow write: if request.auth.uid in resource.data.uids;
-      
-      function checkIsHomebrewOwner() {
-      	let homebrew = get(/databases/$(database)/documents/homebrew/$(homebrewId)).data;
-        return request.auth.uid in homebrew.uids;
+    match /homebrew/homebrew {
+      function checkIsHomebrewOwner(homebrewId) {
+        let homebrew = get(/databases/$(database)/documents/homebrew/homebrew/collections/$(homebrewId)).data;
+        return request.auth.uid in homebrew.editors;
       }
-      
-      match /rules/rules {
-      	allow read: if request.auth.uid != null;
-        allow write: if checkIsHomebrewOwner();
+
+      match /collections/{homebrewId} {
+        allow read: if request.auth.uid != null;
+        allow create: if request.auth.uid != null;
+        allow write: if request.auth.uid in resource.data.editors;
+      }
+
+      match /stats/{statId} {
+        allow read: if request.auth.uid != null;
+        allow create: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner(resource.data.collectionId);
+      }
+
+      match /condition_meters/{conditionMeterId} {
+        allow read: if request.auth.uid != null;
+        allow create: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner(resource.data.collectionId);
+      }
+
+      match /impacts/{impactCategoryId} {
+        allow read: if request.auth.uid != null;
+        allow create: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner(resource.data.collectionId);
+      }
+
+      match /legacy_tracks/{legacyTrackId} {
+        allow read: if request.auth.uid != null;
+        allow create: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner(resource.data.collectionId);
+      }
+
+      match /oracle_tables/{oracleTableId} {
+        allow read: if request.auth.uid != null;
+        allow create: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner(resource.data.collectionId);
+      }
+
+      match /oracle_collections/{oracleCollectionId} {
+        allow read: if request.auth.uid != null;
+        allow create: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner(resource.data.collectionId);
       }
     }
     match /users/{userId} {

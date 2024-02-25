@@ -40,6 +40,7 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
     return (
       <>
         <LinkedDialogContentTitle
+          id={id}
           handleBack={handleBack}
           handleClose={handleClose}
           isLastItem={isLastItem}
@@ -80,6 +81,7 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
   return (
     <>
       <LinkedDialogContentTitle
+        id={id}
         handleBack={handleBack}
         handleClose={handleClose}
         isLastItem={isLastItem}

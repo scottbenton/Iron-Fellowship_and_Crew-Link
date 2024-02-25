@@ -17,7 +17,7 @@ import { SectorRegionAutocomplete } from "./SectorRegionAutocomplete";
 import { useRoller } from "stores/appState/useRoller";
 import { planetDescriptions } from "data/oracles";
 import { SectorLocationCard } from "./SectorLocationCard";
-import { SectorLocationDialog } from "./SectorLocationDialog/SectorLocationDialog";
+import { SectorLocationDialog } from "./SectorLocationDialog";
 import { useWorldPermissions } from "../useWorldPermissions";
 import { RtcRichTextEditor } from "components/shared/RichTextEditor";
 import { NotesSectionHeader } from "../NotesSectionHeader";

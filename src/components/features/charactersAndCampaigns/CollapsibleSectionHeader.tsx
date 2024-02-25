@@ -3,22 +3,30 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
+  ListItemSecondaryAction,
   ListSubheader,
+  ListSubheaderProps,
 } from "@mui/material";
 import OpenIcon from "@mui/icons-material/ChevronRight";
+import React from "react";
 
 export interface CollapsibleSectionHeaderProps {
+  component?: ListSubheaderProps["component"];
   text: string;
   forcedOpen?: boolean;
   open: boolean;
   toggleOpen: () => void;
+  disabled?: boolean;
+  actions?: React.JSX.Element;
 }
 
 export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
-  const { text, open, forcedOpen, toggleOpen } = props;
+  const { component, text, open, forcedOpen, toggleOpen, disabled, actions } =
+    props;
 
   return (
     <ListSubheader
+      component={component ?? "li"}
       disableGutters
       sx={(theme) => ({
         mt: open ? 0.5 : 0,
@@ -35,22 +43,30 @@ export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
       })}
     >
       {!forcedOpen ? (
-        <ListItemButton onClick={toggleOpen}>
-          <Box sx={{ flexGrow: 1 }}>{text}</Box>
-          <ListItemIcon sx={{ minWidth: "unset" }}>
-            <OpenIcon
-              sx={(theme) => ({
-                transform: `rotate(${open ? "-" : ""}90deg)`,
-                transition: theme.transitions.create(["transform"], {
-                  duration: theme.transitions.duration.shorter,
-                }),
-              })}
-            />
-          </ListItemIcon>
-        </ListItemButton>
+        <>
+          <ListItemButton onClick={toggleOpen} disabled={disabled}>
+            <Box sx={{ flexGrow: 1 }}>{text}</Box>
+
+            <ListItemIcon sx={{ minWidth: "unset" }}>
+              <OpenIcon
+                sx={(theme) => ({
+                  transform: `rotate(${open ? "-" : ""}90deg)`,
+                  transition: theme.transitions.create(["transform"], {
+                    duration: theme.transitions.duration.shorter,
+                  }),
+                })}
+              />
+            </ListItemIcon>
+          </ListItemButton>
+        </>
       ) : (
         <ListItem>{text}</ListItem>
       )}
+      {actions ? (
+        <ListItemSecondaryAction sx={{ mr: 4 }}>
+          {actions}
+        </ListItemSecondaryAction>
+      ) : undefined}
     </ListSubheader>
   );
 }

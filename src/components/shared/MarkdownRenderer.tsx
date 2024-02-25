@@ -23,6 +23,9 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
 
   const { allCustomOracleMap } = useCustomOracles();
   const { customMoveMap } = useCustomMoves();
+  const newOracleMap = useStore(
+    (store) => store.rules.oracleMaps.allOraclesMap
+  );
 
   return (
     <ReactMarkdown
@@ -126,7 +129,37 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           if (disableLinks) {
             return <>{props.children}</>;
           }
-          const href = props.href ?? "";
+
+          const propertiesHref = props.node.properties?.href;
+
+          const href = typeof propertiesHref === "string" ? propertiesHref : "";
+          // V2 versions
+          if (href.startsWith("id:")) {
+            const strippedHref = href.slice(3);
+            if (newOracleMap[strippedHref]) {
+              return (
+                <Link
+                  component={"button"}
+                  sx={{
+                    cursor: "pointer",
+                    verticalAlign: "baseline",
+                  }}
+                  color={
+                    theme.palette.mode === "light" ? "info.dark" : "info.light"
+                  }
+                  onClick={() => openDialog(strippedHref, true)}
+                >
+                  {props.children}
+                </Link>
+              );
+            }
+
+            console.error("Link: ", href);
+
+            // TODO - add handlers for this situation;
+            return <span>{props.children}</span>;
+          }
+          // V1 versions
           if (href.startsWith("ironsworn/") || href.startsWith("starforged/")) {
             if (
               (href.startsWith("ironsworn/moves") ||

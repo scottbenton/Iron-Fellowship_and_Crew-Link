@@ -2,10 +2,10 @@ import { Typography } from "@mui/material";
 import { Track } from "components/features/Track";
 import { StatComponent } from "components/features/characters/StatComponent";
 import { Control, useWatch } from "react-hook-form";
-import { StoredConditionMeter } from "types/HomebrewCollection.type";
+import { Form } from "./ConditionMeterDialogForm";
 
 export interface ConditionMeterPreviewProps {
-  control: Control<StoredConditionMeter, unknown>;
+  control: Control<Form, unknown>;
 }
 
 export function ConditionMeterPreview(props: ConditionMeterPreviewProps) {
@@ -14,7 +14,7 @@ export function ConditionMeterPreview(props: ConditionMeterPreviewProps) {
   const label = useWatch({ control, name: "label" });
   const min = useWatch({ control, name: "min" });
   const max = useWatch({ control, name: "max" });
-  const defaultValue = useWatch({ control, name: "value" });
+  const defaultValue = useWatch({ control, name: "defaultValue" });
   const rollable = useWatch({ control, name: "rollable" });
 
   if (

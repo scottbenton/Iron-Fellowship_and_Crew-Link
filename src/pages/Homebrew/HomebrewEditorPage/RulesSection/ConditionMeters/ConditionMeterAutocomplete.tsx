@@ -1,6 +1,6 @@
 import { Autocomplete, TextField, capitalize } from "@mui/material";
 import { useRules } from "data/hooks/useRules";
-import { StoredConditionMeter } from "types/HomebrewCollection.type";
+import { StoredConditionMeter } from "types/homebrew/HomebrewRules.type";
 
 export interface StatAutocompleteProps {
   conditionMeters: Record<string, StoredConditionMeter>;

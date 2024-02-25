@@ -3,7 +3,7 @@ import { D6Icon } from "assets/D6Icon";
 import { D10Icon } from "assets/D10Icon";
 
 export interface RollValuesProps {
-  d10Results?: [number, number] | number;
+  d10Results?: number[] | number;
   d6Result?: {
     action: number;
     modifier?: number;
@@ -91,9 +91,7 @@ export function RollValues(props: RollValuesProps) {
           >
             <D10Icon />
             <Typography ml={1} color={(theme) => theme.palette.grey[200]}>
-              {Array.isArray(d10Results)
-                ? `${d10Results[0]}, ${d10Results[1]}`
-                : d10Results}
+              {Array.isArray(d10Results) ? d10Results.join(", ") : d10Results}
             </Typography>
           </Box>
         )}

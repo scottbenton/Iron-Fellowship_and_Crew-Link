@@ -5,7 +5,7 @@ import { defaultAppState } from "./appState.slice.default";
 export const createAppStateSlice: CreateSliceType<AppStateSlice> = (set) => ({
   ...defaultAppState,
 
-  openDialog: (id) => {
+  openDialog: (id, newVersion) => {
     set((store) => {
       const currentState = store.appState.openDialogState;
 
@@ -14,12 +14,14 @@ export const createAppStateSlice: CreateSliceType<AppStateSlice> = (set) => ({
           isOpen: true,
           previousIds: [...currentState.previousIds, currentState.openId],
           openId: id,
+          newVersion,
         };
       } else {
         store.appState.openDialogState = {
           isOpen: true,
           previousIds: [],
           openId: id,
+          newVersion,
         };
       }
     });
@@ -35,6 +37,7 @@ export const createAppStateSlice: CreateSliceType<AppStateSlice> = (set) => ({
           isOpen: true,
           openId: nextId,
           previousIds: newIds,
+          newVersion: store.appState.openDialogState.newVersion,
         };
       }
     });

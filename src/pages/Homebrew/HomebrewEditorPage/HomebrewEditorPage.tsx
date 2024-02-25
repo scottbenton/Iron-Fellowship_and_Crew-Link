@@ -15,6 +15,7 @@ import { BASE_ROUTES, basePaths } from "routes";
 import { RulesSection } from "./RulesSection";
 import { useListenToHomebrewContent } from "stores/homebrew/useListenToHomebrewContent";
 import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
+import { OracleSection } from "./OracleSection";
 
 enum TABS {
   ABOUT = "about",
@@ -33,7 +34,7 @@ export function HomebrewEditorPage() {
 
   const loading = useStore((store) => store.homebrew.loading);
   const homebrewName = useStore((store) =>
-    homebrewId && store.homebrew.collections[homebrewId]
+    homebrewId && store.homebrew.collections[homebrewId]?.base
       ? store.homebrew.collections[homebrewId].base.title ??
         "Unnamed Collection"
       : undefined
@@ -88,7 +89,7 @@ export function HomebrewEditorPage() {
     <>
       <PageHeader
         label={homebrewName}
-        subLabel="Coming Soon"
+        subLabel='Coming Soon'
         actions={
           <Button
             variant={"outlined"}
@@ -127,6 +128,7 @@ export function HomebrewEditorPage() {
           </StyledTabs>
           <Box role={"tabpanel"} sx={{ px: { xs: 2, sm: 3 } }}>
             {selectedTab === TABS.ABOUT && <AboutSection id={homebrewId} />}
+            {selectedTab === TABS.ORACLES && <OracleSection id={homebrewId} />}
             {selectedTab === TABS.RULES && <RulesSection id={homebrewId} />}
           </Box>
         </Box>
