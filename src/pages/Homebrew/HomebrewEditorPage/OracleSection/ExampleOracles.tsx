@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { OracleCollectionList } from "components/sharedIronsworn/NewOracles";
+import { OracleCollectionList } from "components/features/charactersAndCampaigns/NewOracleSection";
 import { useStore } from "stores/store";
 
 export function ExampleOracles() {

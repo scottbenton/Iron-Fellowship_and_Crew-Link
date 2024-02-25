@@ -13,6 +13,11 @@ export interface RulesSliceData {
     oracleRollableMap: Record<string, Datasworn.OracleRollable>;
     oracleTableRollableMap: Record<string, Datasworn.OracleTableRollable>;
   };
+  rootMoveCollectionIds: string[];
+  moveMaps: {
+    moveCategoryMap: Record<string, Datasworn.MoveCategory>;
+    moveMap: Record<string, Datasworn.Move>;
+  };
 }
 
 export interface RulesSliceActions {

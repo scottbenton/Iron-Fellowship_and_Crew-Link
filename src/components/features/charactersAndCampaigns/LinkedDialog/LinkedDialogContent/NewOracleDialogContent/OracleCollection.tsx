@@ -1,6 +1,6 @@
 import { Datasworn } from "@datasworn/core";
-import { OracleTablesCollectionSubList } from "components/sharedIronsworn/NewOracles/OracleTablesCollectionSubList";
-import { defaultActions } from "components/sharedIronsworn/NewOracles/defaultActions";
+import { OracleTablesCollectionSubList } from "components/features/charactersAndCampaigns/NewOracleSection/OracleTablesCollectionSubList";
+import { defaultActions } from "components/features/charactersAndCampaigns/NewOracleSection/defaultActions";
 
 export interface OracleCollectionProps {
   collection: Datasworn.OracleTablesCollection;
