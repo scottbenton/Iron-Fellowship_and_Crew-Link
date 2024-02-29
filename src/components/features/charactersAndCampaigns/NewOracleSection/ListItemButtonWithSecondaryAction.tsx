@@ -7,19 +7,20 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export interface OptionalListItemButtonProps extends ListItemProps {
-  showButton: boolean;
+export interface ListItemButtonWithSecondaryActionProps extends ListItemProps {
   onClick?: () => void;
+  disabled?: boolean;
   listItemButtonProps?: ListItemButtonProps;
 }
 
-export function OptionalListItemButton(props: OptionalListItemButtonProps) {
+export function ListItemButtonWithSecondaryAction(
+  props: ListItemButtonWithSecondaryActionProps
+) {
   const {
-    showButton,
     onClick,
+    disabled,
     listItemButtonProps,
     children,
-    sx,
     secondaryAction,
     ...listItemProps
   } = props;
@@ -46,34 +47,6 @@ export function OptionalListItemButton(props: OptionalListItemButtonProps) {
     };
   }, [actionContainer, secondaryAction]);
 
-  if (showButton) {
-    return (
-      <ListItem
-        secondaryAction={
-          secondaryAction ? (
-            <Box
-              ref={(element) => setActionContainer(element as HTMLDivElement)}
-            >
-              {secondaryAction}
-            </Box>
-          ) : undefined
-        }
-        disablePadding
-        sx={sx}
-        {...listItemProps}
-      >
-        <ListItemButton
-          onClick={onClick}
-          {...listItemButtonProps}
-          sx={(theme) => ({
-            pr: `calc(${theme.spacing(2)} + ${actionWidth ?? 0}px) !important`,
-          })}
-        >
-          {children}
-        </ListItemButton>
-      </ListItem>
-    );
-  }
   return (
     <ListItem
       secondaryAction={
@@ -83,10 +56,24 @@ export function OptionalListItemButton(props: OptionalListItemButtonProps) {
           </Box>
         ) : undefined
       }
+      disablePadding
+      sx={{
+        "&:nth-of-type(even)": {
+          bgcolor: "background.paperInlay",
+        },
+      }}
       {...listItemProps}
-      sx={[{}, ...(Array.isArray(sx) ? sx : [sx])]}
     >
-      {children}
+      <ListItemButton
+        disabled={disabled}
+        onClick={onClick}
+        {...listItemButtonProps}
+        sx={(theme) => ({
+          pr: `calc(${theme.spacing(2)} + ${actionWidth ?? 0}px) !important`,
+        })}
+      >
+        {children}
+      </ListItemButton>
     </ListItem>
   );
 }

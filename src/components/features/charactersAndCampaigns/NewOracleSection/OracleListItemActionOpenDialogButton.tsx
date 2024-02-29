@@ -1,10 +1,19 @@
 import { IconButton } from "@mui/material";
-import { OracleListItemActionProps } from "./oracleListItemActions";
 import TableIcon from "@mui/icons-material/ListAlt";
 import { useStore } from "stores/store";
+import { Datasworn } from "@datasworn/core";
+
+export interface OracleListItemActionOpenDialogButtonProps {
+  item:
+    | Datasworn.OracleTableSharedRolls
+    | Datasworn.OracleTableSharedResults
+    | Datasworn.OracleTableSharedDetails
+    | Datasworn.OracleRollable;
+  disabled?: boolean;
+}
 
 export function OracleListItemActionOpenDialogButton(
-  props: OracleListItemActionProps
+  props: OracleListItemActionOpenDialogButtonProps
 ) {
   const { item, disabled } = props;
   const openDialog = useStore((store) => store.appState.openDialog);

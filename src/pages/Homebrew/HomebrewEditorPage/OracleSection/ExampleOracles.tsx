@@ -1,10 +1,7 @@
 import { Box, Typography } from "@mui/material";
-import { OracleCollectionList } from "components/features/charactersAndCampaigns/NewOracleSection";
-import { useStore } from "stores/store";
+import { OracleSection } from "components/features/charactersAndCampaigns/NewOracleSection/OracleSection";
 
 export function ExampleOracles() {
-  const rootOracles = useStore((store) => store.rules.rootOracleCollectionIds);
-
   return (
     <Box
       borderRadius={1}
@@ -20,7 +17,7 @@ export function ExampleOracles() {
           Preview
         </Typography>
       </Box>
-      <OracleCollectionList collectionIds={rootOracles} />
+      <OracleSection />
     </Box>
   );
 }

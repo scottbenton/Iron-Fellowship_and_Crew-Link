@@ -1,24 +1,21 @@
 import { Datasworn } from "@datasworn/core";
 import { Box, ListItemText, MenuItem, TextField } from "@mui/material";
 import { useState } from "react";
-import { extraOracleListItemActionsProp } from "./oracleListItemActions";
-import { Actions } from "./Actions";
-import { OptionalListItemButton } from "./OptionalListItemButton";
 import { useRoller } from "stores/appState/useRoller";
+import { OracleListItemActionOpenDialogButton } from "./OracleListItemActionOpenDialogButton";
+import { ListItemButtonWithSecondaryAction } from "./ListItemButtonWithSecondaryAction";
 
 export interface OracleSelectableRollableCollectionListItemProps {
   collection:
     | Datasworn.OracleTableSharedResults
     | Datasworn.OracleTableSharedDetails;
-  actions?: extraOracleListItemActionsProp;
   disabled?: boolean;
-  rollOnRowClick: boolean;
 }
 
 export function OracleSelectableRollableCollectionListItem(
   props: OracleSelectableRollableCollectionListItemProps
 ) {
-  const { collection, actions, disabled, rollOnRowClick } = props;
+  const { collection, disabled } = props;
   const { rollOracleTableNew } = useRoller();
 
   const options = collection.contents ?? {};
@@ -28,15 +25,10 @@ export function OracleSelectableRollableCollectionListItem(
 
   const selectedOptionId = options[selectedOption]?.id;
   return (
-    <OptionalListItemButton
-      showButton={!!selectedOptionId && rollOnRowClick}
-      sx={{
-        "&:nth-of-type(even)": {
-          bgcolor: "background.paperInlay",
-        },
-      }}
+    <ListItemButtonWithSecondaryAction
+      disabled={disabled || !selectedOptionId}
       onClick={
-        rollOnRowClick && selectedOptionId
+        selectedOptionId
           ? () => rollOracleTableNew(selectedOptionId, true)
           : undefined
       }
@@ -61,11 +53,14 @@ export function OracleSelectableRollableCollectionListItem(
               ))}
             </TextField>
           )}
-          <Actions actions={actions} item={collection} disabled={disabled} />
+          <OracleListItemActionOpenDialogButton
+            item={collection}
+            disabled={disabled}
+          />
         </Box>
       }
     >
       <ListItemText primary={collection.name} />
-    </OptionalListItemButton>
+    </ListItemButtonWithSecondaryAction>
   );
 }

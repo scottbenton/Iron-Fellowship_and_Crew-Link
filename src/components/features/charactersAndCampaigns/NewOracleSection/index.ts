@@ -1,1 +1,1 @@
-export * from "./OracleCollectionList";
+export * from "./OracleSection";
