@@ -24,6 +24,38 @@ export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
   const { component, text, open, forcedOpen, toggleOpen, disabled, actions } =
     props;
 
+  if (forcedOpen) {
+    return (
+      <ListItem
+        sx={(theme) => ({
+          mt: open ? 0.5 : 0,
+          backgroundColor: theme.palette.background.paperInlayDarker,
+          color: theme.palette.grey[theme.palette.mode === "light" ? 700 : 200],
+          ...theme.typography.body1,
+          fontFamily: theme.fontFamilyTitle,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          transition: theme.transitions.create(["margin"], {
+            duration: theme.transitions.duration.shorter,
+          }),
+        })}
+      >
+        {text}
+        <ListItemIcon sx={{ minWidth: "unset" }}>
+          <OpenIcon
+            sx={(theme) => ({
+              transform: `rotate(${open ? "-" : ""}90deg)`,
+              transition: theme.transitions.create(["transform"], {
+                duration: theme.transitions.duration.shorter,
+              }),
+            })}
+          />
+        </ListItemIcon>
+      </ListItem>
+    );
+  }
+
   return (
     <ListSubheader
       component={component ?? "li"}
@@ -60,7 +92,7 @@ export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
           </ListItemButton>
         </>
       ) : (
-        <ListItem>{text}</ListItem>
+        <ListItem slots={{ root: "div" }}>{text}</ListItem>
       )}
       {actions ? (
         <ListItemSecondaryAction sx={{ mr: 4 }}>

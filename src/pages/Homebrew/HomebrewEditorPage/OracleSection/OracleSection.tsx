@@ -30,18 +30,16 @@ export function OracleSection(props: OracleSectionProps) {
   }
 
   return (
-    <>
-      <SectionWithSidebar
-        sx={{ mt: 2 }}
-        sidebar={<ExampleOracles />}
-        mainContent={
-          <OracleEditorPane
-            homebrewId={id}
-            oracleCollections={oracleCollections}
-            oracleTables={oracleTables}
-          />
-        }
-      />
-    </>
+    <SectionWithSidebar
+      sx={{ mt: 2 }}
+      sidebar={<ExampleOracles />}
+      mainContent={
+        <OracleEditorPane
+          homebrewId={id}
+          oracleCollections={oracleCollections}
+          oracleTables={oracleTables}
+        />
+      }
+    />
   );
 }

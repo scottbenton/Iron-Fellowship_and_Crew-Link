@@ -1,9 +1,7 @@
 import { Autocomplete, TextField, capitalize } from "@mui/material";
-import { useRules } from "data/hooks/useRules";
-import { StoredStat } from "types/homebrew/HomebrewRules.type";
+import { useStore } from "stores/store";
 
 export interface StatAutocompleteProps {
-  stats: Record<string, StoredStat>;
   label?: string;
   value: string[];
   onChange: (value: string[]) => void;
@@ -12,16 +10,15 @@ export interface StatAutocompleteProps {
 }
 
 export function StatAutocomplete(props: StatAutocompleteProps) {
-  const { label, stats, value, onChange, disabled, onBlur } = props;
-  const { stats: baseStats } = useRules();
+  const { label, value, onChange, disabled, onBlur } = props;
 
-  const allStats = { ...stats, ...baseStats };
+  const stats = useStore((store) => store.rules.stats);
 
   return (
     <Autocomplete
       multiple={true}
-      options={Object.keys(allStats)}
-      getOptionLabel={(statKey) => capitalize(allStats[statKey].label)}
+      options={Object.keys(stats)}
+      getOptionLabel={(statKey) => capitalize(stats[statKey].label)}
       renderInput={(params) => (
         <TextField {...params} label={label ?? "Stats"} />
       )}

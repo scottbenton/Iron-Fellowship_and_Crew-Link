@@ -32,10 +32,6 @@ export function Impacts(props: ImpactsProps) {
   const isLoading = useStore(
     (store) => !store.homebrew.collections[homebrewId]?.impactCategories?.loaded
   );
-  const conditionMeters = useStore(
-    (store) =>
-      store.homebrew.collections[homebrewId]?.conditionMeters?.data ?? {}
-  );
 
   const [impactCategoryDialogOpen, setImpactCategoryDialogOpen] =
     useState(false);
@@ -286,7 +282,6 @@ export function Impacts(props: ImpactsProps) {
           onSave={updateImpact}
           editingCategoryKey={editingImpactCategoryKey}
           editingImpactKey={editingImpactKey}
-          conditionMeters={conditionMeters}
         />
       )}
     </>

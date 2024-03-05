@@ -16,6 +16,8 @@ import { RulesSection } from "./RulesSection";
 import { useListenToHomebrewContent } from "stores/homebrew/useListenToHomebrewContent";
 import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
 import { OracleSection } from "./OracleSection";
+import { MovesSection } from "./MovesSection";
+import { AssetsSection } from "./AssetsSection/AssetsSection";
 
 enum TABS {
   ABOUT = "about",
@@ -128,8 +130,12 @@ export function HomebrewEditorPage() {
           </StyledTabs>
           <Box role={"tabpanel"} sx={{ px: { xs: 2, sm: 3 } }}>
             {selectedTab === TABS.ABOUT && <AboutSection id={homebrewId} />}
+            {selectedTab === TABS.MOVES && (
+              <MovesSection homebrewId={homebrewId} />
+            )}
             {selectedTab === TABS.ORACLES && <OracleSection id={homebrewId} />}
             {selectedTab === TABS.RULES && <RulesSection id={homebrewId} />}
+            {selectedTab === TABS.ASSETS && <AssetsSection />}
           </Box>
         </Box>
       </PageContent>
