@@ -5,6 +5,10 @@ import {
   HomebrewCollectionDocument,
 } from "types/homebrew/HomebrewCollection.type";
 import {
+  StoredMove,
+  StoredMoveCategory,
+} from "types/homebrew/HomebrewMoves.type";
+import {
   StoredOracleCollection,
   StoredOracleTable,
 } from "types/homebrew/HomebrewOracles.type";
@@ -32,8 +36,11 @@ export interface HomebrewEntry {
 
   oracleCollections?: HomebrewData<StoredOracleCollection>;
   oracleTables?: HomebrewData<StoredOracleTable>;
-
   dataswornOracles?: Record<string, Datasworn.OracleTablesCollection>;
+
+  moveCategories?: HomebrewData<StoredMoveCategory>;
+  moves?: HomebrewData<StoredMove>;
+  dataswornMoves?: Record<string, Datasworn.MoveCategory>;
 }
 
 export interface HomebrewSliceData {
@@ -103,6 +110,22 @@ export interface HomebrewSliceActions {
   deleteOracleTable: (oracleTableId: string) => Promise<void>;
 
   updateDataswornOracles: (homebrewId: string) => void;
+
+  createMoveCategory: (moveCategory: StoredMoveCategory) => Promise<void>;
+  updateMoveCategory: (
+    moveCategoryId: string,
+    moveCategory: StoredMoveCategory
+  ) => Promise<void>;
+  deleteMoveCategory: (
+    homebrewId: string,
+    moveCategoryId: string
+  ) => Promise<void>;
+
+  createMove: (move: StoredMove) => Promise<void>;
+  updateMove: (moveId: string, move: StoredMove) => Promise<void>;
+  deleteMove: (moveId: string) => Promise<void>;
+
+  updateDataswornMoves: (homebrewId: string) => void;
 }
 
 export type HomebrewSlice = HomebrewSliceData & HomebrewSliceActions;

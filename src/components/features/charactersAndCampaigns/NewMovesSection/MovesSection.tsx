@@ -8,6 +8,7 @@ import { EmptyState } from "components/shared/EmptyState";
 export function MovesSection() {
   const {
     moveCategories,
+    moveMap,
     setSearch,
     visibleMoveCategoryIds,
     visibleMoveIds,
@@ -56,6 +57,7 @@ export function MovesSection() {
             <MoveCategory
               key={index}
               category={category}
+              moveMap={moveMap}
               openMove={(move) => {
                 openDialog(move.id, true);
               }}

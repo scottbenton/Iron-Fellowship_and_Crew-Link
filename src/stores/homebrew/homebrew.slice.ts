@@ -35,9 +35,23 @@ import { deleteHomebrewOracleCollection } from "api-calls/homebrew/oracles/colle
 import { createHomebrewOracleTable } from "api-calls/homebrew/oracles/tables/createHomebrewOracleTable";
 import { updateHomebrewOracleTable } from "api-calls/homebrew/oracles/tables/updateHomebrewOracleTable";
 import { convertStoredOraclesToCollections } from "functions/convertStoredOraclesToCollections";
+import { listenToHomebrewMoveCategories } from "api-calls/homebrew/moves/collections/listenToHomebrewMoveCategories";
+import { listenToHomebrewMoves } from "api-calls/homebrew/moves/moves/listenToHomebrewMoves";
+import { createHomebrewMoveCategory } from "api-calls/homebrew/moves/collections/createHomebrewMoveCategory";
+import { updateHomebrewMoveCategory } from "api-calls/homebrew/moves/collections/updateHomebrewMoveCategory";
+import { deleteHomebrewMove } from "api-calls/homebrew/moves/moves/deleteHomebrewMove";
+import { deleteHomebrewMoveCategory } from "api-calls/homebrew/moves/collections/deleteHomebrewMoveCategory";
+import { createHomebrewMove } from "api-calls/homebrew/moves/moves/createHomebrewMove";
+import { updateHomebrewMove } from "api-calls/homebrew/moves/moves/updateHomebrewMove";
+import { convertStoredMovesToCategories } from "functions/convertStoredMovesToCategories";
 
 enum ListenerRefreshes {
   Oracles,
+  Moves,
+  Stats,
+  ConditionMeters,
+  SpecialTracks,
+  Impacts,
 }
 
 type ListenerConfig<T = { collectionId: string }> = {
@@ -96,21 +110,25 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
         listenerFunction: listenToHomebrewStats,
         errorMessage: "Failed to load homebrew stats",
         sliceKey: "stats",
+        refreshes: ListenerRefreshes.Stats,
       },
       {
         listenerFunction: listenToHomebrewConditionMeters,
         errorMessage: "Failed to load homebrew condition meters",
         sliceKey: "conditionMeters",
+        refreshes: ListenerRefreshes.ConditionMeters,
       },
       {
         listenerFunction: listenToHomebrewImpacts,
         errorMessage: "Failed to load homebrew impacts",
         sliceKey: "impactCategories",
+        refreshes: ListenerRefreshes.Impacts,
       },
       {
         listenerFunction: listenToHomebrewLegacyTracks,
         errorMessage: "Failed to load legacy tracks",
         sliceKey: "legacyTracks",
+        refreshes: ListenerRefreshes.SpecialTracks,
       },
       {
         listenerFunction: listenToHomebrewOracleCollections,
@@ -123,6 +141,18 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
         errorMessage: "Failed to load oracle tables",
         sliceKey: "oracleTables",
         refreshes: ListenerRefreshes.Oracles,
+      },
+      {
+        listenerFunction: listenToHomebrewMoveCategories,
+        errorMessage: "Failed to load move categories",
+        sliceKey: "moveCategories",
+        refreshes: ListenerRefreshes.Moves,
+      },
+      {
+        listenerFunction: listenToHomebrewMoves,
+        errorMessage: "Failed to load moves",
+        sliceKey: "moves",
+        refreshes: ListenerRefreshes.Moves,
       },
     ];
 
@@ -142,8 +172,25 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
                   },
                 };
               });
-              if (config.refreshes === ListenerRefreshes.Oracles) {
-                getState().homebrew.updateDataswornOracles(homebrewId);
+              switch (config.refreshes) {
+                case ListenerRefreshes.Oracles:
+                  getState().homebrew.updateDataswornOracles(homebrewId);
+                  break;
+                case ListenerRefreshes.Moves:
+                  getState().homebrew.updateDataswornMoves(homebrewId);
+                  break;
+                case ListenerRefreshes.Stats:
+                  getState().rules.rebuildStats();
+                  break;
+                case ListenerRefreshes.ConditionMeters:
+                  getState().rules.rebuildConditionMeters();
+                  break;
+                case ListenerRefreshes.SpecialTracks:
+                  getState().rules.rebuildSpecialTracks();
+                  break;
+                case ListenerRefreshes.Impacts:
+                  getState().rules.rebuildImpacts();
+                  break;
               }
             },
             () => {
@@ -307,6 +354,71 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
         store.homebrew.collections[homebrewId].dataswornOracles = collections;
       });
       getState().rules.rebuildOracles();
+    }
+  },
+
+  createMoveCategory: (moveCategory) => {
+    return createHomebrewMoveCategory({ moveCategory });
+  },
+  updateMoveCategory: (moveCategoryId, moveCategory) => {
+    return updateHomebrewMoveCategory({
+      moveCategoryId,
+      moveCategory,
+    });
+  },
+  deleteMoveCategory: (homebrewId, moveCategoryId) => {
+    const moves =
+      getState().homebrew.collections[homebrewId]?.moves?.data ?? {};
+    const filteredMoveIds = Object.keys(moves).filter(
+      (moveId) => moves[moveId]?.categoryId === moveCategoryId
+    );
+
+    const promises: Promise<void>[] = [];
+    filteredMoveIds.forEach((moveId) => {
+      promises.push(getState().homebrew.deleteMove(moveId));
+    });
+
+    return new Promise((resolve, reject) => {
+      Promise.all(promises)
+        .then(() => {
+          deleteHomebrewMoveCategory({
+            moveCategoryId,
+          })
+            .then(() => {
+              resolve();
+            })
+            .catch(reject);
+        })
+        .catch(reject);
+    });
+  },
+
+  createMove: (move) => {
+    return createHomebrewMove({ move });
+  },
+  updateMove: (moveId, move) => {
+    return updateHomebrewMove({ moveId, move });
+  },
+  deleteMove: (moveId) => {
+    return deleteHomebrewMove({ moveId });
+  },
+
+  updateDataswornMoves: (homebrewId) => {
+    const homebrewCollection = getState().homebrew.collections[homebrewId];
+
+    const moveCategories = homebrewCollection?.moveCategories?.data;
+    const moves = homebrewCollection?.moves?.data;
+
+    if (moveCategories && moves) {
+      const categories = convertStoredMovesToCategories(
+        homebrewId,
+        moveCategories,
+        moves
+      );
+      set((store) => {
+        store.homebrew.collections[homebrewId].dataswornMoves = categories;
+      });
+      getState().rules.rebuildMoves();
     }
   },
 });

@@ -1,18 +1,13 @@
-import {
-  Box,
-  Collapse,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-} from "@mui/material";
-import OpenIcon from "@mui/icons-material/ChevronRight";
+import { Box, Collapse } from "@mui/material";
 import { useState } from "react";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
 import { CATEGORY_VISIBILITY } from "./useFilterMoves";
 import { Datasworn } from "@datasworn/core";
+import { Move } from "./Move";
 
 export interface MoveCategoryProps {
   category: Datasworn.MoveCategory;
+  moveMap: Record<string, Datasworn.Move>;
   openMove: (move: Datasworn.Move) => void;
   forceOpen?: boolean;
   visibleCategories: Record<string, CATEGORY_VISIBILITY>;
@@ -20,8 +15,14 @@ export interface MoveCategoryProps {
 }
 
 export function MoveCategory(props: MoveCategoryProps) {
-  const { category, openMove, forceOpen, visibleCategories, visibleMoves } =
-    props;
+  const {
+    category,
+    moveMap,
+    openMove,
+    forceOpen,
+    visibleCategories,
+    visibleMoves,
+  } = props;
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -49,38 +50,12 @@ export function MoveCategory(props: MoveCategoryProps) {
           {Object.values(category.contents ?? {}).map((move, index) =>
             visibleCategories[category.id] === CATEGORY_VISIBILITY.ALL ||
             visibleMoves[move.id] === true ? (
-              <ListItem
-                id={move.id}
+              <Move
                 key={index}
-                sx={(theme) => ({
-                  "&:nth-of-type(even)": {
-                    backgroundColor: theme.palette.background.paperInlay,
-                  },
-                })}
-                disablePadding
-              >
-                <ListItemButton
-                  disabled={!isExpandedOrForced}
-                  onClick={() => openMove(move)}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box
-                    sx={(theme) => ({
-                      ...theme.typography.body2,
-                      color: theme.palette.text.primary,
-                    })}
-                  >
-                    {move.name}
-                  </Box>
-                  <ListItemIcon sx={{ minWidth: "unset" }}>
-                    <OpenIcon />
-                  </ListItemIcon>
-                </ListItemButton>
-              </ListItem>
+                move={moveMap[move.id]}
+                disabled={!isExpandedOrForced}
+                openMove={openMove}
+              />
             ) : null
           )}
         </Box>

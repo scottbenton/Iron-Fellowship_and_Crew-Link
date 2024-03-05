@@ -6,6 +6,7 @@ import { oracleMap } from "data/oracles";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useStore } from "stores/store";
+import { OracleTableRenderer } from "./OracleTableRenderer";
 
 export interface MarkdownRendererProps {
   inlineParagraph?: boolean;
@@ -26,29 +27,48 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
   const newOracleMap = useStore(
     (store) => store.rules.oracleMaps.allOraclesMap
   );
+  const newMoveMap = useStore((store) => store.rules.moveMaps.moveMap);
 
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        p: ({ children }) => (
-          <Typography
-            variant={"body2"}
-            display={inlineParagraph ? "inline" : "block"}
-            color={
-              inheritColor
-                ? "inherit"
-                : (theme) =>
-                    inlineParagraph
-                      ? theme.palette.text.secondary
-                      : theme.palette.text.primary
+        p: ({ children }) => {
+          if (
+            typeof children === "string" ||
+            (Array.isArray(children) &&
+              children.length > 0 &&
+              typeof children[0] === "string")
+          ) {
+            const content =
+              typeof children === "string" ? children : (children[0] as string);
+            if (content.match(/^{{table:[^/]+\/oracles\/[^}]+}}$/)) {
+              const id = content.replace("{{table:", "").replace("}}", "");
+              const oracle = newOracleMap[id];
+              if (oracle) {
+                return <OracleTableRenderer oracle={oracle} />;
+              }
             }
-            py={inlineParagraph ? 0 : 1}
-            textAlign={"left"}
-          >
-            {children}
-          </Typography>
-        ),
+          }
+          return (
+            <Typography
+              variant={"body2"}
+              display={inlineParagraph ? "inline" : "block"}
+              color={
+                inheritColor
+                  ? "inherit"
+                  : (theme) =>
+                      inlineParagraph
+                        ? theme.palette.text.secondary
+                        : theme.palette.text.primary
+              }
+              py={inlineParagraph ? 0 : 1}
+              textAlign={"left"}
+            >
+              {children}
+            </Typography>
+          );
+        },
         li: ({ children }) => (
           <Typography
             component={"li"}
@@ -152,6 +172,28 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
                   {props.children}
                 </Link>
               );
+            }
+            if (href.match(/^id:[^/]*\/moves/)) {
+              const strippedHref = href.slice(3);
+              if (newMoveMap[strippedHref]) {
+                return (
+                  <Link
+                    component={"button"}
+                    sx={{
+                      cursor: "pointer",
+                      verticalAlign: "baseline",
+                    }}
+                    color={
+                      theme.palette.mode === "light"
+                        ? "info.dark"
+                        : "info.light"
+                    }
+                    onClick={() => openDialog(strippedHref, true)}
+                  >
+                    {props.children}
+                  </Link>
+                );
+              }
             }
 
             console.error("Link: ", href);

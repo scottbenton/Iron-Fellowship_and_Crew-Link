@@ -1,9 +1,7 @@
 import { Autocomplete, TextField, capitalize } from "@mui/material";
-import { useRules } from "data/hooks/useRules";
-import { StoredConditionMeter } from "types/homebrew/HomebrewRules.type";
+import { useStore } from "stores/store";
 
-export interface StatAutocompleteProps {
-  conditionMeters: Record<string, StoredConditionMeter>;
+export interface ConditionMeterAutocompleteProps {
   label?: string;
   value: string[];
   onChange: (value: string[]) => void;
@@ -11,17 +9,18 @@ export interface StatAutocompleteProps {
   onBlur: () => void;
 }
 
-export function ConditionMeterAutocomplete(props: StatAutocompleteProps) {
-  const { label, conditionMeters, value, onChange, disabled, onBlur } = props;
-  const { condition_meters: baseConditionMeters } = useRules();
+export function ConditionMeterAutocomplete(
+  props: ConditionMeterAutocompleteProps
+) {
+  const { label, value, onChange, disabled, onBlur } = props;
 
-  const allConditionMeters = { ...conditionMeters, ...baseConditionMeters };
+  const conditionMeters = useStore((store) => store.rules.conditionMeters);
 
   return (
     <Autocomplete
       multiple={true}
-      options={Object.keys(allConditionMeters)}
-      getOptionLabel={(key) => capitalize(allConditionMeters[key].label)}
+      options={Object.keys(conditionMeters)}
+      getOptionLabel={(key) => capitalize(conditionMeters[key].label)}
       renderInput={(params) => (
         <TextField {...params} label={label ?? "Condition Meters"} />
       )}

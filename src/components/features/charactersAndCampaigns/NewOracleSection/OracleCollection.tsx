@@ -43,7 +43,6 @@ export function OracleCollection(props: OracleCollectionProps) {
   const subCollections =
     collection.oracle_type === "tables" && collection.collections;
 
-  console.debug(enhancesCollections);
   const enhancingCollectionIds = enhancesCollections[collectionId];
 
   const { oracleIds, subCollectionIds } = useMemo(() => {
@@ -53,7 +52,6 @@ export function OracleCollection(props: OracleCollectionProps) {
       (subCollection) => subCollection.id
     );
 
-    console.debug(enhancingCollectionIds);
     (enhancingCollectionIds ?? []).forEach((enhancesId) => {
       const enhancingCollection = collections[enhancesId];
       if (enhancingCollection) {

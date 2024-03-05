@@ -88,6 +88,9 @@ export function useFilterOracles() {
       if (hasOracles) {
         isEmpty = false;
         visibleCollections[collection.id] = CATEGORY_VISIBILITY.SOME;
+        if (collection.enhances) {
+          visibleCollections[collection.enhances] = CATEGORY_VISIBILITY.SOME;
+        }
       } else {
         visibleCollections[collection.id] = CATEGORY_VISIBILITY.HIDDEN;
       }
@@ -106,8 +109,6 @@ export function useFilterOracles() {
     };
   }, [oracleCollections, search]);
 
-  console.debug(visibleOracleCollectionIds, visibleOracleIds);
-  console.count("Reran use filter oracles");
   return {
     oracleCollections,
     oracles,

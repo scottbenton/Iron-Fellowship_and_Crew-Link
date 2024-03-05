@@ -149,6 +149,18 @@ service cloud.firestore {
         allow create: if request.auth.uid != null;
         allow write: if checkIsHomebrewOwner(resource.data.collectionId);
       }
+
+      match /move_categories/{moveCategoryId} {
+        allow read: if request.auth.uid != null;
+        allow create: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner(resource.data.collectionId);
+      }
+
+      match /moves/{moveId} {
+        allow read: if request.auth.uid != null;
+        allow create: if request.auth.uid != null;
+        allow write: if checkIsHomebrewOwner(resource.data.collectionId);
+      }
     }
     match /users/{userId} {
     	allow read: if true;

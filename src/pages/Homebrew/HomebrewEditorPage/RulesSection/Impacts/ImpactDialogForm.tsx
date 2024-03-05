@@ -15,7 +15,6 @@ import { convertIdPart } from "functions/dataswornIdEncoder";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
-  StoredConditionMeter,
   StoredImpact,
   StoredImpactCategory,
 } from "types/homebrew/HomebrewRules.type";
@@ -29,7 +28,6 @@ export interface ImpactDialogFormProps {
   impacts: StoredImpactCategory["contents"];
   editingCategoryKey: string;
   editingImpactKey?: string;
-  conditionMeters: Record<string, StoredConditionMeter>;
 }
 
 export interface Form {
@@ -49,7 +47,6 @@ export function ImpactDialogForm(props: ImpactDialogFormProps) {
     impacts,
     editingCategoryKey,
     editingImpactKey,
-    conditionMeters,
   } = props;
 
   const existingImpact =
@@ -185,7 +182,6 @@ export function ImpactDialogForm(props: ImpactDialogFormProps) {
                 <ConditionMeterAutocomplete
                   label={"Prevents Recovery on"}
                   value={field.value}
-                  conditionMeters={conditionMeters}
                   onChange={(ids) => field.onChange(ids)}
                   onBlur={field.onBlur}
                 />

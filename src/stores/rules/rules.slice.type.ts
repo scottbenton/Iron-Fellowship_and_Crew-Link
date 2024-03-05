@@ -3,7 +3,12 @@ import { Datasworn } from "@datasworn/core";
 export interface RulesSliceData {
   expansionIds: string[];
   baseRuleset?: Datasworn.Ruleset;
+  progressTracks: string[];
   rootOracleCollectionIds: string[];
+  stats: Datasworn.Rules["stats"];
+  conditionMeters: Datasworn.Rules["condition_meters"];
+  specialTracks: Datasworn.Rules["special_tracks"];
+  impacts: Datasworn.Rules["impacts"];
   oracleMaps: {
     allOraclesMap: Record<
       string,
@@ -23,6 +28,11 @@ export interface RulesSliceData {
 export interface RulesSliceActions {
   setExpansionIds: (expansionIds: string[]) => void;
   rebuildOracles: () => void;
+  rebuildMoves: () => void;
+  rebuildStats: () => void;
+  rebuildConditionMeters: () => void;
+  rebuildSpecialTracks: () => void;
+  rebuildImpacts: () => void;
 }
 
 export type RulesSlice = RulesSliceData & RulesSliceActions;

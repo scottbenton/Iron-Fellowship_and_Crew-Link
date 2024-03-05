@@ -28,7 +28,7 @@ export function SimpleTable<T>(props: SimpleTableProps<T>) {
         component={"table"}
         mt={1}
         borderColor={"divider"}
-        sx={{
+        sx={(theme) => ({
           borderCollapse: "separate",
           borderRadius: 1,
           overflow: "hidden",
@@ -37,9 +37,32 @@ export function SimpleTable<T>(props: SimpleTableProps<T>) {
           borderStyle: "solid",
           overflowX: "auto",
           width: "100%",
-        }}
+
+          "& th": {
+            backgroundColor: theme.palette.background.paperInlayDarker,
+          },
+
+          "& th:nth-child(1)": {
+            borderTopLeftRadius: theme.shape.borderRadius,
+          },
+          "& th:nth-last-child(1)": {
+            borderTopRightRadius: theme.shape.borderRadius,
+          },
+
+          "& tbody tr:nth-of-type(even) td": {
+            backgroundColor: theme.palette.background.paperInlay,
+          },
+          "& tbody tr:nth-last-child(1)": {
+            "& td:nth-child(1)": {
+              borderBottomLeftRadius: theme.shape.borderRadius,
+            },
+            "& td:nth-last-child(1)": {
+              borderBottomRightRadius: theme.shape.borderRadius,
+            },
+          },
+        })}
       >
-        <Box component={"thead"} bgcolor={"background.paperInlayDarker"}>
+        <Box component={"thead"}>
           <tr>
             {columns.map((column, index) => (
               <Typography
@@ -59,15 +82,7 @@ export function SimpleTable<T>(props: SimpleTableProps<T>) {
         <tbody>
           {rows.map((row, index) => {
             return (
-              <Box
-                key={index}
-                component={"tr"}
-                sx={(theme) => ({
-                  "&:nth-of-type(even)": {
-                    backgroundColor: theme.palette.background.paperInlay,
-                  },
-                })}
-              >
+              <Box key={index} component={"tr"}>
                 {columns.map((column, columnIndex) => (
                   <Typography
                     key={columnIndex}

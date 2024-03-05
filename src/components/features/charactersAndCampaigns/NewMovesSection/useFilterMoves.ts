@@ -14,6 +14,8 @@ export function useFilterMoves() {
     (store) => store.rules.moveMaps.moveCategoryMap
   );
 
+  const moveMap = useStore((store) => store.rules.moveMaps.moveMap);
+
   const { visibleMoveCategoryIds, visibleMoveIds, isEmpty } = useMemo(() => {
     const visibleCategories: Record<string, CATEGORY_VISIBILITY> = {};
     const visibleMoves: Record<string, boolean> = {};
@@ -50,6 +52,9 @@ export function useFilterMoves() {
       if (hasMove) {
         isEmpty = false;
         visibleCategories[category.id] = CATEGORY_VISIBILITY.SOME;
+        if (category.enhances) {
+          visibleCategories[category.enhances] = CATEGORY_VISIBILITY.SOME;
+        }
       } else {
         visibleCategories[category.id] = CATEGORY_VISIBILITY.HIDDEN;
       }
@@ -64,6 +69,7 @@ export function useFilterMoves() {
 
   return {
     moveCategories,
+    moveMap,
     setSearch,
     visibleMoveCategoryIds,
     visibleMoveIds,

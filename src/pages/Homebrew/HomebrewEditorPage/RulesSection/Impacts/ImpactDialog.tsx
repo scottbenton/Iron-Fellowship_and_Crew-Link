@@ -1,6 +1,5 @@
 import { Dialog } from "@mui/material";
 import {
-  StoredConditionMeter,
   StoredImpact,
   StoredImpactCategory,
 } from "types/homebrew/HomebrewRules.type";
@@ -13,7 +12,6 @@ export interface ImpactDialogProps {
   impacts: StoredImpactCategory["contents"];
   editingCategoryKey: string;
   editingImpactKey?: string;
-  conditionMeters: Record<string, StoredConditionMeter>;
 }
 
 export function ImpactDialog(props: ImpactDialogProps) {
