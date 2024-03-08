@@ -49,7 +49,7 @@ export function StatsSectionMobile() {
               <StatComponent
                 key={statKey}
                 label={ruleStats[statKey].label}
-                value={stats[statKey]}
+                value={stats[statKey] ?? 0}
                 sx={{ width: 54 }}
               />
             ))}

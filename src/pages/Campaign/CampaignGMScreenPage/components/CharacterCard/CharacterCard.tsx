@@ -19,6 +19,7 @@ import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { IronswornTracks } from "./IronswornTracks";
 import { LegacyTracks } from "./LegacyTracks";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
 
 export interface CharacterCardProps {
   uid: string;
@@ -28,6 +29,9 @@ export interface CharacterCardProps {
 
 export function CharacterCard(props: CharacterCardProps) {
   const { uid, characterId, character } = props;
+
+  const showNewExpansions = useNewCustomContentPage();
+  const stats = useStore((store) => store.rules.stats);
 
   const trackLabel = useGameSystemValue<string>({
     [GAME_SYSTEMS.IRONSWORN]: "XP and Bonds",
@@ -94,45 +98,61 @@ export function CharacterCard(props: CharacterCardProps) {
           />
         </Box>
         <Box display={"flex"} px={2} flexWrap={"wrap"}>
-          <StatComponent
-            label={"Edge"}
-            value={character.stats[Stat.Edge]}
-            sx={{ mr: 1, mt: 1 }}
-            disableRoll
-          />
-          <StatComponent
-            label={"Heart"}
-            value={character.stats[Stat.Heart]}
-            sx={{ mr: 1, mt: 1 }}
-            disableRoll
-          />
-          <StatComponent
-            label={"Iron"}
-            value={character.stats[Stat.Iron]}
-            sx={{ mr: 1, mt: 1 }}
-            disableRoll
-          />
-          <StatComponent
-            label={"Shadow"}
-            value={character.stats[Stat.Shadow]}
-            sx={{ mr: 1, mt: 1 }}
-            disableRoll
-          />
-          <StatComponent
-            label={"Wits"}
-            value={character.stats[Stat.Wits]}
-            sx={{ mr: 1, mt: 1 }}
-            disableRoll
-          />
-          {customStats.map((customStat) => (
-            <StatComponent
-              key={customStat}
-              label={customStat}
-              value={character.stats[customStat] ?? 0}
-              sx={{ mr: 1, mt: 1 }}
-              disableRoll
-            />
-          ))}
+          {showNewExpansions ? (
+            <>
+              {Object.keys(stats).map((statKey) => (
+                <StatComponent
+                  key={statKey}
+                  label={stats[statKey].label}
+                  value={character.stats[statKey] ?? 0}
+                  sx={{ mr: 1, mt: 1 }}
+                  disableRoll
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              <StatComponent
+                label={"Edge"}
+                value={character.stats[Stat.Edge]}
+                sx={{ mr: 1, mt: 1 }}
+                disableRoll
+              />
+              <StatComponent
+                label={"Heart"}
+                value={character.stats[Stat.Heart]}
+                sx={{ mr: 1, mt: 1 }}
+                disableRoll
+              />
+              <StatComponent
+                label={"Iron"}
+                value={character.stats[Stat.Iron]}
+                sx={{ mr: 1, mt: 1 }}
+                disableRoll
+              />
+              <StatComponent
+                label={"Shadow"}
+                value={character.stats[Stat.Shadow]}
+                sx={{ mr: 1, mt: 1 }}
+                disableRoll
+              />
+              <StatComponent
+                label={"Wits"}
+                value={character.stats[Stat.Wits]}
+                sx={{ mr: 1, mt: 1 }}
+                disableRoll
+              />
+              {customStats.map((customStat) => (
+                <StatComponent
+                  key={customStat}
+                  label={customStat}
+                  value={character.stats[customStat] ?? 0}
+                  sx={{ mr: 1, mt: 1 }}
+                  disableRoll
+                />
+              ))}
+            </>
+          )}
         </Box>
         <Box display={"flex"} px={2} pb={2}>
           <StatComponent

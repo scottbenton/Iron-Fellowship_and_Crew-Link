@@ -54,7 +54,7 @@ export function StatsSection() {
               <StatComponent
                 key={statKey}
                 label={ruleStats[statKey].label}
-                value={stats[statKey]}
+                value={stats[statKey] ?? 0}
                 sx={{ my: 0.5, mr: index === arr.length - 1 ? 0 : 0.5 }}
               />
             ))}
