@@ -14,12 +14,16 @@ import { useListenToSectors } from "stores/world/currentWorld/sector/useListenTo
 import { useListenToSectorLocations } from "stores/world/currentWorld/sector/sectorLocations/useListenToSectorLocations";
 import { useListenToSharedAssets } from "stores/campaign/currentCampaign/sharedAssets/useListenToSharedAssets";
 import { useListenToLogs } from "stores/gameLog/useListenToLogs";
+import { useListenToHomebrewContent } from "stores/homebrew/useListenToHomebrewContent";
 
 export function useSyncStore() {
   const { campaignId } = useParams();
 
   const setCampaignId = useStore(
     (store) => store.campaigns.currentCampaign.setCurrentCampaignId
+  );
+  const expansionIds = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign?.expansionIds
   );
 
   useEffect(() => {
@@ -42,4 +46,6 @@ export function useSyncStore() {
 
   useListenToSettings();
   useListenToLogs();
+
+  useListenToHomebrewContent(expansionIds ?? []);
 }

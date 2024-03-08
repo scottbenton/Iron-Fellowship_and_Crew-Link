@@ -5,4 +5,5 @@ export interface StoredCampaign {
   supply: number;
   gmIds?: string[];
   worldId?: string;
+  expansionIds?: string[];
 }

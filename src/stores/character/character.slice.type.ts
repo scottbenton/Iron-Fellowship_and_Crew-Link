@@ -26,7 +26,8 @@ export interface CharacterSliceActions {
         x: number;
         y: number;
       };
-    }
+    },
+    expansionIds?: string[]
   ) => Promise<string>;
   deleteCharacter: (characterId: string) => Promise<void>;
   loadCharacterPortrait: (

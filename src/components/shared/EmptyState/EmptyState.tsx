@@ -7,10 +7,11 @@ export interface EmptyStateProps {
   message?: string;
   callToAction?: React.ReactNode;
   sx?: SxProps;
+  leftAlign?: boolean;
 }
 
 export function EmptyState(props: EmptyStateProps) {
-  const { showImage, title, message, callToAction, sx } = props;
+  const { showImage, title, message, callToAction, leftAlign, sx } = props;
 
   const imageSrc = getPublicAssetPath("empty-state.svg");
 
@@ -18,7 +19,7 @@ export function EmptyState(props: EmptyStateProps) {
     <Box
       display={"flex"}
       flexDirection={"column"}
-      alignItems={"center"}
+      alignItems={leftAlign ? "flex-start" : "center"}
       mt={showImage ? 8 : 2}
       sx={sx}
     >

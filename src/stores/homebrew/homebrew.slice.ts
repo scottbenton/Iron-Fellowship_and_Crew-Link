@@ -215,6 +215,12 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
     return () => {
       getState().rules.setExpansionIds([]);
       unsubscribes.forEach((unsubscribe) => unsubscribe());
+      getState().rules.rebuildOracles();
+      getState().rules.rebuildMoves();
+      getState().rules.rebuildStats();
+      getState().rules.rebuildConditionMeters();
+      getState().rules.rebuildSpecialTracks();
+      getState().rules.rebuildImpacts();
     };
   },
 

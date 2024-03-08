@@ -1,11 +1,15 @@
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { StatsMap } from "types/Character.type";
 
 import { Stat } from "types/stats.enum";
 import { StatComponent } from "components/features/characters/StatComponent";
 import { useStore } from "stores/store";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
 
 export function StatsSection() {
+  const showNewRules = useNewCustomContentPage();
+  const ruleStats = useStore((store) => store.rules.stats);
+
   // We know character is defined at this point, hence the typecasting
   const stats = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.stats
@@ -43,56 +47,80 @@ export function StatsSection() {
 
   return (
     <Box display={"flex"} flexWrap={"wrap"} justifyContent={"flex-start"}>
-      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mr={2}>
-        <StatComponent
-          label={"Edge"}
-          value={stats[Stat.Edge]}
-          sx={{ my: 0.5, mr: 1 }}
-        />
-        <StatComponent
-          label={"Heart"}
-          value={stats[Stat.Heart]}
-          sx={{ my: 0.5, mr: 1 }}
-        />
-        <StatComponent
-          label={"Iron"}
-          value={stats[Stat.Iron]}
-          sx={{ my: 0.5, mr: 1 }}
-        />
-        <StatComponent
-          label={"Shadow"}
-          value={stats[Stat.Shadow]}
-          sx={{ my: 0.5, mr: 1 }}
-        />
-        <StatComponent
-          label={"Wits"}
-          value={stats[Stat.Wits]}
-          sx={{ my: 0.5, mr: 1 }}
-        />
-        {customStats.map((customStat) => (
-          <StatComponent
-            key={customStat}
-            label={customStat}
-            value={stats[customStat] ?? 0}
-            sx={{ my: 0.5, mr: 1 }}
-          />
-        ))}
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
+        {showNewRules ? (
+          <>
+            {Object.keys(ruleStats).map((statKey, index, arr) => (
+              <StatComponent
+                key={statKey}
+                label={ruleStats[statKey].label}
+                value={stats[statKey]}
+                sx={{ my: 0.5, mr: index === arr.length - 1 ? 0 : 0.5 }}
+              />
+            ))}
+          </>
+        ) : (
+          <>
+            <StatComponent
+              label={"Edge"}
+              value={stats[Stat.Edge]}
+              sx={{ my: 0.5, mr: 0.5 }}
+            />
+            <StatComponent
+              label={"Heart"}
+              value={stats[Stat.Heart]}
+              sx={{ my: 0.5, mr: 0.5 }}
+            />
+            <StatComponent
+              label={"Iron"}
+              value={stats[Stat.Iron]}
+              sx={{ my: 0.5, mr: 0.5 }}
+            />
+            <StatComponent
+              label={"Shadow"}
+              value={stats[Stat.Shadow]}
+              sx={{ my: 0.5, mr: 0.5 }}
+            />
+            <StatComponent
+              label={"Wits"}
+              value={stats[Stat.Wits]}
+              sx={{ my: 0.5, mr: customStats.length > 0 ? 0.5 : 0 }}
+            />
+            {customStats.map((customStat, index) => (
+              <StatComponent
+                key={customStat}
+                label={customStat}
+                value={stats[customStat] ?? 0}
+                sx={{ my: 0.5, mr: customStats.length - 1 === index ? 0 : 0.5 }}
+              />
+            ))}
+          </>
+        )}
       </Box>
-      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} pl={0.5}>
+      <Divider
+        orientation='vertical'
+        flexItem
+        sx={(theme) => ({
+          mx: 1,
+          borderColor:
+            theme.palette.grey[theme.palette.mode === "light" ? 700 : 600],
+        })}
+      />
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
         <StatComponent
           label={"Health"}
           value={health}
-          sx={{ my: 0.5, mr: 1 }}
+          sx={{ my: 0.5, mr: 0.5 }}
         />
         <StatComponent
           label={"Spirit"}
           value={spirit}
-          sx={{ my: 0.5, mr: 1 }}
+          sx={{ my: 0.5, mr: 0.5 }}
         />
         <StatComponent
           label={"Supply"}
           value={supply}
-          sx={{ my: 0.5, mr: customTracks.length > 0 ? 1 : 3 }}
+          sx={{ my: 0.5, mr: customTracks.length > 0 ? 0.5 : 0 }}
         />
 
         {customTracks.map((track, index) => (
@@ -107,9 +135,18 @@ export function StatsSection() {
                 ? (track.values[customTrackValues[track.label]].value as number)
                 : 0
             }
-            sx={{ my: 0.5, mr: customTracks.length - 1 === index ? 3 : 1 }}
+            sx={{ my: 0.5, mr: customTracks.length - 1 === index ? 0 : 0.5 }}
           />
         ))}
+        <Divider
+          orientation='vertical'
+          flexItem
+          sx={(theme) => ({
+            mx: 1,
+            borderColor:
+              theme.palette.grey[theme.palette.mode === "light" ? 700 : 600],
+          })}
+        />
 
         <StatComponent
           label={"Adds"}

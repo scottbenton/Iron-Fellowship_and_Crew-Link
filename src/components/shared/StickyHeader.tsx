@@ -59,9 +59,7 @@ export function StickyHeader(props: PropsWithChildren<StickyHeaderProps>) {
               px: { xs: 2, sm: 3 },
               backgroundColor:
                 theme.palette.grey[theme.palette.mode === "light" ? 600 : 800],
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              color: theme.palette.common.white,
               overflowX: "auto",
               overflowY: "visible",
               flexWrap: "wrap",

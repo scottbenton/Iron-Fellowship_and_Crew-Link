@@ -2,12 +2,9 @@ import { Datasworn } from "@datasworn/core";
 import { CATEGORY_VISIBILITY } from "../OracleSection/useFilterOracles";
 import { useMemo, useState } from "react";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
-import { Collapse, List, ListItemText } from "@mui/material";
-import { useRoller } from "stores/appState/useRoller";
+import { Collapse, List } from "@mui/material";
 import { OracleSelectableRollableCollectionListItem } from "./OracleSelectableRollableCollectionListItem";
 import { OracleListItem } from "./OracleListItem";
-import { OracleListItemActionOpenDialogButton } from "./OracleListItemActionOpenDialogButton";
-import { ListItemButtonWithSecondaryAction } from "./ListItemButtonWithSecondaryAction";
 
 export interface OracleCollectionProps {
   collectionId: string;
@@ -31,8 +28,6 @@ export function OracleCollection(props: OracleCollectionProps) {
     enhancesCollections,
     disabled,
   } = props;
-
-  const { rollOracleTableNew } = useRoller();
 
   const [isExpanded, setIsExpanded] = useState(false);
   const isExpandedOrForced = isExpanded || forceOpen;
@@ -112,21 +107,6 @@ export function OracleCollection(props: OracleCollectionProps) {
         collection={collection}
         disabled={disabled}
       />
-    );
-  } else if (collection.oracle_type === "table_shared_rolls") {
-    return (
-      <ListItemButtonWithSecondaryAction
-        onClick={() => rollOracleTableNew(collection.id, true)}
-        secondaryAction={
-          <OracleListItemActionOpenDialogButton
-            item={collection}
-            disabled={disabled}
-          />
-        }
-        disabled={disabled}
-      >
-        <ListItemText primary={collection.name} />
-      </ListItemButtonWithSecondaryAction>
     );
   }
 

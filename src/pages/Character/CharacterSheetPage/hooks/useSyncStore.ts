@@ -14,6 +14,7 @@ import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs"
 import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
 import { useListenToSectorLocations } from "stores/world/currentWorld/sector/sectorLocations/useListenToSectorLocations";
 import { useListenToSharedAssets } from "stores/campaign/currentCampaign/sharedAssets/useListenToSharedAssets";
+import { useListenToHomebrewContent } from "stores/homebrew/useListenToHomebrewContent";
 
 export function useSyncStore() {
   const { characterId } = useParams();
@@ -27,6 +28,13 @@ export function useSyncStore() {
   );
   const worldId = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.worldId
+  );
+
+  const characterExpansionIds = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.expansionIds
+  );
+  const campaignExpansionIds = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign?.expansionIds
   );
 
   const setCurrentCharacterId = useStore(
@@ -85,4 +93,8 @@ export function useSyncStore() {
 
   useListenToLogs();
   useListenToCurrentCampaignCharacters();
+
+  useListenToHomebrewContent(
+    (campaignId ? campaignExpansionIds : characterExpansionIds) ?? []
+  );
 }

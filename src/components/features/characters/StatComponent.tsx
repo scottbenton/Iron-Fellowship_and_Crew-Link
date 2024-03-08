@@ -149,6 +149,10 @@ export function StatComponent(props: StatComponentProps) {
           onChange={(evt) => handleStatUpdate(evt.target.value)}
           sx={{
             width: "100%",
+            "& .MuiOutlinedInput-root": {
+              borderTopRightRadius: 0,
+              borderTopLeftRadius: 0,
+            },
             "& input": { paddingRight: 0, py: 0.75 },
           }}
           type={"number"}

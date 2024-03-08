@@ -4,7 +4,7 @@ import React from "react";
 export type NumberFieldProps = {
   value: number;
   onChange: (value?: number) => void;
-} & TextFieldProps;
+} & Omit<TextFieldProps, "onChange">;
 
 export function NumberField(props: NumberFieldProps) {
   const { value, onChange, ...textFieldProps } = props;

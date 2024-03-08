@@ -17,11 +17,12 @@ export const createCharacter = createApiFunction<
     name: string;
     stats: StatsMap;
     assets: StoredAsset[];
+    expansionIds?: string[];
   },
   string
 >((params) => {
   return new Promise((resolve, reject) => {
-    const { uid, name, stats, assets } = params;
+    const { uid, name, stats, assets, expansionIds } = params;
     const character: CharacterDocument = {
       uid: uid,
       name: name,
@@ -31,6 +32,9 @@ export const createCharacter = createApiFunction<
       supply: supplyTrack.startingValue,
       momentum: momentumTrack.startingValue,
     };
+    if (expansionIds) {
+      character.expansionIds = expansionIds;
+    }
 
     addDoc(getCharacterCollection(), character)
       .then((doc) => {
