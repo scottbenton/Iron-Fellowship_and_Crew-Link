@@ -1,5 +1,5 @@
 import { StoredAsset } from "./Asset.type";
-import { LEGACY_TRACK_TYPES, LegacyTrack } from "./LegacyTrack.type";
+import { LegacyTrack } from "./LegacyTrack.type";
 
 export type StatsMap = {
   [key: string]: number;
@@ -15,9 +15,6 @@ export interface CharacterDocument {
   uid: string;
   name: string;
   stats: StatsMap;
-  health: number;
-  spirit: number;
-  supply: number;
   adds?: number;
   momentum: number;
   campaignId?: string;
@@ -25,12 +22,6 @@ export interface CharacterDocument {
     earned?: number;
     spent?: number;
   };
-  legacyTracks?: {
-    [LEGACY_TRACK_TYPES.QUESTS]?: LegacyTrack;
-    [LEGACY_TRACK_TYPES.BONDS]?: LegacyTrack;
-    [LEGACY_TRACK_TYPES.DISCOVERIES]?: LegacyTrack;
-  };
-  bonds?: number;
   debilities?: {
     [key: string]: boolean;
   };
@@ -46,6 +37,15 @@ export interface CharacterDocument {
   };
   worldId?: string | null;
 
+  conditionMeters?: Record<string, number>;
+  specialTracks?: Record<string, LegacyTrack>;
+
+  // TODO - remove once new expansion is complete
+  health: number;
+  spirit: number;
+  supply: number;
+  legacyTracks?: Record<string, LegacyTrack>;
+  bonds?: number;
   customTracks?: {
     [trackName: string]: number;
   };

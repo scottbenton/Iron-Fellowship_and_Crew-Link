@@ -66,7 +66,10 @@ export function TracksSection() {
     if (track === "supply" && isInCampaign) {
       return updateCampaignSupply(newValue);
     } else {
-      return updateCharacter({ [track]: newValue });
+      return updateCharacter({
+        [track]: newValue,
+        [`conditionMeters.${track}`]: newValue,
+      });
     }
   };
 
