@@ -3,6 +3,17 @@ import { LegacyTrack } from "./LegacyTrack";
 import { Stack } from "@mui/material";
 import { useStore } from "stores/store";
 
+function getDataforgedKey(key: string): string {
+  if (key === "quests") {
+    return "quests_legacy";
+  } else if (key === "bonds") {
+    return "bonds_legacy";
+  } else if (key === "discoveries") {
+    return "discoveries_legacy";
+  }
+  return key;
+}
+
 export function LegacyTracks() {
   const legacyTracks = useStore(
     (store) =>
@@ -14,8 +25,10 @@ export function LegacyTracks() {
   );
 
   const updateLegacyTrackValue = (track: string, value: number) => {
+    const newDataforgedKey: string = getDataforgedKey(track);
     updateCharacter({
       [`legacyTracks.${track}.value`]: value,
+      [`specialTracks.${newDataforgedKey}.value`]: value,
     }).catch(() => {});
   };
 

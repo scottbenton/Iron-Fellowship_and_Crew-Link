@@ -1,4 +1,4 @@
-import { updateDoc } from "firebase/firestore";
+import { UpdateData, updateDoc } from "firebase/firestore";
 import { getCampaignDoc } from "./_getRef";
 import { createApiFunction } from "api-calls/createApiFunction";
 import { StoredCampaign } from "types/Campaign.type";
@@ -6,7 +6,7 @@ import { StoredCampaign } from "types/Campaign.type";
 export const updateCampaign = createApiFunction<
   {
     campaignId: string;
-    campaign: Partial<StoredCampaign>;
+    campaign: UpdateData<StoredCampaign>;
   },
   void
 >((params) => {

@@ -26,6 +26,8 @@ export const createCharacter = createApiFunction<
       uid: uid,
       name: name,
       stats: stats,
+      conditionMeters: {},
+      specialTracks: {},
       health: healthTrack.startingValue,
       spirit: spiritTrack.startingValue,
       supply: supplyTrack.startingValue,

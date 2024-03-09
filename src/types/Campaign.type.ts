@@ -2,7 +2,9 @@ export interface StoredCampaign {
   name: string;
   users: string[];
   characters: { uid: string; characterId: string }[];
-  supply: number;
   gmIds?: string[];
   worldId?: string;
+  conditionMeters?: Record<string, number>;
+  // TODO - Remove once expansions are in
+  supply: number;
 }
