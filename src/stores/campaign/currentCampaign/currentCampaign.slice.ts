@@ -152,7 +152,10 @@ export const createCurrentCampaignSlice: CreateSliceType<
       if (!campaignId) {
         return new Promise((res, reject) => reject("No campaign found."));
       }
-      return updateCampaign({ campaignId, campaign: { supply } });
+      return updateCampaign({
+        campaignId,
+        campaign: { supply, [`conditionMeters.supply`]: supply },
+      });
     },
     updateCampaign: (campaign) => {
       const campaignId = getState().campaigns.currentCampaign.currentCampaignId;

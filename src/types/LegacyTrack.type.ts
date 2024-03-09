@@ -5,6 +5,6 @@ export enum LEGACY_TRACK_TYPES {
 }
 export interface LegacyTrack {
   value: number;
-  spentExperience: { [index: number]: boolean };
-  isLegacy: boolean;
+  spentExperience?: { [index: number]: boolean };
+  isLegacy?: boolean;
 }

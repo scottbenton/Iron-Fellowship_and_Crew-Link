@@ -1,6 +1,7 @@
 import { CharacterDocument } from "types/Character.type";
 import { AssetSlice } from "./assets/assets.slice.type";
 import { CharacterTracksSlice } from "./tracks/characterTracks.slice.type";
+import { UpdateData } from "firebase/firestore";
 
 export interface CurrentCharacterSliceData {
   currentCharacterId?: string;
@@ -11,7 +12,7 @@ export interface CurrentCharacterSliceActions {
   setCurrentCharacterId: (characterId?: string) => void;
 
   updateCurrentCharacter: (
-    character: Partial<CharacterDocument>
+    character: UpdateData<CharacterDocument>
   ) => Promise<void>;
   updateCurrentCharacterPortrait: (
     portrait: File | undefined,
