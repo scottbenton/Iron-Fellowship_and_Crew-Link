@@ -15,7 +15,7 @@ export function IronswornTracks() {
   const updateBonds = (bonds: number) => {
     const trackName = "bonds";
     return updateCharacter({
-      [`legacyTracks.${trackName}.value`]: bonds,
+      [`specialTracks.${trackName}.value`]: bonds,
       bonds,
     });
   };

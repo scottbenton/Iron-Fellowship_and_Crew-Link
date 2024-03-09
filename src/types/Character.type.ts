@@ -37,13 +37,14 @@ export interface CharacterDocument {
   };
   worldId?: string | null;
 
-  conditionMeters: Record<string, number>;
-  legacyTracks: Record<string, LegacyTrack>;
+  conditionMeters?: Record<string, number>;
+  specialTracks?: Record<string, LegacyTrack>;
 
   // TODO - remove once new expansion is complete
   health: number;
   spirit: number;
   supply: number;
+  legacyTracks?: Record<string, LegacyTrack>;
   bonds?: number;
   customTracks?: {
     [trackName: string]: number;
