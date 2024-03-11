@@ -105,7 +105,7 @@ export function CharacterCreatePageContent() {
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <CharacterDetails control={control} watch={watch} />
-          <ExpansionsAndHomebrew control={control} />
+          {!campaignId && <ExpansionsAndHomebrew control={control} />}
           <Stats control={control} />
           <Assets control={control} />
           <Box display={"flex"} justifyContent={"flex-end"}>
