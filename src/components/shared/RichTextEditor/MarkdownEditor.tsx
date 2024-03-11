@@ -4,6 +4,8 @@ import { Markdown } from "tiptap-markdown";
 import { Editor } from "./Editor";
 import { Box, Typography } from "@mui/material";
 import { MarkdownEditorToolbar } from "./MarkdownEditorToolbar";
+import Link from "@tiptap/extension-link";
+
 export interface MarkdownEditorProps {
   label: string;
   content: string;
@@ -16,7 +18,11 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
   const editor = useEditor(
     {
-      extensions: [StarterKit, Markdown],
+      extensions: [
+        StarterKit,
+        Markdown,
+        Link.extend({ inclusive: false }).configure({ openOnClick: false }),
+      ],
       content,
       onBlur,
       onUpdate: ({ editor }) => {

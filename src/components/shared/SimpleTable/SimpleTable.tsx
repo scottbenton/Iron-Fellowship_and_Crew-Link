@@ -42,21 +42,21 @@ export function SimpleTable<T>(props: SimpleTableProps<T>) {
             backgroundColor: theme.palette.background.paperInlayDarker,
           },
 
-          "& th:nth-child(1)": {
+          "& th:nth-of-type(1)": {
             borderTopLeftRadius: theme.shape.borderRadius,
           },
-          "& th:nth-last-child(1)": {
+          "& th:nth-last-of-type(1)": {
             borderTopRightRadius: theme.shape.borderRadius,
           },
 
           "& tbody tr:nth-of-type(even) td": {
             backgroundColor: theme.palette.background.paperInlay,
           },
-          "& tbody tr:nth-last-child(1)": {
-            "& td:nth-child(1)": {
+          "& tbody tr:nth-last-of-type(1)": {
+            "& td:nth-of-type(1)": {
               borderBottomLeftRadius: theme.shape.borderRadius,
             },
-            "& td:nth-last-child(1)": {
+            "& td:nth-last-of-type(1)": {
               borderBottomRightRadius: theme.shape.borderRadius,
             },
           },

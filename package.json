@@ -12,8 +12,8 @@
   "dependencies": {
     "@datasworn/core": "^0.0.6",
     "@datasworn/ironsworn-classic": "^0.0.6",
-    "@datasworn/starforged": "^0.0.6",
     "@datasworn/ironsworn-classic-delve": "^0.0.6",
+    "@datasworn/starforged": "^0.0.6",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/bebas-neue": "^5.0.12",
@@ -26,6 +26,7 @@
     "@mui/x-date-pickers": "^6.18.4",
     "@tiptap/extension-collaboration": "^2.0.3",
     "@tiptap/extension-collaboration-cursor": "^2.0.3",
+    "@tiptap/extension-link": "^2.2.4",
     "@tiptap/extension-placeholder": "^2.0.0-beta.218",
     "@tiptap/pm": "^2.0.0-beta.218",
     "@tiptap/react": "^2.0.0-beta.218",
