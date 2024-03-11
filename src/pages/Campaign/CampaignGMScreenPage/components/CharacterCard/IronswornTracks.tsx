@@ -2,8 +2,9 @@ import SpentIcon from "@mui/icons-material/RadioButtonChecked";
 import EarnedIcon from "@mui/icons-material/HighlightOff";
 import EmptyIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { useStore } from "stores/store";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { ProgressTrack } from "components/features/ProgressTrack";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
 
 const totalExp = 30;
 export interface IronswornTracksProps {
@@ -12,6 +13,15 @@ export interface IronswornTracksProps {
 
 export function IronswornTracks(props: IronswornTracksProps) {
   const { characterId } = props;
+
+  const showNewExpansions = useNewCustomContentPage();
+  const specialTracks = useStore((store) => store.rules.specialTracks);
+  const specialTrackValues = useStore(
+    (store) =>
+      store.campaigns.currentCampaign.characters.characterMap[characterId]
+        .specialTracks ?? {}
+  );
+
   const xp = useStore(
     (store) =>
       store.campaigns.currentCampaign.characters.characterMap[characterId]
@@ -44,10 +54,30 @@ export function IronswornTracks(props: IronswornTracksProps) {
           ))}
         </Box>
       </Box>
-      <Typography fontFamily={(theme) => theme.fontFamilyTitle} sx={{ mt: 2 }}>
-        Bonds
-      </Typography>
-      <ProgressTrack value={bondValue} max={40} />
+      {showNewExpansions ? (
+        <Stack spacing={2} mt={2}>
+          {Object.keys(specialTracks)
+            .filter((specialTrack) => !specialTracks[specialTrack].shared)
+            .map((specialTrack) => (
+              <ProgressTrack
+                key={specialTrack}
+                label={specialTracks[specialTrack].label}
+                value={specialTrackValues[specialTrack]?.value ?? 0}
+                max={40}
+              />
+            ))}
+        </Stack>
+      ) : (
+        <>
+          <Typography
+            fontFamily={(theme) => theme.fontFamilyTitle}
+            sx={{ mt: 2 }}
+          >
+            Bonds
+          </Typography>
+          <ProgressTrack value={bondValue} max={40} />
+        </>
+      )}
     </Box>
   );
 }

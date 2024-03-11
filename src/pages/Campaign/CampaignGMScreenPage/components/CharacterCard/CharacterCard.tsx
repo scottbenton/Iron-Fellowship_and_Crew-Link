@@ -32,9 +32,12 @@ export function CharacterCard(props: CharacterCardProps) {
 
   const showNewExpansions = useNewCustomContentPage();
   const stats = useStore((store) => store.rules.stats);
+  const conditionMeters = useStore((store) => store.rules.conditionMeters);
 
   const trackLabel = useGameSystemValue<string>({
-    [GAME_SYSTEMS.IRONSWORN]: "XP and Bonds",
+    [GAME_SYSTEMS.IRONSWORN]: showNewExpansions
+      ? "XP and Legacy Tracks"
+      : "XP and Bonds",
     [GAME_SYSTEMS.STARFORGED]: "Legacy Tracks",
   });
   const TrackComponent = useGameSystemValue<
@@ -155,42 +158,64 @@ export function CharacterCard(props: CharacterCardProps) {
           )}
         </Box>
         <Box display={"flex"} px={2} pb={2}>
-          <StatComponent
-            label={"Health"}
-            value={character.health}
-            disableRoll
-            sx={{ mr: 1, mt: 1 }}
-          />
-          <StatComponent
-            label={"Spirit"}
-            value={character.spirit}
-            disableRoll
-            sx={{ mr: 1, mt: 1 }}
-          />
+          {showNewExpansions ? (
+            <>
+              {Object.keys(conditionMeters)
+                .filter((cm) => !conditionMeters[cm].shared)
+                .map((cm) => (
+                  <StatComponent
+                    key={cm}
+                    label={conditionMeters[cm].label}
+                    value={
+                      character.conditionMeters?.[cm] ??
+                      conditionMeters[cm].value
+                    }
+                    sx={{ mr: 1, mt: 1 }}
+                    disableRoll
+                  />
+                ))}
+            </>
+          ) : (
+            <>
+              <StatComponent
+                label={"Health"}
+                value={character.health}
+                disableRoll
+                sx={{ mr: 1, mt: 1 }}
+              />
+              <StatComponent
+                label={"Spirit"}
+                value={character.spirit}
+                disableRoll
+                sx={{ mr: 1, mt: 1 }}
+              />
+              {customTracks.map((customTrack) => {
+                const index = customTrackValues[customTrack.label];
+                const value =
+                  index !== undefined &&
+                  typeof customTrack.values[index].value === "number"
+                    ? (customTrack.values[index].value as number)
+                    : 0;
+
+                return (
+                  <StatComponent
+                    key={customTrack.label}
+                    label={customTrack.label}
+                    value={value}
+                    disableRoll
+                    sx={{ mr: 1, mt: 1 }}
+                  />
+                );
+              })}
+            </>
+          )}
+
           <StatComponent
             label={"Momentum"}
             value={character.momentum}
             disableRoll
             sx={{ mr: 1, mt: 1 }}
           />
-          {customTracks.map((customTrack) => {
-            const index = customTrackValues[customTrack.label];
-            const value =
-              index !== undefined &&
-              typeof customTrack.values[index].value === "number"
-                ? (customTrack.values[index].value as number)
-                : 0;
-
-            return (
-              <StatComponent
-                key={customTrack.label}
-                label={customTrack.label}
-                value={value}
-                disableRoll
-                sx={{ mr: 1, mt: 1 }}
-              />
-            );
-          })}
         </Box>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -216,23 +241,6 @@ export function CharacterCard(props: CharacterCardProps) {
             <TrackComponent characterId={characterId} />
           </AccordionDetails>
         </Accordion>
-
-        {/* <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            Notes
-          </AccordionSummary>
-          <AccordionDetails>
-            {character.shareNotesWithGM ? (
-              <CharacterNotesComponent uid={uid} characterId={characterId} />
-            ) : (
-              <Typography>
-                {user?.displayName ?? "User"} has not opted-in to sharing their
-                character notes with you. They can change this under the
-                character tab on their character sheet.
-              </Typography>
-            )}
-          </AccordionDetails>
-        </Accordion> */}
       </Box>
     </Card>
   );
