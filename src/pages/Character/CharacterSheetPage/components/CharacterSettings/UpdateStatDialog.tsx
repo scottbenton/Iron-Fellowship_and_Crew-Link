@@ -75,9 +75,6 @@ function UpdateStatDialogContents(props: { onClose: () => void }) {
 
   return (
     <>
-      <DialogTitleWithCloseButton onClose={onClose}>
-        Update Character Stats
-      </DialogTitleWithCloseButton>
       <DialogContent>
         {Object.keys(stats).map((statKey) => (
           <NumberField

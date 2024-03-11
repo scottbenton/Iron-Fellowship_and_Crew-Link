@@ -1,5 +1,5 @@
-import { OracleSection } from "components/features/charactersAndCampaigns/OracleSection";
+import { Typography } from "@mui/material";
 
 export function AssetsSection() {
-  return <OracleSection />;
+  return <Typography>Coming Soon</Typography>;
 }

@@ -20,6 +20,7 @@ import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { useAppName } from "hooks/useAppName";
 import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
+import { NewDebilities } from "./NewDebilities";
 
 export function CharacterSection() {
   const { gameSystem } = useGameSystem();
@@ -78,9 +79,11 @@ export function CharacterSection() {
 
   const appName = useAppName();
 
+  const showNewDebilities = useNewCustomContentPage();
+
   return (
     <Stack spacing={2} pb={2}>
-      <Debilities />
+      {showNewDebilities ? <NewDebilities /> : <Debilities />}
       {!usingNewHomebrew && <CharacterSettings />}
       {!usingNewHomebrew && <Stats />}
 

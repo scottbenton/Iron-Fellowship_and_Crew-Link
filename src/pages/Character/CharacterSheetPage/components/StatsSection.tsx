@@ -16,6 +16,34 @@ export function StatsSection() {
   ) as StatsMap;
   const customStats = useStore((store) => store.settings.customStats);
 
+  const isInCampaign = useStore(
+    (store) => !!store.characters.currentCharacter.currentCharacter?.campaignId
+  );
+  const conditionMeters = useStore((store) => store.rules.conditionMeters);
+  const characterConditionMeters = useStore(
+    (store) =>
+      store.characters.currentCharacter.currentCharacter?.conditionMeters
+  );
+  const campaignConditionMeters = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign?.conditionMeters
+  );
+  const getConditionMeterValue = (conditionMeterKey: string): number => {
+    const conditionMeter = conditionMeters[conditionMeterKey];
+
+    if (conditionMeter.shared && isInCampaign && campaignConditionMeters) {
+      return campaignConditionMeters[conditionMeterKey] ?? conditionMeter.value;
+    } else if (
+      (!conditionMeter.shared || !isInCampaign) &&
+      characterConditionMeters
+    ) {
+      return (
+        characterConditionMeters[conditionMeterKey] ?? conditionMeter.value
+      );
+    }
+
+    return conditionMeter.value;
+  };
+
   const health = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.health
   ) as number;
@@ -107,37 +135,61 @@ export function StatsSection() {
         })}
       />
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
-        <StatComponent
-          label={"Health"}
-          value={health}
-          sx={{ my: 0.5, mr: 0.5 }}
-        />
-        <StatComponent
-          label={"Spirit"}
-          value={spirit}
-          sx={{ my: 0.5, mr: 0.5 }}
-        />
-        <StatComponent
-          label={"Supply"}
-          value={supply}
-          sx={{ my: 0.5, mr: customTracks.length > 0 ? 0.5 : 0 }}
-        />
+        {showNewRules ? (
+          <>
+            {Object.keys(conditionMeters)
+              .filter(
+                (conditionMeterKey) =>
+                  conditionMeters[conditionMeterKey].rollable
+              )
+              .map((conditionMeterKey) => (
+                <StatComponent
+                  key={conditionMeterKey}
+                  label={conditionMeters[conditionMeterKey].label}
+                  value={getConditionMeterValue(conditionMeterKey)}
+                  sx={{ my: 0.5, mr: 0.5 }}
+                />
+              ))}
+          </>
+        ) : (
+          <>
+            <StatComponent
+              label={"Health"}
+              value={health}
+              sx={{ my: 0.5, mr: 0.5 }}
+            />
+            <StatComponent
+              label={"Spirit"}
+              value={spirit}
+              sx={{ my: 0.5, mr: 0.5 }}
+            />
+            <StatComponent
+              label={"Supply"}
+              value={supply}
+              sx={{ my: 0.5, mr: customTracks.length > 0 ? 0.5 : 0 }}
+            />
 
-        {customTracks.map((track, index) => (
-          <StatComponent
-            key={track.label}
-            label={track.label}
-            value={
-              customTrackValues[track.label] !== undefined &&
-              customTrackValues[track.label] !== null &&
-              typeof track.values[customTrackValues[track.label]].value ===
-                "number"
-                ? (track.values[customTrackValues[track.label]].value as number)
-                : 0
-            }
-            sx={{ my: 0.5, mr: customTracks.length - 1 === index ? 0 : 0.5 }}
-          />
-        ))}
+            {customTracks.map((track, index) => (
+              <StatComponent
+                key={track.label}
+                label={track.label}
+                value={
+                  customTrackValues[track.label] !== undefined &&
+                  customTrackValues[track.label] !== null &&
+                  typeof track.values[customTrackValues[track.label]].value ===
+                    "number"
+                    ? (track.values[customTrackValues[track.label]]
+                        .value as number)
+                    : 0
+                }
+                sx={{
+                  my: 0.5,
+                  mr: customTracks.length - 1 === index ? 0 : 0.5,
+                }}
+              />
+            ))}
+          </>
+        )}
         <Divider
           orientation='vertical'
           flexItem

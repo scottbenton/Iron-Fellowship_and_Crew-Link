@@ -1,9 +1,12 @@
 import { Box, Card } from "@mui/material";
-import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
-import { OracleSection } from "components/features/charactersAndCampaigns/OracleSection";
+import { MovesSection as MovesSectionOld } from "components/features/charactersAndCampaigns/MovesSection";
+import { MovesSection } from "components/features/charactersAndCampaigns/NewMovesSection";
+import { OracleSection as OracleSectionOld } from "components/features/charactersAndCampaigns/OracleSection";
+import { OracleSection } from "components/features/charactersAndCampaigns/NewOracleSection";
 import { DarkStyledTabs, DarkStyledTab } from "components/shared/StyledTabs";
 import { useState } from "react";
 import { useStore } from "stores/store";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
 
 export enum SIDEBAR_TABS {
   MOVES = "moves",
@@ -12,6 +15,8 @@ export enum SIDEBAR_TABS {
 
 export function Sidebar() {
   const [currentTab, setCurrentTab] = useState(SIDEBAR_TABS.MOVES);
+
+  const showNewMovesAndOracles = useNewCustomContentPage();
 
   const shouldShowOracles = useStore((store) => {
     const currentCharacter = store.characters.currentCharacter.currentCharacter;
@@ -55,7 +60,7 @@ export function Sidebar() {
               : { display: "none" }
           }
         >
-          <MovesSection />
+          {showNewMovesAndOracles ? <MovesSection /> : <MovesSectionOld />}
         </Box>
         <Box
           sx={
@@ -64,7 +69,7 @@ export function Sidebar() {
               : { display: "none" }
           }
         >
-          <OracleSection />
+          {showNewMovesAndOracles ? <OracleSection /> : <OracleSectionOld />}
         </Box>
       </Card>
     </>

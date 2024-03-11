@@ -1,3 +1,5 @@
+import { LegacyTrack } from "./LegacyTrack.type";
+
 export interface StoredCampaign {
   name: string;
   users: string[];
@@ -6,6 +8,7 @@ export interface StoredCampaign {
   worldId?: string;
   expansionIds?: string[];
   conditionMeters?: Record<string, number>;
+  specialTracks?: Record<string, LegacyTrack>;
   // TODO - Remove once expansions are in
   supply: number;
 }
