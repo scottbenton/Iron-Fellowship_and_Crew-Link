@@ -8,11 +8,12 @@ export function useSyncHomebrewContent(
   watch: UseFormWatch<Form>,
   campaignId?: string
 ) {
-  const expansionMap = watch("enabledExpansionMap", {});
+  const expansionMap = watch("enabledExpansionMap");
+  // const expansionMap = watch("enabledExpansionMap", {});
 
   const expansions = useMemo(
     () =>
-      Object.keys(expansionMap).filter(
+      Object.keys(expansionMap ?? {}).filter(
         (expansionId) => expansionMap[expansionId]
       ),
     [expansionMap]

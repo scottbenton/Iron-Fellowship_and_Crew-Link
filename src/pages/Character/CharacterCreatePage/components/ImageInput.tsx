@@ -14,7 +14,7 @@ export interface ImageInputProps {
 export function ImageInput(props: ImageInputProps) {
   const { value, onChange, watch } = props;
 
-  const name = watch("name", "");
+  const name = watch("name") ?? "";
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
