@@ -1,11 +1,11 @@
-import { Box, SxProps, Typography } from "@mui/material";
+import { Box, SxProps, Theme, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
 export interface SectionHeadingProps {
   label: string;
   action?: ReactNode;
   breakContainer?: boolean;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   floating?: boolean;
 }
 

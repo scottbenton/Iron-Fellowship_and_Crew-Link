@@ -6,7 +6,7 @@ import ironswornDelve from "@datasworn/ironsworn-classic-delve/json/delve.json";
 import { parseOraclesIntoMaps } from "./helpers/parseOraclesIntoMaps";
 import { parseMovesIntoMaps } from "./helpers/parseMovesIntoMaps";
 
-const defaultExpansions: Record<string, Datasworn.Expansion> = {
+export const defaultExpansions: Record<string, Datasworn.Expansion> = {
   [ironswornDelve.id]: ironswornDelve as unknown as Datasworn.Expansion,
 };
 

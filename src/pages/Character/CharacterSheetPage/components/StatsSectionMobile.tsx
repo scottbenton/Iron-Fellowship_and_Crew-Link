@@ -4,6 +4,7 @@ import { StatsMap } from "types/Character.type";
 import { STATS } from "types/stats.enum";
 import { StatComponent } from "components/features/characters/StatComponent";
 import { useStore } from "stores/store";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
 
 const orderedStats: string[] = [
   STATS.EDGE,
@@ -14,6 +15,9 @@ const orderedStats: string[] = [
 ];
 
 export function StatsSectionMobile() {
+  const showNewRules = useNewCustomContentPage();
+  const ruleStats = useStore((store) => store.rules.stats);
+
   // We know character is defined at this point, hence the typecasting
   const stats = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.stats
@@ -39,14 +43,29 @@ export function StatsSectionMobile() {
         flexWrap={"wrap"}
         gap={0.5}
       >
-        {allStats.map((stat) => (
-          <StatComponent
-            key={stat}
-            label={stat}
-            value={stats[stat]}
-            sx={{ width: 54 }}
-          />
-        ))}
+        {showNewRules ? (
+          <>
+            {Object.keys(ruleStats).map((statKey) => (
+              <StatComponent
+                key={statKey}
+                label={ruleStats[statKey].label}
+                value={stats[statKey] ?? 0}
+                sx={{ width: 54 }}
+              />
+            ))}
+          </>
+        ) : (
+          <>
+            {allStats.map((stat) => (
+              <StatComponent
+                key={stat}
+                label={stat}
+                value={stats[stat]}
+                sx={{ width: 54 }}
+              />
+            ))}
+          </>
+        )}
         <StatComponent
           label={"Adds"}
           updateTrack={(newValue) => updateAdds({ adds: newValue })}

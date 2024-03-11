@@ -4,18 +4,14 @@ import {
   MenuItem,
   SxProps,
   TextField,
-  Tooltip,
   Typography,
-  tooltipClasses,
 } from "@mui/material";
-import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
-import HelpIcon from "@mui/icons-material/Help";
+import { useField } from "formik";
+import { Stat } from "types/stats.enum";
 
 export interface StatInputProps {
   label: string;
-  description?: string;
-  value?: number;
-  updateValue: (value?: number) => void;
+  stat: Stat;
 
   remainingOptions: number[];
   handleRemainingOptionsChange: (
@@ -30,35 +26,37 @@ export interface StatInputProps {
 
 export function StatInput(props: StatInputProps) {
   const {
+    stat,
     label,
-    description,
-    value,
-    updateValue,
     remainingOptions,
     handleRemainingOptionsChange,
     allowAnyNumber,
     sx,
   } = props;
 
+  const [field, , handlers] = useField<number | undefined>({
+    name: `stats.${stat}`,
+  });
+  const value = field.value;
+
   const handleInputChange = (value: string) => {
     if (!value) {
-      updateValue(undefined);
+      handlers.setValue(undefined);
     } else {
       const numValue = parseInt(value);
       if (!Number.isNaN(numValue)) {
-        updateValue(numValue);
+        handlers.setValue(numValue);
       }
     }
   };
 
-  const handleSelectChange = (newValue: string | number) => {
-    const currentValue = value as number | undefined;
-    const numValue =
-      typeof newValue === "string" ? parseInt(newValue) : newValue;
+  const handleSelectChange = (value: string | number) => {
+    const currentValue = field.value as number | undefined;
+    const numValue = typeof value === "string" ? parseInt(value) : value;
     const finalValue = numValue > 0 ? numValue : undefined;
     handleRemainingOptionsChange(currentValue, finalValue);
 
-    updateValue(finalValue);
+    handlers.setValue(finalValue);
   };
 
   return (
@@ -76,44 +74,20 @@ export function StatInput(props: StatInputProps) {
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
-      <Box>
-        <Box
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"space-between"}
-          color={"textSecondary"}
-          bgcolor={"background.paperInlay"}
-          px={1}
-        >
-          <Typography
-            display={"block"}
-            variant={"subtitle1"}
-            component={"label"}
-            htmlFor={label}
-            sx={(theme) => ({
-              fontFamily: theme.fontFamilyTitle,
-            })}
-          >
-            {label}
-          </Typography>
-          {description && (
-            <Tooltip
-              PopperProps={{
-                sx: (theme) => ({
-                  [`& .${tooltipClasses.tooltip}`]: {
-                    backgroundColor: theme.palette.background.paper,
-                    maxWidth: theme.spacing(24),
-                    border: `1px solid ${theme.palette.divider}`,
-                  },
-                }),
-              }}
-              title={<MarkdownRenderer markdown={description} />}
-            >
-              <HelpIcon color={"info"} />
-            </Tooltip>
-          )}
-        </Box>
-      </Box>
+      <Typography
+        display={"block"}
+        textAlign={"center"}
+        variant={"subtitle1"}
+        component={"label"}
+        htmlFor={label}
+        sx={(theme) => ({
+          fontFamily: theme.fontFamilyTitle,
+          color: theme.palette.text.secondary,
+          backgroundColor: theme.palette.background.paperInlay,
+        })}
+      >
+        {label}
+      </Typography>
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
         {allowAnyNumber ? (
           <TextField
@@ -122,13 +96,7 @@ export function StatInput(props: StatInputProps) {
             variant={"outlined"}
             value={value ?? ""}
             onChange={(evt) => handleInputChange(evt.target.value)}
-            sx={{
-              width: 100,
-              "& .MuiOutlinedInput-root": {
-                borderTopRightRadius: 0,
-                borderTopLeftRadius: 0,
-              },
-            }}
+            sx={{ width: 100 }}
             inputProps={{ inputMode: "numeric" }}
           />
         ) : (
@@ -139,13 +107,7 @@ export function StatInput(props: StatInputProps) {
             variant={"outlined"}
             value={value ?? -1}
             onChange={(evt) => handleSelectChange(evt.target.value)}
-            sx={{
-              width: 100,
-              "& .MuiOutlinedInput-root": {
-                borderTopRightRadius: 0,
-                borderTopLeftRadius: 0,
-              },
-            }}
+            sx={{ width: 100 }}
           >
             <MenuItem value={-1}>--</MenuItem>
             {value !== undefined && <MenuItem value={value}>{value}</MenuItem>}

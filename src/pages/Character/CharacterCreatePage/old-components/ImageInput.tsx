@@ -1,26 +1,22 @@
 import { ButtonBase } from "@mui/material";
 import { PortraitAvatarDisplay } from "components/features/characters/PortraitAvatar/PortraitAvatarDisplay";
 import { PortraitUploaderDialog } from "components/features/characters/PortraitUploaderDialog";
+import { useField } from "formik";
 import { useEffect, useState } from "react";
-import { UseFormWatch } from "react-hook-form";
-import { Form } from "../CharacterCreatePageContent";
 
 export interface ImageInputProps {
-  value: Form["portrait"];
-  onChange: (value: Form["portrait"]) => void;
-  watch: UseFormWatch<Form>;
+  name?: string;
 }
 
 export function ImageInput(props: ImageInputProps) {
-  const { value, onChange, watch } = props;
-
-  const name = watch("name") ?? "";
+  const { name } = props;
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const [field, , handlers] = useField({ name: "portrait" });
   const [imageUrl, setImageUrl] = useState<string>();
 
-  const file = value?.image;
+  const file = field.value?.image;
   useEffect(() => {
     if (file && typeof file !== "string") {
       const reader = new FileReader();
@@ -54,12 +50,11 @@ export function ImageInput(props: ImageInputProps) {
           name={name}
           portraitUrl={imageUrl}
           portraitSettings={
-            value?.position && value?.scale !== undefined
-              ? {
-                  position: value.position,
-                  scale: value.scale,
-                }
-              : undefined
+            field.value?.position &&
+            field.value?.scale && {
+              position: field.value.position,
+              scale: field.value.scale,
+            }
           }
         />
       </ButtonBase>
@@ -67,7 +62,7 @@ export function ImageInput(props: ImageInputProps) {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         handleUpload={(image, scale, position) => {
-          onChange({
+          handlers.setValue({
             image,
             scale,
             position,

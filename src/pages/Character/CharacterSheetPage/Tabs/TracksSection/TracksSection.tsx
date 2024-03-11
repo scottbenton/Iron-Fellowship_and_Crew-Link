@@ -7,6 +7,8 @@ import { LegacyTracks } from "./LegacyTracks";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { ClockSection } from "components/features/charactersAndCampaigns/Clocks/ClockSection";
 import { useGameSystem } from "hooks/useGameSystem";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
+import { SpecialTracks } from "./SpecialTracks";
 
 const systemTracks: GameSystemChooser<() => JSX.Element> = {
   [GAME_SYSTEMS.IRONSWORN]: IronswornTracks,
@@ -17,9 +19,11 @@ export function TracksSection() {
   const Tracks = useGameSystemValue(systemTracks);
   const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
 
+  const showNewSpecialTracks = useNewCustomContentPage();
+
   return (
     <Stack spacing={2} sx={{ pb: 2 }}>
-      <Tracks />
+      {showNewSpecialTracks ? <SpecialTracks /> : <Tracks />}
       <ProgressTrackSection
         type={TRACK_TYPES.FRAY}
         typeLabel={"Combat Track"}

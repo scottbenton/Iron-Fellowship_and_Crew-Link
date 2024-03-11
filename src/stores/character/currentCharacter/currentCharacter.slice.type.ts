@@ -14,6 +14,10 @@ export interface CurrentCharacterSliceActions {
   updateCurrentCharacter: (
     character: UpdateData<CharacterDocument>
   ) => Promise<void>;
+  updateCharacterConditionMeter: (
+    conditionMeterKey: string,
+    value: number
+  ) => Promise<void>;
   updateCurrentCharacterPortrait: (
     portrait: File | undefined,
     scale: number,

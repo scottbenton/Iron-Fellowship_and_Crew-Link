@@ -19,9 +19,14 @@ import { CustomTrackSettings } from "components/features/charactersAndCampaigns/
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { useAppName } from "hooks/useAppName";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
+import { NewDebilities } from "./NewDebilities";
 
 export function CharacterSection() {
   const { gameSystem } = useGameSystem();
+
+  const usingNewHomebrew = useNewCustomContentPage();
+
   const characterId = useStore(
     (store) => store.characters.currentCharacter.currentCharacterId
   );
@@ -74,11 +79,13 @@ export function CharacterSection() {
 
   const appName = useAppName();
 
+  const showNewDebilities = useNewCustomContentPage();
+
   return (
     <Stack spacing={2} pb={2}>
-      <Debilities />
-      <CharacterSettings />
-      <Stats />
+      {showNewDebilities ? <NewDebilities /> : <Debilities />}
+      {!usingNewHomebrew && <CharacterSettings />}
+      {!usingNewHomebrew && <Stats />}
 
       {!campaignId && <CustomTrackSettings />}
       {!campaignId && (
@@ -131,7 +138,7 @@ export function CharacterSection() {
       )}
       <SectionHeading label={"Misc"} />
       <Box px={2}>
-        <Alert severity="info">
+        <Alert severity='info'>
           <div>
             {appName} includes an overlay for OBS or other webcam editors so you
             can overlay information about your character as you play. You can

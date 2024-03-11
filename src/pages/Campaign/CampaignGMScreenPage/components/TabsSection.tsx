@@ -1,11 +1,13 @@
 import { Card, useMediaQuery, useTheme } from "@mui/material";
-import { MovesSection } from "components/features/charactersAndCampaigns/MovesSection";
+import { MovesSection as MovesSectionOld } from "components/features/charactersAndCampaigns/MovesSection";
+import { MovesSection } from "components/features/charactersAndCampaigns/NewMovesSection";
 import { useEffect } from "react";
 import { useState } from "react";
 import { StoredCampaign } from "types/Campaign.type";
 import { CharacterSection } from "./CharacterSection";
 import { TracksSection } from "./TracksSection";
-import { OracleSection } from "components/features/charactersAndCampaigns/OracleSection";
+import { OracleSection as OracleSectionOld } from "components/features/charactersAndCampaigns/OracleSection";
+import { OracleSection } from "components/features/charactersAndCampaigns/NewOracleSection";
 import { CampaignNotesSection } from "./CampaignNotesSection";
 import { SettingsSection } from "./SettingsSection";
 import { WorldSection } from "./WorldSection";
@@ -22,6 +24,7 @@ import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { SectorSection } from "components/features/worlds/SectorSection";
 import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
+import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
 
 enum TABS {
   MOVES = "moves",
@@ -43,6 +46,8 @@ export interface TabsSectionProps {
 
 export function TabsSection(props: TabsSectionProps) {
   const { campaign } = props;
+
+  const showNewMovesAndOracles = useNewCustomContentPage();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -86,25 +91,25 @@ export function TabsSection(props: TabsSectionProps) {
         onChange={(evt, value) => handleTabChange(value)}
       >
         {isMobile && <StyledTab label={"Moves"} value={TABS.MOVES} />}
-        {isMobile && <StyledTab label="Oracle" value={TABS.ORACLE} />}
-        <StyledTab label="Characters" value={TABS.CHARACTERS} />
-        <StyledTab label="Tracks" value={TABS.TRACKS} />
-        <StyledTab label="Notes" value={TABS.NOTES} />
-        <StyledTab label="World" value={TABS.WORLD} />
+        {isMobile && <StyledTab label='Oracle' value={TABS.ORACLE} />}
+        <StyledTab label='Characters' value={TABS.CHARACTERS} />
+        <StyledTab label='Tracks' value={TABS.TRACKS} />
+        <StyledTab label='Notes' value={TABS.NOTES} />
+        <StyledTab label='World' value={TABS.WORLD} />
         {shouldShowSectors ? (
-          <StyledTab label="Sectors" value={TABS.SECTORS} />
+          <StyledTab label='Sectors' value={TABS.SECTORS} />
         ) : (
-          <StyledTab label="Locations" value={TABS.LOCATIONS} />
+          <StyledTab label='Locations' value={TABS.LOCATIONS} />
         )}
-        <StyledTab label="NPCs" value={TABS.NPCS} />
-        <StyledTab label="Lore" value={TABS.LORE} />
-        <StyledTab label="Settings" value={TABS.SETTINGS} />
+        <StyledTab label='NPCs' value={TABS.NPCS} />
+        <StyledTab label='Lore' value={TABS.LORE} />
+        <StyledTab label='Settings' value={TABS.SETTINGS} />
       </StyledTabs>
       <ContainedTabPanel isVisible={selectedTab === TABS.MOVES}>
-        <MovesSection />
+        {showNewMovesAndOracles ? <MovesSection /> : <MovesSectionOld />}
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.ORACLE}>
-        <OracleSection />
+        {showNewMovesAndOracles ? <OracleSection /> : <OracleSectionOld />}
       </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === TABS.CHARACTERS}

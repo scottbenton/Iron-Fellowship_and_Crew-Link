@@ -44,6 +44,7 @@ import { deleteHomebrewMoveCategory } from "api-calls/homebrew/moves/collections
 import { createHomebrewMove } from "api-calls/homebrew/moves/moves/createHomebrewMove";
 import { updateHomebrewMove } from "api-calls/homebrew/moves/moves/updateHomebrewMove";
 import { convertStoredMovesToCategories } from "functions/convertStoredMovesToCategories";
+import { defaultExpansions } from "stores/rules/rules.slice";
 
 enum ListenerRefreshes {
   Oracles,
@@ -105,6 +106,11 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
 
   subscribeToHomebrewContent: (homebrewIds) => {
     getState().rules.setExpansionIds(homebrewIds);
+
+    const filteredHomebrewIds = homebrewIds.filter(
+      (homebrewId) => !defaultExpansions[homebrewId]
+    );
+
     const listenerConfigs: ListenerConfig[] = [
       {
         listenerFunction: listenToHomebrewStats,
@@ -157,7 +163,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
     ];
 
     const unsubscribes: Unsubscribe[] = [];
-    homebrewIds.forEach((homebrewId) => {
+    filteredHomebrewIds.forEach((homebrewId) => {
       listenerConfigs.forEach((config) => {
         unsubscribes.push(
           config.listenerFunction(
@@ -215,6 +221,12 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
     return () => {
       getState().rules.setExpansionIds([]);
       unsubscribes.forEach((unsubscribe) => unsubscribe());
+      getState().rules.rebuildOracles();
+      getState().rules.rebuildMoves();
+      getState().rules.rebuildStats();
+      getState().rules.rebuildConditionMeters();
+      getState().rules.rebuildSpecialTracks();
+      getState().rules.rebuildImpacts();
     };
   },
 

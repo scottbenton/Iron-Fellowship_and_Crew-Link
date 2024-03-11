@@ -49,6 +49,7 @@ export interface CharacterDocument {
   customTracks?: {
     [trackName: string]: number;
   };
+  expansionIds?: string[];
 }
 
 export interface AssetDocument {

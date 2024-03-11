@@ -78,10 +78,9 @@ function AssetCardComponent(
   const asset = storedAsset?.customAsset ?? assetMap[assetId];
   const isCustom = !!storedAsset?.customAsset;
 
-  const isShared = asset.Usage.Shared;
-
   if (!asset) return null;
 
+  const isShared = asset.Usage.Shared;
   const abilityInputs: FieldType[] = [];
 
   let alternateConditionMeterProperties:
