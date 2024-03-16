@@ -9,6 +9,10 @@ export interface RulesSliceData {
   conditionMeters: Datasworn.Rules["condition_meters"];
   specialTracks: Datasworn.Rules["special_tracks"];
   impacts: Datasworn.Rules["impacts"];
+  assetMaps: {
+    assetCollectionMap: Record<string, Datasworn.AssetCollection>;
+    assetMap: Record<string, Datasworn.Asset>;
+  };
   oracleMaps: {
     allOraclesMap: Record<
       string,

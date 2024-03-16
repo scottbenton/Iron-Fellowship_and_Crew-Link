@@ -4,6 +4,7 @@ import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { ReactComponent as IronFellowshipLogo } from "assets/iron-fellowship-logo.svg";
 import { ReactComponent as CrewLinkLogo } from "assets/crew-link-logo.svg";
+import { ReactComponent as SunderedIslesLogo } from "assets/sundered-isles-crew-link-logo.svg";
 import { useAppName } from "hooks/useAppName";
 import { NavItem } from "./NavItem";
 import { BASE_ROUTES, basePaths } from "routes";
@@ -23,13 +24,18 @@ import LoginIcon from "@mui/icons-material/AccountCircle";
 import { useState } from "react";
 import { NavRailFlyouts } from "./NavRailFlyouts";
 import { AppsMenu } from "./AppsMenu";
+import { useNewSunderedIslesTheme } from "hooks/featureFlags/useNewSunderedIslesTheme";
 
 export const NAV_RAIL_WIDTH = 80;
 
 export function NavRail() {
+  const showSunderedIslesTheme = useNewSunderedIslesTheme();
+
   const Logo = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]: IronFellowshipLogo,
-    [GAME_SYSTEMS.STARFORGED]: CrewLinkLogo,
+    [GAME_SYSTEMS.STARFORGED]: showSunderedIslesTheme
+      ? SunderedIslesLogo
+      : CrewLinkLogo,
   });
 
   const authStatus = useStore((store) => store.auth.status);

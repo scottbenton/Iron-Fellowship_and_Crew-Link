@@ -2,20 +2,7 @@ export const starforgedGold = {
   light: "#eab308",
   main: "#ca8a04",
   dark: "#a16207",
-  // dark: "#854d0e",
 };
-
-/*
-#f8fafc
-100
-#f1f5f9
-200
-#e2e8f0
-300
-#cbd5e1
-400
-#94a3b8
-*/
 
 export const starforgedGrey = {
   [50]: "#f8fafc",

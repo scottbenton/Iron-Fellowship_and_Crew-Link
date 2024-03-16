@@ -6,8 +6,8 @@ import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { Alert, Button, Grid } from "@mui/material";
 import { EmptyState } from "components/shared/EmptyState";
 import { useState } from "react";
-import { AssetCardDialog } from "components/features/assets/AssetCardDialog";
-import { AssetCard } from "components/features/assets/AssetCard";
+import { AssetCardDialog } from "components/features/assets/NewAssetCardDialog";
+import { AssetCard } from "components/features/assets/NewAssetCard";
 
 export interface AssetsProps {
   control: Control<Form>;
@@ -56,30 +56,27 @@ export function Assets(props: AssetsProps) {
                     minHeight: 450,
                     width: "100%",
                   }}
-                  handleDeleteClick={() => remove(index)}
-                  handleAbilityCheck={(abilityIndex, checked) => {
+                  onAssetRemove={() => remove(index)}
+                  onAssetAbilityToggle={(abilityIndex, checked) => {
                     const newAsset = { ...storedAsset };
                     newAsset.enabledAbilities[abilityIndex] = checked;
                     update(index, newAsset);
                   }}
-                  handleInputChange={(label, value) => {
+                  onAssetControlChange={(controlKey, value) => {
                     const newAsset = { ...storedAsset };
-                    newAsset.inputs = { ...newAsset.inputs, [label]: value };
+                    if (!newAsset.controlValues) {
+                      newAsset.controlValues = {};
+                    }
+                    newAsset.controlValues[controlKey] = value;
                     update(index, newAsset);
-                    return new Promise<void>((res) => res());
                   }}
-                  handleConditionCheck={(condition, checked) => {
+                  onAssetOptionChange={(optionKey, value) => {
                     const newAsset = { ...storedAsset };
-                    newAsset.conditions = {
-                      ...newAsset.conditions,
-                      [condition]: checked,
-                    };
+                    if (!newAsset.optionValues) {
+                      newAsset.optionValues = {};
+                    }
+                    newAsset.optionValues[optionKey] = value;
                     update(index, newAsset);
-                    return new Promise<void>((res) => res());
-                  }}
-                  handleCustomAssetUpdate={(asset) => {
-                    update(index, { ...storedAsset, customAsset: asset });
-                    return new Promise<void>((res) => res());
                   }}
                 />
               </Grid>

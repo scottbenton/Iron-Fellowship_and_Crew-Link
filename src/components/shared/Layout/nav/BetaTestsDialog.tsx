@@ -13,6 +13,7 @@ import { activeFeatureFlags } from "hooks/featureFlags/activeFeatureFlags";
 import { EmptyState } from "../../EmptyState";
 import { useEffect, useState } from "react";
 import { useStore } from "stores/store";
+import { useGameSystem } from "hooks/useGameSystem";
 
 export interface BetaTestsDialogProps {
   open: boolean;
@@ -21,6 +22,8 @@ export interface BetaTestsDialogProps {
 
 export function BetaTestsDialog(props: BetaTestsDialogProps) {
   const { open, onClose } = props;
+
+  const { gameSystem } = useGameSystem();
 
   const activeBetaTests = useStore((store) => store.appState.betaTests);
   const updateBetaTests = useStore((store) => store.appState.updateBetaTests);
@@ -59,25 +62,31 @@ export function BetaTestsDialog(props: BetaTestsDialogProps) {
       </DialogTitleWithCloseButton>
       <DialogContent>
         {activeFeatureFlags.length === 0 ? (
-          <EmptyState message="There are no active beta tests at this time" />
+          <EmptyState message='There are no active beta tests at this time' />
         ) : testStates === undefined ? (
           <LinearProgress />
         ) : (
           <Stack spacing={2} sx={{ mt: 1 }}>
-            {activeFeatureFlags.map((flagConfig) => (
-              <FormControlLabel
-                key={flagConfig.testId}
-                control={
-                  <Switch
-                    checked={testStates[flagConfig.testId] ?? false}
-                    onChange={(evt, checked) =>
-                      handleTestChange(flagConfig.testId, checked)
-                    }
-                  />
-                }
-                label={flagConfig.label}
-              />
-            ))}
+            {activeFeatureFlags
+              .filter((config) =>
+                config.gameSystems
+                  ? config.gameSystems.includes(gameSystem)
+                  : true
+              )
+              .map((flagConfig) => (
+                <FormControlLabel
+                  key={flagConfig.testId}
+                  control={
+                    <Switch
+                      checked={testStates[flagConfig.testId] ?? false}
+                      onChange={(evt, checked) =>
+                        handleTestChange(flagConfig.testId, checked)
+                      }
+                    />
+                  }
+                  label={flagConfig.label}
+                />
+              ))}
           </Stack>
         )}
       </DialogContent>

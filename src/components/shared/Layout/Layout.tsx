@@ -12,6 +12,8 @@ import { BottomNav } from "./nav/BottomNav";
 import { NavRail } from "./nav/NavRail";
 import { TopNav } from "./nav/TopNav";
 import { LayoutPathListener } from "./LayoutPathListener";
+import { useNewCrewLinkTheme } from "hooks/featureFlags/useNewCrewLinkTheme";
+import { StarforgedStarBackground } from "./StarforgedStarBackground";
 
 export function Layout() {
   useSyncFeatureFlags();
@@ -23,6 +25,8 @@ export function Layout() {
     (store) => store.auth.closeUserNameDialog
   );
 
+  const showNewCrewLinkTheme = useNewCrewLinkTheme();
+
   if (state === AUTH_STATE.LOADING) {
     return <LinearProgress color={"primary"} />;
   }
@@ -33,9 +37,12 @@ export function Layout() {
       display={"flex"}
       flexDirection={"column"}
       sx={(theme) => ({
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: showNewCrewLinkTheme
+          ? undefined
+          : theme.palette.background.default,
       })}
     >
+      {showNewCrewLinkTheme && <StarforgedStarBackground />}
       <Box
         display={"flex"}
         flexDirection={{ xs: "column", sm: "row" }}

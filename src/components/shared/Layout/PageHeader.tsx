@@ -1,5 +1,7 @@
 import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import { getPublicAssetPath } from "functions/getPublicAssetPath";
+import { useNewCrewLinkTheme } from "hooks/featureFlags/useNewCrewLinkTheme";
+import { useNewSunderedIslesTheme } from "hooks/featureFlags/useNewSunderedIslesTheme";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import React, { PropsWithChildren } from "react";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
@@ -16,6 +18,8 @@ export function PageHeader(props: PageHeaderProps) {
   const isEmpty = !label && !subLabel && !actions && !children;
 
   const isLightTheme = useTheme().palette.mode === "light";
+  const showNewStarforgedTheme = useNewCrewLinkTheme();
+  const showNewSunderedIslesTheme = useNewSunderedIslesTheme();
 
   const isIronsworn = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]: true,
@@ -33,9 +37,10 @@ export function PageHeader(props: PageHeaderProps) {
           pb: isEmpty ? 8 : 10,
           mb: isEmpty ? -8 : -4,
           // width: "100vw",
-          backgroundColor: isLightTheme
-            ? theme.palette.darkGrey.main
-            : undefined,
+          backgroundColor:
+            isLightTheme && !showNewStarforgedTheme
+              ? theme.palette.darkGrey.main
+              : undefined,
           position: "relative",
         })}
       >
@@ -95,7 +100,12 @@ export function PageHeader(props: PageHeaderProps) {
         >
           <Box
             sx={(theme) => ({
-              backgroundImage: isLightTheme ? `url("${borderUrl}")` : undefined,
+              backgroundImage:
+                isLightTheme &&
+                !showNewStarforgedTheme &&
+                !showNewSunderedIslesTheme
+                  ? `url("${borderUrl}")`
+                  : undefined,
               height: theme.spacing(8),
               backgroundRepeat: "repeat-x",
               backgroundSize: "contain",

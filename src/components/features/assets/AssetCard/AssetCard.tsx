@@ -33,11 +33,11 @@ export interface AssetCardProps {
   storedAsset?: StoredAsset;
 
   showSharedIcon?: boolean;
+  sx?: SxProps<Theme>;
 
   readOnly?: boolean;
   hideTracks?: boolean;
   actions?: ReactNode;
-  sx?: SxProps<Theme>;
 
   handleAbilityCheck?: (index: number, checked: boolean) => void;
   handleInputChange?: (label: string, value: string) => Promise<void>;

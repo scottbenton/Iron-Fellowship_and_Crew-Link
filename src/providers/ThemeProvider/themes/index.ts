@@ -1,28 +1,7 @@
-import { Theme } from "@mui/material";
-import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
-import { ironswornLightTheme } from "./ironsworn-light";
-import { ironswornDarkTheme } from "./ironsworn-dark";
-import { starforgedLightTheme } from "./starforged-light";
-import { starforgedDarkTheme } from "./starforged-dark";
-
 export enum THEME_TYPE {
   LIGHT = "light",
   DARK = "dark",
 }
-
-export const gameThemes: GameSystemChooser<{
-  [THEME_TYPE.LIGHT]: Theme;
-  [THEME_TYPE.DARK]: Theme;
-}> = {
-  [GAME_SYSTEMS.IRONSWORN]: {
-    [THEME_TYPE.LIGHT]: ironswornLightTheme,
-    [THEME_TYPE.DARK]: ironswornDarkTheme,
-  },
-  [GAME_SYSTEMS.STARFORGED]: {
-    [THEME_TYPE.LIGHT]: starforgedLightTheme,
-    [THEME_TYPE.DARK]: starforgedDarkTheme,
-  },
-};
 
 declare module "@mui/material/styles" {
   interface Theme {
