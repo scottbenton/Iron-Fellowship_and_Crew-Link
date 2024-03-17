@@ -1,9 +1,14 @@
-import { Box, Button, ButtonBase, Link, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Chip, Link, Typography } from "@mui/material";
 import { useEffect, useId, useState } from "react";
 import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
 import PlusIcon from "@mui/icons-material/Add";
-import { DIFFICULTY, PROGRESS_TRACKS, TRACK_TYPES } from "types/Track.type";
+import {
+  DIFFICULTY,
+  PROGRESS_TRACKS,
+  TRACK_STATUS,
+  TRACK_TYPES,
+} from "types/Track.type";
 import CompleteIcon from "@mui/icons-material/Check";
 import DieIcon from "@mui/icons-material/Casino";
 import { useConfirm } from "material-ui-confirm";
@@ -32,6 +37,7 @@ const trackMoveIdSystemValues: GameSystemChooser<{
 
 export interface ProgressTracksProps {
   trackType?: PROGRESS_TRACKS;
+  status?: TRACK_STATUS;
   label?: string;
   difficulty?: DIFFICULTY;
   description?: string;
@@ -41,6 +47,7 @@ export interface ProgressTracksProps {
   onDelete?: () => void;
   onEdit?: () => void;
   hideDifficultyLabel?: boolean;
+  hideRollButton?: boolean;
 }
 
 const getDifficultyLabel = (difficulty: DIFFICULTY): string => {
@@ -79,6 +86,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
   const {
     trackType,
     label,
+    status,
     description,
     difficulty,
     max,
@@ -87,6 +95,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
     onDelete,
     onEdit,
     hideDifficultyLabel,
+    hideRollButton,
   } = props;
 
   const trackMoveIds = useGameSystemValue(trackMoveIdSystemValues);
@@ -176,25 +185,35 @@ export function ProgressTrack(props: ProgressTracksProps) {
           </Typography>
         )}
         {(label || onEdit) && (
-          <Typography
-            variant={"h6"}
-            component={"p"}
-            id={labelId}
-            color={(theme) => theme.palette.text.primary}
-            fontFamily={(theme) => theme.fontFamilyTitle}
-          >
-            {label + " "}
-            {onEdit && (
-              <Link
-                color={"inherit"}
-                component={"button"}
+          <Box display={"flex"} alignItems={"center"}>
+            <Typography
+              variant={"h6"}
+              component={"p"}
+              id={labelId}
+              color={(theme) => theme.palette.text.primary}
+              fontFamily={(theme) => theme.fontFamilyTitle}
+            >
+              {label + " "}
+              {onEdit && (
+                <Link
+                  color={"inherit"}
+                  component={"button"}
+                  sx={{ ml: 2 }}
+                  onClick={() => onEdit()}
+                >
+                  Edit
+                </Link>
+              )}
+            </Typography>
+            {status === TRACK_STATUS.COMPLETED && (
+              <Chip
+                label={"Completed"}
+                color={"success"}
                 sx={{ ml: 2 }}
-                onClick={() => onEdit()}
-              >
-                Edit
-              </Link>
+                size={"small"}
+              />
             )}
-          </Typography>
+          </Box>
         )}
         {description && (
           <Typography
@@ -328,7 +347,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
           Complete Track
         </Button>
       )}
-      {trackType && (
+      {trackType && !hideRollButton && (
         <Button
           color={"inherit"}
           onClick={handleRollClick}
