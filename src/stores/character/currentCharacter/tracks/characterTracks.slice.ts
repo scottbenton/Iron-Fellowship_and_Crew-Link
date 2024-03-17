@@ -27,22 +27,22 @@ export const createCharacterTracksSlice: CreateSliceType<
             const track = tracks[trackId];
             switch (track.type) {
               case TRACK_TYPES.FRAY:
-                store.characters.currentCharacter.tracks.trackMap[
+                store.characters.currentCharacter.tracks.trackMap[status][
                   TRACK_TYPES.FRAY
                 ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.JOURNEY:
-                store.characters.currentCharacter.tracks.trackMap[
+                store.characters.currentCharacter.tracks.trackMap[status][
                   TRACK_TYPES.JOURNEY
                 ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.VOW:
-                store.characters.currentCharacter.tracks.trackMap[
+                store.characters.currentCharacter.tracks.trackMap[status][
                   TRACK_TYPES.VOW
                 ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.CLOCK:
-                store.characters.currentCharacter.tracks.trackMap[
+                store.characters.currentCharacter.tracks.trackMap[status][
                   TRACK_TYPES.CLOCK
                 ][trackId] = track as Clock;
                 break;
@@ -54,9 +54,9 @@ export const createCharacterTracksSlice: CreateSliceType<
       },
       (trackId, type) => {
         set((store) => {
-          delete store.characters.currentCharacter.tracks.trackMap[type][
-            trackId
-          ];
+          delete store.characters.currentCharacter.tracks.trackMap[status][
+            type
+          ][trackId];
         });
       },
       (error) => {
@@ -79,6 +79,12 @@ export const createCharacterTracksSlice: CreateSliceType<
     const characterId =
       getState().characters.currentCharacter.currentCharacterId;
     return updateProgressTrack({ characterId, trackId, track });
+  },
+
+  setLoadCompletedTracks: () => {
+    set((store) => {
+      store.characters.currentCharacter.tracks.loadCompletedTracks = true;
+    });
   },
 
   resetStore: () => {

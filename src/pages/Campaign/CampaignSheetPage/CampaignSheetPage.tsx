@@ -98,9 +98,13 @@ export function CampaignSheetPage() {
           <StyledTabs
             value={selectedTab}
             onChange={(evt, value) => handleTabChange(value)}
-            indicatorColor="primary"
+            indicatorColor='primary'
             centered
             variant={"standard"}
+            sx={(theme) => ({
+              borderTopRightRadius: theme.shape.borderRadius,
+              borderTopLeftRadius: theme.shape.borderRadius,
+            })}
           >
             <StyledTab value={TABS.CHARACTER} label={"Characters"} />
             <StyledTab value={TABS.WORLD} label={"World"} />

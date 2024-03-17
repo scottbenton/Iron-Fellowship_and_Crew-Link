@@ -28,22 +28,22 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
             const track = tracks[trackId];
             switch (track.type) {
               case TRACK_TYPES.FRAY:
-                store.campaigns.currentCampaign.tracks.trackMap[
+                store.campaigns.currentCampaign.tracks.trackMap[status][
                   TRACK_TYPES.FRAY
                 ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.JOURNEY:
-                store.campaigns.currentCampaign.tracks.trackMap[
+                store.campaigns.currentCampaign.tracks.trackMap[status][
                   TRACK_TYPES.JOURNEY
                 ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.VOW:
-                store.campaigns.currentCampaign.tracks.trackMap[
+                store.campaigns.currentCampaign.tracks.trackMap[status][
                   TRACK_TYPES.VOW
                 ][trackId] = track as ProgressTrack;
                 break;
               case TRACK_TYPES.CLOCK:
-                store.campaigns.currentCampaign.tracks.trackMap[
+                store.campaigns.currentCampaign.tracks.trackMap[status][
                   TRACK_TYPES.CLOCK
                 ][trackId] = track as Clock;
                 break;
@@ -55,7 +55,9 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
       },
       (trackId, type) => {
         set((store) => {
-          delete store.campaigns.currentCampaign.tracks.trackMap[type][trackId];
+          delete store.campaigns.currentCampaign.tracks.trackMap[status][type][
+            trackId
+          ];
         });
       },
       (error) => {
@@ -80,6 +82,12 @@ export const createCampaignTracksSlice: CreateSliceType<CampaignTracksSlice> = (
 
   updateCharacterTrack: (characterId, trackId, track) => {
     return updateProgressTrack({ characterId, trackId, track });
+  },
+
+  setLoadCompletedTracks: () => {
+    set((store) => {
+      store.campaigns.currentCampaign.tracks.loadCompletedTracks = true;
+    });
   },
 
   resetStore: () => {
