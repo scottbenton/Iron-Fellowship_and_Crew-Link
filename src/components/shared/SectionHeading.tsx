@@ -1,4 +1,4 @@
-import { Box, SxProps, Theme, Typography } from "@mui/material";
+import { Box, Stack, SxProps, Theme, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
 export interface SectionHeadingProps {
@@ -20,7 +20,6 @@ export function SectionHeading(props: SectionHeadingProps) {
       justifyContent={"space-between"}
       sx={[
         (theme) => ({
-          flexDirection: "row",
           alignItems: "center",
 
           marginX: breakContainer ? -3 : 0,
@@ -29,9 +28,12 @@ export function SectionHeading(props: SectionHeadingProps) {
           [theme.breakpoints.down("sm")]: {
             flexDirection: "column",
             paddingX: 2,
-          },
-          [theme.breakpoints.down("sm")]: {
             marginX: breakContainer ? -2 : 0,
+          },
+          [theme.breakpoints.up("md")]: {
+            px: 3,
+            mx: breakContainer ? -3 : 0,
+            flexDirection: "row",
           },
         }),
         floating && {
@@ -48,7 +50,11 @@ export function SectionHeading(props: SectionHeadingProps) {
       >
         {label}
       </Typography>
-      {action}
+      {action && (
+        <Stack direction={{ xs: "column", md: "row" }} spacing={1}>
+          {action}
+        </Stack>
+      )}
     </Box>
   );
 }

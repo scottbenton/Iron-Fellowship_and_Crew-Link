@@ -2,12 +2,13 @@ import {
   Box,
   Button,
   Card,
+  Chip,
   Link,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
-import { Clock as IClock } from "types/Track.type";
+import { Clock as IClock, TRACK_STATUS } from "types/Track.type";
 import { ClockCircle } from "./ClockCircle";
 import CheckIcon from "@mui/icons-material/Check";
 import { useConfirm } from "material-ui-confirm";
@@ -29,10 +30,10 @@ const clockOracleMap = {
 
 export interface ClockProps {
   clock: IClock;
-  onEdit: () => void;
-  onValueChange: (value: number) => void;
-  onSelectedOracleChange: (oracleKey: CLOCK_ORACLES_KEYS) => void;
-  onComplete: () => void;
+  onEdit?: () => void;
+  onValueChange?: (value: number) => void;
+  onSelectedOracleChange?: (oracleKey: CLOCK_ORACLES_KEYS) => void;
+  onComplete?: () => void;
 }
 
 export function Clock(props: ClockProps) {
@@ -44,45 +45,64 @@ export function Clock(props: ClockProps) {
   const confirm = useConfirm();
 
   const handleCompleteClick = () => {
-    confirm({
-      title: "Complete Clock",
-      description: "Are you sure you want to complete this clock?",
-      confirmationText: "Complete",
-      confirmationButtonProps: {
-        variant: "contained",
-        color: "primary",
-      },
-    })
-      .then(() => {
-        onComplete();
+    if (onComplete) {
+      confirm({
+        title: "Complete Clock",
+        description: "Are you sure you want to complete this clock?",
+        confirmationText: "Complete",
+        confirmationButtonProps: {
+          variant: "contained",
+          color: "primary",
+        },
       })
-      .catch(() => {});
+        .then(() => {
+          onComplete();
+        })
+        .catch(() => {});
+    }
   };
 
   const handleProgressionRoll = () => {
-    const result = rollClockProgression(
-      clock.label,
-      clockOracleMap[clock.oracleKey ?? CLOCK_ORACLES_KEYS.FIFTY_FIFTY]
-    );
+    if (onValueChange) {
+      const result = rollClockProgression(
+        clock.label,
+        clockOracleMap[clock.oracleKey ?? CLOCK_ORACLES_KEYS.FIFTY_FIFTY]
+      );
 
-    if (result && clock.value < clock.segments) {
-      onValueChange(clock.value + 1);
+      if (result && clock.value < clock.segments) {
+        onValueChange(clock.value + 1);
+      }
     }
   };
 
   return (
     <Box display={"flex"} flexDirection={"column"} alignItems={"flex-start"}>
-      <Typography fontFamily={(theme) => theme.fontFamilyTitle} variant={"h6"}>
-        {clock.label}
-        <Link
-          color={"inherit"}
-          component={"button"}
-          sx={{ ml: 2 }}
-          onClick={() => onEdit()}
+      <Box display={"flex"} alignItems={"center"}>
+        <Typography
+          fontFamily={(theme) => theme.fontFamilyTitle}
+          variant={"h6"}
         >
-          Edit
-        </Link>
-      </Typography>
+          {clock.label}
+          {onEdit && (
+            <Link
+              color={"inherit"}
+              component={"button"}
+              sx={{ ml: 2 }}
+              onClick={() => onEdit()}
+            >
+              Edit
+            </Link>
+          )}
+        </Typography>
+        {clock.status === TRACK_STATUS.COMPLETED && (
+          <Chip
+            label={"Completed"}
+            color={"success"}
+            sx={{ ml: 2 }}
+            size={"small"}
+          />
+        )}
+      </Box>
       {clock.description && (
         <Typography
           variant={"subtitle1"}
@@ -114,8 +134,10 @@ export function Clock(props: ClockProps) {
             select
             value={clock.oracleKey ?? CLOCK_ORACLES_KEYS.FIFTY_FIFTY}
             onChange={(evt) =>
+              onSelectedOracleChange &&
               onSelectedOracleChange(evt.target.value as CLOCK_ORACLES_KEYS)
             }
+            disabled={!onSelectedOracleChange}
             fullWidth
           >
             <MenuItem value={CLOCK_ORACLES_KEYS.ALMOST_CERTAIN}>
@@ -130,32 +152,42 @@ export function Clock(props: ClockProps) {
               Small Chance
             </MenuItem>
           </TextField>
-          <Button
-            sx={{ mt: 1 }}
-            color={"inherit"}
-            endIcon={<DieIcon />}
-            onClick={() => handleProgressionRoll()}
-          >
-            Roll Progress
-          </Button>
+          {onValueChange && (
+            <Button
+              sx={{ mt: 1 }}
+              color={"inherit"}
+              endIcon={<DieIcon />}
+              onClick={() => handleProgressionRoll()}
+            >
+              Roll Progress
+            </Button>
+          )}
         </Box>
         <ClockCircle
           value={clock.value}
           segments={clock.segments}
-          onClick={() => {
-            onValueChange(clock.value >= clock.segments ? 0 : clock.value + 1);
-          }}
+          onClick={
+            onValueChange
+              ? () => {
+                  onValueChange(
+                    clock.value >= clock.segments ? 0 : clock.value + 1
+                  );
+                }
+              : undefined
+          }
         />
       </Card>
-      <Button
-        variant={"outlined"}
-        color={"inherit"}
-        onClick={handleCompleteClick}
-        sx={{ mt: 1 }}
-        endIcon={<CheckIcon />}
-      >
-        Complete Clock
-      </Button>
+      {onComplete && (
+        <Button
+          variant={"outlined"}
+          color={"inherit"}
+          onClick={handleCompleteClick}
+          sx={{ mt: 1 }}
+          endIcon={<CheckIcon />}
+        >
+          Complete Clock
+        </Button>
+      )}
     </Box>
   );
 }
