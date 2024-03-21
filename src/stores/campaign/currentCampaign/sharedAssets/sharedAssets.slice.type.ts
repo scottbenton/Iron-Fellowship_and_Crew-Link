@@ -16,6 +16,7 @@ export interface SharedAssetSliceActions {
   updateAssetInput: (
     assetId: string,
     inputLabel: string,
+    inputKey: string,
     inputValue: string
   ) => Promise<void>;
   updateAssetCheckbox: (

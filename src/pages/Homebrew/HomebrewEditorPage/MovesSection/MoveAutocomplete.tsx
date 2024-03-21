@@ -31,7 +31,7 @@ export function MoveAutocomplete(props: MoveAutocompleteProps) {
         <Box component={"li"} {...props}>
           <ListItemText
             primary={moveMap[option].name}
-            secondary={moveMap[option].id}
+            secondary={moveMap[option]._id}
           />
         </Box>
       )}

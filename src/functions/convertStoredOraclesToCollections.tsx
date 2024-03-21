@@ -33,9 +33,9 @@ export function convertStoredOraclesToCollections(
     } else {
       const storedCollection = storedCollections[collectionId];
       collections[collectionId] = {
-        id: `${homebrewId}/collections/oracles/${collectionId}`,
+        _id: `${homebrewId}/collections/oracles/${collectionId}`,
         name: storedCollection.label,
-        source: DEFAULT_SOURCE,
+        _source: DEFAULT_SOURCE,
         description: storedCollection.description,
         enhances: storedCollection.enhancesId,
         replaces: storedCollection.replacesId,
@@ -86,12 +86,12 @@ function populateCollection(
         collection.collections = {};
       }
       if (collection.collections) {
-        const subCollectionDataswornId = `${collection.id}/${subCollectionId}`;
+        const subCollectionDataswornId = `${collection._id}/${subCollectionId}`;
 
         const subCollection: Datasworn.OracleTablesCollection = {
-          id: subCollectionDataswornId,
+          _id: subCollectionDataswornId,
           name: subColl.label,
-          source: DEFAULT_SOURCE,
+          _source: DEFAULT_SOURCE,
           description: subColl.description,
           enhances: subColl.enhancesId,
           replaces: subColl.replacesId,
@@ -122,7 +122,7 @@ function populateCollection(
       collection.contents = {};
     }
     if (collection.contents) {
-      const tableDataswornId = `${collection.id}/${tableId}`;
+      const tableDataswornId = `${collection._id}/${tableId}`;
 
       const hasDetails = table.columnLabels.detail;
       const tableType: "table_simple" | "table_details" = "table_simple";
@@ -139,14 +139,12 @@ function populateCollection(
         rows.push(
           hasDetails
             ? {
-                id: `${tableDataswornId}/${min}-${max}`,
                 min,
                 max,
                 result: row.result,
                 detail: row.detail ?? null,
               }
             : {
-                id: `${tableDataswornId}/${min}-${max}`,
                 min,
                 max,
                 result: row.result,
@@ -159,13 +157,13 @@ function populateCollection(
       });
 
       collection.contents[tableId] = {
-        id: tableDataswornId,
+        _id: tableDataswornId,
         name: table.label,
         description: table.description,
         oracle_type: tableType,
         dice: `1d${total}`,
         replaces: table.replaces,
-        source: DEFAULT_SOURCE,
+        _source: DEFAULT_SOURCE,
         column_labels: table.columnLabels,
         rows,
       };

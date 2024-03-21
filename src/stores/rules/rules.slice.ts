@@ -7,7 +7,7 @@ import { parseOraclesIntoMaps } from "./helpers/parseOraclesIntoMaps";
 import { parseMovesIntoMaps } from "./helpers/parseMovesIntoMaps";
 
 export const defaultExpansions: Record<string, Datasworn.Expansion> = {
-  [ironswornDelve.id]: ironswornDelve as unknown as Datasworn.Expansion,
+  [ironswornDelve._id]: ironswornDelve as unknown as Datasworn.Expansion,
 };
 
 export const createRulesSlice: CreateSliceType<RulesSlice> = (
@@ -30,7 +30,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
       const baseRuleset = store.rules.baseRuleset;
       if (baseRuleset) {
         const rootOracleCollectionIds = Object.values(baseRuleset.oracles).map(
-          (oracle) => oracle.id
+          (oracle) => oracle._id
         );
         const baseRulesetMaps = parseOraclesIntoMaps(baseRuleset.oracles);
         let allOraclesMap = { ...baseRulesetMaps.allOraclesMap };
@@ -74,7 +74,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
 
           Object.values(expansionOracles).forEach((oracle) => {
             if (!oracle.replaces && !oracle.enhances) {
-              rootOracleCollectionIds.push(oracle.id);
+              rootOracleCollectionIds.push(oracle._id);
             }
           });
         });
@@ -95,7 +95,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
       const baseRuleset = store.rules.baseRuleset;
       if (baseRuleset) {
         const rootMoveCollectionIds = Object.values(baseRuleset.moves).map(
-          (move) => move.id
+          (move) => move._id
         );
         const baseRulesetMaps = parseMovesIntoMaps(baseRuleset.moves);
 

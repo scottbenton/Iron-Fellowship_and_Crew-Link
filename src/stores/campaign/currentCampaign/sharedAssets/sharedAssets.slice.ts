@@ -53,7 +53,7 @@ export const createSharedAssetsSlice: CreateSliceType<SharedAssetSlice> = (
     }
     return removeAsset({ campaignId, assetId });
   },
-  updateAssetInput: (assetId, inputLabel, inputValue) => {
+  updateAssetInput: (assetId, inputLabel, inputKey, inputValue) => {
     const campaignId = getState().campaigns.currentCampaign.currentCampaignId;
     if (!campaignId) {
       return new Promise((res, reject) => reject("Campaign ID not defined"));

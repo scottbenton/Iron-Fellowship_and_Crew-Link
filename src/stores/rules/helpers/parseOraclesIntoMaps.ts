@@ -20,36 +20,36 @@ export function parseOraclesIntoMaps(
   const parseOracleTableCollectionIntoMaps = (
     category: Datasworn.OracleTablesCollection
   ) => {
-    oracleTablesCollectionMap[category.id] = category;
-    allOraclesMap[category.id] = category;
-    oracleCollectionMap[category.id] = category;
+    oracleTablesCollectionMap[category._id] = category;
+    allOraclesMap[category._id] = category;
+    oracleCollectionMap[category._id] = category;
     Object.values(category.contents ?? {}).forEach((oracleContent) => {
-      allOraclesMap[oracleContent.id] = oracleContent;
-      oracleRollableMap[oracleContent.id] = oracleContent;
-      oracleTableRollableMap[oracleContent.id] = oracleContent;
+      allOraclesMap[oracleContent._id] = oracleContent;
+      oracleRollableMap[oracleContent._id] = oracleContent;
+      oracleTableRollableMap[oracleContent._id] = oracleContent;
     });
     Object.values(category.collections ?? {}).forEach((subCollection) => {
-      oracleCollectionMap[subCollection.id] = subCollection;
+      oracleCollectionMap[subCollection._id] = subCollection;
       if (subCollection.replaces) {
         oracleCollectionMap[subCollection.replaces] = subCollection;
       }
       if (subCollection.oracle_type === "tables") {
-        allOraclesMap[subCollection.id] = subCollection;
+        allOraclesMap[subCollection._id] = subCollection;
         parseOracleTableCollectionIntoMaps(subCollection);
       } else if (
         subCollection.oracle_type === "table_shared_rolls" ||
         subCollection.oracle_type === "table_shared_results" ||
         subCollection.oracle_type === "table_shared_details"
       ) {
-        allOraclesMap[subCollection.id] = subCollection;
+        allOraclesMap[subCollection._id] = subCollection;
         Object.values(subCollection.contents ?? {}).forEach(
           (
             content:
               | Datasworn.OracleColumnSimple
               | Datasworn.OracleColumnDetails
           ) => {
-            allOraclesMap[content.id] = content;
-            oracleRollableMap[content.id] = content;
+            allOraclesMap[content._id] = content;
+            oracleRollableMap[content._id] = content;
           }
         );
       }

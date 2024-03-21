@@ -24,9 +24,9 @@ export function convertStoredMovesToCategories(
   Object.keys(storedCategories).forEach((categoryId) => {
     const storedCategory = storedCategories[categoryId];
     categories[categoryId] = {
-      id: `${homebrewId}/collections/moves/${categoryId}`,
+      _id: `${homebrewId}/collections/moves/${categoryId}`,
       name: storedCategory.label,
-      source: DEFAULT_SOURCE,
+      _source: DEFAULT_SOURCE,
       description: storedCategory.description,
       enhances: storedCategory.enhancesId,
       replaces: storedCategory.replacesId,
@@ -58,12 +58,12 @@ function convertStoredMove(
 ): Datasworn.Move {
   if (move.type === MoveType.NoRoll) {
     const m: Datasworn.MoveNoRoll = {
-      id: `${homebrewId}/moves/${move.categoryId}/${moveId}`,
+      _id: `${homebrewId}/moves/${move.categoryId}/${moveId}`,
       name: move.label,
       text: move.text,
       replaces: move.replacesId,
       roll_type: "no_roll",
-      source: DEFAULT_SOURCE,
+      _source: DEFAULT_SOURCE,
       trigger: {
         text: "",
         conditions: [],
@@ -74,12 +74,12 @@ function convertStoredMove(
     return m;
   } else if (move.type === MoveType.ActionRoll) {
     const m: Datasworn.MoveActionRoll = {
-      id: `${homebrewId}/moves/${move.categoryId}/${moveId}`,
+      _id: `${homebrewId}/moves/${move.categoryId}/${moveId}`,
       name: move.label,
       text: move.text,
       replaces: move.replacesId,
       roll_type: "action_roll",
-      source: DEFAULT_SOURCE,
+      _source: DEFAULT_SOURCE,
       trigger: {
         text: "",
         conditions: [
@@ -119,12 +119,12 @@ function convertStoredMove(
     return m;
   } else if (move.type === MoveType.ProgressRoll) {
     const m: Datasworn.MoveProgressRoll = {
-      id: `${homebrewId}/moves/${move.categoryId}/${moveId}`,
+      _id: `${homebrewId}/moves/${move.categoryId}/${moveId}`,
       name: move.label,
       text: move.text,
       replaces: move.replacesId,
       roll_type: "progress_roll",
-      source: DEFAULT_SOURCE,
+      _source: DEFAULT_SOURCE,
       trigger: {
         text: "",
         conditions: [
@@ -151,12 +151,12 @@ function convertStoredMove(
     return m;
   } else {
     const m: Datasworn.MoveSpecialTrack = {
-      id: `${homebrewId}/moves/${move.categoryId}/${moveId}`,
+      _id: `${homebrewId}/moves/${move.categoryId}/${moveId}`,
       name: move.label,
       text: move.text,
       replaces: move.replacesId,
       roll_type: "special_track",
-      source: DEFAULT_SOURCE,
+      _source: DEFAULT_SOURCE,
       trigger: {
         text: "",
         conditions: [

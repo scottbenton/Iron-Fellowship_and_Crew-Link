@@ -16,9 +16,9 @@ export function AssetCardSearch(props: AssetCardSearchProps) {
     return Object.values(assetGroups)
       .flatMap((group) =>
         Object.values(group.contents ?? {}).map((asset) => ({
-          groupId: group.id,
+          groupId: group._id,
           groupName: group.name,
-          assetId: asset.id,
+          assetId: asset._id,
           name: asset.name,
         }))
       )

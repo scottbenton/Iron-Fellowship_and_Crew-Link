@@ -35,7 +35,7 @@ export function OracleCollectionAutocomplete(
         <Box component={"li"} {...props}>
           <ListItemText
             primary={oracleCollectionMap[option].name}
-            secondary={oracleCollectionMap[option].id}
+            secondary={oracleCollectionMap[option]._id}
           />
         </Box>
       )}

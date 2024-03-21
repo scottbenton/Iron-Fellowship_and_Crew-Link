@@ -126,10 +126,13 @@ export function CharacterSection() {
                   <AssetCard
                     assetId={sharedAssets[assetId].id}
                     storedAsset={sharedAssets[assetId]}
-                    handleInputChange={(label, value) =>
-                      updateSharedAssetInput(assetId, label, value).catch(
-                        () => {}
-                      )
+                    handleInputChange={(label, inputKey, value) =>
+                      updateSharedAssetInput(
+                        assetId,
+                        label,
+                        inputKey,
+                        value
+                      ).catch(() => {})
                     }
                     sx={{
                       // maxWidth: 380,

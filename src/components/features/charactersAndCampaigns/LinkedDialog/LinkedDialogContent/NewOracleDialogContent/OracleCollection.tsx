@@ -17,10 +17,10 @@ export function OracleCollection(props: OracleCollectionProps) {
 
   return (
     <OracleCollectionRenderer
-      collectionId={collection.id}
+      collectionId={collection._id}
       collections={collections}
       oracles={oracles}
-      visibleCollections={{ [collection.id]: CATEGORY_VISIBILITY.ALL }}
+      visibleCollections={{ [collection._id]: CATEGORY_VISIBILITY.ALL }}
       enhancesCollections={{}}
       visibleOracles={{}}
     />

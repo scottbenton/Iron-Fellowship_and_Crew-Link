@@ -16,9 +16,26 @@ export interface OracleRollableTableProps {
 export function OracleRollableTable(props: OracleRollableTableProps) {
   const { oracle } = props;
 
+  const labels = {
+    roll: "Roll",
+    result: "Result",
+    details: "Details",
+  };
+
+  if (
+    oracle.oracle_type === "table_details" ||
+    oracle.oracle_type === "table_simple"
+  ) {
+    labels.roll = oracle.column_labels.roll;
+    labels.result = oracle.column_labels.result;
+    if (oracle.oracle_type === "table_details") {
+      labels.details = oracle.column_labels.detail;
+    }
+  }
+
   const columns: SimpleTableColumnDefinition<(typeof oracle)["rows"][0]>[] = [
     {
-      label: oracle.column_labels.roll,
+      label: labels.roll,
       renderer: (row) =>
         row.min !== null && row.max !== null
           ? row.max - row.min === 0
@@ -28,7 +45,7 @@ export function OracleRollableTable(props: OracleRollableTableProps) {
       textColor: "text.secondary",
     },
     {
-      label: oracle.column_labels.result,
+      label: labels.result,
       renderer: (row) => <MarkdownRenderer markdown={row.result} />,
     },
   ];
@@ -38,7 +55,7 @@ export function OracleRollableTable(props: OracleRollableTableProps) {
     oracle.oracle_type === "column_details"
   ) {
     columns.push({
-      label: oracle.column_labels.detail,
+      label: labels.details,
       renderer: (row) =>
         (row as Datasworn.OracleTableRowDetails).detail ? (
           <MarkdownRenderer

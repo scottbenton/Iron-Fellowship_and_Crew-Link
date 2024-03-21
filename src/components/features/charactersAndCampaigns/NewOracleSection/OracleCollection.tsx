@@ -41,10 +41,10 @@ export function OracleCollection(props: OracleCollectionProps) {
   const enhancingCollectionIds = enhancesCollections[collectionId];
 
   const { oracleIds, subCollectionIds } = useMemo(() => {
-    const oracleIds = Object.values(contents ?? {}).map((oracle) => oracle.id);
+    const oracleIds = Object.values(contents ?? {}).map((oracle) => oracle._id);
 
     const subCollectionIds = Object.values(subCollections || {}).map(
-      (subCollection) => subCollection.id
+      (subCollection) => subCollection._id
     );
 
     (enhancingCollectionIds ?? []).forEach((enhancesId) => {
@@ -52,13 +52,13 @@ export function OracleCollection(props: OracleCollectionProps) {
       if (enhancingCollection) {
         oracleIds.push(
           ...Object.values(enhancingCollection.contents ?? {}).map(
-            (oracle) => oracle.id
+            (oracle) => oracle._id
           )
         );
         if (enhancingCollection.oracle_type === "tables") {
           subCollectionIds.push(
             ...Object.values(enhancingCollection.collections ?? {}).map(
-              (subCollection) => subCollection.id
+              (subCollection) => subCollection._id
             )
           );
         }

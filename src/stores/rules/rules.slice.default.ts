@@ -36,11 +36,11 @@ export const defaultRulesSlice: RulesSliceData = {
   specialTracks: defaultRuleset.rules.special_tracks,
   impacts: defaultRuleset.rules.impacts,
   rootOracleCollectionIds: Object.values(defaultRuleset.oracles).map(
-    (oracle) => oracle.id
+    (oracle) => oracle._id
   ),
   oracleMaps: parseOraclesIntoMaps(defaultRuleset.oracles),
   rootMoveCollectionIds: Object.values(defaultRuleset.moves).map(
-    (move) => move.id
+    (move) => move._id
   ),
   moveMaps: parseMovesIntoMaps(defaultRuleset.moves),
   assetMaps: parseAssetsIntoMaps(defaultRuleset.assets),

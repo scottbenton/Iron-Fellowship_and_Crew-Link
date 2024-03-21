@@ -12,12 +12,12 @@ export function parseMovesIntoMaps(
       if (category.replaces) {
         moveCategoryMap[category.replaces] = category;
       }
-      moveCategoryMap[category.id] = category;
+      moveCategoryMap[category._id] = category;
       Object.values(category.contents).forEach((move) => {
         if (move.replaces) {
           moveMap[move.replaces] = move;
         }
-        moveMap[move.id] = move;
+        moveMap[move._id] = move;
       });
     }
   });

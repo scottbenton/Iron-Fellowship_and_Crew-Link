@@ -23,7 +23,7 @@ export function OracleSelectableRollableCollectionListItem(
 
   const [selectedOption, setSelectedOption] = useState<string>(keys[0] ?? "");
 
-  const selectedOptionId = options[selectedOption]?.id;
+  const selectedOptionId = options[selectedOption]?._id;
   return (
     <ListItemButtonWithSecondaryAction
       disabled={disabled || !selectedOptionId}

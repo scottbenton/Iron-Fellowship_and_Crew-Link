@@ -55,7 +55,7 @@ export const createAssetsSlice: CreateSliceType<AssetSlice> = (
     }
     return removeAsset({ characterId, assetId });
   },
-  updateAssetInput: (assetId, inputLabel, inputValue) => {
+  updateAssetInput: (assetId, inputLabel, inputKey, inputValue) => {
     const characterId =
       getState().characters.currentCharacter.currentCharacterId;
     if (!characterId) {

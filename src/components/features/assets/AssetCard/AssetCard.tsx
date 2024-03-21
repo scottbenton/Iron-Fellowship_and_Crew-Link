@@ -40,7 +40,11 @@ export interface AssetCardProps {
   actions?: ReactNode;
 
   handleAbilityCheck?: (index: number, checked: boolean) => void;
-  handleInputChange?: (label: string, value: string) => Promise<void>;
+  handleInputChange?: (
+    label: string,
+    key: string,
+    value: string
+  ) => Promise<void>;
   handleTrackValueChange?: (num: number) => Promise<void>;
   handleConditionCheck?: (condition: string, checked: boolean) => Promise<void>;
 
@@ -81,7 +85,7 @@ function AssetCardComponent(
   if (!asset) return null;
 
   const isShared = asset.Usage.Shared;
-  const abilityInputs: FieldType[] = [];
+  const abilityInputs: Record<string, FieldType> = {};
 
   let alternateConditionMeterProperties:
     | AssetAlterPropertiesConditionMeter
@@ -92,12 +96,13 @@ function AssetCardComponent(
       alternateConditionMeterProperties =
         ability["Alter properties"]?.["Condition meter"];
     }
+    const abilityFields = ability.Inputs ?? {};
     if (
       ((ability.Enabled || storedAsset?.enabledAbilities[index]) ?? false) &&
-      Object.values(ability.Inputs ?? {}).length > 0
+      Object.values(abilityFields).length > 0
     ) {
-      Object.values(ability.Inputs ?? {}).forEach((input) => {
-        abilityInputs.push(input);
+      Object.keys(abilityFields).forEach((inputKey) => {
+        abilityInputs[inputKey] = abilityFields[inputKey];
       });
     }
   });
@@ -182,48 +187,63 @@ function AssetCardComponent(
           {asset.Requirement && (
             <MarkdownRenderer markdown={asset.Requirement} />
           )}
-          {Object.values(asset.Inputs ?? {})
-            .sort((i1, i2) => i1.Label.localeCompare(i2.Label))
-            .map((field) => (
-              <AssetCardField
-                key={field.$id}
-                field={field}
-                value={storedAsset?.inputs?.[encodeDataswornId(field.$id)]}
-                onChange={(value) => {
-                  if (handleInputChange) {
-                    return handleInputChange(
-                      encodeDataswornId(field.$id),
-                      value
+          {Object.keys(asset.Inputs ?? {})
+            .sort(
+              (ik1, ik2) =>
+                asset.Inputs?.[ik1].Label.localeCompare(
+                  asset.Inputs?.[ik2].Label ?? ""
+                ) ?? 0
+            )
+            .map((fieldKey) => {
+              const field = (asset.Inputs ?? {})[fieldKey];
+              return (
+                <AssetCardField
+                  key={field.$id}
+                  field={field}
+                  value={storedAsset?.inputs?.[encodeDataswornId(field.$id)]}
+                  onChange={(value) => {
+                    if (handleInputChange) {
+                      return handleInputChange(
+                        encodeDataswornId(field.$id),
+                        fieldKey,
+                        value
+                      );
+                    }
+                    return new Promise((res, reject) =>
+                      reject("HandleInputChange is undefined")
                     );
-                  }
-                  return new Promise((res, reject) =>
-                    reject("HandleInputChange is undefined")
-                  );
-                }}
-                disabled={readOnly || !handleInputChange}
-              />
-            ))}
-          {abilityInputs
-            .sort((i1, i2) => i1.Label.localeCompare(i2.Label))
-            .map((field) => (
-              <AssetCardField
-                key={field.$id}
-                field={field}
-                value={storedAsset?.inputs?.[encodeDataswornId(field.$id)]}
-                onChange={(value) => {
-                  if (handleInputChange) {
-                    return handleInputChange(
-                      encodeDataswornId(field.$id),
-                      value
+                  }}
+                  disabled={readOnly || !handleInputChange}
+                />
+              );
+            })}
+          {Object.keys(abilityInputs)
+            .sort((ik1, ik2) =>
+              abilityInputs[ik1].Label.localeCompare(abilityInputs[ik2].Label)
+            )
+            .map((fieldKey) => {
+              const field = abilityInputs[fieldKey];
+              return (
+                <AssetCardField
+                  key={field.$id}
+                  field={field}
+                  value={storedAsset?.inputs?.[encodeDataswornId(field.$id)]}
+                  onChange={(value) => {
+                    if (handleInputChange) {
+                      return handleInputChange(
+                        encodeDataswornId(field.$id),
+                        fieldKey,
+                        value
+                      );
+                    }
+                    return new Promise((res, reject) =>
+                      reject("handleInputChange is undefined")
                     );
-                  }
-                  return new Promise((res, reject) =>
-                    reject("handleInputChange is undefined")
-                  );
-                }}
-                disabled={readOnly || !handleInputChange}
-              />
-            ))}
+                  }}
+                  disabled={readOnly || !handleInputChange}
+                />
+              );
+            })}
           <Box flexGrow={1}>
             {asset.Abilities.map((ability, index) => (
               <Box

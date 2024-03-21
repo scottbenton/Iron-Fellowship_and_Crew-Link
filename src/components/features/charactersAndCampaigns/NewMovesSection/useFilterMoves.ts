@@ -29,7 +29,7 @@ export function useFilterMoves() {
           .includes(search.toLocaleLowerCase()) &&
           Object.keys(category.contents ?? {}).length > 0)
       ) {
-        visibleCategories[category.id] = CATEGORY_VISIBILITY.ALL;
+        visibleCategories[category._id] = CATEGORY_VISIBILITY.ALL;
         isEmpty = false;
         return;
       }
@@ -45,18 +45,18 @@ export function useFilterMoves() {
             move.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
           ) {
             hasMove = true;
-            visibleMoves[move.id] = true;
+            visibleMoves[move._id] = true;
           }
         });
       }
       if (hasMove) {
         isEmpty = false;
-        visibleCategories[category.id] = CATEGORY_VISIBILITY.SOME;
+        visibleCategories[category._id] = CATEGORY_VISIBILITY.SOME;
         if (category.enhances) {
           visibleCategories[category.enhances] = CATEGORY_VISIBILITY.SOME;
         }
       } else {
-        visibleCategories[category.id] = CATEGORY_VISIBILITY.HIDDEN;
+        visibleCategories[category._id] = CATEGORY_VISIBILITY.HIDDEN;
       }
     });
 

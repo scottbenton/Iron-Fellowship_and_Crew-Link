@@ -48,14 +48,14 @@ export function MarkdownEditorToolbar(props: MarkdownEditorToolbarProps) {
   }[] = [];
   Object.values(moveMap).forEach((move) => {
     autocompleteOptions.push({
-      id: move.id,
+      id: move._id,
       type: "move",
       label: move.name,
     });
   });
   Object.values(oracleMap).forEach((oracle) => {
     autocompleteOptions.push({
-      id: oracle.id,
+      id: oracle._id,
       type: "oracle",
       label: oracle.name,
     });
@@ -193,18 +193,18 @@ export function MarkdownEditorToolbar(props: MarkdownEditorToolbarProps) {
         <Box p={1}>
           <Autocomplete
             options={Object.values(moveMap)}
-            getOptionKey={(option) => option.id}
+            getOptionKey={(option) => option._id}
             getOptionLabel={(option) => option.name}
             renderInput={(params) => (
               <TextField {...params} label={"Moves"} sx={{ minWidth: 200 }} />
             )}
             renderOption={(props, option) => (
               <Box component={"li"} {...props}>
-                <ListItemText primary={option.name} secondary={option.id} />
+                <ListItemText primary={option.name} secondary={option._id} />
               </Box>
             )}
             onChange={(evt, value) => {
-              value && addDataswornLink(value.id, value.name);
+              value && addDataswornLink(value._id, value.name);
             }}
           />
         </Box>
@@ -222,18 +222,18 @@ export function MarkdownEditorToolbar(props: MarkdownEditorToolbarProps) {
         <Box p={1}>
           <Autocomplete
             options={Object.values(oracleMap)}
-            getOptionKey={(option) => option.id}
+            getOptionKey={(option) => option._id}
             getOptionLabel={(option) => option.name}
             renderInput={(params) => (
               <TextField {...params} label={"Oracles"} sx={{ minWidth: 200 }} />
             )}
             renderOption={(props, option) => (
               <Box component={"li"} {...props}>
-                <ListItemText primary={option.name} secondary={option.id} />
+                <ListItemText primary={option.name} secondary={option._id} />
               </Box>
             )}
             onChange={(evt, value) => {
-              value && addDataswornLink(value.id, value.name);
+              value && addDataswornLink(value._id, value.name);
             }}
           />
         </Box>

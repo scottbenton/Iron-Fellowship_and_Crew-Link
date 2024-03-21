@@ -53,12 +53,12 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
           <FormGroup>
             {officialExpansions.map((expansion) => (
               <FormControlLabel
-                key={expansion.id}
+                key={expansion._id}
                 control={
                   <Switch
-                    checked={enabledExpansionMap[expansion.id] ?? false}
+                    checked={enabledExpansionMap[expansion._id] ?? false}
                     onChange={(evt, checked) =>
-                      toggleEnableExpansion(expansion.id, checked)
+                      toggleEnableExpansion(expansion._id, checked)
                     }
                   />
                 }

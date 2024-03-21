@@ -13,7 +13,7 @@ export function Move(props: MoveProps) {
 
   return (
     <ListItem
-      id={move.id}
+      id={move._id}
       sx={(theme) => ({
         "&:nth-of-type(even)": {
           backgroundColor: theme.palette.background.paperInlay,

@@ -32,7 +32,7 @@ export function AssetHeader(props: AssetHeaderProps) {
       </Typography>
       <Box display={"flex"} alignItems={"center"}>
         {isLocal && (
-          <Tooltip title={asset.id}>
+          <Tooltip title={asset._id}>
             <LinkIcon color={"inherit"} />
           </Tooltip>
         )}

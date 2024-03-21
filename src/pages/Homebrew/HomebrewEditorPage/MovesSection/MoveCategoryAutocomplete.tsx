@@ -33,7 +33,7 @@ export function MoveCategoryAutocomplete(props: MoveCategoryAutocompleteProps) {
         <Box component={"li"} {...props}>
           <ListItemText
             primary={moveCategoryMap[option].name}
-            secondary={moveCategoryMap[option].id}
+            secondary={moveCategoryMap[option]._id}
           />
         </Box>
       )}

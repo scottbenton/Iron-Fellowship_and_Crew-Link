@@ -12,9 +12,9 @@ export function parseAssetsIntoMaps(
       if (category.replaces) {
         assetCollectionMap[category.replaces] = category;
       }
-      assetCollectionMap[category.id] = category;
+      assetCollectionMap[category._id] = category;
       Object.values(category.contents ?? {}).forEach((asset) => {
-        assetMap[asset.id] = asset;
+        assetMap[asset._id] = asset;
       });
     }
   });

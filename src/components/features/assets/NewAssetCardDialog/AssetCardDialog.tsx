@@ -56,7 +56,7 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
       enabledAbilities[index] = ability.enabled;
     });
     const storedAsset: Omit<StoredAsset, "order"> = {
-      id: asset.id,
+      id: asset._id,
       enabledAbilities,
     };
     handleAssetSelection(storedAsset);
@@ -111,10 +111,10 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
               (asset, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <AssetCardDialogCard
-                    assetId={asset.id}
+                    assetId={asset._id}
                     selectAsset={() => onAssetSelect(asset)}
                     loading={loading}
-                    searched={asset.id === searchedAssetId}
+                    searched={asset._id === searchedAssetId}
                     clearSearched={clearSearch}
                   />
                 </Grid>

@@ -28,7 +28,7 @@ export function MoveCategory(props: MoveCategoryProps) {
 
   const isExpandedOrForced = isExpanded || forceOpen;
 
-  if (visibleCategories[category.id] === CATEGORY_VISIBILITY.HIDDEN) {
+  if (visibleCategories[category._id] === CATEGORY_VISIBILITY.HIDDEN) {
     return null;
   }
 
@@ -48,11 +48,11 @@ export function MoveCategory(props: MoveCategoryProps) {
           }}
         >
           {Object.values(category.contents ?? {}).map((move, index) =>
-            visibleCategories[category.id] === CATEGORY_VISIBILITY.ALL ||
-            visibleMoves[move.id] === true ? (
+            visibleCategories[category._id] === CATEGORY_VISIBILITY.ALL ||
+            visibleMoves[move._id] === true ? (
               <Move
                 key={index}
-                move={moveMap[move.id]}
+                move={moveMap[move._id]}
                 disabled={!isExpandedOrForced}
                 openMove={openMove}
               />

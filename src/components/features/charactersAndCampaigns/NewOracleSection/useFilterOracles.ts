@@ -34,7 +34,7 @@ export function useFilterOracles() {
       if (collection.enhances) {
         enhancesCollections[collection.enhances] = [
           ...(enhancesCollections[collection.enhances] ?? []),
-          collection.id,
+          collection._id,
         ];
       }
 
@@ -51,7 +51,7 @@ export function useFilterOracles() {
 
       if (hasChildren && searchIncludesCollectionName) {
         isEmpty = false;
-        visibleCollections[collection.id] = CATEGORY_VISIBILITY.ALL;
+        visibleCollections[collection._id] = CATEGORY_VISIBILITY.ALL;
         return true;
       }
 
@@ -78,7 +78,7 @@ export function useFilterOracles() {
                 .toLocaleLowerCase()
                 .includes(search.toLocaleLowerCase())
             ) {
-              visibleOracles[table.id] = true;
+              visibleOracles[table._id] = true;
               hasOracles = true;
             }
           }
@@ -87,12 +87,12 @@ export function useFilterOracles() {
 
       if (hasOracles) {
         isEmpty = false;
-        visibleCollections[collection.id] = CATEGORY_VISIBILITY.SOME;
+        visibleCollections[collection._id] = CATEGORY_VISIBILITY.SOME;
         if (collection.enhances) {
           visibleCollections[collection.enhances] = CATEGORY_VISIBILITY.SOME;
         }
       } else {
-        visibleCollections[collection.id] = CATEGORY_VISIBILITY.HIDDEN;
+        visibleCollections[collection._id] = CATEGORY_VISIBILITY.HIDDEN;
       }
 
       return hasOracles;
