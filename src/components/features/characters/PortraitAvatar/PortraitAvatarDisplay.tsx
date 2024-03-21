@@ -117,7 +117,12 @@ export function PortraitAvatarDisplay(props: PortraitAvatarDisplayProps) {
         />
       ) : !loading ? (
         name ? (
-          <Typography variant={variants[size]}>{name[0]}</Typography>
+          <Typography
+            variant={variants[size]}
+            fontWeight={size === "huge" ? 600 : undefined}
+          >
+            {name[0]}
+          </Typography>
         ) : (
           <BackgroundIcon />
         )
