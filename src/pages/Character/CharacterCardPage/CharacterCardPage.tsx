@@ -9,9 +9,8 @@ import { Unsubscribe } from "firebase/firestore";
 import { listenToMostRecentCharacterLog } from "api-calls/game-log/listenToMostRecentCharacterLog";
 import { RollCard } from "./components/RollCard";
 import { INITIATIVE_STATUS } from "types/Character.type";
-import InitiativeIcon from "@mui/icons-material/Shield";
-import NoInitiativeIcon from "@mui/icons-material/RemoveModerator";
 import { useSearchParams } from "react-router-dom";
+import { useInitiativeStatusText } from "components/features/characters/InitiativeStatusChip/useInitiativeStatusText";
 
 export function CharacterCardPage() {
   const [params] = useSearchParams();
@@ -56,6 +55,8 @@ export function CharacterCardPage() {
       clearTimeout(timeout);
     };
   }, [latestRoll]);
+
+  const statusLabels = useInitiativeStatusText(true);
 
   if (!character) return null;
 
@@ -142,27 +143,40 @@ export function CharacterCardPage() {
                 </Typography>
               </Box>
               <Box display={"flex"}>
-                <Box display={"flex"} alignItems={"center"}>
+                <Box
+                  display={"flex"}
+                  alignItems={"center"}
+                  bgcolor={"grey.900"}
+                  borderRadius={1}
+                  p={1}
+                >
                   <HealthIcon
-                    sx={(theme) => ({
+                    sx={{
                       width: 50,
                       height: 50,
-                      color: theme.palette.primary.main,
-                    })}
+                      color: "#f472b6",
+                    }}
                   />
-                  <Typography variant={"h3"} ml={1}>
+                  <Typography variant={"h3"} ml={1} width={36}>
                     {character.health}
                   </Typography>
                 </Box>
-                <Box display={"flex"} alignItems={"center"} ml={4}>
+                <Box
+                  display={"flex"}
+                  alignItems={"center"}
+                  ml={2}
+                  bgcolor={"grey.900"}
+                  borderRadius={1}
+                  p={1}
+                >
                   <SpiritIcon
-                    sx={(theme) => ({
+                    sx={{
                       width: 50,
                       height: 50,
-                      color: theme.palette.info.light,
-                    })}
+                      color: "#38bdf8",
+                    }}
                   />
-                  <Typography variant={"h3"} ml={1}>
+                  <Typography variant={"h3"} ml={1} width={36}>
                     {character.spirit}
                   </Typography>
                 </Box>
@@ -177,7 +191,6 @@ export function CharacterCardPage() {
                     py={0.5}
                     pl={1}
                     pr={2}
-                    ml={-1}
                     mt={1}
                     color={(theme) =>
                       character.initiativeStatus ===
@@ -193,24 +206,8 @@ export function CharacterCardPage() {
                     }
                     borderRadius={(theme) => `${theme.shape.borderRadius}px`}
                   >
-                    {character.initiativeStatus ===
-                    INITIATIVE_STATUS.HAS_INITIATIVE ? (
-                      <InitiativeIcon
-                        sx={{
-                          width: 50,
-                          height: 50,
-                        }}
-                      />
-                    ) : (
-                      <NoInitiativeIcon
-                        sx={{
-                          width: 50,
-                          height: 50,
-                        }}
-                      />
-                    )}
                     <Typography variant={"h4"} ml={1}>
-                      {getStatusText(character.initiativeStatus)}
+                      {statusLabels[character.initiativeStatus]}
                     </Typography>
                   </Box>
                 )}
@@ -260,14 +257,3 @@ export function CharacterCardPage() {
     </>
   );
 }
-
-const getStatusText = (status: INITIATIVE_STATUS): string => {
-  switch (status) {
-    case INITIATIVE_STATUS.HAS_INITIATIVE:
-      return "Initiative";
-    case INITIATIVE_STATUS.DOES_NOT_HAVE_INITIATIVE:
-      return "No Initiative";
-    case INITIATIVE_STATUS.OUT_OF_COMBAT:
-      return "Out of Combat";
-  }
-};
