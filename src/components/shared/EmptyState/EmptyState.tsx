@@ -4,7 +4,7 @@ import { getPublicAssetPath } from "functions/getPublicAssetPath";
 export interface EmptyStateProps {
   showImage?: boolean;
   title?: string;
-  message?: string;
+  message?: string | React.ReactNode;
   callToAction?: React.ReactNode;
   sx?: SxProps;
   leftAlign?: boolean;

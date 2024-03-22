@@ -4,6 +4,8 @@ import { useAppName } from "hooks/useAppName";
 import { useEffect, useState } from "react";
 import { reportPageError } from "lib/analytics.lib";
 
+const supportEmail = "support@scottbenton.dev";
+
 export function ErrorRoute() {
   const error = useRouteError();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -43,17 +45,24 @@ export function ErrorRoute() {
     }
   }, [error]);
 
-  if (!errorMessage) {
-    return null;
-  }
-
   return (
     <EmptyState
       showImage
-      title={"Error"}
-      message={`${appName} failed to load the page properly. We are sorry for the inconvenience!${
-        errorMessage && ` Full error message: ${errorMessage}`
-      }`}
+      title={`${appName} encountered an error`}
+      message={
+        <>
+          <div>
+            Sorry for the inconvenience! If you are having trouble accessing the
+            app, please reach out on the discord, or by emailing{" "}
+            <b>{supportEmail}</b> with a description of the error.
+          </div>
+          {errorMessage && (
+            <div>
+              Please include the following in your message: {errorMessage}
+            </div>
+          )}
+        </>
+      }
     />
   );
 }
