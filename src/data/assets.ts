@@ -15,6 +15,7 @@ import ironswornRules from "@datasworn/ironsworn-classic/json/classic.json";
 import starforgedRules from "@datasworn/starforged/json/starforged.json";
 import { Datasworn } from "@datasworn/core";
 import { parseAssetsIntoMaps } from "stores/rules/helpers/parseAssetsIntoMaps";
+import { capitalize } from "@mui/material";
 
 const gameSystem = getSystem();
 const assetCategories: GameSystemChooser<typeof ironswornAssetCategories> = {
@@ -81,7 +82,7 @@ export function getOldDataswornId(newId: string): string {
   }
   return newId.replace("classic", "ironsworn");
 }
-function getNewConditionMeterKey(conditionMeter: ConditionMeter) {
+export function getNewConditionMeterKey(conditionMeter: ConditionMeter) {
   return conditionMeter.Label.replace("companion health", "health");
 }
 function getNewConditionMeterConditionKey(
@@ -89,7 +90,10 @@ function getNewConditionMeterConditionKey(
 ): string {
   return meterCondition.replaceAll(" ", "_");
 }
-function getNewInputKey(assetId: string, inputKey: string): string | null {
+export function getNewInputKey(
+  assetId: string,
+  inputKey: string
+): string | null {
   if (assetId === "classic/assets/combat_talent/ironclad") {
     return null;
   }
@@ -115,33 +119,32 @@ function getNewInputKey(assetId: string, inputKey: string): string | null {
 
   return newInputKey;
 }
-function getOldInputKey(assetId: string, inputKey: string): string | null {
-  if (assetId === "classic/assets/combat_talent/ironclad") {
-    return null;
-  }
-  const newInputKey = inputKey
-    .toLocaleLowerCase()
-    .replaceAll(" ", "_")
-    .replaceAll("'", "")
-    .replaceAll("-", "_")
-    .replaceAll("/", "_");
+export function getOldInputKey(inputKey: string): string {
+  let oldInputKey = capitalize(inputKey);
 
-  if (newInputKey === "linked_stat" && assetId.startsWith("classic")) {
-    return "stat";
-  }
-  // if (
-  //   (newInputKey === "name" &&
-  //     assetId.startsWith("starforged/assets/companion") &&
-  //     assetId !== "starforged/assets/companion/sidekick") ||
-  //   assetId.startsWith("starforged/assets/command_vehicle") ||
-  //   assetId === "starforged/assets/deed/homesteader"
-  // ) {
-  //   return "label";
-  // }
+  oldInputKey = oldInputKey.replaceAll("_", "").replaceAll("_", "-");
 
-  return newInputKey;
+  if (inputKey === "stat") {
+    return "Linked stat";
+  }
+
+  // Specific issues
+  if (oldInputKey === "Godsname") {
+    return "God's name";
+  } else if (oldInputKey === "Titlelineage") {
+    return "Title/Lineage";
+  } else if (oldInputKey === "Linkedstat") {
+    return "Linked stat";
+  } else if (oldInputKey === "Lastof") {
+    return "Last of";
+  } else if (oldInputKey === "Bondmate") {
+    return "Bond-mate";
+  }
+
+  return oldInputKey;
 }
-function getNewControlKey(inputKey: string): string {
+
+export function getNewControlKey(inputKey: string): string {
   return inputKey
     .toLocaleLowerCase()
     .replaceAll(" ", "_")
@@ -159,7 +162,9 @@ const compareAssets = (
 ) => {
   Object.keys(oldAssets).forEach((oldAssetKey) => {
     const newAssetKey = getNewDataswornId(oldAssetKey);
+    const doubleConvertedNewAssetKey = getNewDataswornId(newAssetKey);
     const convertedOldAssetKey = getOldDataswornId(newAssetKey);
+    const doubleConvertedOldAssetKey = getOldDataswornId(convertedOldAssetKey);
     if (!newAssets[newAssetKey]) {
       // console.debug("Missing asset", oldAssetKey);
       return;
@@ -168,6 +173,20 @@ const compareAssets = (
       console.debug("OLD ASSET KEY CONVERSION DID NOT WORK");
       console.debug("OLD ASSET KEY", oldAssetKey);
       console.debug("CONVERTED OLD ASSET KEY", convertedOldAssetKey);
+    }
+    if (doubleConvertedOldAssetKey !== convertedOldAssetKey) {
+      console.debug(
+        "DOUBLE CONVERTING OLD ASSET KEY DID NOT WORK",
+        convertedOldAssetKey,
+        doubleConvertedOldAssetKey
+      );
+    }
+    if (doubleConvertedNewAssetKey !== newAssetKey) {
+      console.debug(
+        "DOUBLE CONVERTING NEW ASSET KEY DID NOT WORK",
+        newAssetKey,
+        doubleConvertedNewAssetKey
+      );
     }
     const oldAsset = oldAssets[oldAssetKey];
     const newAsset = newAssets[newAssetKey];
@@ -223,12 +242,22 @@ const compareAssets = (
           } else if (!newAsset.controls[newControlKey]) {
             console.debug("NO INPUT AVAILABLE IN CONTROLS", newControlKey);
           }
+          const oldControlKey = getOldInputKey(newControlKey);
+          if (!oldAsset.Inputs?.[oldControlKey]) {
+            console.debug(`MISSING ${oldControlKey}`);
+          }
         } else if (!newAsset.options) {
           console.debug("NEW ASSET DOES NOT HAVE OPTIONS", oldInput, newAsset);
         } else {
           const newInput = newAsset.options[newInputKey];
           if (!newInput) {
             console.debug(newAsset._id, `MISSING INPUT ${newInputKey}`);
+          }
+        }
+        if (newInputKey) {
+          const oldInputKey = getOldInputKey(newInputKey);
+          if (!oldAsset.Inputs?.[oldInputKey]) {
+            console.debug("MISSING OLD INPUT", inputKey, oldInputKey);
           }
         }
       });

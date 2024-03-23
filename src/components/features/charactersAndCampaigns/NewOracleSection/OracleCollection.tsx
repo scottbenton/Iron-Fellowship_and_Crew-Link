@@ -123,7 +123,7 @@ export function OracleCollection(props: OracleCollectionProps) {
         <List sx={{ py: 0, mb: isExpandedOrForced ? 0.5 : 0 }}>
           {oracleIds.map((oracleId) => (
             <OracleListItem
-              key={oracleId}
+              key={collectionId + "-" + oracleId}
               oracleId={oracleId}
               oracles={oracles}
               disabled={!isExpandedOrForced || disabled}
@@ -133,7 +133,7 @@ export function OracleCollection(props: OracleCollectionProps) {
           ))}
           {subCollectionIds.map((subCollectionId) => (
             <OracleCollection
-              key={subCollectionId}
+              key={collectionId + "-" + subCollectionId}
               collectionId={subCollectionId}
               collections={collections}
               oracles={oracles}

@@ -24,17 +24,22 @@ export interface AssetControlProps {
 export function AssetControl(props: AssetControlProps) {
   const { controlId, control, storedAsset, onControlChange } = props;
 
+  const controlValue = storedAsset?.controlValues?.[controlId];
+
   switch (control.field_type) {
     case "select_enhancement":
       return (
         <TextField
           select
           label={capitalize(control.label)}
-          defaultValue={control.value ?? ""}
+          defaultValue={
+            typeof controlValue === "string"
+              ? (controlValue as string)
+              : control.value ?? ""
+          }
           disabled={!onControlChange}
           onChange={(evt) =>
-            onControlChange &&
-            onControlChange(controlId, evt.currentTarget.value)
+            onControlChange && onControlChange(controlId, evt.target.value)
           }
           variant={"standard"}
           fullWidth
@@ -66,7 +71,11 @@ export function AssetControl(props: AssetControlProps) {
         <FormControlLabel
           control={
             <Checkbox
-              defaultChecked={control.value}
+              defaultChecked={
+                typeof controlValue === "boolean"
+                  ? (controlValue as boolean)
+                  : control.value ?? false
+              }
               disabled={!onControlChange}
               onChange={(evt, checked) =>
                 onControlChange && onControlChange(controlId, checked)
@@ -81,7 +90,11 @@ export function AssetControl(props: AssetControlProps) {
         <FormControlLabel
           control={
             <Checkbox
-              defaultChecked={control.value}
+              defaultChecked={
+                typeof controlValue === "boolean"
+                  ? (controlValue as boolean)
+                  : control.value ?? false
+              }
               disabled={!onControlChange}
               onChange={(evt, checked) =>
                 onControlChange && onControlChange(controlId, checked)
@@ -95,11 +108,30 @@ export function AssetControl(props: AssetControlProps) {
       const subControls = control.controls;
       return (
         <Box>
+          {subControls && (
+            <Box
+              display={"flex"}
+              justifyContent={"flex-end"}
+              flexWrap={"wrap"}
+              mr={1}
+            >
+              <AssetControls
+                controls={subControls}
+                storedAsset={storedAsset}
+                row
+                onControlChange={onControlChange}
+              />
+            </Box>
+          )}
           <Track
             label={control.label}
             min={control.min}
             max={control.max}
-            value={control.value}
+            value={
+              typeof controlValue === "number"
+                ? (controlValue as number)
+                : control.value ?? 0
+            }
             disabled={!onControlChange}
             onChange={
               onControlChange
@@ -112,14 +144,6 @@ export function AssetControl(props: AssetControlProps) {
                 : undefined
             }
           />
-          {subControls && (
-            <AssetControls
-              controls={subControls}
-              storedAsset={storedAsset}
-              row
-              onControlChange={onControlChange}
-            />
-          )}
         </Box>
       );
   }

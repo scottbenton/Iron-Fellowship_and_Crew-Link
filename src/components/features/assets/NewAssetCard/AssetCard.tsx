@@ -78,7 +78,11 @@ const AssetCardComponent = (
           asset={asset}
           showSharedIcon={showSharedIcon}
         />
-        <AssetOptions asset={asset} onAssetOptionChange={onAssetOptionChange} />
+        <AssetOptions
+          asset={asset}
+          storedAsset={storedAsset}
+          onAssetOptionChange={onAssetOptionChange}
+        />
         <AssetAbilities
           asset={asset}
           storedAsset={storedAsset}

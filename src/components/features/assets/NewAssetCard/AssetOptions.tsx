@@ -1,15 +1,17 @@
 import { Datasworn } from "@datasworn/core";
 import { AssetOption } from "./AssetOption";
 import { Stack } from "@mui/material";
+import { StoredAsset } from "types/Asset.type";
 
 export interface AssetOptionsProps {
   asset: Datasworn.Asset;
+  storedAsset?: StoredAsset;
 
   onAssetOptionChange?: (assetOptionKey: string, value: string) => void;
 }
 
 export function AssetOptions(props: AssetOptionsProps) {
-  const { asset, onAssetOptionChange } = props;
+  const { asset, storedAsset, onAssetOptionChange } = props;
 
   const assetOptions = asset.options;
 
@@ -21,6 +23,7 @@ export function AssetOptions(props: AssetOptionsProps) {
     <Stack spacing={1} mt={0.5}>
       {Object.keys(assetOptions).map((assetOptionKey) => (
         <AssetOption
+          storedAsset={storedAsset}
           key={assetOptionKey}
           assetOptionKey={assetOptionKey}
           assetOption={assetOptions[assetOptionKey]}

@@ -32,6 +32,17 @@ export interface AssetSliceActions {
     checked: boolean
   ) => Promise<void>;
 
+  updateAssetOption: (
+    assetId: string,
+    optionKey: string,
+    value: string
+  ) => Promise<void>;
+  updateAssetControl: (
+    assetId: string,
+    controlKey: string,
+    value: number | string | boolean
+  ) => Promise<void>;
+
   resetStore: () => void;
 }
 

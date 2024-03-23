@@ -1,25 +1,32 @@
 import { Datasworn } from "@datasworn/core";
 import { ListSubheader, MenuItem, TextField, capitalize } from "@mui/material";
+import { StoredAsset } from "types/Asset.type";
 
 export interface AssetOptionProps {
   assetOptionKey: string;
+  storedAsset?: StoredAsset;
   assetOption: Datasworn.AssetOptionField;
   onAssetOptionChange?: (assetOptionKey: string, value: string) => void;
 }
 
 export function AssetOption(props: AssetOptionProps) {
-  const { assetOptionKey, assetOption, onAssetOptionChange } = props;
+  const { assetOptionKey, storedAsset, assetOption, onAssetOptionChange } =
+    props;
 
   switch (assetOption.field_type) {
     case "text":
       return (
         <TextField
           label={capitalize(assetOption.label)}
-          defaultValue={assetOption.value ?? ""}
+          defaultValue={
+            storedAsset?.optionValues?.[assetOptionKey] ??
+            assetOption.value ??
+            ""
+          }
           disabled={!onAssetOptionChange}
           onChange={(evt) =>
             onAssetOptionChange &&
-            onAssetOptionChange(assetOptionKey, evt.currentTarget.value)
+            onAssetOptionChange(assetOptionKey, evt.target.value)
           }
           variant={"standard"}
           sx={{ mt: 0.5 }}
@@ -31,11 +38,15 @@ export function AssetOption(props: AssetOptionProps) {
         <TextField
           select
           label={capitalize(assetOption.label)}
-          defaultValue={assetOption.value ?? ""}
+          defaultValue={
+            storedAsset?.optionValues?.[assetOptionKey] ??
+            assetOption.value ??
+            ""
+          }
           disabled={!onAssetOptionChange}
           onChange={(evt) =>
             onAssetOptionChange &&
-            onAssetOptionChange(assetOptionKey, evt.currentTarget.value)
+            onAssetOptionChange(assetOptionKey, evt.target.value)
           }
           variant={"standard"}
           sx={{ mt: 0.5 }}
@@ -68,11 +79,15 @@ export function AssetOption(props: AssetOptionProps) {
         <TextField
           select
           label={capitalize(assetOption.label)}
-          defaultValue={assetOption.value ?? ""}
+          defaultValue={
+            storedAsset?.optionValues?.[assetOptionKey] ??
+            assetOption.value ??
+            ""
+          }
           disabled={!onAssetOptionChange}
           onChange={(evt) =>
             onAssetOptionChange &&
-            onAssetOptionChange(assetOptionKey, evt.currentTarget.value)
+            onAssetOptionChange(assetOptionKey, evt.target.value)
           }
           variant={"standard"}
           sx={{ mt: 0.5 }}
