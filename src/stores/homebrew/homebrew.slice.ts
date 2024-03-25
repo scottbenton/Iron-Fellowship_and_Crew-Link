@@ -45,6 +45,14 @@ import { createHomebrewMove } from "api-calls/homebrew/moves/moves/createHomebre
 import { updateHomebrewMove } from "api-calls/homebrew/moves/moves/updateHomebrewMove";
 import { convertStoredMovesToCategories } from "functions/convertStoredMovesToCategories";
 import { defaultExpansions } from "stores/rules/rules.slice";
+import { createHomebrewAssetCollection } from "api-calls/homebrew/assets/collections/createHomebrewAssetCollection";
+import { updateHomebrewAssetCollection } from "api-calls/homebrew/assets/collections/updateHomebrewAssetCollection";
+import { deleteHomebrewAsset } from "api-calls/homebrew/assets/assets/deleteHomebrewAsset";
+import { deleteHomebrewAssetCollection } from "api-calls/homebrew/assets/collections/deleteHomebrewAssetCollection";
+import { createHomebrewAsset } from "api-calls/homebrew/assets/assets/createHomebrewAsset";
+import { updateHomebrewAsset } from "api-calls/homebrew/assets/assets/updateHomebrewAsset";
+import { listenToHomebrewAssetCollections } from "api-calls/homebrew/assets/collections/listenToHomebrewAssetCollections";
+import { listenToHomebrewAssets } from "api-calls/homebrew/assets/assets/listenToHomebrewAssets";
 
 enum ListenerRefreshes {
   Oracles,
@@ -53,6 +61,7 @@ enum ListenerRefreshes {
   ConditionMeters,
   SpecialTracks,
   Impacts,
+  Assets,
 }
 
 type ListenerConfig<T = { collectionId: string }> = {
@@ -160,6 +169,18 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
         sliceKey: "moves",
         refreshes: ListenerRefreshes.Moves,
       },
+      {
+        listenerFunction: listenToHomebrewAssetCollections,
+        errorMessage: "Failed to load asset collections",
+        sliceKey: "assetCollections",
+        refreshes: ListenerRefreshes.Assets,
+      },
+      {
+        listenerFunction: listenToHomebrewAssets,
+        errorMessage: "Failed to load assets",
+        sliceKey: "assets",
+        refreshes: ListenerRefreshes.Assets,
+      },
     ];
 
     const unsubscribes: Unsubscribe[] = [];
@@ -197,6 +218,8 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
                 case ListenerRefreshes.Impacts:
                   getState().rules.rebuildImpacts();
                   break;
+                case ListenerRefreshes.Assets:
+                  getState().homebrew.updateDataswornAssets(homebrewId);
               }
             },
             () => {
@@ -432,5 +455,54 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
       });
       getState().rules.rebuildMoves();
     }
+  },
+
+  createAssetCollection: (assetCollection) => {
+    return createHomebrewAssetCollection({ assetCollection });
+  },
+  updateAssetCollection: (assetCollectionId, assetCollection) => {
+    return updateHomebrewAssetCollection({
+      assetCollectionId,
+      assetCollection,
+    });
+  },
+  deleteAssetCollection: (homebrewId, assetCollectionId) => {
+    const assets =
+      getState().homebrew.collections[homebrewId]?.assets?.data ?? {};
+    const filteredAssetIds = Object.keys(assets).filter(
+      (assetId) => assets[assetId]?.categoryKey === assetCollectionId
+    );
+
+    const promises: Promise<void>[] = [];
+    filteredAssetIds.forEach((assetId) => {
+      promises.push(getState().homebrew.deleteAsset(assetId));
+    });
+
+    return new Promise((resolve, reject) => {
+      Promise.all(promises)
+        .then(() => {
+          deleteHomebrewAssetCollection({
+            assetCollectionId,
+          })
+            .then(() => {
+              resolve();
+            })
+            .catch(reject);
+        })
+        .catch(reject);
+    });
+  },
+  createAsset: (asset) => {
+    return createHomebrewAsset({ asset });
+  },
+  updateAsset: (assetId, asset) => {
+    return updateHomebrewAsset({ assetId, asset });
+  },
+  deleteAsset: (assetId) => {
+    return deleteHomebrewAsset({ assetId });
+  },
+
+  updateDataswornAssets: (homebrewId) => {
+    console.debug("PLACEHOLDER - UPDATE DATASWORN ASSETS", homebrewId);
   },
 });

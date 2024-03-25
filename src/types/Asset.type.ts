@@ -15,8 +15,24 @@ export interface StoredAsset {
 }
 
 export interface StoredHomebrewAssetCollection {
-  homebrewId: string;
+  collectionId: string; // Homebrew collection id
   label: string;
+  enhances?: string;
+  replaces?: string;
+}
+
+export interface StoredHomebrewAsset {
+  collectionId: string; // Homebrew collection id
+  categoryKey: string;
+
+  label: string;
+  requirement?: string;
+  shared?: boolean;
+
+  // controls?:
+  // options?:
+  abilities: [];
+
   enhances?: string;
   replaces?: string;
 }

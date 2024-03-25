@@ -17,7 +17,17 @@ export function AssetsSection(props: AssetsSectionProps) {
   return (
     <>
       <SectionHeading
-        label={"Custom Assets"}
+        label={"Homebrew Asset Categories"}
+        sx={{ mt: 2 }}
+        floating
+        action={
+          <Button variant={"outlined"} color={"inherit"}>
+            Add Asset Category
+          </Button>
+        }
+      />
+      <SectionHeading
+        label={"Homebrew Assets"}
         sx={{ mt: 2 }}
         floating
         action={

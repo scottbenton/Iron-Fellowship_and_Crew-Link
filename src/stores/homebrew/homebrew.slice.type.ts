@@ -1,6 +1,10 @@
 import { Datasworn } from "@datasworn/core";
 import { Unsubscribe } from "firebase/firestore";
 import {
+  StoredHomebrewAsset,
+  StoredHomebrewAssetCollection,
+} from "types/Asset.type";
+import {
   ExpansionDocument,
   HomebrewCollectionDocument,
 } from "types/homebrew/HomebrewCollection.type";
@@ -41,6 +45,10 @@ export interface HomebrewEntry {
   moveCategories?: HomebrewData<StoredMoveCategory>;
   moves?: HomebrewData<StoredMove>;
   dataswornMoves?: Record<string, Datasworn.MoveCategory>;
+
+  assetCollections?: HomebrewData<StoredHomebrewAssetCollection>;
+  assets?: HomebrewData<StoredHomebrewAsset>;
+  dataswornAssets?: Record<string, Datasworn.AssetCollection>;
 }
 
 export interface HomebrewSliceData {
@@ -126,6 +134,24 @@ export interface HomebrewSliceActions {
   deleteMove: (moveId: string) => Promise<void>;
 
   updateDataswornMoves: (homebrewId: string) => void;
+
+  createAssetCollection: (
+    assetCollection: StoredHomebrewAssetCollection
+  ) => Promise<void>;
+  updateAssetCollection: (
+    assetCollectionId: string,
+    assetCollection: StoredHomebrewAssetCollection
+  ) => Promise<void>;
+  deleteAssetCollection: (
+    homebrewId: string,
+    assetCollectionId: string
+  ) => Promise<void>;
+
+  createAsset: (asset: StoredHomebrewAsset) => Promise<void>;
+  updateAsset: (assetId: string, asset: StoredHomebrewAsset) => Promise<void>;
+  deleteAsset: (assetId: string) => Promise<void>;
+
+  updateDataswornAssets: (homebrewId: string) => void;
 }
 
 export type HomebrewSlice = HomebrewSliceData & HomebrewSliceActions;
