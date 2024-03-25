@@ -2,6 +2,7 @@ import {
   IconButton,
   ListItemIcon,
   ListItemText,
+  ListSubheader,
   Menu,
   MenuItem,
   Tooltip,
@@ -86,6 +87,13 @@ export function SettingsMenu() {
             ? { vertical: "top", horizontal: "right" }
             : { vertical: "bottom", horizontal: "left" }
         }
+        MenuListProps={{
+          subheader: (
+            <ListSubheader component={"div"} disableSticky>
+              User Settings
+            </ListSubheader>
+          ),
+        }}
       >
         {isLoggedIn && (
           <MenuItem

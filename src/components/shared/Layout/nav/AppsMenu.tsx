@@ -2,6 +2,7 @@ import {
   IconButton,
   ListItemIcon,
   ListItemText,
+  ListSubheader,
   Menu,
   MenuItem,
   Tooltip,
@@ -73,7 +74,7 @@ export function AppsMenu() {
         placement={isMobile ? "bottom" : "right"}
       >
         <IconButton
-          aria-describedby="apps-menu"
+          aria-describedby='apps-menu'
           color={"inherit"}
           ref={appsMenuParent}
           onClick={() => setAppsMenuOpen(true)}
@@ -96,6 +97,13 @@ export function AppsMenu() {
             ? { vertical: "top", horizontal: "right" }
             : { vertical: "bottom", horizontal: "left" }
         }
+        MenuListProps={{
+          subheader: (
+            <ListSubheader component={"div"} disableSticky>
+              Other Apps and Resources
+            </ListSubheader>
+          ),
+        }}
       >
         {listItems.map((item) =>
           !item.shouldHide ? (

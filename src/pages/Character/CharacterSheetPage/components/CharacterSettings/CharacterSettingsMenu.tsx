@@ -1,4 +1,10 @@
-import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+import {
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import HomebrewIcon from "@mui/icons-material/PlaylistAdd";
 import { useState } from "react";
 import { ExpansionSelectorDialog } from "components/features/charactersAndCampaigns/ExpansionSelector/ExpansionSelectorDialog";
@@ -90,7 +96,18 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
 
   return (
     <>
-      <Menu open={open} onClose={onClose} anchorEl={anchorElement}>
+      <Menu
+        open={open}
+        onClose={onClose}
+        anchorEl={anchorElement}
+        MenuListProps={{
+          subheader: (
+            <ListSubheader component={"div"} disableSticky>
+              Character Settings
+            </ListSubheader>
+          ),
+        }}
+      >
         <MenuItem
           onClick={() => {
             onClose();
@@ -100,7 +117,7 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
           <ListItemIcon>
             <PortraitIcon fontSize={"small"} />
           </ListItemIcon>
-          <ListItemText>Change Name & Portrait</ListItemText>
+          <ListItemText>Change Name or Portrait</ListItemText>
         </MenuItem>
         <MenuItem
           onClick={() => {

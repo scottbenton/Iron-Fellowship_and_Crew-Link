@@ -71,7 +71,7 @@ export function AssetControl(props: AssetControlProps) {
         <FormControlLabel
           control={
             <Checkbox
-              defaultChecked={
+              checked={
                 typeof controlValue === "boolean"
                   ? (controlValue as boolean)
                   : control.value ?? false
@@ -90,7 +90,7 @@ export function AssetControl(props: AssetControlProps) {
         <FormControlLabel
           control={
             <Checkbox
-              defaultChecked={
+              checked={
                 typeof controlValue === "boolean"
                   ? (controlValue as boolean)
                   : control.value ?? false

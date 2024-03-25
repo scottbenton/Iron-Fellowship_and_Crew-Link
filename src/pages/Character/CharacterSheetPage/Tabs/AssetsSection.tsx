@@ -2,7 +2,8 @@ import { Box, Button, Grid, Typography, LinearProgress } from "@mui/material";
 import { useState } from "react";
 import { AssetCard as OldAssetCard } from "components/features/assets/AssetCard";
 import { AssetCard } from "components/features/assets/NewAssetCard";
-import { AssetCardDialog } from "components/features/assets/AssetCardDialog";
+import { AssetCardDialog as OldAssetCardDialog } from "components/features/assets/AssetCardDialog";
+import { AssetCardDialog } from "components/features/assets/NewAssetCardDialog";
 import { StoredAsset } from "types/Asset.type";
 import { useConfirm } from "material-ui-confirm";
 import { useStore } from "stores/store";
@@ -143,6 +144,12 @@ export function AssetsSection() {
   const updateAssetControl = useStore(
     (store) => store.characters.currentCharacter.assets.updateAssetControl
   );
+  const updateSharedAssetOption = useStore(
+    (store) => store.campaigns.currentCampaign.assets.updateAssetOption
+  );
+  const updateSharedAssetControl = useStore(
+    (store) => store.campaigns.currentCampaign.assets.updateAssetControl
+  );
 
   return (
     <>
@@ -191,8 +198,12 @@ export function AssetsSection() {
                           checked
                         )
                       }
-                      onAssetOptionChange={() => {}}
-                      onAssetControlChange={() => {}}
+                      onAssetOptionChange={(optionKey, value) =>
+                        updateSharedAssetOption(assetId, optionKey, value)
+                      }
+                      onAssetControlChange={(controlKey, value) =>
+                        updateSharedAssetControl(assetId, controlKey, value)
+                      }
                       sx={{
                         minHeight: 450,
                         width: "100%",
@@ -333,22 +344,41 @@ export function AssetsSection() {
           <Typography>No Assets Found</Typography>
         </Box>
       )}
-      <AssetCardDialog
-        open={isAssetDialogOpen.open}
-        loading={addAssetLoading}
-        handleClose={() => setIsAssetDialogOpen({ open: false })}
-        handleAssetSelection={(asset) =>
-          handleAssetAdd({
-            ...asset,
-            order: isAssetDialogOpen.addToCampaign
-              ? nextSharedAssetIndex
-              : nextAssetIndex,
-          })
-        }
-        showSharedAssetWarning={
-          isInCampaign && !isAssetDialogOpen.addToCampaign
-        }
-      />
+      {showNewAssetCards ? (
+        <AssetCardDialog
+          open={isAssetDialogOpen.open}
+          loading={addAssetLoading}
+          handleClose={() => setIsAssetDialogOpen({ open: false })}
+          handleAssetSelection={(asset) =>
+            handleAssetAdd({
+              ...asset,
+              order: isAssetDialogOpen.addToCampaign
+                ? nextSharedAssetIndex
+                : nextAssetIndex,
+            })
+          }
+          showSharedAssetWarning={
+            isInCampaign && !isAssetDialogOpen.addToCampaign
+          }
+        />
+      ) : (
+        <OldAssetCardDialog
+          open={isAssetDialogOpen.open}
+          loading={addAssetLoading}
+          handleClose={() => setIsAssetDialogOpen({ open: false })}
+          handleAssetSelection={(asset) =>
+            handleAssetAdd({
+              ...asset,
+              order: isAssetDialogOpen.addToCampaign
+                ? nextSharedAssetIndex
+                : nextAssetIndex,
+            })
+          }
+          showSharedAssetWarning={
+            isInCampaign && !isAssetDialogOpen.addToCampaign
+          }
+        />
+      )}
     </>
   );
 }

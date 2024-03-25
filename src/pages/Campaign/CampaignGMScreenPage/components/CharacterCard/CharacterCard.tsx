@@ -10,7 +10,8 @@ import {
 import { StatComponent } from "components/features/characters/StatComponent";
 import { CharacterDocument, INITIATIVE_STATUS } from "types/Character.type";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { AssetCard } from "components/features/assets/AssetCard";
+import { AssetCard as OldAssetCard } from "components/features/assets/AssetCard";
+import { AssetCard } from "components/features/assets/NewAssetCard";
 import { InitiativeStatusChip } from "components/features/characters/InitiativeStatusChip";
 import { PortraitAvatar } from "components/features/characters/PortraitAvatar/PortraitAvatar";
 import { Stat } from "types/stats.enum";
@@ -20,6 +21,7 @@ import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { IronswornTracks } from "./IronswornTracks";
 import { LegacyTracks } from "./LegacyTracks";
 import { useNewCustomContentPage } from "hooks/featureFlags/useNewCustomContentPage";
+import { getNewDataswornId, getOldDataswornId } from "data/assets";
 
 export interface CharacterCardProps {
   uid: string;
@@ -66,6 +68,8 @@ export function CharacterCard(props: CharacterCardProps) {
   const updateCharacterInitiative = (initiativeStatus: INITIATIVE_STATUS) => {
     updateCharacter(characterId, { initiativeStatus }).catch(() => {});
   };
+
+  const showNewAssetCards = useNewCustomContentPage();
 
   return (
     <Card variant={"outlined"}>
@@ -223,13 +227,21 @@ export function CharacterCard(props: CharacterCardProps) {
           </AccordionSummary>
           <AccordionDetails>
             <Stack spacing={2} px={2}>
-              {storedAssets?.map((storedAsset, index) => (
-                <AssetCard
-                  key={index}
-                  storedAsset={storedAsset}
-                  assetId={storedAsset.id}
-                />
-              ))}
+              {storedAssets?.map((storedAsset, index) =>
+                showNewAssetCards ? (
+                  <AssetCard
+                    key={index}
+                    storedAsset={storedAsset}
+                    assetId={getNewDataswornId(storedAsset.id)}
+                  />
+                ) : (
+                  <OldAssetCard
+                    key={index}
+                    storedAsset={storedAsset}
+                    assetId={getOldDataswornId(storedAsset.id)}
+                  />
+                )
+              )}
             </Stack>
           </AccordionDetails>
         </Accordion>
