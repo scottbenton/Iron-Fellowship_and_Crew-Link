@@ -120,9 +120,6 @@ export function TabsSection(props: TabsSectionProps) {
       <ContainedTabPanel isVisible={selectedTab === TABS.TRACKS}>
         <TracksSection supply={campaign.supply} />
       </ContainedTabPanel>
-      <ContainedTabPanel isVisible={selectedTab === TABS.ORACLE}>
-        <OracleSection />
-      </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.NOTES}>
         <CampaignNotesSection />
       </ContainedTabPanel>
