@@ -1,6 +1,7 @@
 import { Datasworn, IdParser } from "@datasworn/core";
 import { RulesSliceData } from "../rules.slice.type";
 import { Primary } from "@datasworn/core/dist/StringId";
+import { idMap } from "data/idMap";
 
 export function parseAssetsIntoMaps(
   assetCategories: Record<string, Datasworn.AssetCollection>
@@ -16,15 +17,21 @@ export function parseAssetsIntoMaps(
     if (category.contents) {
       if (category.replaces) {
         category.replaces.forEach((replaces) => {
-          const replaceMatches = IdParser.getMatches(
-            replaces as Primary,
-            IdParser.tree
-          );
-          replaceMatches.forEach((val, key) => {
-            if (val.type === "asset_collection") {
-              assetCollectionMap[key] = category;
-            }
-          });
+          let replacesId = replaces;
+          if (!replacesId.startsWith("asset_collection")) {
+            replacesId = idMap[replacesId] ?? replacesId;
+          }
+          if (replacesId.startsWith("asset_collection")) {
+            const replaceMatches = IdParser.getMatches(
+              replacesId as Primary,
+              IdParser.tree
+            );
+            replaceMatches.forEach((val, key) => {
+              if (val.type === "asset_collection") {
+                assetCollectionMap[key] = category;
+              }
+            });
+          }
         });
       }
       assetCollectionMap[category._id] = category;

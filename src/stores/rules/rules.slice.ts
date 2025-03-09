@@ -8,6 +8,7 @@ import { parseAssetsIntoMaps } from "./helpers/parseAssetsIntoMaps";
 import { HomebrewNonLinearMeterDocument } from "api-calls/homebrew/rules/nonLinearMeters/_homebrewNonLinearMeter.type";
 import { defaultExpansions } from "data/rulesets";
 import { Primary } from "@datasworn/core/dist/StringId";
+import { idMap } from "data/idMap";
 
 export const createRulesSlice: CreateSliceType<RulesSlice> = (
   set,
@@ -166,35 +167,102 @@ function mergeOracleMaps(
   base: RulesSliceData["oracleMaps"],
   expansion: RulesSliceData["oracleMaps"]
 ): RulesSliceData["oracleMaps"] {
+  const allOraclesMap = {
+    ...base.allOraclesMap,
+    ...expansion.allOraclesMap,
+  };
+  const oracleCollectionMap = {
+    ...base.oracleCollectionMap,
+    ...expansion.oracleCollectionMap,
+  };
+  const nonReplacedOracleCollectionMap = {
+    ...base.nonReplacedOracleCollectionMap,
+    ...expansion.nonReplacedOracleCollectionMap,
+  };
+  const oracleRollableMap = {
+    ...base.oracleRollableMap,
+    ...expansion.oracleRollableMap,
+  };
+  const nonReplacedOracleRollableMap = {
+    ...base.nonReplacedOracleRollableMap,
+    ...expansion.nonReplacedOracleRollableMap,
+  };
+  const oracleTableRollableMap = {
+    ...base.oracleTableRollableMap,
+    ...expansion.oracleTableRollableMap,
+  };
+  const nonReplacedOracleTableRollableMap = {
+    ...base.nonReplacedOracleTableRollableMap,
+    ...expansion.nonReplacedOracleTableRollableMap,
+  };
+
+  Object.keys(expansion.oracleCollectionMap).forEach((collectionKey) => {
+    const collection = expansion.oracleCollectionMap[collectionKey];
+    if (collection.enhances) {
+      collection.enhances.forEach((enhances) => {
+        let enhancesId = enhances;
+        if (!enhancesId.startsWith("oracle_collection")) {
+          enhancesId = idMap[enhancesId] ?? enhancesId;
+        }
+        if (enhancesId.startsWith("oracle_collection")) {
+          const replaceMatches = IdParser.getMatches(
+            enhancesId as Primary,
+            IdParser.tree
+          );
+          replaceMatches.forEach((val, key) => {
+            if (val.type === "oracle_collection") {
+              const newContents: Record<string, Datasworn.OracleRollable> = {
+                ...oracleCollectionMap[key].contents,
+              };
+              Object.entries(collection.contents)
+                .filter(([, oracle]) => !oracle.replaces)
+                .forEach(([oracleKey, oracle]) => {
+                  newContents[oracleKey] = oracle;
+                });
+
+              oracleCollectionMap[key] = {
+                ...oracleCollectionMap[key],
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                contents: newContents as any,
+              };
+
+              if (val.oracle_type !== "table_shared_rolls") {
+                const newCollections: Record<
+                  string,
+                  Datasworn.OracleCollection
+                > = {
+                  ...((
+                    oracleCollectionMap[key] as Datasworn.OracleTablesCollection
+                  ).collections ?? {}),
+                };
+                Object.entries(
+                  (collection as Datasworn.OracleTablesCollection)
+                    .collections ?? {}
+                )
+                  .filter(([, oracle]) => !oracle.replaces && !oracle.enhances)
+                  .forEach(([oracleKey, oracle]) => {
+                    newCollections[oracleKey] = oracle;
+                  });
+                oracleCollectionMap[key] = {
+                  ...oracleCollectionMap[key],
+                  collections: newCollections,
+                } as Datasworn.OracleTablesCollection;
+              }
+            }
+          });
+        }
+      });
+    }
+  });
+
   return {
-    allOraclesMap: {
-      ...base.allOraclesMap,
-      ...expansion.allOraclesMap,
-    },
-    oracleCollectionMap: {
-      ...base.oracleCollectionMap,
-      ...expansion.oracleCollectionMap,
-    },
-    nonReplacedOracleCollectionMap: {
-      ...base.nonReplacedOracleCollectionMap,
-      ...expansion.nonReplacedOracleCollectionMap,
-    },
-    oracleRollableMap: {
-      ...base.oracleRollableMap,
-      ...expansion.oracleRollableMap,
-    },
-    nonReplacedOracleRollableMap: {
-      ...base.nonReplacedOracleRollableMap,
-      ...expansion.nonReplacedOracleRollableMap,
-    },
-    oracleTableRollableMap: {
-      ...base.oracleTableRollableMap,
-      ...expansion.oracleTableRollableMap,
-    },
-    nonReplacedOracleTableRollableMap: {
-      ...base.nonReplacedOracleTableRollableMap,
-      ...expansion.nonReplacedOracleTableRollableMap,
-    },
+    allOraclesMap,
+    oracleCollectionMap,
+    nonReplacedOracleCollectionMap,
+    oracleRollableMap,
+    nonReplacedOracleRollableMap,
+    oracleTableRollableMap,
+    nonReplacedOracleTableRollableMap,
   };
 }
 
@@ -202,23 +270,73 @@ function mergeMoveMaps(
   base: RulesSliceData["moveMaps"],
   expansion: RulesSliceData["moveMaps"]
 ): RulesSliceData["moveMaps"] {
+  const moveCategoryMap = {
+    ...base.moveCategoryMap,
+    ...expansion.moveCategoryMap,
+  };
+  const nonReplacedMoveCategoryMap = {
+    ...base.nonReplacedMoveCategoryMap,
+    ...expansion.nonReplacedMoveCategoryMap,
+  };
+  const moveMap = {
+    ...base.moveMap,
+    ...expansion.moveMap,
+  };
+  const nonReplacedMoveMap = {
+    ...base.nonReplacedMoveMap,
+    ...expansion.nonReplacedMoveMap,
+  };
+
+  Object.keys(expansion.moveCategoryMap).forEach((collectionKey) => {
+    const collection = expansion.moveCategoryMap[collectionKey];
+    if (collection.enhances) {
+      collection.enhances.forEach((enhances) => {
+        let enhancesId = enhances;
+        if (!enhancesId.startsWith("move_category")) {
+          enhancesId = idMap[enhancesId] ?? enhancesId;
+        }
+        if (enhancesId.startsWith("move_category")) {
+          const replaceMatches = IdParser.getMatches(
+            enhancesId as Primary,
+            IdParser.tree
+          );
+          replaceMatches.forEach((val, key) => {
+            if (val.type === "move_category") {
+              const newContents: Record<string, Datasworn.Move> = {
+                ...moveCategoryMap[key].contents,
+              };
+              Object.entries(collection.contents)
+                .filter(([, move]) => !move.replaces)
+                .forEach(([moveKey, move]) => {
+                  newContents[moveKey] = move;
+                });
+
+              const newCategories: Record<string, Datasworn.MoveCategory> = {
+                ...moveCategoryMap[key].collections,
+              };
+              Object.entries(collection.collections)
+                .filter(([, move]) => !move.replaces && !move.enhances)
+                .forEach(([moveKey, move]) => {
+                  newCategories[moveKey] = move;
+                });
+
+              moveCategoryMap[key] = {
+                ...moveCategoryMap[key],
+                contents: newContents,
+                collections: newCategories,
+              };
+            }
+          });
+        }
+      });
+    }
+  });
+
   return {
-    moveCategoryMap: {
-      ...base.moveCategoryMap,
-      ...expansion.moveCategoryMap,
-    },
-    nonReplacedMoveCategoryMap: {
-      ...base.nonReplacedMoveCategoryMap,
-      ...expansion.nonReplacedMoveCategoryMap,
-    },
-    moveMap: {
-      ...base.moveMap,
-      ...expansion.moveMap,
-    },
-    nonReplacedMoveMap: {
-      ...base.nonReplacedMoveMap,
-      ...expansion.nonReplacedMoveMap,
-    },
+    moveCategoryMap,
+    nonReplacedMoveCategoryMap,
+    moveMap,
+    nonReplacedMoveMap,
   };
 }
 
@@ -243,28 +361,36 @@ function mergeAssetMaps(
     const collection = expansion.assetCollectionMap[collectionKey];
     if (collection.enhances) {
       collection.enhances.forEach((enhances) => {
-        const replaceMatches = IdParser.getMatches(
-          enhances as Primary,
-          IdParser.tree
-        );
-        replaceMatches.forEach((val, key) => {
-          if (val.type === "asset_collection") {
-            const newContents: Record<string, Datasworn.Asset> = {
-              ...combinedAssetCollectionMap[key].contents,
-            };
-            Object.entries(collection.contents).forEach(([assetKey, asset]) => {
-              newContents[assetKey] = {
-                ...asset,
-                category: val.name.replace("Assets", ""),
+        let enhancesId = enhances;
+        if (!enhancesId.startsWith("asset_collection")) {
+          enhancesId = idMap[enhancesId] ?? enhancesId;
+        }
+        if (enhancesId.startsWith("asset_collection")) {
+          const replaceMatches = IdParser.getMatches(
+            enhancesId as Primary,
+            IdParser.tree
+          );
+          replaceMatches.forEach((val, key) => {
+            if (val.type === "asset_collection") {
+              const newContents: Record<string, Datasworn.Asset> = {
+                ...combinedAssetCollectionMap[key].contents,
               };
-            });
+              Object.entries(collection.contents)
+                .filter(([, asset]) => !asset.replaces)
+                .forEach(([assetKey, asset]) => {
+                  newContents[assetKey] = {
+                    ...asset,
+                    category: val.name.replace("Assets", ""),
+                  };
+                });
 
-            combinedAssetCollectionMap[key] = {
-              ...combinedAssetCollectionMap[key],
-              contents: newContents,
-            };
-          }
-        });
+              combinedAssetCollectionMap[key] = {
+                ...combinedAssetCollectionMap[key],
+                contents: newContents,
+              };
+            }
+          });
+        }
       });
     }
   });

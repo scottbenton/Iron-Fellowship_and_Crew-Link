@@ -1,6 +1,7 @@
 import { Datasworn, IdParser } from "@datasworn/core";
 import { RulesSliceData } from "../rules.slice.type";
 import { Primary } from "@datasworn/core/dist/StringId";
+import { idMap } from "data/idMap";
 
 export function parseMovesIntoMaps(
   moveCategories: Record<string, Datasworn.MoveCategory>,
@@ -19,15 +20,21 @@ export function parseMovesIntoMaps(
     if (category.contents) {
       if (category.replaces) {
         category.replaces.forEach((replaces) => {
-          const replaceMatches = IdParser.getMatches(
-            replaces as Primary,
-            IdParser.tree
-          );
-          replaceMatches.forEach((val, key) => {
-            if (val.type === "move_category") {
-              moveCategoryMap[key] = category;
-            }
-          });
+          let replacesId = replaces;
+          if (!replacesId.startsWith("move_category")) {
+            replacesId = idMap[replacesId] ?? replacesId;
+          }
+          if (replacesId.startsWith("move_category")) {
+            const replaceMatches = IdParser.getMatches(
+              replacesId as Primary,
+              IdParser.tree
+            );
+            replaceMatches.forEach((val, key) => {
+              if (val.type === "move_category") {
+                moveCategoryMap[key] = category;
+              }
+            });
+          }
         });
       } else {
         moveCategoryMap[category._id] = category;
@@ -43,15 +50,21 @@ export function parseMovesIntoMaps(
       sortedContents.forEach((move) => {
         if (move.replaces) {
           move.replaces.forEach((replaces) => {
-            const replaceMatches = IdParser.getMatches(
-              replaces as Primary,
-              IdParser.tree
-            );
-            replaceMatches.forEach((val, key) => {
-              if (val.type === "move") {
-                moveMap[key] = move;
-              }
-            });
+            let replacesId = replaces;
+            if (!replacesId.startsWith("move")) {
+              replacesId = idMap[replacesId] ?? replacesId;
+            }
+            if (replacesId.startsWith("move")) {
+              const replaceMatches = IdParser.getMatches(
+                replacesId as Primary,
+                IdParser.tree
+              );
+              replaceMatches.forEach((val, key) => {
+                if (val.type === "move") {
+                  moveMap[key] = move;
+                }
+              });
+            }
           });
         }
         moveMap[move._id] = move;

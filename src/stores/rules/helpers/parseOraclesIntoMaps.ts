@@ -1,6 +1,7 @@
 import { Datasworn, IdParser } from "@datasworn/core";
 import { RulesSliceData } from "../rules.slice.type";
 import { Primary } from "@datasworn/core/dist/StringId";
+import { idMap } from "data/idMap";
 
 export function parseOraclesIntoMaps(
   oracles: Record<string, Datasworn.OracleTablesCollection>,
@@ -34,16 +35,22 @@ export function parseOraclesIntoMaps(
     // TODO - check and make sure this replaces properly
     if (category.replaces) {
       category.replaces.forEach((replaces) => {
-        const replaceMatches = IdParser.getMatches(
-          replaces as Primary,
-          IdParser.tree
-        );
-        replaceMatches.forEach((val, key) => {
-          if (val.type === "oracle_collection") {
-            allOraclesMap[key] = category;
-            oracleCollectionMap[key] = category;
-          }
-        });
+        let replacesId = replaces;
+        if (!replacesId.startsWith("oracle_collection:")) {
+          replacesId = idMap[replaces] ?? replaces;
+        }
+        if (replacesId.startsWith("oracle_collection:")) {
+          const replaceMatches = IdParser.getMatches(
+            replacesId as Primary,
+            IdParser.tree
+          );
+          replaceMatches.forEach((val, key) => {
+            if (val.type === "oracle_collection") {
+              allOraclesMap[key] = category;
+              oracleCollectionMap[key] = category;
+            }
+          });
+        }
       });
     }
     if (category.contents) {
@@ -67,25 +74,32 @@ export function parseOraclesIntoMaps(
         // TODO - check and make sure this is replaced properly
         if (oracleContent.replaces) {
           oracleContent.replaces.forEach((replaces) => {
-            const replaceMatches = IdParser.getMatches(
-              replaces as Primary,
-              IdParser.tree
-            );
-            replaceMatches.forEach((val, key) => {
-              if (val.type === "oracle_rollable") {
-                oracleRollableMap[key] = oracleContent;
-                allOraclesMap[key] = oracleContent;
-              }
-              const oracleRollableTableTypes = [
-                "table_text",
-                "table_text2",
-                "table_text3",
-              ];
-              if (oracleRollableTableTypes.includes(oracleContent.type)) {
-                oracleTableRollableMap[key] =
-                  oracleContent as Datasworn.OracleRollableTable;
-              }
-            });
+            let replacesId = replaces;
+            if (!replaces.startsWith("oracle_rollable:")) {
+              replacesId = idMap[replaces] ?? replaces;
+            }
+
+            if (replacesId.startsWith("oracle_rollable:")) {
+              const replaceMatches = IdParser.getMatches(
+                replacesId as Primary,
+                IdParser.tree
+              );
+              replaceMatches.forEach((val, key) => {
+                if (val.type === "oracle_rollable") {
+                  oracleRollableMap[key] = oracleContent;
+                  allOraclesMap[key] = oracleContent;
+                }
+                const oracleRollableTableTypes = [
+                  "table_text",
+                  "table_text2",
+                  "table_text3",
+                ];
+                if (oracleRollableTableTypes.includes(oracleContent.type)) {
+                  oracleTableRollableMap[key] =
+                    oracleContent as Datasworn.OracleRollableTable;
+                }
+              });
+            }
           });
         }
       });
