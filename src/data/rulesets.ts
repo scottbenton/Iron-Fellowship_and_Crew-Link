@@ -32,6 +32,11 @@ const defaultExpansions: Record<string, Datasworn.Expansion> = {};
       )
     ) as unknown as Datasworn.Expansion;
     defaultExpansions[delve._id] = delve;
+  } else if (gameSystem === GAME_SYSTEMS.STARFORGED) {
+    const starsmith = JSON.parse(
+      JSON.stringify((await import("./thirdparty/starsmith.json")).default)
+    ) as unknown as Datasworn.Expansion;
+    defaultExpansions[starsmith._id] = starsmith;
   }
 })();
 
