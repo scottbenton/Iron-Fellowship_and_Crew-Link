@@ -44,7 +44,7 @@ import { deleteHomebrewMoveCategory } from "api-calls/homebrew/moves/categories/
 import { createHomebrewMove } from "api-calls/homebrew/moves/moves/createHomebrewMove";
 import { updateHomebrewMove } from "api-calls/homebrew/moves/moves/updateHomebrewMove";
 import { convertStoredMovesToCategories } from "functions/convertStoredMovesToCategories";
-import { defaultExpansions } from "data/rulesets";
+import { defaultExpansions, thirdPartyExpansions } from "data/rulesets";
 import { createHomebrewAssetCollection } from "api-calls/homebrew/assets/collections/createHomebrewAssetCollection";
 import { updateHomebrewAssetCollection } from "api-calls/homebrew/assets/collections/updateHomebrewAssetCollection";
 import { deleteHomebrewAsset } from "api-calls/homebrew/assets/assets/deleteHomebrewAsset";
@@ -82,7 +82,7 @@ type ListenerConfig<T = { collectionId: string }> = {
 
 export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
   set,
-  getState
+  getState,
 ) => ({
   ...defaultHomebrewSlice,
   subscribe: (uid) => {
@@ -96,7 +96,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
           };
 
           store.homebrew.sortedHomebrewCollectionIds = Object.keys(
-            store.homebrew.collections
+            store.homebrew.collections,
           )
             .filter((key) => {
               return (
@@ -106,8 +106,8 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
             })
             .sort((k1, k2) =>
               (store.homebrew.collections[k1]?.base?.title ?? "").localeCompare(
-                store.homebrew.collections[k2]?.base?.title ?? ""
-              )
+                store.homebrew.collections[k2]?.base?.title ?? "",
+              ),
             );
 
           store.homebrew.loading = false;
@@ -120,22 +120,22 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
           store.homebrew.loading = false;
           store.homebrew.error = undefined;
           store.homebrew.sortedHomebrewCollectionIds = Object.keys(
-            store.homebrew.collections
+            store.homebrew.collections,
           )
             .filter((key) => {
               const shouldKeep =
                 store.homebrew.collections[key]?.base?.editors.includes(
-                  store.auth.uid
+                  store.auth.uid,
                 ) ||
                 store.homebrew.collections[key]?.base.viewers?.includes(
-                  store.auth.uid
+                  store.auth.uid,
                 );
               return shouldKeep;
             })
             .sort((k1, k2) =>
               (store.homebrew.collections[k1]?.base?.title ?? "").localeCompare(
-                store.homebrew.collections[k2]?.base?.title ?? ""
-              )
+                store.homebrew.collections[k2]?.base?.title ?? "",
+              ),
             );
         });
       },
@@ -144,7 +144,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
           store.homebrew.loading = false;
           store.homebrew.error = getErrorMessage(
             error,
-            "Your homebrew collections failed to load."
+            "Your homebrew collections failed to load.",
           );
         });
       },
@@ -152,14 +152,15 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
         set((store) => {
           store.homebrew.loading = false;
         });
-      }
+      },
     );
   },
 
   subscribeToHomebrewContent: (homebrewIds) => {
     getState().rules.setExpansionIds(homebrewIds);
     const defaultHomebrewIds = homebrewIds.filter(
-      (homebrewId) => defaultExpansions[homebrewId]
+      (homebrewId) =>
+        defaultExpansions[homebrewId] || thirdPartyExpansions[homebrewId],
     );
 
     if (defaultHomebrewIds.length > 0) {
@@ -167,7 +168,8 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
     }
 
     const filteredHomebrewIds = homebrewIds.filter(
-      (homebrewId) => !defaultExpansions[homebrewId]
+      (homebrewId) =>
+        !defaultExpansions[homebrewId] && !thirdPartyExpansions[homebrewId],
     );
 
     const listenerConfigs: ListenerConfig[] = [
@@ -252,15 +254,15 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
                 base: data,
               };
               store.homebrew.sortedHomebrewCollectionIds = Object.keys(
-                store.homebrew.collections
+                store.homebrew.collections,
               )
                 .filter((key) => {
                   const shouldKeep =
                     store.homebrew.collections[key]?.base?.editors.includes(
-                      store.auth.uid
+                      store.auth.uid,
                     ) ||
                     store.homebrew.collections[key]?.base.viewers?.includes(
-                      store.auth.uid
+                      store.auth.uid,
                     );
                   return shouldKeep;
                 })
@@ -268,8 +270,8 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
                   (
                     store.homebrew.collections[k1]?.base?.title ?? ""
                   ).localeCompare(
-                    store.homebrew.collections[k2]?.base?.title ?? ""
-                  )
+                    store.homebrew.collections[k2]?.base?.title ?? "",
+                  ),
                 );
             });
             getState().homebrew.updateExpansionIfLoaded(homebrewId);
@@ -279,7 +281,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
               store.homebrew.loading = false;
               store.homebrew.error = getErrorMessage(
                 error,
-                "Failed to load homebrew information"
+                "Failed to load homebrew information",
               );
             });
             console.error(error);
@@ -288,8 +290,8 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
             set((store) => {
               store.homebrew.loading = false;
             });
-          }
-        )
+          },
+        ),
       );
       listenerConfigs.forEach((config) => {
         unsubscribes.push(
@@ -326,8 +328,8 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
                   },
                 };
               });
-            }
-          )
+            },
+          ),
         );
       });
     });
@@ -419,7 +421,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
       getState().homebrew.collections[homebrewId]?.oracleTables?.data ?? {};
     const filteredOracleTableIds = Object.keys(oracleTables).filter(
       (oracleId) =>
-        oracleTables[oracleId]?.oracleCollectionId === oracleCollectionId
+        oracleTables[oracleId]?.oracleCollectionId === oracleCollectionId,
     );
 
     const subCollections =
@@ -431,7 +433,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
           subCollections[oracleId]?.parentOracleCollectionId ===
           oracleCollectionId
         );
-      }
+      },
     );
 
     const promises: Promise<void>[] = [];
@@ -440,7 +442,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
     });
     filteredOracleSubCollectionIds.forEach((subCollectionId) => {
       promises.push(
-        getState().homebrew.deleteOracleCollection(homebrewId, subCollectionId)
+        getState().homebrew.deleteOracleCollection(homebrewId, subCollectionId),
       );
     });
 
@@ -482,7 +484,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
     const moves =
       getState().homebrew.collections[homebrewId]?.moves?.data ?? {};
     const filteredMoveIds = Object.keys(moves).filter(
-      (moveId) => moves[moveId]?.categoryId === moveCategoryId
+      (moveId) => moves[moveId]?.categoryId === moveCategoryId,
     );
 
     const promises: Promise<void>[] = [];
@@ -528,7 +530,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
     const assets =
       getState().homebrew.collections[homebrewId]?.assets?.data ?? {};
     const filteredAssetIds = Object.keys(assets).filter(
-      (assetId) => assets[assetId]?.categoryKey === assetCollectionId
+      (assetId) => assets[assetId]?.categoryKey === assetCollectionId,
     );
 
     const promises: Promise<void>[] = [];
@@ -592,22 +594,22 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
           expansion.stats.data ?? {},
           expansion.conditionMeters.data ?? {},
           expansion.impactCategories.data ?? {},
-          expansion.legacyTracks.data ?? {}
+          expansion.legacyTracks.data ?? {},
         ),
         assets: convertHomebrewAssetDocumentsToCollections(
           expansionId,
           expansion.assetCollections.data ?? {},
-          expansion.assets.data ?? {}
+          expansion.assets.data ?? {},
         ),
         moves: convertStoredMovesToCategories(
           expansionId,
           expansion.moveCategories.data ?? {},
-          expansion.moves.data ?? {}
+          expansion.moves.data ?? {},
         ),
         oracles: convertStoredOraclesToCollections(
           expansionId,
           expansion.oracleCollections.data ?? {},
-          expansion.oracleTables.data ?? {}
+          expansion.oracleTables.data ?? {},
         ),
       };
       set((store) => {

@@ -9,9 +9,13 @@ import {
   Typography,
 } from "@mui/material";
 import { EmptyState } from "components/shared/EmptyState";
-import { defaultExpansions } from "data/rulesets";
+import {
+  defaultExpansions,
+  thirdPartyExpansions as thirdPartyExpansionMap,
+} from "data/rulesets";
 
 const expansions = Object.values(defaultExpansions);
+const thirdPartyExpansions = Object.values(thirdPartyExpansionMap);
 
 export interface ExpansionSelectorProps {
   enabledExpansionMap: Record<string, boolean>;
@@ -27,18 +31,20 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
 
   const homebrewExpansionMap = useStore((store) => store.homebrew.collections);
   const sortedExpansionIds = useStore(
-    (store) => store.homebrew.sortedHomebrewCollectionIds
+    (store) => store.homebrew.sortedHomebrewCollectionIds,
   );
 
   const expansionIds = sortedExpansionIds.filter(
     (expansionId) =>
-      homebrewExpansionMap[expansionId]?.base?.rulesetId === baseRuleset
+      homebrewExpansionMap[expansionId]?.base?.rulesetId === baseRuleset,
   );
+  console.debug(expansionIds, enabledExpansionMap);
 
   const notFoundExpansionIds = Object.keys(enabledExpansionMap).filter(
     (key) =>
       !expansions.some((expansion) => expansion._id === key) &&
-      !expansionIds.includes(key)
+      !thirdPartyExpansions.some((expansion) => expansion._id === key) &&
+      !expansionIds.includes(key),
   );
 
   return (
@@ -64,7 +70,30 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
           </FormGroup>
         </Box>
       )}
-      <Box mt={expansions.length > 0 ? 4 : 0}>
+      {thirdPartyExpansions.length > 0 && (
+        <Box mt={expansions.length > 0 ? 4 : 0}>
+          <Typography variant={"overline"}>Third-Party Expansions</Typography>
+          <FormGroup>
+            {thirdPartyExpansions.map((expansion) => (
+              <FormControlLabel
+                key={expansion._id}
+                control={
+                  <Switch
+                    checked={enabledExpansionMap[expansion._id] ?? false}
+                    onChange={(evt, checked) =>
+                      toggleEnableExpansion(expansion._id, checked)
+                    }
+                  />
+                }
+                label={expansion.title ?? "Unnamed Expansion"}
+              />
+            ))}
+          </FormGroup>
+        </Box>
+      )}
+      <Box
+        mt={expansions.length > 0 || thirdPartyExpansions.length > 0 ? 4 : 0}
+      >
         <Typography variant={"overline"}>Homebrew Expansions</Typography>
         {expansionIds.length > 0 ? (
           <FormGroup>

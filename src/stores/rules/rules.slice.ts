@@ -6,13 +6,13 @@ import { parseOraclesIntoMaps } from "./helpers/parseOraclesIntoMaps";
 import { parseMovesIntoMaps } from "./helpers/parseMovesIntoMaps";
 import { parseAssetsIntoMaps } from "./helpers/parseAssetsIntoMaps";
 import { HomebrewNonLinearMeterDocument } from "api-calls/homebrew/rules/nonLinearMeters/_homebrewNonLinearMeter.type";
-import { defaultExpansions } from "data/rulesets";
+import { defaultExpansions, thirdPartyExpansions } from "data/rulesets";
 import { Primary } from "@datasworn/core/dist/StringId";
 import { idMap } from "data/idMap";
 
 export const createRulesSlice: CreateSliceType<RulesSlice> = (
   set,
-  getState
+  getState,
 ) => ({
   ...defaultRulesSlice,
 
@@ -37,7 +37,10 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
       let nonLinearMeters: Record<string, HomebrewNonLinearMeterDocument> = {};
 
       store.rules.expansionIds.forEach((expansionId) => {
-        if (!defaultExpansions[expansionId]) {
+        if (
+          !defaultExpansions[expansionId] &&
+          !thirdPartyExpansions[expansionId]
+        ) {
           const expansionNonLinearMeters =
             store.homebrew.collections[expansionId]?.nonLinearMeters?.data ??
             {};
@@ -45,8 +48,8 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
           Object.keys(expansionNonLinearMeters)
             .sort((m1, m2) =>
               expansionNonLinearMeters[m1].label.localeCompare(
-                expansionNonLinearMeters[m2].label
-              )
+                expansionNonLinearMeters[m2].label,
+              ),
             )
             .forEach((meterKey) => {
               nonLinearMeters[meterKey] = expansionNonLinearMeters[meterKey];
@@ -77,21 +80,21 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
       IdParser.tree = tree;
 
       let oracleMaps: RulesSliceData["oracleMaps"] = parseOraclesIntoMaps(
-        baseRuleset.oracles
+        baseRuleset.oracles,
       );
       let rootOracleCollectionIds = Object.values(baseRuleset.oracles).map(
-        (oracle) => oracle._id
+        (oracle) => oracle._id,
       );
 
       let moveMaps: RulesSliceData["moveMaps"] = parseMovesIntoMaps(
-        baseRuleset.moves
+        baseRuleset.moves,
       );
       let rootMoveCollectionIds = Object.values(baseRuleset.moves).map(
-        (move) => move._id
+        (move) => move._id,
       );
 
       let assetMaps: RulesSliceData["assetMaps"] = parseAssetsIntoMaps(
-        baseRuleset.assets
+        baseRuleset.assets,
       );
       let stats = baseRuleset.rules.stats;
       let conditionMeters = baseRuleset.rules.condition_meters;
@@ -104,6 +107,8 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
         if (defaultExpansions[expansionId]) {
           expansion = defaultExpansions[expansionId];
           // merge expansion with base ruleset
+        } else if (thirdPartyExpansions[expansionId]) {
+          expansion = thirdPartyExpansions[expansionId];
         } else {
           expansion = state.homebrew.expansions[expansionId];
         }
@@ -118,14 +123,14 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
           rootOracleCollectionIds = rootOracleCollectionIds.concat(
             Object.values(expansion.oracles)
               .filter((oracle) => !oracle.replaces && !oracle.enhances)
-              .map((oracle) => oracle._id)
+              .map((oracle) => oracle._id),
           );
 
           moveMaps = mergeMoveMaps(moveMaps, expansionMoveMaps);
           rootMoveCollectionIds = rootMoveCollectionIds.concat(
             Object.values(expansion.moves)
               .filter((move) => !move.enhances && !move.replaces)
-              .map((move) => move._id)
+              .map((move) => move._id),
           );
 
           assetMaps = mergeAssetMaps(assetMaps, expansionAssetMaps);
@@ -165,7 +170,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
 
 function mergeOracleMaps(
   base: RulesSliceData["oracleMaps"],
-  expansion: RulesSliceData["oracleMaps"]
+  expansion: RulesSliceData["oracleMaps"],
 ): RulesSliceData["oracleMaps"] {
   const allOraclesMap = {
     ...base.allOraclesMap,
@@ -207,7 +212,7 @@ function mergeOracleMaps(
         if (enhancesId.startsWith("oracle_collection")) {
           const replaceMatches = IdParser.getMatches(
             enhancesId as Primary,
-            IdParser.tree
+            IdParser.tree,
           );
           replaceMatches.forEach((val, key) => {
             if (val.type === "oracle_collection") {
@@ -237,7 +242,7 @@ function mergeOracleMaps(
                 };
                 Object.entries(
                   (collection as Datasworn.OracleTablesCollection)
-                    .collections ?? {}
+                    .collections ?? {},
                 )
                   .filter(([, oracle]) => !oracle.replaces && !oracle.enhances)
                   .forEach(([oracleKey, oracle]) => {
@@ -268,7 +273,7 @@ function mergeOracleMaps(
 
 function mergeMoveMaps(
   base: RulesSliceData["moveMaps"],
-  expansion: RulesSliceData["moveMaps"]
+  expansion: RulesSliceData["moveMaps"],
 ): RulesSliceData["moveMaps"] {
   const moveCategoryMap = {
     ...base.moveCategoryMap,
@@ -298,7 +303,7 @@ function mergeMoveMaps(
         if (enhancesId.startsWith("move_category")) {
           const replaceMatches = IdParser.getMatches(
             enhancesId as Primary,
-            IdParser.tree
+            IdParser.tree,
           );
           replaceMatches.forEach((val, key) => {
             if (val.type === "move_category") {
@@ -342,7 +347,7 @@ function mergeMoveMaps(
 
 function mergeAssetMaps(
   base: RulesSliceData["assetMaps"],
-  expansion: RulesSliceData["assetMaps"]
+  expansion: RulesSliceData["assetMaps"],
 ): RulesSliceData["assetMaps"] {
   const combinedAssetCollectionMap = {
     ...base.assetCollectionMap,
@@ -368,7 +373,7 @@ function mergeAssetMaps(
         if (enhancesId.startsWith("asset_collection")) {
           const replaceMatches = IdParser.getMatches(
             enhancesId as Primary,
-            IdParser.tree
+            IdParser.tree,
           );
           replaceMatches.forEach((val, key) => {
             if (val.type === "asset_collection") {

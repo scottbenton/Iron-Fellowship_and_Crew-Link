@@ -33,4 +33,13 @@ const defaultExpansions: Record<string, Datasworn.Expansion> = {};
   }
 })();
 
-export { ruleset, defaultExpansions };
+const thirdPartyExpansions: Record<string, Datasworn.Expansion> = {};
+(async () => {
+  if (gameSystem === GAME_SYSTEMS.STARFORGED) {
+    const starsmith = await import("./starsmith.json");
+    thirdPartyExpansions[starsmith._id] =
+      starsmith as unknown as Datasworn.Expansion;
+  }
+})();
+
+export { ruleset, defaultExpansions, thirdPartyExpansions };

@@ -1,5 +1,5 @@
 import { Datasworn } from "@datasworn/core";
-import { defaultExpansions } from "data/rulesets";
+import { defaultExpansions, thirdPartyExpansions } from "data/rulesets";
 import { useMemo } from "react";
 import { useStore } from "stores/store";
 
@@ -13,7 +13,9 @@ export function useDataswornTree() {
       const expansions: Record<string, Datasworn.Expansion> = {};
       activeExpansionIds.forEach((expansionId) => {
         const expansion =
-          homebrewExpansions[expansionId] ?? defaultExpansions[expansionId];
+          homebrewExpansions[expansionId] ??
+          defaultExpansions[expansionId] ??
+          thirdPartyExpansions[expansionId];
         if (expansion) {
           expansions[expansion._id] = expansion;
         }
