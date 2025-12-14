@@ -11,17 +11,34 @@ export function useFilterMoves() {
   const [search, setSearch] = useState("");
 
   const moveCategories = useStore(
-    (store) => store.rules.moveMaps.moveCategoryMap
+    (store) => store.rules.moveMaps.moveCategoryMap,
+  );
+  const rootMoveCategories = useStore(
+    (store) => store.rules.rootMoveCollectionIds,
   );
 
   const moveMap = useStore((store) => store.rules.moveMaps.moveMap);
 
-  const { visibleMoveCategoryIds, visibleMoveIds, isEmpty } = useMemo(() => {
+  const {
+    visibleMoveCategoryIds,
+    visibleMoveIds,
+    isEmpty,
+    enhancesCollections,
+  } = useMemo(() => {
     const visibleCategories: Record<string, CATEGORY_VISIBILITY> = {};
     const visibleMoves: Record<string, boolean> = {};
     let isEmpty: boolean = true;
 
+    const enhancesCollections: Record<string, string[]> = {};
+
     Object.values(moveCategories).forEach((category) => {
+      if (category.enhances) {
+        enhancesCollections[category.enhances] = [
+          ...(enhancesCollections[category.enhances] ?? []),
+          category._id,
+        ];
+      }
+
       if (
         !search ||
         (category.name
@@ -64,6 +81,7 @@ export function useFilterMoves() {
       visibleMoveCategoryIds: visibleCategories,
       visibleMoveIds: visibleMoves,
       isEmpty,
+      enhancesCollections,
     };
   }, [moveCategories, search]);
 
@@ -75,5 +93,7 @@ export function useFilterMoves() {
     visibleMoveIds,
     isSearchActive: !!search,
     isEmpty,
+    rootMoveCategories,
+    enhancesCollections,
   };
 }

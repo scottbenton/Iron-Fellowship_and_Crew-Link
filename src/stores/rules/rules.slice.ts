@@ -10,7 +10,7 @@ import { defaultExpansions } from "data/rulesets";
 
 export const createRulesSlice: CreateSliceType<RulesSlice> = (
   set,
-  getState
+  getState,
 ) => ({
   ...defaultRulesSlice,
 
@@ -45,7 +45,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
       const baseRuleset = store.rules.baseRuleset;
       if (baseRuleset) {
         const rootOracleCollectionIds = Object.values(baseRuleset.oracles).map(
-          (oracle) => oracle._id
+          (oracle) => oracle._id,
         );
         const baseRulesetMaps = parseOraclesIntoMaps(baseRuleset.oracles);
         let allOraclesMap = { ...baseRulesetMaps.allOraclesMap };
@@ -79,7 +79,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
           }
           const expansionOracleMaps = parseOraclesIntoMaps(
             expansionOracles,
-            !defaultExpansions[expansionId]
+            !defaultExpansions[expansionId],
           );
 
           allOraclesMap = {
@@ -137,7 +137,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
       const baseRuleset = store.rules.baseRuleset;
       if (baseRuleset) {
         const rootMoveCollectionIds = Object.values(baseRuleset.moves).map(
-          (move) => move._id
+          (move) => move._id,
         );
         const baseRulesetMaps = parseMovesIntoMaps(baseRuleset.moves);
 
@@ -161,8 +161,15 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
           }
           const expansionMoveMaps = parseMovesIntoMaps(
             expansionMoveCategories,
-            !defaultExpansions[expansionId]
+            !defaultExpansions[expansionId],
           );
+
+          // TODO -
+          Object.values(expansionMoveCategories).forEach((moveCategory) => {
+            if (!moveCategory.replaces && !moveCategory.enhances) {
+              rootMoveCollectionIds.push(moveCategory._id);
+            }
+          });
 
           moveCategoryMap = {
             ...moveCategoryMap,
@@ -272,8 +279,8 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
           Object.keys(expansionNonLinearMeters)
             .sort((m1, m2) =>
               expansionNonLinearMeters[m1].label.localeCompare(
-                expansionNonLinearMeters[m2].label
-              )
+                expansionNonLinearMeters[m2].label,
+              ),
             )
             .forEach((meterKey) => {
               nonLinearMeters[meterKey] = expansionNonLinearMeters[meterKey];
@@ -338,8 +345,8 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
             Object.keys(expansionImpacts)
               .sort((c1, c2) =>
                 expansionImpacts[c1].label.localeCompare(
-                  expansionImpacts[c2].label
-                )
+                  expansionImpacts[c2].label,
+                ),
               )
               .forEach((impactCategoryId) => {
                 const impactCategory = expansionImpacts[impactCategoryId];
@@ -348,8 +355,8 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
                 Object.keys(impactCategory.contents)
                   .sort((i1, i2) =>
                     impactCategory.contents[i1].label.localeCompare(
-                      impactCategory.contents[i2].label
-                    )
+                      impactCategory.contents[i2].label,
+                    ),
                   )
                   .forEach((impactKey) => {
                     const impact = impactCategory.contents[impactKey];
@@ -400,7 +407,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
               store.homebrew.collections[expansionId]?.dataswornAssets ?? {};
           }
           const expansionAssetMaps = parseAssetsIntoMaps(
-            expansionAssetCollections
+            expansionAssetCollections,
           );
 
           assetCollectionMap = {
@@ -440,7 +447,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
                   };
                 }
               }
-            }
+            },
           );
         });
 
