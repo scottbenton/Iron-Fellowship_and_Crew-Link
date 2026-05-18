@@ -76,18 +76,19 @@ export const ironswornDelveConfig: IExpansionConfig = {
   },
 };
 
-export const ironswornLodestarConfig: IExpansionConfig = {
-  id: "lodestar",
-  name: "Ironsworn Lodestar",
-  type: "expansion",
-  isHomebrew: false,
-  load: async () => {
-    const json = await import(
-      "@datasworn/ironsworn-classic-lodestar/json/lodestar.json"
-    );
-    return getJsonDefault(json) as unknown as Datasworn.Expansion;
-  },
-};
+// Lodestar is not ready to expose yet.
+// export const ironswornLodestarConfig: IExpansionConfig = {
+//   id: "lodestar",
+//   name: "Ironsworn Lodestar",
+//   type: "expansion",
+//   isHomebrew: false,
+//   load: async () => {
+//     const json = await import(
+//       "@datasworn/ironsworn-classic-lodestar/json/lodestar.json"
+//     );
+//     return getJsonDefault(json) as unknown as Datasworn.Expansion;
+//   },
+// };
 
 // ─── Official Starforged Expansions ──────────────────────────────────────────
 
@@ -174,7 +175,7 @@ export const includedRulesets: Record<string, IRulesetConfig> = {
 export const includedExpansions: Record<string, Record<string, IExpansionConfig>> = {
   [ironswornConfig.id]: {
     [ironswornDelveConfig.id]: ironswornDelveConfig,
-    [ironswornLodestarConfig.id]: ironswornLodestarConfig,
+    // [ironswornLodestarConfig.id]: ironswornLodestarConfig,
     [ironsmithConfig.id]: ironsmithConfig,
   },
   [starforgedConfig.id]: {
