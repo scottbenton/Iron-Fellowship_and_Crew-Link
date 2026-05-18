@@ -3,7 +3,7 @@
 // fetching, so each package gets the repo root instead of its subdirectory.
 // This script copies the correct subpackage contents to the package root.
 
-const { cpSync, existsSync } = require('fs');
+const { cpSync, existsSync, readFileSync, writeFileSync } = require('fs');
 const { join } = require('path');
 
 const packages = [
@@ -18,6 +18,35 @@ const packages = [
   { dir: 'node_modules/@datasworn-community-content/starsmith', subpath: 'pkg/nodejs/@datasworn-community-content/starsmith' },
 ];
 
+function exposeMigrationIdMap(pkgDir) {
+  const idMapPath = join(pkgDir, 'migration/0.1.0/id_map.json');
+  const packageJsonPath = join(pkgDir, 'package.json');
+
+  if (!existsSync(idMapPath) || !existsSync(packageJsonPath)) {
+    return false;
+  }
+
+  const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
+  const exportsMap = packageJson.exports;
+
+  if (
+    exportsMap == null ||
+    typeof exportsMap !== 'object' ||
+    Array.isArray(exportsMap)
+  ) {
+    return false;
+  }
+
+  const migrationSpecifier = './migration/0.1.0/id_map.json';
+  if (exportsMap[migrationSpecifier] === migrationSpecifier) {
+    return false;
+  }
+
+  exportsMap[migrationSpecifier] = migrationSpecifier;
+  writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
+  return true;
+}
+
 let anyFixed = false;
 for (const { dir, subpath } of packages) {
   const pkgDir = join(process.cwd(), dir);
@@ -30,13 +59,16 @@ for (const { dir, subpath } of packages) {
 
   const rootPkg = require(join(pkgDir, 'package.json'));
   const expectedName = dir.replace('node_modules/', '');
-  if (rootPkg.name === expectedName) {
-    continue; // already correctly installed
+  if (rootPkg.name !== expectedName) {
+    console.log(`[fix-datasworn] fixing ${dir}`);
+    cpSync(subdirPath, pkgDir, { recursive: true });
+    anyFixed = true;
   }
 
-  console.log(`[fix-datasworn] fixing ${dir}`);
-  cpSync(subdirPath, pkgDir, { recursive: true });
-  anyFixed = true;
+  if (exposeMigrationIdMap(pkgDir)) {
+    console.log(`[fix-datasworn] exposing migration ID map for ${dir}`);
+    anyFixed = true;
+  }
 }
 
 if (anyFixed) {
