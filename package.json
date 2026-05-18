@@ -8,15 +8,23 @@
     "lint": "eslint ./src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "eslint ./src --ext ts,tsx --fix",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "postinstall": "node scripts/fix-datasworn-packages.cjs"
   },
   "dependencies": {
     "@3d-dice/dice-box": "^1.1.4",
-    "@datasworn/core": "^0.1.0-0",
-    "@datasworn/ironsworn-classic": "^0.1.0-0",
-    "@datasworn/ironsworn-classic-delve": "^0.1.0-0",
-    "@datasworn/starforged": "^0.1.0-0",
-    "@datasworn/sundered-isles": "^0.1.0-0",
+    "@datasworn-community-content/fe-runners": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn-community-content/fe-runners",
+    "@datasworn-community-content/ironsmith": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn-community-content/ironsmith",
+    "@datasworn-community-content/starsmith": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn-community-content/starsmith",
+    "@datasworn/core": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn/core",
+    "@datasworn/ironsworn-classic": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn/ironsworn-classic",
+    "@datasworn/ironsworn-classic-delve": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn/ironsworn-classic-delve",
+    "@datasworn/ironsworn-classic-lodestar": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn/ironsworn-classic-lodestar",
+    "@datasworn/starforged": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn/starforged",
+    "@datasworn/sundered-isles": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn/sundered-isles",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fontsource-variable/rubik": "^5.0.22",
@@ -63,6 +71,7 @@
     "@typescript-eslint/eslint-plugin": "^7.9.0",
     "@typescript-eslint/parser": "^7.9.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^4.1.6",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
@@ -70,6 +79,10 @@
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
     "vite-plugin-svgr": "^4.2.0",
-    "vite-tsconfig-paths": "^4.3.2"
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^4.1.6"
+  },
+  "overrides": {
+    "@datasworn/core": "github:tbsvttr/datasworn#a537d6c::path:pkg/nodejs/@datasworn/core"
   }
 }

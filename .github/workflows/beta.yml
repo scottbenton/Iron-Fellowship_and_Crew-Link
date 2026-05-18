@@ -31,7 +31,11 @@ jobs:
       VITE_OPENGRAPH_PATH: "/assets/ironsworn/opengraph-default.png"
     steps:
       - uses: actions/checkout@v2
-      - run: npm ci && npm run build
+      - run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Build
+        run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           target: beta
@@ -95,7 +99,11 @@ jobs:
       VITE_OPENGRAPH_PATH: "/assets/starforged/opengraph-default.png"
     steps:
       - uses: actions/checkout@v2
-      - run: npm ci && npm run build
+      - run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Build
+        run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           target: beta
