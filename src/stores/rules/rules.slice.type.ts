@@ -45,6 +45,8 @@ export interface RulesSliceData {
 export interface RulesSliceActions {
   setBaseRuleset: (ruleset: Datasworn.Ruleset) => void;
   setExpansionIds: (expansionIds: string[]) => void;
+  loadBaseRuleset: () => Promise<void>;
+  loadIncludedExpansions: (expansionIds: string[]) => Promise<void>;
   rebuildNonLinearMeters: () => void;
   rebuildRules: () => void;
 }

@@ -9,13 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { EmptyState } from "components/shared/EmptyState";
-import {
-  defaultExpansions,
-  thirdPartyExpansions as thirdPartyExpansionMap,
-} from "data/rulesets";
-
-const expansions = Object.values(defaultExpansions);
-const thirdPartyExpansions = Object.values(thirdPartyExpansionMap);
+import { includedExpansions } from "data/rulesets";
 
 export interface ExpansionSelectorProps {
   enabledExpansionMap: Record<string, boolean>;
@@ -24,7 +18,7 @@ export interface ExpansionSelectorProps {
 
 export function ExpansionSelector(props: ExpansionSelectorProps) {
   const { enabledExpansionMap, toggleEnableExpansion } = props;
-  const baseRuleset = useGameSystemValue({
+  const activeRulesetId = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]: "classic",
     [GAME_SYSTEMS.STARFORGED]: "starforged",
   });
@@ -34,70 +28,79 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
     (store) => store.homebrew.sortedHomebrewCollectionIds,
   );
 
-  const expansionIds = sortedExpansionIds.filter(
-    (expansionId) =>
-      homebrewExpansionMap[expansionId]?.base?.rulesetId === baseRuleset,
+  const rulesetExpansions = Object.values(
+    includedExpansions[activeRulesetId] ?? {},
   );
-  console.debug(expansionIds, enabledExpansionMap);
+  const officialExpansions = rulesetExpansions.filter((c) => !c.isHomebrew);
+  const thirdPartyExpansions = rulesetExpansions.filter((c) => c.isHomebrew);
+
+  const homebrewExpansionIds = sortedExpansionIds.filter(
+    (expansionId) =>
+      homebrewExpansionMap[expansionId]?.base?.rulesetId === activeRulesetId,
+  );
+  console.debug(homebrewExpansionIds, enabledExpansionMap);
 
   const notFoundExpansionIds = Object.keys(enabledExpansionMap).filter(
     (key) =>
-      !expansions.some((expansion) => expansion._id === key) &&
-      !thirdPartyExpansions.some((expansion) => expansion._id === key) &&
-      !expansionIds.includes(key),
+      !rulesetExpansions.some((c) => c.id === key) &&
+      !homebrewExpansionIds.includes(key),
   );
 
   return (
     <Box>
-      {expansions.length > 0 && (
+      {officialExpansions.length > 0 && (
         <Box>
           <Typography variant={"overline"}>Official Expansions</Typography>
           <FormGroup>
-            {expansions.map((expansion) => (
+            {officialExpansions.map((config) => (
               <FormControlLabel
-                key={expansion._id}
+                key={config.id}
                 control={
                   <Switch
-                    checked={enabledExpansionMap[expansion._id] ?? false}
+                    checked={enabledExpansionMap[config.id] ?? false}
                     onChange={(evt, checked) =>
-                      toggleEnableExpansion(expansion._id, checked)
+                      toggleEnableExpansion(config.id, checked)
                     }
                   />
                 }
-                label={expansion.title ?? "Unnamed Expansion"}
+                label={config.name}
               />
             ))}
           </FormGroup>
         </Box>
       )}
       {thirdPartyExpansions.length > 0 && (
-        <Box mt={expansions.length > 0 ? 4 : 0}>
+        <Box mt={officialExpansions.length > 0 ? 4 : 0}>
           <Typography variant={"overline"}>Third-Party Expansions</Typography>
           <FormGroup>
-            {thirdPartyExpansions.map((expansion) => (
+            {thirdPartyExpansions.map((config) => (
               <FormControlLabel
-                key={expansion._id}
+                key={config.id}
                 control={
                   <Switch
-                    checked={enabledExpansionMap[expansion._id] ?? false}
+                    checked={enabledExpansionMap[config.id] ?? false}
                     onChange={(evt, checked) =>
-                      toggleEnableExpansion(expansion._id, checked)
+                      toggleEnableExpansion(config.id, checked)
                     }
                   />
                 }
-                label={expansion.title ?? "Unnamed Expansion"}
+                label={config.name}
               />
             ))}
           </FormGroup>
         </Box>
       )}
       <Box
-        mt={expansions.length > 0 || thirdPartyExpansions.length > 0 ? 4 : 0}
+        mt={
+          officialExpansions.length > 0 || thirdPartyExpansions.length > 0
+            ? 4
+            : 0
+        }
       >
         <Typography variant={"overline"}>Homebrew Expansions</Typography>
-        {expansionIds.length > 0 ? (
+        {homebrewExpansionIds.length > 0 ? (
           <FormGroup>
-            {expansionIds.map((expansionId) => (
+            {homebrewExpansionIds.map((expansionId) => (
               <FormControlLabel
                 key={expansionId}
                 control={
