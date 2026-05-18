@@ -7,6 +7,7 @@ import { getRollResultLabel } from "./getRollResultLabel";
 import { RollContainer } from "./RollContainer";
 import { ReactNode } from "react";
 import { useStore } from "stores/store";
+import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 
 export interface RollDisplayProps {
   roll: Roll;
@@ -120,6 +121,20 @@ export function RollDisplay(props: RollDisplayProps) {
                 }
               />
             </RollContainer>
+            {isExpanded && roll.text2 && (
+              <MarkdownRenderer
+                disableLinks
+                markdown={roll.text2}
+                inheritColor
+              />
+            )}
+            {isExpanded && roll.text3 && (
+              <MarkdownRenderer
+                disableLinks
+                markdown={roll.text3}
+                inheritColor
+              />
+            )}
           </>
         )}
         {roll.type === ROLL_TYPE.CLOCK_PROGRESSION && (

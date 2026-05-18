@@ -148,7 +148,9 @@ function populateCollection(
         )}/${tableId}`;
 
         const hasDetails = table.columnLabels.detail;
-        const tableType: "table_text" | "table_text2" = "table_text";
+        const tableType: "table_text" | "table_text2" = hasDetails
+          ? "table_text2"
+          : "table_text";
         const rows: Datasworn.OracleRollableRow[] = [];
 
         let total = 0;
@@ -193,7 +195,7 @@ function populateCollection(
               text: table.columnLabels.result,
             };
 
-        collection.contents[tableId] = {
+        const oracle = {
           _id: tableDataswornId,
           type: "oracle_rollable",
           name: table.label,
@@ -205,6 +207,8 @@ function populateCollection(
           column_labels: columnLabels,
           rows,
         } as Datasworn.OracleRollable;
+
+        collection.contents[tableId] = oracle;
       }
     });
 

@@ -14,12 +14,14 @@ export function MovesSection(props: MovesSectionProps) {
 
   const {
     moveCategories,
+    rootMoveCategories,
     moveMap,
     setSearch,
     visibleMoveCategoryIds,
     visibleMoveIds,
     isSearchActive,
     isEmpty,
+    enhancesCollections,
   } = useFilterMoves();
 
   const openDialog = useStore((store) => store.appState.openDialog);
@@ -61,10 +63,11 @@ export function MovesSection(props: MovesSectionProps) {
         })}
       >
         {!isEmpty ? (
-          Object.values(moveCategories).map((category, index) => (
+          rootMoveCategories.map((categoryId, index) => (
             <MoveCategory
               key={index}
-              category={category}
+              category={moveCategories[categoryId]}
+              categories={moveCategories}
               moveMap={moveMap}
               openMove={(move) => {
                 openDialog(move._id);
@@ -73,6 +76,7 @@ export function MovesSection(props: MovesSectionProps) {
               visibleCategories={visibleMoveCategoryIds}
               visibleMoves={visibleMoveIds}
               shouldExpandLocally={shouldExpandLocally}
+              enhancesCollections={enhancesCollections}
             />
           ))
         ) : (
