@@ -145,24 +145,25 @@ export const starsmithConfig: IExpansionConfig = {
   },
 };
 
-export const feRunnersConfig: IExpansionConfig = {
-  id: "fe_runners",
-  name: "Fe-Runners",
-  type: "expansion",
-  isHomebrew: true,
-  licenseInfo: {
-    license: "CC BY-NC-SA 4.0",
-    licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-    url: "https://zombiecraig.itch.io/",
-    author: "Craig Smith",
-  },
-  load: async () => {
-    const json = await import(
-      "@datasworn-community-content/fe-runners/json/fe_runners.json"
-    );
-    return getJsonDefault(json) as unknown as Datasworn.Expansion;
-  },
-};
+// Fe-Runners is not ready to expose yet.
+// export const feRunnersConfig: IExpansionConfig = {
+//   id: "fe_runners",
+//   name: "Fe-Runners",
+//   type: "expansion",
+//   isHomebrew: true,
+//   licenseInfo: {
+//     license: "CC BY-NC-SA 4.0",
+//     licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+//     url: "https://zombiecraig.itch.io/",
+//     author: "Craig Smith",
+//   },
+//   load: async () => {
+//     const json = await import(
+//       "@datasworn-community-content/fe-runners/json/fe_runners.json"
+//     );
+//     return getJsonDefault(json) as unknown as Datasworn.Expansion;
+//   },
+// };
 
 // ─── Organized Collections ───────────────────────────────────────────────────
 
@@ -181,7 +182,7 @@ export const includedExpansions: Record<string, Record<string, IExpansionConfig>
   [starforgedConfig.id]: {
     [sunderedIslesConfig.id]: sunderedIslesConfig,
     [starsmithConfig.id]: starsmithConfig,
-    [feRunnersConfig.id]: feRunnersConfig,
+    // [feRunnersConfig.id]: feRunnersConfig,
   },
 };
 
