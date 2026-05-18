@@ -44,7 +44,7 @@ import { deleteHomebrewMoveCategory } from "api-calls/homebrew/moves/categories/
 import { createHomebrewMove } from "api-calls/homebrew/moves/moves/createHomebrewMove";
 import { updateHomebrewMove } from "api-calls/homebrew/moves/moves/updateHomebrewMove";
 import { convertStoredMovesToCategories } from "functions/convertStoredMovesToCategories";
-import { defaultExpansions, thirdPartyExpansions } from "data/rulesets";
+import { findIncludedExpansionConfig } from "data/rulesets";
 import { createHomebrewAssetCollection } from "api-calls/homebrew/assets/collections/createHomebrewAssetCollection";
 import { updateHomebrewAssetCollection } from "api-calls/homebrew/assets/collections/updateHomebrewAssetCollection";
 import { deleteHomebrewAsset } from "api-calls/homebrew/assets/assets/deleteHomebrewAsset";
@@ -159,8 +159,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
   subscribeToHomebrewContent: (homebrewIds) => {
     getState().rules.setExpansionIds(homebrewIds);
     const defaultHomebrewIds = homebrewIds.filter(
-      (homebrewId) =>
-        defaultExpansions[homebrewId] || thirdPartyExpansions[homebrewId],
+      (homebrewId) => findIncludedExpansionConfig(homebrewId),
     );
 
     if (defaultHomebrewIds.length > 0) {
@@ -168,8 +167,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
     }
 
     const filteredHomebrewIds = homebrewIds.filter(
-      (homebrewId) =>
-        !defaultExpansions[homebrewId] && !thirdPartyExpansions[homebrewId],
+      (homebrewId) => !findIncludedExpansionConfig(homebrewId),
     );
 
     const listenerConfigs: ListenerConfig[] = [

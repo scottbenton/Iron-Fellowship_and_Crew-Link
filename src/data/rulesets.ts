@@ -1,6 +1,5 @@
 import { Datasworn } from "@datasworn/core";
 import { getSystem } from "hooks/useGameSystem";
-import { useStore } from "stores/store";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 
 export interface IRulesetConfig {
@@ -27,6 +26,13 @@ export interface IExpansionConfig {
 
 export type IPackageConfig = IRulesetConfig | IExpansionConfig;
 
+function getJsonDefault<T>(json: T | { default: T }): T {
+  if (json && typeof json === "object" && "default" in json) {
+    return json.default;
+  }
+  return json;
+}
+
 // ─── Rulesets ────────────────────────────────────────────────────────────────
 
 export const ironswornConfig: IRulesetConfig = {
@@ -38,7 +44,7 @@ export const ironswornConfig: IRulesetConfig = {
     const json = await import(
       "@datasworn/ironsworn-classic/json/classic.json"
     );
-    return json as unknown as Datasworn.Ruleset;
+    return getJsonDefault(json) as unknown as Datasworn.Ruleset;
   },
 };
 
@@ -51,7 +57,7 @@ export const starforgedConfig: IRulesetConfig = {
     const json = await import(
       "@datasworn/starforged/json/starforged.json"
     );
-    return json as unknown as Datasworn.Ruleset;
+    return getJsonDefault(json) as unknown as Datasworn.Ruleset;
   },
 };
 
@@ -66,7 +72,7 @@ export const ironswornDelveConfig: IExpansionConfig = {
     const json = await import(
       "@datasworn/ironsworn-classic-delve/json/delve.json"
     );
-    return json as unknown as Datasworn.Expansion;
+    return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
 };
 
@@ -79,7 +85,7 @@ export const ironswornLodestarConfig: IExpansionConfig = {
     const json = await import(
       "@datasworn/ironsworn-classic-lodestar/json/lodestar.json"
     );
-    return json as unknown as Datasworn.Expansion;
+    return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
 };
 
@@ -94,7 +100,7 @@ export const sunderedIslesConfig: IExpansionConfig = {
     const json = await import(
       "@datasworn/sundered-isles/json/sundered_isles.json"
     );
-    return json as unknown as Datasworn.Expansion;
+    return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
 };
 
@@ -115,7 +121,7 @@ export const ironsmithConfig: IExpansionConfig = {
     const json = await import(
       "@datasworn-community-content/ironsmith/json/ironsmith.json"
     );
-    return json as unknown as Datasworn.Expansion;
+    return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
 };
 
@@ -134,7 +140,7 @@ export const starsmithConfig: IExpansionConfig = {
     const json = await import(
       "@datasworn-community-content/starsmith/json/starsmith.json"
     );
-    return json as unknown as Datasworn.Expansion;
+    return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
 };
 
@@ -153,7 +159,7 @@ export const feRunnersConfig: IExpansionConfig = {
     const json = await import(
       "@datasworn-community-content/fe-runners/json/fe_runners.json"
     );
-    return json as unknown as Datasworn.Expansion;
+    return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
 };
 
@@ -185,25 +191,77 @@ export const includedExpansions: Record<string, Record<string, IExpansionConfig>
 const gameSystem = getSystem();
 const activeRulesetId =
   gameSystem === GAME_SYSTEMS.IRONSWORN ? ironswornConfig.id : starforgedConfig.id;
-const activeExpansions = includedExpansions[activeRulesetId];
 
 let ruleset: Datasworn.Ruleset | undefined = undefined;
-(async () => {
-  ruleset = await includedRulesets[activeRulesetId].load();
-  useStore.getState().rules.setBaseRuleset(ruleset);
-})();
-
 const defaultExpansions: Record<string, Datasworn.Expansion> = {};
 const thirdPartyExpansions: Record<string, Datasworn.Expansion> = {};
-(async () => {
-  for (const config of Object.values(activeExpansions)) {
-    const expansion = await config.load();
+
+const rulesetLoadPromises: Record<string, Promise<Datasworn.Ruleset>> = {};
+const expansionLoadPromises: Record<string, Promise<Datasworn.Expansion>> = {};
+
+export function preloadActiveRuleset(): Promise<Datasworn.Ruleset> {
+  return loadIncludedRuleset(activeRulesetId);
+}
+
+export function findIncludedExpansionConfig(
+  expansionId: string,
+): IExpansionConfig | undefined {
+  for (const expansions of Object.values(includedExpansions)) {
+    const config = expansions[expansionId];
+    if (config) {
+      return config;
+    }
+  }
+}
+
+export async function loadIncludedRuleset(
+  rulesetId = activeRulesetId,
+): Promise<Datasworn.Ruleset> {
+  if (ruleset?._id === rulesetId) {
+    return ruleset;
+  }
+
+  const config = includedRulesets[rulesetId];
+  if (!config) {
+    throw new Error(`Unknown included ruleset: ${rulesetId}`);
+  }
+
+  rulesetLoadPromises[rulesetId] ??= config.load().then((loadedRuleset) => {
+    if (rulesetId === activeRulesetId) {
+      ruleset = loadedRuleset;
+    }
+    return loadedRuleset;
+  });
+
+  return rulesetLoadPromises[rulesetId];
+}
+
+export async function loadIncludedExpansion(
+  expansionId: string,
+): Promise<Datasworn.Expansion | undefined> {
+  const existingExpansion =
+    defaultExpansions[expansionId] ?? thirdPartyExpansions[expansionId];
+  if (existingExpansion) {
+    return existingExpansion;
+  }
+
+  const config = findIncludedExpansionConfig(expansionId);
+  if (!config) {
+    return undefined;
+  }
+
+  expansionLoadPromises[expansionId] ??= config.load().then((expansion) => {
     if (config.isHomebrew) {
       thirdPartyExpansions[expansion._id] = expansion;
     } else {
       defaultExpansions[expansion._id] = expansion;
     }
-  }
-})();
+    return expansion;
+  });
+
+  return expansionLoadPromises[expansionId];
+}
+
+preloadActiveRuleset().catch(console.error);
 
 export { ruleset, defaultExpansions, thirdPartyExpansions };
