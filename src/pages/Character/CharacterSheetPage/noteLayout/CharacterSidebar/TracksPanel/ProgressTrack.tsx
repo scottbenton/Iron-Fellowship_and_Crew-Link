@@ -25,6 +25,7 @@ const trackMoveIdSystemValues: GameSystemChooser<{
     [TrackTypes.Vow]: "classic/moves/quest/fulfill_your_vow",
     [TrackTypes.Journey]: "classic/moves/adventure/reach_your_destination",
     [TrackTypes.Fray]: "classic/moves/combat/end_the_fight",
+    [TrackTypes.DelveSite]: "delve/moves/delve/locate_your_objective",
     [TrackTypes.SceneChallenge]: "",
     [TrackTypes.BondProgress]: "",
   },
@@ -32,6 +33,7 @@ const trackMoveIdSystemValues: GameSystemChooser<{
     [TrackTypes.Vow]: "starforged/moves/quest/fulfill_your_vow",
     [TrackTypes.Journey]: "starforged/moves/exploration/finish_an_expedition",
     [TrackTypes.Fray]: "starforged/moves/combat/take_decisive_action",
+    [TrackTypes.DelveSite]: "",
     [TrackTypes.BondProgress]: "starforged/moves/connection/forge_a_bond",
     [TrackTypes.SceneChallenge]:
       "starforged/moves/scene_challenge/finish_the_scene",

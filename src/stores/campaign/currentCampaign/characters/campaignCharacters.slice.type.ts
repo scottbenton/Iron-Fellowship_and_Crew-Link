@@ -23,6 +23,9 @@ export interface CampaignCharactersSliceData {
       [TrackTypes.Vow]: {
         [key: string]: ProgressTrack;
       };
+      [TrackTypes.DelveSite]: {
+        [key: string]: ProgressTrack;
+      };
       [TrackTypes.SceneChallenge]: {
         [key: string]: SceneChallenge;
       };

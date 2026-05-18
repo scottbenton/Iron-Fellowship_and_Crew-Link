@@ -83,6 +83,7 @@ export const createCampaignCharactersSlice: CreateSliceType<
                 [TrackTypes.Fray]: {},
                 [TrackTypes.Journey]: {},
                 [TrackTypes.Vow]: {},
+                [TrackTypes.DelveSite]: {},
                 [TrackTypes.SceneChallenge]: {},
                 [TrackTypes.Clock]: {},
               };

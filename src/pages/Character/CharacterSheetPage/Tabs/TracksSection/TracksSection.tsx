@@ -5,9 +5,12 @@ import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { ClockSection } from "components/features/charactersAndCampaigns/Clocks/ClockSection";
 import { useGameSystem } from "hooks/useGameSystem";
 import { SpecialTracks } from "./SpecialTracks";
+import { useStore } from "stores/store";
 
 export function TracksSection() {
   const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
+  const isIronsworn = useGameSystem().gameSystem === GAME_SYSTEMS.IRONSWORN;
+  const showDelve = useStore((store) => store.settings.delve.showDelveMoves);
 
   return (
     <Stack spacing={2} sx={{ pb: 2 }}>
@@ -22,6 +25,12 @@ export function TracksSection() {
         type={TrackTypes.Journey}
         typeLabel={isStarforged ? "Expedition" : "Journey"}
       />
+      {isIronsworn && showDelve && (
+        <ProgressTrackSection
+          type={TrackTypes.DelveSite}
+          typeLabel={"Delve Site"}
+        />
+      )}
       {isStarforged && (
         <ProgressTrackSection
           type={TrackTypes.SceneChallenge}
