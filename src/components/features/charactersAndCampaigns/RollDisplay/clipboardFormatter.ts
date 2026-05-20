@@ -202,7 +202,7 @@ function getTrackTypeLabel(type: TrackTypes | LEGACY_TrackTypes) {
 export function extractTrackProgressRollContents(
   roll: TrackProgressRoll
 ): TrackProgressRollContents {
-  const title = `${getTrackTypeLabel(roll.trackType)}: ${roll.rollLabel}`;
+  const title = roll.trackType ? `${getTrackTypeLabel(roll.trackType)}: ${roll.rollLabel}` : roll.rollLabel;
   const progress = roll.trackProgress + "";
   const challenge = `${roll.challenge1}, ${roll.challenge2}`;
   const result = getRollResultLabel(roll.result).toLocaleUpperCase();

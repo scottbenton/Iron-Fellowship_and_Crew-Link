@@ -28,19 +28,22 @@ export function ExampleStatsSection() {
   });
 
   const { rollOracleTable } = useRoller();
-  const handleOracleRoll = useCallback(() => {
+  const handleOracleRoll = useCallback(async () => {
     if (joinOracles) {
-      return nameOracles
-        .map((id) => rollOracleTable(id, false)?.result ?? "")
-        .join(" ");
+      const names: string[] = [];
+      for (const id of nameOracles) {
+        const name = await rollOracleTable(id, false);
+        names.push(name?.result ?? "")
+      }
+      return names.join(" ");
     } else {
       const oracleIndex = Math.floor(Math.random() * nameOracles.length);
 
-      return rollOracleTable(nameOracles[oracleIndex], false)?.result;
+      return (await rollOracleTable(nameOracles[oracleIndex], false))?.result;
     }
   }, [rollOracleTable, nameOracles, joinOracles]);
 
-  const [name, setName] = useState(() => handleOracleRoll() ?? "");
+  const [name, setName] = useState("");
 
   return (
     <TryItOut>
@@ -51,7 +54,7 @@ export function ExampleStatsSection() {
         justifyContent={"space-between"}
       >
         <TextFieldWithOracle
-          getOracleValue={() => handleOracleRoll() ?? ""}
+          getOracleValue={async () => await handleOracleRoll() ?? ""}
           label={"Name"}
           name={"name"}
           value={name}

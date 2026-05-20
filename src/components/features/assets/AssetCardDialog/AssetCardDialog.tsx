@@ -22,14 +22,24 @@ export interface AssetCardDialogProps {
   loading?: boolean;
   handleClose: () => void;
   handleAssetSelection: (asset: Omit<AssetDocument, "order">) => void;
+  actionIsHide?: boolean;
+  campaignId?: string;
 }
 
 export function AssetCardDialog(props: AssetCardDialogProps) {
-  const { open, loading, handleClose, handleAssetSelection } = props;
+  const { open, loading, handleClose, handleAssetSelection, actionIsHide = false, campaignId } = props;
 
   const assetGroups = useStore(
     (store) => store.rules.assetMaps.assetCollectionMap
   );
+  let hiddenAssets = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign?.hiddenAssetIds
+  );
+  const campaigns = useStore((store) => store.campaigns.campaignMap);
+
+  if (!hiddenAssets && campaignId && Object.keys(campaigns).includes(campaignId)) {
+    hiddenAssets = campaigns[campaignId].hiddenAssetIds;
+  }
 
   const [selectedTabId, setSelectedTabId] = useState<string>(
     Object.keys(assetGroups)[0]
@@ -101,17 +111,31 @@ export function AssetCardDialog(props: AssetCardDialogProps) {
           />
           <Grid container spacing={1} mt={2}>
             {Object.values(assetGroups[selectedTabId]?.contents ?? {}).map(
-              (asset, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <AssetCardDialogCard
-                    assetId={asset._id}
-                    selectAsset={() => onAssetSelect(asset)}
-                    loading={loading}
-                    searched={asset._id === searchedAssetId}
-                    clearSearched={clearSearch}
-                  />
-                </Grid>
-              )
+              (asset, index) => {
+                const isHidden = hiddenAssets?.includes(asset._id);
+                if (!actionIsHide && isHidden) {
+                  return;
+                }
+
+                let selectLabel;
+                if (actionIsHide) {
+                  selectLabel = isHidden ? "Unhide" : "Hide";
+                }
+
+                return (
+                  <Grid item xs={12} sm={6} md={4} key={index}>
+                    <AssetCardDialogCard
+                      assetId={asset._id}
+                      selectAsset={() => onAssetSelect(asset)}
+                      loading={loading}
+                      searched={asset._id === searchedAssetId}
+                      clearSearched={clearSearch}
+                      selectLabel={selectLabel}
+                      disabled={isHidden}
+                    />
+                  </Grid>
+                )
+              }
             )}
           </Grid>
         </Box>

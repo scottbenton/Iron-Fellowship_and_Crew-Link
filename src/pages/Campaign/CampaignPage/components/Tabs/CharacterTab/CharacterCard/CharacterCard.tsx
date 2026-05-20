@@ -154,7 +154,7 @@ export function CharacterCard(props: CharacterCardProps) {
             Assets
           </AccordionSummary>
           <AccordionDetails>
-            <Stack spacing={2} px={2}>
+            <Stack spacing={2}>
               {storedAssets?.map((storedAsset, index) => (
                 <AssetCard
                   key={index}

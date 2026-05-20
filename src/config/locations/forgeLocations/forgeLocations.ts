@@ -74,8 +74,8 @@ export const forgeLocations: ILocationConfig = {
             type: "oracle",
           },
         ],
-        createLocation: (rollOracleTable) => {
-          const description = rollOracleTable(
+        createLocation: async (rollOracleTable) => {
+          const description = await rollOracleTable(
             "starforged/oracles/space/stellar_object",
             false
           );

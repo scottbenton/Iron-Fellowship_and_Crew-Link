@@ -49,6 +49,7 @@ export function useFilterOracles() {
       const pinnedOracleId = "app/collections/oracles/pinned";
 
       const collection: IPinnedOracleCollection = {
+        collections: {},
         _id: pinnedOracleId,
         name: "Pinned Oracles",
         type: "oracle_collection",
@@ -95,12 +96,13 @@ export function useFilterOracles() {
     const enhancesCollections: Record<string, string[]> = {};
 
     const filterCollection = (collection: CombinedCollectionType): boolean => {
-      if (collection.enhances) {
-        enhancesCollections[collection.enhances] = [
-          ...(enhancesCollections[collection.enhances] ?? []),
-          collection._id,
-        ];
-      }
+      // TODO -double check this
+      // if (collection.enhances) {
+      //   enhancesCollections[collection.enhances] = [
+      //     ...(enhancesCollections[collection.enhances] ?? []),
+      //     collection._id,
+      //   ];
+      // }
 
       const hasChildren =
         (collection.oracle_type === "tables" &&
@@ -150,9 +152,10 @@ export function useFilterOracles() {
       if (hasOracles) {
         isEmpty = false;
         visibleCollections[collection._id] = CATEGORY_VISIBILITY.SOME;
-        if (collection.enhances) {
-          visibleCollections[collection.enhances] = CATEGORY_VISIBILITY.SOME;
-        }
+        // TODO - check this
+        // if (collection.enhances) {
+        //   visibleCollections[collection.enhances] = CATEGORY_VISIBILITY.SOME;
+        // }
       } else {
         visibleCollections[collection._id] = CATEGORY_VISIBILITY.HIDDEN;
       }

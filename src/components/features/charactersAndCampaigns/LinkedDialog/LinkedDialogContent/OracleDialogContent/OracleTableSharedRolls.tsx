@@ -21,14 +21,14 @@ export function OracleTableSharedRolls(
     return null;
   }
 
-  const columns: SimpleTableColumnDefinition<Datasworn.OracleTableRowText>[] = [
+  const columns: SimpleTableColumnDefinition<Datasworn.OracleRollableRow>[] = [
     {
       label: oracle.column_labels.roll,
       renderer: (row) =>
-        row.min !== null && row.max !== null
-          ? row.max - row.min === 0
-            ? row.min
-            : `${row.min} - ${row.max}`
+        row.roll
+          ? row.roll.max - row.roll.min === 0
+            ? row.roll.min
+            : `${row.roll.min} - ${row.roll.max}`
           : null,
       textColor: "text.secondary",
     },

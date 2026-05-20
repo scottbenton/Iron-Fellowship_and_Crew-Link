@@ -6,6 +6,48 @@
     "crew-link-dev": "crew-link-dev",
     "default": "iron-fellowship-dev"
   },
-  "targets": {},
-  "etags": {}
+  "targets": {
+    "iron-journal-1ac32": {
+      "hosting": {
+        "app": [
+          "iron-journal-1ac32"
+        ],
+        "beta": [
+          "iron-fellowship-beta"
+        ]
+      }
+    },
+    "iron-fellowship-dev": {
+      "hosting": {
+        "app": [
+          "iron-fellowship-dev"
+        ],
+        "beta": [
+          "iron-fellowship-dev"
+        ]
+      }
+    },
+    "starforged-crew-link": {
+      "hosting": {
+        "app": [
+          "starforged-crew-link"
+        ],
+        "beta": [
+          "beta-starforged-crew-link"
+        ]
+      }
+    },
+    "crew-link-dev": {
+      "hosting": {
+        "app": [
+          "crew-link-dev"
+        ],
+        "beta": [
+          "crew-link-dev"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

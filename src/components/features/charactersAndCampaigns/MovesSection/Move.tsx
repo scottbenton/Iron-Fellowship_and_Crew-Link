@@ -5,14 +5,10 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  Stack,
-  Typography,
 } from "@mui/material";
 import OpenIcon from "@mui/icons-material/ChevronRight";
 import { useState } from "react";
-import { MoveRollers } from "../LinkedDialog/LinkedDialogContent/MoveDialogContent/MoveRollers";
-import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
-import { OracleButton } from "../OracleSection/OracleButton";
+import { MoveContent } from "components/features/datasworn/MoveContent";
 
 export interface MoveProps {
   move: Datasworn.Move;
@@ -78,25 +74,7 @@ export function Move(props: MoveProps) {
           borderBottom={1}
           borderColor={"divider"}
         >
-          <MoveRollers move={move} />
-          <MarkdownRenderer markdown={move.text} />
-          {move.oracles && (
-            <Box mt={2}>
-              <Typography variant={"overline"}>
-                Roll Oracle{move.oracles.length > 1 ? "s" : ""}
-              </Typography>
-              <Stack direction={"row"} flexWrap={"wrap"} spacing={1}>
-                {move.oracles.map((oracleId) => (
-                  <OracleButton
-                    color={"inherit"}
-                    variant={"outlined"}
-                    key={oracleId}
-                    oracleId={oracleId}
-                  />
-                ))}
-              </Stack>
-            </Box>
-          )}
+          <MoveContent move={move} />
         </Box>
       </Collapse>
     </>

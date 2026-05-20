@@ -9,7 +9,6 @@ export function useSyncHomebrewContent(
   campaignId?: string
 ) {
   const expansionMap = watch("enabledExpansionMap");
-  // const expansionMap = watch("enabledExpansionMap", {});
 
   const expansions = useMemo(
     () =>

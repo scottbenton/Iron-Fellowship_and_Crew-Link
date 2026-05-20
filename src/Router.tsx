@@ -27,6 +27,7 @@ import { useListenToAccessibilitySettings } from "stores/accessibilitySettings/u
 import { useListenToHomebrew } from "stores/homebrew/useListenToHomebrew";
 import { HOMEBREW_ROUTES, homebrewPaths } from "pages/Homebrew/routes";
 import { useSyncCampaignWorldPermissions } from "stores/campaign/useSyncCampaignWorldPermissions";
+import { useSyncDataswornTree } from "hooks/useSyncDataswornTree";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -145,6 +146,8 @@ export function Router() {
   useListenToHomebrew();
 
   useSyncCampaignWorldPermissions();
+
+  useSyncDataswornTree();
 
   return <RouterProvider router={router} />;
 }

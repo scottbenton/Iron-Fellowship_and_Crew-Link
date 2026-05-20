@@ -91,7 +91,7 @@ export function OpenSector(props: OpenSectorProps) {
   ) => {
     let locationId: string | undefined = undefined;
     if (hexType === SectorHexTypes.Star) {
-      const description = rollOracleTable(
+      const description = await rollOracleTable(
         "starforged/oracles/space/stellar_object",
         false
       );
@@ -101,7 +101,7 @@ export function OpenSector(props: OpenSectorProps) {
         description: description?.result ?? "",
       });
     } else if (hexType === SectorHexTypes.Planet) {
-      const planetClass = rollOracleTable(
+      const planetClass = await rollOracleTable(
         "starforged/oracles/planets/class",
         false
       );
@@ -112,7 +112,7 @@ export function OpenSector(props: OpenSectorProps) {
         ?.split(" ")[0]
         .toLocaleLowerCase();
 
-      const name = rollOracleTable(
+      const name = await rollOracleTable(
         `starforged/oracles/planets/${convertedClass}/name`,
         false
       );
@@ -137,12 +137,12 @@ export function OpenSector(props: OpenSectorProps) {
         description,
       });
     } else if (hexType === SectorHexTypes.Settlement) {
-      const name = rollOracleTable(
+      const name = await rollOracleTable(
         "starforged/oracles/settlements/name",
         false
-      )?.result;
+      );
       locationId = await createLocation({
-        name: name ?? "New Sector",
+        name: name?.result ?? "New Sector",
         type: SectorHexTypes.Settlement,
       });
     } else if (hexType === SectorHexTypes.Derelict) {

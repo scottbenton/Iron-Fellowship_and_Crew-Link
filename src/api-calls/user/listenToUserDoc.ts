@@ -1,4 +1,4 @@
-import { onSnapshot, ListenSource } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
 import { getUsersDoc } from "./_getRef";
 import { UserDocument } from "api-calls/user/_user.type";
 

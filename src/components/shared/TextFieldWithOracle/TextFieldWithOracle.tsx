@@ -9,7 +9,7 @@ import RollIcon from "@mui/icons-material/Casino";
 import { useStore } from "stores/store";
 
 export type TextFieldWithOracleProps = Omit<TextFieldProps, "onChange"> & {
-  getOracleValue: (() => string) | undefined;
+  getOracleValue: (() => Promise<string>) | undefined;
   onChange: (value: string) => void;
 };
 
@@ -18,9 +18,9 @@ export function TextFieldWithOracle(props: TextFieldWithOracleProps) {
 
   const announce = useStore((store) => store.appState.announce);
 
-  const handleOracleRoll = () => {
+  const handleOracleRoll = async () => {
     if (getOracleValue) {
-      const value = getOracleValue();
+      const value = await getOracleValue();
       onChange(value);
       announce(`Updated ${label} to ${value}`);
     }

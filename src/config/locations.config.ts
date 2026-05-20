@@ -71,8 +71,8 @@ export interface ILocationConfig {
       oracleId: string,
       showSnackbar?: boolean,
       gmsOnly?: boolean
-    ) => OracleTableRoll | undefined
-  ) => Partial<Location>;
+    ) => Promise<OracleTableRoll | undefined>
+  ) => Promise<Partial<Location>>;
 }
 
 export const locationConfigs: Record<string, ILocationConfig | undefined> = {

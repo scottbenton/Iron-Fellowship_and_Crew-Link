@@ -67,14 +67,14 @@ export function constructSettlementConfig(
         };
       },
     ],
-    createLocation: (rollOracleTable) => {
-      const name = rollOracleTable(
+    createLocation: async (rollOracleTable) => {
+      const name = await rollOracleTable(
         "starforged/oracles/settlements/name",
         false
-      )?.result;
-      return name
+      );
+      return name?.result
         ? {
-            name,
+            name: name.result,
           }
         : {};
     },

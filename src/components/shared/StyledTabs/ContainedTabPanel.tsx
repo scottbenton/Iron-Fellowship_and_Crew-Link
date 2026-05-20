@@ -16,10 +16,15 @@ export function ContainedTabPanel(props: ContainedTabPanelProps) {
     <Box
       role={"tabpanel"}
       flexGrow={1}
-      overflow={overflowAuto ? "auto" : undefined}
       bgcolor={(theme) =>
         greyBackground ? theme.palette.background.paperInlay : undefined
       }
+      sx={(theme) => ({
+        overflowY: overflowAuto ? "auto" : "scroll",
+        scrollbarColor: `${theme.palette.divider} rgba(0, 0, 0, 0)`,
+        scrollbarWidth: "thin",
+        pb: 2
+      })}
     >
       {children}
     </Box>

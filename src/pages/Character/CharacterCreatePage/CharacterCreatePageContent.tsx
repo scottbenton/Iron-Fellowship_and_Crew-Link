@@ -107,7 +107,7 @@ export function CharacterCreatePageContent() {
           <CharacterDetails control={control} watch={watch} />
           {!campaignId && <ExpansionsAndHomebrew control={control} />}
           <Stats control={control} />
-          <Assets control={control} />
+          <Assets control={control} campaignId={campaignId || undefined} />
           <Box display={"flex"} justifyContent={"flex-end"}>
             <Button
               variant={"contained"}

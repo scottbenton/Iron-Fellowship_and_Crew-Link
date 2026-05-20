@@ -33,6 +33,7 @@ export function NotesSection() {
       <Box>
         <StyledTabs
           centered
+          variant={"standard"}
           value={currentTab}
           onChange={(evt, value) => setCurrentTab(value)}
           removeBackgroundColor

@@ -36,9 +36,6 @@ export interface LocationMapProps {
   map?: ILocationMap;
 }
 
-const DEFAULT_ROWS = 13;
-const DEFAULT_COLS = 18;
-
 export function LocationMap(props: LocationMapProps) {
   const { locationId, map = {}, backgroundImageUrl } = props;
   const locationMap = useStore(
@@ -68,14 +65,6 @@ export function LocationMap(props: LocationMapProps) {
       maxMapDimensions,
       backgroundImageDimensions
     );
-
-  // const rows = 13;
-  // const cols = 18;
-
-  // // Calculate SVG dimensions
-  // const width: number =
-  //   cols * s * Math.sqrt(3) + (s * Math.sqrt(3)) / 2 - cols + 6; // Updated
-  // const height: number = rows * 1.5 * s + s / 2 + 1; // Updated
 
   const verticalSpacing: number = 1.5 * s; // Updated
   const horizontalSpacing: number = s * Math.sqrt(3); // Updated
@@ -116,7 +105,7 @@ export function LocationMap(props: LocationMapProps) {
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleHexClick = (
+  const handleHexClick = async (
     row: number,
     col: number,
     locationIds: string[] | undefined,
@@ -131,7 +120,8 @@ export function LocationMap(props: LocationMapProps) {
         updateLocation(locationId, {
           [`map.${row}.${col}.type`]:
             currentCell?.type === MapEntryType.Path ? null : MapEntryType.Path,
-        }).catch(() => {});
+        }).catch(() => {
+        });
       }
     } else if (mapTool?.type === MapTools.AddLocation) {
       const type = mapTool.locationType;
@@ -145,15 +135,17 @@ export function LocationMap(props: LocationMapProps) {
         type: type,
         updatedDate: new Date(),
         createdDate: new Date(),
-        ...(configCreateLocation ? configCreateLocation(rollOracleTable) : {}),
+        ...(configCreateLocation ? await configCreateLocation(rollOracleTable) : {}),
       })
         .then((id) => {
           updateLocation(locationId, {
             [`map.${row}.${col}.type`]: MapEntryType.Location,
             [`map.${row}.${col}.locationIds`]: arrayUnion(id),
-          }).catch(() => {});
+          }).catch(() => {
+          });
         })
-        .catch(() => {});
+        .catch(() => {
+        });
       setMapTool(undefined);
     } else if (mapTool?.type === MapTools.MoveLocation) {
       const locationToMove = locationMap[mapTool.locationId];
@@ -164,14 +156,16 @@ export function LocationMap(props: LocationMapProps) {
           locationId,
           row,
           col
-        ).catch(() => {});
+        ).catch(() => {
+        });
         setMapTool(undefined);
       }
     } else if (mapTool?.type === MapTools.BackgroundPaint) {
       const color = mapTool.color;
       updateLocation(locationId, {
         [`map.${row}.${col}.background.color`]: color,
-      }).catch(() => {});
+      }).catch(() => {
+      });
     } else if (!mapTool && locationIds) {
       const filteredLocationIds = getValidLocations(
         locationId,
@@ -190,7 +184,8 @@ export function LocationMap(props: LocationMapProps) {
     } else if (mapTool?.type === MapTools.BackgroundEraser) {
       updateLocation(locationId, {
         [`map.${row}.${col}.background`]: null,
-      }).catch(() => {});
+      }).catch(() => {
+      });
     }
   };
 
@@ -430,7 +425,7 @@ export function LocationMap(props: LocationMapProps) {
 
                           paintOrder: "stroke",
                           stroke: "#000000",
-                          strokeOpacity: !!backgroundImageUrl ? "100%" : "60%",
+                          strokeOpacity: backgroundImageUrl ? "100%" : "60%",
                           strokeWidth: s / 12,
                           strokeLinecap: "butt",
                           strokeLinejoin: "miter",

@@ -3,6 +3,9 @@
 ## Steps
 
 1. Clone this project `git clone https://github.com/scottbenton/Iron-Fellowship.git`
+1. Install node v18 and npm v10
+   1. Follow [these instructions](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating) to install nvm
+   1. Switch to project dir and `nvm install` to install and configure the correct node version
 1. Install dependencies `npm i`
 1. Create an `.env.local` file (see `.env.local` below)
 1. Set up firebase (see Firebase Setup below, or contact Scott to get credentials to the dev instance)

@@ -1,4 +1,4 @@
-import { Box, Button, ButtonBase, Chip, Link, Typography } from "@mui/material";
+import {Box, Button, ButtonBase, Chip, IconButton, Link, Typography} from "@mui/material";
 import { useEffect, useId, useState } from "react";
 import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
@@ -33,8 +33,7 @@ const trackMoveIdSystemValues: GameSystemChooser<{
     [TrackTypes.Journey]: "starforged/moves/exploration/finish_an_expedition",
     [TrackTypes.Fray]: "starforged/moves/combat/take_decisive_action",
     [TrackTypes.BondProgress]: "starforged/moves/connection/forge_a_bond",
-    [TrackTypes.SceneChallenge]:
-      "starforged/moves/scene_challenge/finish_the_scene",
+    [TrackTypes.SceneChallenge]: "starforged/moves/scene_challenge/finish_the_scene",
   },
 };
 
@@ -52,6 +51,8 @@ export interface BaseProgressTrackProps {
   onEdit?: () => void;
   hideDifficultyLabel?: boolean;
   hideRollButton?: boolean;
+  smallRollButton?: boolean;
+  alwaysRollMax?: boolean;
 }
 
 interface ProgressTrackProgressProps extends BaseProgressTrackProps {
@@ -117,6 +118,8 @@ export function ProgressTrack(props: ProgressTracksProps) {
     onEdit,
     hideDifficultyLabel,
     hideRollButton,
+    smallRollButton,
+    alwaysRollMax,
   } = props;
 
   const trackMoveIds = useGameSystemValue(trackMoveIdSystemValues);
@@ -169,10 +172,10 @@ export function ProgressTrack(props: ProgressTracksProps) {
     if (trackType) {
       openDialog(trackMoveIds[trackType]);
       rollTrackProgress(
-        trackType,
         label || "",
-        Math.min(Math.floor(value / 4), 10),
-        move?._id ?? ""
+        alwaysRollMax ? 10 : Math.min(Math.floor(value / 4), 10),
+        move?._id ?? "",
+        trackType,
       );
     }
   };
@@ -265,114 +268,125 @@ export function ProgressTrack(props: ProgressTracksProps) {
           mt={label ? 1 : 0}
           mr={trackType === TrackTypes.SceneChallenge ? 2 : 0}
         >
-          {onValueChange && (
-            <ButtonBase
-              aria-label={"Decrement Track"}
-              onClick={() => {
-                if (onValueChange) {
-                  const newValue = Math.max(
-                    value - getDifficultyStep(difficulty),
-                    0
-                  );
-                  onValueChange(newValue);
-                  if (newValue === value) {
-                    announce(`${label} is already at zero ticks`);
-                  } else {
-                    announce(`Updated ${label} to ${getValueText(newValue)}`);
-                  }
-                }
-              }}
-              focusRipple
-              sx={(theme) => ({
-                backgroundColor:
-                  theme.palette.darkGrey[
-                    theme.palette.mode === "light" ? "main" : "light"
-                  ],
-                color: theme.palette.darkGrey.contrastText,
-                px: 0.5,
-                "&:hover": {
-                  backgroundColor: theme.palette.darkGrey.dark,
-                },
-                borderTopLeftRadius: `${theme.shape.borderRadius}px`,
-                borderBottomLeftRadius: `${theme.shape.borderRadius}px`,
-              })}
+          {trackType && !hideRollButton && smallRollButton && (
+            <IconButton
+              aria-label="Roll Track"
+              onClick={handleRollClick}
+              sx={{ mr: 1.5, p: 0 }}
             >
-              <MinusIcon />
-            </ButtonBase>
+              <DieIcon />
+            </IconButton>
           )}
-          <Box
-            display={"flex"}
-            bgcolor={(theme) => theme.palette.background.paper}
-            color={(theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[600]
-                : theme.palette.grey[300]
-            }
-            borderTop={1}
-            borderBottom={1}
-            borderLeft={onValueChange ? 0 : 1}
-            borderRight={onValueChange ? 0 : 1}
-            borderColor={(theme) => theme.palette.divider}
-            role={"meter"}
-            aria-labelledby={labelId}
-            aria-valuemin={0}
-            aria-valuemax={max}
-            aria-valuenow={value}
-            aria-valuetext={getValueText(value)}
-          >
-            {checks.map((value, index) => (
-              <Box
-                key={index}
+          <Box display={"flex"} >
+            {onValueChange && (
+              <ButtonBase
+                aria-label={"Decrement Track"}
+                onClick={() => {
+                  if (onValueChange) {
+                    const newValue = Math.max(
+                      value - getDifficultyStep(difficulty),
+                      0
+                    );
+                    onValueChange(newValue);
+                    if (newValue === value) {
+                      announce(`${label} is already at zero ticks`);
+                    } else {
+                      announce(`Updated ${label} to ${getValueText(newValue)}`);
+                    }
+                  }
+                }}
+                focusRipple
                 sx={(theme) => ({
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "transparent",
-                  borderLeftColor:
-                    index !== 0 ? theme.palette.divider : undefined,
+                  backgroundColor:
+                    theme.palette.darkGrey[
+                      theme.palette.mode === "light" ? "main" : "light"
+                    ],
+                  color: theme.palette.darkGrey.contrastText,
+                  px: 0.5,
+                  "&:hover": {
+                    backgroundColor: theme.palette.darkGrey.dark,
+                  },
+                  borderTopLeftRadius: `${theme.shape.borderRadius}px`,
+                  borderBottomLeftRadius: `${theme.shape.borderRadius}px`,
                 })}
               >
-                <ProgressTrackTick value={value} key={index} aria-hidden />
-              </Box>
-            ))}
-          </Box>
-          {onValueChange && (
-            <ButtonBase
-              aria-label={"Increment Track"}
-              onClick={() => {
-                if (onValueChange) {
-                  const newValue = Math.min(
-                    value + getDifficultyStep(difficulty),
-                    max
-                  );
-                  onValueChange(newValue);
-                  if (newValue === value) {
-                    announce(
-                      `${label} is already at its maximum value of ${max} ticks`
-                    );
-                  } else {
-                    announce(`Updated ${label} to ${getValueText(newValue)}`);
-                  }
-                }
-              }}
-              focusRipple
-              sx={(theme) => ({
-                backgroundColor:
-                  theme.palette.darkGrey[
-                    theme.palette.mode === "light" ? "main" : "light"
-                  ],
-                color: theme.palette.darkGrey.contrastText,
-                px: 0.5,
-                "&:hover": {
-                  backgroundColor: theme.palette.darkGrey.dark,
-                },
-
-                borderTopRightRadius: `${theme.shape.borderRadius}px`,
-                borderBottomRightRadius: `${theme.shape.borderRadius}px`,
-              })}
+                <MinusIcon />
+              </ButtonBase>
+            )}
+            <Box
+              display={"flex"}
+              bgcolor={(theme) => theme.palette.background.paper}
+              color={(theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[600]
+                  : theme.palette.grey[300]
+              }
+              borderTop={1}
+              borderBottom={1}
+              borderLeft={onValueChange ? 0 : 1}
+              borderRight={onValueChange ? 0 : 1}
+              borderColor={(theme) => theme.palette.divider}
+              role={"meter"}
+              aria-labelledby={labelId}
+              aria-valuemin={0}
+              aria-valuemax={max}
+              aria-valuenow={value}
+              aria-valuetext={getValueText(value)}
             >
-              <PlusIcon />
-            </ButtonBase>
-          )}
+              {checks.map((value, index) => (
+                <Box
+                  key={index}
+                  sx={(theme) => ({
+                    borderWidth: 1,
+                    borderStyle: "solid",
+                    borderColor: "transparent",
+                    borderLeftColor:
+                      index !== 0 ? theme.palette.divider : undefined,
+                  })}
+                >
+                  <ProgressTrackTick value={value} key={index} aria-hidden />
+                </Box>
+              ))}
+            </Box>
+            {onValueChange && (
+              <ButtonBase
+                aria-label={"Increment Track"}
+                onClick={() => {
+                  if (onValueChange) {
+                    const newValue = Math.min(
+                      value + getDifficultyStep(difficulty),
+                      max
+                    );
+                    onValueChange(newValue);
+                    if (newValue === value) {
+                      announce(
+                        `${label} is already at its maximum value of ${max} ticks`
+                      );
+                    } else {
+                      announce(`Updated ${label} to ${getValueText(newValue)}`);
+                    }
+                  }
+                }}
+                focusRipple
+                sx={(theme) => ({
+                  backgroundColor:
+                    theme.palette.darkGrey[
+                      theme.palette.mode === "light" ? "main" : "light"
+                    ],
+                  color: theme.palette.darkGrey.contrastText,
+                  px: 0.5,
+                  "&:hover": {
+                    backgroundColor: theme.palette.darkGrey.dark,
+                  },
+
+                  borderTopRightRadius: `${theme.shape.borderRadius}px`,
+                  borderBottomRightRadius: `${theme.shape.borderRadius}px`,
+                })}
+              >
+                <PlusIcon />
+              </ButtonBase>
+            )}
+          </Box>
         </Box>
 
         {trackType === TrackTypes.SceneChallenge && (
@@ -408,7 +422,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
           Complete Track
         </Button>
       )}
-      {trackType && !hideRollButton && (
+      {trackType && !hideRollButton && !smallRollButton && (
         <Button
           color={"inherit"}
           onClick={handleRollClick}

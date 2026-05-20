@@ -50,7 +50,7 @@ export function CharacterTab(props: CharacterTabProps) {
         <Container maxWidth={false}>
           <Grid container spacing={2}>
             {Object.keys(characters).map((characterId) => (
-              <Grid item xs={12} lg={6} key={characterId}>
+              <Grid item lg={12} xl={6} key={characterId} maxWidth={"100%"}>
                 <CharacterCard
                   characterId={characterId}
                   uid={characters[characterId].uid}

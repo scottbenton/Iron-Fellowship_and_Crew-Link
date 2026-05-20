@@ -1,4 +1,4 @@
-import { Card, useMediaQuery, useTheme } from "@mui/material";
+import { Card } from "@mui/material";
 import { useEffect, useState } from "react";
 import { AssetsSection } from "../Tabs/AssetsSection";
 import { NotesSection } from "../Tabs/NotesSection";
@@ -22,6 +22,7 @@ import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQuery
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { useCampaignType } from "hooks/useCampaignType";
 import { useNewMaps } from "hooks/featureFlags/useNewMaps";
+import { useIsMobile } from "hooks/useIsMobile";
 
 enum TABS {
   MOVES = "moves",
@@ -38,8 +39,7 @@ enum TABS {
 }
 
 export function TabsSection() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useIsMobile();
 
   const impactsLabel = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]: "Debilities",

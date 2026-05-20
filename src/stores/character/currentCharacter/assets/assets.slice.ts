@@ -21,6 +21,7 @@ export const createAssetsSlice: CreateSliceType<AssetSlice> = (
       characterId,
       undefined,
       (assets) => {
+        console.debug(assets);
         set((store) => {
           store.characters.currentCharacter.assets.assets = assets;
           store.characters.currentCharacter.assets.loading = false;

@@ -33,8 +33,7 @@ const trackMoveIdSystemValues: GameSystemChooser<{
     [TrackTypes.Journey]: "starforged/moves/exploration/finish_an_expedition",
     [TrackTypes.Fray]: "starforged/moves/combat/take_decisive_action",
     [TrackTypes.BondProgress]: "starforged/moves/connection/forge_a_bond",
-    [TrackTypes.SceneChallenge]:
-      "starforged/moves/scene_challenge/finish_the_scene",
+    [TrackTypes.SceneChallenge]: "starforged/moves/scene_challenge/finish_the_scene",
   },
 };
 
@@ -52,6 +51,8 @@ export interface BaseProgressTrackProps {
   onEdit?: () => void;
   hideDifficultyLabel?: boolean;
   hideRollButton?: boolean;
+  smallRollButton?: boolean;
+  alwaysRollMax?: boolean;
 }
 
 interface ProgressTrackProgressProps extends BaseProgressTrackProps {
@@ -117,6 +118,8 @@ export function ProgressTrack(props: ProgressTracksProps) {
     onEdit,
     hideDifficultyLabel,
     hideRollButton,
+    smallRollButton,
+    alwaysRollMax,
   } = props;
 
   const trackMoveIds = useGameSystemValue(trackMoveIdSystemValues);
@@ -169,10 +172,10 @@ export function ProgressTrack(props: ProgressTracksProps) {
     if (trackType) {
       openDialog(trackMoveIds[trackType]);
       rollTrackProgress(
-        trackType,
         label || "",
-        Math.min(Math.floor(value / 4), 10),
-        move?._id ?? ""
+        alwaysRollMax ? 10 : Math.min(Math.floor(value / 4), 10),
+        move?._id ?? "",
+        trackType,
       );
     }
   };
@@ -307,10 +310,17 @@ export function ProgressTrack(props: ProgressTracksProps) {
         </Box>
         <Box
           display={"flex"}
-          alignItems={"center"}
           justifyContent={"flex-end"}
           width={280}
         >
+          {trackType && !hideRollButton && smallRollButton && (
+            <IconButton
+              onClick={handleRollClick}
+              aria-label={"Roll Track"}
+            >
+              <DieIcon />
+            </IconButton>
+          )}
           {onValueChange && (
             <>
               <IconButton
@@ -391,7 +401,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
             Complete Track
           </Button>
         )}
-        {trackType && !hideRollButton && (
+        {trackType && !hideRollButton && !smallRollButton && (
           <Button
             color={"inherit"}
             onClick={handleRollClick}

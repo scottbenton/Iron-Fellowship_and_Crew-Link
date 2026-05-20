@@ -37,15 +37,18 @@ export function CharacterDetails(props: CharacterDetailsProps) {
     [GAME_SYSTEMS.STARFORGED]: true,
   });
 
-  const handleOracleRoll = useCallback(() => {
+  const handleOracleRoll = useCallback(async () => {
     if (joinOracles) {
-      return nameOracles
-        .map((id) => rollOracleTable(id, false)?.result ?? "")
-        .join(" ");
+      const names: string[] = [];
+      for (const id of nameOracles) {
+        const name = await rollOracleTable(id, false);
+        names.push(name?.result ?? "")
+      }
+      return names.join(" ");
     } else {
       const oracleIndex = Math.floor(Math.random() * nameOracles.length);
 
-      return rollOracleTable(nameOracles[oracleIndex], false)?.result ?? "";
+      return (await rollOracleTable(nameOracles[oracleIndex], false))?.result ?? "";
     }
   }, [rollOracleTable, nameOracles, joinOracles]);
 
@@ -79,7 +82,7 @@ export function CharacterDetails(props: CharacterDetailsProps) {
           render={({ field, fieldState, formState }) => (
             <TextFieldWithOracle
               InputLabelProps={{ shrink: true }}
-              getOracleValue={() => handleOracleRoll() ?? ""}
+              getOracleValue={async () => await handleOracleRoll() ?? ""}
               disabled={formState.disabled}
               label={"Character Name"}
               fullWidth

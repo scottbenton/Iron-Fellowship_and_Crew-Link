@@ -20,10 +20,11 @@ export interface StatComponentProps {
     name: string;
     id: string;
   };
+  ignoreAdds?: boolean;
 }
 
 export function StatComponent(props: StatComponentProps) {
-  const { label, value, updateTrack, disableRoll, moveInfo, sx } = props;
+  const { label, value, updateTrack, disableRoll, moveInfo, sx, ignoreAdds } = props;
 
   const [inputValue, setInputValue] = useState<string>(value + "");
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -38,7 +39,7 @@ export function StatComponent(props: StatComponentProps) {
   const adds = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.adds ?? 0
   );
-  const hasAdds = adds !== 0;
+  const hasAdds = !ignoreAdds ? adds !== 0 : false;
   const resetAdds = useStore(
     (store) => store.characters.currentCharacter.updateCurrentCharacter
   );
@@ -105,8 +106,10 @@ export function StatComponent(props: StatComponentProps) {
       component={updateTrack || disableRoll ? "div" : ButtonBase}
       onClick={() => {
         if (!(updateTrack || disableRoll)) {
-          rollStat(label, value, moveInfo, adds);
-          resetAdds({ adds: 0 }).catch(() => {});
+          rollStat(label, value, moveInfo, !ignoreAdds ? adds : 0);
+          if (!ignoreAdds) {
+            resetAdds({adds: 0}).catch(() => {});
+          }
         }
       }}
     >
@@ -114,6 +117,7 @@ export function StatComponent(props: StatComponentProps) {
         display={"block"}
         textAlign={"center"}
         variant={"subtitle1"}
+        fontSize={14}
         component={"span"}
         lineHeight={1}
         id={`${label}-label`}

@@ -1,5 +1,7 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn, IdParser } from "@datasworn/core";
 import { RulesSliceData } from "../rules.slice.type";
+import { Primary } from "@datasworn/core/dist/StringId";
+import { idMap } from "data/idMap";
 
 export function parseOraclesIntoMaps(
   oracles: Record<string, Datasworn.OracleTablesCollection>,
@@ -17,11 +19,11 @@ export function parseOraclesIntoMaps(
   const oracleRollableMap: Record<string, Datasworn.OracleRollable> = {};
   const nonReplacedOracleRollableMap: Record<string, Datasworn.OracleRollable> =
     {};
-  const oracleTableRollableMap: Record<string, Datasworn.OracleTableRollable> =
+  const oracleTableRollableMap: Record<string, Datasworn.OracleRollableTable> =
     {};
   const nonReplacedOracleTableRollableMap: Record<
     string,
-    Datasworn.OracleTableRollable
+    Datasworn.OracleRollableTable
   > = {};
 
   const parseOracleTableCollectionIntoMaps = (
@@ -30,9 +32,26 @@ export function parseOraclesIntoMaps(
     allOraclesMap[category._id] = category;
     oracleCollectionMap[category._id] = category;
     nonReplacedOracleCollectionMap[category._id] = category;
+    // TODO - check and make sure this replaces properly
     if (category.replaces) {
-      allOraclesMap[category.replaces] = category;
-      oracleCollectionMap[category.replaces] = category;
+      category.replaces.forEach((replaces) => {
+        let replacesId = replaces;
+        if (!replacesId.startsWith("oracle_collection:")) {
+          replacesId = idMap[replaces] ?? replaces;
+        }
+        if (replacesId.startsWith("oracle_collection:")) {
+          const replaceMatches = IdParser.getMatches(
+            replacesId as Primary,
+            IdParser.tree
+          );
+          replaceMatches.forEach((val, key) => {
+            if (val.type === "oracle_collection") {
+              allOraclesMap[key] = category;
+              oracleCollectionMap[key] = category;
+            }
+          });
+        }
+      });
     }
     if (category.contents) {
       const sortedContents = sort
@@ -52,16 +71,36 @@ export function parseOraclesIntoMaps(
           oracleTableRollableMap[oracleContent._id] = oracleContent;
           nonReplacedOracleTableRollableMap[oracleContent._id] = oracleContent;
         }
+        // TODO - check and make sure this is replaced properly
         if (oracleContent.replaces) {
-          allOraclesMap[oracleContent.replaces] = oracleContent;
-          oracleRollableMap[oracleContent.replaces] = oracleContent;
-          if (
-            oracleContent.oracle_type === "table_text" ||
-            oracleContent.oracle_type === "table_text2" ||
-            oracleContent.oracle_type === "table_text3"
-          ) {
-            oracleTableRollableMap[oracleContent.replaces] = oracleContent;
-          }
+          oracleContent.replaces.forEach((replaces) => {
+            let replacesId = replaces;
+            if (!replaces.startsWith("oracle_rollable:")) {
+              replacesId = idMap[replaces] ?? replaces;
+            }
+
+            if (replacesId.startsWith("oracle_rollable:")) {
+              const replaceMatches = IdParser.getMatches(
+                replacesId as Primary,
+                IdParser.tree
+              );
+              replaceMatches.forEach((val, key) => {
+                if (val.type === "oracle_rollable") {
+                  oracleRollableMap[key] = oracleContent;
+                  allOraclesMap[key] = oracleContent;
+                }
+                const oracleRollableTableTypes = [
+                  "table_text",
+                  "table_text2",
+                  "table_text3",
+                ];
+                if (oracleRollableTableTypes.includes(oracleContent.type)) {
+                  oracleTableRollableMap[key] =
+                    oracleContent as Datasworn.OracleRollableTable;
+                }
+              });
+            }
+          });
         }
       });
     }

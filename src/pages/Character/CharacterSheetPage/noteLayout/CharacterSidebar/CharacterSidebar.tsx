@@ -9,6 +9,7 @@ import {
 import { CharacterPanel } from "./CharacterPanel";
 import { TracksPanel } from "./TracksPanel";
 import { AssetsPanel } from "./AssetsPanel";
+import { Box } from "@mui/material";
 
 enum Tabs {
   Character = "character",
@@ -28,11 +29,11 @@ export function CharacterSidebar() {
   useUpdateQueryStringValueWithoutNavigation("characterTab", selectedTab);
 
   return (
-    <>
+    <Box height={"100%"} display={"flex"} flexDirection={"column"} >
       <StyledTabs
+        scrollButtons={false}
         value={selectedTab}
         onChange={(evt, value) => handleTabChange(value)}
-        sx={{ mx: -2 }}
       >
         <StyledTab label="Character" value={Tabs.Character} />
         <StyledTab label="Tracks" value={Tabs.Tracks} />
@@ -57,6 +58,6 @@ export function CharacterSidebar() {
       >
         <AssetsPanel />
       </ContainedTabPanel>
-    </>
+    </Box>
   );
 }

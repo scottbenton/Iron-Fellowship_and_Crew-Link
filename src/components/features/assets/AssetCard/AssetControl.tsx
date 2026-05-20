@@ -145,6 +145,7 @@ export function AssetControl(props: AssetControlProps) {
                   }
                 : undefined
             }
+            rollable={true}
           />
         </Box>
       );

@@ -11,9 +11,38 @@ import { getRollResultLabel } from "components/features/charactersAndCampaigns/R
 import { TrackTypes } from "types/Track.type";
 import { LEGACY_TrackTypes } from "types/LegacyTrack.type";
 import { rollOracle } from "./rollers/rollOracle";
+import { idMap } from "data/idMap";
+import { Datasworn, IdParser } from "@datasworn/core";
+import { Dice } from "components/shared/Dice";
+import { Theme, useTheme } from "@mui/material";
 
-export const getRoll = (dieMax: number) => {
-  return Math.floor(Math.random() * dieMax) + 1;
+export interface RollResult {
+  value: number
+}
+
+export const getRolls = async (challengeDice: number, actionDice: number, theme: Theme, hide3dDice: boolean): Promise<RollResult[]> => {
+  if (hide3dDice) {
+    const rolls: RollResult[] = [];
+    for(let challenges = 0; challenges < challengeDice; challenges++) {
+      rolls.push({
+        value: Math.floor(Math.random() * 10) + 1
+      });
+    }
+    for(let actions = 0; actions < actionDice; actions++) {
+      rolls.push({
+        value: Math.floor(Math.random() * 6) + 1
+      });
+    }
+    return rolls;
+  }
+
+  Dice.clear().show();
+  setTimeout(() => Dice.hide("fade-out"), 100);
+
+  return await Dice.roll([
+    { qty: challengeDice, sides: 10, themeColor: theme.palette.darkGrey.light },
+    { qty: actionDice, sides: 6, themeColor: theme.palette.primary.main }
+  ]);
 };
 
 export function useRoller() {
@@ -32,22 +61,28 @@ export function useRoller() {
   const addRollToScreen = useStore((store) => store.appState.addRoll);
   const addRollToLog = useStore((store) => store.gameLog.addRoll);
 
-  const newOracles = useStore((store) => store.rules.oracleMaps.allOraclesMap);
   const momentum = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.momentum ?? 0
   );
 
+  const hide3dDice = useStore(
+    (store) => store.auth.userDoc?.hide3dDice
+  );
+
+  const theme = useTheme();
+
   const rollStat = useCallback(
-    (
+    async (
       label: string,
       modifier: number,
       move?: { name: string; id: string },
       adds?: number,
       showSnackbar = true
     ) => {
-      const challenge1 = getRoll(10);
-      const challenge2 = getRoll(10);
-      const action = getRoll(6);
+      const results = await getRolls(2, 1, theme, hide3dDice === true);
+      const challenge1 = results[0].value;
+      const challenge2 = results[1].value;
+      const action = results[2].value;
 
       let matchedNegativeMomentum = false;
       if (momentum < 0 && Math.abs(momentum) === action) {
@@ -142,15 +177,28 @@ export function useRoller() {
       uid,
       verboseScreenReaderRolls,
       momentum,
+      theme,
+      hide3dDice
     ]
   );
 
   const rollOracleTable = useCallback(
-    (oracleId: string, showSnackbar = true, gmsOnly = false) => {
-      const oracle = newOracles[oracleId];
-      if (!oracle) return undefined;
+    async (potentialOldOracleId: string, showSnackbar = true, gmsOnly = false) => {
+      const oracleId = idMap[potentialOldOracleId] ?? potentialOldOracleId;
+      // const oracle = newOracles[oracleId];
 
-      const oracleRoll = rollOracle(oracle, characterId, uid, gmsOnly);
+      let oracle: Datasworn.OracleRollable | undefined;
+      try {
+        oracle = IdParser.get(oracleId) as Datasworn.OracleRollable;
+      } catch {
+        // Empty on purpose - the following if statement will handle the undefined case
+      }
+
+      if (!oracle || oracle.type !== "oracle_rollable") {
+        return undefined;
+      }
+
+      const oracleRoll = await rollOracle(oracle, characterId, uid, gmsOnly, theme, !showSnackbar || hide3dDice === true);
       if (!oracleRoll) return undefined;
 
       let result = oracleRoll.result ?? "";
@@ -195,7 +243,6 @@ export function useRoller() {
       return definedOracleRoll;
     },
     [
-      newOracles,
       characterId,
       uid,
       announce,
@@ -203,18 +250,21 @@ export function useRoller() {
       addRollToScreen,
       campaignId,
       verboseScreenReaderRolls,
+      theme,
+      hide3dDice
     ]
   );
 
   const rollTrackProgress = useCallback(
-    (
-      trackType: TrackTypes | LEGACY_TrackTypes,
+    async (
       trackLabel: string,
       trackProgress: number,
-      moveId: string
+      moveId: string,
+      trackType?: TrackTypes | LEGACY_TrackTypes,
     ) => {
-      const challenge1 = getRoll(10);
-      const challenge2 = getRoll(10);
+      const results = await getRolls(2, 0, theme, hide3dDice === true);
+      const challenge1 = results[0].value;
+      const challenge2 = results[1].value;
 
       let result: ROLL_RESULT = ROLL_RESULT.WEAK_HIT;
       if (trackProgress > challenge1 && trackProgress > challenge2) {
@@ -231,7 +281,7 @@ export function useRoller() {
         challenge1,
         challenge2,
         trackProgress,
-        trackType,
+        trackType: trackType ?? "",
         result,
         characterId,
         uid,
@@ -248,10 +298,13 @@ export function useRoller() {
           addRollToScreen(rollId, trackProgressRoll);
         })
         .catch(() => {});
+
+      const rollString = trackProgressRoll.trackType
+        ? `${trackProgressRoll.trackType} ${trackProgressRoll.rollLabel}`
+        : trackProgressRoll.rollLabel;
+
       announce(
-        `Rolled progress for ${trackProgressRoll.trackType} ${
-          trackProgressRoll.rollLabel
-        }. Your progress was ${trackProgressRoll.trackProgress} against a ${
+        `Rolled progress for ${rollString}. Your progress was ${trackProgressRoll.trackProgress} against a ${
           trackProgressRoll.challenge1
         } and a ${trackProgressRoll.challenge2} for a ${getRollResultLabel(
           trackProgressRoll.result
@@ -260,15 +313,30 @@ export function useRoller() {
 
       return result;
     },
-    [announce, addRollToLog, addRollToScreen, campaignId, characterId, uid]
+    [
+      announce,
+      addRollToLog,
+      addRollToScreen,
+      campaignId,
+      characterId,
+      uid,
+      theme,
+      hide3dDice
+    ]
   );
 
   const rollClockProgression = useCallback(
-    (clockTitle: string, oracleId: string) => {
-      const oracle = newOracles[oracleId];
-      if (!oracle) return undefined;
+    async (clockTitle: string, oracleId: string) => {
+      let oracle: Datasworn.OracleRollable | undefined = undefined;
+      try {
+        oracle = IdParser.get(oracleId) as Datasworn.OracleRollable;
+      } catch {
+        // Empty on purpose - the following if statement will handle the undefined case
+      }
 
-      const result = rollOracle(oracle, null, uid, true);
+      if (!oracle || oracle.type !== "oracle_rollable") return undefined;
+
+      const result = await rollOracle(oracle, null, uid, true, theme, hide3dDice === true);
 
       if (!result) return undefined;
 
@@ -329,7 +397,8 @@ export function useRoller() {
       uid,
       addRollToLog,
       addRollToScreen,
-      newOracles,
+      theme,
+      hide3dDice
     ]
   );
 

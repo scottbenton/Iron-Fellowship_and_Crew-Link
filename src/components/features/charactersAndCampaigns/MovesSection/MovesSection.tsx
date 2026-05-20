@@ -55,10 +55,12 @@ export function MovesSection(props: MovesSectionProps) {
         />
       </Box>
       <Box
-        sx={{
+        sx={(theme) => ({
           overflow: "auto",
           flexGrow: 1,
-        }}
+          scrollbarColor: `${theme.palette.divider} rgba(0, 0, 0, 0)`,
+          scrollbarWidth: "thin",
+        })}
       >
         {!isEmpty ? (
           rootMoveCategories.map((categoryId, index) => (

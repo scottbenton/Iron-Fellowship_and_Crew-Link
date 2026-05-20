@@ -8,6 +8,8 @@ import {
   CATEGORY_VISIBILITY,
   CombinedCollectionType,
 } from "./useFilterOracles";
+import { useStore } from "stores/store";
+import { ToggleVisibilityButton } from "../../../shared/ToggleVisibilityButton";
 
 export interface OracleCollectionProps {
   collectionId: string;
@@ -18,6 +20,7 @@ export interface OracleCollectionProps {
   visibleOracles: Record<string, boolean>;
   enhancesCollections: Record<string, string[]>;
   disabled?: boolean;
+  actionIsHide?: boolean;
 }
 
 export function OracleCollection(props: OracleCollectionProps) {
@@ -30,7 +33,27 @@ export function OracleCollection(props: OracleCollectionProps) {
     visibleOracles,
     enhancesCollections,
     disabled,
+    actionIsHide,
   } = props;
+
+  const hiddenOracles = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign?.hiddenOracleIds
+  );
+  const updateHiddenOracles = useStore(
+    (store) => store.campaigns.currentCampaign.updateHiddenOracles
+  );
+
+  const [hideIsloading, setHideIsLoading] = useState(false);
+
+  const onToggleVisibility = () => {
+    setHideIsLoading(true);
+    updateHiddenOracles(collectionId, !hidden)
+      .catch(() => {
+      })
+      .finally(() => {
+        setHideIsLoading(false);
+      });
+  };
 
   const [isExpanded, setIsExpanded] = useState(false);
   const isExpandedOrForced = isExpanded || forceOpen;
@@ -71,9 +94,12 @@ export function OracleCollection(props: OracleCollectionProps) {
     return { oracleIds, subCollectionIds };
   }, [contents, subCollections, collections, enhancingCollectionIds]);
 
+  const hidden = hiddenOracles?.includes(collectionId);
+
   if (
     visibleCollections[collectionId] === CATEGORY_VISIBILITY.HIDDEN ||
-    !collection
+    !collection ||
+    (!actionIsHide && hidden)
   ) {
     return null;
   } else if (
@@ -85,6 +111,8 @@ export function OracleCollection(props: OracleCollectionProps) {
       <OracleSelectableRollableCollectionListItem
         collection={collection}
         disabled={disabled}
+        actionIsHide={actionIsHide}
+        hidden={hidden}
       />
     );
   }
@@ -97,19 +125,32 @@ export function OracleCollection(props: OracleCollectionProps) {
         toggleOpen={() => !forceOpen && setIsExpanded((prev) => !prev)}
         text={collection.name}
         disabled={disabled}
+        actions={actionIsHide ? (
+          <ToggleVisibilityButton
+              onToggleVisibility={onToggleVisibility}
+              loading={hideIsloading}
+              hidden={hidden}
+            />
+        ) : undefined}
+        hidden={hidden}
       />
       <Collapse in={isExpandedOrForced}>
         <List sx={{ py: 0, mb: isExpandedOrForced ? 0.5 : 0 }}>
-          {oracleIds.map((oracleId) => (
-            <OracleListItem
-              key={collectionId + "-" + oracleId}
-              oracleId={oracleId}
-              oracles={oracles}
-              disabled={!isExpandedOrForced || disabled}
-              visibleOracles={visibleOracles}
-              collectionVisibility={visibleCollections[collection._id]}
-            />
-          ))}
+          {oracleIds.map((oracleId) => {
+            const hidden = hiddenOracles?.includes(oracleId);
+            return (
+              <OracleListItem
+                key={collectionId + "-" + oracleId}
+                oracleId={oracleId}
+                oracles={oracles}
+                disabled={!isExpandedOrForced || disabled}
+                visibleOracles={visibleOracles}
+                collectionVisibility={visibleCollections[collection._id]}
+                actionIsHide={actionIsHide}
+                hidden={hidden}
+              />
+            );
+          })}
           {subCollectionIds.map((subCollectionId) => (
             <OracleCollection
               key={collectionId + "-" + subCollectionId}
@@ -121,6 +162,7 @@ export function OracleCollection(props: OracleCollectionProps) {
               visibleOracles={visibleOracles}
               enhancesCollections={enhancesCollections}
               disabled={disabled || !isExpandedOrForced}
+              actionIsHide={actionIsHide}
             />
           ))}
         </List>

@@ -14,7 +14,7 @@ export interface SectionWithSidebarProps {
 export function SectionWithSidebar(props: SectionWithSidebarProps) {
   const {
     sidebar,
-    sidebarWidth = 324,
+    sidebarWidth = 300,
     mainContent,
     sx,
     respectUserSetting,

@@ -1,471 +1,432 @@
 import { CreateSliceType } from "stores/store.type";
-import { RulesSlice } from "./rules.slice.type";
+import { RulesSlice, RulesSliceData } from "./rules.slice.type";
 import { defaultRulesSlice } from "./rules.slice.default";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn, IdParser } from "@datasworn/core";
 import { parseOraclesIntoMaps } from "./helpers/parseOraclesIntoMaps";
 import { parseMovesIntoMaps } from "./helpers/parseMovesIntoMaps";
 import { parseAssetsIntoMaps } from "./helpers/parseAssetsIntoMaps";
 import { HomebrewNonLinearMeterDocument } from "api-calls/homebrew/rules/nonLinearMeters/_homebrewNonLinearMeter.type";
-import { defaultExpansions } from "data/rulesets";
+import {
+  defaultExpansions,
+  loadIncludedExpansion,
+  loadIncludedRuleset,
+  thirdPartyExpansions,
+} from "data/rulesets";
+import { Primary } from "@datasworn/core/dist/StringId";
+import { idMap } from "data/idMap";
 
 export const createRulesSlice: CreateSliceType<RulesSlice> = (
   set,
   getState,
-) => ({
-  ...defaultRulesSlice,
+) => {
+  return {
+    ...defaultRulesSlice,
 
-  setBaseRuleset: (ruleset) => {
-    set((store) => {
-      store.rules.baseRuleset = ruleset;
-    });
-
-    const state = getState();
-    state.rules.rebuildOracles();
-    state.rules.rebuildMoves();
-    state.rules.rebuildStats();
-    state.rules.rebuildConditionMeters();
-    state.rules.rebuildNonLinearMeters();
-    state.rules.rebuildSpecialTracks();
-    state.rules.rebuildImpacts();
-    state.rules.rebuildAssets();
-    state.rules.rebuildWorldTruths();
-  },
-
-  setExpansionIds: (expansionIds) => {
-    set((store) => {
-      store.rules.expansionIds = expansionIds;
-    });
-
-    const state = getState();
-    state.rules.rebuildOracles();
-  },
-
-  rebuildOracles: () => {
-    set((store) => {
-      const baseRuleset = store.rules.baseRuleset;
-      if (baseRuleset) {
-        const rootOracleCollectionIds = Object.values(baseRuleset.oracles).map(
-          (oracle) => oracle._id,
-        );
-        const baseRulesetMaps = parseOraclesIntoMaps(baseRuleset.oracles);
-        let allOraclesMap = { ...baseRulesetMaps.allOraclesMap };
-        let oracleCollectionMap = {
-          ...baseRulesetMaps.oracleCollectionMap,
-        };
-        let nonReplacedOracleCollectionMap = {
-          ...baseRulesetMaps.nonReplacedOracleCollectionMap,
-        };
-        let oracleRollableMap = { ...baseRulesetMaps.oracleRollableMap };
-        let nonReplacedOracleRollableMap = {
-          ...baseRulesetMaps.nonReplacedOracleRollableMap,
-        };
-        let oracleTableRollableMap = {
-          ...baseRulesetMaps.oracleTableRollableMap,
-        };
-        let nonReplacedOracleTableRollableMap = {
-          ...baseRulesetMaps.nonReplacedOracleTableRollableMap,
-        };
-
-        store.rules.expansionIds.forEach((expansionId) => {
-          let expansionOracles: Record<
-            string,
-            Datasworn.OracleTablesCollection
-          >;
-          if (defaultExpansions[expansionId]) {
-            expansionOracles = defaultExpansions[expansionId].oracles ?? {};
-          } else {
-            expansionOracles =
-              store.homebrew.collections[expansionId]?.dataswornOracles ?? {};
-          }
-          const expansionOracleMaps = parseOraclesIntoMaps(
-            expansionOracles,
-            !defaultExpansions[expansionId],
-          );
-
-          allOraclesMap = {
-            ...allOraclesMap,
-            ...expansionOracleMaps.allOraclesMap,
-          };
-          oracleCollectionMap = {
-            ...oracleCollectionMap,
-            ...expansionOracleMaps.oracleCollectionMap,
-          };
-          nonReplacedOracleCollectionMap = {
-            ...nonReplacedOracleCollectionMap,
-            ...expansionOracleMaps.nonReplacedOracleCollectionMap,
-          };
-          oracleRollableMap = {
-            ...oracleRollableMap,
-            ...expansionOracleMaps.oracleRollableMap,
-          };
-          nonReplacedOracleRollableMap = {
-            ...nonReplacedOracleRollableMap,
-            ...expansionOracleMaps.nonReplacedOracleRollableMap,
-          };
-          oracleTableRollableMap = {
-            ...oracleTableRollableMap,
-            ...expansionOracleMaps.oracleTableRollableMap,
-          };
-          nonReplacedOracleTableRollableMap = {
-            ...nonReplacedOracleTableRollableMap,
-            ...expansionOracleMaps.nonReplacedOracleTableRollableMap,
-          };
-
-          Object.values(expansionOracles).forEach((oracle) => {
-            if (!oracle.replaces && !oracle.enhances) {
-              rootOracleCollectionIds.push(oracle._id);
-            }
-          });
-        });
-
-        store.rules.oracleMaps = {
-          allOraclesMap,
-          oracleCollectionMap,
-          nonReplacedOracleCollectionMap,
-          oracleRollableMap,
-          nonReplacedOracleRollableMap,
-          oracleTableRollableMap,
-          nonReplacedOracleTableRollableMap,
-        };
-        store.rules.rootOracleCollectionIds = rootOracleCollectionIds;
-      }
-    });
-  },
-
-  rebuildMoves: () => {
-    set((store) => {
-      const baseRuleset = store.rules.baseRuleset;
-      if (baseRuleset) {
-        const rootMoveCollectionIds = Object.values(baseRuleset.moves).map(
-          (move) => move._id,
-        );
-        const baseRulesetMaps = parseMovesIntoMaps(baseRuleset.moves);
-
-        let moveCategoryMap = { ...baseRulesetMaps.moveCategoryMap };
-        let moveMap = { ...baseRulesetMaps.moveMap };
-        let nonReplacedMoveCategoryMap = {
-          ...baseRulesetMaps.nonReplacedMoveCategoryMap,
-        };
-        let nonReplacedMoveMap = {
-          ...baseRulesetMaps.nonReplacedMoveMap,
-        };
-
-        store.rules.expansionIds.forEach((expansionId) => {
-          let expansionMoveCategories: Record<string, Datasworn.MoveCategory>;
-          if (defaultExpansions[expansionId]) {
-            expansionMoveCategories =
-              defaultExpansions[expansionId].moves ?? {};
-          } else {
-            expansionMoveCategories =
-              store.homebrew.collections[expansionId]?.dataswornMoves ?? {};
-          }
-          const expansionMoveMaps = parseMovesIntoMaps(
-            expansionMoveCategories,
-            !defaultExpansions[expansionId],
-          );
-
-          // TODO -
-          Object.values(expansionMoveCategories).forEach((moveCategory) => {
-            if (!moveCategory.replaces && !moveCategory.enhances) {
-              rootMoveCollectionIds.push(moveCategory._id);
-            }
-          });
-
-          moveCategoryMap = {
-            ...moveCategoryMap,
-            ...expansionMoveMaps.moveCategoryMap,
-          };
-          moveMap = { ...moveMap, ...expansionMoveMaps.moveMap };
-          nonReplacedMoveCategoryMap = {
-            ...nonReplacedMoveCategoryMap,
-            ...expansionMoveMaps.nonReplacedMoveCategoryMap,
-          };
-          nonReplacedMoveMap = {
-            ...nonReplacedMoveMap,
-            ...expansionMoveMaps.nonReplacedMoveMap,
-          };
-        });
-
-        store.rules.moveMaps = {
-          moveCategoryMap,
-          moveMap,
-          nonReplacedMoveCategoryMap,
-          nonReplacedMoveMap,
-        };
-        store.rules.rootMoveCollectionIds = rootMoveCollectionIds;
-      }
-    });
-  },
-  rebuildStats: () => {
-    set((store) => {
-      const baseRuleset = store.rules.baseRuleset;
-      if (baseRuleset) {
-        const rootStats = baseRuleset.rules.stats;
-
-        let statMap = { ...rootStats };
-
-        store.rules.expansionIds.forEach((expansionId) => {
-          if (defaultExpansions[expansionId]) {
-            statMap = {
-              ...statMap,
-              ...(defaultExpansions[expansionId].rules?.stats ?? {}),
-            };
-          } else {
-            const expansionStats =
-              store.homebrew.collections[expansionId]?.stats?.data ?? {};
-            Object.values(expansionStats)
-              .sort((s1, s2) => s1.label.localeCompare(s2.label))
-              .forEach((expansionStat) => {
-                statMap[expansionStat.dataswornId] = {
-                  label: expansionStat.label,
-                  description: expansionStat.description ?? "",
-                };
-              });
-          }
-        });
-
-        store.rules.stats = statMap;
-      }
-    });
-  },
-  rebuildConditionMeters: () => {
-    set((store) => {
-      const baseRuleset = store.rules.baseRuleset;
-      if (baseRuleset) {
-        const rootConditionMeters = baseRuleset.rules.condition_meters;
-
-        let conditionMeters = { ...rootConditionMeters };
-
-        store.rules.expansionIds.forEach((expansionId) => {
-          if (defaultExpansions[expansionId]) {
-            conditionMeters = {
-              ...conditionMeters,
-              ...(defaultExpansions[expansionId].rules?.condition_meters ?? {}),
-            };
-          } else {
-            const expansionConditionMeters =
-              store.homebrew.collections[expansionId]?.conditionMeters?.data ??
-              {};
-            Object.values(expansionConditionMeters)
-              .sort((c1, c2) => c1.label.localeCompare(c2.label))
-              .forEach((conditionMeter) => {
-                conditionMeters[conditionMeter.dataswornId] = {
-                  label: conditionMeter.label,
-                  description: conditionMeter.description ?? "",
-                  shared: conditionMeter.shared,
-                  value: conditionMeter.value,
-                  min: conditionMeter.min,
-                  max: conditionMeter.max,
-                  rollable: true,
-                };
-              });
-          }
-        });
-
-        store.rules.conditionMeters = conditionMeters;
-      }
-    });
-  },
-  rebuildNonLinearMeters: () => {
-    set((store) => {
-      let nonLinearMeters: Record<string, HomebrewNonLinearMeterDocument> = {};
-
-      store.rules.expansionIds.forEach((expansionId) => {
-        if (!defaultExpansions[expansionId]) {
-          const expansionNonLinearMeters =
-            store.homebrew.collections[expansionId]?.nonLinearMeters?.data ??
-            {};
-          nonLinearMeters = { ...nonLinearMeters };
-          Object.keys(expansionNonLinearMeters)
-            .sort((m1, m2) =>
-              expansionNonLinearMeters[m1].label.localeCompare(
-                expansionNonLinearMeters[m2].label,
-              ),
-            )
-            .forEach((meterKey) => {
-              nonLinearMeters[meterKey] = expansionNonLinearMeters[meterKey];
-            });
-        }
+    setBaseRuleset: (ruleset) => {
+      set((store) => {
+        store.rules.baseRuleset = ruleset;
       });
-      store.rules.nonLinearMeters = nonLinearMeters;
-    });
-  },
-  rebuildSpecialTracks: () => {
-    set((store) => {
-      const baseRuleset = store.rules.baseRuleset;
-      if (baseRuleset) {
-        const rootSpecialTracks = baseRuleset.rules.special_tracks;
 
-        let specialTracks = { ...rootSpecialTracks };
+      const state = getState();
+      state.rules.rebuildRules();
+    },
 
-        store.rules.expansionIds.forEach((expansionId) => {
-          if (defaultExpansions[expansionId]) {
-            specialTracks = {
-              ...specialTracks,
-              ...(defaultExpansions[expansionId].rules?.special_tracks ?? {}),
-            };
-          } else {
-            const expansionSpecialTracks =
-              store.homebrew.collections[expansionId]?.legacyTracks?.data ?? {};
-            Object.values(expansionSpecialTracks)
-              .sort((s1, s2) => s1.label.localeCompare(s2.label))
-              .forEach((specialTrack) => {
-                specialTracks[specialTrack.dataswornId] = {
-                  label: specialTrack.label,
-                  description: specialTrack.description ?? "",
-                  shared: specialTrack.shared,
-                  optional: specialTrack.optional,
-                };
-              });
-          }
-        });
+    setExpansionIds: (expansionIds) => {
+      set((store) => {
+        store.rules.expansionIds = expansionIds;
+      });
+      getState().rules.rebuildRules();
+      getState().rules.loadIncludedExpansions(expansionIds).catch(console.error);
+    },
 
-        store.rules.specialTracks = specialTracks;
+    loadBaseRuleset: async () => {
+      const ruleset = await loadIncludedRuleset();
+      getState().rules.setBaseRuleset(ruleset);
+    },
+
+    loadIncludedExpansions: async (expansionIds) => {
+      const loadedExpansions = await Promise.all(
+        expansionIds.map((expansionId) => loadIncludedExpansion(expansionId)),
+      );
+
+      if (loadedExpansions.some(Boolean)) {
+        getState().rules.rebuildRules();
       }
-    });
-  },
-  rebuildImpacts: () => {
-    set((store) => {
-      const baseRuleset = store.rules.baseRuleset;
-      if (baseRuleset) {
-        const rootImpacts = baseRuleset.rules.impacts;
+    },
 
-        let impacts = { ...rootImpacts };
+    rebuildNonLinearMeters: () => {
+      set((store) => {
+        let nonLinearMeters: Record<string, HomebrewNonLinearMeterDocument> =
+          {};
 
         store.rules.expansionIds.forEach((expansionId) => {
-          if (defaultExpansions[expansionId]) {
-            impacts = {
-              ...impacts,
-              ...(defaultExpansions[expansionId].rules?.impacts ?? {}),
-            };
-          } else {
-            const expansionImpacts =
-              store.homebrew.collections[expansionId]?.impactCategories?.data ??
+          if (
+            !defaultExpansions[expansionId] &&
+            !thirdPartyExpansions[expansionId]
+          ) {
+            const expansionNonLinearMeters =
+              store.homebrew.collections[expansionId]?.nonLinearMeters?.data ??
               {};
-            Object.keys(expansionImpacts)
-              .sort((c1, c2) =>
-                expansionImpacts[c1].label.localeCompare(
-                  expansionImpacts[c2].label,
+            nonLinearMeters = { ...nonLinearMeters };
+            Object.keys(expansionNonLinearMeters)
+              .sort((m1, m2) =>
+                expansionNonLinearMeters[m1].label.localeCompare(
+                  expansionNonLinearMeters[m2].label,
                 ),
               )
-              .forEach((impactCategoryId) => {
-                const impactCategory = expansionImpacts[impactCategoryId];
-                const impactContents: Record<string, Datasworn.ImpactRule> = {};
-
-                Object.keys(impactCategory.contents)
-                  .sort((i1, i2) =>
-                    impactCategory.contents[i1].label.localeCompare(
-                      impactCategory.contents[i2].label,
-                    ),
-                  )
-                  .forEach((impactKey) => {
-                    const impact = impactCategory.contents[impactKey];
-                    impactContents[impact.dataswornId] = {
-                      label: impact.label,
-                      description: impact.description ?? "",
-                      shared: impact.shared,
-                      prevents_recovery: impact.preventsRecovery,
-                      permanent: impact.permanent,
-                    };
-                  });
-
-                impacts[impactCategoryId] = {
-                  label: impactCategory.label,
-                  description: impactCategory.description ?? "",
-                  contents: impactContents,
-                };
+              .forEach((meterKey) => {
+                nonLinearMeters[meterKey] = expansionNonLinearMeters[meterKey];
               });
           }
         });
+        store.rules.nonLinearMeters = nonLinearMeters;
+      });
+    },
 
-        store.rules.impacts = impacts;
-      }
-    });
-  },
-  rebuildAssets: () => {
-    set((store) => {
-      const baseRuleset = store.rules.baseRuleset;
+    rebuildWorldTruths: () => {
+      set((store) => {
+        const baseRulesetTruths = store.rules.baseRuleset?.truths;
+        if (baseRulesetTruths) {
+          store.rules.worldTruths = baseRulesetTruths;
+        }
+      });
+    },
+    rebuildRules: () => {
+      const state = getState();
+      const expansionIds = state.rules.expansionIds;
+      const baseRuleset = state.rules.baseRuleset;
+
       if (baseRuleset) {
-        const baseRulesetMaps = parseAssetsIntoMaps(baseRuleset.assets);
-
-        let assetCollectionMap = { ...baseRulesetMaps.assetCollectionMap };
-        let assetMap = { ...baseRulesetMaps.assetMap };
-        let nonReplacedAssetCollectionMap = {
-          ...baseRulesetMaps.nonReplacedAssetCollectionMap,
+        const tree: Record<string, Datasworn.RulesPackage> = {
+          [baseRuleset._id]: baseRuleset,
         };
+        IdParser.tree = tree;
 
-        store.rules.expansionIds.forEach((expansionId) => {
-          let expansionAssetCollections: Record<
-            string,
-            Datasworn.AssetCollection
-          >;
+        let oracleMaps: RulesSliceData["oracleMaps"] = parseOraclesIntoMaps(
+          baseRuleset.oracles,
+        );
+        let rootOracleCollectionIds = Object.values(baseRuleset.oracles).map(
+          (oracle) => oracle._id,
+        );
+
+        let moveMaps: RulesSliceData["moveMaps"] = parseMovesIntoMaps(
+          baseRuleset.moves,
+        );
+        let rootMoveCollectionIds = Object.values(baseRuleset.moves).map(
+          (move) => move._id,
+        );
+
+        let assetMaps: RulesSliceData["assetMaps"] = parseAssetsIntoMaps(
+          baseRuleset.assets,
+        );
+        let stats = baseRuleset.rules.stats;
+        let conditionMeters = baseRuleset.rules.condition_meters;
+        let specialTracks = baseRuleset.rules.special_tracks;
+        let impacts = baseRuleset.rules.impacts;
+        let worldTruths = baseRuleset.truths ?? {};
+
+        expansionIds.forEach((expansionId) => {
+          let expansion: Datasworn.Expansion;
           if (defaultExpansions[expansionId]) {
-            expansionAssetCollections =
-              defaultExpansions[expansionId].assets ?? {};
+            expansion = defaultExpansions[expansionId];
+            // merge expansion with base ruleset
+          } else if (thirdPartyExpansions[expansionId]) {
+            expansion = thirdPartyExpansions[expansionId];
           } else {
-            expansionAssetCollections =
-              store.homebrew.collections[expansionId]?.dataswornAssets ?? {};
+            expansion = state.homebrew.expansions[expansionId];
           }
-          const expansionAssetMaps = parseAssetsIntoMaps(
-            expansionAssetCollections,
-          );
+          if (expansion) {
+            tree[expansion._id] = expansion;
 
-          assetCollectionMap = {
-            ...assetCollectionMap,
-            ...expansionAssetMaps.assetCollectionMap,
-          };
-          assetMap = { ...assetMap, ...expansionAssetMaps.assetMap };
-          nonReplacedAssetCollectionMap = {
-            ...nonReplacedAssetCollectionMap,
-            ...expansionAssetMaps.nonReplacedAssetCollectionMap,
-          };
+            const expansionOracleMaps = parseOraclesIntoMaps(expansion.oracles);
+            const expansionMoveMaps = parseMovesIntoMaps(expansion.moves);
+            const expansionAssetMaps = parseAssetsIntoMaps(expansion.assets);
 
-          Object.keys(expansionAssetMaps.assetCollectionMap).forEach(
-            (collectionKey) => {
-              const collection =
-                expansionAssetMaps.assetCollectionMap[collectionKey];
-              if (collection.replaces) {
-                assetCollectionMap[collection.replaces] = collection;
-              } else if (collection.enhances) {
-                const original = assetCollectionMap[collection.enhances];
-                if (original) {
-                  const newContents: Record<string, Datasworn.Asset> = {};
-                  const oldContents = collection.contents;
-                  if (oldContents) {
-                    Object.keys(oldContents).forEach((assetKey) => {
-                      const asset = oldContents[assetKey];
-                      newContents[assetKey] = {
-                        ...asset,
-                        category: original.name.replace("Assets", ""),
-                      };
-                      assetMap[asset._id] = newContents[assetKey];
-                    });
-                  }
-                  assetCollectionMap[collection.enhances] = {
-                    ...original,
-                    contents: { ...original.contents, ...newContents },
-                  };
-                }
-              }
-            },
-          );
+            oracleMaps = mergeOracleMaps(oracleMaps, expansionOracleMaps);
+            rootOracleCollectionIds = rootOracleCollectionIds.concat(
+              Object.values(expansion.oracles)
+                .filter((oracle) => !oracle.replaces && !oracle.enhances)
+                .map((oracle) => oracle._id),
+            );
+
+            moveMaps = mergeMoveMaps(moveMaps, expansionMoveMaps);
+            rootMoveCollectionIds = rootMoveCollectionIds.concat(
+              Object.values(expansion.moves)
+                .filter((move) => !move.enhances && !move.replaces)
+                .map((move) => move._id),
+            );
+
+            assetMaps = mergeAssetMaps(assetMaps, expansionAssetMaps);
+
+            stats = { ...stats, ...expansion.rules?.stats };
+            conditionMeters = {
+              ...conditionMeters,
+              ...expansion.rules?.condition_meters,
+            };
+            specialTracks = {
+              ...specialTracks,
+              ...expansion.rules?.special_tracks,
+            };
+            impacts = { ...impacts, ...expansion.rules?.impacts };
+            worldTruths = { ...worldTruths, ...expansion.truths };
+          }
         });
 
-        store.rules.assetMaps = {
-          assetCollectionMap,
-          assetMap,
-          nonReplacedAssetCollectionMap,
-        };
-      }
-    });
-  },
+        set((store) => {
+          store.rules.oracleMaps = oracleMaps;
+          store.rules.rootOracleCollectionIds = rootOracleCollectionIds;
 
-  rebuildWorldTruths: () => {
-    set((store) => {
-      const baseRulesetTruths = store.rules.baseRuleset?.truths;
-      if (baseRulesetTruths) {
-        store.rules.worldTruths = baseRulesetTruths;
+          store.rules.moveMaps = moveMaps;
+          store.rules.rootMoveCollectionIds = rootMoveCollectionIds;
+
+          store.rules.assetMaps = assetMaps;
+
+          store.rules.stats = stats;
+          store.rules.conditionMeters = conditionMeters;
+          store.rules.specialTracks = specialTracks;
+          store.rules.impacts = impacts;
+          store.rules.worldTruths = worldTruths;
+        });
       }
-    });
-  },
-});
+    },
+  };
+};
+
+function mergeOracleMaps(
+  base: RulesSliceData["oracleMaps"],
+  expansion: RulesSliceData["oracleMaps"],
+): RulesSliceData["oracleMaps"] {
+  const allOraclesMap = {
+    ...base.allOraclesMap,
+    ...expansion.allOraclesMap,
+  };
+  const oracleCollectionMap = {
+    ...base.oracleCollectionMap,
+    ...expansion.oracleCollectionMap,
+  };
+  const nonReplacedOracleCollectionMap = {
+    ...base.nonReplacedOracleCollectionMap,
+    ...expansion.nonReplacedOracleCollectionMap,
+  };
+  const oracleRollableMap = {
+    ...base.oracleRollableMap,
+    ...expansion.oracleRollableMap,
+  };
+  const nonReplacedOracleRollableMap = {
+    ...base.nonReplacedOracleRollableMap,
+    ...expansion.nonReplacedOracleRollableMap,
+  };
+  const oracleTableRollableMap = {
+    ...base.oracleTableRollableMap,
+    ...expansion.oracleTableRollableMap,
+  };
+  const nonReplacedOracleTableRollableMap = {
+    ...base.nonReplacedOracleTableRollableMap,
+    ...expansion.nonReplacedOracleTableRollableMap,
+  };
+
+  Object.keys(expansion.oracleCollectionMap).forEach((collectionKey) => {
+    const collection = expansion.oracleCollectionMap[collectionKey];
+    if (collection.enhances) {
+      collection.enhances.forEach((enhances) => {
+        let enhancesId = enhances;
+        if (!enhancesId.startsWith("oracle_collection")) {
+          enhancesId = idMap[enhancesId] ?? enhancesId;
+        }
+        if (enhancesId.startsWith("oracle_collection")) {
+          const replaceMatches = IdParser.getMatches(
+            enhancesId as Primary,
+            IdParser.tree,
+          );
+          replaceMatches.forEach((val, key) => {
+            if (val.type === "oracle_collection") {
+              const newContents: Record<string, Datasworn.OracleRollable> = {
+                ...oracleCollectionMap[key].contents,
+              };
+              Object.entries(collection.contents)
+                .filter(([, oracle]) => !oracle.replaces)
+                .forEach(([oracleKey, oracle]) => {
+                  newContents[oracleKey] = oracle;
+                });
+
+              oracleCollectionMap[key] = {
+                ...oracleCollectionMap[key],
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                contents: newContents as any,
+              };
+
+              if (val.oracle_type !== "table_shared_rolls") {
+                const newCollections: Record<
+                  string,
+                  Datasworn.OracleCollection
+                > = {
+                  ...((
+                    oracleCollectionMap[key] as Datasworn.OracleTablesCollection
+                  ).collections ?? {}),
+                };
+                Object.entries(
+                  (collection as Datasworn.OracleTablesCollection)
+                    .collections ?? {},
+                )
+                  .filter(([, oracle]) => !oracle.replaces && !oracle.enhances)
+                  .forEach(([oracleKey, oracle]) => {
+                    newCollections[oracleKey] = oracle;
+                  });
+                oracleCollectionMap[key] = {
+                  ...oracleCollectionMap[key],
+                  collections: newCollections,
+                } as Datasworn.OracleTablesCollection;
+              }
+            }
+          });
+        }
+      });
+    }
+  });
+
+  return {
+    allOraclesMap,
+    oracleCollectionMap,
+    nonReplacedOracleCollectionMap,
+    oracleRollableMap,
+    nonReplacedOracleRollableMap,
+    oracleTableRollableMap,
+    nonReplacedOracleTableRollableMap,
+  };
+}
+
+function mergeMoveMaps(
+  base: RulesSliceData["moveMaps"],
+  expansion: RulesSliceData["moveMaps"],
+): RulesSliceData["moveMaps"] {
+  const moveCategoryMap = {
+    ...base.moveCategoryMap,
+    ...expansion.moveCategoryMap,
+  };
+  const nonReplacedMoveCategoryMap = {
+    ...base.nonReplacedMoveCategoryMap,
+    ...expansion.nonReplacedMoveCategoryMap,
+  };
+  const moveMap = {
+    ...base.moveMap,
+    ...expansion.moveMap,
+  };
+  const nonReplacedMoveMap = {
+    ...base.nonReplacedMoveMap,
+    ...expansion.nonReplacedMoveMap,
+  };
+
+  Object.keys(expansion.moveCategoryMap).forEach((collectionKey) => {
+    const collection = expansion.moveCategoryMap[collectionKey];
+    if (collection.enhances) {
+      collection.enhances.forEach((enhances) => {
+        let enhancesId = enhances;
+        if (!enhancesId.startsWith("move_category")) {
+          enhancesId = idMap[enhancesId] ?? enhancesId;
+        }
+        if (enhancesId.startsWith("move_category")) {
+          const replaceMatches = IdParser.getMatches(
+            enhancesId as Primary,
+            IdParser.tree,
+          );
+          replaceMatches.forEach((val, key) => {
+            if (val.type === "move_category") {
+              const newContents: Record<string, Datasworn.Move> = {
+                ...moveCategoryMap[key].contents,
+              };
+              Object.entries(collection.contents)
+                .filter(([, move]) => !move.replaces)
+                .forEach(([moveKey, move]) => {
+                  newContents[moveKey] = move;
+                });
+
+              const newCategories: Record<string, Datasworn.MoveCategory> = {
+                ...moveCategoryMap[key].collections,
+              };
+              Object.entries(collection.collections)
+                .filter(([, move]) => !move.replaces && !move.enhances)
+                .forEach(([moveKey, move]) => {
+                  newCategories[moveKey] = move;
+                });
+
+              moveCategoryMap[key] = {
+                ...moveCategoryMap[key],
+                contents: newContents,
+                collections: newCategories,
+              };
+            }
+          });
+        }
+      });
+    }
+  });
+
+  return {
+    moveCategoryMap,
+    nonReplacedMoveCategoryMap,
+    moveMap,
+    nonReplacedMoveMap,
+  };
+}
+
+function mergeAssetMaps(
+  base: RulesSliceData["assetMaps"],
+  expansion: RulesSliceData["assetMaps"],
+): RulesSliceData["assetMaps"] {
+  const combinedAssetCollectionMap = {
+    ...base.assetCollectionMap,
+    ...expansion.assetCollectionMap,
+  };
+  const combinedNonReplacedAssetCollectionMap = {
+    ...base.nonReplacedAssetCollectionMap,
+    ...expansion.nonReplacedAssetCollectionMap,
+  };
+  const combinedAssetMap = {
+    ...base.assetMap,
+    ...expansion.assetMap,
+  };
+
+  Object.keys(expansion.assetCollectionMap).forEach((collectionKey) => {
+    const collection = expansion.assetCollectionMap[collectionKey];
+    if (collection.enhances) {
+      collection.enhances.forEach((enhances) => {
+        let enhancesId = enhances;
+        if (!enhancesId.startsWith("asset_collection")) {
+          enhancesId = idMap[enhancesId] ?? enhancesId;
+        }
+        if (enhancesId.startsWith("asset_collection")) {
+          const replaceMatches = IdParser.getMatches(
+            enhancesId as Primary,
+            IdParser.tree,
+          );
+          replaceMatches.forEach((val, key) => {
+            if (val.type === "asset_collection") {
+              const newContents: Record<string, Datasworn.Asset> = {
+                ...combinedAssetCollectionMap[key].contents,
+              };
+              Object.entries(collection.contents)
+                .filter(([, asset]) => !asset.replaces)
+                .forEach(([assetKey, asset]) => {
+                  newContents[assetKey] = {
+                    ...asset,
+                    category: val.name.replace("Assets", ""),
+                  };
+                });
+
+              combinedAssetCollectionMap[key] = {
+                ...combinedAssetCollectionMap[key],
+                contents: newContents,
+              };
+            }
+          });
+        }
+      });
+    }
+  });
+
+  return {
+    assetCollectionMap: combinedAssetCollectionMap,
+    nonReplacedAssetCollectionMap: combinedNonReplacedAssetCollectionMap,
+    assetMap: combinedAssetMap,
+  };
+}

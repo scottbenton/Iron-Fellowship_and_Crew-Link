@@ -14,7 +14,7 @@ export type ProgressTracks =
   | TrackTypes.BondProgress
   | TrackTypes.Fray
   | TrackTypes.Journey
-  | TrackTypes.Vow;
+  | TrackTypes.Vow
 export type TrackSectionProgressTracks =
   | TrackTypes.Fray
   | TrackTypes.Journey

@@ -1,4 +1,4 @@
-import { IconButton, ListItemText, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useRef, useState } from "react";
 import { MapBackgroundImageFit, MapStrokeColors } from "types/Locations.type";
 import OverflowMenuIcon from "@mui/icons-material/MoreHoriz";
