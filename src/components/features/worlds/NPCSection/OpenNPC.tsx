@@ -23,7 +23,6 @@ import { BondsSection } from "components/features/worlds/BondsSection";
 import { useWorldPermissions } from "../useWorldPermissions";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
-import { Sector } from "types/Sector.type";
 import { Difficulty } from "types/Track.type";
 import { GuideAndPlayerHeader, GuideOnlyHeader } from "../common";
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_LABEL } from "lib/storage.lib";
@@ -31,7 +30,6 @@ import { useSnackbar } from "providers/SnackbarProvider";
 import { mergeIcons } from "components/shared/GameIcons/mergeIcons";
 import { IconColors } from "types/Icon.type";
 import { PageWithImage } from "../common/PageWithImage";
-import { useNewMaps } from "hooks/featureFlags/useNewMaps";
 
 const defaultNPCSpeciesOptions: {
   enum: DefaultNPCSpecies;
@@ -91,7 +89,6 @@ export interface OpenNPCProps {
   worldId: string;
   npcId: string;
   locations: { [key: string]: LocationWithGMProperties };
-  sectors: Record<string, Sector>;
   npc: NPCDocumentWithGMProperties;
   closeNPC: () => void;
   hideBorder?: boolean;
@@ -113,13 +110,11 @@ const nameOracles: { [key in DefaultNPCSpecies]: string | string[] } = {
 };
 
 export function OpenNPC(props: OpenNPCProps) {
-  const { worldId, npcId, locations, npc, closeNPC, sectors, hideBorder } =
-    props;
+  const { worldId, npcId, locations, npc, closeNPC, hideBorder } = props;
   const confirm = useConfirm();
 
   const { showGMFields, showGMTips, isGuidedGame } = useWorldPermissions();
 
-  const usingNewLocations = useNewMaps();
   useListenToCurrentNPC(npcId);
 
   const updateNPC = useStore(
@@ -357,35 +352,20 @@ export function OpenNPC(props: OpenNPCProps) {
               </Grid>
             )}
             <Grid item xs={12} sm={6}>
-              {!isStarforged || usingNewLocations ? (
-                <Autocomplete
-                  options={Object.keys(locations)}
-                  getOptionLabel={(locationId) =>
-                    locations[locationId]?.name ?? ""
-                  }
-                  autoHighlight
-                  value={npc.lastLocationId ?? null}
-                  onChange={(evt, value) =>
-                    handleUpdateNPC({ lastLocationId: value ?? "" })
-                  }
-                  renderInput={(props) => (
-                    <TextField {...props} label={"Location"} fullWidth />
-                  )}
-                />
-              ) : (
-                <Autocomplete
-                  options={Object.keys(sectors)}
-                  getOptionLabel={(sectorId) => sectors[sectorId]?.name ?? ""}
-                  autoHighlight
-                  value={npc.lastSectorId ?? null}
-                  onChange={(evt, value) =>
-                    handleUpdateNPC({ lastSectorId: value ?? "" })
-                  }
-                  renderInput={(props) => (
-                    <TextField {...props} label={"Sector"} fullWidth />
-                  )}
-                />
-              )}
+              <Autocomplete
+                options={Object.keys(locations)}
+                getOptionLabel={(locationId) =>
+                  locations[locationId]?.name ?? ""
+                }
+                autoHighlight
+                value={npc.lastLocationId ?? null}
+                onChange={(evt, value) =>
+                  handleUpdateNPC({ lastLocationId: value ?? "" })
+                }
+                renderInput={(props) => (
+                  <TextField {...props} label={"Location"} fullWidth />
+                )}
+              />
             </Grid>
             {showGMFields && (
               <>

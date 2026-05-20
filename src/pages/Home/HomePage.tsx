@@ -15,7 +15,6 @@ import { ExampleSupplySection } from "./ExampleSupplySection";
 import { ExampleTrackSection } from "./ExampleTrackSection";
 import { Licensing } from "./Licensing";
 import { getPublicAssetPath } from "functions/getPublicAssetPath";
-import { useNewMaps } from "hooks/featureFlags/useNewMaps";
 
 export function HomePage() {
   const isLoggedIn = useStore((store) => !!store.auth.user);
@@ -25,8 +24,6 @@ export function HomePage() {
     [GAME_SYSTEMS.IRONSWORN]: "Ironsworn",
     [GAME_SYSTEMS.STARFORGED]: "Starforged",
   });
-
-  const showNewLocationScreenshots = useNewMaps();
 
   return (
     <>
@@ -221,9 +218,7 @@ export function HomePage() {
             <Box
               border={(theme) => `1px solid ${theme.palette.divider}`}
               component={"img"}
-              src={getPublicAssetPath(
-                showNewLocationScreenshots ? "World.webp" : "WorldSheet.webp"
-              )}
+              src={getPublicAssetPath("World.webp")}
               alt={`Screenshot of a world map in ${appName}.`}
               width={"100%"}
               borderRadius={(theme) => `${theme.shape.borderRadius}px`}

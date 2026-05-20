@@ -32,10 +32,6 @@ export function NPCSection(props: NPCSectionProps) {
     [GAME_SYSTEMS.IRONSWORN]: { species: DefaultNPCSpecies.Ironlander },
     [GAME_SYSTEMS.STARFORGED]: {},
   });
-  const searchPlaceholder = useGameSystemValue({
-    [GAME_SYSTEMS.IRONSWORN]: "Search by name or location",
-    [GAME_SYSTEMS.STARFORGED]: "Search by name or sector",
-  });
 
   const worldId = useStore((store) => store.worlds.currentWorld.currentWorldId);
   const isWorldOwner = useStore(
@@ -46,9 +42,6 @@ export function NPCSection(props: NPCSectionProps) {
   );
   const locations = useStore(
     (store) => store.worlds.currentWorld.currentWorldLocations.locationMap
-  );
-  const sectors = useStore(
-    (store) => store.worlds.currentWorld.currentWorldSectors.sectors
   );
   const npcs = useStore(
     (store) => store.worlds.currentWorld.currentWorldNPCs.npcMap
@@ -68,7 +61,6 @@ export function NPCSection(props: NPCSectionProps) {
 
   const { filteredNPCIds, sortedNPCIds } = useFilterNPCs(
     locations,
-    sectors,
     npcs,
     search
   );
@@ -131,7 +123,6 @@ export function NPCSection(props: NPCSectionProps) {
           npcId={openNPCId}
           npc={openNPC}
           locations={locations}
-          sectors={sectors}
           closeNPC={() => setOpenNPCId()}
           hideBorder={hideSidebar}
         />
@@ -155,13 +146,12 @@ export function NPCSection(props: NPCSectionProps) {
             Add NPC
           </Button>
         }
-        searchPlaceholder={searchPlaceholder}
+        searchPlaceholder={"Search by name or location"}
       />
       <NPCList
         filteredNPCIds={filteredNPCIds}
         npcs={npcs}
         locations={locations}
-        sectors={sectors}
         openNPC={setOpenNPCId}
         showHiddenTag={showHiddenTag}
       />

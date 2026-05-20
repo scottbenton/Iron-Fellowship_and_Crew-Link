@@ -2,7 +2,6 @@ import { Truth, World } from "api-calls/world/_world.type";
 import { LocationsSlice } from "./locations/locations.slice.type";
 import { NPCsSlice } from "./npcs/npcs.slice.type";
 import { LoreSlice } from "./lore/lore.slice.type";
-import { SectorSlice } from "./sector/sector.slice.type";
 
 export interface CurrentWorldSliceData {
   currentWorldId?: string;
@@ -27,7 +26,4 @@ export interface CurrentWorldSliceActions {
   resetStore: () => void;
 }
 
-export type CurrentWorldSlice = CurrentWorldSliceData &
-  CurrentWorldSliceActions & {
-    currentWorldSectors: SectorSlice;
-  };
+export type CurrentWorldSlice = CurrentWorldSliceData & CurrentWorldSliceActions;

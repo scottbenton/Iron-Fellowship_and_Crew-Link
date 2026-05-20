@@ -13,19 +13,14 @@ import { NPCSection } from "components/features/worlds/NPCSection";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
 import { LoreSection } from "components/features/worlds/Lore";
-import { useGameSystem } from "hooks/useGameSystem";
-import { GAME_SYSTEMS } from "types/GameSystems.type";
-import { SectorSection } from "components/features/worlds/SectorSection";
 import { EmptyState } from "components/shared/EmptyState";
 import { LinkComponent } from "components/shared/LinkComponent";
 import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
 import { useWorldPermissions } from "components/features/worlds/useWorldPermissions";
 import { LocationsSection } from "components/features/worlds/Locations";
-import { useNewMaps } from "hooks/featureFlags/useNewMaps";
 
 enum TABS {
   DETAILS = "details",
-  SECTORS = "sectors",
   LOCATIONS = "locations",
   NPCS = "npcs",
   LORE = "lore",
@@ -35,10 +30,6 @@ export function WorldSheetPage() {
   useSyncStore();
 
   const { showGMFields } = useWorldPermissions();
-
-  const showNewLocations = useNewMaps();
-  const shouldShowSectors =
-    useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED && !showNewLocations;
 
   const [searchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<TABS>(
@@ -159,17 +150,13 @@ export function WorldSheetPage() {
             })}
           >
             <StyledTab value={TABS.DETAILS} label={"World Details"} />
-            {shouldShowSectors ? (
-              <StyledTab value={TABS.SECTORS} label={"Sectors"} />
-            ) : (
-              <StyledTab value={TABS.LOCATIONS} label={"Locations"} />
-            )}
+            <StyledTab value={TABS.LOCATIONS} label={"Locations"} />
             <StyledTab value={TABS.NPCS} label={"NPCs"} />
             <StyledTab value={TABS.LORE} label={"Lore"} />
           </StyledTabs>
         </BreakContainer>
         {selectedTab === TABS.DETAILS && <WorldSheet canEdit={canEdit} />}
-        {selectedTab === TABS.LOCATIONS && !shouldShowSectors && (
+        {selectedTab === TABS.LOCATIONS && (
           <BreakContainer
             sx={(theme) => ({
               backgroundColor: theme.palette.background.paperInlay,
@@ -177,19 +164,6 @@ export function WorldSheetPage() {
             })}
           >
             <LocationsSection
-              showHiddenTag
-              openNPCTab={() => setSelectedTab(TABS.NPCS)}
-            />
-          </BreakContainer>
-        )}
-        {selectedTab === TABS.SECTORS && shouldShowSectors && (
-          <BreakContainer
-            sx={(theme) => ({
-              backgroundColor: theme.palette.background.paperInlay,
-              flexGrow: 1,
-            })}
-          >
-            <SectorSection
               showHiddenTag
               openNPCTab={() => setSelectedTab(TABS.NPCS)}
             />

@@ -20,8 +20,7 @@ export interface NPC {
 
   pronouns?: string;
   species?: string | null; // Ironsworn only
-  lastLocationId?: string; // Ironsworn only
-  lastSectorId?: string; // Starforged only
+  lastLocationId?: string;
   characterConnections?: { [characterId: string]: boolean }; // Starforged only
   characterBonds?: { [characterId: string]: boolean };
   characterBondProgress?: { [characterId: string]: number }; // Starforged only
