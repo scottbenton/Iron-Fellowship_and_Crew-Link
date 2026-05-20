@@ -9,28 +9,64 @@ import {
   Typography,
 } from "@mui/material";
 import { SECTOR_HEX_TYPES, hexTypeMap } from "./hexTypes";
-import { useState } from "react";
+import { useState, useRef, forwardRef, useImperativeHandle } from "react";
 import HelpIcon from "@mui/icons-material/Help";
 import { SectorMap as ISectorMap } from "types/Sector.type";
 import { useStore } from "stores/store";
+import { toPng, toSvg } from "html-to-image";
 
 export interface SectorMapProps {
   map: ISectorMap;
   addHex: (row: number, col: number, type?: SECTOR_HEX_TYPES) => void;
 }
 
-export function SectorMap(props: SectorMapProps) {
-  const { map, addHex } = props;
+export interface SectorMapRef {
+  exportToPng: (filename: string) => Promise<void>;
+  exportToSvg: (filename: string) => Promise<void>;
+}
 
-  const theme = useTheme();
+export const SectorMap = forwardRef<SectorMapRef, SectorMapProps>(
+  (props, ref) => {
+    const { map, addHex } = props;
 
-  const setOpenLocationId = useStore(
-    (store) =>
-      store.worlds.currentWorld.currentWorldSectors.locations.setOpenLocationId
-  );
+    const theme = useTheme();
+    const svgContainerRef = useRef<HTMLDivElement>(null);
 
-  const [currentSelectionTool, setCurrentSelectionTool] =
-    useState<SECTOR_HEX_TYPES>();
+    const setOpenLocationId = useStore(
+      (store) =>
+        store.worlds.currentWorld.currentWorldSectors.locations.setOpenLocationId
+    );
+
+    const [currentSelectionTool, setCurrentSelectionTool] =
+      useState<SECTOR_HEX_TYPES>();
+
+    useImperativeHandle(ref, () => ({
+      exportToPng: async (filename: string) => {
+        if (!svgContainerRef.current) return;
+        const dataUrl = await toPng(svgContainerRef.current, {
+          backgroundColor: theme.palette.mode === "light"
+            ? theme.palette.grey[900]
+            : theme.palette.background.default,
+        });
+        const link = document.createElement("a");
+        link.download = `${filename}.png`;
+        link.href = dataUrl;
+        link.click();
+      },
+      exportToSvg: async (filename: string) => {
+        if (!svgContainerRef.current) return;
+        const dataUrl = await toSvg(svgContainerRef.current, {
+          backgroundColor: theme.palette.mode === "light"
+            ? theme.palette.grey[900]
+            : theme.palette.background.default,
+        });
+        const link = document.createElement("a");
+        link.download = `${filename}.svg`;
+        link.href = dataUrl;
+        link.click();
+      },
+    }));
+
 
   const rows = 13;
   const cols = 18;
@@ -70,47 +106,48 @@ export function SectorMap(props: SectorMapProps) {
     }
   };
 
-  return (
-    <Box
-      width={"100%"}
-      overflow={"hidden"}
-      sx={(theme) => ({
-        bgcolor:
-          theme.palette.mode === "light"
-            ? theme.palette.grey[900]
-            : theme.palette.background.default,
-        p: 2,
-      })}
-    >
+    return (
       <Box
+        width={"100%"}
+        overflow={"hidden"}
         sx={(theme) => ({
-          width: "100%",
-          color: "#fff",
-          overflowX: "auto",
-          "&>svg": {
-            display: "flex",
-            marginX: "auto",
-          },
-
-          "& .hexagon": {
-            cursor: "pointer",
-            fill: theme.palette.grey[900],
-            fillOpacity: "100%",
-            color: theme.palette.grey[600],
-            "&:hover": {
-              fill: theme.palette.grey[800],
-              fillOpacity: "100%",
-            },
-          },
-          "& .path-line": {
-            color: theme.palette.grey[300],
-            background: "none",
-            pointerEvents: "none",
-            height: 0,
-            overflow: "visible",
-          },
+          bgcolor:
+            theme.palette.mode === "light"
+              ? theme.palette.grey[900]
+              : theme.palette.background.default,
+          p: 2,
         })}
       >
+        <Box
+          ref={svgContainerRef}
+          sx={(theme) => ({
+            width: "100%",
+            color: "#fff",
+            overflowX: "auto",
+            "&>svg": {
+              display: "flex",
+              marginX: "auto",
+            },
+
+            "& .hexagon": {
+              cursor: "pointer",
+              fill: theme.palette.grey[900],
+              fillOpacity: "100%",
+              color: theme.palette.grey[600],
+              "&:hover": {
+                fill: theme.palette.grey[800],
+                fillOpacity: "100%",
+              },
+            },
+            "& .path-line": {
+              color: theme.palette.grey[300],
+              background: "none",
+              pointerEvents: "none",
+              height: 0,
+              overflow: "visible",
+            },
+          })}
+        >
         <svg
           width={width}
           height={height}
@@ -245,10 +282,13 @@ export function SectorMap(props: SectorMapProps) {
         >
           <HelpIcon color={"info"} sx={{ ml: 2 }} />
         </Tooltip>
+        </Box>
       </Box>
-    </Box>
-  );
-}
+    );
+  }
+);
+
+SectorMap.displayName = "SectorMap";
 
 const getConnections = (
   mapItems: {

@@ -7,8 +7,12 @@ import {
   Tab,
   Tabs,
   Tooltip,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
-import { SectorMap } from "./SectorMap";
+import { SectorMap, SectorMapRef } from "./SectorMap";
 import { useStore } from "stores/store";
 import { ItemHeader } from "../ItemHeader";
 import { SECTOR_TABS } from "stores/world/currentWorld/sector/sector.slice.type";
@@ -23,8 +27,11 @@ import { NotesSectionHeader } from "../NotesSectionHeader";
 import { NPCCard } from "../NPCSection/NPCCard";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DownloadIcon from "@mui/icons-material/Download";
+import ImageIcon from "@mui/icons-material/Image";
+import CodeIcon from "@mui/icons-material/Code";
 import { useConfirm } from "material-ui-confirm";
-import { useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 
 interface OpenSectorProps {
   sectorId: string;
@@ -35,6 +42,10 @@ export function OpenSector(props: OpenSectorProps) {
   const { sectorId, openNPCTab } = props;
   const confirm = useConfirm();
   const { rollOracleTable } = useRoller();
+  const sectorMapRef = useRef<SectorMapRef>(null);
+  const [exportMenuAnchor, setExportMenuAnchor] = useState<null | HTMLElement>(
+    null
+  );
 
   const worldId = useStore(
     (store) => store.worlds.currentWorld.currentWorldId ?? ""
@@ -195,6 +206,24 @@ export function OpenSector(props: OpenSectorProps) {
       .catch(() => {});
   };
 
+  const handleExportClick = (event: React.MouseEvent<HTMLElement>) => {
+    setExportMenuAnchor(event.currentTarget);
+  };
+
+  const handleExportClose = () => {
+    setExportMenuAnchor(null);
+  };
+
+  const handleExportPng = async () => {
+    handleExportClose();
+    await sectorMapRef.current?.exportToPng(sector.name);
+  };
+
+  const handleExportSvg = async () => {
+    handleExportClose();
+    await sectorMapRef.current?.exportToSvg(sector.name);
+  };
+
   const { showGMFields, showGMTips, isGuidedGame } = useWorldPermissions();
   const notes = useStore(
     (store) => store.worlds.currentWorld.currentWorldSectors.openSectorNotes
@@ -248,18 +277,44 @@ export function OpenSector(props: OpenSectorProps) {
         ]}
         joinOracles
         actions={
-          showGMFields && (
-            <Tooltip title={"Delete Sector"}>
-              <IconButton onClick={() => handleSectorDelete()}>
-                <DeleteIcon />
+          <>
+            <Tooltip title={"Export Map"}>
+              <IconButton onClick={handleExportClick}>
+                <DownloadIcon />
               </IconButton>
             </Tooltip>
-          )
+            <Menu
+              anchorEl={exportMenuAnchor}
+              open={Boolean(exportMenuAnchor)}
+              onClose={handleExportClose}
+            >
+              <MenuItem onClick={handleExportPng}>
+                <ListItemIcon>
+                  <ImageIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Export as PNG</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={handleExportSvg}>
+                <ListItemIcon>
+                  <CodeIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Export as SVG</ListItemText>
+              </MenuItem>
+            </Menu>
+            {showGMFields && (
+              <Tooltip title={"Delete Sector"}>
+                <IconButton onClick={() => handleSectorDelete()}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </>
         }
         sx={{ alignItems: "center" }}
         closeItem={() => setOpenSectorId()}
       />
       <SectorMap
+        ref={sectorMapRef}
         map={sector.map}
         addHex={(row, col, type) =>
           handleAddHex(row, col, type).catch(() => {})
