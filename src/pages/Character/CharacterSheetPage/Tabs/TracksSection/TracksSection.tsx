@@ -10,7 +10,11 @@ import { useStore } from "stores/store";
 export function TracksSection() {
   const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
   const isIronsworn = useGameSystem().gameSystem === GAME_SYSTEMS.IRONSWORN;
-  const showDelve = useStore((store) => store.settings.delve.showDelveMoves);
+  const showDelve = useStore((store) =>
+    Boolean(
+      store.rules.moveMaps.moveMap["delve/moves/delve/locate_your_objective"]
+    )
+  );
 
   return (
     <Stack spacing={2} sx={{ pb: 2 }}>

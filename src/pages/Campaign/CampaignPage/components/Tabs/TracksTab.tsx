@@ -14,7 +14,11 @@ import { GAME_SYSTEMS } from "types/GameSystems.type";
 export function TracksTab() {
   const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
   const isIronsworn = useGameSystem().gameSystem === GAME_SYSTEMS.IRONSWORN;
-  const showDelve = useStore((store) => store.settings.delve.showDelveMoves);
+  const showDelve = useStore((store) =>
+    Boolean(
+      store.rules.moveMaps.moveMap["delve/moves/delve/locate_your_objective"]
+    )
+  );
 
   const conditionMeterRules = useStore((store) => store.rules.conditionMeters);
   const conditionMeterValues = useStore(
