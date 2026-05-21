@@ -10,8 +10,6 @@ import { useListenToNotes } from "stores/notes/useListenToNotes";
 import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
 import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
 import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
-import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
-import { useListenToSectorLocations } from "stores/world/currentWorld/sector/sectorLocations/useListenToSectorLocations";
 import { useListenToSharedAssets } from "stores/campaign/currentCampaign/sharedAssets/useListenToSharedAssets";
 import { useListenToLogs } from "stores/gameLog/useListenToLogs";
 import { useListenToHomebrewContent } from "stores/homebrew/useListenToHomebrewContent";
@@ -43,8 +41,6 @@ export function useSyncStore() {
   useListenToLocations();
   useListenToNPCs();
   useListenToLoreDocuments();
-  useListenToSectors();
-  useListenToSectorLocations();
 
   useListenToNotes();
 

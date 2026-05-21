@@ -46,7 +46,6 @@ export function LocationNPCs(props: LocationNPCProps) {
           <NPCCard
             npc={npcs[npcId]}
             locations={locations}
-            sectors={{}}
             openNPC={() => {
               openNPC(npcId);
               openNPCTab();
