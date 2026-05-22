@@ -277,6 +277,7 @@ export function LocationMap(props: LocationMapProps) {
           <MapOverflowOptionsMenu
             locationId={locationId}
             hasBackgroundImage={!!backgroundImageUrl}
+            backgroundImageUrl={backgroundImageUrl}
             mapStrokeColor={mapStrokeColor}
             mapBackgroundImageFit={mapBackgroundFit}
             mapContainerRef={mapContainerRef}

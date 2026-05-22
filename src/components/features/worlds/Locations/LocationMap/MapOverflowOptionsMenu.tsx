@@ -67,6 +67,7 @@ const SVG_ATTRIBUTES_TO_COPY = [
 export interface MapOverflowOptionsMenuProps {
   locationId: string;
   hasBackgroundImage: boolean;
+  backgroundImageUrl?: string;
   mapStrokeColor: MapStrokeColors;
   mapBackgroundImageFit: MapBackgroundImageFit;
   mapContainerRef: RefObject<HTMLDivElement>;
@@ -77,6 +78,7 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
   const {
     locationId,
     hasBackgroundImage,
+    backgroundImageUrl,
     mapStrokeColor,
     mapBackgroundImageFit,
     mapContainerRef,
@@ -119,7 +121,11 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
       const svg = mapContainerRef.current.querySelector("svg");
       if (!svg) throw new Error("Map SVG not found");
 
-      const dataUrl = await exportMapImage(svg, mapContainerRef.current);
+      const dataUrl = await exportMapImage(
+        svg,
+        mapContainerRef.current,
+        backgroundImageUrl
+      );
       const link = document.createElement("a");
       link.download = `${getExportFileName()}.png`;
       link.href = dataUrl;
@@ -243,7 +249,11 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
   );
 }
 
-async function exportMapImage(svg: SVGSVGElement, container: HTMLDivElement) {
+async function exportMapImage(
+  svg: SVGSVGElement,
+  container: HTMLDivElement,
+  backgroundImageUrl: string | undefined
+) {
   if ("fonts" in document) {
     await document.fonts.ready;
   }
@@ -251,6 +261,50 @@ async function exportMapImage(svg: SVGSVGElement, container: HTMLDivElement) {
   const width = Number(svg.getAttribute("width") ?? svg.clientWidth);
   const height = Number(svg.getAttribute("height") ?? svg.clientHeight);
 
+  const canvas = document.createElement("canvas");
+  canvas.width = width * MAP_EXPORT_SCALE;
+  canvas.height = height * MAP_EXPORT_SCALE;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas context not available");
+
+  ctx.scale(MAP_EXPORT_SCALE, MAP_EXPORT_SCALE);
+
+  // Pass 1: background color
+  ctx.fillStyle = findBackgroundColor(container);
+  ctx.fillRect(0, 0, width, height);
+
+  // Pass 2: background image drawn directly to canvas (avoids embedding it
+  // in the serialized SVG, which would require CORS via fetch/FileReader).
+  // crossOrigin="anonymous" still requires CORS headers from the server —
+  // if the Firebase Storage bucket doesn't have CORS configured this will
+  // silently be skipped. Apply `gsutil cors set cors.json gs://YOUR_BUCKET`
+  // to enable it.
+  if (backgroundImageUrl) {
+    const bgImage = await tryLoadCrossOriginImage(backgroundImageUrl);
+    if (bgImage) {
+      drawImageCovered(ctx, bgImage, 0, 0, width, height);
+    }
+  }
+
+  // Pass 3: hexagon SVG without any external image references so the canvas
+  // stays untainted and toDataURL() can read it back.
+  const hexSvgUrl = await buildHexSvgBlobUrl(svg, width, height);
+  try {
+    const hexImage = await loadImage(hexSvgUrl);
+    ctx.drawImage(hexImage, 0, 0, width, height);
+  } finally {
+    URL.revokeObjectURL(hexSvgUrl);
+  }
+
+  return canvas.toDataURL("image/png");
+}
+
+async function buildHexSvgBlobUrl(
+  svg: SVGSVGElement,
+  width: number,
+  height: number
+) {
   const clonedSvg = svg.cloneNode(true) as SVGSVGElement;
 
   clonedSvg.setAttribute("xmlns", SVG_NAMESPACE);
@@ -261,80 +315,47 @@ async function exportMapImage(svg: SVGSVGElement, container: HTMLDivElement) {
 
   copyComputedStyles(svg, clonedSvg);
 
-  // Fetch all external images and embed as data URLs so the serialized SVG
-  // is self-contained and avoids CORS restrictions at canvas render time.
-  await inlineImages(clonedSvg);
+  // Strip all external image references — background image is handled
+  // separately in Pass 2, and any hex location images face the same CORS
+  // restriction. Keeping them would taint the canvas.
+  clonedSvg.querySelectorAll("image").forEach((node) => node.remove());
 
-  const backgroundColor = findBackgroundColor(container);
-  const backgroundRect = document.createElementNS(SVG_NAMESPACE, "rect");
-  backgroundRect.setAttribute("x", "0");
-  backgroundRect.setAttribute("y", "0");
-  backgroundRect.setAttribute("width", `${width}`);
-  backgroundRect.setAttribute("height", `${height}`);
-  backgroundRect.setAttribute("fill", backgroundColor);
-  clonedSvg.insertBefore(backgroundRect, clonedSvg.firstChild);
-
-  const svgBlob = new Blob([new XMLSerializer().serializeToString(clonedSvg)], {
+  const blob = new Blob([new XMLSerializer().serializeToString(clonedSvg)], {
     type: "image/svg+xml;charset=utf-8",
   });
-  const objectUrl = URL.createObjectURL(svgBlob);
-
-  try {
-    const canvas = document.createElement("canvas");
-    canvas.width = width * MAP_EXPORT_SCALE;
-    canvas.height = height * MAP_EXPORT_SCALE;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("Canvas context not available");
-
-    ctx.scale(MAP_EXPORT_SCALE, MAP_EXPORT_SCALE);
-    const image = await loadImage(objectUrl);
-    ctx.drawImage(image, 0, 0, width, height);
-
-    return canvas.toDataURL("image/png");
-  } finally {
-    URL.revokeObjectURL(objectUrl);
-  }
+  return URL.createObjectURL(blob);
 }
 
-async function inlineImages(svg: SVGSVGElement) {
-  const imageNodes = Array.from(svg.querySelectorAll("image"));
-
-  await Promise.all(
-    imageNodes.map(async (imageNode) => {
-      const href =
-        imageNode.getAttribute("href") ??
-        imageNode.getAttributeNS(XLINK_NAMESPACE, "href");
-
-      if (!href || href.startsWith("data:") || href.startsWith("blob:")) {
-        return;
-      }
-
-      try {
-        const dataUrl = await fetchAsDataUrl(href);
-        imageNode.setAttribute("href", dataUrl);
-        imageNode.setAttributeNS(XLINK_NAMESPACE, "xlink:href", dataUrl);
-      } catch {
-        // If we can't inline the image, remove it rather than leaving a
-        // broken external reference that would taint the canvas.
-        imageNode.remove();
-      }
-    })
-  );
-}
-
-async function fetchAsDataUrl(url: string): Promise<string> {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch image (${response.status})`);
-  }
-  const blob = await response.blob();
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
+function tryLoadCrossOriginImage(
+  url: string
+): Promise<HTMLImageElement | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = url;
   });
+}
+
+function drawImageCovered(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) {
+  const scale = Math.max(width / img.naturalWidth, height / img.naturalHeight);
+  const drawWidth = img.naturalWidth * scale;
+  const drawHeight = img.naturalHeight * scale;
+  ctx.drawImage(
+    img,
+    x + (width - drawWidth) / 2,
+    y + (height - drawHeight) / 2,
+    drawWidth,
+    drawHeight
+  );
 }
 
 function copyComputedStyles(
