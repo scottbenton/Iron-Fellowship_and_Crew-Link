@@ -8,6 +8,7 @@ import { useSnackbar } from "providers/SnackbarProvider";
 import { useConfirm } from "material-ui-confirm";
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_LABEL } from "lib/storage.lib";
 
+const MAP_EXPORT_SCALE = 4;
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
 const STYLE_PROPERTIES_TO_COPY = [
@@ -105,7 +106,7 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
   const getExportFileName = () =>
     locationName?.trim() ? locationName.trim() : `location-map-${locationId}`;
 
-  const handleMapExport = async (scale: 1 | 2 | 4) => {
+  const handleMapExport = async () => {
     setIsMenuOpen(false);
 
     if (!mapContainerRef.current) {
@@ -119,13 +120,14 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
         throw new Error("Map SVG not found");
       }
 
-      const dataUrl = await exportMapImage(svg, mapContainerRef.current, scale);
+      const dataUrl = await exportMapImage(svg, mapContainerRef.current);
       const link = document.createElement("a");
-      link.download = `${getExportFileName()}${scale === 1 ? "" : `@${scale}x`}.png`;
+      link.download = `${getExportFileName()}.png`;
       link.href = dataUrl;
       link.click();
-    } catch {
-      error(`Failed to export location map as PNG (${scale}x).`);
+    } catch (exportError) {
+      console.error("Failed to export location map.", exportError);
+      error("Failed to download map. Check the console for the export error.");
     }
   };
 
@@ -169,24 +171,10 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
       >
         <MenuItem
           onClick={() => {
-            handleMapExport(1).catch(() => {});
+            handleMapExport().catch(() => {});
           }}
         >
-          Export PNG (1x)
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleMapExport(2).catch(() => {});
-          }}
-        >
-          Export PNG (2x)
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleMapExport(4).catch(() => {});
-          }}
-        >
-          Export PNG (4x)
+          Download Map
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -244,7 +232,6 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
         ref={mapInputRef}
         hidden
         accept="image/*"
-        multiple
         type="file"
         onChange={(evt) => {
           const file = evt.target.files?.[0];
@@ -259,29 +246,37 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
 
 async function exportMapImage(
   svg: SVGSVGElement,
-  container: HTMLDivElement,
-  scale: 1 | 2 | 4
+  container: HTMLDivElement
 ) {
   if ("fonts" in document) {
     await document.fonts.ready;
   }
 
-  const preparedSvg = await cloneSvgForExport(svg, container);
+  const { width, height } = getSvgDimensions(svg);
+  const preparedSvg = cloneSvgForExport(svg, container, {
+    includeImages: false,
+    width,
+    height,
+  });
   const serializedSvg = new XMLSerializer().serializeToString(preparedSvg);
   const svgBlob = new Blob([serializedSvg], {
     type: "image/svg+xml;charset=utf-8",
   });
 
-  return renderSvgBlobToPng(svgBlob, preparedSvg, scale);
+  return renderSvgBlobToPng(svgBlob, svg, width, height);
 }
 
-async function cloneSvgForExport(
+function cloneSvgForExport(
   svg: SVGSVGElement,
-  container: HTMLDivElement
+  container: HTMLDivElement,
+  options: {
+    includeImages: boolean;
+    width: number;
+    height: number;
+  }
 ) {
   const clonedSvg = svg.cloneNode(true) as SVGSVGElement;
-  const width = Number(svg.getAttribute("width") ?? svg.clientWidth);
-  const height = Number(svg.getAttribute("height") ?? svg.clientHeight);
+  const { includeImages, width, height } = options;
   const backgroundColor = findBackgroundColor(container);
 
   clonedSvg.setAttribute("xmlns", SVG_NAMESPACE);
@@ -291,7 +286,12 @@ async function cloneSvgForExport(
   clonedSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
   copyComputedStyles(svg, clonedSvg);
-  await inlineSvgImages(svg, clonedSvg);
+
+  if (!includeImages) {
+    clonedSvg
+      .querySelectorAll("image")
+      .forEach((imageNode) => imageNode.remove());
+  }
 
   const backgroundRect = document.createElementNS(SVG_NAMESPACE, "rect");
   backgroundRect.setAttribute("x", "0");
@@ -352,72 +352,16 @@ function applyComputedStyle(sourceNode: Element, targetNode: Element) {
   });
 }
 
-async function inlineSvgImages(
-  sourceSvg: SVGSVGElement,
-  targetSvg: SVGSVGElement
-) {
-  const sourceImages = sourceSvg.querySelectorAll("image");
-  const targetImages = targetSvg.querySelectorAll("image");
-
-  await Promise.all(
-    Array.from(sourceImages).map(async (sourceImage, index) => {
-      const targetImage = targetImages[index];
-      if (!targetImage) {
-        return;
-      }
-
-      const href =
-        sourceImage.getAttribute("href") ??
-        sourceImage.getAttributeNS(XLINK_NAMESPACE, "href");
-
-      if (!href || href.startsWith("data:")) {
-        return;
-      }
-
-      const dataUrl = await convertImageToDataUrl(href);
-      targetImage.setAttribute("href", dataUrl);
-      targetImage.setAttributeNS(XLINK_NAMESPACE, "xlink:href", dataUrl);
-    })
-  );
-}
-
-async function convertImageToDataUrl(url: string) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error("Failed to fetch image data");
-  }
-
-  const imageBlob = await response.blob();
-
-  return convertBlobToDataUrl(imageBlob);
-}
-
-function convertBlobToDataUrl(blob: Blob) {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (typeof reader.result === "string") {
-        resolve(reader.result);
-      } else {
-        reject(new Error("Failed to read image data"));
-      }
-    };
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(blob);
-  });
-}
-
 async function renderSvgBlobToPng(
   svgBlob: Blob,
-  svg: SVGSVGElement,
-  scale: 1 | 2 | 4
+  sourceSvg: SVGSVGElement,
+  width: number,
+  height: number
 ) {
+  const scale = MAP_EXPORT_SCALE;
   const objectUrl = URL.createObjectURL(svgBlob);
 
   try {
-    const image = await loadImage(objectUrl);
-    const width = Number(svg.getAttribute("width"));
-    const height = Number(svg.getAttribute("height"));
     const canvas = document.createElement("canvas");
     canvas.width = width * scale;
     canvas.height = height * scale;
@@ -428,6 +372,9 @@ async function renderSvgBlobToPng(
     }
 
     context.scale(scale, scale);
+    await drawSvgImagesToCanvas(sourceSvg, context);
+
+    const image = await loadImage(objectUrl);
     context.drawImage(image, 0, 0, width, height);
     return canvas.toDataURL("image/png");
   } finally {
@@ -442,6 +389,92 @@ function loadImage(src: string) {
     image.onerror = () => reject(new Error("Failed to load export image"));
     image.src = src;
   });
+}
+
+function getSvgDimensions(svg: SVGSVGElement) {
+  return {
+    width: Number(svg.getAttribute("width") ?? svg.clientWidth),
+    height: Number(svg.getAttribute("height") ?? svg.clientHeight),
+  };
+}
+
+async function drawSvgImagesToCanvas(
+  sourceSvg: SVGSVGElement,
+  context: CanvasRenderingContext2D
+) {
+  const sourceImages = Array.from(sourceSvg.querySelectorAll("image"));
+
+  for (const sourceImage of sourceImages) {
+    const href =
+      sourceImage.getAttribute("href") ??
+      sourceImage.getAttributeNS(XLINK_NAMESPACE, "href");
+
+    if (!href) {
+      continue;
+    }
+
+    const image = await loadRenderableImage(href);
+    drawSvgImageToCanvas(context, sourceImage, image);
+  }
+}
+
+async function loadRenderableImage(src: string) {
+  if (src.startsWith("data:")) {
+    return loadImage(src);
+  }
+
+  const response = await fetch(src);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch image data (${response.status}).`);
+  }
+
+  const imageBlob = await response.blob();
+  const objectUrl = URL.createObjectURL(imageBlob);
+
+  try {
+    return await loadImage(objectUrl);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+function drawSvgImageToCanvas(
+  context: CanvasRenderingContext2D,
+  sourceImage: SVGImageElement,
+  image: HTMLImageElement
+) {
+  const x = Number(sourceImage.getAttribute("x") ?? 0);
+  const y = Number(sourceImage.getAttribute("y") ?? 0);
+  const width = Number(sourceImage.getAttribute("width") ?? image.naturalWidth);
+  const height = Number(
+    sourceImage.getAttribute("height") ?? image.naturalHeight
+  );
+  const preserveAspectRatio =
+    sourceImage.getAttribute("preserveAspectRatio") ?? "xMidYMid meet";
+
+  if (preserveAspectRatio === "none") {
+    context.drawImage(image, x, y, width, height);
+    return;
+  }
+
+  const imageAspectRatio = image.naturalWidth / image.naturalHeight;
+  const targetAspectRatio = width / height;
+  const shouldSlice = preserveAspectRatio.includes("slice");
+  const scale =
+    shouldSlice
+      ? Math.max(width / image.naturalWidth, height / image.naturalHeight)
+      : Math.min(width / image.naturalWidth, height / image.naturalHeight);
+
+  const drawWidth =
+    imageAspectRatio > targetAspectRatio && !shouldSlice
+      ? width
+      : image.naturalWidth * scale;
+  const drawHeight = image.naturalHeight * scale;
+
+  const drawX = x + (width - drawWidth) / 2;
+  const drawY = y + (height - drawHeight) / 2;
+
+  context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
 }
 
 function findBackgroundColor(element: HTMLElement) {
