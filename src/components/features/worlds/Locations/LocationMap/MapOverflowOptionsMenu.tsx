@@ -105,7 +105,7 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
   const getExportFileName = () =>
     locationName?.trim() ? locationName.trim() : `location-map-${locationId}`;
 
-  const handleMapExport = async (format: "png" | "svg") => {
+  const handleMapExport = async (scale: 1 | 2 | 4) => {
     setIsMenuOpen(false);
 
     if (!mapContainerRef.current) {
@@ -119,13 +119,13 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
         throw new Error("Map SVG not found");
       }
 
-      const dataUrl = await exportMapImage(svg, mapContainerRef.current, format);
+      const dataUrl = await exportMapImage(svg, mapContainerRef.current, scale);
       const link = document.createElement("a");
-      link.download = `${getExportFileName()}.${format}`;
+      link.download = `${getExportFileName()}${scale === 1 ? "" : `@${scale}x`}.png`;
       link.href = dataUrl;
       link.click();
     } catch {
-      error(`Failed to export location map as ${format.toUpperCase()}.`);
+      error(`Failed to export location map as PNG (${scale}x).`);
     }
   };
 
@@ -169,17 +169,24 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
       >
         <MenuItem
           onClick={() => {
-            handleMapExport("png").catch(() => {});
+            handleMapExport(1).catch(() => {});
           }}
         >
-          Export as PNG
+          Export PNG (1x)
         </MenuItem>
         <MenuItem
           onClick={() => {
-            handleMapExport("svg").catch(() => {});
+            handleMapExport(2).catch(() => {});
           }}
         >
-          Export as SVG
+          Export PNG (2x)
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleMapExport(4).catch(() => {});
+          }}
+        >
+          Export PNG (4x)
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -253,7 +260,7 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
 async function exportMapImage(
   svg: SVGSVGElement,
   container: HTMLDivElement,
-  format: "png" | "svg"
+  scale: 1 | 2 | 4
 ) {
   if ("fonts" in document) {
     await document.fonts.ready;
@@ -265,11 +272,7 @@ async function exportMapImage(
     type: "image/svg+xml;charset=utf-8",
   });
 
-  if (format === "svg") {
-    return convertBlobToDataUrl(svgBlob);
-  }
-
-  return renderSvgBlobToPng(svgBlob, preparedSvg);
+  return renderSvgBlobToPng(svgBlob, preparedSvg, scale);
 }
 
 async function cloneSvgForExport(
@@ -404,7 +407,11 @@ function convertBlobToDataUrl(blob: Blob) {
   });
 }
 
-async function renderSvgBlobToPng(svgBlob: Blob, svg: SVGSVGElement) {
+async function renderSvgBlobToPng(
+  svgBlob: Blob,
+  svg: SVGSVGElement,
+  scale: 1 | 2 | 4
+) {
   const objectUrl = URL.createObjectURL(svgBlob);
 
   try {
@@ -412,14 +419,15 @@ async function renderSvgBlobToPng(svgBlob: Blob, svg: SVGSVGElement) {
     const width = Number(svg.getAttribute("width"));
     const height = Number(svg.getAttribute("height"));
     const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width * scale;
+    canvas.height = height * scale;
 
     const context = canvas.getContext("2d");
     if (!context) {
       throw new Error("Canvas context not available");
     }
 
+    context.scale(scale, scale);
     context.drawImage(image, 0, 0, width, height);
     return canvas.toDataURL("image/png");
   } finally {
