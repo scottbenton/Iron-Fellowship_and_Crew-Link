@@ -29,6 +29,12 @@ import { locationConfigs } from "config/locations.config";
 import { useRoller } from "stores/appState/useRoller";
 import { useImageDimensions } from "./useImageDimensions";
 import { MapOverflowOptionsMenu } from "./MapOverflowOptionsMenu";
+import {
+  DEFAULT_MAP_HEX_SIZE,
+  MAX_MAP_DIMENSIONS_PX,
+  getColumnCountForRow,
+  getMapLayout,
+} from "./mapDimensions";
 
 export interface LocationMapProps {
   locationId: string;
@@ -41,13 +47,13 @@ export function LocationMap(props: LocationMapProps) {
   const locationMap = useStore(
     (store) => store.worlds.currentWorld.currentWorldLocations.locationMap
   );
+  const currentLocation = locationMap[locationId];
 
   const mapStrokeColor = backgroundImageUrl
-    ? locationMap[locationId]?.mapStrokeColor ?? MapStrokeColors.Dark
+    ? currentLocation?.mapStrokeColor ?? MapStrokeColors.Dark
     : MapStrokeColors.Light;
   const mapBackgroundFit =
-    locationMap[locationId]?.mapBackgroundImageFit ??
-    MapBackgroundImageFit.Contain;
+    currentLocation?.mapBackgroundImageFit ?? MapBackgroundImageFit.Contain;
 
   const backgroundImageDimensions = useImageDimensions(
     backgroundImageUrl && mapBackgroundFit === MapBackgroundImageFit.Contain
@@ -55,20 +61,21 @@ export function LocationMap(props: LocationMapProps) {
       : undefined
   );
 
-  const s = 20;
-  const maxMapDimensions = 675;
+  const hexSize = currentLocation?.mapHexSize ?? DEFAULT_MAP_HEX_SIZE;
 
   const { rows, cols, width, height, firstColOffset, firstRowOffset } =
-    getRowAndColumnCount(
-      s,
-      maxMapDimensions,
-      maxMapDimensions,
-      backgroundImageDimensions
-    );
+    getMapLayout({
+      hexSize,
+      maxWidth: MAX_MAP_DIMENSIONS_PX,
+      maxHeight: MAX_MAP_DIMENSIONS_PX,
+      imageDimensions: backgroundImageDimensions,
+      mapRows: currentLocation?.mapRows,
+      mapCols: currentLocation?.mapCols,
+    });
 
-  const verticalSpacing: number = 1.5 * s; // Updated
-  const horizontalSpacing: number = s * Math.sqrt(3); // Updated
-  const offsetX: number = (s * Math.sqrt(3)) / 2; // New offset for vertical positioning
+  const verticalSpacing: number = 1.5 * hexSize;
+  const horizontalSpacing: number = hexSize * Math.sqrt(3);
+  const offsetX: number = (hexSize * Math.sqrt(3)) / 2;
 
   const settingId = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]: "ironlands",
@@ -194,7 +201,7 @@ export function LocationMap(props: LocationMapProps) {
       const color = mapTool.color;
       const updates: Record<string, MapEntryBackgroundColors> = {};
       for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols - (row % 2 === 1 ? 1 : 0); col++) {
+        for (let col = 0; col < getColumnCountForRow(cols, row); col++) {
           updates[`map.${row}.${col}.background.color`] = color;
         }
       }
@@ -203,7 +210,7 @@ export function LocationMap(props: LocationMapProps) {
     } else if (mapTool?.type === MapTools.BackgroundEraser) {
       const updates: Record<string, null> = {};
       for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols - (row % 2 === 1 ? 1 : 0); col++) {
+        for (let col = 0; col < getColumnCountForRow(cols, row); col++) {
           updates[`map.${row}.${col}.background`] = null;
         }
       }
@@ -310,15 +317,16 @@ export function LocationMap(props: LocationMapProps) {
             ></image>
           )}
           {new Array(rows).fill(0).map((_, row) => {
-            return new Array(cols - (row % 2 === 1 ? 1 : 0))
+            return new Array(getColumnCountForRow(cols, row))
               .fill(0)
               .map((_, col) => {
                 const x: number =
                   col * horizontalSpacing +
                   (row % 2 === 1 ? offsetX : 0) +
-                  s +
-                  firstColOffset; // Offset every other row
-                const y: number = row * verticalSpacing + s + firstRowOffset; // Start with one hexagon's height
+                  hexSize +
+                  firstColOffset;
+                const y: number =
+                  row * verticalSpacing + hexSize + firstRowOffset;
 
                 const mapEntry = map[row]?.[col];
 
@@ -346,7 +354,7 @@ export function LocationMap(props: LocationMapProps) {
                     key={`${x}-${y}`}
                     x={x}
                     y={y}
-                    size={s}
+                    size={hexSize}
                     locationMap={locationMap}
                     mapEntry={mapEntry ?? undefined}
                     pathConnections={pathConnections}
@@ -381,15 +389,16 @@ export function LocationMap(props: LocationMapProps) {
               });
           })}
           {new Array(rows).fill(0).map((r, row) => {
-            return new Array(cols - (row % 2 === 1 ? 1 : 0))
+            return new Array(getColumnCountForRow(cols, row))
               .fill(0)
               .map((c, col) => {
                 const x: number =
                   col * horizontalSpacing +
                   (row % 2 === 1 ? offsetX : 0) +
-                  s +
-                  firstColOffset; // Offset every other row
-                const y: number = row * verticalSpacing + s + firstRowOffset; // Start with one hexagon's height
+                  hexSize +
+                  firstColOffset;
+                const y: number =
+                  row * verticalSpacing + hexSize + firstRowOffset;
 
                 let locationIds: string[] = [];
                 const hex = map[row]?.[col];
@@ -415,9 +424,9 @@ export function LocationMap(props: LocationMapProps) {
                       <text
                         key={`${x}-${y}`}
                         x={x}
-                        y={y - (s * 3) / 4} // Position the label below the hexagon
-                        fontSize={(s * 3) / 4} // Adjust font size based on hexagon size
-                        textAnchor="middle" // Center the text
+                        y={y - (hexSize * 3) / 4}
+                        fontSize={(hexSize * 3) / 4}
+                        textAnchor="middle"
                         fill={"#fff"}
                         style={{
                           background: "none",
@@ -426,11 +435,11 @@ export function LocationMap(props: LocationMapProps) {
                           paintOrder: "stroke",
                           stroke: "#000000",
                           strokeOpacity: backgroundImageUrl ? "100%" : "60%",
-                          strokeWidth: s / 12,
+                          strokeWidth: hexSize / 12,
                           strokeLinecap: "butt",
                           strokeLinejoin: "miter",
                         }}
-                        strokeWidth={s * 4}
+                        strokeWidth={hexSize * 4}
                         color={"#000"}
                       >
                         {name}
@@ -535,77 +544,4 @@ const getConnections = (
   }
 
   return connections;
-};
-
-function getRowAndColumnCount(
-  hexSize: number,
-  maxWidth: number,
-  maxHeight: number,
-  imageDimensions: { width: number; height: number } | null
-): {
-  rows: number;
-  cols: number;
-  width: number;
-  height: number;
-  firstRowOffset: number;
-  firstColOffset: number;
-} {
-  let rows: number = 13;
-  let cols: number = 18;
-  let width: number =
-    cols * hexSize * Math.sqrt(3) + (hexSize * Math.sqrt(3)) / 2 - cols + 6; // Updated
-  let height: number = rows * 1.5 * hexSize + hexSize / 2 + 1; // Updated
-  let firstRowOffset = 0;
-  let firstColOffset = 0;
-
-  if (imageDimensions) {
-    // Calculate the number of rows and columns based on the image dimensions, scaled to the max width and height, and based on the hex size
-    const imageWidth = imageDimensions.width;
-    const imageHeight = imageDimensions.height;
-
-    const imageAspectRatio = imageWidth / imageHeight;
-    const maxAspectRatio = maxWidth / maxHeight;
-
-    if (imageAspectRatio > maxAspectRatio) {
-      // Image is wider than the max dimensions
-      cols = calculateMaxColumns(maxWidth, hexSize);
-      rows = Math.ceil((imageHeight / imageWidth) * cols);
-      width = maxWidth;
-      height = (maxWidth / imageWidth) * imageHeight;
-    } else {
-      // Image is taller than the max dimensions
-      rows = Math.floor(maxHeight / (1.5 * hexSize));
-      width = (maxHeight / imageHeight) * imageWidth;
-      cols = calculateMaxColumns(width, hexSize);
-      height = maxHeight;
-    }
-
-    // Calculate the first row and column offset
-    firstRowOffset = (height - calculateHeightFromRows(rows, hexSize)) / 2;
-    firstColOffset = (width - calculateWidthFromColumns(cols, hexSize)) / 2;
-  }
-
-  return {
-    rows,
-    cols,
-    width,
-    height,
-    firstRowOffset,
-    firstColOffset,
-  };
-}
-
-const calculateMaxColumns = (width: number, hexSize: number): number => {
-  const sqrt3 = Math.sqrt(3);
-  const cols = (width - (hexSize * sqrt3) / 2 - 6) / (hexSize * sqrt3 - 1);
-  return Math.floor(cols); // Use Math.floor to ensure we don't go over the width with partial columns
-};
-
-const calculateWidthFromColumns = (cols: number, hexSize: number): number => {
-  return (
-    cols * hexSize * Math.sqrt(3) + (hexSize * Math.sqrt(3)) / 2 - cols + 6
-  );
-};
-const calculateHeightFromRows = (rows: number, hexSize: number): number => {
-  return rows * 1.5 * hexSize + hexSize / 2 + 1;
 };
