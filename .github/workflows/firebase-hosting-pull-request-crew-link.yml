@@ -27,7 +27,11 @@ jobs:
       VITE_FAVICON_PATH: "/theme/eidolon.svg"
       VITE_OPENGRAPH_PATH: "/assets/starforged/opengraph-default.png"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
       - run: npm ci
       - name: Run tests
         run: npm test
