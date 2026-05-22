@@ -6,10 +6,6 @@ export const defaultSettings: SettingsSliceData = {
   customStats: [],
   customTracks: [],
 
-  delve: {
-    showDelveOracles: true,
-  },
-
   hiddenCustomMoveIds: [],
   hiddenCustomOracleIds: [],
 

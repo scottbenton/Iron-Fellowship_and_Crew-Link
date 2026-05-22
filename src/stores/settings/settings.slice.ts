@@ -72,9 +72,6 @@ export const createSettingsSlice: CreateSliceType<SettingsSlice> = (
             store.settings.hiddenCustomMoveIds = settings.hiddenCustomMoveIds;
             store.settings.hiddenCustomOracleIds =
               settings.hiddenCustomOraclesIds;
-            store.settings.delve = {
-              showDelveOracles: !settings.hideDelveOracles,
-            };
 
             store.settings.customStats = settings.customStats;
             store.settings.customTracks = Object.values(

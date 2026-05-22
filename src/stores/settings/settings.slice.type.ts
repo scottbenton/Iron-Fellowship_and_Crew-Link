@@ -13,9 +13,6 @@ export interface SettingsSliceData {
   customOracles: {
     [uid: string]: StoredOracle[];
   };
-  delve: {
-    showDelveOracles: boolean;
-  };
 
   hiddenCustomMoveIds: string[];
   hiddenCustomOracleIds: string[];
