@@ -1,4 +1,12 @@
-import {Box, Button, ButtonBase, Chip, IconButton, Link, Typography} from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonBase,
+  Chip,
+  IconButton,
+  Link,
+  Typography,
+} from "@mui/material";
 import { useEffect, useId, useState } from "react";
 import { ProgressTrackTick } from "./ProgressTrackTick";
 import MinusIcon from "@mui/icons-material/Remove";
@@ -18,24 +26,25 @@ import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { useStore } from "stores/store";
 import { DebouncedClockCircle } from "../charactersAndCampaigns/Clocks/DebouncedClockCircle";
 
-const trackMoveIdSystemValues: GameSystemChooser<{
+export const trackMoveIdSystemValues: GameSystemChooser<{
   [key in ProgressTracks | TrackTypes.SceneChallenge]: string;
 }> = {
   [GAME_SYSTEMS.IRONSWORN]: {
-    [TrackTypes.Vow]: "classic/moves/quest/fulfill_your_vow",
-    [TrackTypes.Journey]: "classic/moves/adventure/reach_your_destination",
-    [TrackTypes.Fray]: "classic/moves/combat/end_the_fight",
-    [TrackTypes.DelveSite]: "delve/moves/delve/locate_your_objective",
+    [TrackTypes.Vow]: "move:classic/quest/fulfill_your_vow",
+    [TrackTypes.Journey]: "move:classic/adventure/reach_your_destination",
+    [TrackTypes.Fray]: "move:classic/combat/end_the_fight",
+    [TrackTypes.DelveSite]: "move:delve/delve/locate_your_objective",
     [TrackTypes.SceneChallenge]: "",
     [TrackTypes.BondProgress]: "",
   },
   [GAME_SYSTEMS.STARFORGED]: {
-    [TrackTypes.Vow]: "starforged/moves/quest/fulfill_your_vow",
-    [TrackTypes.Journey]: "starforged/moves/exploration/finish_an_expedition",
-    [TrackTypes.Fray]: "starforged/moves/combat/take_decisive_action",
+    [TrackTypes.Vow]: "move:starforged/quest/fulfill_your_vow",
+    [TrackTypes.Journey]: "move:starforged/exploration/finish_an_expedition",
+    [TrackTypes.Fray]: "move:starforged/combat/take_decisive_action",
     [TrackTypes.DelveSite]: "",
-    [TrackTypes.BondProgress]: "starforged/moves/connection/forge_a_bond",
-    [TrackTypes.SceneChallenge]: "starforged/moves/scene_challenge/finish_the_scene",
+    [TrackTypes.BondProgress]: "move:starforged/connection/forge_a_bond",
+    [TrackTypes.SceneChallenge]:
+      "move:starforged/scene_challenge/finish_the_scene",
   },
 };
 
@@ -177,7 +186,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         label || "",
         alwaysRollMax ? 10 : Math.min(Math.floor(value / 4), 10),
         move?._id ?? "",
-        trackType,
+        trackType
       );
     }
   };
@@ -279,7 +288,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
               <DieIcon />
             </IconButton>
           )}
-          <Box display={"flex"} >
+          <Box display={"flex"}>
             {onValueChange && (
               <ButtonBase
                 aria-label={"Decrement Track"}

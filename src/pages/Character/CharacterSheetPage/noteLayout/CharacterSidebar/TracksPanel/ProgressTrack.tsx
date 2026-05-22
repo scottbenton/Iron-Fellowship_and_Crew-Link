@@ -12,32 +12,11 @@ import CompleteIcon from "@mui/icons-material/Check";
 import DieIcon from "@mui/icons-material/Casino";
 import { useConfirm } from "material-ui-confirm";
 import { useRoller } from "stores/appState/useRoller";
-import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { useStore } from "stores/store";
 import { ProgressTrackTick } from "components/features/ProgressTrack/ProgressTrackTick";
 import { DebouncedClockCircle } from "components/features/charactersAndCampaigns/Clocks/DebouncedClockCircle";
-
-const trackMoveIdSystemValues: GameSystemChooser<{
-  [key in ProgressTracks | TrackTypes.SceneChallenge]: string;
-}> = {
-  [GAME_SYSTEMS.IRONSWORN]: {
-    [TrackTypes.Vow]: "classic/moves/quest/fulfill_your_vow",
-    [TrackTypes.Journey]: "classic/moves/adventure/reach_your_destination",
-    [TrackTypes.Fray]: "classic/moves/combat/end_the_fight",
-    [TrackTypes.DelveSite]: "delve/moves/delve/locate_your_objective",
-    [TrackTypes.SceneChallenge]: "",
-    [TrackTypes.BondProgress]: "",
-  },
-  [GAME_SYSTEMS.STARFORGED]: {
-    [TrackTypes.Vow]: "starforged/moves/quest/fulfill_your_vow",
-    [TrackTypes.Journey]: "starforged/moves/exploration/finish_an_expedition",
-    [TrackTypes.Fray]: "starforged/moves/combat/take_decisive_action",
-    [TrackTypes.DelveSite]: "",
-    [TrackTypes.BondProgress]: "starforged/moves/connection/forge_a_bond",
-    [TrackTypes.SceneChallenge]: "starforged/moves/scene_challenge/finish_the_scene",
-  },
-};
+import { trackMoveIdSystemValues } from "components/features/ProgressTrack";
 
 export interface BaseProgressTrackProps {
   trackType?: ProgressTracks | TrackTypes.SceneChallenge;
@@ -177,7 +156,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         label || "",
         alwaysRollMax ? 10 : Math.min(Math.floor(value / 4), 10),
         move?._id ?? "",
-        trackType,
+        trackType
       );
     }
   };
@@ -310,16 +289,9 @@ export function ProgressTrack(props: ProgressTracksProps) {
             </Box>
           ))}
         </Box>
-        <Box
-          display={"flex"}
-          justifyContent={"flex-end"}
-          width={280}
-        >
+        <Box display={"flex"} justifyContent={"flex-end"} width={280}>
           {trackType && !hideRollButton && smallRollButton && (
-            <IconButton
-              onClick={handleRollClick}
-              aria-label={"Roll Track"}
-            >
+            <IconButton onClick={handleRollClick} aria-label={"Roll Track"}>
               <DieIcon />
             </IconButton>
           )}
