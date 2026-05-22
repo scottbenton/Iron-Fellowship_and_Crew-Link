@@ -16,7 +16,7 @@ import {
   MapStrokeColors,
 } from "types/Locations.type";
 import { useStore } from "stores/store";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { MapTool, MapTools, draggableMapTools } from "./MapTools.enum";
 import { MapToolChooser } from "./MapToolChooser";
 import { arrayUnion } from "firebase/firestore";
@@ -38,6 +38,7 @@ export interface LocationMapProps {
 
 export function LocationMap(props: LocationMapProps) {
   const { locationId, map = {}, backgroundImageUrl } = props;
+  const mapContainerRef = useRef<HTMLDivElement>(null);
   const locationMap = useStore(
     (store) => store.worlds.currentWorld.currentWorldLocations.locationMap
   );
@@ -230,11 +231,6 @@ export function LocationMap(props: LocationMapProps) {
           alignItems: "center",
           minWidth: width,
           color: "#fff",
-          "&>svg": {
-            display: "flex",
-            marginX: "auto",
-          },
-
           "& .hexagon": {
             cursor: "pointer",
             fill: theme.palette.grey[900],
@@ -283,166 +279,184 @@ export function LocationMap(props: LocationMapProps) {
             hasBackgroundImage={!!backgroundImageUrl}
             mapStrokeColor={mapStrokeColor}
             mapBackgroundImageFit={mapBackgroundFit}
+            mapContainerRef={mapContainerRef}
+            locationName={locationMap[locationId]?.name}
           />
         </Box>
-
-        <svg
-          width={width}
-          height={height}
-          style={{ minWidth: width, minHeight: height, overflow: "visible" }}
+        <Box
+          ref={mapContainerRef}
+          sx={{
+            minWidth: width,
+            "&>svg": {
+              display: "flex",
+              marginX: "auto",
+            },
+          }}
         >
-          {backgroundImageUrl && (
-            <image
-              width={width}
-              height={height}
-              href={backgroundImageUrl}
-              preserveAspectRatio={
-                mapBackgroundFit === MapBackgroundImageFit.Contain
-                  ? "xMidYMid slice"
-                  : "xMidYMid slice"
-              }
-              style={{
-                background: "none",
-                pointerEvents: "none",
-              }}
-              x={0}
-              y={0}
-            ></image>
-          )}
-          {new Array(rows).fill(0).map((_, row) => {
-            return new Array(cols - (row % 2 === 1 ? 1 : 0))
-              .fill(0)
-              .map((_, col) => {
-                const x: number =
-                  col * horizontalSpacing +
-                  (row % 2 === 1 ? offsetX : 0) +
-                  s +
-                  firstColOffset; // Offset every other row
-                const y: number = row * verticalSpacing + s + firstRowOffset; // Start with one hexagon's height
-
-                const mapEntry = map[row]?.[col];
-
-                let pathConnections: LocationHexagonProps["pathConnections"] =
-                  undefined;
-
-                if (mapEntry?.type === MapEntryType.Path) {
-                  pathConnections = getConnections(
-                    map,
-                    row,
-                    col,
-                    locationId,
-                    locationMap
-                  );
+          <svg
+            width={width}
+            height={height}
+            style={{ minWidth: width, minHeight: height, overflow: "visible" }}
+          >
+            {backgroundImageUrl && (
+              <image
+                width={width}
+                height={height}
+                href={backgroundImageUrl}
+                preserveAspectRatio={
+                  mapBackgroundFit === MapBackgroundImageFit.Contain
+                    ? "xMidYMid slice"
+                    : "xMidYMid slice"
                 }
+                style={{
+                  background: "none",
+                  pointerEvents: "none",
+                }}
+                x={0}
+                y={0}
+              ></image>
+            )}
+            {new Array(rows).fill(0).map((_, row) => {
+              return new Array(cols - (row % 2 === 1 ? 1 : 0))
+                .fill(0)
+                .map((_, col) => {
+                  const x: number =
+                    col * horizontalSpacing +
+                    (row % 2 === 1 ? offsetX : 0) +
+                    s +
+                    firstColOffset;
+                  const y: number =
+                    row * verticalSpacing + s + firstRowOffset;
 
-                const locationIds =
-                  mapEntry?.type === MapEntryType.Location
-                    ? mapEntry.locationIds
-                    : [];
+                  const mapEntry = map[row]?.[col];
 
-                return (
-                  <LocationHexagon
-                    locationId={locationId}
-                    key={`${x}-${y}`}
-                    x={x}
-                    y={y}
-                    size={s}
-                    locationMap={locationMap}
-                    mapEntry={mapEntry ?? undefined}
-                    pathConnections={pathConnections}
-                    onClick={(cell) => {
-                      if (
-                        !mapTool ||
-                        (mapTool && !draggableMapTools.includes(mapTool.type))
-                      ) {
-                        handleHexClick(row, col, locationIds, cell);
-                      }
-                    }}
-                    hasBackgroundImage={!!backgroundImageUrl}
-                    mapStrokeColor={mapStrokeColor}
-                    onMouseDown={(cell) => {
-                      if (mapTool && draggableMapTools.includes(mapTool.type)) {
-                        handleHexClick(row, col, locationIds, cell);
-                      }
-                      setIsDragging(true);
-                    }}
-                    onMouseUp={() => setIsDragging(false)}
-                    onMouseEnter={(cell) => {
-                      if (
-                        isDragging &&
-                        mapTool &&
-                        draggableMapTools.includes(mapTool.type)
-                      ) {
-                        handleHexClick(row, col, locationIds, cell);
-                      }
-                    }}
-                  />
-                );
-              });
-          })}
-          {new Array(rows).fill(0).map((r, row) => {
-            return new Array(cols - (row % 2 === 1 ? 1 : 0))
-              .fill(0)
-              .map((c, col) => {
-                const x: number =
-                  col * horizontalSpacing +
-                  (row % 2 === 1 ? offsetX : 0) +
-                  s +
-                  firstColOffset; // Offset every other row
-                const y: number = row * verticalSpacing + s + firstRowOffset; // Start with one hexagon's height
+                  let pathConnections: LocationHexagonProps["pathConnections"] =
+                    undefined;
 
-                let locationIds: string[] = [];
-                const hex = map[row]?.[col];
-                if (hex?.type === MapEntryType.Location) {
-                  locationIds = getValidLocations(
-                    locationId,
-                    locationMap,
-                    hex.locationIds
-                  );
-                }
+                  if (mapEntry?.type === MapEntryType.Path) {
+                    pathConnections = getConnections(
+                      map,
+                      row,
+                      col,
+                      locationId,
+                      locationMap
+                    );
+                  }
 
-                let name: string | undefined = undefined;
+                  const locationIds =
+                    mapEntry?.type === MapEntryType.Location
+                      ? mapEntry.locationIds
+                      : [];
 
-                if (locationIds.length === 1) {
-                  name = locationMap[locationIds[0]]?.name;
-                } else if (locationIds.length > 1) {
-                  name = `${locationIds.length} Locations`;
-                }
-
-                if (name) {
                   return (
-                    <g key={`${x}-${y}-group`}>
-                      <text
-                        key={`${x}-${y}`}
-                        x={x}
-                        y={y - (s * 3) / 4} // Position the label below the hexagon
-                        fontSize={(s * 3) / 4} // Adjust font size based on hexagon size
-                        textAnchor="middle" // Center the text
-                        fill={"#fff"}
-                        style={{
-                          background: "none",
-                          pointerEvents: "none",
-
-                          paintOrder: "stroke",
-                          stroke: "#000000",
-                          strokeOpacity: backgroundImageUrl ? "100%" : "60%",
-                          strokeWidth: s / 12,
-                          strokeLinecap: "butt",
-                          strokeLinejoin: "miter",
-                        }}
-                        strokeWidth={s * 4}
-                        color={"#000"}
-                      >
-                        {name}
-                      </text>
-                    </g>
+                    <LocationHexagon
+                      locationId={locationId}
+                      key={`${x}-${y}`}
+                      x={x}
+                      y={y}
+                      size={s}
+                      locationMap={locationMap}
+                      mapEntry={mapEntry ?? undefined}
+                      pathConnections={pathConnections}
+                      onClick={(cell) => {
+                        if (
+                          !mapTool ||
+                          (mapTool &&
+                            !draggableMapTools.includes(mapTool.type))
+                        ) {
+                          handleHexClick(row, col, locationIds, cell);
+                        }
+                      }}
+                      hasBackgroundImage={!!backgroundImageUrl}
+                      mapStrokeColor={mapStrokeColor}
+                      onMouseDown={(cell) => {
+                        if (
+                          mapTool &&
+                          draggableMapTools.includes(mapTool.type)
+                        ) {
+                          handleHexClick(row, col, locationIds, cell);
+                        }
+                        setIsDragging(true);
+                      }}
+                      onMouseUp={() => setIsDragging(false)}
+                      onMouseEnter={(cell) => {
+                        if (
+                          isDragging &&
+                          mapTool &&
+                          draggableMapTools.includes(mapTool.type)
+                        ) {
+                          handleHexClick(row, col, locationIds, cell);
+                        }
+                      }}
+                    />
                   );
-                } else {
-                  return null;
-                }
-              });
-          })}
-        </svg>
+                });
+            })}
+            {new Array(rows).fill(0).map((r, row) => {
+              return new Array(cols - (row % 2 === 1 ? 1 : 0))
+                .fill(0)
+                .map((c, col) => {
+                  const x: number =
+                    col * horizontalSpacing +
+                    (row % 2 === 1 ? offsetX : 0) +
+                    s +
+                    firstColOffset;
+                  const y: number =
+                    row * verticalSpacing + s + firstRowOffset;
+
+                  let locationIds: string[] = [];
+                  const hex = map[row]?.[col];
+                  if (hex?.type === MapEntryType.Location) {
+                    locationIds = getValidLocations(
+                      locationId,
+                      locationMap,
+                      hex.locationIds
+                    );
+                  }
+
+                  let name: string | undefined = undefined;
+
+                  if (locationIds.length === 1) {
+                    name = locationMap[locationIds[0]]?.name;
+                  } else if (locationIds.length > 1) {
+                    name = `${locationIds.length} Locations`;
+                  }
+
+                  if (name) {
+                    return (
+                      <g key={`${x}-${y}-group`}>
+                        <text
+                          key={`${x}-${y}`}
+                          x={x}
+                          y={y - (s * 3) / 4}
+                          fontSize={(s * 3) / 4}
+                          textAnchor="middle"
+                          fill={"#fff"}
+                          style={{
+                            background: "none",
+                            pointerEvents: "none",
+
+                            paintOrder: "stroke",
+                            stroke: "#000000",
+                            strokeOpacity: backgroundImageUrl ? "100%" : "60%",
+                            strokeWidth: s / 12,
+                            strokeLinecap: "butt",
+                            strokeLinejoin: "miter",
+                          }}
+                          strokeWidth={s * 4}
+                          color={"#000"}
+                        >
+                          {name}
+                        </text>
+                      </g>
+                    );
+                  } else {
+                    return null;
+                  }
+                });
+            })}
+          </svg>
+        </Box>
         <Menu
           open={multiLocationChooserState.open}
           anchorEl={multiLocationChooserState.parentCell}

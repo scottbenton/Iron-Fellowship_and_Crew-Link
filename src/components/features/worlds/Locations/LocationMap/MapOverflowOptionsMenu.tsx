@@ -1,5 +1,7 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
+import { toPng, toSvg } from "html-to-image";
 import { useRef, useState } from "react";
+import type { RefObject } from "react";
 import { MapBackgroundImageFit, MapStrokeColors } from "types/Locations.type";
 import OverflowMenuIcon from "@mui/icons-material/MoreHoriz";
 import { useStore } from "stores/store";
@@ -12,6 +14,8 @@ export interface MapOverflowOptionsMenuProps {
   hasBackgroundImage: boolean;
   mapStrokeColor: MapStrokeColors;
   mapBackgroundImageFit: MapBackgroundImageFit;
+  mapContainerRef: RefObject<HTMLDivElement>;
+  locationName?: string;
 }
 
 export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
@@ -20,6 +24,8 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
     hasBackgroundImage,
     mapStrokeColor,
     mapBackgroundImageFit,
+    mapContainerRef,
+    locationName,
   } = props;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,6 +48,32 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
 
   const { error } = useSnackbar();
   const confirm = useConfirm();
+
+  const getExportFileName = () =>
+    locationName?.trim() ? locationName.trim() : `location-map-${locationId}`;
+
+  const handleMapExport = async (format: "png" | "svg") => {
+    setIsMenuOpen(false);
+
+    if (!mapContainerRef.current) {
+      error("Could not export this map right now.");
+      return;
+    }
+
+    try {
+      const exportFn = format === "png" ? toPng : toSvg;
+      const dataUrl = await exportFn(mapContainerRef.current, {
+        backgroundColor: "rgb(0, 0, 0)",
+      });
+      const link = document.createElement("a");
+      link.download = `${getExportFileName()}.${format}`;
+      link.href = dataUrl;
+      link.click();
+    } catch {
+      error(`Failed to export location map as ${format.toUpperCase()}.`);
+    }
+  };
+
   const handleFileUpload = (file: File) => {
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
@@ -80,6 +112,20 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
         onClose={() => setIsMenuOpen(false)}
         anchorEl={menuParentRef.current}
       >
+        <MenuItem
+          onClick={() => {
+            handleMapExport("png").catch(() => {});
+          }}
+        >
+          Export as PNG
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleMapExport("svg").catch(() => {});
+          }}
+        >
+          Export as SVG
+        </MenuItem>
         <MenuItem
           onClick={() => {
             setIsMenuOpen(false);

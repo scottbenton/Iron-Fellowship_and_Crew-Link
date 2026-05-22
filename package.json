@@ -42,6 +42,7 @@
     "@tiptap/starter-kit": "^2.4.0",
     "core-js": "^3.39.0",
     "firebase": "^10.12.0",
+    "html-to-image": "^1.11.13",
     "immer": "^10.1.1",
     "material-ui-confirm": "^3.0.15",
     "notistack": "^3.0.1",
