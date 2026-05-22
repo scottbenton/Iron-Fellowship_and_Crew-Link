@@ -5,18 +5,14 @@ import {
   StyledTabs,
 } from "components/shared/StyledTabs";
 import { useCampaignType } from "hooks/useCampaignType";
-import { useGameSystem } from "hooks/useGameSystem";
 import { useUpdateQueryStringValueWithoutNavigation } from "hooks/useUpdateQueryStringValueWithoutNavigation";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { CharacterTab, NotesTab, TracksTab, WorldTab } from "./Tabs";
-import { SectorSection } from "components/features/worlds/SectorSection";
 import { useStore } from "stores/store";
 import { NPCSection } from "components/features/worlds/NPCSection";
 import { LoreSection } from "components/features/worlds/Lore";
 import { LocationsSection } from "components/features/worlds/Locations";
-import { useNewMaps } from "hooks/featureFlags/useNewMaps";
 
 enum CampaignTabs {
   Characters = "characters",
@@ -24,7 +20,6 @@ enum CampaignTabs {
   Notes = "notes",
   World = "world",
   Locations = "locations",
-  Sectors = "sectors",
   NPCs = "ncps",
   Lore = "lore",
 }
@@ -36,10 +31,6 @@ export interface CampaignContentProps {
 export function CampaignContent(props: CampaignContentProps) {
   const { openInviteDialog } = props;
   const { showGuidedPlayerView, showGuideTips } = useCampaignType();
-
-  const showNewLocations = useNewMaps();
-  const shouldShowSectors =
-    useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED && !showNewLocations;
 
   const [searchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<CampaignTabs>(
@@ -81,11 +72,7 @@ export function CampaignContent(props: CampaignContentProps) {
           <StyledTab label="Notes" value={CampaignTabs.Notes} />
         )}
         <StyledTab label="World" value={CampaignTabs.World} />
-        {shouldShowSectors ? (
-          <StyledTab label="Sectors" value={CampaignTabs.Sectors} />
-        ) : (
-          <StyledTab label="Locations" value={CampaignTabs.Locations} />
-        )}
+        <StyledTab label="Locations" value={CampaignTabs.Locations} />
         <StyledTab label="NPCs" value={CampaignTabs.NPCs} />
         <StyledTab label="Lore" value={CampaignTabs.Lore} />
       </StyledTabs>
@@ -101,27 +88,15 @@ export function CampaignContent(props: CampaignContentProps) {
       <ContainedTabPanel isVisible={selectedTab === CampaignTabs.World}>
         <WorldTab />
       </ContainedTabPanel>
-      {shouldShowSectors ? (
-        <ContainedTabPanel
-          isVisible={selectedTab === CampaignTabs.Sectors}
-          greyBackground={hasWorld}
-        >
-          <SectorSection
-            showHiddenTag={showGuideTips}
-            openNPCTab={() => setSelectedTab(CampaignTabs.NPCs)}
-          />
-        </ContainedTabPanel>
-      ) : (
-        <ContainedTabPanel
-          isVisible={selectedTab === CampaignTabs.Locations}
-          greyBackground={hasWorld}
-        >
-          <LocationsSection
-            showHiddenTag
-            openNPCTab={() => setSelectedTab(CampaignTabs.NPCs)}
-          />
-        </ContainedTabPanel>
-      )}
+      <ContainedTabPanel
+        isVisible={selectedTab === CampaignTabs.Locations}
+        greyBackground={hasWorld}
+      >
+        <LocationsSection
+          showHiddenTag
+          openNPCTab={() => setSelectedTab(CampaignTabs.NPCs)}
+        />
+      </ContainedTabPanel>
       <ContainedTabPanel
         isVisible={selectedTab === CampaignTabs.NPCs}
         greyBackground={hasWorld}

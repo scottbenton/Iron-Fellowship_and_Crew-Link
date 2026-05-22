@@ -6,7 +6,6 @@ import { updateWorld } from "api-calls/world/updateWorld";
 import { updateWorldDescription } from "api-calls/world/updateWorldDescription";
 import { createNPCsSlice } from "./npcs/npcs.slice";
 import { createLoreSlice } from "./lore/lore.slice";
-import { createSectorSlice } from "./sector/sector.slice";
 import { updateWorldTruth } from "api-calls/world/updateWorldTruth";
 
 export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
@@ -18,7 +17,6 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
     currentWorldLocations: createLocationsSlice(...params),
     currentWorldNPCs: createNPCsSlice(...params),
     currentWorldLore: createLoreSlice(...params),
-    currentWorldSectors: createSectorSlice(...params),
     setCurrentWorldId: (worldId) => {
       const store = getState();
       const previousWorldId = store.worlds.currentWorld.currentWorldId;
@@ -67,7 +65,6 @@ export const createCurrentWorldSlice: CreateSliceType<CurrentWorldSlice> = (
       state.worlds.currentWorld.currentWorldLocations.resetStore();
       state.worlds.currentWorld.currentWorldNPCs.resetStore();
       state.worlds.currentWorld.currentWorldLore.resetStore();
-      state.worlds.currentWorld.currentWorldSectors.resetStore();
       set((store) => {
         store.worlds.currentWorld = {
           ...store.worlds.currentWorld,

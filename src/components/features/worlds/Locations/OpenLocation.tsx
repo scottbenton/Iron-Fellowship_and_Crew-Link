@@ -42,7 +42,6 @@ import { mergeIcons } from "components/shared/GameIcons/mergeIcons";
 import MapIcon from "@mui/icons-material/Map";
 import { LocationMap } from "./LocationMap";
 import { SubLocations } from "./SubLocations";
-import { useNewMaps } from "hooks/featureFlags/useNewMaps";
 import MoveLocationIcon from "@mui/icons-material/ModeOfTravel";
 import { useState } from "react";
 import { MoveLocationDialog } from "./MoveLocationDialog";
@@ -188,8 +187,6 @@ export function OpenLocation(props: OpenLocationProps) {
     location.icon
   );
 
-  const showNewMaps = useNewMaps();
-
   const [moveLocationDialogOpen, setMoveLocationDialogOpen] = useState(false);
 
   return (
@@ -202,39 +199,35 @@ export function OpenLocation(props: OpenLocationProps) {
         <>
           {showGMFields && (
             <>
-              {showNewMaps && (
-                <>
-                  <Tooltip title={"Move Location"}>
-                    <IconButton onClick={() => setMoveLocationDialogOpen(true)}>
-                      <MoveLocationIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip
-                    title={`Toggle Map ${location.showMap ? "Off" : "On"}`}
-                  >
-                    <IconButton
-                      onClick={() => {
-                        updateLocation(locationId, {
-                          showMap: !location.showMap,
-                        }).catch(() => {});
-                      }}
-                      sx={{
-                        bgcolor: location.showMap ? "darkGrey.main" : undefined,
-                        color: location.showMap
-                          ? "darkGrey.contrastText"
-                          : undefined,
-                        "&:hover": {
-                          bgcolor: location.showMap
-                            ? "darkGrey.dark"
-                            : undefined,
-                        },
-                      }}
-                    >
-                      <MapIcon />
-                    </IconButton>
-                  </Tooltip>
-                </>
-              )}
+              <Tooltip title={"Move Location"}>
+                <IconButton onClick={() => setMoveLocationDialogOpen(true)}>
+                  <MoveLocationIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip
+                title={`Toggle Map ${location.showMap ? "Off" : "On"}`}
+              >
+                <IconButton
+                  onClick={() => {
+                    updateLocation(locationId, {
+                      showMap: !location.showMap,
+                    }).catch(() => {});
+                  }}
+                  sx={{
+                    bgcolor: location.showMap ? "darkGrey.main" : undefined,
+                    color: location.showMap
+                      ? "darkGrey.contrastText"
+                      : undefined,
+                    "&:hover": {
+                      bgcolor: location.showMap
+                        ? "darkGrey.dark"
+                        : undefined,
+                    },
+                  }}
+                >
+                  <MapIcon />
+                </IconButton>
+              </Tooltip>
               <Tooltip title={"Delete"}>
                 <IconButton onClick={() => handleLocationDelete()}>
                   <DeleteIcon />
@@ -274,7 +267,7 @@ export function OpenLocation(props: OpenLocationProps) {
     >
       <Box display={"flex"} flexDirection={"column"}>
         <Box mt={1}>
-          {location.showMap && showNewMaps && (
+          {location.showMap && (
             <Box sx={{ mx: { xs: -2, sm: -3 } }}>
               <LocationMap
                 locationId={locationId}
@@ -294,9 +287,7 @@ export function OpenLocation(props: OpenLocationProps) {
             >
               <Tab value={LocationTab.Notes} label={"Notes"} />
               <Tab value={LocationTab.NPCs} label={"NPCs"} />
-              {showNewMaps && (
-                <Tab value={LocationTab.SubLocations} label={"Sub-Locations"} />
-              )}
+              <Tab value={LocationTab.SubLocations} label={"Sub-Locations"} />
             </Tabs>
           </Box>
           <Grid container spacing={2} sx={{ mb: 2 }}>
