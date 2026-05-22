@@ -6,6 +6,7 @@ export enum TrackTypes {
   Journey = "journey",
   Fray = "fray",
   BondProgress = "bondProgress",
+  DelveSite = "delveSite",
   Clock = "clock",
   SceneChallenge = "sceneChallenge",
 }
@@ -15,10 +16,12 @@ export type ProgressTracks =
   | TrackTypes.Fray
   | TrackTypes.Journey
   | TrackTypes.Vow
+  | TrackTypes.DelveSite;
 export type TrackSectionProgressTracks =
   | TrackTypes.Fray
   | TrackTypes.Journey
-  | TrackTypes.Vow;
+  | TrackTypes.Vow
+  | TrackTypes.DelveSite;
 export type TrackSectionTracks =
   | TrackSectionProgressTracks
   | TrackTypes.Clock

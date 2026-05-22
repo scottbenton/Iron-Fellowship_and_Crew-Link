@@ -16,6 +16,7 @@ export interface CharacterTracksSliceData {
       [TrackTypes.Fray]: Record<string, ProgressTrack>;
       [TrackTypes.Journey]: Record<string, ProgressTrack>;
       [TrackTypes.Vow]: Record<string, ProgressTrack>;
+      [TrackTypes.DelveSite]: Record<string, ProgressTrack>;
       [TrackTypes.SceneChallenge]: Record<string, SceneChallenge>;
       [TrackTypes.Clock]: Record<string, Clock>;
     }

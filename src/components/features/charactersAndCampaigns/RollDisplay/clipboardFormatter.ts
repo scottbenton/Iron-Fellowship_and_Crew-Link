@@ -188,6 +188,10 @@ function getTrackTypeLabel(type: TrackTypes | LEGACY_TrackTypes) {
       return "Fray";
     case TrackTypes.Journey:
       return "Journey";
+    case TrackTypes.DelveSite:
+      return "Delve Site";
+    case TrackTypes.SceneChallenge:
+      return "Scene Challenge";
     case LEGACY_TrackTypes.BONDS:
       return "Bonds";
     case LEGACY_TrackTypes.DISCOVERIES:
