@@ -27,8 +27,8 @@ export function PageHeader(props: PageHeaderProps) {
       <Box
         sx={(theme) => ({
           color: theme.palette.darkGrey.contrastText,
-          pt: 4,
-          pb: isEmpty ? 8 : 10,
+          pt: isEmpty ? 4 : 2,
+          pb: isEmpty ? 8 : 6,
           mb: isEmpty ? -8 : -4,
           // width: "100vw",
           backgroundColor:

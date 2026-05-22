@@ -17,7 +17,6 @@ import { useThemeValue } from "providers/ThemeProvider/useThemeValue";
 
 export function Layout() {
   useSyncFeatureFlags();
-
   const state = useStore((store) => store.auth.status);
 
   const userNameDialogOpen = useStore((store) => store.auth.userNameDialogOpen);

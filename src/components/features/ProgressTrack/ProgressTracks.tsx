@@ -10,6 +10,7 @@ import {
 import { ProgressTrack } from "./ProgressTrack";
 import { EmptyState } from "components/shared/EmptyState";
 import { EditOrCreateTrackDialog } from "./EditOrCreateTrackDialog";
+import { useIsMobile } from "hooks/useIsMobile";
 
 export interface ProgressTracksProps {
   isCampaign?: boolean;
@@ -94,6 +95,8 @@ export function ProgressTracks(props: ProgressTracksProps) {
     ? deleteCampaignProgressTrack
     : deleteCharacterProgressTrack;
 
+  const isMobile = useIsMobile();
+
   return (
     <>
       <Stack
@@ -105,6 +108,7 @@ export function ProgressTracks(props: ProgressTracksProps) {
           [theme.breakpoints.up("md")]: {
             px: headingBreakContainer ? 0 : 3,
           },
+          alignItems: isMobile ? "center" : undefined
         })}
       >
         {isCompleted && <Divider>Completed Tracks</Divider>}

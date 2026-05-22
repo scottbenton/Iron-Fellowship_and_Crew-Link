@@ -1,19 +1,20 @@
 import { Datasworn } from "@datasworn/core";
 import { OracleTableRoll, ROLL_TYPE } from "types/DieRolls.type";
 import { rollDie } from "./rollDie";
+import { Theme } from "@mui/material";
 
-function rollOracleColumn(column: Datasworn.OracleRollable):
-  | {
-      roll: number;
-      result: Datasworn.OracleTableRow;
-    }
-  | undefined {
-  const roll = rollDie(column.dice);
+async function rollOracleColumn(column: Datasworn.OracleRollable, theme: Theme, hide3dDice: boolean):
+  Promise<| {
+    roll: number;
+    result: Datasworn.OracleRollableRow;
+  }
+    | undefined> {
+  const roll = await rollDie(column.dice, theme, hide3dDice);
   if (!roll) {
     return undefined;
   }
   const result = column.rows.find(
-    (row) => row.min && row.max && row.min <= roll && row.max >= roll
+    (row) => row.roll && row.roll.min <= roll && row.roll.max >= roll
   );
   if (!result) {
     console.error("Could not find result for roll", roll);
@@ -26,12 +27,14 @@ function rollOracleColumn(column: Datasworn.OracleRollable):
   };
 }
 
-export function rollOracle(
+export async function rollOracle(
   oracle: Datasworn.OracleCollection | Datasworn.OracleRollable,
   characterId: string | null,
   uid: string,
-  gmsOnly: boolean
-): OracleTableRoll | undefined {
+  gmsOnly: boolean,
+  theme: Theme,
+  hide3dDice: boolean,
+): Promise<OracleTableRoll | undefined> {
   // We cannot roll across multiple tables like this
   if (oracle.oracle_type === "tables") {
     console.error("Oracle table collections cannot be rolled");
@@ -56,8 +59,8 @@ export function rollOracle(
     const tmpRolls: number[] = [];
     resultString = Object.values(oracle.contents ?? {})
       .sort((c1, c2) => c1.name.localeCompare(c2.name))
-      .map((col) => {
-        const rollResult = rollOracleColumn(col);
+      .map(async (col) => {
+        const rollResult = await rollOracleColumn(col, theme, hide3dDice);
         if (!rollResult) {
           return "";
         } else {
@@ -68,7 +71,7 @@ export function rollOracle(
       .join("\n");
     rolls = tmpRolls;
   } else {
-    const rollResult = rollOracleColumn(oracle);
+    const rollResult = await rollOracleColumn(oracle, theme, hide3dDice);
     if (rollResult) {
       rolls = rollResult.roll;
       resultString = rollResult.result.text;
@@ -77,11 +80,11 @@ export function rollOracle(
         oracle.oracle_type === "table_text3"
       ) {
         const columnLabel2 = oracle.column_labels.text2;
-        const text2 = (rollResult.result as Datasworn.OracleTableRowText2)
+        const text2 = (rollResult.result as Datasworn.OracleRollableRowText2)
           .text2;
         const columnLabel3 = (oracle as Datasworn.OracleTableText3)
           .column_labels.text3;
-        const text3 = (rollResult.result as Datasworn.OracleTableRowText3)
+        const text3 = (rollResult.result as Datasworn.OracleRollableRowText3)
           .text3;
 
         if (text2) {

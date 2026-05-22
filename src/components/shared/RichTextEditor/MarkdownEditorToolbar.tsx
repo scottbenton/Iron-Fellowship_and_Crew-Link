@@ -74,7 +74,7 @@ export function MarkdownEditorToolbar(props: MarkdownEditorToolbarProps) {
     editor
       .chain()
       .setTextSelection({ from: startPos, to: endPos })
-      .setLink({ href: `id:${id}` })
+      .setLink({ href: `datasworn:${id}` })
       .setTextSelection(endPos + 1)
       .focus()
       .run();

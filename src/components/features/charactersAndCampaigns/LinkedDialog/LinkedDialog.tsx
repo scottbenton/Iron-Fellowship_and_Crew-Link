@@ -2,6 +2,7 @@ import { Dialog, SwipeableDrawer } from "@mui/material";
 import { useStore } from "stores/store";
 import { LinkedDialogContent } from "./LinkedDialogContent";
 import { useIsMobile } from "hooks/useIsMobile";
+import { idMap } from "data/idMap";
 
 export function LinkedDialog() {
   const { isOpen, previousIds, openId } = useStore(
@@ -11,6 +12,8 @@ export function LinkedDialog() {
   const handleClose = useStore((store) => store.appState.closeDialog);
 
   const isMobile = useIsMobile();
+
+  const newId = openId ? idMap[openId] ?? openId : undefined;
 
   if (isMobile) {
     return (
@@ -35,7 +38,7 @@ export function LinkedDialog() {
         }}
       >
         <LinkedDialogContent
-          id={openId}
+          id={newId}
           isLastItem={previousIds.length === 0}
           handleBack={handleBack}
           handleClose={handleClose}
@@ -47,7 +50,7 @@ export function LinkedDialog() {
   return (
     <Dialog open={isOpen} onClose={handleClose}>
       <LinkedDialogContent
-        id={openId}
+        id={newId}
         isLastItem={previousIds.length === 0}
         handleBack={handleBack}
         handleClose={handleClose}

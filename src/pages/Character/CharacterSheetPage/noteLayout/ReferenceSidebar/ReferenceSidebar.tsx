@@ -22,7 +22,7 @@ export function ReferenceSidebar() {
 
   const shouldShowOracles = !useCampaignType().showGuidedPlayerView;
   return (
-    <>
+    <Box height={"100%"} display={"flex"} flexDirection={"column"} >
       {shouldShowOracles && (
         <div>
           <DarkStyledTabs
@@ -52,6 +52,6 @@ export function ReferenceSidebar() {
       >
         <OracleSection />
       </Box>
-    </>
+    </Box>
   );
 }

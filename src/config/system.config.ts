@@ -29,26 +29,29 @@ export const sharedOracleConfig: GameSystemChooser<OracleMap> = {
   [GAME_SYSTEMS.IRONSWORN]: {
     askTheOracle: {
       [AskTheOracle.AlmostCertain]:
-        "classic/oracles/moves/ask_the_oracle/almost_certain",
-      [AskTheOracle.Likely]: "classic/oracles/moves/ask_the_oracle/likely",
+        "move.oracle_rollable:classic/fate/ask_the_oracle.almost_certain",
+      [AskTheOracle.Likely]:
+        "move.oracle_rollable:classic/fate/ask_the_oracle.likely",
       [AskTheOracle.FiftyFifty]:
-        "classic/oracles/moves/ask_the_oracle/fifty_fifty",
-      [AskTheOracle.Unlikely]: "classic/oracles/moves/ask_the_oracle/unlikely",
+        "move.oracle_rollable:classic/fate/ask_the_oracle.fifty_fifty",
+      [AskTheOracle.Unlikely]:
+        "move.oracle_rollable:classic/fate/ask_the_oracle.unlikely",
       [AskTheOracle.SmallChance]:
-        "classic/oracles/moves/ask_the_oracle/small_chance",
+        "move.oracle_rollable:classic/fate/ask_the_oracle.small_chance",
     },
   },
   [GAME_SYSTEMS.STARFORGED]: {
     askTheOracle: {
       [AskTheOracle.AlmostCertain]:
-        "starforged/oracles/moves/ask_the_oracle/almost_certain",
-      [AskTheOracle.Likely]: "starforged/oracles/moves/ask_the_oracle/likely",
+        "move.oracle_rollable:starforged/fate/ask_the_oracle.almost_certain",
+      [AskTheOracle.Likely]:
+        "move.oracle_rollable:starforged/fate/ask_the_oracle.likely",
       [AskTheOracle.FiftyFifty]:
-        "starforged/oracles/moves/ask_the_oracle/fifty_fifty",
+        "move.oracle_rollable:starforged/fate/ask_the_oracle.fifty_fifty",
       [AskTheOracle.Unlikely]:
-        "starforged/oracles/moves/ask_the_oracle/unlikely",
+        "move.oracle_rollable:starforged/fate/ask_the_oracle.unlikely",
       [AskTheOracle.SmallChance]:
-        "starforged/oracles/moves/ask_the_oracle/small_chance",
+        "move.oracle_rollable:starforged/fate/ask_the_oracle.small_chance",
     },
   },
 };

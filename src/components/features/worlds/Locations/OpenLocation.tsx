@@ -287,6 +287,7 @@ export function OpenLocation(props: OpenLocationProps) {
           <Box sx={{ mx: { xs: -2, sm: -3 } }}>
             <Tabs
               centered
+              variant={"standard"}
               indicatorColor="primary"
               value={currentTab}
               onChange={(_, tab) => setCurrentTab(tab)}

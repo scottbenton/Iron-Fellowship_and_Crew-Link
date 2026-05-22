@@ -1,9 +1,9 @@
-import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { Notes } from "components/features/charactersAndCampaigns/Notes/Notes";
+import { useIsMobile } from "hooks/useIsMobile";
 
 export function NotesTab() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useIsMobile();
 
   return (
     <Box height={"100%"}>

@@ -115,6 +115,8 @@ export function WorldTruths(props: WorldTruthsProps) {
                     truthSelections[truthKey].selectedTruthOptionIndex ===
                     CUSTOM_TRUTH_INDEX
                       ? {
+                          _id: "custom",
+                          roll: { min: -1, max: -1 },
                           description:
                             truthSelections[truthKey].customTruth
                               ?.description ?? "",

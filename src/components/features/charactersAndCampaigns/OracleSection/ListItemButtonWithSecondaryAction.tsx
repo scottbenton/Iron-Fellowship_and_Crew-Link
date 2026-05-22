@@ -65,11 +65,12 @@ export function ListItemButtonWithSecondaryAction(
       {...listItemProps}
     >
       <ListItemButton
-        disabled={disabled}
+        disabled={disabled || !onClick}
         onClick={onClick}
         {...listItemButtonProps}
         sx={(theme) => ({
           pr: `calc(${theme.spacing(2)} + ${actionWidth ?? 0}px) !important`,
+          opacity: !onClick ? "1 !important" : undefined
         })}
       >
         {children}

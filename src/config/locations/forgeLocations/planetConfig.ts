@@ -99,18 +99,18 @@ export const planetConfig: ILocationConfig = {
       };
     },
   ],
-  createLocation: (rollOracleTable) => {
-    const planetClassResult = rollOracleTable(
+  createLocation: async (rollOracleTable) => {
+    const planetClassResult = await rollOracleTable(
       "starforged/oracles/planets/class",
       false
     );
     const convertedClass =
       planetClassResult?.result?.split(" ")[0].toLocaleLowerCase() ?? "";
 
-    const name = rollOracleTable(
+    const name = await rollOracleTable(
       `starforged/oracles/planets/${convertedClass}/name`,
       false
-    )?.result;
+    );
     const planetClassCollectionId = convertedClass
       ? `starforged/collections/oracles/planets/${convertedClass}`
       : undefined;
@@ -123,7 +123,7 @@ export const planetConfig: ILocationConfig = {
 
     const planet: Partial<Location> = {};
     if (name) {
-      planet.name = name;
+      planet.name = name.result;
     }
     if (description) {
       planet.fields = {

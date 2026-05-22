@@ -8,6 +8,7 @@ import { AssetHeader } from "./AssetHeader";
 import { AssetNameAndDescription } from "./AssetNameAndDescription";
 import { ForwardedRef, ReactNode, forwardRef } from "react";
 import { Datasworn } from "@datasworn/core";
+import { idMap } from "data/idMap";
 
 export interface AssetCardProps {
   assetId: string;
@@ -23,6 +24,7 @@ export interface AssetCardProps {
   ) => void;
 
   showSharedIcon?: boolean;
+  disabled?: boolean;
   sx?: SxProps<Theme>;
 }
 
@@ -39,12 +41,14 @@ const AssetCardComponent = (
     onAssetOptionChange,
     onAssetControlChange,
     showSharedIcon,
+    disabled,
     sx,
   } = props;
 
+  const updatedId = idMap[assetId] ?? assetId;
   const assetMap = useStore((store) => store.rules.assetMaps.assetMap);
 
-  const asset = assetMap[assetId];
+  const asset = assetMap[updatedId];
 
   if (!asset) {
     return null;
@@ -96,7 +100,9 @@ const AssetCardComponent = (
         ...sx,
       }}
     >
-      <AssetHeader asset={asset} onAssetRemove={onAssetRemove} />
+      <Box sx={{ filter: disabled ? "grayscale(30%) opacity(70%)" : undefined }}>
+        <AssetHeader asset={asset} onAssetRemove={onAssetRemove} />
+      </Box>
       <Box
         flexGrow={1}
         display={"flex"}
@@ -108,25 +114,34 @@ const AssetCardComponent = (
           borderBottomRightRadius: theme.shape.borderRadius,
         })}
       >
-        <AssetNameAndDescription
-          asset={asset}
-          showSharedIcon={showSharedIcon}
-        />
-        <AssetOptions
-          options={assetOptions}
-          storedAsset={storedAsset}
-          onAssetOptionChange={onAssetOptionChange}
-        />
-        <AssetAbilities
-          asset={asset}
-          storedAsset={storedAsset}
-          onAbilityToggle={onAssetAbilityToggle}
-        />
-        <AssetControls
-          controls={assetControls}
-          storedAsset={storedAsset}
-          onControlChange={onAssetControlChange}
-        />
+        <Box
+          flexGrow={1}
+          display={"flex"}
+          flexDirection={"column"}
+          sx={{
+            filter: disabled ? "grayscale(30%) opacity(70%)" : undefined
+          }}
+        >
+          <AssetNameAndDescription
+            asset={asset}
+            showSharedIcon={showSharedIcon}
+          />
+          <AssetOptions
+            options={assetOptions}
+            storedAsset={storedAsset}
+            onAssetOptionChange={onAssetOptionChange}
+          />
+          <AssetAbilities
+            asset={asset}
+            storedAsset={storedAsset}
+            onAbilityToggle={onAssetAbilityToggle}
+          />
+          <AssetControls
+            controls={assetControls}
+            storedAsset={storedAsset}
+            onControlChange={onAssetControlChange}
+          />
+        </Box>
         {actions && (
           <Stack
             direction={"row"}

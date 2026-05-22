@@ -78,9 +78,9 @@ export function Clock(props: ClockProps) {
     }
   };
 
-  const handleProgressionRoll = () => {
+  const handleProgressionRoll = async () => {
     if (onValueChange) {
-      const result = rollClockProgression(
+      const result = await rollClockProgression(
         clock.label,
         askTheOracle[clock.oracleKey ?? AskTheOracle.Likely]
       );

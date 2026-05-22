@@ -14,7 +14,6 @@ export interface SettingsSliceData {
     [uid: string]: StoredOracle[];
   };
   delve: {
-    showDelveMoves: boolean;
     showDelveOracles: boolean;
   };
 

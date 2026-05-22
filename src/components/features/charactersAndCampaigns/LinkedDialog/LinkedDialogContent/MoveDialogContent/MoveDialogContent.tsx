@@ -1,9 +1,7 @@
-import { Box, DialogContent, Stack, Typography } from "@mui/material";
+import { DialogContent } from "@mui/material";
 import { LinkedDialogContentTitle } from "../LinkedDialogContentTitle";
 import { useStore } from "stores/store";
-import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
-import { OracleButton } from "components/features/charactersAndCampaigns/OracleSection/OracleButton";
-import { MoveRollers } from "./MoveRollers";
+import { MoveContent } from "components/features/datasworn/MoveContent";
 
 export interface MoveDialogContentProps {
   id: string;
@@ -44,25 +42,7 @@ export function MoveDialogContent(props: MoveDialogContentProps) {
         {move.name}
       </LinkedDialogContentTitle>
       <DialogContent>
-        <MoveRollers move={move} />
-        <MarkdownRenderer markdown={move.text} />
-        {move.oracles && (
-          <Box mt={2}>
-            <Typography variant={"overline"}>
-              Roll Oracle{move.oracles.length > 1 ? "s" : ""}
-            </Typography>
-            <Stack direction={"row"} flexWrap={"wrap"} spacing={1}>
-              {move.oracles.map((oracleId) => (
-                <OracleButton
-                  color={"inherit"}
-                  variant={"outlined"}
-                  key={oracleId}
-                  oracleId={oracleId}
-                />
-              ))}
-            </Stack>
-          </Box>
-        )}
+        <MoveContent move={move} />
       </DialogContent>
     </>
   );

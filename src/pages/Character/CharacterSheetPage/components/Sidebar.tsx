@@ -16,46 +16,44 @@ export function Sidebar() {
   const shouldShowOracles = !useCampaignType().showGuidedPlayerView;
 
   return (
-    <>
-      <Card
-        variant={"outlined"}
-        sx={{
-          minWidth: 300,
-          maxHeight: "100%",
-          display: { xs: "none", md: "flex" },
-          flexDirection: "column",
-        }}
+    <Card
+      variant={"outlined"}
+      sx={{
+        minWidth: 250,
+        maxHeight: "100%",
+        display: { xs: "none", md: "flex" },
+        flexDirection: "column",
+      }}
+    >
+      {shouldShowOracles && (
+        <div>
+          <DarkStyledTabs
+            value={currentTab}
+            onChange={(evt, value) => setCurrentTab(value)}
+          >
+            <DarkStyledTab label={"Moves"} value={SIDEBAR_TABS.MOVES} />
+            <DarkStyledTab label={"Oracles"} value={SIDEBAR_TABS.ORACLES} />
+          </DarkStyledTabs>
+        </div>
+      )}
+      <Box
+        sx={
+          !shouldShowOracles || currentTab === SIDEBAR_TABS.MOVES
+            ? { overflow: "auto", display: "flex", flexDirection: "column" }
+            : { display: "none" }
+        }
       >
-        {shouldShowOracles && (
-          <div>
-            <DarkStyledTabs
-              value={currentTab}
-              onChange={(evt, value) => setCurrentTab(value)}
-            >
-              <DarkStyledTab label={"Moves"} value={SIDEBAR_TABS.MOVES} />
-              <DarkStyledTab label={"Oracles"} value={SIDEBAR_TABS.ORACLES} />
-            </DarkStyledTabs>
-          </div>
-        )}
-        <Box
-          sx={
-            !shouldShowOracles || currentTab === SIDEBAR_TABS.MOVES
-              ? { overflow: "auto", display: "flex", flexDirection: "column" }
-              : { display: "none" }
-          }
-        >
-          <MovesSection />
-        </Box>
-        <Box
-          sx={
-            shouldShowOracles && currentTab === SIDEBAR_TABS.ORACLES
-              ? { overflow: "auto", display: "flex", flexDirection: "column" }
-              : { display: "none" }
-          }
-        >
-          <OracleSection />
-        </Box>
-      </Card>
-    </>
+        <MovesSection />
+      </Box>
+      <Box
+        sx={
+          shouldShowOracles && currentTab === SIDEBAR_TABS.ORACLES
+            ? { overflow: "auto", display: "flex", flexDirection: "column" }
+            : { display: "none" }
+        }
+      >
+        <OracleSection />
+      </Box>
+    </Card>
   );
 }

@@ -35,13 +35,17 @@ export function convertStoredOraclesToCollections(
       } else {
         const storedCollection = storedCollections[collectionId];
         collections[collectionId] = {
-          _id: `${homebrewId}/collections/oracles/${collectionId}`,
+          _id: `oracle_collection:${homebrewId}/${collectionId}`,
           type: "oracle_collection",
           name: storedCollection.label,
           _source: DEFAULT_SOURCE,
           description: storedCollection.description,
-          enhances: storedCollection.enhancesId ?? undefined,
-          replaces: storedCollection.replacesId ?? undefined,
+          enhances: storedCollection.enhancesId
+            ? [storedCollection.enhancesId]
+            : undefined,
+          replaces: storedCollection.replacesId
+            ? [storedCollection.replacesId]
+            : undefined,
           contents: {},
           collections: {},
           oracle_type: "tables",
@@ -106,8 +110,8 @@ function populateCollection(
             name: subColl.label,
             _source: DEFAULT_SOURCE,
             description: subColl.description,
-            enhances: subColl.enhancesId ?? undefined,
-            replaces: subColl.replacesId ?? undefined,
+            enhances: subColl.enhancesId ? [subColl.enhancesId] : undefined,
+            replaces: subColl.replacesId ? [subColl.replacesId] : undefined,
             contents: {},
             collections: {},
             type: "oracle_collection",
@@ -138,31 +142,40 @@ function populateCollection(
         collection.contents = {};
       }
       if (collection.contents) {
-        const tableDataswornId = `${collection._id}/${tableId}`;
+        const tableDataswornId = `${collection._id.replace(
+          "oracle_collection",
+          "oracle_rollable"
+        )}/${tableId}`;
 
         const hasDetails = table.columnLabels.detail;
         const tableType: "table_text" | "table_text2" = hasDetails
           ? "table_text2"
           : "table_text";
-        const rows: Datasworn.OracleTableRow[] = [];
+        const rows: Datasworn.OracleRollableRow[] = [];
 
         let total = 0;
         let runningMin = 1;
 
-        table.rows.forEach((row) => {
+        table.rows.forEach((row, index) => {
           const min = runningMin;
           const max = runningMin + row.chance - 1;
           rows.push(
             hasDetails
               ? {
-                  min,
-                  max,
+                  _id: `${tableDataswornId}.${index}`,
+                  roll: {
+                    min,
+                    max,
+                  },
                   text: row.result,
                   text2: row.detail ?? null,
                 }
               : {
-                  min,
-                  max,
+                  _id: `${tableDataswornId}.${index}`,
+                  roll: {
+                    min,
+                    max,
+                  },
                   text: row.result,
                 }
           );
@@ -189,11 +202,11 @@ function populateCollection(
           description: table.description,
           oracle_type: tableType,
           dice: `1d${total}`,
-          replaces: table.replaces ?? undefined,
+          replaces: table.replaces ? [table.replaces] : undefined,
           _source: DEFAULT_SOURCE,
           column_labels: columnLabels,
           rows,
-        } as Datasworn.OracleTableText | Datasworn.OracleTableText2;
+        } as Datasworn.OracleRollable;
 
         collection.contents[tableId] = oracle;
       }

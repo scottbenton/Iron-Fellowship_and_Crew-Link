@@ -4,12 +4,11 @@ import {
   Stack,
   SxProps,
   Tooltip,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import { DebouncedOracleInput } from "components/shared/DebouncedOracleInput";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
+import { useIsMobile } from "hooks/useIsMobile";
 
 export interface ItemHeaderProps {
   itemName: string;
@@ -32,8 +31,7 @@ export function ItemHeader(props: ItemHeaderProps) {
     sx,
   } = props;
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useIsMobile();
 
   return (
     <Box

@@ -51,7 +51,7 @@ export function Debilities() {
   });
 
   return (
-    <Box mt={2}>
+    <Box mt={2} pr={2}>
       <Typography
         fontFamily={(theme) => theme.fontFamilyTitle}
         variant={"h6"}

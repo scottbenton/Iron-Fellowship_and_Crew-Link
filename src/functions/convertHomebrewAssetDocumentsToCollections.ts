@@ -26,14 +26,19 @@ export function convertHomebrewAssetDocumentsToCollections(
     .forEach((collectionId) => {
       const storedCollection = storedCollections[collectionId];
       collections[collectionId] = {
-        _id: `${homebrewId}/collections/assets/${collectionId}`,
+        _id: `asset_collection:${homebrewId}/${collectionId}`,
         type: "asset_collection",
         name: storedCollection.label,
-        replaces: storedCollection.replacesId ?? undefined,
-        enhances: storedCollection.enhancesId ?? undefined,
+        replaces: storedCollection.replacesId
+          ? [storedCollection.replacesId]
+          : undefined,
+        enhances: storedCollection.enhancesId
+          ? [storedCollection.enhancesId]
+          : undefined,
         description: storedCollection.description,
         _source: DEFAULT_SOURCE,
         contents: {},
+        collections: {},
       };
     });
 
@@ -142,12 +147,13 @@ function convertAssetDocument(
         max: control.max,
         min: control.min,
         rollable: true,
+        controls: {},
       };
     }
   });
 
   return {
-    _id: `${homebrewId}/assets/${asset.categoryKey}/${assetId}`,
+    _id: `asset:${homebrewId}/${asset.categoryKey}/${assetId}`,
     type: "asset",
     name: asset.label,
     count_as_impact: false,

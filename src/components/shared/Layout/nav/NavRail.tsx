@@ -44,17 +44,17 @@ export function NavRail() {
       }}
     >
       <Box
-        sx={{
+        sx={(theme) => ({
           width: NAV_RAIL_WIDTH,
           display: "flex",
           flexDirection: "column",
           flexShrink: 0,
-          bgcolor: "darkGrey.main",
-          color: "darkGrey.contrastText",
+          bgcolor: theme.palette.darkGrey.main,
+          color: theme.palette.darkGrey.contrastText,
           py: 2,
           px: 1.5,
           zIndex: 11,
-        }}
+        })}
       >
         <Box flexGrow={1}>
           <ButtonBase

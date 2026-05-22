@@ -24,6 +24,14 @@ export interface CurrentCampaignSliceActions {
     value: number
   ) => Promise<void>;
   updateCampaign: (campaign: Partial<CampaignDocument>) => Promise<void>;
+  updateHiddenAssets: (
+    assetId: string,
+    isHidden: boolean
+  ) => Promise<void>;
+  updateHiddenOracles: (
+    oracleId: string,
+    isHidden: boolean
+  ) => Promise<void>;
 
   resetStore: () => void;
 }

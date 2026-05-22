@@ -53,7 +53,7 @@ export interface TrackProgressRoll extends BaseRoll {
   challenge2: number;
   trackProgress: number;
   result: ROLL_RESULT;
-  trackType: TrackTypes | LEGACY_TrackTypes;
+  trackType: TrackTypes | LEGACY_TrackTypes | "";
   moveId?: string;
 }
 

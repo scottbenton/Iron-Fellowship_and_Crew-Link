@@ -108,6 +108,7 @@ export function AssetCardPreview(props: AssetCardPreviewProps) {
         max: control.max,
         min: control.min,
         rollable: true,
+        controls: {},
       };
     }
   });

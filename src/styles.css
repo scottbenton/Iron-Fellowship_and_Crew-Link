@@ -1,0 +1,28 @@
+#dice-box,
+#dice-box canvas {
+  position: fixed;
+  pointer-events: none;
+  z-index: 2000; /* nav and modals are in the 1000-1200 range, snackbar is 10000+ range */
+  width: 100%;
+  height: 100%;
+}
+
+.fade-out {
+	opacity: 0;
+	animation-name: fadeOutOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 5s;
+}
+
+@keyframes fadeOutOpacity {
+	0% {
+		opacity: 1;
+	}
+  60% {
+    opacity: 1;
+  }
+	100% {
+		opacity: 0;
+	}
+}

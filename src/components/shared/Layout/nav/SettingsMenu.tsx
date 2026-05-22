@@ -13,6 +13,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useToggleTheme } from "providers/ThemeProvider";
 import LightThemeIcon from "@mui/icons-material/LightMode";
 import DarkThemeIcon from "@mui/icons-material/DarkMode";
+import DieIcon from "@mui/icons-material/Casino";
 import { ThemeType } from "providers/ThemeProvider/themes/theme.types";
 import { useGameSystem } from "hooks/useGameSystem";
 import { getIsLocalEnvironment } from "functions/getGameSystem";
@@ -57,6 +58,13 @@ export function SettingsMenu() {
   const isLoggedIn = useStore(
     (store) => store.auth.status === AUTH_STATE.AUTHENTICATED
   );
+
+  const hide3dDice = useStore((store) => store.auth.userDoc?.hide3dDice);
+  const updateUser = useStore((store) => store.auth.updateUserDoc);
+
+  const toggleDice = () => {
+    updateUser({ hide3dDice: !hide3dDice })
+  };
 
   return (
     <>
@@ -159,6 +167,21 @@ export function SettingsMenu() {
             {themeType === ThemeType.Light ? "Dark Mode" : "Light Mode"}
           </ListItemText>
         </MenuItem>
+        {isLoggedIn && (
+          <MenuItem
+            onClick={() => {
+              setMenuOpen(false);
+              toggleDice();
+            }}
+          >
+            <ListItemIcon>
+              <DieIcon />
+            </ListItemIcon>
+            <ListItemText>
+              { hide3dDice ? "Show Animated Dice" : "Hide Animated Dice"}
+            </ListItemText>
+          </MenuItem>
+        )}
         {isLoggedIn && (
           <MenuItem
             onClick={() => {

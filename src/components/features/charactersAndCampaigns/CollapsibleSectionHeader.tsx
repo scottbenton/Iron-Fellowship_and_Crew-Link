@@ -18,10 +18,11 @@ export interface CollapsibleSectionHeaderProps {
   toggleOpen: () => void;
   disabled?: boolean;
   actions?: React.JSX.Element;
+  hidden?: boolean;
 }
 
 export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
-  const { component, text, open, forcedOpen, toggleOpen, disabled, actions } =
+  const { component, text, open, forcedOpen, toggleOpen, disabled, actions, hidden } =
     props;
 
   if (forcedOpen) {
@@ -39,6 +40,7 @@ export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
           transition: theme.transitions.create(["margin"], {
             duration: theme.transitions.duration.shorter,
           }),
+          filter: hidden ? "grayscale(30%) opacity(70%)" : undefined
         })}
       >
         {text}
@@ -72,6 +74,7 @@ export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
         transition: theme.transitions.create(["margin"], {
           duration: theme.transitions.duration.shorter,
         }),
+        filter: hidden ? "grayscale(30%) opacity(70%)" : undefined
       })}
     >
       {!forcedOpen ? (

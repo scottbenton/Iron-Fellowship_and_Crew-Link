@@ -34,20 +34,18 @@ export interface HomebrewEntry {
 
   oracleCollections?: HomebrewData<HomebrewOracleCollectionDocument>;
   oracleTables?: HomebrewData<HomebrewOracleTableDocument>;
-  dataswornOracles?: Record<string, Datasworn.OracleTablesCollection>;
 
   moveCategories?: HomebrewData<HomebrewMoveCategoryDocument>;
   moves?: HomebrewData<HomebrewMoveDocument>;
-  dataswornMoves?: Record<string, Datasworn.MoveCategory>;
 
   assetCollections?: HomebrewData<HomebrewAssetCollectionDocument>;
   assets?: HomebrewData<HomebrewAssetDocument>;
-  dataswornAssets?: Record<string, Datasworn.AssetCollection>;
 }
 
 export interface HomebrewSliceData {
   sortedHomebrewCollectionIds: string[];
   collections: Record<string, HomebrewEntry>;
+  expansions: Record<string, Datasworn.Expansion>;
   loading: boolean;
   error?: string;
 }
@@ -129,8 +127,6 @@ export interface HomebrewSliceActions {
   ) => Promise<void>;
   deleteOracleTable: (oracleTableId: string) => Promise<void>;
 
-  updateDataswornOracles: (homebrewId: string) => void;
-
   createMoveCategory: (
     moveCategory: HomebrewMoveCategoryDocument
   ) => Promise<void>;
@@ -149,8 +145,6 @@ export interface HomebrewSliceActions {
     move: PartialWithFieldValue<HomebrewMoveDocument>
   ) => Promise<void>;
   deleteMove: (moveId: string) => Promise<void>;
-
-  updateDataswornMoves: (homebrewId: string) => void;
 
   createAssetCollection: (
     assetCollection: HomebrewAssetCollectionDocument
@@ -171,7 +165,7 @@ export interface HomebrewSliceActions {
   ) => Promise<void>;
   deleteAsset: (assetId: string) => Promise<void>;
 
-  updateDataswornAssets: (homebrewId: string) => void;
+  updateExpansionIfLoaded: (expansionId: string) => void;
 }
 
 export type HomebrewSlice = HomebrewSliceData & HomebrewSliceActions;

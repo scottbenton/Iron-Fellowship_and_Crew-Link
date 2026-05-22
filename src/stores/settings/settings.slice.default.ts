@@ -7,7 +7,6 @@ export const defaultSettings: SettingsSliceData = {
   customTracks: [],
 
   delve: {
-    showDelveMoves: true,
     showDelveOracles: true,
   },
 

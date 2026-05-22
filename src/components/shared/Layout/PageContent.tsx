@@ -1,5 +1,6 @@
 import { Breakpoint, Container, Paper, SxProps, Theme } from "@mui/material";
 import { PropsWithChildren } from "react";
+import { useIsMobile } from "hooks/useIsMobile";
 
 export interface PageContentProps extends PropsWithChildren {
   isPaper?: boolean;
@@ -12,6 +13,8 @@ export interface PageContentProps extends PropsWithChildren {
 export function PageContent(props: PageContentProps) {
   const { children, isPaper, viewHeight, hiddenHeader, maxWidth, sx } = props;
 
+  const isMobile = useIsMobile();
+
   return (
     <Container
       component={isPaper ? Paper : "div"}
@@ -23,7 +26,7 @@ export function PageContent(props: PageContentProps) {
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
           flexGrow: 1,
-
+          pl: !isMobile ? 0 : undefined,
           pb: 2,
           display: "flex",
           flexDirection: "column",

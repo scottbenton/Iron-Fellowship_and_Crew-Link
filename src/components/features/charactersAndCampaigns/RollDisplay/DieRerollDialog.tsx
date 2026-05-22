@@ -6,6 +6,7 @@ import {
   DialogContent,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { D10Icon } from "assets/D10Icon";
 import { D6Icon } from "assets/D6Icon";
@@ -13,7 +14,7 @@ import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithClo
 import { ROLL_RESULT, StatRoll } from "types/DieRolls.type";
 import { RollDisplay } from "./RollDisplay";
 import React, { useState } from "react";
-import { getRoll } from "stores/appState/useRoller";
+import { getRolls } from "stores/appState/useRoller";
 import { useSnackbar } from "providers/SnackbarProvider";
 import { useStore } from "stores/store";
 
@@ -63,14 +64,21 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
     matchedNegativeMomentum,
   };
 
-  const handleRoll = (
+  const hide3dDice = useStore(
+    (store) => store.auth.userDoc?.hide3dDice
+  );
+
+  const theme = useTheme();
+
+  const handleRoll = async (
     setter: React.Dispatch<React.SetStateAction<number>>,
-    dieSides: number,
-    dieLabel: string
+    type: "challenge" | "action"
   ) => {
-    const roll = getRoll(dieSides);
-    setter(roll);
-    info(`Rerolled ${dieLabel} die for a new value of ${roll}`);
+    const roll = type === "challenge"
+      ? await getRolls(1, 0, theme, hide3dDice === true)
+      : await getRolls(0, 1, theme, hide3dDice === true);
+    setter(roll[0].value);
+    info(`Rerolled ${type} die for a new value of ${roll[0].value}`);
   };
 
   const handleSave = () => {
@@ -129,7 +137,7 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
                 {action}
               </Typography>
             </Box>
-            <Button onClick={() => handleRoll(setAction, 6, "action")}>
+            <Button onClick={() => handleRoll(setAction, "action")}>
               Reroll
             </Button>
           </Box>
@@ -140,7 +148,7 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
                 {challenge1}
               </Typography>
             </Box>
-            <Button onClick={() => handleRoll(setChallenge1, 10, "challenge")}>
+            <Button onClick={() => handleRoll(setChallenge1, "challenge")}>
               Reroll
             </Button>
           </Box>
@@ -151,7 +159,7 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
                 {challenge2}
               </Typography>
             </Box>
-            <Button onClick={() => handleRoll(setChallenge2, 10, "challenge")}>
+            <Button onClick={() => handleRoll(setChallenge2, "challenge")}>
               Reroll
             </Button>
           </Box>

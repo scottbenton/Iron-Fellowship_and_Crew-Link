@@ -1,5 +1,6 @@
-import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { Tick1, Tick2, Tick3, Tick4 } from "./assets";
+import { useIsMobile } from "hooks/useIsMobile";
 export interface ProgressTrackTickProps {
   value: number;
   size?: {
@@ -19,8 +20,7 @@ const tickProps = (sizeValue: number) => ({
 export function ProgressTrackTick(props: ProgressTrackTickProps) {
   const { value, size = { desktop: 32, mobile: 20 } } = props;
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useIsMobile();
 
   const finalSize = isMobile ? size.mobile : size.desktop;
 

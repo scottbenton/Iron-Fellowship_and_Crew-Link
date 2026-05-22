@@ -17,6 +17,12 @@ export interface OracleDialogContentProps {
   isLastItem: boolean;
 }
 
+// TODO - remove once datasworn is correct
+type TempType = {
+  summary?: string;
+  description?: string;
+};
+
 export function OracleDialogContent(props: OracleDialogContentProps) {
   const { id, handleBack, handleClose, isLastItem } = props;
 
@@ -67,19 +73,12 @@ export function OracleDialogContent(props: OracleDialogContentProps) {
         {oracle.name}
       </LinkedDialogContentTitle>
       <DialogContent>
-        {oracle.summary &&
-          (oracle.oracle_type === "column_text" ||
-            oracle.oracle_type === "column_text2" ||
-            oracle.oracle_type === "column_text3" ||
-            !oracle.description) && (
-            <MarkdownRenderer markdown={oracle.summary} />
-          )}
-        {oracle.oracle_type !== "column_text" &&
-          oracle.oracle_type !== "column_text2" &&
-          oracle.oracle_type !== "column_text3" &&
-          oracle.description && (
-            <MarkdownRenderer markdown={oracle.description} />
-          )}
+        {(oracle as TempType).summary && !(oracle as TempType).description && (
+          <MarkdownRenderer markdown={(oracle as TempType).summary ?? ""} />
+        )}
+        {(oracle as TempType).description && (
+          <MarkdownRenderer markdown={(oracle as TempType).description ?? ""} />
+        )}
         {oracle.oracle_type !== "table_shared_text" &&
           oracle.oracle_type !== "table_shared_text2" &&
           oracle.oracle_type !== "table_shared_text3" &&

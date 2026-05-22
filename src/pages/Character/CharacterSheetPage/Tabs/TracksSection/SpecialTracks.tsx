@@ -5,8 +5,9 @@ import { useStore } from "stores/store";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { ExperienceTrack } from "./ExperienceTrack";
 import { ProgressTrack } from "components/features/ProgressTrack";
-import { LegacyTrack as ILegacyTrack } from "types/LegacyTrack.type";
+import { LEGACY_TrackTypes, LegacyTrack as ILegacyTrack } from "types/LegacyTrack.type";
 import { LegacyTrack } from "./LegacyTrack";
+import { useIsMobile } from "hooks/useIsMobile";
 
 export function SpecialTracks() {
   const specialTracksRules = useStore((store) => store.rules.specialTracks);
@@ -103,6 +104,8 @@ export function SpecialTracks() {
 
   const isIronsworn = useGameSystem().gameSystem === GAME_SYSTEMS.IRONSWORN;
 
+  const isMobile = useIsMobile();
+
   if (isIronsworn) {
     return (
       <>
@@ -130,13 +133,20 @@ export function SpecialTracks() {
   return (
     <>
       <SectionHeading label={"Legacy Tracks"} />
-      <Stack spacing={2} px={2} sx={{ overflowX: "auto" }}>
+      <Stack spacing={2} px={2} sx={{ overflowX: "auto", alignItems: isMobile ? "center" : undefined }}>
         {Object.keys(specialTracksRules).map((specialTrackKey) => {
+          const specialTrackLabel = specialTracksRules[specialTrackKey].label;
           const specialTrackValue = getSpecialTrackValue(specialTrackKey);
+
+          let trackType = undefined;
+          if (specialTrackLabel.toLowerCase() in Object.values(LEGACY_TrackTypes)) {
+            trackType = specialTrackLabel.toLowerCase() as LEGACY_TrackTypes;
+          }
+
           return (
             <LegacyTrack
               key={specialTrackKey}
-              label={specialTracksRules[specialTrackKey].label}
+              label={specialTrackLabel}
               value={specialTrackValue?.value ?? 0}
               checkedExperience={specialTrackValue?.spentExperience ?? {}}
               onValueChange={(value) =>
@@ -153,6 +163,7 @@ export function SpecialTracks() {
               onIsLegacyChecked={(checked) =>
                 updateSpecialTrackIsLegacy(specialTrackKey, checked)
               }
+              trackType={trackType}
             />
           );
         })}

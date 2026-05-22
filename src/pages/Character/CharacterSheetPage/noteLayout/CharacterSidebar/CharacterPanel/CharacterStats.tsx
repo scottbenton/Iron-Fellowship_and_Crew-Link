@@ -23,6 +23,7 @@ export function CharacterStats() {
             key={statKey}
             label={stat.label}
             value={statValues?.[statKey] ?? 0}
+            sx={{ width: 65 }}
           />
         ))}
       </Box>

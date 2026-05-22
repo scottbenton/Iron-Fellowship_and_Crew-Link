@@ -11,6 +11,8 @@ import { createCampaignTracksSlice } from "./tracks/campaignTracks.slice";
 import { createCampaignCharactersSlice } from "./characters/campaignCharacters.slice";
 import { updateCampaignWorld } from "api-calls/campaign/updateCampaignWorld";
 import { createSharedAssetsSlice } from "./sharedAssets/sharedAssets.slice";
+import { updateCampaignHiddenAssets } from "api-calls/campaign/updateHiddenAssets";
+import { updateCampaignHiddenOracles } from "../../../api-calls/campaign/updateHiddenOracles";
 
 export const createCurrentCampaignSlice: CreateSliceType<
   CurrentCampaignSlice
@@ -163,6 +165,22 @@ export const createCurrentCampaignSlice: CreateSliceType<
         return new Promise((res, reject) => reject("No campaign found."));
       }
       return updateCampaign({ campaignId, campaign });
+    },
+    updateHiddenAssets: (assetId, isHidden) => {
+      const state = getState();
+      const campaignId = state.campaigns.currentCampaign.currentCampaignId;
+      if (!campaignId) {
+        return new Promise((res, reject) => reject("No campaign found."));
+      }
+      return updateCampaignHiddenAssets({ campaignId, assetId, isHidden });
+    },
+    updateHiddenOracles: (oracleId, isHidden) => {
+      const state = getState();
+      const campaignId = state.campaigns.currentCampaign.currentCampaignId;
+      if (!campaignId) {
+        return new Promise((res, reject) => reject("No campaign found."));
+      }
+      return updateCampaignHiddenOracles({ campaignId, oracleId, hidden: isHidden });
     },
 
     resetStore: () => {

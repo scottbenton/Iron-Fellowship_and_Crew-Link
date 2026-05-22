@@ -8,4 +8,5 @@ export interface UserDocument {
   layout?: {
     referenceSidebarLocation?: ReferenceSidebarLocation;
   };
+  hide3dDice?: boolean;
 }

@@ -27,6 +27,7 @@ export function StyledTabs(props: StyledTabsProps) {
       sx={[
         (theme) => ({
           py: 0,
+          px: 1,
           backgroundColor: removeBackgroundColor
             ? undefined
             : theme.palette.background.paperInlay,

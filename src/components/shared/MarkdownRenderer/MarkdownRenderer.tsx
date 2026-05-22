@@ -11,6 +11,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useStore } from "stores/store";
 import { OracleTableRenderer } from "./OracleTableRenderer";
+import { idMap } from "data/idMap";
+import { Datasworn, IdParser } from "@datasworn/core";
 
 export interface MarkdownRendererProps {
   inlineParagraph?: boolean;
@@ -35,12 +37,6 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
 
   const theme = useTheme();
 
-  const newOracleMap = useStore(
-    (store) => store.rules.oracleMaps.allOraclesMap
-  );
-  const newMoveMap = useStore((store) => store.rules.moveMaps.moveMap);
-  const assetMap = useStore((store) => store.rules.assetMaps.assetMap);
-
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -55,10 +51,24 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
             const content =
               typeof children === "string" ? children : (children[0] as string);
             if (
-              content.match(/^{{table:[^/]+(\/collections)?\/oracles\/[^}]+}}$/)
+              content.match(
+                /^{{table:[^/]+(\/collections)?\/oracles\/[^}]+}}$/
+              ) ||
+              content.match(/^{{table>[^}]+}}$/)
             ) {
-              const id = content.replace("{{table:", "").replace("}}", "");
-              const oracle = newOracleMap[id];
+              const id = content
+                .replace("{{table:", "")
+                .replace("}}", "")
+                .replace("{{table>", "");
+              let oracle: Datasworn.OracleRollable | undefined = undefined;
+              try {
+                const tmpOracle = IdParser.get(id) as Datasworn.OracleRollable;
+                if (tmpOracle.type === "oracle_rollable") {
+                  oracle = tmpOracle;
+                }
+              } catch {
+                // Empty - if oracle is undefined we will continue parsing
+              }
               if (oracle) {
                 return <OracleTableRenderer oracle={oracle} />;
               }
@@ -181,10 +191,21 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
           const propertiesHref = linkProps.node?.properties?.href;
 
           const href = typeof propertiesHref === "string" ? propertiesHref : "";
-          // V2 versions
-          if (href.startsWith("id:")) {
-            const strippedHref = href.slice(3);
-            if (newOracleMap[strippedHref]) {
+
+          if (href.startsWith("datasworn:")) {
+            const strippedHref = href.replace("datasworn:", "");
+            // We have a datasworn id
+            const id = idMap[strippedHref] ?? strippedHref;
+
+            let item: unknown;
+            try {
+              item = IdParser.get(id);
+            } catch {
+              // console.warn("Could not find in datasworn");
+              // Empty - if item is undefined we will continue parsing
+            }
+
+            if (item) {
               return (
                 <Link
                   component={"button"}
@@ -199,71 +220,30 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
                   color={
                     theme.palette.mode === "light" ? "info.dark" : "info.light"
                   }
-                  onClick={() => openDialog(strippedHref)}
+                  onClick={() => openDialog(id)}
                 >
                   {linkProps.children}
                 </Link>
               );
+            } else {
+              // TODO - add error styling
+              return <Typography>{linkProps.children}</Typography>;
             }
-            if (href.match(/^id:[^/]*\/moves/)) {
-              const strippedHref = href.slice(3);
-              if (newMoveMap[strippedHref]) {
-                return (
-                  <Link
-                    component={"button"}
-                    type={"button"}
-                    sx={[
-                      {
-                        cursor: "pointer",
-                        verticalAlign: "baseline",
-                      },
-                      ...(Array.isArray(sx) ? sx : [sx]),
-                    ]}
-                    color={
-                      theme.palette.mode === "light"
-                        ? "info.dark"
-                        : "info.light"
-                    }
-                    onClick={() => openDialog(strippedHref)}
-                  >
-                    {linkProps.children}
-                  </Link>
-                );
-              }
-            }
-            if (href.match(/^id:[^/]*\/assets/)) {
-              const strippedHref = href.slice(3);
-              if (assetMap[strippedHref]) {
-                return (
-                  <Link
-                    component={"button"}
-                    type={"button"}
-                    sx={[
-                      {
-                        cursor: "pointer",
-                        verticalAlign: "baseline",
-                      },
-                      ...(Array.isArray(sx) ? sx : [sx]),
-                    ]}
-                    color={
-                      theme.palette.mode === "light"
-                        ? "info.dark"
-                        : "info.light"
-                    }
-                    onClick={() => openDialog(strippedHref)}
-                  >
-                    {linkProps.children}
-                  </Link>
-                );
-              }
-            }
-
-            console.debug("Link", href, "was not found");
-
-            // TODO - add handlers for this situation;
-            return <span>{linkProps.children}</span>;
           }
-          return <a {...linkProps} />;
+
+          let url: URL | undefined = undefined;
+          try {
+            url = new URL(href);
+          } catch {
+            console.warn("Was not a url");
+            // Empty - if url is undefined we will continue parsing
+          }
+          if (url) {
+            return <a {...linkProps} />;
+          } else {
+            // TODO - add error styling
+            return <Typography>{linkProps.children}</Typography>;
+          }
         },
       }}
       urlTransform={(url) => url}

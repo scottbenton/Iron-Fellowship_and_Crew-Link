@@ -2,11 +2,11 @@ import {
   Box,
   ButtonBase,
   Card,
-  FormControlLabel,
+  // FormControlLabel,
   // FormControlLabel,
   Link,
-  Radio,
-  RadioGroup,
+  // Radio,
+  // RadioGroup,
   // Radio,
   // RadioGroup,
   Typography,
@@ -18,8 +18,8 @@ import { useState } from "react";
 import { Datasworn } from "@datasworn/core";
 import { TruthSelectorDialog } from "./TruthSelectorDialog";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
-import { HexradioChecked } from "assets/HexradioChecked";
-import { HexboxUnchecked } from "assets/HexboxUnchecked";
+// import { HexradioChecked } from "assets/HexradioChecked";
+// import { HexboxUnchecked } from "assets/HexboxUnchecked";
 
 export interface TruthCardProps {
   truthKey: string;
@@ -43,8 +43,8 @@ export function TruthCard(props: TruthCardProps) {
     fullHeight,
     onSelect,
     selected,
-    selectedSubItemIndex,
-    onSelectSubItem,
+    // selectedSubItemIndex,
+    // onSelectSubItem,
     canEdit,
   } = props;
 
@@ -113,7 +113,8 @@ export function TruthCard(props: TruthCardProps) {
               />
             )}
           </Box>
-          {truthOption.table &&
+          {/* TODO - get the oracles working again */}
+          {/* {truthOption.oracles &&
             (onSelectSubItem || typeof selectedSubItemIndex !== "number" ? (
               <RadioGroup
                 value={selected ? selectedSubItemIndex : null}
@@ -147,7 +148,7 @@ export function TruthCard(props: TruthCardProps) {
                   }
                 </Typography>
               </Box>
-            ))}
+            ))} */}
         </Box>
         <Box
           sx={(theme) => ({

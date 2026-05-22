@@ -2,6 +2,7 @@ import { Box, Typography, SxProps, Theme, ButtonBase } from "@mui/material";
 import { useDebouncedState } from "hooks/useDebouncedState";
 import { useEffect, useId, useRef, useState } from "react";
 import { useStore } from "stores/store";
+import { useRoller } from "stores/appState/useRoller";
 
 export interface TrackProps {
   label?: string;
@@ -11,6 +12,7 @@ export interface TrackProps {
   onChange?: (newValue: number) => Promise<boolean | void>;
   sx?: SxProps<Theme>;
   disabled?: boolean;
+  rollable?: boolean;
 }
 
 function getArr(min: number, max: number): number[] {
@@ -24,7 +26,7 @@ function getArr(min: number, max: number): number[] {
 }
 
 export function Track(props: TrackProps) {
-  const { label, min, max, value, onChange, sx, disabled } = props;
+  const { label, min, max, value, onChange, sx, disabled, rollable } = props;
 
   const [numbers, setNumbers] = useState<number[]>([]);
   const hasUnsavedChangesRef = useRef(false);
@@ -66,6 +68,14 @@ export function Track(props: TrackProps) {
 
   const labelId = useId();
 
+  const { rollStat } = useRoller();
+  const adds = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.adds ?? 0
+  );
+  const resetAdds = useStore(
+    (store) => store.characters.currentCharacter.updateCurrentCharacter
+  );
+
   return (
     <Box
       role={"group"}
@@ -92,7 +102,24 @@ export function Track(props: TrackProps) {
           sx={(theme) => ({
             borderTopLeftRadius: `${theme.shape.borderRadius}px`,
             borderBottomLeftRadius: `${theme.shape.borderRadius}px`,
+            transition: theme.transitions.create(
+              ["background-color"],
+              { duration: theme.transitions.duration.shorter }
+            ),
+            "&:hover":
+              disabled || !rollable
+                ? {}
+                : {
+                    backgroundColor: theme.palette.primary.main,
+                  },
           })}
+          onClick={() => {
+            if (!disabled && rollable) {
+              rollStat(label, value, undefined, adds);
+              resetAdds({ adds: 0 }).catch(() => {});
+            }
+          }}
+          component={(disabled || !rollable) ? "div" : ButtonBase}
         >
           <Typography
             fontFamily={(theme) => theme.fontFamilyTitle}

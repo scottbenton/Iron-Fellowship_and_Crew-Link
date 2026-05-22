@@ -32,36 +32,43 @@ export function DebouncedOracleInput(props: DebouncedOracleInputProps) {
     Array.isArray(oracleTableId) ||
     (!!oracleTableId && oracleTableId in oracleMap);
 
-  const handleOracleRoll = () => {
+  const handleOracleRoll = async () => {
     if (!oracleTableId) return "";
     if (Array.isArray(oracleTableId) && joinOracleTables) {
-      return oracleTableId
-        .map((tableId) => {
-          if (Array.isArray(tableId)) {
-            return tableId
-              .map((id) => rollOracleTable(id, false)?.result ?? "")
-              .join("");
+      const oracleResults: string[] = [];
+      for(const tableId of oracleTableId) {
+        if (Array.isArray(tableId)) {
+          const tableResults: string[] = [];
+          for(const id of tableId) {
+            const result = await rollOracleTable(id, false);
+            tableResults.push(result?.result ?? "");
           }
-          return rollOracleTable(tableId, false)?.result ?? "";
-        })
-        .join(" ");
+          oracleResults.push(tableResults.join(""));
+        } else {
+          const result = await rollOracleTable(tableId, false);
+          oracleResults.push(result?.result ?? "");
+        }
+      }
+
+      return oracleResults.join(" ");
     } else if (Array.isArray(oracleTableId)) {
       const oracleIndex = Math.floor(Math.random() * oracleTableId.length);
       const oracleId = oracleTableId[oracleIndex];
       if (Array.isArray(oracleId)) {
-        return oracleId
-          .map((id) => {
-            const result = rollOracleTable(id, false)?.result ?? "";
-            return result;
-          })
-          .join("");
+        const results: string[] = [];
+        for(const id of oracleId) {
+          const result = await rollOracleTable(id, false);
+          results.push(result?.result ?? "");
+        }
+        return results.join("");
       }
-      const result = rollOracleTable(oracleId, false)?.result ?? "";
-      return result;
+
+      const result = await rollOracleTable(oracleId, false);
+      return result?.result ?? "";
     }
 
-    const result = rollOracleTable(oracleTableId, false)?.result ?? "";
-    return result;
+    const result = await rollOracleTable(oracleTableId, false);
+    return result?.result ?? "";
   };
 
   return (

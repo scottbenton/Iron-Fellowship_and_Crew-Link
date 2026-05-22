@@ -56,6 +56,7 @@ export function CharacterHeader() {
         display={"flex"}
         alignItems={"center"}
         justifyContent={"space-between"}
+        pt={isMobile ? 1 : undefined}
       >
         <Box display={"flex"} alignItems={"center"} flexGrow={1}>
           <CharacterPortrait />

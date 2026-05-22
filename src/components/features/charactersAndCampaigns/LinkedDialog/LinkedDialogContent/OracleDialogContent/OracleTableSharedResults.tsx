@@ -22,7 +22,7 @@ export function OracleTableSharedResults(props: OracleTableSharedResultsProps) {
     return null;
   }
 
-  const columns: SimpleTableColumnDefinition<Datasworn.OracleTableRowText3>[] =
+  const columns: SimpleTableColumnDefinition<Datasworn.OracleRollableRowText3>[] =
     [];
 
   const contentValues:
@@ -39,10 +39,10 @@ export function OracleTableSharedResults(props: OracleTableSharedResultsProps) {
       renderer: (_, index) => {
         const row = subOracle.rows[index];
 
-        return row.min !== null && row.max !== null
-          ? row.max - row.min === 0
-            ? row.min
-            : `${row.min} - ${row.max}`
+        return row.roll
+          ? row.roll.max - row.roll.min === 0
+            ? row.roll.min
+            : `${row.roll.min} - ${row.roll.max}`
           : null;
       },
       textColor: "text.secondary",

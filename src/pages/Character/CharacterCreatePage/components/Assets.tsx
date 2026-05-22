@@ -11,10 +11,11 @@ import { AssetCard } from "components/features/assets/AssetCard";
 
 export interface AssetsProps {
   control: Control<Form>;
+  campaignId?: string;
 }
 
 export function Assets(props: AssetsProps) {
-  const { control } = props;
+  const { control, campaignId } = props;
 
   const defaultRuleAlertText = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]:
@@ -120,6 +121,7 @@ export function Assets(props: AssetsProps) {
           });
           setIsAddAssetDialogOpen(false);
         }}
+        campaignId={campaignId}
       />
     </>
   );

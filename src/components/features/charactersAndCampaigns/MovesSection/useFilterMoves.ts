@@ -33,10 +33,12 @@ export function useFilterMoves() {
 
     Object.values(moveCategories).forEach((category) => {
       if (category.enhances) {
-        enhancesCollections[category.enhances] = [
-          ...(enhancesCollections[category.enhances] ?? []),
-          category._id,
-        ];
+        category.enhances.forEach((enhancesId) => {
+          enhancesCollections[enhancesId] = [
+            ...(enhancesCollections[enhancesId] ?? []),
+            category._id,
+          ];
+        });
       }
 
       if (
@@ -69,9 +71,10 @@ export function useFilterMoves() {
       if (hasMove) {
         isEmpty = false;
         visibleCategories[category._id] = CATEGORY_VISIBILITY.SOME;
-        if (category.enhances) {
-          visibleCategories[category.enhances] = CATEGORY_VISIBILITY.SOME;
-        }
+        // TODO - double check this
+        // if (category.enhances) {
+        //   visibleCategories[category.enhances] = CATEGORY_VISIBILITY.SOME;
+        // }
       } else {
         visibleCategories[category._id] = CATEGORY_VISIBILITY.HIDDEN;
       }

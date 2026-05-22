@@ -10,7 +10,9 @@ import { useStore } from "stores/store";
 export function TracksSection() {
   const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
   const isIronsworn = useGameSystem().gameSystem === GAME_SYSTEMS.IRONSWORN;
-  const showDelve = useStore((store) => store.settings.delve.showDelveMoves);
+  const isDelveEnabled = useStore((store) =>
+    store.rules.expansionIds.includes("delve")
+  );
 
   return (
     <Stack spacing={2} sx={{ pb: 2 }}>
@@ -25,7 +27,7 @@ export function TracksSection() {
         type={TrackTypes.Journey}
         typeLabel={isStarforged ? "Expedition" : "Journey"}
       />
-      {isIronsworn && showDelve && (
+      {isIronsworn && isDelveEnabled && (
         <ProgressTrackSection
           type={TrackTypes.DelveSite}
           typeLabel={"Delve Site"}

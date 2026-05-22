@@ -14,7 +14,9 @@ import { GAME_SYSTEMS } from "types/GameSystems.type";
 export function TracksTab() {
   const isStarforged = useGameSystem().gameSystem === GAME_SYSTEMS.STARFORGED;
   const isIronsworn = useGameSystem().gameSystem === GAME_SYSTEMS.IRONSWORN;
-  const showDelve = useStore((store) => store.settings.delve.showDelveMoves);
+  const isDelveEnabled = useStore((store) =>
+    store.rules.expansionIds.includes("delve")
+  );
 
   const conditionMeterRules = useStore((store) => store.rules.conditionMeters);
   const conditionMeterValues = useStore(
@@ -76,7 +78,7 @@ export function TracksTab() {
           typeLabel={isStarforged ? "Shared Expedition" : "Shared Journey"}
           isCampaign
         />
-        {isIronsworn && showDelve && (
+        {isIronsworn && isDelveEnabled && (
           <ProgressTrackList
             trackType={TrackTypes.DelveSite}
             typeLabel={"Shared Delve Site"}

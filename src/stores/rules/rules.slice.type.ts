@@ -4,6 +4,7 @@ import { HomebrewNonLinearMeterDocument } from "api-calls/homebrew/rules/nonLine
 export interface RulesSliceData {
   expansionIds: string[];
   baseRuleset?: Datasworn.Ruleset;
+  mergedRuleset?: Datasworn.Ruleset;
   progressTracks: string[];
   rootOracleCollectionIds: string[];
   stats: Datasworn.Rules["stats"];
@@ -25,10 +26,10 @@ export interface RulesSliceData {
     nonReplacedOracleCollectionMap: Record<string, Datasworn.OracleCollection>;
     oracleRollableMap: Record<string, Datasworn.OracleRollable>;
     nonReplacedOracleRollableMap: Record<string, Datasworn.OracleRollable>;
-    oracleTableRollableMap: Record<string, Datasworn.OracleTableRollable>;
+    oracleTableRollableMap: Record<string, Datasworn.OracleRollableTable>;
     nonReplacedOracleTableRollableMap: Record<
       string,
-      Datasworn.OracleTableRollable
+      Datasworn.OracleRollableTable
     >;
   };
   rootMoveCollectionIds: string[];
@@ -44,15 +45,10 @@ export interface RulesSliceData {
 export interface RulesSliceActions {
   setBaseRuleset: (ruleset: Datasworn.Ruleset) => void;
   setExpansionIds: (expansionIds: string[]) => void;
-  rebuildOracles: () => void;
-  rebuildMoves: () => void;
-  rebuildStats: () => void;
-  rebuildConditionMeters: () => void;
+  loadBaseRuleset: () => Promise<void>;
+  loadIncludedExpansions: (expansionIds: string[]) => Promise<void>;
   rebuildNonLinearMeters: () => void;
-  rebuildSpecialTracks: () => void;
-  rebuildImpacts: () => void;
-  rebuildAssets: () => void;
-  rebuildWorldTruths: () => void;
+  rebuildRules: () => void;
 }
 
 export type RulesSlice = RulesSliceData & RulesSliceActions;

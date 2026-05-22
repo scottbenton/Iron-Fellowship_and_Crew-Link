@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { LegacyTrack } from "./LegacyTrack";
 import { useStore } from "stores/store";
-import { LegacyTrack as ILegacyTrack } from "types/LegacyTrack.type";
+import { LEGACY_TrackTypes, LegacyTrack as ILegacyTrack } from "types/LegacyTrack.type";
 
 export function LegacyTracks() {
   const specialTracksRules = useStore((store) => store.rules.specialTracks);
@@ -88,19 +88,30 @@ export function LegacyTracks() {
         Legacy Tracks
       </Typography>
       <Box display={"flex"} flexDirection={"column"} gap={1}>
-        {Object.keys(specialTracksRules).map((specialTrackKey) => (
-          <LegacyTrack
-            key={specialTrackKey}
-            rule={specialTracksRules[specialTrackKey]}
-            value={getSpecialTrackValue(specialTrackKey)}
-            toggleIsLegacy={(isLegacy) =>
-              updateSpecialTrackIsLegacy(specialTrackKey, isLegacy)
-            }
-            onValueChange={(value) =>
-              updateSpecialTrackValue(specialTrackKey, value)
-            }
-          />
-        ))}
+        {Object.keys(specialTracksRules).map((specialTrackKey) => {
+          const specialTrackLabel = specialTracksRules[specialTrackKey].label.toLowerCase();
+
+          let trackType = undefined;
+          if (specialTrackLabel in Object.values(LEGACY_TrackTypes)) {
+            trackType = specialTrackLabel as LEGACY_TrackTypes;
+          }
+
+          return (
+            <LegacyTrack
+              key={specialTrackKey}
+              rule={specialTracksRules[specialTrackKey]}
+              value={getSpecialTrackValue(specialTrackKey)?.value ?? 0}
+              isLegacy={getSpecialTrackValue(specialTrackKey)?.isLegacy ?? false}
+              toggleIsLegacy={(isLegacy) =>
+                updateSpecialTrackIsLegacy(specialTrackKey, isLegacy)
+              }
+              onValueChange={(value) =>
+                updateSpecialTrackValue(specialTrackKey, value)
+              }
+              trackType={trackType}
+            />
+          );
+        })}
       </Box>
     </Box>
   );
