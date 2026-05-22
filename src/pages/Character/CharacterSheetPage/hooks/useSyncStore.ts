@@ -11,8 +11,6 @@ import { useStore } from "stores/store";
 import { useListenToLocations } from "stores/world/currentWorld/locations/useListenToLocations";
 import { useListenToLoreDocuments } from "stores/world/currentWorld/lore/useListenToLoreDocuments";
 import { useListenToNPCs } from "stores/world/currentWorld/npcs/useListenToNPCs";
-import { useListenToSectors } from "stores/world/currentWorld/sector/useListenToSectors";
-import { useListenToSectorLocations } from "stores/world/currentWorld/sector/sectorLocations/useListenToSectorLocations";
 import { useListenToSharedAssets } from "stores/campaign/currentCampaign/sharedAssets/useListenToSharedAssets";
 import { useListenToHomebrewContent } from "stores/homebrew/useListenToHomebrewContent";
 import { useSyncTheme } from "providers/ThemeProvider/useSyncTheme";
@@ -89,8 +87,6 @@ export function useSyncStore() {
   useListenToLocations();
   useListenToNPCs();
   useListenToLoreDocuments();
-  useListenToSectors();
-  useListenToSectorLocations();
 
   useListenToLogs();
   useListenToCurrentCampaignCharacters();
