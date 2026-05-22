@@ -1,6 +1,7 @@
 import {
   Alert,
   Button,
+  DialogContentText,
   Dialog,
   DialogActions,
   DialogContent,
@@ -8,12 +9,13 @@ import {
   ListItem,
   ListItemText,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import { UpdateData } from "firebase/firestore";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
-import { NumberField } from "components/shared/NumberField";
 import { useEffect, useMemo, useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useStore } from "stores/store";
 import {
   MapBackgroundImageFit,
@@ -46,12 +48,23 @@ interface ResizePlan {
 
 type ResizeUpdates = UpdateData<Location> & Record<string, number | null>;
 
+interface ResizeMapForm {
+  rows: string;
+  cols: string;
+  hexSize: string;
+}
+
+function parseNumericInput(value: string) {
+  if (!/^\d+$/.test(value.trim())) {
+    return undefined;
+  }
+
+  return Number.parseInt(value, 10);
+}
+
 export function ResizeMapDialog(props: ResizeMapDialogProps) {
   const { locationId, open, onClose } = props;
 
-  const [rows, setRows] = useState(MIN_MAP_ROWS);
-  const [cols, setCols] = useState(MIN_MAP_COLS);
-  const [hexSize, setHexSize] = useState(DEFAULT_MAP_HEX_SIZE);
   const [pendingResizePlan, setPendingResizePlan] = useState<ResizePlan>();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -86,49 +99,89 @@ export function ResizeMapDialog(props: ResizeMapDialogProps) {
     ]
   );
 
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+  } = useForm<ResizeMapForm>({
+    mode: "onChange",
+    defaultValues: {
+      rows: `${currentLayout.rows}`,
+      cols: `${currentLayout.cols}`,
+      hexSize: `${location?.mapHexSize ?? DEFAULT_MAP_HEX_SIZE}`,
+    },
+  });
+
   useEffect(() => {
     if (!open) {
       return;
     }
 
-    setRows(currentLayout.rows);
-    setCols(currentLayout.cols);
-    setHexSize(location?.mapHexSize ?? DEFAULT_MAP_HEX_SIZE);
+    reset({
+      rows: `${currentLayout.rows}`,
+      cols: `${currentLayout.cols}`,
+      hexSize: `${location?.mapHexSize ?? DEFAULT_MAP_HEX_SIZE}`,
+    });
     setPendingResizePlan(undefined);
     setIsSaving(false);
-  }, [currentLayout.cols, currentLayout.rows, location?.mapHexSize, open]);
+  }, [currentLayout.cols, currentLayout.rows, location?.mapHexSize, open, reset]);
+
+  const rowsValue = watch("rows");
+  const colsValue = watch("cols");
+  const hexSizeValue = watch("hexSize");
 
   const previewLayout = useMemo(
-    () =>
-      getMapLayout({
+    () => {
+      const parsedRows = parseNumericInput(rowsValue);
+      const parsedCols = parseNumericInput(colsValue);
+      const parsedHexSize = parseNumericInput(hexSizeValue);
+
+      if (
+        typeof parsedRows !== "number" ||
+        typeof parsedCols !== "number" ||
+        typeof parsedHexSize !== "number"
+      ) {
+        return undefined;
+      }
+
+      return getMapLayout({
         imageDimensions: null,
-        mapRows: rows,
-        mapCols: cols,
-        hexSize,
-      }),
-    [cols, hexSize, rows]
+        mapRows: parsedRows,
+        mapCols: parsedCols,
+        hexSize: parsedHexSize,
+      });
+    },
+    [colsValue, hexSizeValue, rowsValue]
   );
 
-  const validateValue = (
-    value: number | undefined,
+  const validateInput = (
+    label: string,
+    value: string,
     min: number,
     max: number
   ) => {
-    if (typeof value !== "number") {
-      return min;
+    if (!value.trim()) {
+      return `${label} is required.`;
     }
 
-    return Math.min(Math.max(value, min), max);
+    const parsedValue = parseNumericInput(value);
+    if (typeof parsedValue !== "number") {
+      return `${label} must be a whole number.`;
+    }
+
+    if (parsedValue < min || parsedValue > max) {
+      return `${label} must be between ${min} and ${max}.`;
+    }
+
+    return true;
   };
 
-  const buildResizePlan = () => {
-    const nextRows = validateValue(rows, MIN_MAP_ROWS, MAX_MAP_DIMENSION_INPUT);
-    const nextCols = validateValue(cols, MIN_MAP_COLS, MAX_MAP_DIMENSION_INPUT);
-    const nextHexSize = validateValue(
-      hexSize,
-      MIN_MAP_HEX_SIZE,
-      MAX_MAP_HEX_SIZE
-    );
+  const buildResizePlan = (
+    nextRows: number,
+    nextCols: number,
+    nextHexSize: number
+  ) => {
     const updates: ResizeUpdates = {
       mapRows: nextRows,
       mapCols: nextCols,
@@ -176,8 +229,11 @@ export function ResizeMapDialog(props: ResizeMapDialogProps) {
     }
   };
 
-  const handleSave = () => {
-    const plan = buildResizePlan();
+  const handleSave: SubmitHandler<ResizeMapForm> = (values) => {
+    const nextRows = Number.parseInt(values.rows, 10);
+    const nextCols = Number.parseInt(values.cols, 10);
+    const nextHexSize = Number.parseInt(values.hexSize, 10);
+    const plan = buildResizePlan(nextRows, nextCols, nextHexSize);
 
     if (plan.affectedLocationNames.length > 0) {
       setPendingResizePlan(plan);
@@ -198,55 +254,111 @@ export function ResizeMapDialog(props: ResizeMapDialogProps) {
         <DialogTitleWithCloseButton onClose={onClose}>
           Resize Map
         </DialogTitleWithCloseButton>
-        <DialogContent>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <NumberField
-              label={"Rows"}
-              fullWidth
-              value={rows}
-              onChange={(value) =>
-                setRows(validateValue(value, MIN_MAP_ROWS, MAX_MAP_DIMENSION_INPUT))
-              }
-              inputProps={{ min: MIN_MAP_ROWS, max: MAX_MAP_DIMENSION_INPUT }}
-              helperText={`Minimum ${MIN_MAP_ROWS}, suggested maximum ${MAX_MAP_DIMENSION_INPUT}`}
-            />
-            <NumberField
-              label={"Columns"}
-              fullWidth
-              value={cols}
-              onChange={(value) =>
-                setCols(validateValue(value, MIN_MAP_COLS, MAX_MAP_DIMENSION_INPUT))
-              }
-              inputProps={{ min: MIN_MAP_COLS, max: MAX_MAP_DIMENSION_INPUT }}
-              helperText={`Minimum ${MIN_MAP_COLS}, suggested maximum ${MAX_MAP_DIMENSION_INPUT}`}
-            />
-            <NumberField
-              label={"Hex Size"}
-              fullWidth
-              value={hexSize}
-              onChange={(value) =>
-                setHexSize(validateValue(value, MIN_MAP_HEX_SIZE, MAX_MAP_HEX_SIZE))
-              }
-              inputProps={{ min: MIN_MAP_HEX_SIZE, max: MAX_MAP_HEX_SIZE }}
-              helperText={`Visual size only. Range ${MIN_MAP_HEX_SIZE}-${MAX_MAP_HEX_SIZE}`}
-            />
-            <Alert severity={"info"}>
-              <Typography variant={"body2"}>
-                Preview size: {Math.round(previewLayout.width)}px by{" "}
-                {Math.round(previewLayout.height)}px. Odd rows render with one
-                fewer column.
-              </Typography>
-            </Alert>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} disabled={isSaving}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} variant={"contained"} disabled={isSaving}>
-            Apply
-          </Button>
-        </DialogActions>
+        <form onSubmit={handleSubmit(handleSave)} noValidate>
+          <DialogContent>
+            <Stack spacing={2} sx={{ pt: 1 }}>
+              <Controller
+                name={"rows"}
+                control={control}
+                rules={{
+                  validate: (value) =>
+                    validateInput(
+                      "Rows",
+                      value,
+                      MIN_MAP_ROWS,
+                      MAX_MAP_DIMENSION_INPUT
+                    ),
+                }}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={"Rows"}
+                    fullWidth
+                    error={!!fieldState.error}
+                    helperText={
+                      fieldState.error?.message ??
+                      `Allowed range: ${MIN_MAP_ROWS}-${MAX_MAP_DIMENSION_INPUT}`
+                    }
+                    inputProps={{ inputMode: "numeric" }}
+                  />
+                )}
+              />
+              <Controller
+                name={"cols"}
+                control={control}
+                rules={{
+                  validate: (value) =>
+                    validateInput(
+                      "Columns",
+                      value,
+                      MIN_MAP_COLS,
+                      MAX_MAP_DIMENSION_INPUT
+                    ),
+                }}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={"Columns"}
+                    fullWidth
+                    error={!!fieldState.error}
+                    helperText={
+                      fieldState.error?.message ??
+                      `Allowed range: ${MIN_MAP_COLS}-${MAX_MAP_DIMENSION_INPUT}`
+                    }
+                    inputProps={{ inputMode: "numeric" }}
+                  />
+                )}
+              />
+              <Controller
+                name={"hexSize"}
+                control={control}
+                rules={{
+                  validate: (value) =>
+                    validateInput(
+                      "Hex Size",
+                      value,
+                      MIN_MAP_HEX_SIZE,
+                      MAX_MAP_HEX_SIZE
+                    ),
+                }}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={"Hex Size"}
+                    fullWidth
+                    error={!!fieldState.error}
+                    helperText={
+                      fieldState.error?.message ??
+                      `Visual size only. Allowed range: ${MIN_MAP_HEX_SIZE}-${MAX_MAP_HEX_SIZE}`
+                    }
+                    inputProps={{ inputMode: "numeric" }}
+                  />
+                )}
+              />
+              <Alert severity={"info"}>
+                {previewLayout ? (
+                  <Typography variant={"body2"}>
+                    Preview size: {Math.round(previewLayout.width)}px by{" "}
+                    {Math.round(previewLayout.height)}px. Odd rows render with one
+                    fewer column.
+                  </Typography>
+                ) : (
+                  <DialogContentText>
+                    Enter whole numbers to preview the rendered map size.
+                  </DialogContentText>
+                )}
+              </Alert>
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={onClose} disabled={isSaving}>
+              Cancel
+            </Button>
+            <Button type={"submit"} variant={"contained"} disabled={isSaving}>
+              Apply
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
 
       <Dialog

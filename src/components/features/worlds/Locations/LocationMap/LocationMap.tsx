@@ -42,6 +42,9 @@ export interface LocationMapProps {
   map?: ILocationMap;
 }
 
+const DEFAULT_LABEL_SIZE = (DEFAULT_MAP_HEX_SIZE * 3) / 4;
+const LABEL_SCALE_EXPONENT = 0.75;
+
 export function LocationMap(props: LocationMapProps) {
   const { locationId, map = {}, backgroundImageUrl } = props;
   const locationMap = useStore(
@@ -76,6 +79,12 @@ export function LocationMap(props: LocationMapProps) {
   const verticalSpacing: number = 1.5 * hexSize;
   const horizontalSpacing: number = hexSize * Math.sqrt(3);
   const offsetX: number = (hexSize * Math.sqrt(3)) / 2;
+  const labelScaleRatio = Math.pow(
+    hexSize / DEFAULT_MAP_HEX_SIZE,
+    LABEL_SCALE_EXPONENT
+  );
+  const labelSize = DEFAULT_LABEL_SIZE * labelScaleRatio;
+  const labelOutlineWidth = Math.max(1.5, labelSize / 9);
 
   const settingId = useGameSystemValue({
     [GAME_SYSTEMS.IRONSWORN]: "ironlands",
@@ -424,8 +433,8 @@ export function LocationMap(props: LocationMapProps) {
                       <text
                         key={`${x}-${y}`}
                         x={x}
-                        y={y - (hexSize * 3) / 4}
-                        fontSize={(hexSize * 3) / 4}
+                        y={y - labelSize}
+                        fontSize={labelSize}
                         textAnchor="middle"
                         fill={"#fff"}
                         style={{
@@ -435,11 +444,11 @@ export function LocationMap(props: LocationMapProps) {
                           paintOrder: "stroke",
                           stroke: "#000000",
                           strokeOpacity: backgroundImageUrl ? "100%" : "60%",
-                          strokeWidth: hexSize / 12,
+                          strokeWidth: labelOutlineWidth,
                           strokeLinecap: "butt",
                           strokeLinejoin: "miter",
                         }}
-                        strokeWidth={hexSize * 4}
+                        strokeWidth={labelOutlineWidth}
                         color={"#000"}
                       >
                         {name}
