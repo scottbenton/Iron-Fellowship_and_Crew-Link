@@ -36,6 +36,7 @@ import UsernameIcon from "@mui/icons-material/AccountCircle";
 import TokenIcon from "@mui/icons-material/Contacts";
 import { CustomTokenDialog } from "./CustomTokenDialog/CustomTokenDialog";
 import { activeFeatureFlags } from "hooks/featureFlags/activeFeatureFlags";
+import { ExportGameState } from "pages/Campaign/CampaignPage/components/CampaignSettingsMenu/ExportGameState";
 
 export function SettingsMenu() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -53,6 +54,7 @@ export function SettingsMenu() {
   const [usernameDialogOpen, setUsernameDialogOpen] = useState(false);
   const [customTokenDialogOpen, setCustomTokenDialogOpen] = useState(false);
 
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const isMobile = useIsMobile();
 
   const isLoggedIn = useStore(
@@ -195,6 +197,17 @@ export function SettingsMenu() {
             <ListItemText>Logout</ListItemText>
           </MenuItem>
         )}
+        <MenuItem
+          onClick={() => {
+            setMenuOpen(false);
+            setExportDialogOpen(true);
+          }}
+        >
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText>Export Game State</ListItemText>
+        </MenuItem>
         {isLocal && (
           <MenuItem
             onClick={() => {
@@ -243,6 +256,10 @@ export function SettingsMenu() {
           onClose={() => setCustomTokenDialogOpen(false)}
         />
       )}
+      <ExportGameState
+        open={exportDialogOpen}
+        onClose={() => setExportDialogOpen(false)}
+      />
     </>
   );
 }

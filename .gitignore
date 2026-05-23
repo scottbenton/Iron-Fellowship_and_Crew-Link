@@ -25,3 +25,4 @@ dist-ssr
 
 # Project Specific
 .firebase/*
+.aider*
