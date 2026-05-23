@@ -179,6 +179,7 @@ export function ProgressTracks(props: ProgressTracksProps) {
       </Stack>
       {!readOnly && currentlyEditingTrack && currentlyEditingTrackId && (
         <EditOrCreateTrackDialog
+          key={currentlyEditingTrackId}
           open={!!currentlyEditingTrack}
           handleClose={() => setCurrentlyEditingTrackId(undefined)}
           trackType={currentlyEditingTrack.type as TrackSectionProgressTracks}

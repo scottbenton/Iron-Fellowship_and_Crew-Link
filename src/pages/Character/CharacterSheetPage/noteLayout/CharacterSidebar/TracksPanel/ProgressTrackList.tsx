@@ -42,6 +42,7 @@ export function ProgressTrackList(props: ProgressTrackListProps) {
     <>
       {!readOnly && (
         <EditOrCreateTrackDialog
+          key={`${trackType}-${addTrackDialogOpen ? "open" : "closed"}`}
           open={addTrackDialogOpen}
           handleClose={() => setAddTrackDialogOpen(false)}
           trackType={trackType}

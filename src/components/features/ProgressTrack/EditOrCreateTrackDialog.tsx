@@ -12,7 +12,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ProgressTrack,
   Difficulty,
@@ -56,15 +56,6 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
     initialTrack?.difficulty
   );
   const [resetProgress, setResetProgress] = useState(false);
-
-  useEffect(() => {
-    setTitle(initialTrack?.label ?? "");
-    setDescription(initialTrack?.description ?? "");
-    setDifficulty(initialTrack?.difficulty);
-    setResetProgress(false);
-    setError(undefined);
-    setLoading(false);
-  }, [initialTrack, open]);
 
   const handleDialogClose = () => {
     setTitle("");
