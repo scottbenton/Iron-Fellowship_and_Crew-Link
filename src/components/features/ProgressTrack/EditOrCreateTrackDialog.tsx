@@ -12,7 +12,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ProgressTrack,
   Difficulty,
@@ -28,6 +28,7 @@ export interface EditOrCreateTrackDialogProps {
   initialTrack?: ProgressTrack | SceneChallenge;
   trackType: TrackSectionProgressTracks | TrackTypes.SceneChallenge;
   trackTypeName: string;
+  onDelete?: () => Promise<boolean | void>;
   handleTrack: (
     track: ProgressTrack | SceneChallenge
   ) => Promise<boolean | void>;
@@ -40,6 +41,7 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
     initialTrack,
     trackType,
     trackTypeName,
+    onDelete,
     handleTrack,
   } = props;
 
@@ -54,6 +56,15 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
     initialTrack?.difficulty
   );
   const [resetProgress, setResetProgress] = useState(false);
+
+  useEffect(() => {
+    setTitle(initialTrack?.label ?? "");
+    setDescription(initialTrack?.description ?? "");
+    setDifficulty(initialTrack?.difficulty);
+    setResetProgress(false);
+    setError(undefined);
+    setLoading(false);
+  }, [initialTrack, open]);
 
   const handleDialogClose = () => {
     setTitle("");
@@ -73,18 +84,26 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       return;
     }
 
+    const sceneChallengeInitialTrack =
+      trackType === TrackTypes.SceneChallenge
+        ? (initialTrack as SceneChallenge | undefined)
+        : undefined;
+
     const track: ProgressTrack | SceneChallenge =
       trackType === TrackTypes.SceneChallenge
         ? {
             createdDate: new Date(),
             status: TrackStatus.Active,
             type: trackType,
-            ...((initialTrack as SceneChallenge | undefined) ?? {}),
+            ...(sceneChallengeInitialTrack ?? {}),
             label: title,
             description,
             difficulty: difficulty,
             value: initialTrack && !resetProgress ? initialTrack.value : 0,
-            segmentsFilled: 0,
+            segmentsFilled:
+              sceneChallengeInitialTrack && !resetProgress
+                ? sceneChallengeInitialTrack.segmentsFilled
+                : 0,
           }
         : {
             createdDate: new Date(),
@@ -105,6 +124,22 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       .catch(() => {
         setLoading(false);
         setError("Error adding track");
+      });
+  };
+
+  const handleDelete = () => {
+    if (!onDelete) {
+      return;
+    }
+
+    setLoading(true);
+    onDelete()
+      .then(() => {
+        handleDialogClose();
+      })
+      .catch(() => {
+        setLoading(false);
+        setError("Error deleting track");
       });
   };
 
@@ -167,6 +202,11 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
           </Stack>
         </DialogContent>
         <DialogActions>
+          {initialTrack?.status === TrackStatus.Active && onDelete && (
+            <Button disabled={loading} onClick={handleDelete} color={"error"}>
+              Delete Track
+            </Button>
+          )}
           <Button
             disabled={loading}
             onClick={() => handleDialogClose()}
