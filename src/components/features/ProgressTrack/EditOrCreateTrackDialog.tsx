@@ -12,6 +12,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
 import {
   ProgressTrack,
@@ -44,6 +45,8 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
     onDelete,
     handleTrack,
   } = props;
+
+  const confirm = useConfirm();
 
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -118,8 +121,22 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       });
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!onDelete) {
+      return;
+    }
+
+    try {
+      await confirm({
+        title: "Delete Track",
+        description: "Are you sure you want to delete this track?",
+        confirmationText: "Delete",
+        confirmationButtonProps: {
+          variant: "contained",
+          color: "error",
+        },
+      });
+    } catch {
       return;
     }
 
