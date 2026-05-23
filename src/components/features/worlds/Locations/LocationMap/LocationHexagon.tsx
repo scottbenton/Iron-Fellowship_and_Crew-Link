@@ -14,6 +14,10 @@ const mapStrokeColors: Record<MapStrokeColors, string> = {
   [MapStrokeColors.Dark]: "#333",
 };
 
+const ICON_SIZE_MULTIPLIER = 1.25;
+const ICON_SCALE_THRESHOLD = 20;
+const ICON_SCALE_REDUCTION = 0.6;
+
 export interface LocationHexagonProps {
   x: number;
   y: number;
@@ -92,6 +96,13 @@ export function LocationHexagon(props: LocationHexagonProps) {
   const leftX = x - (size * Math.sqrt(3)) / 2;
   const hexWidth = size * Math.sqrt(3);
   const hexHeight = size * 2;
+  const iconSize =
+    (size <= ICON_SCALE_THRESHOLD
+      ? size
+      : ICON_SCALE_THRESHOLD +
+        (size - ICON_SCALE_THRESHOLD) * ICON_SCALE_REDUCTION) *
+    ICON_SIZE_MULTIPLIER;
+  const iconStrokeWidth = iconSize;
 
   const sideMidpoints = {
     topLeft: [
@@ -158,19 +169,17 @@ export function LocationHexagon(props: LocationHexagonProps) {
             sx={{
               background: "none",
               pointerEvents: "none",
-              height: 0,
               overflow: "visible",
+              fontSize: iconSize,
               "& path": {
                 paintOrder: "stroke",
-                strokeWidth: size * (hasBackgroundImage ? 3 : 2) + "px",
+                strokeWidth: `${iconStrokeWidth}px`,
                 strokeOpacity: hasBackgroundImage ? "100%" : "60%",
                 stroke: "black",
               },
             }}
-            width={size * 1.25}
-            height={size * 1.25}
-            x={x - (size * 1.25) / 2}
-            y={y - (size * 1.25) / 2}
+            x={x - iconSize / 2}
+            y={y - iconSize / 2}
           />
         ))}
       <polygon
