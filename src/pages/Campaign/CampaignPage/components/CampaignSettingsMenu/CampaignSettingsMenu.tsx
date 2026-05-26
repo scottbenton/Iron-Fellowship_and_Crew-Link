@@ -31,6 +31,13 @@ import { AssetCardDialog } from "components/features/assets/AssetCardDialog";
 import { AssetDocument } from "api-calls/assets/_asset.type";
 import { HideOraclesDialog } from "./HideOraclesDialog";
 import OracleHideIcon from '@mui/icons-material/PlaylistRemove';
+import DownloadIcon from "@mui/icons-material/Download";
+import { ExportDialog, ExportOption } from "components/features/export/ExportDialog";
+import { createCharacterExporter } from "services/export/exporters/exportCharacter";
+import { createNotesExporter } from "services/export/exporters/exportNotes";
+import { createWorldExporter } from "services/export/exporters/exportWorld";
+import { Exporter } from "services/export";
+import { useMemo } from "react";
 
 export function CampaignSettingsMenu() {
   const confirm = useConfirm();
@@ -50,7 +57,82 @@ export function CampaignSettingsMenu() {
   const [assetDialogOpen, setAssetDialogOpen] = useState(false);
   const [hideAssetsLoading, setHideAssetsLoading] = useState(false);
   const [isEditCampaignOpen, setIsEditCampaignOpen] = useState(false);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const handleClose = () => setAnchorElement(null);
+
+  const campaignId = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaignId
+  );
+  const campaignName = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign?.name ?? ""
+  );
+  const campaignWorldId = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign?.worldId
+  );
+  const campaignCharacterIds = useStore(
+    (store) =>
+      store.campaigns.currentCampaign.currentCampaign?.characters.map(
+        (c) => c.characterId
+      ) ?? []
+  );
+  const isGuideForExport = useStore(
+    (store) =>
+      store.campaigns.currentCampaign.currentCampaign?.gmIds?.includes(
+        store.auth.uid
+      ) ?? false
+  );
+  const uidForExport = useStore((store) => store.auth.uid);
+
+  const exportOptions = useMemo<ExportOption[]>(() => {
+    const opts: ExportOption[] = [
+      {
+        key: "characters",
+        label: `All characters (${campaignCharacterIds.length})`,
+        description: "Sheets, tracks, and assets for every character in the campaign.",
+        disabledReason:
+          campaignCharacterIds.length === 0
+            ? "This campaign has no characters."
+            : undefined,
+      },
+      {
+        key: "notes",
+        label: "Campaign notes",
+        description: isGuideForExport
+          ? "Includes private and shared notes."
+          : "Includes only notes shared with players.",
+      },
+    ];
+    if (campaignWorldId) {
+      opts.push({
+        key: "world",
+        label: "World",
+        description: "Includes NPCs, lore, and locations you can read.",
+      });
+    }
+    return opts;
+  }, [campaignCharacterIds.length, campaignWorldId, isGuideForExport]);
+
+  const buildExporters = (keys: Set<string>): Exporter[] => {
+    const list: Exporter[] = [];
+    if (!campaignId) return list;
+    if (keys.has("characters")) {
+      for (const cid of campaignCharacterIds) {
+        list.push(createCharacterExporter({ characterId: cid }));
+      }
+    }
+    if (keys.has("notes")) {
+      list.push(
+        createNotesExporter({
+          campaignId,
+          includeUnsharedCampaignNotes: isGuideForExport,
+        })
+      );
+    }
+    if (keys.has("world") && campaignWorldId) {
+      list.push(createWorldExporter({ worldId: campaignWorldId, userId: uidForExport }));
+    }
+    return list;
+  };
 
   const leaveCampaign = useStore(
     (store) => store.campaigns.currentCampaign.leaveCampaign
@@ -260,6 +342,17 @@ export function CampaignSettingsMenu() {
             <ListItemText>Delete Campaign</ListItemText>
           </MenuItem>
         )}
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            setExportDialogOpen(true);
+          }}
+        >
+          <ListItemIcon>
+            <DownloadIcon fontSize={"small"} />
+          </ListItemIcon>
+          <ListItemText>Export Data</ListItemText>
+        </MenuItem>
         {isGuide && campaignType === CampaignType.Guided && (
           <MenuItem
             onClick={() => {
@@ -301,6 +394,19 @@ export function CampaignSettingsMenu() {
         open={oraclesDialogOpen}
         onClose={() => setOraclesDialogOpen(false)}
       />
+      {campaignId && (
+        <ExportDialog
+          open={exportDialogOpen}
+          onClose={() => setExportDialogOpen(false)}
+          title={`Export ${campaignName || "Campaign"}`}
+          description="Select what to include. Notes and rich text become markdown files; images are not included."
+          filenameStem={`campaign-${campaignName || campaignId}`.replace(/\s+/g, "-").toLowerCase()}
+          appVersion={APP_VERSION}
+          source={{ type: "campaign", id: campaignId }}
+          options={exportOptions}
+          buildExporters={buildExporters}
+        />
+      )}
     </>
   );
 }
