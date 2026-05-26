@@ -294,7 +294,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
       <Box display={"flex"} alignItems={"center"} flexWrap={"wrap"}>
         <Box
           display={"flex"}
-          mt={label ? 2 : 0}
+          mt={label ? 1 : 0}
           mr={trackType === TrackTypes.SceneChallenge ? 2 : 0}
         >
           {trackType && !hideRollButton && smallRollButton && (
@@ -473,7 +473,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         </Button>
       )}
       {onDelete && status === TrackStatus.Completed && (
-        <Button color={"error"} sx={{ mt: 1 }} onClick={handleDeleteClick}>
+        <Button color={"error"} sx={{ mt: 2 }} onClick={handleDeleteClick}>
           Delete Permanently
         </Button>
       )}
