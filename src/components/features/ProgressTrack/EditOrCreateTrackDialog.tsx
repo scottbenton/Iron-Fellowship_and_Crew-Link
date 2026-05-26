@@ -1,6 +1,7 @@
 import {
   Alert,
   AlertTitle,
+  Box,
   Button,
   Checkbox,
   Dialog,
@@ -209,28 +210,32 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
             )}
           </Stack>
         </DialogContent>
-        <DialogActions>
-          {initialTrack?.status === TrackStatus.Active && onDelete && (
-            <Button disabled={loading} onClick={handleDelete} color={"error"}>
-              Delete Track
+        <DialogActions sx={{ justifyContent: "space-between" }}>
+          <Box>
+            {initialTrack?.status === TrackStatus.Active && onDelete && (
+              <Button disabled={loading} onClick={handleDelete} color={"error"}>
+                Delete Track
+              </Button>
+            )}
+          </Box>
+          <Stack direction="row" spacing={1}>
+            <Button
+              disabled={loading}
+              onClick={() => handleDialogClose()}
+              color={"inherit"}
+            >
+              Cancel
             </Button>
-          )}
-          <Button
-            disabled={loading}
-            onClick={() => handleDialogClose()}
-            color={"inherit"}
-          >
-            Cancel
-          </Button>
-          <Button
-            disabled={loading}
-            onClick={() => handleSubmit()}
-            variant={"contained"}
-          >
-            {initialTrack
-              ? `Edit ${initialTrack.label}`
-              : `Add ${trackTypeName}`}
-          </Button>
+            <Button
+              disabled={loading}
+              onClick={() => handleSubmit()}
+              variant={"contained"}
+            >
+              {initialTrack
+                ? `Edit ${initialTrack.label}`
+                : `Add ${trackTypeName}`}
+            </Button>
+          </Stack>
         </DialogActions>
       </Dialog>
     </>
