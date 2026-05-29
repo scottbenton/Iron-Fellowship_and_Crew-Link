@@ -3,7 +3,7 @@
 // fetching, so each package gets the repo root instead of its subdirectory.
 // This script copies the correct subpackage contents to the package root.
 
-const { cpSync, existsSync, readFileSync, writeFileSync } = require('fs');
+const { cpSync, existsSync, readFileSync, rmSync, writeFileSync } = require('fs');
 const { join } = require('path');
 
 const packages = [
@@ -73,4 +73,19 @@ for (const { dir, subpath } of packages) {
 
 if (anyFixed) {
   console.log('[fix-datasworn] done');
+}
+
+const diceBoxGeneratedAssetDirs = [
+  'public/assets/ammo',
+  'public/assets/themes',
+];
+
+for (const dir of diceBoxGeneratedAssetDirs) {
+  const generatedAssetDir = join(process.cwd(), dir);
+  if (!existsSync(generatedAssetDir)) {
+    continue;
+  }
+
+  rmSync(generatedAssetDir, { recursive: true, force: true });
+  console.log(`[dice-box-assets] removed unused generated ${dir}`);
 }
