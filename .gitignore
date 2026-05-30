@@ -26,5 +26,9 @@ dist-ssr
 # Project Specific
 .firebase/*
 
+# @3d-dice/dice-box install script generates unused copies here.
+/public/assets/ammo/
+/public/assets/themes/
+
 # AI
 .claude/*

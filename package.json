@@ -12,7 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "postinstall": "node scripts/fix-datasworn-packages.cjs"
+    "postinstall": "node scripts/fix-datasworn-packages.cjs && node scripts/cleanup-dicebox-assets.cjs"
   },
   "dependencies": {
     "@3d-dice/dice-box": "^1.1.4",
