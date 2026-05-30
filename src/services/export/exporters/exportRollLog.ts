@@ -52,7 +52,6 @@ export class RollLogExporter implements Exporter {
           rolls: records.map((record) => ({
             logId: record.id,
             ...record.roll,
-            timestamp: record.roll.timestamp.toISOString(),
           })),
         },
         null,

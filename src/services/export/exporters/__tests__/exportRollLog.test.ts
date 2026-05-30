@@ -21,10 +21,10 @@ describe("RollLogExporter", () => {
     mocks.getAllLogsForExport.mockResolvedValue([
       {
         id: "log-1",
-        roll: {
-          type: ROLL_TYPE.ORACLE_TABLE,
-          rollLabel: "Oracle",
-          timestamp: new Date("2026-05-30T04:00:00.000Z"),
+          roll: {
+            type: ROLL_TYPE.ORACLE_TABLE,
+            rollLabel: "Oracle",
+          timestamp: "2026-05-30T04:00:00.000Z",
           characterId: "char-1",
           uid: "user-1",
           gmsOnly: false,

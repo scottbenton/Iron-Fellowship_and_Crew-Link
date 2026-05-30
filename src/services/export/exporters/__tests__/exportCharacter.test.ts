@@ -7,7 +7,6 @@ const mocks = vi.hoisted(() => ({
   getCharacterForExport: vi.fn(),
   getCharacterAssetCollection: vi.fn(),
   getCharacterTracksCollection: vi.fn(),
-  convertFromDatabase: vi.fn(),
 }));
 
 vi.mock("firebase/firestore", () => ({
@@ -20,7 +19,6 @@ vi.mock("api-calls/assets/_getRef", () => ({
   getCharacterAssetCollection: mocks.getCharacterAssetCollection,
 }));
 vi.mock("api-calls/tracks/_getRef", () => ({
-  convertFromDatabase: mocks.convertFromDatabase,
   getCharacterTracksCollection: mocks.getCharacterTracksCollection,
 }));
 
@@ -35,9 +33,6 @@ describe("CharacterExporter", () => {
     mocks.getCharacterAssetCollection.mockImplementation(
       (characterId: string) => `assets:${characterId}`
     );
-    mocks.convertFromDatabase.mockImplementation((track: unknown) => ({
-      converted: track,
-    }));
   });
 
   it("does not fetch character data just to count one output file", async () => {
@@ -64,7 +59,18 @@ describe("CharacterExporter", () => {
       if (collection === "tracks:char-1") {
         return Promise.resolve({
           empty: false,
-          docs: [{ id: "track-1", data: () => ({ value: 4 }) }],
+          docs: [
+            {
+              id: "track-1",
+              data: () => ({
+                label: "Vow",
+                value: 4,
+                createdTimestamp: {
+                  toDate: () => new Date("2026-05-30T05:00:00.000Z"),
+                },
+              }),
+            },
+          ],
         });
       }
       return Promise.resolve({
@@ -84,8 +90,42 @@ describe("CharacterExporter", () => {
     expect(JSON.parse(String(files[0].contents))).toMatchObject({
       name: "Del Nar",
       profileImageFilename: "portrait.png",
-      tracks: { "track-1": { converted: { value: 4 } } },
+      tracks: {
+        "track-1": {
+          label: "Vow",
+          value: 4,
+          createdDate: "2026-05-30T05:00:00.000Z",
+        },
+      },
       assets: { "asset-1": { name: "Blade" } },
+    });
+  });
+
+  it("exports tracks even when legacy docs are missing createdTimestamp", async () => {
+    mocks.getCharacterForExport.mockResolvedValue({
+      id: "char-1",
+      data: {
+        uid: "user-1",
+        name: "Legacy",
+        stats: {},
+        momentum: 0,
+      },
+    });
+    mocks.getDocs.mockImplementation((collection: string) => {
+      if (collection === "tracks:char-1") {
+        return Promise.resolve({
+          empty: false,
+          docs: [{ id: "track-1", data: () => ({ label: "Old Track", value: 1 }) }],
+        });
+      }
+      return Promise.resolve({ empty: true, docs: [] });
+    });
+
+    const exporter = new CharacterExporter({ characterId: "char-1" });
+    const files = await collectAsyncIterable(exporter.run());
+
+    expect(JSON.parse(String(files[0].contents))).toMatchObject({
+      tracks: { "track-1": { label: "Old Track", value: 1 } },
     });
   });
 });

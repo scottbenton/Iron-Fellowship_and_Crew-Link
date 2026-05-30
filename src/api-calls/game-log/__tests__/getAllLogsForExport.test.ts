@@ -5,7 +5,6 @@ const mocks = vi.hoisted(() => ({
   orderBy: vi.fn(),
   query: vi.fn(),
   where: vi.fn(),
-  convertFromDatabase: vi.fn(),
   getCampaignGameLogCollection: vi.fn(),
   getCharacterGameLogCollection: vi.fn(),
 }));
@@ -17,7 +16,6 @@ vi.mock("firebase/firestore", () => ({
   where: mocks.where,
 }));
 vi.mock("../_getRef", () => ({
-  convertFromDatabase: mocks.convertFromDatabase,
   getCampaignGameLogCollection: mocks.getCampaignGameLogCollection,
   getCharacterGameLogCollection: mocks.getCharacterGameLogCollection,
 }));
@@ -40,11 +38,18 @@ describe("getAllLogsForExport", () => {
     }));
     mocks.getCampaignGameLogCollection.mockReturnValue("campaign-logs");
     mocks.getCharacterGameLogCollection.mockReturnValue("character-logs");
-    mocks.convertFromDatabase.mockImplementation((doc: unknown) => ({
-      converted: doc,
-    }));
     mocks.getDocs.mockResolvedValue({
-      docs: [{ id: "log-1", data: () => ({ roll: 42 }) }],
+      docs: [
+        {
+          id: "log-1",
+          data: () => ({
+            roll: 42,
+            timestamp: {
+              toDate: () => new Date("2026-05-30T05:00:00.000Z"),
+            },
+          }),
+        },
+      ],
     });
   });
 
@@ -56,7 +61,12 @@ describe("getAllLogsForExport", () => {
       "campaign-logs",
       "order:timestamp:asc"
     );
-    expect(logs).toEqual([{ id: "log-1", roll: { converted: { roll: 42 } } }]);
+    expect(logs).toEqual([
+      {
+        id: "log-1",
+        roll: { roll: 42, timestamp: "2026-05-30T05:00:00.000Z" },
+      },
+    ]);
   });
 
   it("filters non-GM exports to player-visible logs", async () => {
@@ -68,5 +78,15 @@ describe("getAllLogsForExport", () => {
       "where:gmsOnly:==:false",
       "order:timestamp:asc"
     );
+  });
+
+  it("serializes legacy logs with missing timestamps without crashing", async () => {
+    mocks.getDocs.mockResolvedValue({
+      docs: [{ id: "log-1", data: () => ({ roll: 42 }) }],
+    });
+
+    const logs = await getAllLogsForExport({ characterId: "char-1", isGM: true });
+
+    expect(logs).toEqual([{ id: "log-1", roll: { roll: 42, timestamp: null } }]);
   });
 });

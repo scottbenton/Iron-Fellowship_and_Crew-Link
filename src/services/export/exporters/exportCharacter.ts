@@ -1,10 +1,8 @@
 import { getDocs } from "firebase/firestore";
 import { getCharacterForExport } from "api-calls/character/getCharacterForExport";
 import { getCharacterAssetCollection } from "api-calls/assets/_getRef";
-import {
-  convertFromDatabase,
-  getCharacterTracksCollection,
-} from "api-calls/tracks/_getRef";
+import { getCharacterTracksCollection } from "api-calls/tracks/_getRef";
+import { TrackDocument } from "api-calls/tracks/_track.type";
 import { ExportAbortedError } from "services/export/zipBundle";
 import {
   buildUniqueExportPath,
@@ -19,6 +17,15 @@ import type { Exporter, ExportFile } from "services/export/types";
 
 function throwIfAborted(signal?: AbortSignal): void {
   if (signal?.aborted) throw new ExportAbortedError();
+}
+
+function serializeTrackForExport(track: TrackDocument): Record<string, unknown> {
+  const { createdTimestamp, ...rest } = track;
+  const createdDate = createdTimestamp?.toDate?.();
+
+  return createdDate != null
+    ? { ...rest, createdDate: createdDate.toISOString() }
+    : rest;
 }
 
 export interface CharacterExporterParams {
@@ -115,7 +122,7 @@ export class CharacterExporter implements Exporter {
     const tracks: Record<string, unknown> = {};
     if (!tracksSnap.empty) {
       tracksSnap.docs.forEach((d) => {
-        tracks[d.id] = convertFromDatabase(d.data());
+        tracks[d.id] = serializeTrackForExport(d.data());
       });
     }
 

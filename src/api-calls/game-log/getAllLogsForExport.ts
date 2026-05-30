@@ -1,14 +1,23 @@
 import { getDocs, orderBy, query, where } from "firebase/firestore";
-import { Roll } from "types/DieRolls.type";
 import {
-  convertFromDatabase,
   getCampaignGameLogCollection,
   getCharacterGameLogCollection,
 } from "./_getRef";
+import { GameLogDocument } from "./_game-log.type";
 
 export interface GameLogExportRecord {
   id: string;
-  roll: Roll;
+  roll: Record<string, unknown>;
+}
+
+function serializeLogForExport(log: GameLogDocument): Record<string, unknown> {
+  const { timestamp, ...rest } = log;
+  const timestampDate = timestamp?.toDate?.();
+
+  return {
+    ...rest,
+    timestamp: timestampDate?.toISOString() ?? null,
+  };
 }
 
 export async function getAllLogsForExport(params: {
@@ -37,6 +46,6 @@ export async function getAllLogsForExport(params: {
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => ({
     id: doc.id,
-    roll: convertFromDatabase(doc.data()),
+    roll: serializeLogForExport(doc.data()),
   }));
 }
