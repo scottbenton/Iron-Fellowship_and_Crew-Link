@@ -1,12 +1,12 @@
 import { IdParser } from "@datasworn/core";
 import { describe, expect, it, vi } from "vitest";
-import { loadBaseRulesetForSync, syncDataswornTree } from "./useSyncDataswornTree";
+import { loadBaseRulesetForSync, syncDataswornTree } from "../useSyncDataswornTree";
 
 vi.mock("stores/store", () => ({
   useStore: vi.fn(),
 }));
 
-vi.mock("./useDataswornTree", () => ({
+vi.mock("../useDataswornTree", () => ({
   useDataswornTree: vi.fn(),
 }));
 

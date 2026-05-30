@@ -6,6 +6,11 @@ import {
   getCharacterTracksCollection,
 } from "api-calls/tracks/_getRef";
 import { ExportAbortedError } from "services/export/zipBundle";
+import {
+  buildUniqueExportPath,
+  createExportFilenameTracker,
+  ExportFilenameTracker,
+} from "services/export/exportFilename";
 import type { Exporter, ExportFile } from "services/export/types";
 
 // ---------------------------------------------------------------------------
@@ -16,20 +21,15 @@ function throwIfAborted(signal?: AbortSignal): void {
   if (signal?.aborted) throw new ExportAbortedError();
 }
 
-// ---------------------------------------------------------------------------
-// Public factory
-// ---------------------------------------------------------------------------
-
 export interface CharacterExporterParams {
   characterId: string;
+  filenameTracker?: ExportFilenameTracker;
 }
 
 /**
  * Produces a zip sub-tree for a single character:
  *
- *   characters/<characterId>/character.json
- *   characters/<characterId>/tracks.json   (when tracks exist)
- *   characters/<characterId>/assets.json   (when assets exist)
+ *   characters/<characterName>.json
  *
  * The profile-image *binary* is never included; only the filename string
  * already present on the character document is kept.
@@ -41,51 +41,40 @@ export interface CharacterExporterParams {
  * are owned resources and are not granularly shared, so a mismatch is a
  * hard failure.
  */
-export function createCharacterExporter(
-  params: CharacterExporterParams
-): Exporter {
-  const { characterId } = params;
-  const base = `characters/${characterId}`;
+export class CharacterExporter implements Exporter {
+  readonly stage = "Character";
 
-  // -------------------------------------------------------------------------
-  // count()
-  // -------------------------------------------------------------------------
-  const count = async (signal?: AbortSignal): Promise<number> => {
+  private readonly characterId: string;
+
+  private readonly filenameTracker: ExportFilenameTracker;
+
+  constructor(params: CharacterExporterParams) {
+    this.characterId = params.characterId;
+    this.filenameTracker =
+      params.filenameTracker ?? createExportFilenameTracker();
+  }
+
+  async count(signal?: AbortSignal): Promise<number> {
+    throwIfAborted(signal);
+    return 1;
+  }
+
+  async *run(signal?: AbortSignal): AsyncIterable<ExportFile> {
     throwIfAborted(signal);
 
-    const result = await getCharacterForExport(characterId);
-    throwIfAborted(signal);
+    const characterPromise = getCharacterForExport(this.characterId);
+    const tracksPromise = getDocs(
+      getCharacterTracksCollection(this.characterId)
+    );
+    const assetsPromise = getDocs(
+      getCharacterAssetCollection(this.characterId)
+    );
 
-    if (!result) {
-      throw new Error(`Character ${characterId} not found.`);
-    }
-
-    // character.json is always emitted; tracks/assets are conditional on
-    // whether there is data. We do a lightweight getDocs for count accuracy.
-    const [tracksSnap, assetsSnap] = await Promise.all([
-      getDocs(getCharacterTracksCollection(characterId)),
-      getDocs(getCharacterAssetCollection(characterId)),
-    ]);
-    throwIfAborted(signal);
-
-    let fileCount = 1; // character.json
-    if (!tracksSnap.empty) fileCount += 1; // tracks.json
-    if (!assetsSnap.empty) fileCount += 1; // assets.json
-
-    return fileCount;
-  };
-
-  // -------------------------------------------------------------------------
-  // run()
-  // -------------------------------------------------------------------------
-  async function* run(signal?: AbortSignal): AsyncIterable<ExportFile> {
-    throwIfAborted(signal);
-
-    const result = await getCharacterForExport(characterId);
+    const result = await characterPromise;
     throwIfAborted(signal);
 
     if (!result) {
-      throw new Error(`Character ${characterId} not found.`);
+      throw new Error(`Character ${this.characterId} not found.`);
     }
 
     const { data: doc } = result;
@@ -120,51 +109,44 @@ export function createCharacterExporter(
       characterJson.profileImageFilename = doc.profileImage.filename;
     }
 
-    yield {
-      path: `${base}/character.json`,
-      contents: JSON.stringify(characterJson, null, 2),
-    };
+    const tracksSnap = await tracksPromise;
     throwIfAborted(signal);
 
-    // -- tracks.json ----------------------------------------------------------
-    const tracksSnap = await getDocs(getCharacterTracksCollection(characterId));
-    throwIfAborted(signal);
-
+    const tracks: Record<string, unknown> = {};
     if (!tracksSnap.empty) {
-      const tracks: Record<string, unknown> = {};
       tracksSnap.docs.forEach((d) => {
         tracks[d.id] = convertFromDatabase(d.data());
       });
-      yield {
-        path: `${base}/tracks.json`,
-        contents: JSON.stringify(tracks, null, 2),
-      };
-      throwIfAborted(signal);
     }
 
-    // -- assets.json ----------------------------------------------------------
-    const assetsSnap = await getDocs(getCharacterAssetCollection(characterId));
+    const assetsSnap = await assetsPromise;
     throwIfAborted(signal);
 
+    const assets: Record<string, unknown> = {};
     if (!assetsSnap.empty) {
-      const assets: Record<string, unknown> = {};
       assetsSnap.docs.forEach((d) => {
         assets[d.id] = d.data();
       });
-      yield {
-        path: `${base}/assets.json`,
-        contents: JSON.stringify(assets, null, 2),
-      };
-      throwIfAborted(signal);
     }
-  }
 
-  // -------------------------------------------------------------------------
-  // Exporter object
-  // -------------------------------------------------------------------------
-  return {
-    stage: "Character",
-    count,
-    run,
-  };
+    yield {
+      path: buildUniqueExportPath({
+        directory: "characters",
+        name: doc.name,
+        fallbackId: this.characterId,
+        extension: "json",
+        tracker: this.filenameTracker,
+      }),
+      contents: JSON.stringify(
+        {
+          ...characterJson,
+          tracks,
+          assets,
+        },
+        null,
+        2
+      ),
+    };
+    throwIfAborted(signal);
+  }
 }

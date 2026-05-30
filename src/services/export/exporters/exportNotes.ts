@@ -4,78 +4,15 @@ import {
 } from "api-calls/notes/getAllNotesWithContent";
 import { Exporter, ExportFile } from "services/export/types";
 import { ExportAbortedError } from "services/export/zipBundle";
+import {
+  buildUniqueExportPath,
+  createExportFilenameTracker,
+  slugifyExportName,
+} from "services/export/exportFilename";
 import { yjsUpdateToMarkdown } from "services/export/yjsToMarkdown";
 
-// ---------------------------------------------------------------------------
-// Slug helpers
-// ---------------------------------------------------------------------------
-
-/**
- * Convert a note title to a URL/filename-safe ASCII kebab-case slug.
- * Falls back to the noteId if the result would be empty.
- */
 export function slugify(title: string, noteId: string): string {
-  const ascii = title
-    .toLowerCase()
-    // Replace runs of non-ASCII or non-(a-z0-9) chars with a hyphen
-    .replace(/[^a-z0-9]+/g, "-")
-    // Collapse leading/trailing hyphens
-    .replace(/^-+|-+$/g, "");
-
-  return ascii.length > 0 ? ascii : noteId;
-}
-
-/**
- * Zero-pad the order number to 3 digits.
- */
-export function padOrder(order: number): string {
-  return String(order).padStart(3, "0");
-}
-
-// ---------------------------------------------------------------------------
-// Frontmatter builder
-// ---------------------------------------------------------------------------
-
-/**
- * Escape a string for use inside YAML double-quoted scalars.
- * Only `"` and `\` need escaping; newlines become `\n`.
- */
-export function escapeYamlString(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
-}
-
-function buildFrontmatter(
-  title: string,
-  shared: boolean,
-  order: number,
-  noteId: string,
-  source: "campaign" | "character"
-): string {
-  return [
-    "---",
-    `title: "${escapeYamlString(title)}"`,
-    `shared: ${shared}`,
-    `order: ${order}`,
-    `noteId: ${noteId}`,
-    `source: ${source}`,
-    "---",
-    "",
-  ].join("\n");
-}
-
-// ---------------------------------------------------------------------------
-// Path builder
-// ---------------------------------------------------------------------------
-
-function buildPath(
-  prefix: string,
-  order: number,
-  title: string,
-  noteId: string
-): string {
-  const paddedOrder = padOrder(order);
-  const slug = slugify(title, noteId);
-  return `${prefix}${paddedOrder}-${slug}.md`;
+  return slugifyExportName(title, noteId);
 }
 
 // ---------------------------------------------------------------------------
@@ -90,59 +27,71 @@ interface EnrichedNote {
   content: Uint8Array | null;
 }
 
-// ---------------------------------------------------------------------------
-// Public factory
-// ---------------------------------------------------------------------------
-
-export function createNotesExporter(params: {
+export interface NotesExporterParams {
   campaignId?: string;
   characterId?: string;
   includeUnsharedCampaignNotes: boolean;
-}): Exporter {
-  const { campaignId, characterId, includeUnsharedCampaignNotes } = params;
+}
 
-  // Determine directory structure: dual-source → namespaced subdirs.
-  const hasBoth = !!campaignId && !!characterId;
-  const campaignPrefix = hasBoth ? "notes/campaign/" : "notes/";
-  const characterPrefix = hasBoth ? "notes/character/" : "notes/";
+export class NotesExporter implements Exporter {
+  readonly stage = "Notes";
 
-  // Cached notes fetched during count().
-  let cachedNotes: EnrichedNote[] | null = null;
+  private readonly campaignId?: string;
 
-  async function fetchAll(): Promise<EnrichedNote[]> {
-    if (cachedNotes !== null) {
-      return cachedNotes;
+  private readonly characterId?: string;
+
+  private readonly includeUnsharedCampaignNotes: boolean;
+
+  private readonly campaignPrefix: string;
+
+  private readonly characterPrefix: string;
+
+  private cachedNotes: EnrichedNote[] | null = null;
+
+  constructor(params: NotesExporterParams) {
+    this.campaignId = params.campaignId;
+    this.characterId = params.characterId;
+    this.includeUnsharedCampaignNotes = params.includeUnsharedCampaignNotes;
+
+    const hasBoth = !!params.campaignId && !!params.characterId;
+    this.campaignPrefix = hasBoth ? "notes/campaign/" : "notes/";
+    this.characterPrefix = hasBoth ? "notes/character/" : "notes/";
+  }
+
+  private async fetchAll(): Promise<EnrichedNote[]> {
+    if (this.cachedNotes !== null) {
+      return this.cachedNotes;
     }
 
     const fetches: Promise<EnrichedNote[]>[] = [];
 
-    if (campaignId) {
+    if (this.campaignId) {
       fetches.push(
         getAllNotesWithContent({
           source: "campaign",
-          ownerId: campaignId,
-          onlyShared: !includeUnsharedCampaignNotes,
+          ownerId: this.campaignId,
+          onlyShared: !this.includeUnsharedCampaignNotes,
         }).then((notes) =>
           notes.map((n) => ({
             source: "campaign" as const,
-            prefix: campaignPrefix,
+            prefix: this.campaignPrefix,
             ...n,
           }))
         )
       );
     }
 
-    if (characterId) {
+    if (this.characterId) {
       fetches.push(
         getAllNotesWithContent({
           source: "character",
-          ownerId: characterId,
+          ownerId: this.characterId,
           // Character notes are always private to the owner — no shared filter.
           onlyShared: false,
         }).then((notes) =>
           notes.map((n) => ({
             source: "character" as const,
-            prefix: characterPrefix,
+            prefix: this.characterPrefix,
             ...n,
           }))
         )
@@ -150,40 +99,58 @@ export function createNotesExporter(params: {
     }
 
     const groups = await Promise.all(fetches);
-    cachedNotes = groups.flat();
-    return cachedNotes;
+    this.cachedNotes = groups.flat().sort((a, b) => {
+      const sourceCompare = a.source.localeCompare(b.source);
+      if (sourceCompare !== 0) return sourceCompare;
+      const orderCompare = (a.meta.order ?? 0) - (b.meta.order ?? 0);
+      if (orderCompare !== 0) return orderCompare;
+      const titleCompare = (a.meta.title ?? "").localeCompare(b.meta.title ?? "");
+      if (titleCompare !== 0) return titleCompare;
+      return a.noteId.localeCompare(b.noteId);
+    });
+    return this.cachedNotes;
   }
 
-  return {
-    stage: "Notes",
+  async count(): Promise<number> {
+    const notes = await this.fetchAll();
+    return notes.length;
+  }
 
-    async count(): Promise<number> {
-      const notes = await fetchAll();
-      return notes.length;
-    },
+  async *run(signal?: AbortSignal): AsyncIterable<ExportFile> {
+    const notes = await this.fetchAll();
+    const paths = createExportFilenameTracker();
 
-    async *run(signal?: AbortSignal): AsyncIterable<ExportFile> {
-      const notes = await fetchAll();
-
-      for (const note of notes) {
-        if (signal?.aborted) {
-          throw new ExportAbortedError();
-        }
-
-        const { meta, content, noteId, source, prefix } = note;
-        const title = meta.title ?? "";
-        const shared = meta.shared ?? false;
-        const order = meta.order ?? 0;
-
-        const path = buildPath(prefix, order, title, noteId);
-        const frontmatter = buildFrontmatter(title, shared, order, noteId, source);
-        const body = yjsUpdateToMarkdown(content);
-
-        yield {
-          path,
-          contents: frontmatter + body,
-        };
+    for (const note of notes) {
+      if (signal?.aborted) {
+        throw new ExportAbortedError();
       }
-    },
-  };
+
+      const { meta, content, noteId, source, prefix } = note;
+      const title = meta.title ?? "";
+      const shared = meta.shared ?? false;
+      const order = meta.order ?? 0;
+
+      yield {
+        path: buildUniqueExportPath({
+          directory: prefix.replace(/\/$/, ""),
+          name: title,
+          fallbackId: noteId,
+          extension: "json",
+          tracker: paths,
+        }),
+        contents: JSON.stringify(
+          {
+            noteId,
+            title,
+            shared,
+            order,
+            source,
+            markdown: yjsUpdateToMarkdown(content),
+          },
+          null,
+          2
+        ),
+      };
+    }
+  }
 }

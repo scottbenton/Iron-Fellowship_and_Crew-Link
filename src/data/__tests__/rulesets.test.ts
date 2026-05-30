@@ -6,7 +6,7 @@ import {
   loadIncludedRuleset,
   preloadActiveRuleset,
   thirdPartyExpansions,
-} from "./rulesets";
+} from "../rulesets";
 
 vi.mock("hooks/useGameSystem", () => ({
   getSystem: () => "ironsworn",

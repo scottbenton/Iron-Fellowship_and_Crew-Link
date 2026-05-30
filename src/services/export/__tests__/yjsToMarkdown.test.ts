@@ -6,7 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import { Markdown } from "tiptap-markdown";
 import { prosemirrorJSONToYDoc } from "y-prosemirror";
-import { yjsUpdateToMarkdown } from "./yjsToMarkdown";
+import { yjsUpdateToMarkdown } from "../yjsToMarkdown";
 
 function buildYDocFromMarkdown(markdown: string): Uint8Array {
   const editor = new Editor({

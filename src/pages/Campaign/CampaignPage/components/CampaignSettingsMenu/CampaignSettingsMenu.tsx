@@ -33,10 +33,12 @@ import { HideOraclesDialog } from "./HideOraclesDialog";
 import OracleHideIcon from '@mui/icons-material/PlaylistRemove';
 import DownloadIcon from "@mui/icons-material/Download";
 import { ExportDialog, ExportOption } from "components/features/export/ExportDialog";
-import { createCharacterExporter } from "services/export/exporters/exportCharacter";
-import { createNotesExporter } from "services/export/exporters/exportNotes";
-import { createWorldExporter } from "services/export/exporters/exportWorld";
+import { CharacterExporter } from "services/export/exporters/exportCharacter";
+import { NotesExporter } from "services/export/exporters/exportNotes";
+import { RollLogExporter } from "services/export/exporters/exportRollLog";
+import { WorldExporter } from "services/export/exporters/exportWorld";
 import { Exporter } from "services/export";
+import { createExportFilenameTracker } from "services/export/exportFilename";
 import { useMemo } from "react";
 
 export function CampaignSettingsMenu() {
@@ -101,6 +103,13 @@ export function CampaignSettingsMenu() {
           ? "Includes private and shared notes."
           : "Includes only notes shared with players.",
       },
+      {
+        key: "roll-log",
+        label: "Roll log",
+        description: isGuideForExport
+          ? "Includes all campaign roll log entries."
+          : "Includes roll log entries visible to players.",
+      },
     ];
     if (campaignWorldId) {
       opts.push({
@@ -116,20 +125,29 @@ export function CampaignSettingsMenu() {
     const list: Exporter[] = [];
     if (!campaignId) return list;
     if (keys.has("characters")) {
+      const characterFilenameTracker = createExportFilenameTracker();
       for (const cid of campaignCharacterIds) {
-        list.push(createCharacterExporter({ characterId: cid }));
+        list.push(
+          new CharacterExporter({
+            characterId: cid,
+            filenameTracker: characterFilenameTracker,
+          })
+        );
       }
     }
     if (keys.has("notes")) {
       list.push(
-        createNotesExporter({
+        new NotesExporter({
           campaignId,
           includeUnsharedCampaignNotes: isGuideForExport,
         })
       );
     }
+    if (keys.has("roll-log")) {
+      list.push(new RollLogExporter({ campaignId, isGM: isGuideForExport }));
+    }
     if (keys.has("world") && campaignWorldId) {
-      list.push(createWorldExporter({ worldId: campaignWorldId, userId: uidForExport }));
+      list.push(new WorldExporter({ worldId: campaignWorldId, userId: uidForExport }));
     }
     return list;
   };

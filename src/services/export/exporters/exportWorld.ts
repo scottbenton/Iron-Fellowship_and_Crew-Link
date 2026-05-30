@@ -10,6 +10,10 @@ import { getNPCCollection } from "api-calls/world/npcs/_getRef";
 import { getLoreCollection } from "api-calls/world/lore/_getRef";
 import { getLocationCollection } from "api-calls/world/locations/_getRef";
 import { World } from "api-calls/world/_world.type";
+import {
+  buildUniqueExportPath,
+  createExportFilenameTracker,
+} from "services/export/exportFilename";
 
 export interface WorldExporterParams {
   worldId: string;
@@ -21,15 +25,6 @@ function throwIfAborted(signal?: AbortSignal): void {
 }
 
 /**
- * Per-entity file counts:
- *   Non-owners: 1 JSON + 1 notes.md = 2
- *   Owners:     1 JSON (with GM properties merged in) + 1 notes.md + 1 gm-notes.md = 3
- */
-function filesPerEntity(isOwner: boolean): number {
-  return isOwner ? 3 : 2;
-}
-
-/**
  * Determine whether userId is an owner/guide of the world.
  * ownerIds in the decoded World already includes campaignGuides (see decodeWorld).
  */
@@ -37,203 +32,220 @@ function resolveOwnership(world: World, userId: string): boolean {
   return world.ownerIds.includes(userId);
 }
 
-export function createWorldExporter(params: WorldExporterParams): Exporter {
-  const { worldId, userId } = params;
+function compareNamedExportRecords(
+  a: { id: string; doc: { name: string } },
+  b: { id: string; doc: { name: string } }
+): number {
+  const nameCompare = a.doc.name.localeCompare(b.doc.name);
+  if (nameCompare !== 0) return nameCompare;
+  return a.id.localeCompare(b.id);
+}
 
-  return {
-    stage: "World",
+export class WorldExporter implements Exporter {
+  readonly stage = "World";
 
-    async count(signal?: AbortSignal): Promise<number> {
+  private readonly worldId: string;
+
+  private readonly userId: string;
+
+  constructor(params: WorldExporterParams) {
+    this.worldId = params.worldId;
+    this.userId = params.userId;
+  }
+
+  async count(signal?: AbortSignal): Promise<number> {
+    throwIfAborted(signal);
+
+    const world = await getWorldForExport(this.worldId);
+    if (!world) return 0;
+
+    throwIfAborted(signal);
+
+    const isOwner = resolveOwnership(world, this.userId);
+
+    // world.json
+    let total = 1;
+
+    // Collection counts (filtered by sharedWithPlayers for non-owners)
+    const [npcCount, loreCount, locationCount] = await Promise.all([
+      getCountFromServer(
+        isOwner
+          ? getNPCCollection(this.worldId)
+          : query(
+              getNPCCollection(this.worldId),
+              where("sharedWithPlayers", "==", true)
+            )
+      ).then((r) => r.data().count),
+      getCountFromServer(
+        isOwner
+          ? getLoreCollection(this.worldId)
+          : query(
+              getLoreCollection(this.worldId),
+              where("sharedWithPlayers", "==", true)
+            )
+      ).then((r) => r.data().count),
+      getCountFromServer(
+        isOwner
+          ? getLocationCollection(this.worldId)
+          : query(
+              getLocationCollection(this.worldId),
+              where("sharedWithPlayers", "==", true)
+            )
+      ).then((r) => r.data().count),
+    ]);
+
+    throwIfAborted(signal);
+
+    total += npcCount;
+    total += loreCount;
+    total += locationCount;
+
+    return total;
+  }
+
+  async *run(signal?: AbortSignal): AsyncIterable<ExportFile> {
+    throwIfAborted(signal);
+
+    const world = await getWorldForExport(this.worldId);
+    if (!world) return;
+
+    throwIfAborted(signal);
+
+    const isOwner = resolveOwnership(world, this.userId);
+
+    const worldJson: Omit<World, "worldDescription"> & {
+      descriptionMarkdown: string;
+    } = {
+      name: world.name,
+      settingKey: world.settingKey,
+      ownerIds: world.ownerIds,
+      campaignGuides: world.campaignGuides,
+      newTruths: world.newTruths,
+      descriptionMarkdown: yjsUpdateToMarkdown(world.worldDescription ?? null),
+    };
+
+    yield {
+      path: "world.json",
+      contents: JSON.stringify(worldJson, null, 2),
+    };
+    throwIfAborted(signal);
+
+    // ------------------------------------------------------------------ //
+    // Fetch all collections
+    // ------------------------------------------------------------------ //
+    const [npcs, loreItems, locations] = await Promise.all([
+      getAllNPCsForExport(this.worldId, isOwner),
+      getAllLoreForExport(this.worldId, isOwner),
+      getAllLocationsForExport(this.worldId, isOwner),
+    ]);
+
+    throwIfAborted(signal);
+    const npcPaths = createExportFilenameTracker();
+    const lorePaths = createExportFilenameTracker();
+    const locationPaths = createExportFilenameTracker();
+    npcs.sort(compareNamedExportRecords);
+    loreItems.sort(compareNamedExportRecords);
+    locations.sort(compareNamedExportRecords);
+
+    // ------------------------------------------------------------------ //
+    // NPCs
+    // ------------------------------------------------------------------ //
+    for (const npc of npcs) {
       throwIfAborted(signal);
 
-      const world = await getWorldForExport(worldId);
-      if (!world) return 0;
-
-      throwIfAborted(signal);
-
-      const isOwner = resolveOwnership(world, userId);
-
-      // world.json + world/description.md + world/truths.json
-      let total = 3;
-
-      // Collection counts (filtered by sharedWithPlayers for non-owners)
-      const [npcCount, loreCount, locationCount] = await Promise.all([
-        getCountFromServer(
-          isOwner
-            ? getNPCCollection(worldId)
-            : query(getNPCCollection(worldId), where("sharedWithPlayers", "==", true))
-        ).then((r) => r.data().count),
-        getCountFromServer(
-          isOwner
-            ? getLoreCollection(worldId)
-            : query(getLoreCollection(worldId), where("sharedWithPlayers", "==", true))
-        ).then((r) => r.data().count),
-        getCountFromServer(
-          isOwner
-            ? getLocationCollection(worldId)
-            : query(
-                getLocationCollection(worldId),
-                where("sharedWithPlayers", "==", true)
-              )
-        ).then((r) => r.data().count),
-      ]);
-
-      throwIfAborted(signal);
-
-      total += npcCount * filesPerEntity(isOwner);
-      total += loreCount * filesPerEntity(isOwner);
-      total += locationCount * filesPerEntity(isOwner);
-
-      return total;
-    },
-
-    async *run(signal?: AbortSignal): AsyncIterable<ExportFile> {
-      throwIfAborted(signal);
-
-      const world = await getWorldForExport(worldId);
-      if (!world) return;
-
-      throwIfAborted(signal);
-
-      const isOwner = resolveOwnership(world, userId);
-
-      // ------------------------------------------------------------------ //
-      // world.json  (worldDescription is the Yjs binary — excluded from JSON)
-      // ------------------------------------------------------------------ //
-      const worldJson: Omit<World, "worldDescription"> = {
-        name: world.name,
-        settingKey: world.settingKey,
-        ownerIds: world.ownerIds,
-        campaignGuides: world.campaignGuides,
-        newTruths: world.newTruths,
-      };
-
+      // For owners, merge GM properties (role, goal, descriptor, etc.) into
+      // the base NPC JSON. Image bytes are not included; image filenames
+      // already live on npc.doc as strings.
+      const npcJson =
+        isOwner && npc.gmProperties
+          ? { ...npc.doc, ...npc.gmProperties }
+          : npc.doc;
+      const path = buildUniqueExportPath({
+        directory: "npcs",
+        name: npc.doc.name,
+        fallbackId: npc.id,
+        extension: "json",
+        tracker: npcPaths,
+      });
       yield {
-        path: "world.json",
-        contents: JSON.stringify(worldJson, null, 2),
+        path,
+        contents: JSON.stringify(
+          {
+            ...npcJson,
+            notesMarkdown: yjsUpdateToMarkdown(npc.notes),
+            ...(isOwner
+              ? { gmNotesMarkdown: yjsUpdateToMarkdown(npc.gmNotes) }
+              : {}),
+          },
+          null,
+          2
+        ),
       };
       throwIfAborted(signal);
+    }
 
-      // ------------------------------------------------------------------ //
-      // world/description.md
-      // ------------------------------------------------------------------ //
+    // ------------------------------------------------------------------ //
+    // Lore
+    // ------------------------------------------------------------------ //
+    for (const lore of loreItems) {
+      throwIfAborted(signal);
+
+      const path = buildUniqueExportPath({
+        directory: "lore",
+        name: lore.doc.name,
+        fallbackId: lore.id,
+        extension: "json",
+        tracker: lorePaths,
+      });
       yield {
-        path: "world/description.md",
-        contents: yjsUpdateToMarkdown(world.worldDescription ?? null),
+        path,
+        contents: JSON.stringify(
+          {
+            ...lore.doc,
+            notesMarkdown: yjsUpdateToMarkdown(lore.notes),
+            ...(isOwner
+              ? { gmNotesMarkdown: yjsUpdateToMarkdown(lore.gmNotes) }
+              : {}),
+          },
+          null,
+          2
+        ),
       };
       throwIfAborted(signal);
+    }
 
-      // ------------------------------------------------------------------ //
-      // world/truths.json
-      // ------------------------------------------------------------------ //
+    // ------------------------------------------------------------------ //
+    // Locations
+    // ------------------------------------------------------------------ //
+    for (const location of locations) {
+      throwIfAborted(signal);
+
+      const locationJson =
+        isOwner && location.gmProperties
+          ? { ...location.doc, ...location.gmProperties }
+          : location.doc;
+      const path = buildUniqueExportPath({
+        directory: "locations",
+        name: location.doc.name,
+        fallbackId: location.id,
+        extension: "json",
+        tracker: locationPaths,
+      });
       yield {
-        path: "world/truths.json",
-        contents: JSON.stringify(world.newTruths ?? {}, null, 2),
+        path,
+        contents: JSON.stringify(
+          {
+            ...locationJson,
+            notesMarkdown: yjsUpdateToMarkdown(location.notes),
+            ...(isOwner
+              ? { gmNotesMarkdown: yjsUpdateToMarkdown(location.gmNotes) }
+              : {}),
+          },
+          null,
+          2
+        ),
       };
       throwIfAborted(signal);
-
-      // ------------------------------------------------------------------ //
-      // Fetch all collections
-      // ------------------------------------------------------------------ //
-      const [npcs, loreItems, locations] = await Promise.all([
-        getAllNPCsForExport(worldId, isOwner),
-        getAllLoreForExport(worldId, isOwner),
-        getAllLocationsForExport(worldId, isOwner),
-      ]);
-
-      throwIfAborted(signal);
-
-      // ------------------------------------------------------------------ //
-      // NPCs
-      // ------------------------------------------------------------------ //
-      for (const npc of npcs) {
-        throwIfAborted(signal);
-
-        // For owners, merge GM properties (role, goal, descriptor, etc.) into
-        // the base NPC JSON. Image bytes are not included; image filenames
-        // already live on npc.doc as strings.
-        const npcJson =
-          isOwner && npc.gmProperties
-            ? { ...npc.doc, ...npc.gmProperties }
-            : npc.doc;
-        yield {
-          path: `npcs/${npc.id}.json`,
-          contents: JSON.stringify(npcJson, null, 2),
-        };
-        throwIfAborted(signal);
-
-        yield {
-          path: `npcs/${npc.id}/notes.md`,
-          contents: yjsUpdateToMarkdown(npc.notes),
-        };
-        throwIfAborted(signal);
-
-        if (isOwner) {
-          yield {
-            path: `npcs/${npc.id}/gm-notes.md`,
-            contents: yjsUpdateToMarkdown(npc.gmNotes),
-          };
-          throwIfAborted(signal);
-        }
-      }
-
-      // ------------------------------------------------------------------ //
-      // Lore
-      // ------------------------------------------------------------------ //
-      for (const lore of loreItems) {
-        throwIfAborted(signal);
-
-        yield {
-          path: `lore/${lore.id}.json`,
-          contents: JSON.stringify(lore.doc, null, 2),
-        };
-        throwIfAborted(signal);
-
-        yield {
-          path: `lore/${lore.id}/notes.md`,
-          contents: yjsUpdateToMarkdown(lore.notes),
-        };
-        throwIfAborted(signal);
-
-        if (isOwner) {
-          yield {
-            path: `lore/${lore.id}/gm-notes.md`,
-            contents: yjsUpdateToMarkdown(lore.gmNotes),
-          };
-          throwIfAborted(signal);
-        }
-      }
-
-      // ------------------------------------------------------------------ //
-      // Locations
-      // ------------------------------------------------------------------ //
-      for (const location of locations) {
-        throwIfAborted(signal);
-
-        const locationJson =
-          isOwner && location.gmProperties
-            ? { ...location.doc, ...location.gmProperties }
-            : location.doc;
-        yield {
-          path: `locations/${location.id}.json`,
-          contents: JSON.stringify(locationJson, null, 2),
-        };
-        throwIfAborted(signal);
-
-        yield {
-          path: `locations/${location.id}/notes.md`,
-          contents: yjsUpdateToMarkdown(location.notes),
-        };
-        throwIfAborted(signal);
-
-        if (isOwner) {
-          yield {
-            path: `locations/${location.id}/gm-notes.md`,
-            contents: yjsUpdateToMarkdown(location.gmNotes),
-          };
-          throwIfAborted(signal);
-        }
-      }
-    },
-  };
+    }
+  }
 }

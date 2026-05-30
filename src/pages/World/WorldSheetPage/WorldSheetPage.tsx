@@ -11,7 +11,7 @@ import { StyledTab, StyledTabs } from "components/shared/StyledTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DownloadIcon from "@mui/icons-material/Download";
 import { ExportDialog } from "components/features/export/ExportDialog";
-import { createWorldExporter } from "services/export/exporters/exportWorld";
+import { WorldExporter } from "services/export/exporters/exportWorld";
 import { Exporter } from "services/export";
 import { NPCSection } from "components/features/worlds/NPCSection";
 import { Head } from "providers/HeadProvider/Head";
@@ -215,7 +215,7 @@ export function WorldSheetPage() {
         source={{ type: "world", id: worldId }}
         options={[{ key: "world", label: "World" }]}
         buildExporters={(keys): Exporter[] =>
-          keys.has("world") ? [createWorldExporter({ worldId, userId })] : []
+          keys.has("world") ? [new WorldExporter({ worldId, userId })] : []
         }
         autoStart
       />

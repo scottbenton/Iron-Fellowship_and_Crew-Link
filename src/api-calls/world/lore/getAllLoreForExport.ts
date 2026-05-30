@@ -37,9 +37,14 @@ export async function getAllLoreForExport(
       const id = docSnap.id;
       const loreDoc = docSnap.data();
 
-      const notesSnap = await getDoc(
-        getPublicNotesLoreDoc(worldId, id)
-      ).catch(() => null);
+      const notesPromise = getDoc(getPublicNotesLoreDoc(worldId, id)).catch(
+        () => null
+      );
+      const gmPromise = isOwner
+        ? getDoc(getPrivateDetailsLoreDoc(worldId, id)).catch(() => null)
+        : Promise.resolve(null);
+
+      const [notesSnap, gmSnap] = await Promise.all([notesPromise, gmPromise]);
       const notesDoc: LoreNotesDocument | undefined = notesSnap?.data();
       const notes = notesDoc?.notes?.toUint8Array() ?? null;
 
@@ -47,9 +52,6 @@ export async function getAllLoreForExport(
         return { id, doc: loreDoc, notes, gmNotes: null };
       }
 
-      const gmSnap = await getDoc(
-        getPrivateDetailsLoreDoc(worldId, id)
-      ).catch(() => null);
       const gmDoc: GMLoreDocument | undefined = gmSnap?.data();
       const gmNotes = gmDoc?.gmNotes?.toUint8Array() ?? null;
 

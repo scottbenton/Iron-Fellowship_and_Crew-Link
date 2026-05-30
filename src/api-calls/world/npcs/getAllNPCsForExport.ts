@@ -39,9 +39,14 @@ export async function getAllNPCsForExport(
       const id = docSnap.id;
       const npcDoc = docSnap.data();
 
-      const notesSnap = await getDoc(
-        getPublicNotesNPCDoc(worldId, id)
-      ).catch(() => null);
+      const notesPromise = getDoc(getPublicNotesNPCDoc(worldId, id)).catch(
+        () => null
+      );
+      const gmPromise = isOwner
+        ? getDoc(getPrivateDetailsNPCDoc(worldId, id)).catch(() => null)
+        : Promise.resolve(null);
+
+      const [notesSnap, gmSnap] = await Promise.all([notesPromise, gmPromise]);
       const notesDoc: NPCNotesDocument | undefined = notesSnap?.data();
       const notes = notesDoc?.notes?.toUint8Array() ?? null;
 
@@ -49,9 +54,6 @@ export async function getAllNPCsForExport(
         return { id, doc: npcDoc, notes, gmNotes: null, gmProperties: null };
       }
 
-      const gmSnap = await getDoc(
-        getPrivateDetailsNPCDoc(worldId, id)
-      ).catch(() => null);
       const gmDoc: GMNPCDocument | undefined = gmSnap?.data();
       const gmNotes = gmDoc?.gmNotes?.toUint8Array() ?? null;
       const gmProperties: Omit<GMNPCDocument, "gmNotes"> | null =

@@ -44,9 +44,14 @@ export async function getAllLocationsForExport(
       const id = docSnap.id;
       const locationDoc = docSnap.data();
 
-      const notesSnap = await getDoc(
+      const notesPromise = getDoc(
         getPublicNotesLocationDoc(worldId, id)
       ).catch(() => null);
+      const gmPromise = isOwner
+        ? getDoc(getPrivateDetailsLocationDoc(worldId, id)).catch(() => null)
+        : Promise.resolve(null);
+
+      const [notesSnap, gmSnap] = await Promise.all([notesPromise, gmPromise]);
       const notesDoc: LocationNotesDocument | undefined = notesSnap?.data();
       const notes = notesDoc?.notes?.toUint8Array() ?? null;
 
@@ -60,9 +65,6 @@ export async function getAllLocationsForExport(
         };
       }
 
-      const gmSnap = await getDoc(
-        getPrivateDetailsLocationDoc(worldId, id)
-      ).catch(() => null);
       const gmDoc: GMLocationDocument | undefined = gmSnap?.data();
       const gmNotes = gmDoc?.gmNotes?.toUint8Array() ?? null;
       const gmProperties: Omit<GMLocationDocument, "gmNotes"> | null =

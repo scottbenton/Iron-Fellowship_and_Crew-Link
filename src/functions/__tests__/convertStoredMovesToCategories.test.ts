@@ -5,7 +5,7 @@ import {
   buildMoveConditionId,
   buildMoveOutcomeId,
   convertStoredMovesToCategories,
-} from "./convertStoredMovesToCategories";
+} from "../convertStoredMovesToCategories";
 import { MoveType } from "api-calls/homebrew/moves/moves/_homebrewMove.type";
 import type { HomebrewMoveCategoryDocument } from "api-calls/homebrew/moves/categories/_homebrewMoveCategory.type";
 import type {

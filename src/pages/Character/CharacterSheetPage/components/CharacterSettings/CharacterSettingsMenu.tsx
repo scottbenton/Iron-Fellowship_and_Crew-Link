@@ -30,9 +30,10 @@ import LayoutIcon from "@mui/icons-material/ViewComfy";
 import { LayoutChooserDialog } from "components/shared/Layout/LayoutChooserDialog";
 import DownloadIcon from "@mui/icons-material/Download";
 import { ExportDialog, ExportOption } from "components/features/export/ExportDialog";
-import { createCharacterExporter } from "services/export/exporters/exportCharacter";
-import { createNotesExporter } from "services/export/exporters/exportNotes";
-import { createWorldExporter } from "services/export/exporters/exportWorld";
+import { CharacterExporter } from "services/export/exporters/exportCharacter";
+import { NotesExporter } from "services/export/exporters/exportNotes";
+import { RollLogExporter } from "services/export/exporters/exportRollLog";
+import { WorldExporter } from "services/export/exporters/exportWorld";
 import { Exporter } from "services/export";
 
 export interface CharacterSettingsMenuProps {
@@ -74,6 +75,11 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
     const opts: ExportOption[] = [
       { key: "character", label: "Character sheet" },
       { key: "notes", label: "Character notes" },
+      {
+        key: "roll-log",
+        label: "Roll log",
+        description: "Includes this character's roll log entries.",
+      },
     ];
     if (characterWorldId) {
       opts.push({
@@ -89,18 +95,21 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
     const list: Exporter[] = [];
     if (!characterId) return list;
     if (keys.has("character")) {
-      list.push(createCharacterExporter({ characterId }));
+      list.push(new CharacterExporter({ characterId }));
     }
     if (keys.has("notes")) {
       list.push(
-        createNotesExporter({
+        new NotesExporter({
           characterId,
           includeUnsharedCampaignNotes: false,
         })
       );
     }
+    if (keys.has("roll-log")) {
+      list.push(new RollLogExporter({ characterId, isGM: true }));
+    }
     if (keys.has("world") && characterWorldId) {
-      list.push(createWorldExporter({ worldId: characterWorldId, userId }));
+      list.push(new WorldExporter({ worldId: characterWorldId, userId }));
     }
     return list;
   };

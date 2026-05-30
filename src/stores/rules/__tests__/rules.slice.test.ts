@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { createRulesSlice } from "./rules.slice";
+import { createRulesSlice } from "../rules.slice";
 
 const baseRuleset = {
   _id: "classic",
