@@ -1,6 +1,7 @@
 import {
   Alert,
   AlertTitle,
+  Box,
   Button,
   Checkbox,
   Dialog,
@@ -12,6 +13,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
 import {
   ProgressTrack,
@@ -28,6 +30,7 @@ export interface EditOrCreateTrackDialogProps {
   initialTrack?: ProgressTrack | SceneChallenge;
   trackType: TrackSectionProgressTracks | TrackTypes.SceneChallenge;
   trackTypeName: string;
+  onDelete?: () => Promise<boolean | void>;
   handleTrack: (
     track: ProgressTrack | SceneChallenge
   ) => Promise<boolean | void>;
@@ -40,8 +43,11 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
     initialTrack,
     trackType,
     trackTypeName,
+    onDelete,
     handleTrack,
   } = props;
+
+  const confirm = useConfirm();
 
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -73,18 +79,26 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       return;
     }
 
+    const sceneChallengeInitialTrack =
+      trackType === TrackTypes.SceneChallenge
+        ? (initialTrack as SceneChallenge | undefined)
+        : undefined;
+
     const track: ProgressTrack | SceneChallenge =
       trackType === TrackTypes.SceneChallenge
         ? {
             createdDate: new Date(),
             status: TrackStatus.Active,
             type: trackType,
-            ...((initialTrack as SceneChallenge | undefined) ?? {}),
+            ...(sceneChallengeInitialTrack ?? {}),
             label: title,
             description,
             difficulty: difficulty,
             value: initialTrack && !resetProgress ? initialTrack.value : 0,
-            segmentsFilled: 0,
+            segmentsFilled:
+              sceneChallengeInitialTrack && !resetProgress
+                ? sceneChallengeInitialTrack.segmentsFilled
+                : 0,
           }
         : {
             createdDate: new Date(),
@@ -105,6 +119,36 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
       .catch(() => {
         setLoading(false);
         setError("Error adding track");
+      });
+  };
+
+  const handleDelete = async () => {
+    if (!onDelete) {
+      return;
+    }
+
+    try {
+      await confirm({
+        title: "Delete Track",
+        description: "Are you sure you want to delete this track?",
+        confirmationText: "Delete",
+        confirmationButtonProps: {
+          variant: "contained",
+          color: "error",
+        },
+      });
+    } catch {
+      return;
+    }
+
+    setLoading(true);
+    onDelete()
+      .then(() => {
+        handleDialogClose();
+      })
+      .catch(() => {
+        setLoading(false);
+        setError("Error deleting track");
       });
   };
 
@@ -166,23 +210,32 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
             )}
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button
-            disabled={loading}
-            onClick={() => handleDialogClose()}
-            color={"inherit"}
-          >
-            Cancel
-          </Button>
-          <Button
-            disabled={loading}
-            onClick={() => handleSubmit()}
-            variant={"contained"}
-          >
-            {initialTrack
-              ? `Edit ${initialTrack.label}`
-              : `Add ${trackTypeName}`}
-          </Button>
+        <DialogActions sx={{ justifyContent: "space-between" }}>
+          <Box>
+            {initialTrack?.status === TrackStatus.Active && onDelete && (
+              <Button disabled={loading} onClick={handleDelete} color={"error"}>
+                Delete Track
+              </Button>
+            )}
+          </Box>
+          <Stack direction="row" spacing={1}>
+            <Button
+              disabled={loading}
+              onClick={() => handleDialogClose()}
+              color={"inherit"}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={loading}
+              onClick={() => handleSubmit()}
+              variant={"contained"}
+            >
+              {initialTrack
+                ? `Edit ${initialTrack.label}`
+                : `Add ${trackTypeName}`}
+            </Button>
+          </Stack>
         </DialogActions>
       </Dialog>
     </>

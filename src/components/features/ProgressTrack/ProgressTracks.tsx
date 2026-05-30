@@ -73,6 +73,12 @@ export function ProgressTracks(props: ProgressTracksProps) {
     );
   };
 
+  const reopenProgressTrack = (trackId: string) => {
+    updateProgressTrack(trackId, { status: TrackStatus.Active }).catch(
+      () => {}
+    );
+  };
+
   const updateProgressTrackValue = (trackId: string, value: number) => {
     updateProgressTrack(trackId, { value }).catch(() => {});
   };
@@ -132,6 +138,11 @@ export function ProgressTracks(props: ProgressTracksProps) {
                   ? undefined
                   : () => completeProgressTrack(trackId)
               }
+              onReopen={
+                readOnly || !isCompleted
+                  ? undefined
+                  : () => reopenProgressTrack(trackId)
+              }
               onEdit={
                 readOnly || isCompleted
                   ? undefined
@@ -168,11 +179,13 @@ export function ProgressTracks(props: ProgressTracksProps) {
       </Stack>
       {!readOnly && currentlyEditingTrack && currentlyEditingTrackId && (
         <EditOrCreateTrackDialog
+          key={currentlyEditingTrackId}
           open={!!currentlyEditingTrack}
           handleClose={() => setCurrentlyEditingTrackId(undefined)}
           trackType={currentlyEditingTrack.type as TrackSectionProgressTracks}
           trackTypeName={`${typeLabel}`}
           initialTrack={currentlyEditingTrack}
+          onDelete={() => deleteProgressTrack(currentlyEditingTrackId)}
           handleTrack={(track) =>
             currentlyEditingTrack
               ? updateProgressTrack(currentlyEditingTrackId, track)

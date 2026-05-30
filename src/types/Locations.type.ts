@@ -69,6 +69,9 @@ export interface Location {
   type?: string;
   fields?: Record<string, string>;
   map?: LocationMap;
+  mapRows?: number;
+  mapCols?: number;
+  mapHexSize?: number;
   mapBackgroundImageFilename?: string;
   mapBackgroundImageFit?: MapBackgroundImageFit;
   mapStrokeColor?: MapStrokeColors;

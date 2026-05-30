@@ -6,6 +6,7 @@ import { useStore } from "stores/store";
 import { useSnackbar } from "providers/SnackbarProvider";
 import { useConfirm } from "material-ui-confirm";
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_LABEL } from "lib/storage.lib";
+import { ResizeMapDialog } from "./ResizeMapDialog";
 
 export interface MapOverflowOptionsMenuProps {
   locationId: string;
@@ -23,6 +24,7 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
   } = props;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isResizeDialogOpen, setIsResizeDialogOpen] = useState(false);
   const menuParentRef = useRef<HTMLButtonElement>(null);
   const mapInputRef = useRef<HTMLInputElement>(null);
 
@@ -88,6 +90,14 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
         >
           {hasBackgroundImage ? "Replace" : "Upload"} Background Image
         </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setIsMenuOpen(false);
+            setIsResizeDialogOpen(true);
+          }}
+        >
+          Resize Map
+        </MenuItem>
         {hasBackgroundImage && (
           <MenuItem
             onClick={() => {
@@ -144,6 +154,11 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
             handleFileUpload(file);
           }
         }}
+      />
+      <ResizeMapDialog
+        locationId={locationId}
+        open={isResizeDialogOpen}
+        onClose={() => setIsResizeDialogOpen(false)}
       />
     </>
   );

@@ -58,6 +58,7 @@ export interface BaseProgressTrackProps {
   value: number;
   onValueChange?: (value: number) => void;
   onComplete?: () => void;
+  onReopen?: () => void;
   onDelete?: () => void;
   onEdit?: () => void;
   hideDifficultyLabel?: boolean;
@@ -125,6 +126,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
     value,
     onValueChange,
     onComplete,
+    onReopen,
     onDelete,
     onEdit,
     hideDifficultyLabel,
@@ -165,7 +167,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   const handleDeleteClick = () => {
     confirm({
-      title: "Complete Track",
+      title: "Delete Track",
       description: "Are you sure you want to delete this track?",
       confirmationText: "Delete",
       confirmationButtonProps: {
@@ -175,6 +177,22 @@ export function ProgressTrack(props: ProgressTracksProps) {
     })
       .then(() => {
         onDelete && onDelete();
+      })
+      .catch(() => {});
+  };
+
+  const handleReopenClick = () => {
+    confirm({
+      title: "Mark Track Incomplete",
+      description: "Are you sure you want to move this track back to active?",
+      confirmationText: "Mark Incomplete",
+      confirmationButtonProps: {
+        variant: "contained",
+        color: "primary",
+      },
+    })
+      .then(() => {
+        onReopen && onReopen();
       })
       .catch(() => {});
   };
@@ -433,6 +451,16 @@ export function ProgressTrack(props: ProgressTracksProps) {
           Complete Track
         </Button>
       )}
+      {onReopen && status === TrackStatus.Completed && (
+        <Button
+          color={"inherit"}
+          onClick={handleReopenClick}
+          variant={"outlined"}
+          sx={{ mt: 2, mr: 1 }}
+        >
+          Mark Incomplete
+        </Button>
+      )}
       {trackType && !hideRollButton && !smallRollButton && (
         <Button
           color={"inherit"}
@@ -445,7 +473,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         </Button>
       )}
       {onDelete && status === TrackStatus.Completed && (
-        <Button color={"error"} sx={{ mt: 1 }} onClick={handleDeleteClick}>
+        <Button color={"error"} sx={{ mt: 2 }} onClick={handleDeleteClick}>
           Delete Permanently
         </Button>
       )}
