@@ -88,16 +88,18 @@ describe("CharacterExporter", () => {
     expect(files).toHaveLength(1);
     expect(files[0].path).toBe("characters/del-nar.json");
     expect(JSON.parse(String(files[0].contents))).toMatchObject({
+      id: "char-1",
       name: "Del Nar",
       profileImageFilename: "portrait.png",
       tracks: {
         "track-1": {
+          id: "track-1",
           label: "Vow",
           value: 4,
           createdDate: "2026-05-30T05:00:00.000Z",
         },
       },
-      assets: { "asset-1": { name: "Blade" } },
+      assets: { "asset-1": { id: "asset-1", name: "Blade" } },
     });
   });
 
@@ -125,7 +127,7 @@ describe("CharacterExporter", () => {
     const files = await collectAsyncIterable(exporter.run());
 
     expect(JSON.parse(String(files[0].contents))).toMatchObject({
-      tracks: { "track-1": { label: "Old Track", value: 1 } },
+      tracks: { "track-1": { id: "track-1", label: "Old Track", value: 1 } },
     });
   });
 });

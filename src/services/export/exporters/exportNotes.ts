@@ -140,6 +140,7 @@ export class NotesExporter implements Exporter {
         }),
         contents: JSON.stringify(
           {
+            id: noteId,
             noteId,
             title,
             shared,

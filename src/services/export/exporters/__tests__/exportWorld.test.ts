@@ -127,19 +127,23 @@ describe("WorldExporter", () => {
       "locations/haven.json",
     ]);
     expect(JSON.parse(String(files[0].contents))).toMatchObject({
+      id: "world-1",
       name: "World",
       descriptionMarkdown: "markdown-9",
     });
     expect(JSON.parse(String(files[1].contents))).toMatchObject({
+      id: "npc-1",
       name: "Rival",
       notesMarkdown: "markdown-1",
       gmNotesMarkdown: "",
     });
     expect(JSON.parse(String(files[2].contents))).toMatchObject({
+      id: "npc-2",
       role: "Guide",
       gmNotesMarkdown: "markdown-3",
     });
     expect(JSON.parse(String(files[4].contents))).toMatchObject({
+      id: "loc-1",
       fields: { trouble: "Storm" },
       notesMarkdown: "markdown-5",
     });

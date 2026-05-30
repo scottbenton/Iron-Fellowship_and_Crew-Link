@@ -100,6 +100,7 @@ describe("NotesExporter", () => {
       "notes/alpha-2.json",
     ]);
     expect(JSON.parse(String(files[0].contents))).toEqual({
+      id: "n-1",
       noteId: "n-1",
       title: "Alpha",
       shared: false,

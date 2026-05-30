@@ -52,6 +52,7 @@ export class RollLogExporter implements Exporter {
           rolls: records.map((record) => ({
             logId: record.id,
             ...record.roll,
+            id: record.id,
           })),
         },
         null,

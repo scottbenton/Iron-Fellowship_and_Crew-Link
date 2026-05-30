@@ -114,8 +114,10 @@ export class WorldExporter implements Exporter {
     const isOwner = resolveOwnership(world, this.userId);
 
     const worldJson: Omit<World, "worldDescription"> & {
+      id: string;
       descriptionMarkdown: string;
     } = {
+      id: this.worldId,
       name: world.name,
       settingKey: world.settingKey,
       ownerIds: world.ownerIds,
@@ -171,6 +173,7 @@ export class WorldExporter implements Exporter {
         path,
         contents: JSON.stringify(
           {
+            id: npc.id,
             ...npcJson,
             notesMarkdown: yjsUpdateToMarkdown(npc.notes),
             ...(isOwner
@@ -201,6 +204,7 @@ export class WorldExporter implements Exporter {
         path,
         contents: JSON.stringify(
           {
+            id: lore.id,
             ...lore.doc,
             notesMarkdown: yjsUpdateToMarkdown(lore.notes),
             ...(isOwner
@@ -235,6 +239,7 @@ export class WorldExporter implements Exporter {
         path,
         contents: JSON.stringify(
           {
+            id: location.id,
             ...locationJson,
             notesMarkdown: yjsUpdateToMarkdown(location.notes),
             ...(isOwner

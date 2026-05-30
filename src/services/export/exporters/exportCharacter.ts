@@ -89,6 +89,7 @@ export class CharacterExporter implements Exporter {
     // -- character.json -------------------------------------------------------
     // Omit the binary image; keep just the filename string for reference.
     const characterJson: Record<string, unknown> = {
+      id: this.characterId,
       uid: doc.uid,
       name: doc.name,
       stats: doc.stats,
@@ -122,7 +123,7 @@ export class CharacterExporter implements Exporter {
     const tracks: Record<string, unknown> = {};
     if (!tracksSnap.empty) {
       tracksSnap.docs.forEach((d) => {
-        tracks[d.id] = serializeTrackForExport(d.data());
+        tracks[d.id] = { ...serializeTrackForExport(d.data()), id: d.id };
       });
     }
 
@@ -132,7 +133,7 @@ export class CharacterExporter implements Exporter {
     const assets: Record<string, unknown> = {};
     if (!assetsSnap.empty) {
       assetsSnap.docs.forEach((d) => {
-        assets[d.id] = d.data();
+        assets[d.id] = { ...d.data(), id: d.id };
       });
     }
 

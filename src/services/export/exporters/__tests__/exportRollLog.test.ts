@@ -48,6 +48,7 @@ describe("RollLogExporter", () => {
       ownerId: "camp-1",
       rolls: [
         {
+          id: "log-1",
           logId: "log-1",
           type: ROLL_TYPE.ORACLE_TABLE,
           rollLabel: "Oracle",
