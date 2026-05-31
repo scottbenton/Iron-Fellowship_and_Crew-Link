@@ -417,7 +417,7 @@ export function CampaignSettingsMenu() {
           open={exportDialogOpen}
           onClose={() => setExportDialogOpen(false)}
           title={`Export ${campaignName || "Campaign"}`}
-          description="Select what to include. Notes and rich text become markdown files; images are not included."
+          description="Select what to include. The downloaded zip contains JSON files with exported data. Notes and rich text are embedded as markdown fields; images are not included."
           filenameStem={`campaign-${campaignName || campaignId}`.replace(/\s+/g, "-").toLowerCase()}
           appVersion={APP_VERSION}
           source={{ type: "campaign", id: campaignId }}
