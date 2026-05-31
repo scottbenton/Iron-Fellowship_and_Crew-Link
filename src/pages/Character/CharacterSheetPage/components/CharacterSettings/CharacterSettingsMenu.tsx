@@ -282,7 +282,7 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
           open={exportDialogOpen}
           onClose={() => setExportDialogOpen(false)}
           title={`Export ${characterName || "Character"}`}
-          description="Select what to include. Notes and rich text become markdown files; images are not included."
+          description="Select what to include. The downloaded zip contains JSON files with exported data. Notes and rich text are embedded as markdown fields; images are not included."
           filenameStem={`character-${characterName || characterId}`.replace(/\s+/g, "-").toLowerCase()}
           appVersion={APP_VERSION}
           source={{ type: "character", id: characterId }}
