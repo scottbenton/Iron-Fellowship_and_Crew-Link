@@ -6,7 +6,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import HomebrewIcon from "@mui/icons-material/PlaylistAdd";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ExpansionSelectorDialog } from "components/features/charactersAndCampaigns/ExpansionSelector/ExpansionSelectorDialog";
 import { useStore } from "stores/store";
 import { useConfirm } from "material-ui-confirm";
@@ -28,6 +28,13 @@ import ThemeIcon from "@mui/icons-material/ColorLens";
 import { ThemeChooserDialog } from "components/shared/Layout/ThemeChooserDialog";
 import LayoutIcon from "@mui/icons-material/ViewComfy";
 import { LayoutChooserDialog } from "components/shared/Layout/LayoutChooserDialog";
+import DownloadIcon from "@mui/icons-material/Download";
+import { ExportDialog, ExportOption } from "components/features/export/ExportDialog";
+import { CharacterExporter } from "services/export/exporters/exportCharacter";
+import { NotesExporter } from "services/export/exporters/exportNotes";
+import { RollLogExporter } from "services/export/exporters/exportRollLog";
+import { WorldExporter } from "services/export/exporters/exportWorld";
+import { Exporter } from "services/export";
 
 export interface CharacterSettingsMenuProps {
   open: boolean;
@@ -51,6 +58,7 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
     useState(false);
 
   const [updateStatDialogOpen, setUpdateStatDialogOpen] = useState(false);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
 
   const characterId = useStore(
     (store) => store.characters.currentCharacter.currentCharacterId
@@ -58,6 +66,53 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
   const characterName = useStore(
     (store) => store.characters.currentCharacter.currentCharacter?.name ?? ""
   );
+  const characterWorldId = useStore(
+    (store) => store.characters.currentCharacter.currentCharacter?.worldId ?? undefined
+  );
+  const userId = useStore((store) => store.auth.uid);
+
+  const exportOptions = useMemo<ExportOption[]>(() => {
+    const opts: ExportOption[] = [
+      { key: "character", label: "Character sheet" },
+      { key: "notes", label: "Character notes" },
+      {
+        key: "roll-log",
+        label: "Roll log",
+        description: "Includes this character's roll log entries.",
+      },
+    ];
+    if (characterWorldId) {
+      opts.push({
+        key: "world",
+        label: "World",
+        description: "Includes NPCs, lore, and locations you can read.",
+      });
+    }
+    return opts;
+  }, [characterWorldId]);
+
+  const buildExporters = (keys: Set<string>): Exporter[] => {
+    const list: Exporter[] = [];
+    if (!characterId) return list;
+    if (keys.has("character")) {
+      list.push(new CharacterExporter({ characterId }));
+    }
+    if (keys.has("notes")) {
+      list.push(
+        new NotesExporter({
+          characterId,
+          includeUnsharedCampaignNotes: false,
+        })
+      );
+    }
+    if (keys.has("roll-log")) {
+      list.push(new RollLogExporter({ characterId, isGM: true }));
+    }
+    if (keys.has("world") && characterWorldId) {
+      list.push(new WorldExporter({ worldId: characterWorldId, userId }));
+    }
+    return list;
+  };
 
   const { showGuidedPlayerView } = useCampaignType();
 
@@ -190,6 +245,17 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
           </ListItemIcon>
           <ListItemText>OBS Overlay Link</ListItemText>
         </MenuItem>
+        <MenuItem
+          onClick={() => {
+            onClose();
+            setExportDialogOpen(true);
+          }}
+        >
+          <ListItemIcon>
+            <DownloadIcon fontSize={"small"} />
+          </ListItemIcon>
+          <ListItemText>Export Data</ListItemText>
+        </MenuItem>
       </Menu>
       <ExpansionSelectorDialog
         open={expansionSelectorDialogOpen}
@@ -211,6 +277,19 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
         open={layoutDialogOpen}
         onClose={() => setLayoutDialogOpen(false)}
       />
+      {characterId && (
+        <ExportDialog
+          open={exportDialogOpen}
+          onClose={() => setExportDialogOpen(false)}
+          title={`Export ${characterName || "Character"}`}
+          description="Select what to include. Notes and rich text become markdown files; images are not included."
+          filenameStem={`character-${characterName || characterId}`.replace(/\s+/g, "-").toLowerCase()}
+          appVersion={APP_VERSION}
+          source={{ type: "character", id: characterId }}
+          options={exportOptions}
+          buildExporters={buildExporters}
+        />
+      )}
     </>
   );
 }

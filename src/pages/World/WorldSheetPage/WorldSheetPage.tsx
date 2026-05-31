@@ -1,4 +1,4 @@
-import { Button, LinearProgress } from "@mui/material";
+import { Button, LinearProgress, Stack } from "@mui/material";
 import { WorldSheet } from "components/features/worlds/WorldSheet";
 import { useConfirm } from "material-ui-confirm";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -9,6 +9,10 @@ import { WORLD_ROUTES, constructWorldPath } from "../routes";
 import { PageContent, PageHeader } from "components/shared/Layout";
 import { StyledTab, StyledTabs } from "components/shared/StyledTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DownloadIcon from "@mui/icons-material/Download";
+import { ExportDialog } from "components/features/export/ExportDialog";
+import { WorldExporter } from "services/export/exporters/exportWorld";
+import { Exporter } from "services/export";
 import { NPCSection } from "components/features/worlds/NPCSection";
 import { Head } from "providers/HeadProvider/Head";
 import { useStore } from "stores/store";
@@ -55,6 +59,8 @@ export function WorldSheetPage() {
   const deleteWorld = useStore((store) => store.worlds.deleteWorld);
 
   const [syncLoading, setSyncLoading] = useState(true);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const userId = useStore((store) => store.auth.uid);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -124,16 +130,26 @@ export function WorldSheetPage() {
       <PageHeader
         label={world.name}
         actions={
-          showGMFields && (
+          <Stack direction="row" spacing={1}>
             <Button
               color={"inherit"}
               variant={"outlined"}
-              onClick={() => handleDeleteClick()}
-              endIcon={<DeleteIcon />}
+              onClick={() => setExportDialogOpen(true)}
+              endIcon={<DownloadIcon />}
             >
-              Delete World
+              Export
             </Button>
-          )
+            {showGMFields && (
+              <Button
+                color={"inherit"}
+                variant={"outlined"}
+                onClick={() => handleDeleteClick()}
+                endIcon={<DeleteIcon />}
+              >
+                Delete World
+              </Button>
+            )}
+          </Stack>
         }
       />
       <PageContent isPaper>
@@ -190,6 +206,19 @@ export function WorldSheetPage() {
           </BreakContainer>
         )}
       </PageContent>
+      <ExportDialog
+        open={exportDialogOpen}
+        onClose={() => setExportDialogOpen(false)}
+        title={`Export ${world.name}`}
+        filenameStem={`world-${world.name || worldId}`.replace(/\s+/g, "-").toLowerCase()}
+        appVersion={APP_VERSION}
+        source={{ type: "world", id: worldId }}
+        options={[{ key: "world", label: "World" }]}
+        buildExporters={(keys): Exporter[] =>
+          keys.has("world") ? [new WorldExporter({ worldId, userId })] : []
+        }
+        autoStart
+      />
     </>
   );
 }
