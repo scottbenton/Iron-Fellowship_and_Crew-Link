@@ -8,7 +8,7 @@ export const activeFeatureFlags: {
 }[] = [
   {
     testId: "lodestar",
-    label: "Ironsworn: Lodestar",
+    label: "Enable Lodestar content (may not match book content)",
     gameSystems: [GAME_SYSTEMS.IRONSWORN],
   },
 ];
