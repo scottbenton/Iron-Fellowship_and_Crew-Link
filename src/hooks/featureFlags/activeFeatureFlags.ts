@@ -5,4 +5,10 @@ export const activeFeatureFlags: {
   label: string;
   warning?: string;
   gameSystems?: GAME_SYSTEMS[];
-}[] = [];
+}[] = [
+  {
+    testId: "lodestar",
+    label: "Ironsworn: Lodestar",
+    gameSystems: [GAME_SYSTEMS.IRONSWORN],
+  },
+];

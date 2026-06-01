@@ -47,8 +47,8 @@ export function ExpansionSelectorDialog(props: ExpansionSelectorDialogProps) {
     setEnabledExpansions(defaultExpansions);
   }, [characterId, campaignId, characterHomebrewIds, campaignHomebrewIds]);
 
-  const toggleEnableExpansion = (expansionId: string, enabled: boolean) => {
-    setEnabledExpansions((prev) => ({ ...prev, [expansionId]: enabled }));
+  const toggleEnableExpansion = (changes: Record<string, boolean>) => {
+    setEnabledExpansions((prev) => ({ ...prev, ...changes }));
   };
 
   const updateCurrentCharacter = useStore(

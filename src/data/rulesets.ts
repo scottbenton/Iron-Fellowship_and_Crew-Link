@@ -41,9 +41,7 @@ export const ironswornConfig: IRulesetConfig = {
   type: "ruleset",
   isHomebrew: false,
   load: async () => {
-    const json = await import(
-      "@datasworn/ironsworn-classic/json/classic.json"
-    );
+    const json = await import("@datasworn/ironsworn-classic/json/classic.json");
     return getJsonDefault(json) as unknown as Datasworn.Ruleset;
   },
 };
@@ -54,9 +52,7 @@ export const starforgedConfig: IRulesetConfig = {
   type: "ruleset",
   isHomebrew: false,
   load: async () => {
-    const json = await import(
-      "@datasworn/starforged/json/starforged.json"
-    );
+    const json = await import("@datasworn/starforged/json/starforged.json");
     return getJsonDefault(json) as unknown as Datasworn.Ruleset;
   },
 };
@@ -76,19 +72,16 @@ export const ironswornDelveConfig: IExpansionConfig = {
   },
 };
 
-// Lodestar is not ready to expose yet.
-// export const ironswornLodestarConfig: IExpansionConfig = {
-//   id: "lodestar",
-//   name: "Ironsworn Lodestar",
-//   type: "expansion",
-//   isHomebrew: false,
-//   load: async () => {
-//     const json = await import(
-//       "@datasworn/ironsworn-classic-lodestar/json/lodestar.json"
-//     );
-//     return getJsonDefault(json) as unknown as Datasworn.Expansion;
-//   },
-// };
+export const ironswornLodestarConfig: IExpansionConfig = {
+  id: "lodestar",
+  name: "Ironsworn Lodestar",
+  type: "expansion",
+  isHomebrew: false,
+  load: async () => {
+    const json = await import("./lodestar.json");
+    return getJsonDefault(json) as unknown as Datasworn.Expansion;
+  },
+};
 
 // ─── Official Starforged Expansions ──────────────────────────────────────────
 
@@ -173,10 +166,13 @@ export const includedRulesets: Record<string, IRulesetConfig> = {
 };
 
 /** All expansions organized by their parent ruleset id. */
-export const includedExpansions: Record<string, Record<string, IExpansionConfig>> = {
+export const includedExpansions: Record<
+  string,
+  Record<string, IExpansionConfig>
+> = {
   [ironswornConfig.id]: {
     [ironswornDelveConfig.id]: ironswornDelveConfig,
-    // [ironswornLodestarConfig.id]: ironswornLodestarConfig,
+    [ironswornLodestarConfig.id]: ironswornLodestarConfig,
     [ironsmithConfig.id]: ironsmithConfig,
   },
   [starforgedConfig.id]: {
@@ -192,7 +188,9 @@ export const includedExpansions: Record<string, Record<string, IExpansionConfig>
 
 const gameSystem = getSystem();
 const activeRulesetId =
-  gameSystem === GAME_SYSTEMS.IRONSWORN ? ironswornConfig.id : starforgedConfig.id;
+  gameSystem === GAME_SYSTEMS.IRONSWORN
+    ? ironswornConfig.id
+    : starforgedConfig.id;
 
 let ruleset: Datasworn.Ruleset | undefined = undefined;
 const defaultExpansions: Record<string, Datasworn.Expansion> = {};
@@ -206,7 +204,7 @@ export function preloadActiveRuleset(): Promise<Datasworn.Ruleset> {
 }
 
 export function findIncludedExpansionConfig(
-  expansionId: string,
+  expansionId: string
 ): IExpansionConfig | undefined {
   for (const expansions of Object.values(includedExpansions)) {
     const config = expansions[expansionId];
@@ -217,7 +215,7 @@ export function findIncludedExpansionConfig(
 }
 
 export async function loadIncludedRuleset(
-  rulesetId = activeRulesetId,
+  rulesetId = activeRulesetId
 ): Promise<Datasworn.Ruleset> {
   if (ruleset?._id === rulesetId) {
     return ruleset;
@@ -239,7 +237,7 @@ export async function loadIncludedRuleset(
 }
 
 export async function loadIncludedExpansion(
-  expansionId: string,
+  expansionId: string
 ): Promise<Datasworn.Expansion | undefined> {
   const existingExpansion =
     defaultExpansions[expansionId] ?? thirdPartyExpansions[expansionId];

@@ -13,6 +13,9 @@ export function TracksSection() {
   const isDelveEnabled = useStore((store) =>
     store.rules.expansionIds.includes("delve")
   );
+  const isLodestarEnabled = useStore((store) =>
+    store.rules.expansionIds.includes("lodestar")
+  );
 
   return (
     <Stack spacing={2} sx={{ pb: 2 }}>
@@ -33,7 +36,7 @@ export function TracksSection() {
           typeLabel={"Delve Site"}
         />
       )}
-      {isStarforged && (
+      {(isStarforged || (isIronsworn && isLodestarEnabled)) && (
         <ProgressTrackSection
           type={TrackTypes.SceneChallenge}
           typeLabel={"Scene Challenge"}
