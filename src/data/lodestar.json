@@ -1,0 +1,5235 @@
+{
+  "_id": "lodestar",
+  "datasworn_version": "0.1.0",
+  "type": "expansion",
+  "ruleset": "classic",
+  "title": "Ironsworn Lodestar",
+  "authors": [
+    {
+      "name": "Shawn Tomkin"
+    }
+  ],
+  "date": "2025-05-01",
+  "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "url": "https://ironswornrpg.com",
+  "oracles": {
+    "combat": {
+      "_id": "oracle_collection:lodestar/combat",
+      "type": "oracle_collection",
+      "name": "Combat Oracles",
+      "oracle_type": "tables",
+      "contents": {
+        "battleground": {
+          "_id": "oracle_rollable:lodestar/combat/battleground",
+          "type": "oracle_rollable",
+          "name": "Battleground",
+          "oracle_type": "table_text2",
+          "dice": "1d100",
+          "summary": "Roll on this oracle to reveal a feature of the combat environment that affects the fight. Use the result to inspire tactical choices or complicate the situation.",
+          "column_labels": {
+            "roll": "Roll",
+            "text": "Result",
+            "text2": "Details"
+          },
+          "rows": [
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.0",
+              "roll": {
+                "min": 1,
+                "max": 5
+              },
+              "text": "Slippery surface",
+              "text2": "Mud, ice, rain-slick rocks"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.1",
+              "roll": {
+                "min": 6,
+                "max": 10
+              },
+              "text": "Encumbering terrain",
+              "text2": "Water, muck, deep snow, webs"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.2",
+              "roll": {
+                "min": 11,
+                "max": 15
+              },
+              "text": "Precipitous drop",
+              "text2": "Cliff, ravine, pit, stairs"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.3",
+              "roll": {
+                "min": 16,
+                "max": 20
+              },
+              "text": "Obstructed path",
+              "text2": "Barricade, toppled ruin, fallen tree"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.4",
+              "roll": {
+                "min": 21,
+                "max": 25
+              },
+              "text": "High ground",
+              "text2": "Mound, outcropping, climbable structure"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.5",
+              "roll": {
+                "min": 26,
+                "max": 30
+              },
+              "text": "Cluttered terrain",
+              "text2": "Rubble, rocks, roots"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.6",
+              "roll": {
+                "min": 31,
+                "max": 35
+              },
+              "text": "Low visibility",
+              "text2": "Darkness, smoke, mist, torrential rain"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.7",
+              "roll": {
+                "min": 36,
+                "max": 40
+              },
+              "text": "Impassable border",
+              "text2": "Deep waterway, high wall, cliff face, locked door"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.8",
+              "roll": {
+                "min": 41,
+                "max": 45
+              },
+              "text": "Scattered cover",
+              "text2": "Low walls, boulders, trees, crates"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.9",
+              "roll": {
+                "min": 46,
+                "max": 50
+              },
+              "text": "Cramped spaces",
+              "text2": "Narrow tunnel, crowded room, dense woods"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.10",
+              "roll": {
+                "min": 51,
+                "max": 55
+              },
+              "text": "Treacherous ground",
+              "text2": "Fire pit, boiling hot spring, quagmire"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.11",
+              "roll": {
+                "min": 56,
+                "max": 60
+              },
+              "text": "Restricted approach",
+              "text2": "Bridge, corridor, river ford, narrow canyon"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.12",
+              "roll": {
+                "min": 61,
+                "max": 65
+              },
+              "text": "Collapsing foundation",
+              "text2": "Crumbling ruins, thin ice, undermined earth"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.13",
+              "roll": {
+                "min": 66,
+                "max": 70
+              },
+              "text": "Bounded space",
+              "text2": "Dueling circle, woodland clearing, standing stones"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.14",
+              "roll": {
+                "min": 71,
+                "max": 75
+              },
+              "text": "Pitched ground",
+              "text2": "Steep hillside, rooftop, collapsed ruin, ship deck"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.15",
+              "roll": {
+                "min": 76,
+                "max": 80
+              },
+              "text": "Hidden hazard",
+              "text2": "Trap, sinkhole, lurking creature, waiting ambushers"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.16",
+              "roll": {
+                "min": 81,
+                "max": 85
+              },
+              "text": "Frenzied distractions",
+              "text2": "Noncombatants, panicked creatures, insect swarms"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.17",
+              "roll": {
+                "min": 86,
+                "max": 90
+              },
+              "text": "Destructive chaos",
+              "text2": "Storm, fire, flooding, rampaging creature"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.18",
+              "roll": {
+                "min": 91,
+                "max": 95
+              },
+              "text": "Unnatural forces",
+              "text2": "Mystic energies, runic symbols, sorcerous artifacts"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/battleground.19",
+              "roll": {
+                "min": 96,
+                "max": 100
+              },
+              "text": "Cursed ground",
+              "text2": "Corpses, shambling undead, ghostly specters"
+            }
+          ],
+          "_source": {
+            "title": "Ironsworn: Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 94,
+            "url": "https://ironswornrpg.com"
+          }
+        },
+        "tactic": {
+          "_id": "oracle_rollable:lodestar/combat/tactic",
+          "type": "oracle_rollable",
+          "name": "Tactic",
+          "oracle_type": "table_text",
+          "dice": "1d100",
+          "summary": "Use this oracle to help inspire an action for an NPC in combat. When you're not sure what your foe does next, particularly when they have initiative, roll on this table and interpret the result as appropriate to the situation.",
+          "column_labels": {
+            "roll": "Roll",
+            "text": "Result"
+          },
+          "rows": [
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.0",
+              "roll": {
+                "min": 1,
+                "max": 3
+              },
+              "text": "Compel a surrender."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.1",
+              "roll": {
+                "min": 4,
+                "max": 6
+              },
+              "text": "Coordinate with allies."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.2",
+              "roll": {
+                "min": 7,
+                "max": 9
+              },
+              "text": "Gather reinforcements."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.3",
+              "roll": {
+                "min": 10,
+                "max": 13
+              },
+              "text": "Seize something or someone."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.4",
+              "roll": {
+                "min": 14,
+                "max": 17
+              },
+              "text": "Provoke a reckless response."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.5",
+              "roll": {
+                "min": 18,
+                "max": 21
+              },
+              "text": "Intimidate or frighten."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.6",
+              "roll": {
+                "min": 22,
+                "max": 25
+              },
+              "text": "Reveal a surprising truth."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.7",
+              "roll": {
+                "min": 26,
+                "max": 29
+              },
+              "text": "Shift focus to something else."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.8",
+              "roll": {
+                "min": 30,
+                "max": 33
+              },
+              "text": "Destroy or damage something."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.9",
+              "roll": {
+                "min": 34,
+                "max": 39
+              },
+              "text": "Take a decisive action."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.10",
+              "roll": {
+                "min": 40,
+                "max": 45
+              },
+              "text": "Reinforce defenses."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.11",
+              "roll": {
+                "min": 46,
+                "max": 52
+              },
+              "text": "Ready an action."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.12",
+              "roll": {
+                "min": 53,
+                "max": 60
+              },
+              "text": "Use the terrain to gain advantage."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.13",
+              "roll": {
+                "min": 61,
+                "max": 68
+              },
+              "text": "Take advantage of an opening."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.14",
+              "roll": {
+                "min": 69,
+                "max": 78
+              },
+              "text": "Create an opportunity."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.15",
+              "roll": {
+                "min": 79,
+                "max": 89
+              },
+              "text": "Attack with precision."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.16",
+              "roll": {
+                "min": 90,
+                "max": 99
+              },
+              "text": "Attack with power."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/combat/tactic.17",
+              "roll": {
+                "min": 100,
+                "max": 100
+              },
+              "text": "Take an unexpected action."
+            }
+          ],
+          "_source": {
+            "title": "Ironsworn: Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 95,
+            "url": "https://ironswornrpg.com"
+          }
+        }
+      },
+      "collections": {},
+      "_source": {
+        "title": "Ironsworn: Lodestar",
+        "authors": [
+          {
+            "name": "Shawn Tomkin"
+          }
+        ],
+        "date": "2025-05-01",
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "page": 94,
+        "url": "https://ironswornrpg.com"
+      }
+    },
+    "core": {
+      "_id": "oracle_collection:lodestar/core",
+      "type": "oracle_collection",
+      "name": "Core Oracles",
+      "oracle_type": "tables",
+      "contents": {
+        "descriptor": {
+          "_id": "oracle_rollable:lodestar/core/descriptor",
+          "type": "oracle_rollable",
+          "name": "Descriptor",
+          "oracle_type": "table_text",
+          "dice": "1d100",
+          "summary": "Use the Descriptor oracle to add texture to the details of a location or event. Combined with a Focus oracle result, it provides a more specific prompt than either oracle alone.",
+          "column_labels": {
+            "roll": "Roll",
+            "text": "Result"
+          },
+          "rows": [
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.0",
+              "roll": {
+                "min": 1,
+                "max": 1
+              },
+              "text": "Small",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.1",
+              "roll": {
+                "min": 2,
+                "max": 2
+              },
+              "text": "Collapsed",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.2",
+              "roll": {
+                "min": 3,
+                "max": 3
+              },
+              "text": "Protected",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.3",
+              "roll": {
+                "min": 4,
+                "max": 4
+              },
+              "text": "Infested",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.4",
+              "roll": {
+                "min": 5,
+                "max": 5
+              },
+              "text": "Misty",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.5",
+              "roll": {
+                "min": 6,
+                "max": 6
+              },
+              "text": "Towering",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.6",
+              "roll": {
+                "min": 7,
+                "max": 7
+              },
+              "text": "Light",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.7",
+              "roll": {
+                "min": 8,
+                "max": 8
+              },
+              "text": "Marked",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.8",
+              "roll": {
+                "min": 9,
+                "max": 9
+              },
+              "text": "Crafted",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.9",
+              "roll": {
+                "min": 10,
+                "max": 10
+              },
+              "text": "Remote",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.10",
+              "roll": {
+                "min": 11,
+                "max": 11
+              },
+              "text": "Deep",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.11",
+              "roll": {
+                "min": 12,
+                "max": 12
+              },
+              "text": "Captured",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.12",
+              "roll": {
+                "min": 13,
+                "max": 13
+              },
+              "text": "Ruined",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.13",
+              "roll": {
+                "min": 14,
+                "max": 14
+              },
+              "text": "Safe",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.14",
+              "roll": {
+                "min": 15,
+                "max": 15
+              },
+              "text": "Precious",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.15",
+              "roll": {
+                "min": 16,
+                "max": 16
+              },
+              "text": "Abandoned",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.16",
+              "roll": {
+                "min": 17,
+                "max": 17
+              },
+              "text": "Inaccessible",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.17",
+              "roll": {
+                "min": 18,
+                "max": 18
+              },
+              "text": "Barren",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.18",
+              "roll": {
+                "min": 19,
+                "max": 19
+              },
+              "text": "Guarded",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.19",
+              "roll": {
+                "min": 20,
+                "max": 20
+              },
+              "text": "Impassable",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.20",
+              "roll": {
+                "min": 21,
+                "max": 21
+              },
+              "text": "Corrupted",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.21",
+              "roll": {
+                "min": 22,
+                "max": 22
+              },
+              "text": "Foreboding",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.22",
+              "roll": {
+                "min": 23,
+                "max": 23
+              },
+              "text": "Wild",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.23",
+              "roll": {
+                "min": 24,
+                "max": 24
+              },
+              "text": "Fragile",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.24",
+              "roll": {
+                "min": 25,
+                "max": 25
+              },
+              "text": "Isolated",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.25",
+              "roll": {
+                "min": 26,
+                "max": 26
+              },
+              "text": "Inhabited",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.26",
+              "roll": {
+                "min": 27,
+                "max": 27
+              },
+              "text": "Defended",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.27",
+              "roll": {
+                "min": 28,
+                "max": 28
+              },
+              "text": "Active",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.28",
+              "roll": {
+                "min": 29,
+                "max": 29
+              },
+              "text": "Bloody",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.29",
+              "roll": {
+                "min": 30,
+                "max": 30
+              },
+              "text": "Dying",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.30",
+              "roll": {
+                "min": 31,
+                "max": 31
+              },
+              "text": "Grim",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.31",
+              "roll": {
+                "min": 32,
+                "max": 32
+              },
+              "text": "Shrouded",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.32",
+              "roll": {
+                "min": 33,
+                "max": 33
+              },
+              "text": "Dead",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.33",
+              "roll": {
+                "min": 34,
+                "max": 34
+              },
+              "text": "Sealed",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.34",
+              "roll": {
+                "min": 35,
+                "max": 35
+              },
+              "text": "Flooded",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.35",
+              "roll": {
+                "min": 36,
+                "max": 36
+              },
+              "text": "Withered",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.36",
+              "roll": {
+                "min": 37,
+                "max": 37
+              },
+              "text": "Lush",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.37",
+              "roll": {
+                "min": 38,
+                "max": 38
+              },
+              "text": "Fortified",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.38",
+              "roll": {
+                "min": 39,
+                "max": 39
+              },
+              "text": "Beautiful",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.39",
+              "roll": {
+                "min": 40,
+                "max": 40
+              },
+              "text": "Blocked",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.40",
+              "roll": {
+                "min": 41,
+                "max": 41
+              },
+              "text": "Desolate",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.41",
+              "roll": {
+                "min": 42,
+                "max": 42
+              },
+              "text": "Deadly",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.42",
+              "roll": {
+                "min": 43,
+                "max": 43
+              },
+              "text": "Massive",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.43",
+              "roll": {
+                "min": 44,
+                "max": 44
+              },
+              "text": "Hallowed",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.44",
+              "roll": {
+                "min": 45,
+                "max": 45
+              },
+              "text": "Confined",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.45",
+              "roll": {
+                "min": 46,
+                "max": 46
+              },
+              "text": "Unusual",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.46",
+              "roll": {
+                "min": 47,
+                "max": 47
+              },
+              "text": "Mysterious",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.47",
+              "roll": {
+                "min": 48,
+                "max": 48
+              },
+              "text": "Strange",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.48",
+              "roll": {
+                "min": 49,
+                "max": 49
+              },
+              "text": "Depleted",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.49",
+              "roll": {
+                "min": 50,
+                "max": 50
+              },
+              "text": "Crowded",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.50",
+              "roll": {
+                "min": 51,
+                "max": 51
+              },
+              "text": "Fertile",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.51",
+              "roll": {
+                "min": 52,
+                "max": 52
+              },
+              "text": "Diverse",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.52",
+              "roll": {
+                "min": 53,
+                "max": 53
+              },
+              "text": "Sheltered",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.53",
+              "roll": {
+                "min": 54,
+                "max": 54
+              },
+              "text": "Destroyed",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.54",
+              "roll": {
+                "min": 55,
+                "max": 55
+              },
+              "text": "Open",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.55",
+              "roll": {
+                "min": 56,
+                "max": 56
+              },
+              "text": "Exposed",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.56",
+              "roll": {
+                "min": 57,
+                "max": 57
+              },
+              "text": "Contested",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.57",
+              "roll": {
+                "min": 58,
+                "max": 58
+              },
+              "text": "Blighted",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.58",
+              "roll": {
+                "min": 59,
+                "max": 59
+              },
+              "text": "Rugged",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.59",
+              "roll": {
+                "min": 60,
+                "max": 60
+              },
+              "text": "Unnatural",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.60",
+              "roll": {
+                "min": 61,
+                "max": 61
+              },
+              "text": "Secret",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.61",
+              "roll": {
+                "min": 62,
+                "max": 62
+              },
+              "text": "Dark",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.62",
+              "roll": {
+                "min": 63,
+                "max": 63
+              },
+              "text": "Sunken",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.63",
+              "roll": {
+                "min": 64,
+                "max": 64
+              },
+              "text": "Abundant",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.64",
+              "roll": {
+                "min": 65,
+                "max": 65
+              },
+              "text": "Raided",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.65",
+              "roll": {
+                "min": 66,
+                "max": 66
+              },
+              "text": "Suspended",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.66",
+              "roll": {
+                "min": 67,
+                "max": 67
+              },
+              "text": "Hostile",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.67",
+              "roll": {
+                "min": 68,
+                "max": 68
+              },
+              "text": "Empty",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.68",
+              "roll": {
+                "min": 69,
+                "max": 69
+              },
+              "text": "Overgrown",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.69",
+              "roll": {
+                "min": 70,
+                "max": 70
+              },
+              "text": "Chaotic",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.70",
+              "roll": {
+                "min": 71,
+                "max": 71
+              },
+              "text": "Peaceful",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.71",
+              "roll": {
+                "min": 72,
+                "max": 72
+              },
+              "text": "Broken",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.72",
+              "roll": {
+                "min": 73,
+                "max": 73
+              },
+              "text": "Ensnaring",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.73",
+              "roll": {
+                "min": 74,
+                "max": 74
+              },
+              "text": "Frozen",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.74",
+              "roll": {
+                "min": 75,
+                "max": 75
+              },
+              "text": "Ravaged",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.75",
+              "roll": {
+                "min": 76,
+                "max": 76
+              },
+              "text": "Expansive",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.76",
+              "roll": {
+                "min": 77,
+                "max": 77
+              },
+              "text": "Toxic",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.77",
+              "roll": {
+                "min": 78,
+                "max": 78
+              },
+              "text": "High",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.78",
+              "roll": {
+                "min": 79,
+                "max": 79
+              },
+              "text": "Sacred",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.79",
+              "roll": {
+                "min": 80,
+                "max": 80
+              },
+              "text": "Low",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.80",
+              "roll": {
+                "min": 81,
+                "max": 81
+              },
+              "text": "Forsaken",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.81",
+              "roll": {
+                "min": 82,
+                "max": 82
+              },
+              "text": "Fallen",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.82",
+              "roll": {
+                "min": 83,
+                "max": 83
+              },
+              "text": "Shadowy",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.83",
+              "roll": {
+                "min": 84,
+                "max": 84
+              },
+              "text": "Unstable",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.84",
+              "roll": {
+                "min": 85,
+                "max": 85
+              },
+              "text": "Hidden",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.85",
+              "roll": {
+                "min": 86,
+                "max": 86
+              },
+              "text": "Haunted",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.86",
+              "roll": {
+                "min": 87,
+                "max": 87
+              },
+              "text": "Buried",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.87",
+              "roll": {
+                "min": 88,
+                "max": 88
+              },
+              "text": "Damaged",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.88",
+              "roll": {
+                "min": 89,
+                "max": 89
+              },
+              "text": "Ancient",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.89",
+              "roll": {
+                "min": 90,
+                "max": 90
+              },
+              "text": "Scarred",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.90",
+              "roll": {
+                "min": 91,
+                "max": 91
+              },
+              "text": "Elevated",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.91",
+              "roll": {
+                "min": 92,
+                "max": 92
+              },
+              "text": "Forgotten",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.92",
+              "roll": {
+                "min": 93,
+                "max": 93
+              },
+              "text": "Preserved",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.93",
+              "roll": {
+                "min": 94,
+                "max": 94
+              },
+              "text": "Trapped",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.94",
+              "roll": {
+                "min": 95,
+                "max": 95
+              },
+              "text": "Mystic",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.95",
+              "roll": {
+                "min": 96,
+                "max": 96
+              },
+              "text": "Natural",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.96",
+              "roll": {
+                "min": 97,
+                "max": 97
+              },
+              "text": "Treacherous",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.97",
+              "roll": {
+                "min": 98,
+                "max": 98
+              },
+              "text": "Watery",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.98",
+              "roll": {
+                "min": 99,
+                "max": 99
+              },
+              "text": "Moving",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/descriptor.99",
+              "roll": {
+                "min": 100,
+                "max": 100
+              },
+              "text": "Foul",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "adjective"
+                }
+              }
+            }
+          ],
+          "_source": {
+            "title": "Ironsworn: Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 52,
+            "url": "https://ironswornrpg.com"
+          }
+        },
+        "focus": {
+          "_id": "oracle_rollable:lodestar/core/focus",
+          "type": "oracle_rollable",
+          "name": "Focus",
+          "oracle_type": "table_text",
+          "dice": "1d100",
+          "summary": "Use the Focus oracle to add detail or subject matter to a location or event. Combined with a Descriptor oracle result, it provides a more specific prompt than either oracle alone.",
+          "column_labels": {
+            "roll": "Roll",
+            "text": "Result"
+          },
+          "rows": [
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.0",
+              "roll": {
+                "min": 1,
+                "max": 1
+              },
+              "text": "Bridge",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.1",
+              "roll": {
+                "min": 2,
+                "max": 2
+              },
+              "text": "Being",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.2",
+              "roll": {
+                "min": 3,
+                "max": 3
+              },
+              "text": "Archive",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.3",
+              "roll": {
+                "min": 4,
+                "max": 4
+              },
+              "text": "Gap",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.4",
+              "roll": {
+                "min": 5,
+                "max": 5
+              },
+              "text": "Message",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.5",
+              "roll": {
+                "min": 6,
+                "max": 6
+              },
+              "text": "Denizen",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.6",
+              "roll": {
+                "min": 7,
+                "max": 7
+              },
+              "text": "Commodity",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.7",
+              "roll": {
+                "min": 8,
+                "max": 8
+              },
+              "text": "Vegetation",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.8",
+              "roll": {
+                "min": 9,
+                "max": 9
+              },
+              "text": "Rubble",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.9",
+              "roll": {
+                "min": 10,
+                "max": 10
+              },
+              "text": "Rendezvous",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.10",
+              "roll": {
+                "min": 11,
+                "max": 11
+              },
+              "text": "Hideaway",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.11",
+              "roll": {
+                "min": 12,
+                "max": 12
+              },
+              "text": "Vault",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.12",
+              "roll": {
+                "min": 13,
+                "max": 13
+              },
+              "text": "Crossing",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.13",
+              "roll": {
+                "min": 14,
+                "max": 14
+              },
+              "text": "Camp",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.14",
+              "roll": {
+                "min": 15,
+                "max": 15
+              },
+              "text": "Inhabitant",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.15",
+              "roll": {
+                "min": 16,
+                "max": 16
+              },
+              "text": "Landscape",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.16",
+              "roll": {
+                "min": 17,
+                "max": 17
+              },
+              "text": "Boundary",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.17",
+              "roll": {
+                "min": 18,
+                "max": 18
+              },
+              "text": "Entry",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.18",
+              "roll": {
+                "min": 19,
+                "max": 19
+              },
+              "text": "Grave",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.19",
+              "roll": {
+                "min": 20,
+                "max": 20
+              },
+              "text": "Beast",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.20",
+              "roll": {
+                "min": 21,
+                "max": 21
+              },
+              "text": "Construction",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.21",
+              "roll": {
+                "min": 22,
+                "max": 22
+              },
+              "text": "Iron",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.22",
+              "roll": {
+                "min": 23,
+                "max": 23
+              },
+              "text": "Threshold",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.23",
+              "roll": {
+                "min": 24,
+                "max": 24
+              },
+              "text": "Sound",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.24",
+              "roll": {
+                "min": 25,
+                "max": 25
+              },
+              "text": "Debris",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.25",
+              "roll": {
+                "min": 26,
+                "max": 26
+              },
+              "text": "Monument",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.26",
+              "roll": {
+                "min": 27,
+                "max": 27
+              },
+              "text": "Terrain",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.27",
+              "roll": {
+                "min": 28,
+                "max": 28
+              },
+              "text": "Battlefield",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.28",
+              "roll": {
+                "min": 29,
+                "max": 29
+              },
+              "text": "Stone",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.29",
+              "roll": {
+                "min": 30,
+                "max": 30
+              },
+              "text": "Shortcut",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.30",
+              "roll": {
+                "min": 31,
+                "max": 31
+              },
+              "text": "Symbol",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.31",
+              "roll": {
+                "min": 32,
+                "max": 32
+              },
+              "text": "Ambush",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.32",
+              "roll": {
+                "min": 33,
+                "max": 33
+              },
+              "text": "Water",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.33",
+              "roll": {
+                "min": 34,
+                "max": 34
+              },
+              "text": "Viewpoint",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.34",
+              "roll": {
+                "min": 35,
+                "max": 35
+              },
+              "text": "Environment",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.35",
+              "roll": {
+                "min": 36,
+                "max": 36
+              },
+              "text": "Excavation",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.36",
+              "roll": {
+                "min": 37,
+                "max": 37
+              },
+              "text": "Person",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.37",
+              "roll": {
+                "min": 38,
+                "max": 38
+              },
+              "text": "Gathering",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.38",
+              "roll": {
+                "min": 39,
+                "max": 39
+              },
+              "text": "Enclosure",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.39",
+              "roll": {
+                "min": 40,
+                "max": 40
+              },
+              "text": "Ritual",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.40",
+              "roll": {
+                "min": 41,
+                "max": 41
+              },
+              "text": "Weather",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.41",
+              "roll": {
+                "min": 42,
+                "max": 42
+              },
+              "text": "Precipice",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.42",
+              "roll": {
+                "min": 43,
+                "max": 43
+              },
+              "text": "Opening",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.43",
+              "roll": {
+                "min": 44,
+                "max": 44
+              },
+              "text": "Rift",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.44",
+              "roll": {
+                "min": 45,
+                "max": 45
+              },
+              "text": "Bones",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.45",
+              "roll": {
+                "min": 46,
+                "max": 46
+              },
+              "text": "Transport",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.46",
+              "roll": {
+                "min": 47,
+                "max": 47
+              },
+              "text": "Territory",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.47",
+              "roll": {
+                "min": 48,
+                "max": 48
+              },
+              "text": "Clearing",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.48",
+              "roll": {
+                "min": 49,
+                "max": 49
+              },
+              "text": "Hole",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.49",
+              "roll": {
+                "min": 50,
+                "max": 50
+              },
+              "text": "Growth",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.50",
+              "roll": {
+                "min": 51,
+                "max": 51
+              },
+              "text": "Portal",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.51",
+              "roll": {
+                "min": 52,
+                "max": 52
+              },
+              "text": "Route",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.52",
+              "roll": {
+                "min": 53,
+                "max": 53
+              },
+              "text": "Hazard",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.53",
+              "roll": {
+                "min": 54,
+                "max": 54
+              },
+              "text": "Habitat",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.54",
+              "roll": {
+                "min": 55,
+                "max": 55
+              },
+              "text": "Trail",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.55",
+              "roll": {
+                "min": 56,
+                "max": 56
+              },
+              "text": "Illusion",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.56",
+              "roll": {
+                "min": 57,
+                "max": 57
+              },
+              "text": "Refuge",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.57",
+              "roll": {
+                "min": 58,
+                "max": 58
+              },
+              "text": "Relic",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.58",
+              "roll": {
+                "min": 59,
+                "max": 59
+              },
+              "text": "Span",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.59",
+              "roll": {
+                "min": 60,
+                "max": 60
+              },
+              "text": "Formation",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.60",
+              "roll": {
+                "min": 61,
+                "max": 61
+              },
+              "text": "Nest",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.61",
+              "roll": {
+                "min": 62,
+                "max": 62
+              },
+              "text": "Treasure",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.62",
+              "roll": {
+                "min": 63,
+                "max": 63
+              },
+              "text": "Prominence",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.63",
+              "roll": {
+                "min": 64,
+                "max": 64
+              },
+              "text": "Predator",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.64",
+              "roll": {
+                "min": 65,
+                "max": 65
+              },
+              "text": "Trap",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.65",
+              "roll": {
+                "min": 66,
+                "max": 66
+              },
+              "text": "People",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.66",
+              "roll": {
+                "min": 67,
+                "max": 67
+              },
+              "text": "Tracks",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.67",
+              "roll": {
+                "min": 68,
+                "max": 68
+              },
+              "text": "Combatant",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.68",
+              "roll": {
+                "min": 69,
+                "max": 69
+              },
+              "text": "Storage",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.69",
+              "roll": {
+                "min": 70,
+                "max": 70
+              },
+              "text": "Riches",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.70",
+              "roll": {
+                "min": 71,
+                "max": 71
+              },
+              "text": "Anomaly",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.71",
+              "roll": {
+                "min": 72,
+                "max": 72
+              },
+              "text": "Outpost",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.72",
+              "roll": {
+                "min": 73,
+                "max": 73
+              },
+              "text": "Settlement",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.73",
+              "roll": {
+                "min": 74,
+                "max": 74
+              },
+              "text": "Cultivation",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.74",
+              "roll": {
+                "min": 75,
+                "max": 75
+              },
+              "text": "Craftwork",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.75",
+              "roll": {
+                "min": 76,
+                "max": 76
+              },
+              "text": "Caravan",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.76",
+              "roll": {
+                "min": 77,
+                "max": 77
+              },
+              "text": "Void",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.77",
+              "roll": {
+                "min": 78,
+                "max": 78
+              },
+              "text": "Fire",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.78",
+              "roll": {
+                "min": 79,
+                "max": 79
+              },
+              "text": "Smell",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.79",
+              "roll": {
+                "min": 80,
+                "max": 80
+              },
+              "text": "Remains",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.80",
+              "roll": {
+                "min": 81,
+                "max": 81
+              },
+              "text": "Artifact",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.81",
+              "roll": {
+                "min": 82,
+                "max": 82
+              },
+              "text": "Energy",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.82",
+              "roll": {
+                "min": 83,
+                "max": 83
+              },
+              "text": "Puzzle",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.83",
+              "roll": {
+                "min": 84,
+                "max": 84
+              },
+              "text": "Equipment",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.84",
+              "roll": {
+                "min": 85,
+                "max": 85
+              },
+              "text": "Discovery",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.85",
+              "roll": {
+                "min": 86,
+                "max": 86
+              },
+              "text": "Apparition",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.86",
+              "roll": {
+                "min": 87,
+                "max": 87
+              },
+              "text": "Remnant",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.87",
+              "roll": {
+                "min": 88,
+                "max": 88
+              },
+              "text": "Guardian",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.88",
+              "roll": {
+                "min": 89,
+                "max": 89
+              },
+              "text": "Shrine",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.89",
+              "roll": {
+                "min": 90,
+                "max": 90
+              },
+              "text": "Barricade",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.90",
+              "roll": {
+                "min": 91,
+                "max": 91
+              },
+              "text": "Insects",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.91",
+              "roll": {
+                "min": 92,
+                "max": 92
+              },
+              "text": "Waterway",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.92",
+              "roll": {
+                "min": 93,
+                "max": 93
+              },
+              "text": "Material",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.93",
+              "roll": {
+                "min": 94,
+                "max": 94
+              },
+              "text": "Worksite",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.94",
+              "roll": {
+                "min": 95,
+                "max": 95
+              },
+              "text": "Mire",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.95",
+              "roll": {
+                "min": 96,
+                "max": 96
+              },
+              "text": "Lair",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.96",
+              "roll": {
+                "min": 97,
+                "max": 97
+              },
+              "text": "Obstacle",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.97",
+              "roll": {
+                "min": 98,
+                "max": 98
+              },
+              "text": "Wood",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.98",
+              "roll": {
+                "min": 99,
+                "max": 99
+              },
+              "text": "Animal",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/core/focus.99",
+              "roll": {
+                "min": 100,
+                "max": 100
+              },
+              "text": "Corpse",
+              "_i18n": {
+                "text": {
+                  "part_of_speech": "common_noun"
+                }
+              }
+            }
+          ],
+          "_source": {
+            "title": "Ironsworn: Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 53,
+            "url": "https://ironswornrpg.com"
+          }
+        }
+      },
+      "collections": {},
+      "_source": {
+        "title": "Ironsworn: Lodestar",
+        "authors": [
+          {
+            "name": "Shawn Tomkin"
+          }
+        ],
+        "date": "2025-05-01",
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "page": 50,
+        "url": "https://ironswornrpg.com"
+      }
+    },
+    "magic": {
+      "_id": "oracle_collection:lodestar/magic",
+      "type": "oracle_collection",
+      "name": "Magic Oracles",
+      "oracle_type": "tables",
+      "contents": {
+        "ritual_backlash": {
+          "_id": "oracle_rollable:lodestar/magic/ritual_backlash",
+          "type": "oracle_rollable",
+          "name": "Ritual Backlash",
+          "oracle_type": "table_text",
+          "dice": "1d100",
+          "summary": "Those who deal in magic may find themselves at the mercy of chaos. This oracle can supplement, or replace, the Pay the Price table when resolving the outcome of a failed ritual or other negative interaction with mystical forces. Use this oracle in dramatic moments, or to introduce an unexpected outcome triggered by a match.",
+          "column_labels": {
+            "roll": "Roll",
+            "text": "Result"
+          },
+          "rows": [
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.0",
+              "roll": {
+                "min": 1,
+                "max": 4
+              },
+              "text": "Your ritual has the opposite effect."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.1",
+              "roll": {
+                "min": 5,
+                "max": 8
+              },
+              "text": "You are sapped of strength."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.2",
+              "roll": {
+                "min": 9,
+                "max": 12
+              },
+              "text": "Your friend, ally, or companion is adversely affected."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.3",
+              "roll": {
+                "min": 13,
+                "max": 16
+              },
+              "text": "You destroy an important object."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.4",
+              "roll": {
+                "min": 17,
+                "max": 20
+              },
+              "text": "You inadvertently summon a spirit or undead being."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.5",
+              "roll": {
+                "min": 21,
+                "max": 24
+              },
+              "text": "You collapse, and drift into a troubled sleep."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.6",
+              "roll": {
+                "min": 25,
+                "max": 28
+              },
+              "text": "You undergo a physical torment which leaves its mark upon you."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.7",
+              "roll": {
+                "min": 29,
+                "max": 32
+              },
+              "text": "You hear ghostly voices whispering of dark portents."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.8",
+              "roll": {
+                "min": 33,
+                "max": 36
+              },
+              "text": "You find yourself in another place without memory of how you got there."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.9",
+              "roll": {
+                "min": 37,
+                "max": 40
+              },
+              "text": "You alert someone or something to your presence."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.10",
+              "roll": {
+                "min": 41,
+                "max": 44
+              },
+              "text": "You are not yourself, and act against a friend, ally, or companion."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.11",
+              "roll": {
+                "min": 45,
+                "max": 48
+              },
+              "text": "You affect your surroundings, causing a disturbance or potential harm."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.12",
+              "roll": {
+                "min": 49,
+                "max": 52
+              },
+              "text": "You waste resources."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.13",
+              "roll": {
+                "min": 53,
+                "max": 56
+              },
+              "text": "You suffer the loss of a sense for several hours."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.14",
+              "roll": {
+                "min": 57,
+                "max": 60
+              },
+              "text": "You lose your connection to magic for a day or so."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.15",
+              "roll": {
+                "min": 61,
+                "max": 64
+              },
+              "text": "Your ritual affects the target in an unexpected and problematic way."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.16",
+              "roll": {
+                "min": 65,
+                "max": 68
+              },
+              "text": "Your ritual reveals a surprising and troubling truth."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.17",
+              "roll": {
+                "min": 69,
+                "max": 72
+              },
+              "text": "You are tempted by dark powers."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.18",
+              "roll": {
+                "min": 73,
+                "max": 76
+              },
+              "text": "You see a troubling vision of your future."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.19",
+              "roll": {
+                "min": 77,
+                "max": 80
+              },
+              "text": "You can't perform this ritual again until you acquire a key component."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.20",
+              "roll": {
+                "min": 81,
+                "max": 84
+              },
+              "text": "You develop a strange fear or compulsion."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.21",
+              "roll": {
+                "min": 85,
+                "max": 88
+              },
+              "text": "Your ritual causes creatures to exhibit strange or aggressive behavior."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.22",
+              "roll": {
+                "min": 89,
+                "max": 92
+              },
+              "text": "You are tormented by an apparition from your past."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.23",
+              "roll": {
+                "min": 93,
+                "max": 96
+              },
+              "text": "You are wracked with sudden sickness."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/ritual_backlash.24",
+              "roll": {
+                "min": 97,
+                "max": 100
+              },
+              "text": "Roll twice; if they are the same result, make it worse.",
+              "oracle_rolls": [
+                {
+                  "oracle": null,
+                  "dice": null,
+                  "auto": true,
+                  "duplicates": "make_it_worse",
+                  "number_of_rolls": 2
+                }
+              ]
+            }
+          ],
+          "_source": {
+            "title": "Ironsworn: Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 96,
+            "url": "https://ironswornrpg.com"
+          }
+        },
+        "mystic_effect": {
+          "_id": "oracle_rollable:lodestar/magic/mystic_effect",
+          "type": "oracle_rollable",
+          "name": "Mystic Effect",
+          "oracle_type": "table_text",
+          "dice": "1d100",
+          "summary": "Use this oracle to reveal the nature or outcome of a mystic power, ritual effect, or supernatural phenomenon.",
+          "column_labels": {
+            "roll": "Roll",
+            "text": "Result"
+          },
+          "rows": [
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.0",
+              "roll": {
+                "min": 1,
+                "max": 6
+              },
+              "text": "Drain the life from a target."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.1",
+              "roll": {
+                "min": 7,
+                "max": 8
+              },
+              "text": "Disintegrate or decay objects."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.2",
+              "roll": {
+                "min": 9,
+                "max": 10
+              },
+              "text": "Awaken an ancient being."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.3",
+              "roll": {
+                "min": 11,
+                "max": 12
+              },
+              "text": "Summon a monstrous creature."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.4",
+              "roll": {
+                "min": 13,
+                "max": 14
+              },
+              "text": "Bind to a vow or task."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.5",
+              "roll": {
+                "min": 15,
+                "max": 16
+              },
+              "text": "Give life to inanimate forms."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.6",
+              "roll": {
+                "min": 17,
+                "max": 18
+              },
+              "text": "Unleash a plague."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.7",
+              "roll": {
+                "min": 19,
+                "max": 20
+              },
+              "text": "Control elemental forces."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.8",
+              "roll": {
+                "min": 21,
+                "max": 22
+              },
+              "text": "Erase or suppress memories."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.9",
+              "roll": {
+                "min": 23,
+                "max": 24
+              },
+              "text": "Shroud in lasting darkness."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.10",
+              "roll": {
+                "min": 25,
+                "max": 26
+              },
+              "text": "Alter surrounding environment."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.11",
+              "roll": {
+                "min": 27,
+                "max": 28
+              },
+              "text": "Bind to a location."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.12",
+              "roll": {
+                "min": 29,
+                "max": 30
+              },
+              "text": "Inflict cursed luck."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.13",
+              "roll": {
+                "min": 31,
+                "max": 32
+              },
+              "text": "Incite negative emotions."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.14",
+              "roll": {
+                "min": 33,
+                "max": 34
+              },
+              "text": "Awaken latent powers in another."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.15",
+              "roll": {
+                "min": 35,
+                "max": 36
+              },
+              "text": "Inflict aging or wasting."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.16",
+              "roll": {
+                "min": 37,
+                "max": 38
+              },
+              "text": "Bind to a restless spirit."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.17",
+              "roll": {
+                "min": 39,
+                "max": 40
+              },
+              "text": "Grant horrifying knowledge."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.18",
+              "roll": {
+                "min": 41,
+                "max": 42
+              },
+              "text": "Awaken or animate the dead."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.19",
+              "roll": {
+                "min": 43,
+                "max": 44
+              },
+              "text": "Incite an obsession."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.20",
+              "roll": {
+                "min": 45,
+                "max": 46
+              },
+              "text": "Manifest inner fears."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.21",
+              "roll": {
+                "min": 47,
+                "max": 48
+              },
+              "text": "Reveal hidden truths."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.22",
+              "roll": {
+                "min": 49,
+                "max": 50
+              },
+              "text": "Commune with spirits."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.23",
+              "roll": {
+                "min": 51,
+                "max": 52
+              },
+              "text": "Control weather or environment."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.24",
+              "roll": {
+                "min": 53,
+                "max": 54
+              },
+              "text": "Reveal past events."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.25",
+              "roll": {
+                "min": 55,
+                "max": 56
+              },
+              "text": "Emit destructive energies."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.26",
+              "roll": {
+                "min": 57,
+                "max": 58
+              },
+              "text": "Alter the flow of time."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.27",
+              "roll": {
+                "min": 59,
+                "max": 60
+              },
+              "text": "Inflict a consuming need."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.28",
+              "roll": {
+                "min": 61,
+                "max": 62
+              },
+              "text": "Create hallucinations or illusions."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.29",
+              "roll": {
+                "min": 63,
+                "max": 64
+              },
+              "text": "Trigger a celestial event."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.30",
+              "roll": {
+                "min": 65,
+                "max": 66
+              },
+              "text": "Summon a swarm of creatures."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.31",
+              "roll": {
+                "min": 67,
+                "max": 68
+              },
+              "text": "Reveal distant places."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.32",
+              "roll": {
+                "min": 69,
+                "max": 70
+              },
+              "text": "Absorb energy or essence."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.33",
+              "roll": {
+                "min": 71,
+                "max": 72
+              },
+              "text": "Banish to another reality."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.34",
+              "roll": {
+                "min": 73,
+                "max": 74
+              },
+              "text": "Banish to another location."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.35",
+              "roll": {
+                "min": 75,
+                "max": 76
+              },
+              "text": "Inflict prophetic visions."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.36",
+              "roll": {
+                "min": 77,
+                "max": 78
+              },
+              "text": "Inflict dreadful transformations."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.37",
+              "roll": {
+                "min": 79,
+                "max": 80
+              },
+              "text": "Inflict sickness or weakness."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.38",
+              "roll": {
+                "min": 81,
+                "max": 82
+              },
+              "text": "Absorb life."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.39",
+              "roll": {
+                "min": 83,
+                "max": 84
+              },
+              "text": "Spread corruption or blight."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.40",
+              "roll": {
+                "min": 85,
+                "max": 86
+              },
+              "text": "Brand with a cursed mark."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.41",
+              "roll": {
+                "min": 87,
+                "max": 88
+              },
+              "text": "Destroy terrain or architecture."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.42",
+              "roll": {
+                "min": 89,
+                "max": 90
+              },
+              "text": "Grant a lasting boon—at a cost."
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/magic/mystic_effect.43",
+              "roll": {
+                "min": 91,
+                "max": 100
+              },
+              "text": "Roll twice.",
+              "oracle_rolls": [
+                {
+                  "oracle": null,
+                  "dice": null,
+                  "auto": true,
+                  "duplicates": "reroll",
+                  "number_of_rolls": 2
+                }
+              ]
+            }
+          ],
+          "_source": {
+            "title": "Ironsworn: Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 97,
+            "url": "https://ironswornrpg.com"
+          }
+        }
+      },
+      "collections": {},
+      "_source": {
+        "title": "Ironsworn: Lodestar",
+        "authors": [
+          {
+            "name": "Shawn Tomkin"
+          }
+        ],
+        "date": "2025-05-01",
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "page": 96,
+        "url": "https://ironswornrpg.com"
+      }
+    },
+    "scale": {
+      "_id": "oracle_collection:lodestar/scale",
+      "type": "oracle_collection",
+      "name": "Scale Oracles",
+      "oracle_type": "tables",
+      "summary": "Use these oracles to help answer a question related to the scale, extent, or capability of something.",
+      "contents": {
+        "rank": {
+          "_id": "oracle_rollable:lodestar/scale/rank",
+          "type": "oracle_rollable",
+          "name": "Rank",
+          "oracle_type": "table_text",
+          "dice": "1d100",
+          "summary": "Use this oracle to randomly set the challenge rank of a quest, journey, or foe.",
+          "column_labels": {
+            "roll": "Roll",
+            "text": "Result"
+          },
+          "rows": [
+            {
+              "_id": "oracle_rollable.row:lodestar/scale/rank.0",
+              "roll": {
+                "min": 1,
+                "max": 15
+              },
+              "text": "Troublesome"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/scale/rank.1",
+              "roll": {
+                "min": 16,
+                "max": 35
+              },
+              "text": "Dangerous"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/scale/rank.2",
+              "roll": {
+                "min": 36,
+                "max": 65
+              },
+              "text": "Formidable"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/scale/rank.3",
+              "roll": {
+                "min": 66,
+                "max": 85
+              },
+              "text": "Extreme"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/scale/rank.4",
+              "roll": {
+                "min": 86,
+                "max": 100
+              },
+              "text": "Epic"
+            }
+          ],
+          "_source": {
+            "title": "Ironsworn: Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 99,
+            "url": "https://ironswornrpg.com"
+          }
+        }
+      },
+      "collections": {
+        "magnitude": {
+          "_id": "oracle_collection:lodestar/scale/magnitude",
+          "type": "oracle_collection",
+          "name": "Magnitude",
+          "oracle_type": "tables",
+          "summary": "Ask your question, choose one of the following tables, and roll to reveal the answer.",
+          "contents": {
+            "size": {
+              "_id": "oracle_rollable:lodestar/scale/magnitude/size",
+              "type": "oracle_rollable",
+              "name": "Size",
+              "oracle_type": "table_text",
+              "dice": "1d100",
+              "column_labels": {
+                "roll": "Roll",
+                "text": "Result"
+              },
+              "rows": [
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/size.0",
+                  "roll": {
+                    "min": 1,
+                    "max": 15
+                  },
+                  "text": "Undersized"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/size.1",
+                  "roll": {
+                    "min": 16,
+                    "max": 35
+                  },
+                  "text": "Small"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/size.2",
+                  "roll": {
+                    "min": 36,
+                    "max": 65
+                  },
+                  "text": "Medium"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/size.3",
+                  "roll": {
+                    "min": 66,
+                    "max": 85
+                  },
+                  "text": "Large"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/size.4",
+                  "roll": {
+                    "min": 86,
+                    "max": 100
+                  },
+                  "text": "Huge"
+                }
+              ],
+              "_source": {
+                "title": "Ironsworn: Lodestar",
+                "authors": [
+                  {
+                    "name": "Shawn Tomkin"
+                  }
+                ],
+                "date": "2025-05-01",
+                "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                "page": 98,
+                "url": "https://ironswornrpg.com"
+              }
+            },
+            "number": {
+              "_id": "oracle_rollable:lodestar/scale/magnitude/number",
+              "type": "oracle_rollable",
+              "name": "Number",
+              "oracle_type": "table_text",
+              "dice": "1d100",
+              "column_labels": {
+                "roll": "Roll",
+                "text": "Result"
+              },
+              "rows": [
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/number.0",
+                  "roll": {
+                    "min": 1,
+                    "max": 15
+                  },
+                  "text": "None / one"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/number.1",
+                  "roll": {
+                    "min": 16,
+                    "max": 35
+                  },
+                  "text": "Few"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/number.2",
+                  "roll": {
+                    "min": 36,
+                    "max": 65
+                  },
+                  "text": "Several"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/number.3",
+                  "roll": {
+                    "min": 66,
+                    "max": 85
+                  },
+                  "text": "Many"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/number.4",
+                  "roll": {
+                    "min": 86,
+                    "max": 100
+                  },
+                  "text": "Countless"
+                }
+              ],
+              "_source": {
+                "title": "Ironsworn: Lodestar",
+                "authors": [
+                  {
+                    "name": "Shawn Tomkin"
+                  }
+                ],
+                "date": "2025-05-01",
+                "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                "page": 98,
+                "url": "https://ironswornrpg.com"
+              }
+            },
+            "distance": {
+              "_id": "oracle_rollable:lodestar/scale/magnitude/distance",
+              "type": "oracle_rollable",
+              "name": "Distance",
+              "oracle_type": "table_text",
+              "dice": "1d100",
+              "column_labels": {
+                "roll": "Roll",
+                "text": "Result"
+              },
+              "rows": [
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/distance.0",
+                  "roll": {
+                    "min": 1,
+                    "max": 15
+                  },
+                  "text": "Very close"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/distance.1",
+                  "roll": {
+                    "min": 16,
+                    "max": 35
+                  },
+                  "text": "Near"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/distance.2",
+                  "roll": {
+                    "min": 36,
+                    "max": 65
+                  },
+                  "text": "Far"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/distance.3",
+                  "roll": {
+                    "min": 66,
+                    "max": 85
+                  },
+                  "text": "Remote"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/distance.4",
+                  "roll": {
+                    "min": 86,
+                    "max": 100
+                  },
+                  "text": "Inaccessible"
+                }
+              ],
+              "_source": {
+                "title": "Ironsworn: Lodestar",
+                "authors": [
+                  {
+                    "name": "Shawn Tomkin"
+                  }
+                ],
+                "date": "2025-05-01",
+                "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                "page": 98,
+                "url": "https://ironswornrpg.com"
+              }
+            },
+            "time": {
+              "_id": "oracle_rollable:lodestar/scale/magnitude/time",
+              "type": "oracle_rollable",
+              "name": "Time",
+              "oracle_type": "table_text",
+              "dice": "1d100",
+              "column_labels": {
+                "roll": "Roll",
+                "text": "Result"
+              },
+              "rows": [
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/time.0",
+                  "roll": {
+                    "min": 1,
+                    "max": 15
+                  },
+                  "text": "Fleeting"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/time.1",
+                  "roll": {
+                    "min": 16,
+                    "max": 35
+                  },
+                  "text": "Short"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/time.2",
+                  "roll": {
+                    "min": 36,
+                    "max": 65
+                  },
+                  "text": "Moderate"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/time.3",
+                  "roll": {
+                    "min": 66,
+                    "max": 85
+                  },
+                  "text": "Lengthy"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/time.4",
+                  "roll": {
+                    "min": 86,
+                    "max": 100
+                  },
+                  "text": "Eternal"
+                }
+              ],
+              "_source": {
+                "title": "Ironsworn: Lodestar",
+                "authors": [
+                  {
+                    "name": "Shawn Tomkin"
+                  }
+                ],
+                "date": "2025-05-01",
+                "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                "page": 98,
+                "url": "https://ironswornrpg.com"
+              }
+            },
+            "power": {
+              "_id": "oracle_rollable:lodestar/scale/magnitude/power",
+              "type": "oracle_rollable",
+              "name": "Power",
+              "oracle_type": "table_text",
+              "dice": "1d100",
+              "column_labels": {
+                "roll": "Roll",
+                "text": "Result"
+              },
+              "rows": [
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/power.0",
+                  "roll": {
+                    "min": 1,
+                    "max": 15
+                  },
+                  "text": "Weak"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/power.1",
+                  "roll": {
+                    "min": 16,
+                    "max": 35
+                  },
+                  "text": "Minor"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/power.2",
+                  "roll": {
+                    "min": 36,
+                    "max": 65
+                  },
+                  "text": "Capable"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/power.3",
+                  "roll": {
+                    "min": 66,
+                    "max": 85
+                  },
+                  "text": "Strong"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/power.4",
+                  "roll": {
+                    "min": 86,
+                    "max": 100
+                  },
+                  "text": "Overwhelming"
+                }
+              ],
+              "_source": {
+                "title": "Ironsworn: Lodestar",
+                "authors": [
+                  {
+                    "name": "Shawn Tomkin"
+                  }
+                ],
+                "date": "2025-05-01",
+                "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                "page": 98,
+                "url": "https://ironswornrpg.com"
+              }
+            },
+            "complexity": {
+              "_id": "oracle_rollable:lodestar/scale/magnitude/complexity",
+              "type": "oracle_rollable",
+              "name": "Complexity",
+              "oracle_type": "table_text",
+              "dice": "1d100",
+              "column_labels": {
+                "roll": "Roll",
+                "text": "Result"
+              },
+              "rows": [
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/complexity.0",
+                  "roll": {
+                    "min": 1,
+                    "max": 15
+                  },
+                  "text": "Simple"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/complexity.1",
+                  "roll": {
+                    "min": 16,
+                    "max": 35
+                  },
+                  "text": "Basic"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/complexity.2",
+                  "roll": {
+                    "min": 36,
+                    "max": 65
+                  },
+                  "text": "Manageable"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/complexity.3",
+                  "roll": {
+                    "min": 66,
+                    "max": 85
+                  },
+                  "text": "Complicated"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/complexity.4",
+                  "roll": {
+                    "min": 86,
+                    "max": 100
+                  },
+                  "text": "Bewildering"
+                }
+              ],
+              "_source": {
+                "title": "Ironsworn: Lodestar",
+                "authors": [
+                  {
+                    "name": "Shawn Tomkin"
+                  }
+                ],
+                "date": "2025-05-01",
+                "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                "page": 98,
+                "url": "https://ironswornrpg.com"
+              }
+            },
+            "value": {
+              "_id": "oracle_rollable:lodestar/scale/magnitude/value",
+              "type": "oracle_rollable",
+              "name": "Value",
+              "oracle_type": "table_text",
+              "dice": "1d100",
+              "column_labels": {
+                "roll": "Roll",
+                "text": "Result"
+              },
+              "rows": [
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/value.0",
+                  "roll": {
+                    "min": 1,
+                    "max": 15
+                  },
+                  "text": "Worthless"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/value.1",
+                  "roll": {
+                    "min": 16,
+                    "max": 35
+                  },
+                  "text": "Cheap"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/value.2",
+                  "roll": {
+                    "min": 36,
+                    "max": 65
+                  },
+                  "text": "Common"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/value.3",
+                  "roll": {
+                    "min": 66,
+                    "max": 85
+                  },
+                  "text": "Valuable"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/value.4",
+                  "roll": {
+                    "min": 86,
+                    "max": 100
+                  },
+                  "text": "Priceless"
+                }
+              ],
+              "_source": {
+                "title": "Ironsworn: Lodestar",
+                "authors": [
+                  {
+                    "name": "Shawn Tomkin"
+                  }
+                ],
+                "date": "2025-05-01",
+                "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                "page": 98,
+                "url": "https://ironswornrpg.com"
+              }
+            },
+            "influence": {
+              "_id": "oracle_rollable:lodestar/scale/magnitude/influence",
+              "type": "oracle_rollable",
+              "name": "Influence",
+              "oracle_type": "table_text",
+              "dice": "1d100",
+              "column_labels": {
+                "roll": "Roll",
+                "text": "Result"
+              },
+              "rows": [
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/influence.0",
+                  "roll": {
+                    "min": 1,
+                    "max": 15
+                  },
+                  "text": "Limited"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/influence.1",
+                  "roll": {
+                    "min": 16,
+                    "max": 35
+                  },
+                  "text": "Isolated"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/influence.2",
+                  "roll": {
+                    "min": 36,
+                    "max": 65
+                  },
+                  "text": "Localized"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/influence.3",
+                  "roll": {
+                    "min": 66,
+                    "max": 85
+                  },
+                  "text": "Far-reaching"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/influence.4",
+                  "roll": {
+                    "min": 86,
+                    "max": 100
+                  },
+                  "text": "Dominant"
+                }
+              ],
+              "_source": {
+                "title": "Ironsworn: Lodestar",
+                "authors": [
+                  {
+                    "name": "Shawn Tomkin"
+                  }
+                ],
+                "date": "2025-05-01",
+                "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                "page": 98,
+                "url": "https://ironswornrpg.com"
+              }
+            },
+            "disposition": {
+              "_id": "oracle_rollable:lodestar/scale/magnitude/disposition",
+              "type": "oracle_rollable",
+              "name": "Disposition",
+              "oracle_type": "table_text",
+              "dice": "1d100",
+              "column_labels": {
+                "roll": "Roll",
+                "text": "Result"
+              },
+              "rows": [
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/disposition.0",
+                  "roll": {
+                    "min": 1,
+                    "max": 15
+                  },
+                  "text": "Friendly"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/disposition.1",
+                  "roll": {
+                    "min": 16,
+                    "max": 35
+                  },
+                  "text": "Open"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/disposition.2",
+                  "roll": {
+                    "min": 36,
+                    "max": 65
+                  },
+                  "text": "Wary"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/disposition.3",
+                  "roll": {
+                    "min": 66,
+                    "max": 85
+                  },
+                  "text": "Threatening"
+                },
+                {
+                  "_id": "oracle_rollable.row:lodestar/scale/magnitude/disposition.4",
+                  "roll": {
+                    "min": 86,
+                    "max": 100
+                  },
+                  "text": "Hostile"
+                }
+              ],
+              "_source": {
+                "title": "Ironsworn: Lodestar",
+                "authors": [
+                  {
+                    "name": "Shawn Tomkin"
+                  }
+                ],
+                "date": "2025-05-01",
+                "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                "page": 98,
+                "url": "https://ironswornrpg.com"
+              }
+            }
+          },
+          "collections": {},
+          "_source": {
+            "title": "Ironsworn: Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 98,
+            "url": "https://ironswornrpg.com"
+          }
+        }
+      },
+      "_source": {
+        "title": "Ironsworn: Lodestar",
+        "authors": [
+          {
+            "name": "Shawn Tomkin"
+          }
+        ],
+        "date": "2025-05-01",
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "page": 98,
+        "url": "https://ironswornrpg.com"
+      }
+    },
+    "story": {
+      "_id": "oracle_collection:lodestar/story",
+      "type": "oracle_collection",
+      "name": "Story Oracles",
+      "oracle_type": "tables",
+      "contents": {
+        "clue": {
+          "_id": "oracle_rollable:lodestar/story/clue",
+          "type": "oracle_rollable",
+          "name": "Clue",
+          "oracle_type": "table_text",
+          "dice": "1d100",
+          "summary": "When you investigate a mystery, you might uncover clues in the form of messages, rumors, eyewitness reports, supernatural revelations, or physical evidence. Use this oracle to help reveal what this evidence connects to or implicates.",
+          "column_labels": {
+            "roll": "Roll",
+            "text": "Result"
+          },
+          "rows": [
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.0",
+              "roll": {
+                "min": 1,
+                "max": 3
+              },
+              "text": "Affirms a previously understood fact or clue"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.1",
+              "roll": {
+                "min": 4,
+                "max": 6
+              },
+              "text": "Connects to a known rumor or scandal"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.2",
+              "roll": {
+                "min": 7,
+                "max": 9
+              },
+              "text": "Connects to a previously unrelated mystery or quest"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.3",
+              "roll": {
+                "min": 10,
+                "max": 12
+              },
+              "text": "Connects to your own expertise or interests"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.4",
+              "roll": {
+                "min": 13,
+                "max": 15
+              },
+              "text": "Contradicts a previously understood fact or clue"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.5",
+              "roll": {
+                "min": 16,
+                "max": 18
+              },
+              "text": "Evokes a personal memory"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.6",
+              "roll": {
+                "min": 19,
+                "max": 21
+              },
+              "text": "Evokes a legend or prophecy"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.7",
+              "roll": {
+                "min": 22,
+                "max": 24
+              },
+              "text": "Evokes a dream or vision"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.8",
+              "roll": {
+                "min": 25,
+                "max": 27
+              },
+              "text": "Involves a hidden or mysterious community"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.9",
+              "roll": {
+                "min": 28,
+                "max": 30
+              },
+              "text": "Involves a hidden or mysterious person"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.10",
+              "roll": {
+                "min": 31,
+                "max": 33
+              },
+              "text": "Involves a nonhuman being or entity"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.11",
+              "roll": {
+                "min": 34,
+                "max": 36
+              },
+              "text": "Involves a creature"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.12",
+              "roll": {
+                "min": 37,
+                "max": 39
+              },
+              "text": "Involves an artifact or precious object"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.13",
+              "roll": {
+                "min": 40,
+                "max": 42
+              },
+              "text": "Involves a personal item"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.14",
+              "roll": {
+                "min": 43,
+                "max": 45
+              },
+              "text": "Involves a weapon"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.15",
+              "roll": {
+                "min": 46,
+                "max": 48
+              },
+              "text": "Involves a valuable resource"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.16",
+              "roll": {
+                "min": 49,
+                "max": 51
+              },
+              "text": "Involves a notable community or faction"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.17",
+              "roll": {
+                "min": 52,
+                "max": 54
+              },
+              "text": "Involves a leader or notable person"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.18",
+              "roll": {
+                "min": 55,
+                "max": 57
+              },
+              "text": "Involves a person or community from your background"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.19",
+              "roll": {
+                "min": 58,
+                "max": 60
+              },
+              "text": "Involves an enemy or rival"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.20",
+              "roll": {
+                "min": 61,
+                "max": 63
+              },
+              "text": "Involves someone you trust"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.21",
+              "roll": {
+                "min": 64,
+                "max": 65
+              },
+              "text": "Involves a mystic power or ritual"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.22",
+              "roll": {
+                "min": 66,
+                "max": 68
+              },
+              "text": "Involves an ailment or affliction"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.23",
+              "roll": {
+                "min": 69,
+                "max": 71
+              },
+              "text": "Involves a religion or belief"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.24",
+              "roll": {
+                "min": 72,
+                "max": 74
+              },
+              "text": "Involves a promise or debt"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.25",
+              "roll": {
+                "min": 75,
+                "max": 77
+              },
+              "text": "Leads to a nearby or familiar place"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.26",
+              "roll": {
+                "min": 78,
+                "max": 80
+              },
+              "text": "Leads to an ancient or ruined place"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.27",
+              "roll": {
+                "min": 81,
+                "max": 83
+              },
+              "text": "Leads to a settled place"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.28",
+              "roll": {
+                "min": 84,
+                "max": 86
+              },
+              "text": "Leads to a remote or wild place"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.29",
+              "roll": {
+                "min": 87,
+                "max": 89
+              },
+              "text": "Leads to a notable landmark"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.30",
+              "roll": {
+                "min": 90,
+                "max": 91
+              },
+              "text": "Leads to a mystical or unearthly place"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.31",
+              "roll": {
+                "min": 92,
+                "max": 94
+              },
+              "text": "Suggests a history of similar incidents"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.32",
+              "roll": {
+                "min": 95,
+                "max": 97
+              },
+              "text": "Suggests a looming event or deadline"
+            },
+            {
+              "_id": "oracle_rollable.row:lodestar/story/clue.33",
+              "roll": {
+                "min": 98,
+                "max": 100
+              },
+              "text": "Suggests an imposter or deception"
+            }
+          ],
+          "_source": {
+            "title": "Ironsworn: Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 93,
+            "url": "https://ironswornrpg.com"
+          }
+        }
+      },
+      "collections": {},
+      "_source": {
+        "title": "Ironsworn: Lodestar",
+        "authors": [
+          {
+            "name": "Shawn Tomkin"
+          }
+        ],
+        "date": "2025-05-01",
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "page": 92,
+        "url": "https://ironswornrpg.com"
+      }
+    }
+  },
+  "assets": {},
+  "atlas": {},
+  "moves": {
+    "journey": {
+      "_id": "move_category:lodestar/journey",
+      "type": "move_category",
+      "name": "Journey Moves",
+      "enhances": ["move_category:classic/adventure"],
+      "summary": "Journey moves are used as you travel across the Ironlands.",
+      "contents": {
+        "follow_a_path": {
+          "_id": "move:lodestar/journey/follow_a_path",
+          "type": "move",
+          "name": "Follow a Path",
+          "roll_type": "action_roll",
+          "trigger": {
+            "conditions": [
+              {
+                "_id": "move.condition:lodestar/journey/follow_a_path.0",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "condition_meter",
+                    "condition_meter": "supply"
+                  }
+                ]
+              }
+            ],
+            "text": "When you journey along a known route, and one day blends into the next..."
+          },
+          "text": "When __you journey along a known route, and one day blends into the next__, roll +supply.\n\nOn a __strong hit__, you reach your destination and the situation favors you. Take +1 momentum.\n\nOn a __weak hit__, you complete the journey, but face a cost or complication. Choose one or more.\n\n  * You took longer than expected.\n  * You pressed on through pain, sickness, or weariness: [Endure Harm](datasworn:move:classic/suffer/endure_harm).\n  * You suffered under the burden of foul weather, worries, or fearful locations: [Endure Stress](datasworn:move:classic/suffer/endure_stress).\n  * You wasted resources.\n  * You face a complication or hazard at the destination. Envision what you find ([Ask the Oracle](datasworn:move:classic/fate/ask_the_oracle) if unsure).\n\nOn a __miss__, you are waylaid by a dire threat and must [Pay the Price](datasworn:move:classic/fate/pay_the_price). If you overcome this obstacle, you may push on safely to your destination.",
+          "outcomes": {
+            "strong_hit": {
+              "_id": "move.outcome:lodestar/journey/follow_a_path.strong_hit",
+              "text": "On a __strong hit__, you reach your destination and the situation favors you. Take +1 momentum."
+            },
+            "weak_hit": {
+              "_id": "move.outcome:lodestar/journey/follow_a_path.weak_hit",
+              "text": "On a __weak hit__, you complete the journey, but face a cost or complication. Choose one or more.\n\n  * You took longer than expected.\n  * You pressed on through pain, sickness, or weariness: [Endure Harm](datasworn:move:classic/suffer/endure_harm).\n  * You suffered under the burden of foul weather, worries, or fearful locations: [Endure Stress](datasworn:move:classic/suffer/endure_stress).\n  * You wasted resources.\n  * You face a complication or hazard at the destination. Envision what you find ([Ask the Oracle](datasworn:move:classic/fate/ask_the_oracle) if unsure)."
+            },
+            "miss": {
+              "_id": "move.outcome:lodestar/journey/follow_a_path.miss",
+              "text": "On a __miss__, you are waylaid by a dire threat and must [Pay the Price](datasworn:move:classic/fate/pay_the_price). If you overcome this obstacle, you may push on safely to your destination."
+            }
+          },
+          "oracles": {},
+          "_source": {
+            "title": "Ironsworn Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 10,
+            "url": "https://ironswornrpg.com"
+          },
+          "allow_momentum_burn": true
+        }
+      },
+      "collections": {},
+      "_source": {
+        "title": "Ironsworn Lodestar",
+        "authors": [
+          {
+            "name": "Shawn Tomkin"
+          }
+        ],
+        "date": "2025-05-01",
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "page": 10,
+        "url": "https://ironswornrpg.com"
+      }
+    },
+    "adventure": {
+      "_id": "move_category:lodestar/adventure",
+      "type": "move_category",
+      "name": "Adventure Moves",
+      "enhances": ["move_category:classic/adventure"],
+      "contents": {
+        "face_danger": {
+          "_id": "move:lodestar/adventure/face_danger",
+          "type": "move",
+          "name": "Face Danger",
+          "roll_type": "action_roll",
+          "replaces": ["move:classic/adventure/face_danger"],
+          "trigger": {
+            "conditions": [
+              {
+                "_id": "move.condition:lodestar/adventure/face_danger.0",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "edge"
+                  }
+                ],
+                "text": "With speed, agility, or precision"
+              },
+              {
+                "_id": "move.condition:lodestar/adventure/face_danger.1",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "heart"
+                  }
+                ],
+                "text": "With charm, loyalty, or courage"
+              },
+              {
+                "_id": "move.condition:lodestar/adventure/face_danger.2",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "iron"
+                  }
+                ],
+                "text": "With aggressive action, forceful defense, strength, or endurance"
+              },
+              {
+                "_id": "move.condition:lodestar/adventure/face_danger.3",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "shadow"
+                  }
+                ],
+                "text": "With deception, stealth, or trickery"
+              },
+              {
+                "_id": "move.condition:lodestar/adventure/face_danger.4",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "wits"
+                  }
+                ],
+                "text": "With expertise, insight, or observation"
+              }
+            ],
+            "text": "When you attempt something risky or react to an imminent threat..."
+          },
+          "text": "When __you attempt something risky or react to an imminent threat__, envision your action and roll. If you act...\n\n  * With speed, agility, or precision: Roll +edge.\n  * With charm, loyalty, or courage: Roll +heart.\n  * With aggressive action, forceful defense, strength, or endurance: Roll +iron.\n  * With deception, stealth, or trickery: Roll +shadow.\n  * With expertise, insight, or observation: Roll +wits.\n\nOn a __strong hit__, you are successful. Take +1 momentum.\n\nOn a __weak hit__, you succeed, but face a troublesome cost. Choose one.\n\n  * You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.\n  * You are tired or hurt: [Endure Harm](datasworn:move:classic/suffer/endure_harm) (1 harm).\n  * You are dispirited or afraid: [Endure Stress](datasworn:move:classic/suffer/endure_stress) (1 stress).\n  * You sacrifice resources: Suffer -1 supply.\n\nOn a __miss__, you fail, or a momentary success is undermined by a dire turn of events. [Pay the Price](datasworn:move:classic/fate/pay_the_price).",
+          "outcomes": {
+            "strong_hit": {
+              "_id": "move.outcome:lodestar/adventure/face_danger.strong_hit",
+              "text": "On a __strong hit__, you are successful. Take +1 momentum."
+            },
+            "weak_hit": {
+              "_id": "move.outcome:lodestar/adventure/face_danger.weak_hit",
+              "text": "On a __weak hit__, you succeed, but face a troublesome cost. Choose one.\n\n  * You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.\n  * You are tired or hurt: [Endure Harm](datasworn:move:classic/suffer/endure_harm) (1 harm).\n  * You are dispirited or afraid: [Endure Stress](datasworn:move:classic/suffer/endure_stress) (1 stress).\n  * You sacrifice resources: Suffer -1 supply."
+            },
+            "miss": {
+              "_id": "move.outcome:lodestar/adventure/face_danger.miss",
+              "text": "On a __miss__, you fail, or a momentary success is undermined by a dire turn of events. [Pay the Price](datasworn:move:classic/fate/pay_the_price)."
+            }
+          },
+          "oracles": {},
+          "_source": {
+            "title": "Ironsworn Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 8,
+            "url": "https://ironswornrpg.com"
+          },
+          "allow_momentum_burn": true
+        }
+      },
+      "collections": {},
+      "_source": {
+        "title": "Ironsworn Lodestar",
+        "authors": [
+          {
+            "name": "Shawn Tomkin"
+          }
+        ],
+        "date": "2025-05-01",
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "page": 8,
+        "url": "https://ironswornrpg.com"
+      }
+    },
+    "scene_challenge": {
+      "_id": "move_category:lodestar/scene_challenge",
+      "type": "move_category",
+      "name": "Scene Challenge Moves",
+      "summary": "A scene challenge is an optional approach you can use to resolve an extended challenge against an obstacle or NPCs.",
+      "contents": {
+        "begin_the_scene": {
+          "_id": "move:lodestar/scene_challenge/begin_the_scene",
+          "type": "move",
+          "name": "Begin the Scene",
+          "roll_type": "no_roll",
+          "trigger": {
+            "conditions": [],
+            "text": "When you face an extended or complex challenge..."
+          },
+          "text": "When __you face an extended or complex challenge__, name your objective and choose a rank as appropriate to the situation.\n\n  * You have a clear advantage: Troublesome\n  * You are ready to act: Dangerous\n  * You are unprepared or outmatched: Formidable\n\nThen, activate a four-segment countdown track and [Face Danger](datasworn:move:lodestar/scene_challenge/face_danger) or [Secure an Advantage](datasworn:move:lodestar/scene_challenge/secure_an_advantage) to take action.",
+          "outcomes": null,
+          "oracles": {},
+          "_source": {
+            "title": "Ironsworn Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 11,
+            "url": "https://ironswornrpg.com"
+          },
+          "allow_momentum_burn": false
+        },
+        "face_danger": {
+          "_id": "move:lodestar/scene_challenge/face_danger",
+          "type": "move",
+          "name": "Face Danger (Scene Challenge)",
+          "roll_type": "action_roll",
+          "trigger": {
+            "conditions": [
+              {
+                "_id": "move.condition:lodestar/scene_challenge/face_danger.0",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "edge"
+                  }
+                ],
+                "text": "With speed, mobility, or agility"
+              },
+              {
+                "_id": "move.condition:lodestar/scene_challenge/face_danger.1",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "heart"
+                  }
+                ],
+                "text": "With charm, loyalty, or courage"
+              },
+              {
+                "_id": "move.condition:lodestar/scene_challenge/face_danger.2",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "iron"
+                  }
+                ],
+                "text": "With aggressive action, forceful defense, strength, or endurance"
+              },
+              {
+                "_id": "move.condition:lodestar/scene_challenge/face_danger.3",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "shadow"
+                  }
+                ],
+                "text": "With deception, stealth, or trickery"
+              },
+              {
+                "_id": "move.condition:lodestar/scene_challenge/face_danger.4",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "wits"
+                  }
+                ],
+                "text": "With expertise, insight, or observation"
+              }
+            ],
+            "text": "When you attempt something risky or react to an imminent threat within a scene challenge..."
+          },
+          "text": "When __you attempt something risky or react to an imminent threat within a scene challenge__, envision your action and roll. If you act...\n\n  * With speed, agility, or precision: Roll +edge.\n  * With charm, loyalty, or courage: Roll +heart.\n  * With aggressive action, forceful defense, strength, or endurance: Roll +iron.\n  * With deception, stealth, or trickery: Roll +shadow.\n  * With expertise, insight, or observation: Roll +wits.\n\nOn a __strong hit__, you are successful and mark progress. On a __strong hit with a match__, mark progress twice.\n\nOn a __weak hit__, you are successful and mark progress, but also encounter a complication or setback. Envision what occurs and mark a countdown segment.\n\nOn a __miss__, you fail, or a momentary success is undermined by a dramatic turn of events. Mark a countdown segment and [Pay the Price](datasworn:move:classic/fate/pay_the_price). On a __miss with a match__, mark two segments and [Pay the Price](datasworn:move:classic/fate/pay_the_price).",
+          "outcomes": {
+            "strong_hit": {
+              "_id": "move.outcome:lodestar/scene_challenge/face_danger.strong_hit",
+              "text": "On a __strong hit__, you are successful and mark progress. On a __strong hit with a match__, mark progress twice."
+            },
+            "weak_hit": {
+              "_id": "move.outcome:lodestar/scene_challenge/face_danger.weak_hit",
+              "text": "On a __weak hit__, you are successful and mark progress, but also encounter a complication or setback. Envision what occurs and mark a countdown segment."
+            },
+            "miss": {
+              "_id": "move.outcome:lodestar/scene_challenge/face_danger.miss",
+              "text": "On a __miss__, you fail, or a momentary success is undermined by a dramatic turn of events. Mark a countdown segment and [Pay the Price](datasworn:move:classic/fate/pay_the_price). On a __miss with a match__, mark two segments and [Pay the Price](datasworn:move:classic/fate/pay_the_price)."
+            }
+          },
+          "oracles": {},
+          "_source": {
+            "title": "Ironsworn Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 11,
+            "url": "https://ironswornrpg.com"
+          },
+          "allow_momentum_burn": true
+        },
+        "secure_an_advantage": {
+          "_id": "move:lodestar/scene_challenge/secure_an_advantage",
+          "type": "move",
+          "name": "Secure an Advantage (Scene Challenge)",
+          "roll_type": "action_roll",
+          "trigger": {
+            "conditions": [
+              {
+                "_id": "move.condition:lodestar/scene_challenge/secure_an_advantage.0",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "edge"
+                  }
+                ],
+                "text": "With speed, agility, or precision"
+              },
+              {
+                "_id": "move.condition:lodestar/scene_challenge/secure_an_advantage.1",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "heart"
+                  }
+                ],
+                "text": "With charm, loyalty, or courage"
+              },
+              {
+                "_id": "move.condition:lodestar/scene_challenge/secure_an_advantage.2",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "iron"
+                  }
+                ],
+                "text": "With aggressive action, forceful defense, strength, or endurance"
+              },
+              {
+                "_id": "move.condition:lodestar/scene_challenge/secure_an_advantage.3",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "shadow"
+                  }
+                ],
+                "text": "With deception, stealth, or trickery"
+              },
+              {
+                "_id": "move.condition:lodestar/scene_challenge/secure_an_advantage.4",
+                "method": "player_choice",
+                "roll_options": [
+                  {
+                    "using": "stat",
+                    "stat": "wits"
+                  }
+                ],
+                "text": "With expertise, insight, or observation"
+              }
+            ],
+            "text": "When you assess a situation, make preparations, or attempt to gain leverage within a scene challenge..."
+          },
+          "text": "When __you assess a situation, make preparations, or attempt to gain leverage__, envision your action and roll. If you act...\n\n  * With speed, agility, or precision: Roll +edge.\n  * With charm, loyalty, or courage: Roll +heart.\n  * With aggressive action, forceful defense, strength, or endurance: Roll +iron.\n  * With deception, stealth, or trickery: Roll +shadow.\n  * With expertise, insight, or observation: Roll +wits.\n\nOn a __strong hit__, take both. On a __string hit with a match__, take both and mark progress. On a __weak hit__, choose one.\n\n  * Take +2 momentum\n  * Add +1 on your next move (not a progress move)\n\nOn a __miss__, you fail or your assumptions betray you. Mark a countdown segment and [Pay the Price](datasworn:move:classic/fate/pay_the_price). On a __miss with a match__, mark two segments and [Pay the Price](datasworn:move:classic/fate/pay_the_price).",
+          "outcomes": {
+            "strong_hit": {
+              "_id": "move.outcome:lodestar/scene_challenge/secure_an_advantage.strong_hit",
+              "text": "On a __strong hit__, take +2 momentum and add +1 on your next move (not a progress move).\n\nOn a __strong hit with a match__, take +2 momentum, add +1 on your next move (not a progress move), and mark progress."
+            },
+            "weak_hit": {
+              "_id": "move.outcome:lodestar/scene_challenge/secure_an_advantage.weak_hit",
+              "text": "On a __weak hit__, choose one.\n\n  * Take +2 momentum\n  * Add +1 on your next move (not a progress move)"
+            },
+            "miss": {
+              "_id": "move.outcome:lodestar/scene_challenge/secure_an_advantage.miss",
+              "text": "On a __miss__, you fail or your assumptions betray you. Mark a countdown segment and [Pay the Price](datasworn:move:classic/fate/pay_the_price). On a __miss with a match__, mark two segments and [Pay the Price](datasworn:move:classic/fate/pay_the_price)."
+            }
+          },
+          "oracles": {},
+          "_source": {
+            "title": "Ironsworn Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 11,
+            "url": "https://ironswornrpg.com"
+          },
+          "allow_momentum_burn": true
+        },
+        "finish_the_scene": {
+          "_id": "move:lodestar/scene_challenge/finish_the_scene",
+          "type": "move",
+          "name": "Finish the Scene",
+          "roll_type": "progress_roll",
+          "tracks": {
+            "category": "Scene Challenge",
+            "controls": {}
+          },
+          "trigger": {
+            "conditions": [
+              {
+                "_id": "move.condition:lodestar/scene_challenge/finish_the_scene.0",
+                "method": "progress_roll",
+                "roll_options": [
+                  {
+                    "using": "progress_track"
+                  }
+                ]
+              }
+            ],
+            "text": "When the scene challenge countdown track or progress track is filled, or when events lead to the scene’s conclusion..."
+          },
+          "text": "When __the scene challenge tension clock or progress track is filled, or when events lead to the scene’s conclusion__, roll the challenge dice and compare to your progress.\n\nOn a __strong hit__, you achieve your objective unconditionally.\n\nOn a __weak hit__, you succeed, but not without cost. You must [Pay the Price](datasworn:move:classic/fate/pay_the_price). Make this a minor cost relative to the scope of the scene.\n\nOn a __miss__, you fail or are undermined by a dire turn of events. [Pay the Price](datasworn:move:classic/fate/pay_the_price).",
+          "outcomes": {
+            "strong_hit": {
+              "_id": "move.outcome:lodestar/scene_challenge/finish_the_scene.strong_hit",
+              "text": "On a __strong hit__, you achieve your objective unconditionally."
+            },
+            "weak_hit": {
+              "_id": "move.outcome:lodestar/scene_challenge/finish_the_scene.weak_hit",
+              "text": "On a __weak hit__, you succeed, but not without cost. You must [Pay the Price](datasworn:move:classic/fate/pay_the_price). Make this a minor cost relative to the scope of the scene."
+            },
+            "miss": {
+              "_id": "move.outcome:lodestar/scene_challenge/finish_the_scene.miss",
+              "text": "On a __miss__, you fail or are undermined by a dire turn of events. [Pay the Price](datasworn:move:classic/fate/pay_the_price)."
+            }
+          },
+          "oracles": {},
+          "_source": {
+            "title": "Ironsworn Lodestar",
+            "authors": [
+              {
+                "name": "Shawn Tomkin"
+              }
+            ],
+            "date": "2025-05-01",
+            "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "page": 11,
+            "url": "https://ironswornrpg.com"
+          },
+          "allow_momentum_burn": false
+        }
+      },
+      "collections": {},
+      "_source": {
+        "title": "Ironsworn Lodestar",
+        "authors": [
+          {
+            "name": "Shawn Tomkin"
+          }
+        ],
+        "date": "2025-05-01",
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "page": 11,
+        "url": "https://ironswornrpg.com"
+      }
+    }
+  },
+  "npcs": {},
+  "rarities": {},
+  "delve_sites": {},
+  "site_domains": {},
+  "site_themes": {},
+  "truths": {}
+}
