@@ -136,6 +136,9 @@ export function ProgressTrack(props: ProgressTracksProps) {
   } = props;
 
   const trackMoveIds = useGameSystemValue(trackMoveIdSystemValues);
+  const isLodestarEnabled = useStore((store) =>
+    store.rules.expansionIds.includes("lodestar"),
+  );
 
   const announce = useStore((store) => store.appState.announce);
 
@@ -143,7 +146,17 @@ export function ProgressTrack(props: ProgressTracksProps) {
   const openDialog = useStore((store) => store.appState.openDialog);
 
   const moveMap = useStore((store) => store.rules.moveMaps.moveMap);
-  const move = trackType ? moveMap[trackMoveIds[trackType]] : undefined;
+  const resolvedSceneChallengeMove =
+    trackType === TrackTypes.SceneChallenge &&
+    !trackMoveIds[TrackTypes.SceneChallenge] &&
+    isLodestarEnabled
+      ? "move:lodestar/scene_challenge/finish_the_scene"
+      : trackMoveIds[TrackTypes.SceneChallenge];
+  const resolvedTrackMoveIds = {
+    ...trackMoveIds,
+    [TrackTypes.SceneChallenge]: resolvedSceneChallengeMove,
+  };
+  const move = trackType ? moveMap[resolvedTrackMoveIds[trackType]] : undefined;
 
   const [checks, setChecks] = useState<number[]>([]);
 

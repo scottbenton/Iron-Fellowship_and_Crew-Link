@@ -6,14 +6,51 @@ import {
   FormControlLabel,
   FormGroup,
   Switch,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { EmptyState } from "components/shared/EmptyState";
-import { includedExpansions } from "data/rulesets";
+import { IExpansionConfig, includedExpansions } from "data/rulesets";
+import { useFeatureFlag } from "hooks/featureFlags/useFeatureFlag";
+import { buildExpansionChanges } from "./expansionCascade";
+
+export { buildExpansionChanges } from "./expansionCascade";
 
 export interface ExpansionSelectorProps {
   enabledExpansionMap: Record<string, boolean>;
-  toggleEnableExpansion: (expansionId: string, enabled: boolean) => void;
+  toggleEnableExpansion: (changes: Record<string, boolean>) => void;
+}
+
+function ExpansionRow({
+  config,
+  checked,
+  onChange,
+}: {
+  config: IExpansionConfig;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  const label =
+    config.id === "lodestar" ? (
+      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+        {config.name}
+        <Tooltip title="Requires Ironsworn: Delve">
+          <InfoIcon fontSize="small" color="action" />
+        </Tooltip>
+      </Box>
+    ) : (
+      config.name
+    );
+
+  return (
+    <FormControlLabel
+      control={
+        <Switch checked={checked} onChange={(_, c) => onChange(c)} />
+      }
+      label={label}
+    />
+  );
 }
 
 export function ExpansionSelector(props: ExpansionSelectorProps) {
@@ -23,6 +60,8 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
     [GAME_SYSTEMS.STARFORGED]: "starforged",
   });
 
+  const isLodestarFlagEnabled = useFeatureFlag("lodestar");
+
   const homebrewExpansionMap = useStore((store) => store.homebrew.collections);
   const sortedExpansionIds = useStore(
     (store) => store.homebrew.sortedHomebrewCollectionIds,
@@ -30,7 +69,8 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
 
   const rulesetExpansions = Object.values(
     includedExpansions[activeRulesetId] ?? {},
-  );
+  ).filter((c) => c.id !== "lodestar" || isLodestarFlagEnabled);
+
   const officialExpansions = rulesetExpansions.filter((c) => !c.isHomebrew);
   const thirdPartyExpansions = rulesetExpansions.filter((c) => c.isHomebrew);
 
@@ -38,13 +78,16 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
     (expansionId) =>
       homebrewExpansionMap[expansionId]?.base?.rulesetId === activeRulesetId,
   );
-  console.debug(homebrewExpansionIds, enabledExpansionMap);
 
   const notFoundExpansionIds = Object.keys(enabledExpansionMap).filter(
     (key) =>
       !rulesetExpansions.some((c) => c.id === key) &&
       !homebrewExpansionIds.includes(key),
   );
+
+  const handleToggle = (expansionId: string, checked: boolean) => {
+    toggleEnableExpansion(buildExpansionChanges(expansionId, checked));
+  };
 
   return (
     <Box>
@@ -53,17 +96,11 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
           <Typography variant={"overline"}>Official Expansions</Typography>
           <FormGroup>
             {officialExpansions.map((config) => (
-              <FormControlLabel
+              <ExpansionRow
                 key={config.id}
-                control={
-                  <Switch
-                    checked={enabledExpansionMap[config.id] ?? false}
-                    onChange={(evt, checked) =>
-                      toggleEnableExpansion(config.id, checked)
-                    }
-                  />
-                }
-                label={config.name}
+                config={config}
+                checked={enabledExpansionMap[config.id] ?? false}
+                onChange={(checked) => handleToggle(config.id, checked)}
               />
             ))}
           </FormGroup>
@@ -74,17 +111,11 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
           <Typography variant={"overline"}>Third-Party Expansions</Typography>
           <FormGroup>
             {thirdPartyExpansions.map((config) => (
-              <FormControlLabel
+              <ExpansionRow
                 key={config.id}
-                control={
-                  <Switch
-                    checked={enabledExpansionMap[config.id] ?? false}
-                    onChange={(evt, checked) =>
-                      toggleEnableExpansion(config.id, checked)
-                    }
-                  />
-                }
-                label={config.name}
+                config={config}
+                checked={enabledExpansionMap[config.id] ?? false}
+                onChange={(checked) => handleToggle(config.id, checked)}
               />
             ))}
           </FormGroup>
@@ -106,9 +137,7 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
                 control={
                   <Switch
                     checked={enabledExpansionMap[expansionId] ?? false}
-                    onChange={(evt, checked) =>
-                      toggleEnableExpansion(expansionId, checked)
-                    }
+                    onChange={(_, checked) => handleToggle(expansionId, checked)}
                   />
                 }
                 label={
@@ -122,9 +151,7 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
                 control={
                   <Switch
                     checked={enabledExpansionMap[expansionId] ?? false}
-                    onChange={(evt, checked) =>
-                      toggleEnableExpansion(expansionId, checked)
-                    }
+                    onChange={(_, checked) => handleToggle(expansionId, checked)}
                   />
                 }
                 label={

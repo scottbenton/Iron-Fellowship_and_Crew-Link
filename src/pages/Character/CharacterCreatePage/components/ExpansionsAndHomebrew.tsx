@@ -20,11 +20,8 @@ export function ExpansionsAndHomebrew(props: CharacterDetailsProps) {
         render={({ field }) => (
           <ExpansionSelector
             enabledExpansionMap={field.value}
-            toggleEnableExpansion={(expansionId, enabled) =>
-              field.onChange({
-                ...field.value,
-                [expansionId]: enabled,
-              })
+            toggleEnableExpansion={(changes) =>
+              field.onChange({ ...field.value, ...changes })
             }
           />
         )}

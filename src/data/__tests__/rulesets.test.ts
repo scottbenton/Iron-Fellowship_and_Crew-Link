@@ -53,4 +53,20 @@ describe("ruleset lazy loaders", () => {
     expect(expansion?._id).toBe("ironsmith");
     expect(thirdPartyExpansions.ironsmith?._id).toBe("ironsmith");
   });
+
+  it("can identify lodestar as an included expansion before its data is cached", () => {
+    delete defaultExpansions.lodestar;
+
+    expect(findIncludedExpansionConfig("lodestar")?.id).toBe("lodestar");
+    expect(defaultExpansions.lodestar).toBeUndefined();
+  });
+
+  it("loads lodestar into the default expansion cache", async () => {
+    delete defaultExpansions.lodestar;
+
+    const expansion = await loadIncludedExpansion("lodestar");
+
+    expect(expansion?._id).toBe("lodestar");
+    expect(defaultExpansions.lodestar?._id).toBe("lodestar");
+  });
 });
