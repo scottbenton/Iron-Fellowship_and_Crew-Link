@@ -10,6 +10,7 @@ import {
 } from "./useFilterOracles";
 import { useStore } from "stores/store";
 import { ToggleVisibilityButton } from "../../../shared/ToggleVisibilityButton";
+import { getOracleIdsForCollection } from "./oracleCollectionUtils";
 
 export interface OracleCollectionProps {
   collectionId: string;
@@ -18,7 +19,6 @@ export interface OracleCollectionProps {
   forceOpen?: boolean;
   visibleCollections: Record<string, CATEGORY_VISIBILITY>;
   visibleOracles: Record<string, boolean>;
-  enhancesCollections: Record<string, string[]>;
   disabled?: boolean;
   actionIsHide?: boolean;
 }
@@ -31,7 +31,6 @@ export function OracleCollection(props: OracleCollectionProps) {
     forceOpen,
     visibleCollections,
     visibleOracles,
-    enhancesCollections,
     disabled,
     actionIsHide,
   } = props;
@@ -60,39 +59,11 @@ export function OracleCollection(props: OracleCollectionProps) {
 
   const collection = collections[collectionId];
 
-  const contents = collection.contents;
-  const subCollections =
-    collection.oracle_type === "tables" && collection.collections;
-
-  const enhancingCollectionIds = enhancesCollections[collectionId];
-
   const { oracleIds, subCollectionIds } = useMemo(() => {
-    const oracleIds = Object.values(contents ?? {}).map((oracle) => oracle._id);
-
-    const subCollectionIds = Object.values(subCollections || {}).map(
-      (subCollection) => subCollection._id
-    );
-
-    (enhancingCollectionIds ?? []).forEach((enhancesId) => {
-      const enhancingCollection = collections[enhancesId];
-      if (enhancingCollection) {
-        oracleIds.push(
-          ...Object.values(enhancingCollection.contents ?? {}).map(
-            (oracle) => oracle._id
-          )
-        );
-        if (enhancingCollection.oracle_type === "tables") {
-          subCollectionIds.push(
-            ...Object.values(enhancingCollection.collections ?? {}).map(
-              (subCollection) => subCollection._id
-            )
-          );
-        }
-      }
-    });
-
-    return { oracleIds, subCollectionIds };
-  }, [contents, subCollections, collections, enhancingCollectionIds]);
+    return collection
+      ? getOracleIdsForCollection(collection)
+      : { oracleIds: [], subCollectionIds: [] };
+  }, [collection]);
 
   const hidden = hiddenOracles?.includes(collectionId);
 
@@ -160,7 +131,6 @@ export function OracleCollection(props: OracleCollectionProps) {
               forceOpen={forceOpen}
               visibleCollections={visibleCollections}
               visibleOracles={visibleOracles}
-              enhancesCollections={enhancesCollections}
               disabled={disabled || !isExpandedOrForced}
               actionIsHide={actionIsHide}
             />

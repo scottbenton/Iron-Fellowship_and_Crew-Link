@@ -1,15 +1,13 @@
-import { useMemo, useState } from "react";
+import { Datasworn } from "@datasworn/core";
+import {
+  CATEGORY_VISIBILITY,
+  useDataswornCollectionFilter,
+} from "hooks/useDataswornCollectionFilter";
 import { useStore } from "stores/store";
 
-export enum CATEGORY_VISIBILITY {
-  HIDDEN,
-  SOME,
-  ALL,
-}
+export { CATEGORY_VISIBILITY };
 
 export function useFilterMoves() {
-  const [search, setSearch] = useState("");
-
   const moveCategories = useStore(
     (store) => store.rules.moveMaps.moveCategoryMap,
   );
@@ -20,83 +18,24 @@ export function useFilterMoves() {
   const moveMap = useStore((store) => store.rules.moveMaps.moveMap);
 
   const {
-    visibleMoveCategoryIds,
-    visibleMoveIds,
+    setSearch,
+    visibleCollectionIds,
+    visibleItemIds,
+    isSearchActive,
     isEmpty,
-    enhancesCollections,
-  } = useMemo(() => {
-    const visibleCategories: Record<string, CATEGORY_VISIBILITY> = {};
-    const visibleMoves: Record<string, boolean> = {};
-    let isEmpty: boolean = true;
-
-    const enhancesCollections: Record<string, string[]> = {};
-
-    Object.values(moveCategories).forEach((category) => {
-      if (category.enhances) {
-        category.enhances.forEach((enhancesId) => {
-          enhancesCollections[enhancesId] = [
-            ...(enhancesCollections[enhancesId] ?? []),
-            category._id,
-          ];
-        });
-      }
-
-      if (
-        !search ||
-        (category.name
-          .toLocaleLowerCase()
-          .includes(search.toLocaleLowerCase()) &&
-          Object.keys(category.contents ?? {}).length > 0)
-      ) {
-        visibleCategories[category._id] = CATEGORY_VISIBILITY.ALL;
-        isEmpty = false;
-        return;
-      }
-
-      let hasMove = false;
-
-      const contents = category.contents;
-      if (contents) {
-        Object.keys(contents).forEach((moveId) => {
-          const move = contents[moveId];
-
-          if (
-            move.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-          ) {
-            hasMove = true;
-            visibleMoves[move._id] = true;
-          }
-        });
-      }
-      if (hasMove) {
-        isEmpty = false;
-        visibleCategories[category._id] = CATEGORY_VISIBILITY.SOME;
-        // TODO - double check this
-        // if (category.enhances) {
-        //   visibleCategories[category.enhances] = CATEGORY_VISIBILITY.SOME;
-        // }
-      } else {
-        visibleCategories[category._id] = CATEGORY_VISIBILITY.HIDDEN;
-      }
-    });
-
-    return {
-      visibleMoveCategoryIds: visibleCategories,
-      visibleMoveIds: visibleMoves,
-      isEmpty,
-      enhancesCollections,
-    };
-  }, [moveCategories, search]);
+  } = useDataswornCollectionFilter<Datasworn.MoveCategory, Datasworn.Move>({
+    collections: moveCategories,
+    rootCollectionIds: rootMoveCategories,
+  });
 
   return {
     moveCategories,
     moveMap,
     setSearch,
-    visibleMoveCategoryIds,
-    visibleMoveIds,
-    isSearchActive: !!search,
+    visibleMoveCategoryIds: visibleCollectionIds,
+    visibleMoveIds: visibleItemIds,
+    isSearchActive,
     isEmpty,
     rootMoveCategories,
-    enhancesCollections,
   };
 }

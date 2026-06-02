@@ -21,7 +21,6 @@ export function OracleCollection(props: OracleCollectionProps) {
       collections={collections}
       oracles={oracles}
       visibleCollections={{ [collection._id]: CATEGORY_VISIBILITY.ALL }}
-      enhancesCollections={{}}
       visibleOracles={{}}
     />
   );
