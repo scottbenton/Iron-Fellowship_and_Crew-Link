@@ -21,7 +21,6 @@ export function MovesSection(props: MovesSectionProps) {
     visibleMoveIds,
     isSearchActive,
     isEmpty,
-    enhancesCollections,
   } = useFilterMoves();
 
   const openDialog = useStore((store) => store.appState.openDialog);
@@ -67,7 +66,6 @@ export function MovesSection(props: MovesSectionProps) {
             <MoveCategory
               key={index}
               category={moveCategories[categoryId]}
-              categories={moveCategories}
               moveMap={moveMap}
               openMove={(move) => {
                 openDialog(move._id);
@@ -76,7 +74,6 @@ export function MovesSection(props: MovesSectionProps) {
               visibleCategories={visibleMoveCategoryIds}
               visibleMoves={visibleMoveIds}
               shouldExpandLocally={shouldExpandLocally}
-              enhancesCollections={enhancesCollections}
             />
           ))
         ) : (

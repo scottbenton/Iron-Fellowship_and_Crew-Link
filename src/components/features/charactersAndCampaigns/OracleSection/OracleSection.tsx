@@ -21,7 +21,6 @@ export function OracleSection(props: OraclesSectionProps) {
     isSearchActive,
     isEmpty,
     rootOracles,
-    enhancesCollections,
   } = useFilterOracles();
 
   return (
@@ -88,7 +87,6 @@ export function OracleSection(props: OraclesSectionProps) {
               forceOpen={isSearchActive}
               visibleCollections={visibleOracleCollectionIds}
               visibleOracles={visibleOracleIds}
-              enhancesCollections={enhancesCollections}
               actionIsHide={actionIsHide}
             />
           ))}

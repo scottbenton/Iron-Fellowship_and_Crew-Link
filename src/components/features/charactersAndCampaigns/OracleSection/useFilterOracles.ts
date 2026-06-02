@@ -1,13 +1,14 @@
 import { Datasworn } from "@datasworn/core";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import {
+  CATEGORY_VISIBILITY,
+  useDataswornCollectionFilter,
+} from "hooks/useDataswornCollectionFilter";
 import { useStore } from "stores/store";
 import { License } from "types/Datasworn";
+import { getOracleSubCollections } from "./oracleCollectionUtils";
 
-export enum CATEGORY_VISIBILITY {
-  HIDDEN,
-  SOME,
-  ALL,
-}
+export { CATEGORY_VISIBILITY };
 
 type omittedKeys = "oracle_type" | "contents";
 export interface IPinnedOracleCollection
@@ -21,7 +22,6 @@ export type CombinedCollectionType =
   | IPinnedOracleCollection;
 
 export function useFilterOracles() {
-  const [search, setSearch] = useState("");
   const oracleCollectionsWithoutPinnedOracles = useStore(
     (store) => store.rules.oracleMaps.oracleCollectionMap
   );
@@ -84,105 +84,28 @@ export function useFilterOracles() {
   ]);
 
   const {
-    visibleOracleCollectionIds,
-    visibleOracleIds,
+    setSearch,
+    visibleCollectionIds,
+    visibleItemIds,
+    isSearchActive,
     isEmpty,
-    enhancesCollections,
-  } = useMemo(() => {
-    const visibleCollections: Record<string, CATEGORY_VISIBILITY> = {};
-    const visibleOracles: Record<string, boolean> = {};
-    let isEmpty: boolean = true;
-
-    const enhancesCollections: Record<string, string[]> = {};
-
-    const filterCollection = (collection: CombinedCollectionType): boolean => {
-      // TODO -double check this
-      // if (collection.enhances) {
-      //   enhancesCollections[collection.enhances] = [
-      //     ...(enhancesCollections[collection.enhances] ?? []),
-      //     collection._id,
-      //   ];
-      // }
-
-      const hasChildren =
-        (collection.oracle_type === "tables" &&
-          Object.keys(
-            (collection as unknown as Datasworn.OracleTablesCollection)
-              .collections ?? {}
-          ).length > 0) ||
-        Object.keys(collection.contents ?? {}).length > 0;
-
-      const searchIncludesCollectionName =
-        !search ||
-        collection.name
-          .toLocaleLowerCase()
-          .includes(search.toLocaleLowerCase());
-
-      if (hasChildren && searchIncludesCollectionName) {
-        isEmpty = false;
-        visibleCollections[collection._id] = CATEGORY_VISIBILITY.ALL;
-        return true;
-      }
-
-      let hasOracles = false;
-
-      if (collection.oracle_type === "tables" && collection.collections) {
-        Object.values(collection.collections).forEach((subCollection) => {
-          if (filterCollection(subCollection)) {
-            hasOracles = true;
-          }
-        });
-      }
-      if (collection.contents) {
-        Object.values(collection.contents).forEach(
-          (table: Datasworn.OracleRollable) => {
-            if (
-              table &&
-              table.name
-                .toLocaleLowerCase()
-                .includes(search.toLocaleLowerCase())
-            ) {
-              visibleOracles[table._id] = true;
-              hasOracles = true;
-            }
-          }
-        );
-      }
-
-      if (hasOracles) {
-        isEmpty = false;
-        visibleCollections[collection._id] = CATEGORY_VISIBILITY.SOME;
-        // TODO - check this
-        // if (collection.enhances) {
-        //   visibleCollections[collection.enhances] = CATEGORY_VISIBILITY.SOME;
-        // }
-      } else {
-        visibleCollections[collection._id] = CATEGORY_VISIBILITY.HIDDEN;
-      }
-
-      return hasOracles;
-    };
-    Object.values(oracleCollections).forEach((collection) => {
-      filterCollection(collection);
-    });
-
-    return {
-      visibleOracleCollectionIds: visibleCollections,
-      visibleOracleIds: visibleOracles,
-      isEmpty,
-      enhancesCollections,
-    };
-  }, [oracleCollections, search]);
+  } = useDataswornCollectionFilter<
+    CombinedCollectionType,
+    Datasworn.OracleRollable
+  >({
+    collections: oracleCollections,
+    rootCollectionIds: rootOracles,
+    getSubCollections: getOracleSubCollections,
+  });
 
   return {
     oracleCollections,
     oracles,
     setSearch,
-    visibleOracleCollectionIds,
-    visibleOracleIds,
-    isSearchActive: !!search,
+    visibleOracleCollectionIds: visibleCollectionIds,
+    visibleOracleIds: visibleItemIds,
+    isSearchActive,
     isEmpty,
     rootOracles,
-    enhancesCollections,
   };
 }
