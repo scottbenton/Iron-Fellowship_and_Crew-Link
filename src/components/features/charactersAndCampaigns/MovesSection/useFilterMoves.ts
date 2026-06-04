@@ -23,24 +23,12 @@ export function useFilterMoves() {
     visibleMoveCategoryIds,
     visibleMoveIds,
     isEmpty,
-    enhancesCollections,
   } = useMemo(() => {
     const visibleCategories: Record<string, CATEGORY_VISIBILITY> = {};
     const visibleMoves: Record<string, boolean> = {};
     let isEmpty: boolean = true;
 
-    const enhancesCollections: Record<string, string[]> = {};
-
     Object.values(moveCategories).forEach((category) => {
-      if (category.enhances) {
-        category.enhances.forEach((enhancesId) => {
-          enhancesCollections[enhancesId] = [
-            ...(enhancesCollections[enhancesId] ?? []),
-            category._id,
-          ];
-        });
-      }
-
       if (
         !search ||
         (category.name
@@ -84,7 +72,6 @@ export function useFilterMoves() {
       visibleMoveCategoryIds: visibleCategories,
       visibleMoveIds: visibleMoves,
       isEmpty,
-      enhancesCollections,
     };
   }, [moveCategories, search]);
 
@@ -97,6 +84,5 @@ export function useFilterMoves() {
     isSearchActive: !!search,
     isEmpty,
     rootMoveCategories,
-    enhancesCollections,
   };
 }
