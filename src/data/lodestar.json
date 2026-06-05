@@ -19,8 +19,7 @@
 			"name": "Character Oracles",
 			"oracle_type": "tables",
 			"enhances": [
-				"oracle_collection:classic/character",
-				"oracle_collection:delve/character"
+				"oracle_collection:classic/character"
 			],
 			"contents": {
 				"first_look": {
@@ -8139,6 +8138,80 @@
 						"page": 53,
 						"url": "https://ironswornrpg.com"
 					}
+				},
+				"building_prompt": {
+					"_id": "oracle_rollable:lodestar/core/building_prompt",
+					"type": "oracle_rollable",
+					"name": "Building a Prompt",
+					"oracle_type": "table_text",
+					"dice": "1d100",
+					"summary": "Use this table to choose a structured prompt when you are unsure which Core oracles to combine for a question.",
+					"column_labels": {
+						"roll": "Roll",
+						"text": "Result"
+					},
+					"rows": [
+						{
+							"_id": "oracle_rollable.row:lodestar/core/building_prompt.0",
+							"roll": {
+								"min": 1,
+								"max": 20
+							},
+							"text": "Action + Theme"
+						},
+						{
+							"_id": "oracle_rollable.row:lodestar/core/building_prompt.1",
+							"roll": {
+								"min": 21,
+								"max": 40
+							},
+							"text": "Descriptor + Focus"
+						},
+						{
+							"_id": "oracle_rollable.row:lodestar/core/building_prompt.2",
+							"roll": {
+								"min": 41,
+								"max": 55
+							},
+							"text": "Action + Focus"
+						},
+						{
+							"_id": "oracle_rollable.row:lodestar/core/building_prompt.3",
+							"roll": {
+								"min": 56,
+								"max": 70
+							},
+							"text": "Descriptor + Theme"
+						},
+						{
+							"_id": "oracle_rollable.row:lodestar/core/building_prompt.4",
+							"roll": {
+								"min": 71,
+								"max": 85
+							},
+							"text": "Action + Descriptor + Focus"
+						},
+						{
+							"_id": "oracle_rollable.row:lodestar/core/building_prompt.5",
+							"roll": {
+								"min": 86,
+								"max": 100
+							},
+							"text": "Action + Descriptor + Theme"
+						}
+					],
+					"_source": {
+						"title": "Ironsworn: Lodestar",
+						"authors": [
+							{
+								"name": "Shawn Tomkin"
+							}
+						],
+						"date": "2025-05-01",
+						"license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+						"page": 51,
+						"url": "https://ironswornrpg.com"
+					}
 				}
 			},
 			"collections": {},
@@ -12006,12 +12079,28 @@
 							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.0",
 							"roll": {
 								"min": 1,
-								"max": 6
+								"max": 2
 							},
-							"text": "Drain the life from a target."
+							"text": "Alter the weather."
 						},
 						{
 							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.1",
+							"roll": {
+								"min": 3,
+								"max": 4
+							},
+							"text": "Nullify other powers."
+						},
+						{
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.2",
+							"roll": {
+								"min": 5,
+								"max": 6
+							},
+							"text": "Imbue an object with power."
+						},
+						{
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.3",
 							"roll": {
 								"min": 7,
 								"max": 8
@@ -12019,7 +12108,7 @@
 							"text": "Disintegrate or decay objects."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.2",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.4",
 							"roll": {
 								"min": 9,
 								"max": 10
@@ -12027,7 +12116,7 @@
 							"text": "Awaken an ancient being."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.3",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.5",
 							"roll": {
 								"min": 11,
 								"max": 12
@@ -12035,7 +12124,7 @@
 							"text": "Summon a monstrous creature."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.4",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.6",
 							"roll": {
 								"min": 13,
 								"max": 14
@@ -12043,7 +12132,7 @@
 							"text": "Bind to a vow or task."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.5",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.7",
 							"roll": {
 								"min": 15,
 								"max": 16
@@ -12051,7 +12140,7 @@
 							"text": "Give life to inanimate forms."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.6",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.8",
 							"roll": {
 								"min": 17,
 								"max": 18
@@ -12059,7 +12148,7 @@
 							"text": "Unleash a plague."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.7",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.9",
 							"roll": {
 								"min": 19,
 								"max": 20
@@ -12067,15 +12156,15 @@
 							"text": "Control elemental forces."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.8",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.10",
 							"roll": {
 								"min": 21,
 								"max": 22
 							},
-							"text": "Erase or suppress memories."
+							"text": "Erase or suppresses memories."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.9",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.11",
 							"roll": {
 								"min": 23,
 								"max": 24
@@ -12083,7 +12172,7 @@
 							"text": "Shroud in lasting darkness."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.10",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.12",
 							"roll": {
 								"min": 25,
 								"max": 26
@@ -12091,7 +12180,7 @@
 							"text": "Alter surrounding environment."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.11",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.13",
 							"roll": {
 								"min": 27,
 								"max": 28
@@ -12099,7 +12188,7 @@
 							"text": "Bind to a location."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.12",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.14",
 							"roll": {
 								"min": 29,
 								"max": 30
@@ -12107,7 +12196,7 @@
 							"text": "Inflict cursed luck."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.13",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.15",
 							"roll": {
 								"min": 31,
 								"max": 32
@@ -12115,7 +12204,7 @@
 							"text": "Incite negative emotions."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.14",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.16",
 							"roll": {
 								"min": 33,
 								"max": 34
@@ -12123,7 +12212,7 @@
 							"text": "Awaken latent powers in another."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.15",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.17",
 							"roll": {
 								"min": 35,
 								"max": 36
@@ -12131,7 +12220,7 @@
 							"text": "Inflict aging or wasting."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.16",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.18",
 							"roll": {
 								"min": 37,
 								"max": 38
@@ -12139,7 +12228,7 @@
 							"text": "Bind to a restless spirit."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.17",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.19",
 							"roll": {
 								"min": 39,
 								"max": 40
@@ -12147,7 +12236,7 @@
 							"text": "Grant horrifying knowledge."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.18",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.20",
 							"roll": {
 								"min": 41,
 								"max": 42
@@ -12155,7 +12244,7 @@
 							"text": "Awaken or animate the dead."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.19",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.21",
 							"roll": {
 								"min": 43,
 								"max": 44
@@ -12163,7 +12252,7 @@
 							"text": "Incite an obsession."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.20",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.22",
 							"roll": {
 								"min": 45,
 								"max": 46
@@ -12171,31 +12260,31 @@
 							"text": "Manifest inner fears."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.21",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.23",
 							"roll": {
 								"min": 47,
 								"max": 48
 							},
-							"text": "Reveal hidden truths."
+							"text": "Banish to another time."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.22",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.24",
 							"roll": {
 								"min": 49,
 								"max": 50
 							},
-							"text": "Commune with spirits."
+							"text": "Manipulate plant growth."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.23",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.25",
 							"roll": {
 								"min": 51,
 								"max": 52
 							},
-							"text": "Control weather or environment."
+							"text": "Trigger a natural disaster."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.24",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.26",
 							"roll": {
 								"min": 53,
 								"max": 54
@@ -12203,7 +12292,7 @@
 							"text": "Reveal past events."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.25",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.27",
 							"roll": {
 								"min": 55,
 								"max": 56
@@ -12211,7 +12300,7 @@
 							"text": "Emit destructive energies."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.26",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.28",
 							"roll": {
 								"min": 57,
 								"max": 58
@@ -12219,7 +12308,7 @@
 							"text": "Alter the flow of time."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.27",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.29",
 							"roll": {
 								"min": 59,
 								"max": 60
@@ -12227,7 +12316,7 @@
 							"text": "Inflict a consuming need."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.28",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.30",
 							"roll": {
 								"min": 61,
 								"max": 62
@@ -12235,7 +12324,7 @@
 							"text": "Create hallucinations or illusions."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.29",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.31",
 							"roll": {
 								"min": 63,
 								"max": 64
@@ -12243,7 +12332,7 @@
 							"text": "Trigger a celestial event."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.30",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.32",
 							"roll": {
 								"min": 65,
 								"max": 66
@@ -12251,7 +12340,7 @@
 							"text": "Summon a swarm of creatures."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.31",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.33",
 							"roll": {
 								"min": 67,
 								"max": 68
@@ -12259,7 +12348,7 @@
 							"text": "Reveal distant places."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.32",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.34",
 							"roll": {
 								"min": 69,
 								"max": 70
@@ -12267,7 +12356,7 @@
 							"text": "Absorb energy or essence."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.33",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.35",
 							"roll": {
 								"min": 71,
 								"max": 72
@@ -12275,7 +12364,7 @@
 							"text": "Banish to another reality."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.34",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.36",
 							"roll": {
 								"min": 73,
 								"max": 74
@@ -12283,7 +12372,7 @@
 							"text": "Banish to another location."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.35",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.37",
 							"roll": {
 								"min": 75,
 								"max": 76
@@ -12291,7 +12380,7 @@
 							"text": "Inflict prophetic visions."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.36",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.38",
 							"roll": {
 								"min": 77,
 								"max": 78
@@ -12299,7 +12388,7 @@
 							"text": "Inflict dreadful transformations."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.37",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.39",
 							"roll": {
 								"min": 79,
 								"max": 80
@@ -12307,7 +12396,7 @@
 							"text": "Inflict sickness or weakness."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.38",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.40",
 							"roll": {
 								"min": 81,
 								"max": 82
@@ -12315,7 +12404,7 @@
 							"text": "Absorb life."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.39",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.41",
 							"roll": {
 								"min": 83,
 								"max": 84
@@ -12323,7 +12412,7 @@
 							"text": "Spread corruption or blight."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.40",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.42",
 							"roll": {
 								"min": 85,
 								"max": 86
@@ -12331,7 +12420,7 @@
 							"text": "Brand with a cursed mark."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.41",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.43",
 							"roll": {
 								"min": 87,
 								"max": 88
@@ -12339,7 +12428,7 @@
 							"text": "Destroy terrain or architecture."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.42",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.44",
 							"roll": {
 								"min": 89,
 								"max": 90
@@ -12347,7 +12436,7 @@
 							"text": "Grant a lasting boon—at a cost."
 						},
 						{
-							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.43",
+							"_id": "oracle_rollable.row:lodestar/magic/mystic_effect.45",
 							"roll": {
 								"min": 91,
 								"max": 100
@@ -12403,12 +12492,14 @@
 					"_id": "oracle_rollable:lodestar/scale/rank",
 					"type": "oracle_rollable",
 					"name": "Rank",
-					"oracle_type": "table_text",
+					"oracle_type": "table_text3",
 					"dice": "1d100",
 					"summary": "Use this oracle to randomly set the challenge rank of a quest, journey, or foe.",
 					"column_labels": {
 						"roll": "Roll",
-						"text": "Result"
+						"text": "Rank",
+						"text2": "Quest",
+						"text3": "Journey / Foe"
 					},
 					"rows": [
 						{
@@ -12417,7 +12508,9 @@
 								"min": 1,
 								"max": 15
 							},
-							"text": "Troublesome"
+							"text": "Troublesome",
+							"text2": "A challenging quest with a small number of obstacles",
+							"text3": "Journey: Traveling a moderate distance within a single region\n\nFoe: Common enemies"
 						},
 						{
 							"_id": "oracle_rollable.row:lodestar/scale/rank.1",
@@ -12425,7 +12518,9 @@
 								"min": 16,
 								"max": 35
 							},
-							"text": "Dangerous"
+							"text": "Dangerous",
+							"text2": "An involved quest with several obstacles",
+							"text3": "Journey: Traveling a long distance within a single region, or across rough terrain\n\nFoe: Capable fighters and deadly creatures"
 						},
 						{
 							"_id": "oracle_rollable.row:lodestar/scale/rank.2",
@@ -12433,7 +12528,9 @@
 								"min": 36,
 								"max": 65
 							},
-							"text": "Formidable"
+							"text": "Formidable",
+							"text2": "A complex quest with many obstacles",
+							"text3": "Journey: Traveling from one region to another, or across especially challenging terrain\n\nFoe: Exceptional fighters and mighty creatures"
 						},
 						{
 							"_id": "oracle_rollable.row:lodestar/scale/rank.3",
@@ -12441,7 +12538,9 @@
 								"min": 66,
 								"max": 85
 							},
-							"text": "Extreme"
+							"text": "Extreme",
+							"text2": "An intimidating quest with scores of obstacles",
+							"text3": "Journey: Traveling through multiple regions\n\nFoe: Foes of overwhelming skill or power"
 						},
 						{
 							"_id": "oracle_rollable.row:lodestar/scale/rank.4",
@@ -12449,7 +12548,9 @@
 								"min": 86,
 								"max": 100
 							},
-							"text": "Epic"
+							"text": "Epic",
+							"text2": "A life-defining quest of unknowable scope",
+							"text3": "Journey: Traveling from one end of the Ironlands to another, or to a separate land\n\nFoe: Legendary foes of mythic power"
 						}
 					],
 					"_source": {
@@ -16819,24 +16920,23 @@
 	"assets": {},
 	"atlas": {},
 	"moves": {
-		"journey": {
-			"_id": "move_category:lodestar/journey",
+		"adventure": {
+			"_id": "move_category:lodestar/adventure",
 			"type": "move_category",
-			"name": "Journey Moves",
+			"name": "Adventure Moves",
 			"enhances": [
 				"move_category:classic/adventure"
 			],
-			"summary": "Journey moves are used as you travel across the Ironlands.",
 			"contents": {
 				"follow_a_path": {
-					"_id": "move:lodestar/journey/follow_a_path",
+					"_id": "move:lodestar/adventure/follow_a_path",
 					"type": "move",
 					"name": "Follow a Path",
 					"roll_type": "action_roll",
 					"trigger": {
 						"conditions": [
 							{
-								"_id": "move.condition:lodestar/journey/follow_a_path.0",
+								"_id": "move.condition:lodestar/adventure/follow_a_path.0",
 								"method": "player_choice",
 								"roll_options": [
 									{
@@ -16851,15 +16951,15 @@
 					"text": "When __you journey along a known route, and one day blends into the next__, roll +supply.\n\nOn a __strong hit__, you reach your destination and the situation favors you. Take +1 momentum.\n\nOn a __weak hit__, you complete the journey, but face a cost or complication. Choose one or more.\n\n  * You took longer than expected.\n  * You pressed on through pain, sickness, or weariness: [Endure Harm](datasworn:move:classic/suffer/endure_harm).\n  * You suffered under the burden of foul weather, worries, or fearful locations: [Endure Stress](datasworn:move:classic/suffer/endure_stress).\n  * You wasted resources.\n  * You face a complication or hazard at the destination. Envision what you find ([Ask the Oracle](datasworn:move:classic/fate/ask_the_oracle) if unsure).\n\nOn a __miss__, you are waylaid by a dire threat and must [Pay the Price](datasworn:move:classic/fate/pay_the_price). If you overcome this obstacle, you may push on safely to your destination.",
 					"outcomes": {
 						"strong_hit": {
-							"_id": "move.outcome:lodestar/journey/follow_a_path.strong_hit",
+							"_id": "move.outcome:lodestar/adventure/follow_a_path.strong_hit",
 							"text": "On a __strong hit__, you reach your destination and the situation favors you. Take +1 momentum."
 						},
 						"weak_hit": {
-							"_id": "move.outcome:lodestar/journey/follow_a_path.weak_hit",
+							"_id": "move.outcome:lodestar/adventure/follow_a_path.weak_hit",
 							"text": "On a __weak hit__, you complete the journey, but face a cost or complication. Choose one or more.\n\n  * You took longer than expected.\n  * You pressed on through pain, sickness, or weariness: [Endure Harm](datasworn:move:classic/suffer/endure_harm).\n  * You suffered under the burden of foul weather, worries, or fearful locations: [Endure Stress](datasworn:move:classic/suffer/endure_stress).\n  * You wasted resources.\n  * You face a complication or hazard at the destination. Envision what you find ([Ask the Oracle](datasworn:move:classic/fate/ask_the_oracle) if unsure)."
 						},
 						"miss": {
-							"_id": "move.outcome:lodestar/journey/follow_a_path.miss",
+							"_id": "move.outcome:lodestar/adventure/follow_a_path.miss",
 							"text": "On a __miss__, you are waylaid by a dire threat and must [Pay the Price](datasworn:move:classic/fate/pay_the_price). If you overcome this obstacle, you may push on safely to your destination."
 						}
 					},
@@ -16877,30 +16977,7 @@
 						"url": "https://ironswornrpg.com"
 					},
 					"allow_momentum_burn": true
-				}
-			},
-			"collections": {},
-			"_source": {
-				"title": "Ironsworn Lodestar",
-				"authors": [
-					{
-						"name": "Shawn Tomkin"
-					}
-				],
-				"date": "2025-05-01",
-				"license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-				"page": 10,
-				"url": "https://ironswornrpg.com"
-			}
-		},
-		"adventure": {
-			"_id": "move_category:lodestar/adventure",
-			"type": "move_category",
-			"name": "Adventure Moves",
-			"enhances": [
-				"move_category:classic/adventure"
-			],
-			"contents": {
+				},
 				"face_danger": {
 					"_id": "move:lodestar/adventure/face_danger",
 					"type": "move",
@@ -17206,7 +17283,7 @@
 						],
 						"text": "When you assess a situation, make preparations, or attempt to gain leverage within a scene challenge..."
 					},
-					"text": "When __you assess a situation, make preparations, or attempt to gain leverage__, envision your action and roll. If you act...\n\n  * With speed, agility, or precision: Roll +edge.\n  * With charm, loyalty, or courage: Roll +heart.\n  * With aggressive action, forceful defense, strength, or endurance: Roll +iron.\n  * With deception, stealth, or trickery: Roll +shadow.\n  * With expertise, insight, or observation: Roll +wits.\n\nOn a __strong hit__, take both. On a __string hit with a match__, take both and mark progress. On a __weak hit__, choose one.\n\n  * Take +2 momentum\n  * Add +1 on your next move (not a progress move)\n\nOn a __miss__, you fail or your assumptions betray you. Mark a countdown segment and [Pay the Price](datasworn:move:classic/fate/pay_the_price). On a __miss with a match__, mark two segments and [Pay the Price](datasworn:move:classic/fate/pay_the_price).",
+					"text": "When __you assess a situation, make preparations, or attempt to gain leverage__, envision your action and roll. If you act...\n\n  * With speed, agility, or precision: Roll +edge.\n  * With charm, loyalty, or courage: Roll +heart.\n  * With aggressive action, forceful defense, strength, or endurance: Roll +iron.\n  * With deception, stealth, or trickery: Roll +shadow.\n  * With expertise, insight, or observation: Roll +wits.\n\nOn a __strong hit__, take both. On a __strong hit with a match__, take both and mark progress. On a __weak hit__, choose one.\n\n  * Take +2 momentum\n  * Add +1 on your next move (not a progress move)\n\nOn a __miss__, you fail or your assumptions betray you. Mark a countdown segment and [Pay the Price](datasworn:move:classic/fate/pay_the_price). On a __miss with a match__, mark two segments and [Pay the Price](datasworn:move:classic/fate/pay_the_price).",
 					"outcomes": {
 						"strong_hit": {
 							"_id": "move.outcome:lodestar/scene_challenge/secure_an_advantage.strong_hit",
