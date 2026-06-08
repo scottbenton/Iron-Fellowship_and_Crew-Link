@@ -43,6 +43,11 @@ export function CustomDiceRollerButton() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setDieSides("6");
+    setQuantity(1);
+    setModifier(0);
+    setCustomNotation("");
+    setIsCustomMode(false);
   };
 
   const handleSwitchToCustom = () => {
