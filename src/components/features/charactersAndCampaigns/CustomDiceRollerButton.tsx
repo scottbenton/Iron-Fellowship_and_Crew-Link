@@ -8,7 +8,6 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import CasinoIcon from "@mui/icons-material/Casino";
@@ -69,21 +68,22 @@ export function CustomDiceRollerButton() {
 
   return (
     <>
-      <Tooltip title="Roll Custom Dice">
-        <IconButton
-          onClick={handleOpen}
-          color="inherit"
-          aria-label="Roll Custom Dice"
-        >
-          <CasinoIcon />
-        </IconButton>
-      </Tooltip>
+      <Button
+        onClick={handleOpen}
+        color="inherit"
+        aria-label="Roll Custom Dice"
+        startIcon={<CasinoIcon />}
+        variant="outlined"
+        fullWidth
+      >
+        Roll Custom Dice
+      </Button>
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "center" }}
         slotProps={{ paper: { sx: { p: 2, minWidth: 300, maxWidth: 340 } } }}
       >
         <Typography variant="subtitle1" fontWeight="bold" gutterBottom>

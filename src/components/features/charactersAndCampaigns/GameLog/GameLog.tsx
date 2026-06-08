@@ -37,18 +37,6 @@ export function GameLog() {
 
   return (
     <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          px: 1,
-          py: 0.5,
-          borderBottom: 1,
-          borderColor: "divider",
-        }}
-      >
-        <CustomDiceRollerButton />
-      </Box>
       {loading && <LinearProgress />}
       <Box sx={{ flexGrow: 1 }}>
         <Virtuoso
@@ -60,6 +48,18 @@ export function GameLog() {
             <GameLogEntry logId={logId} log={logs[logId]} />
           )}
         />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "stretch",
+          px: 1,
+          py: 1,
+          borderTop: 1,
+          borderColor: "divider",
+        }}
+      >
+        <CustomDiceRollerButton />
       </Box>
     </Box>
   );
