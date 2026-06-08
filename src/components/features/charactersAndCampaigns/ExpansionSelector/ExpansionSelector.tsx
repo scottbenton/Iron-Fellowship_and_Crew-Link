@@ -12,7 +12,6 @@ import {
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { EmptyState } from "components/shared/EmptyState";
 import { IExpansionConfig, includedExpansions } from "data/rulesets";
-import { useFeatureFlag } from "hooks/featureFlags/useFeatureFlag";
 import { buildExpansionChanges } from "./expansionCascade";
 
 export { buildExpansionChanges } from "./expansionCascade";
@@ -60,8 +59,6 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
     [GAME_SYSTEMS.STARFORGED]: "starforged",
   });
 
-  const isLodestarFlagEnabled = useFeatureFlag("lodestar");
-
   const homebrewExpansionMap = useStore((store) => store.homebrew.collections);
   const sortedExpansionIds = useStore(
     (store) => store.homebrew.sortedHomebrewCollectionIds,
@@ -69,7 +66,7 @@ export function ExpansionSelector(props: ExpansionSelectorProps) {
 
   const rulesetExpansions = Object.values(
     includedExpansions[activeRulesetId] ?? {},
-  ).filter((c) => c.id !== "lodestar" || isLodestarFlagEnabled);
+  );
 
   const officialExpansions = rulesetExpansions.filter((c) => !c.isHomebrew);
   const thirdPartyExpansions = rulesetExpansions.filter((c) => c.isHomebrew);

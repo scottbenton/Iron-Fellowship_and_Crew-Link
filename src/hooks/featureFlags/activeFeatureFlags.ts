@@ -5,10 +5,4 @@ export const activeFeatureFlags: {
   label: string;
   warning?: string;
   gameSystems?: GAME_SYSTEMS[];
-}[] = [
-  {
-    testId: "lodestar",
-    label: "Enable Lodestar content (may not match book content)",
-    gameSystems: [GAME_SYSTEMS.IRONSWORN],
-  },
-];
+}[] = [];
