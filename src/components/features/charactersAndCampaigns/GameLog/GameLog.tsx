@@ -52,7 +52,7 @@ export function GameLog() {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "stretch",
+          justifyContent: "flex-end",
           px: 1,
           py: 1,
           borderTop: 1,

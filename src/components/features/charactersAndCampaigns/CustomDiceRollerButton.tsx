@@ -74,7 +74,6 @@ export function CustomDiceRollerButton() {
         aria-label="Roll Custom Dice"
         startIcon={<CasinoIcon />}
         variant="outlined"
-        fullWidth
       >
         Roll Custom Dice
       </Button>
@@ -82,8 +81,8 @@ export function CustomDiceRollerButton() {
         open={!!anchorEl}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        transformOrigin={{ vertical: "bottom", horizontal: "center" }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "right" }}
         slotProps={{ paper: { sx: { p: 2, minWidth: 300, maxWidth: 340 } } }}
       >
         <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
