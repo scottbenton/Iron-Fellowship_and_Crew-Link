@@ -15,6 +15,7 @@ import { activeFeatureFlags } from "hooks/featureFlags/activeFeatureFlags";
 import { EmptyState } from "../../EmptyState";
 import { useEffect, useState } from "react";
 import { useStore } from "stores/store";
+import { useGameSystem } from "hooks/useGameSystem";
 
 export interface BetaTestsDialogProps {
   open: boolean;
@@ -23,6 +24,8 @@ export interface BetaTestsDialogProps {
 
 export function BetaTestsDialog(props: BetaTestsDialogProps) {
   const { open, onClose } = props;
+
+  const { gameSystem } = useGameSystem();
 
   const activeBetaTests = useStore((store) => store.appState.betaTests);
   const updateBetaTests = useStore((store) => store.appState.updateBetaTests);
@@ -66,7 +69,13 @@ export function BetaTestsDialog(props: BetaTestsDialogProps) {
           <LinearProgress />
         ) : (
           <Stack spacing={2} sx={{ mt: 1 }}>
-            {activeFeatureFlags.map((flagConfig) => (
+            {activeFeatureFlags
+              .filter((config) =>
+                config.gameSystems
+                  ? config.gameSystems.includes(gameSystem)
+                  : true
+              )
+              .map((flagConfig) => (
                 <Box key={flagConfig.testId}>
                   <FormControlLabel
                     key={flagConfig.testId}
