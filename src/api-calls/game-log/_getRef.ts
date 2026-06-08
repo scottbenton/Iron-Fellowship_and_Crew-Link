@@ -3,8 +3,10 @@ import {
   CollectionReference,
   DocumentReference,
   Timestamp,
+  WithFieldValue,
   collection,
   doc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { Roll } from "types/DieRolls.type";
 import { GameLogDocument } from "./_game-log.type";
@@ -65,13 +67,13 @@ export function getCharacterGameLogDocument(
 export function convertFromDatabase(log: GameLogDocument): Roll {
   return {
     ...log,
-    timestamp: log.timestamp.toDate(),
+    timestamp: log.timestamp?.toDate() ?? new Date(),
   } as Roll;
 }
 
-export function convertRollToGameLogDocument(roll: Roll): GameLogDocument {
+export function convertRollToGameLogDocument(roll: Roll): WithFieldValue<GameLogDocument> {
   return {
     ...roll,
-    timestamp: Timestamp.fromDate(roll.timestamp),
+    timestamp: serverTimestamp(),
   };
 }

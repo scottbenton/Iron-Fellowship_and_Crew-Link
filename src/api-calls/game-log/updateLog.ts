@@ -1,8 +1,7 @@
 import { createApiFunction } from "api-calls/createApiFunction";
-import { updateDoc } from "firebase/firestore";
+import { Timestamp, updateDoc } from "firebase/firestore";
 import { Roll } from "types/DieRolls.type";
 import {
-  convertRollToGameLogDocument,
   getCampaignGameLogDocument,
   getCharacterGameLogDocument,
 } from "./_getRef";
@@ -22,7 +21,7 @@ export const updateLog = createApiFunction<
       ? getCampaignGameLogDocument(campaignId, logId)
       : getCharacterGameLogDocument(characterId as string, logId);
 
-    updateDoc(docRef, convertRollToGameLogDocument(log))
+    updateDoc(docRef, { ...log, timestamp: Timestamp.fromDate(log.timestamp) })
       .then(() => {
         resolve();
       })
