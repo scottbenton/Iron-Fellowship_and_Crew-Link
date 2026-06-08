@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea } from "@mui/material";
+import { Box, Card, CardActionArea, Divider, Typography } from "@mui/material";
 import { ROLL_TYPE, Roll } from "types/DieRolls.type";
 import { RollTitle } from "./RollTitle";
 import { RollValues } from "./RollValues";
@@ -150,6 +150,44 @@ export function RollDisplay(props: RollDisplayProps) {
                 markdown={roll.result}
                 extras={roll.match ? ["Match"] : undefined}
               />
+            </RollContainer>
+          </>
+        )}
+        {roll.type === ROLL_TYPE.CUSTOM_DICE && (
+          <>
+            <RollTitle title={roll.notation} isExpanded={isExpanded} />
+            <RollContainer>
+              {isExpanded && (
+                <>
+                  <Box>
+                    <Typography
+                      variant="body2"
+                      color={(theme) => theme.palette.grey[200]}
+                    >
+                      {roll.dieValues.join(", ")}
+                    </Typography>
+                    {roll.modifier !== 0 && (
+                      <Typography
+                        variant="body2"
+                        color={(theme) => theme.palette.grey[200]}
+                      >
+                        {roll.modifier > 0 ? "+" : ""}
+                        {roll.modifier}
+                      </Typography>
+                    )}
+                  </Box>
+                  <Divider
+                    orientation="vertical"
+                    sx={(theme) => ({
+                      alignSelf: "stretch",
+                      borderColor: theme.palette.grey[400],
+                      height: "auto",
+                      mx: 2,
+                    })}
+                  />
+                </>
+              )}
+              <RollResult result={String(roll.total)} />
             </RollContainer>
           </>
         )}

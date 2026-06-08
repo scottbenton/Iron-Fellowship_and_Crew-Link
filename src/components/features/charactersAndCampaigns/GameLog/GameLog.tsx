@@ -3,6 +3,7 @@ import { useStore } from "stores/store";
 import { Virtuoso } from "react-virtuoso";
 import { Box, LinearProgress } from "@mui/material";
 import { GameLogEntry } from "./GameLogEntry";
+import { CustomDiceRollerButton } from "components/features/charactersAndCampaigns/CustomDiceRollerButton";
 
 const MAX_ITEMS = 1000000000;
 
@@ -35,17 +36,31 @@ export function GameLog() {
   }, [logLength]);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          px: 1,
+          py: 0.5,
+          borderBottom: 1,
+          borderColor: "divider",
+        }}
+      >
+        <CustomDiceRollerButton />
+      </Box>
       {loading && <LinearProgress />}
-      <Virtuoso
-        firstItemIndex={firstItemIndex}
-        initialTopMostItemIndex={MAX_ITEMS - 1}
-        data={orderedLogKeys}
-        startReached={loadMoreLogs}
-        itemContent={(index, logId) => (
-          <GameLogEntry logId={logId} log={logs[logId]} />
-        )}
-      />
+      <Box sx={{ flexGrow: 1 }}>
+        <Virtuoso
+          firstItemIndex={firstItemIndex}
+          initialTopMostItemIndex={MAX_ITEMS - 1}
+          data={orderedLogKeys}
+          startReached={loadMoreLogs}
+          itemContent={(index, logId) => (
+            <GameLogEntry logId={logId} log={logs[logId]} />
+          )}
+        />
+      </Box>
     </Box>
   );
 }

@@ -1,5 +1,6 @@
 import {
   ClockProgressionRoll,
+  CustomDiceRoll,
   OracleTableRoll,
   ROLL_TYPE,
   Roll,
@@ -65,6 +66,13 @@ export function convertRollToClipboard(roll: Roll):
         plain: convertClockProgressionRollToClipboardPlain(
           clockProgressionContents
         ),
+      };
+    }
+    case ROLL_TYPE.CUSTOM_DICE: {
+      const customContents = extractCustomDiceRollContents(roll);
+      return {
+        rich: convertCustomDiceRollToClipboardRich(customContents),
+        plain: convertCustomDiceRollToClipboardPlain(customContents),
       };
     }
     default:
@@ -282,5 +290,47 @@ export function convertClockProgressionRollToClipboardPlain(
 ${contents.title}
 Roll: ${contents.roll}
 ${contents.result}
+    `;
+}
+
+interface CustomDiceRollContents {
+  notation: string;
+  dice: string;
+  total: string;
+}
+
+export function extractCustomDiceRollContents(
+  roll: CustomDiceRoll
+): CustomDiceRollContents {
+  const modifierStr =
+    roll.modifier > 0
+      ? ` + ${roll.modifier}`
+      : roll.modifier < 0
+        ? ` - ${Math.abs(roll.modifier)}`
+        : "";
+  return {
+    notation: roll.notation,
+    dice: roll.dieValues.join(", ") + modifierStr,
+    total: String(roll.total),
+  };
+}
+
+export function convertCustomDiceRollToClipboardRich(
+  contents: CustomDiceRollContents
+): string {
+  const title = formatParagraph(contents.notation);
+  const dice = formatParagraph(formatItalic("Dice: ") + contents.dice);
+  const total = formatBold(contents.total);
+
+  return formatQuote(title + dice + total);
+}
+
+export function convertCustomDiceRollToClipboardPlain(
+  contents: CustomDiceRollContents
+) {
+  return `
+${contents.notation}
+Dice: ${contents.dice}
+${contents.total}
     `;
 }

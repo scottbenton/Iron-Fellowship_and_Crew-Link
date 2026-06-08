@@ -12,6 +12,7 @@ export enum ROLL_TYPE {
   ORACLE_TABLE,
   TRACK_PROGRESS,
   CLOCK_PROGRESSION,
+  CUSTOM_DICE,
 }
 
 export interface BaseRoll {
@@ -66,8 +67,18 @@ export interface ClockProgressionRoll extends BaseRoll {
   match?: boolean;
 }
 
+export interface CustomDiceRoll extends BaseRoll {
+  type: ROLL_TYPE.CUSTOM_DICE;
+  notation: string;
+  dieSides: number;
+  dieValues: number[];
+  modifier: number;
+  total: number;
+}
+
 export type Roll =
   | StatRoll
   | OracleTableRoll
   | TrackProgressRoll
-  | ClockProgressionRoll;
+  | ClockProgressionRoll
+  | CustomDiceRoll;
