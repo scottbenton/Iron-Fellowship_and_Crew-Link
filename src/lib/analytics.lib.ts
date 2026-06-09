@@ -42,3 +42,8 @@ export function reportPageError(
     pathname,
   });
 }
+
+export function sendStreamerOverlayViewedEvent(characterId: string) {
+  if (!analyticsEnabled) return;
+  posthog.capture("streamer-overlay-viewed", { characterId });
+}
