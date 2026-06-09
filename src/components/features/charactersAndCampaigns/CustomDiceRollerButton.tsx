@@ -33,7 +33,9 @@ export function CustomDiceRollerButton() {
   }`;
 
   const notation = isCustomMode ? customNotation : builtNotation;
-  const parsedCustom = isCustomMode ? parseDiceExpression(customNotation) : null;
+  const parsedCustom = isCustomMode
+    ? parseDiceExpression(customNotation)
+    : null;
   const canRoll = isCustomMode ? !!parsedCustom : !!dieSides;
   const isInvalidCustom = isCustomMode && !!customNotation && !parsedCustom;
 
@@ -76,11 +78,10 @@ export function CustomDiceRollerButton() {
       <Button
         onClick={handleOpen}
         color="inherit"
-        aria-label="Roll Custom Dice"
         startIcon={<CasinoIcon />}
         variant="outlined"
       >
-        Roll Custom Dice
+        Roll Dice
       </Button>
       <Popover
         open={!!anchorEl}
@@ -206,7 +207,9 @@ export function CustomDiceRollerButton() {
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Button
             size="small"
-            onClick={isCustomMode ? handleSwitchToBuilder : handleSwitchToCustom}
+            onClick={
+              isCustomMode ? handleSwitchToBuilder : handleSwitchToCustom
+            }
           >
             {isCustomMode ? "Use Builder" : "Custom..."}
           </Button>

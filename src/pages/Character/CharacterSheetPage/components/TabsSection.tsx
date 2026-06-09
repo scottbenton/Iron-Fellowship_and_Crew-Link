@@ -104,7 +104,7 @@ export function TabsSection() {
       <ContainedTabPanel isVisible={selectedTab === TABS.TRACKS}>
         <TracksSection />
       </ContainedTabPanel>
-      <ContainedTabPanel isVisible={selectedTab === TABS.NOTES}>
+      <ContainedTabPanel excludePadding isVisible={selectedTab === TABS.NOTES}>
         <NotesSection />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === TABS.WORLD}>

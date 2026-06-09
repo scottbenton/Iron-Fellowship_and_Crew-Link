@@ -82,7 +82,10 @@ export function CampaignContent(props: CampaignContentProps) {
       <ContainedTabPanel isVisible={selectedTab === CampaignTabs.Tracks}>
         <TracksTab />
       </ContainedTabPanel>
-      <ContainedTabPanel isVisible={selectedTab === CampaignTabs.Notes}>
+      <ContainedTabPanel
+        excludePadding
+        isVisible={selectedTab === CampaignTabs.Notes}
+      >
         <NotesTab />
       </ContainedTabPanel>
       <ContainedTabPanel isVisible={selectedTab === CampaignTabs.World}>
