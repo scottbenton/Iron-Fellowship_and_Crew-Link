@@ -2,11 +2,13 @@ import { useStore } from "stores/store";
 import { useCallback } from "react";
 import {
   ClockProgressionRoll,
+  CustomDiceRoll,
   ROLL_RESULT,
   ROLL_TYPE,
   StatRoll,
   TrackProgressRoll,
 } from "types/DieRolls.type";
+import { parseDiceExpression } from "./rollers/diceExpressionParser";
 import { getRollResultLabel } from "components/features/charactersAndCampaigns/RollDisplay";
 import { TrackTypes } from "types/Track.type";
 import { LEGACY_TrackTypes } from "types/LegacyTrack.type";
@@ -15,6 +17,8 @@ import { idMap } from "data/idMap";
 import { Datasworn, IdParser } from "@datasworn/core";
 import { Dice } from "components/shared/Dice";
 import { Theme, useTheme } from "@mui/material";
+
+const SUPPORTED_3D_DIE_SIDES = new Set([4, 6, 8, 10, 12, 20, 100]);
 
 export interface RollResult {
   value: number
@@ -402,11 +406,88 @@ export function useRoller() {
     ]
   );
 
+  const rollCustomDice = useCallback(
+    async (notation: string) => {
+      const parsed = parseDiceExpression(notation);
+      if (!parsed) return;
+
+      const { diceCount, typeOfDice, modifier } = parsed;
+      const use3D = !hide3dDice && SUPPORTED_3D_DIE_SIDES.has(typeOfDice);
+
+      let dieValues: number[];
+      if (use3D) {
+        Dice.clear().show();
+        setTimeout(() => Dice.hide("fade-out"), 100);
+        const results = await Dice.roll([
+          {
+            qty: diceCount,
+            sides: typeOfDice,
+            themeColor: theme.palette.primary.main,
+          },
+        ]);
+        dieValues = results.map((r: { value: number }) => r.value);
+      } else {
+        dieValues = Array.from({ length: diceCount }, () =>
+          Math.floor(Math.random() * typeOfDice) + 1
+        );
+      }
+
+      const total = dieValues.reduce((sum, v) => sum + v, 0) + modifier;
+
+      const customRoll: CustomDiceRoll = {
+        type: ROLL_TYPE.CUSTOM_DICE,
+        notation,
+        dieSides: typeOfDice,
+        dieValues,
+        modifier,
+        total,
+        rollLabel: notation,
+        timestamp: new Date(),
+        characterId,
+        uid,
+        gmsOnly: false,
+      };
+
+      addRollToLog({
+        campaignId,
+        characterId: characterId || undefined,
+        roll: customRoll,
+      })
+        .then((rollId) => {
+          addRollToScreen(rollId, customRoll);
+        })
+        .catch(() => {});
+
+      const modifierText =
+        modifier > 0
+          ? ` plus ${modifier}`
+          : modifier < 0
+            ? ` minus ${Math.abs(modifier)}`
+            : "";
+      announce(
+        `Rolled ${notation}. Got ${dieValues.join(", ")}${modifierText} for a total of ${total}`
+      );
+
+      return total;
+    },
+    [
+      addRollToLog,
+      addRollToScreen,
+      announce,
+      campaignId,
+      characterId,
+      uid,
+      hide3dDice,
+      theme,
+    ]
+  );
+
   return {
     rollStat,
     rollClockProgression,
     rollTrackProgress,
     rollOracleTable,
+    rollCustomDice,
   };
 }
 

@@ -5,10 +5,17 @@ export interface ContainedTabPanelProps extends PropsWithChildren {
   greyBackground?: boolean;
   isVisible: boolean;
   overflowAuto?: boolean;
+  excludePadding?: boolean;
 }
 
 export function ContainedTabPanel(props: ContainedTabPanelProps) {
-  const { greyBackground, isVisible, overflowAuto = true, children } = props;
+  const {
+    greyBackground,
+    isVisible,
+    overflowAuto = true,
+    excludePadding,
+    children,
+  } = props;
 
   if (!isVisible) return null;
 
@@ -23,7 +30,7 @@ export function ContainedTabPanel(props: ContainedTabPanelProps) {
         overflowY: overflowAuto ? "auto" : "scroll",
         scrollbarColor: `${theme.palette.divider} rgba(0, 0, 0, 0)`,
         scrollbarWidth: "thin",
-        pb: 2
+        pb: excludePadding ? 0 : 2,
       })}
     >
       {children}
