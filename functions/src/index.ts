@@ -11,6 +11,7 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import * as admin from "firebase-admin";
 import { onCall } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
+export { requestOtpSignIn, verifyOtpSignIn } from "./authOtp";
 
 admin.initializeApp();
 
