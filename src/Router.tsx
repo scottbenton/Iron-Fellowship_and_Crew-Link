@@ -112,6 +112,16 @@ const router = createBrowserRouter(
         </Route>
         {/* Unauthenticated Pages */}
         <Route>
+          <Route path={basePaths[BASE_ROUTES.AUTH]}>
+            <Route
+              path={"login"}
+              lazy={() => import("pages/Authentication/OtpAuthPage")}
+            />
+            <Route
+              path={"signup"}
+              lazy={() => import("pages/Authentication/OtpSignupPage")}
+            />
+          </Route>
           <Route
             path={basePaths[BASE_ROUTES.LOGIN]}
             lazy={() => import("pages/Authentication/LoginPage")}

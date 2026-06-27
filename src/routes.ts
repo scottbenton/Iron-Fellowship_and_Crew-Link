@@ -1,6 +1,7 @@
 import { HOMEBREW_ROUTES, homebrewPaths } from "pages/Homebrew/routes";
 
 export enum BASE_ROUTES {
+  AUTH,
   CHARACTER,
   CAMPAIGN,
   WORLD,
@@ -16,6 +17,7 @@ export const WORLD_PREFIX = "worlds";
 export const HOMEBREW_PREFIX = "homebrew";
 
 export const basePaths: { [key in BASE_ROUTES]: string } = {
+  [BASE_ROUTES.AUTH]: "/auth",
   [BASE_ROUTES.CHARACTER]: "/characters",
   [BASE_ROUTES.CAMPAIGN]: "/campaigns",
   [BASE_ROUTES.WORLD]: "/worlds",
@@ -26,6 +28,7 @@ export const basePaths: { [key in BASE_ROUTES]: string } = {
 };
 
 export const openPaths = [
+  basePaths[BASE_ROUTES.AUTH] + "/*",
   basePaths[BASE_ROUTES.LOGIN],
   basePaths[BASE_ROUTES.SIGNUP],
   basePaths[BASE_ROUTES.HOME],
@@ -33,6 +36,8 @@ export const openPaths = [
 ];
 
 export const onlyUnauthenticatedPaths = [
+  basePaths[BASE_ROUTES.AUTH] + "/login",
+  basePaths[BASE_ROUTES.AUTH] + "/signup",
   basePaths[BASE_ROUTES.LOGIN],
   basePaths[BASE_ROUTES.SIGNUP],
 ];
