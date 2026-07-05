@@ -16,6 +16,10 @@ import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithClo
 import { useState } from "react";
 import { Clock, TrackStatus, TrackTypes } from "types/Track.type";
 import { ClockCircle } from "./ClockCircle";
+import {
+  TrackCreateScopeField,
+  TrackCreateScopeOption,
+} from "components/features/ProgressTrack/TrackCreateScopeField";
 
 const segmentOptions = [4, 6, 8, 10];
 
@@ -25,10 +29,24 @@ export interface ClockDialogProps {
   initialClock?: Clock;
   onClock: (clock: Clock) => Promise<void>;
   shared?: boolean;
+  createScopeLabel?: string;
+  createScopeOptions?: TrackCreateScopeOption[];
+  createScopeValue?: string;
+  onCreateScopeChange?: (value: string) => void;
 }
 
 export function ClockDialog(props: ClockDialogProps) {
-  const { open, handleClose, initialClock, onClock, shared } = props;
+  const {
+    open,
+    handleClose,
+    initialClock,
+    onClock,
+    shared,
+    createScopeLabel,
+    createScopeOptions,
+    createScopeValue,
+    onCreateScopeChange,
+  } = props;
 
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
@@ -110,6 +128,18 @@ export function ClockDialog(props: ClockDialogProps) {
             multiline
             minRows={3}
           />
+          {!initialClock &&
+            createScopeLabel &&
+            createScopeOptions &&
+            createScopeValue &&
+            onCreateScopeChange && (
+              <TrackCreateScopeField
+                label={createScopeLabel}
+                options={createScopeOptions}
+                value={createScopeValue}
+                onChange={onCreateScopeChange}
+              />
+            )}
           <Typography>Segments</Typography>
           <Box display={"flex"} flexWrap={"wrap"}>
             {segmentOptions.map((segmentOption) => (

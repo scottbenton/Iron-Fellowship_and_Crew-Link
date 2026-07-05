@@ -65,50 +65,52 @@ export const createCampaignCharactersSlice: CreateSliceType<
     };
   },
   listenToCampaignCharacterTracks: (characterIds: string[]) => {
-    const unsubscribes = characterIds.map((characterId) => {
-      return listenToProgressTracks(
-        undefined,
-        characterId,
-        TrackStatus.Active,
-        (tracks) => {
-          set((store) => {
-            if (
-              !store.campaigns.currentCampaign.characters.characterTracks[
-                characterId
-              ]
-            ) {
-              store.campaigns.currentCampaign.characters.characterTracks[
-                characterId
-              ] = {
-                [TrackTypes.Fray]: {},
-                [TrackTypes.Journey]: {},
-                [TrackTypes.Vow]: {},
-                [TrackTypes.DelveSite]: {},
-                [TrackTypes.SceneChallenge]: {},
-                [TrackTypes.Clock]: {},
-              };
-            }
-            Object.keys(tracks).forEach((trackId) => {
-              const track = tracks[trackId];
-              store.campaigns.currentCampaign.characters.characterTracks[
-                characterId
-              ][track.type][trackId] = track;
+    const unsubscribes = characterIds.flatMap((characterId) =>
+      [TrackStatus.Active, TrackStatus.Completed].map((status) =>
+        listenToProgressTracks(
+          undefined,
+          characterId,
+          status,
+          (tracks) => {
+            set((store) => {
+              if (
+                !store.campaigns.currentCampaign.characters.characterTracks[
+                  characterId
+                ]
+              ) {
+                store.campaigns.currentCampaign.characters.characterTracks[
+                  characterId
+                ] = {
+                  [TrackTypes.Fray]: {},
+                  [TrackTypes.Journey]: {},
+                  [TrackTypes.Vow]: {},
+                  [TrackTypes.DelveSite]: {},
+                  [TrackTypes.SceneChallenge]: {},
+                  [TrackTypes.Clock]: {},
+                };
+              }
+              Object.keys(tracks).forEach((trackId) => {
+                const track = tracks[trackId];
+                store.campaigns.currentCampaign.characters.characterTracks[
+                  characterId
+                ][track.type][trackId] = track;
+              });
             });
-          });
-        },
+          },
 
-        (trackId, type) => {
-          set((store) => {
-            delete store.campaigns.currentCampaign.characters.characterTracks[
-              characterId
-            ][type][trackId];
-          });
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    });
+          (trackId, type) => {
+            set((store) => {
+              delete store.campaigns.currentCampaign.characters.characterTracks[
+                characterId
+              ][type][trackId];
+            });
+          },
+          (error) => {
+            console.error(error);
+          }
+        )
+      )
+    );
     return () => {
       unsubscribes.forEach((unsubscribe) => {
         unsubscribe && unsubscribe();
