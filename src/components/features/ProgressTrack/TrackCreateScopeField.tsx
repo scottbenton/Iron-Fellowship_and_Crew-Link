@@ -1,47 +1,32 @@
 import {
+  Checkbox,
   FormControl,
   FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
+  FormHelperText,
 } from "@mui/material";
-
-export interface TrackCreateScopeOption {
-  value: string;
-  label: string;
-}
 
 export interface TrackCreateScopeFieldProps {
   label: string;
-  options: TrackCreateScopeOption[];
-  value: string;
-  onChange: (value: string) => void;
+  checked: boolean;
+  helperText: string;
+  onChange: (checked: boolean) => void;
 }
 
 export function TrackCreateScopeField(props: TrackCreateScopeFieldProps) {
-  const { label, options, value, onChange } = props;
-
-  if (options.length < 2) {
-    return null;
-  }
+  const { label, checked, helperText, onChange } = props;
 
   return (
     <FormControl>
-      <FormLabel>{label}</FormLabel>
-      <RadioGroup
-        row
-        value={value}
-        onChange={(evt) => onChange(evt.target.value)}
-      >
-        {options.map((option) => (
-          <FormControlLabel
-            key={option.value}
-            value={option.value}
-            control={<Radio />}
-            label={option.label}
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checked}
+            onChange={(_, nextChecked) => onChange(nextChecked)}
           />
-        ))}
-      </RadioGroup>
+        }
+        label={label}
+      />
+      <FormHelperText sx={{ mt: 0 }}>{helperText}</FormHelperText>
     </FormControl>
   );
 }

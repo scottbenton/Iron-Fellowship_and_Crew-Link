@@ -18,7 +18,6 @@ import { Clock, TrackStatus, TrackTypes } from "types/Track.type";
 import { ClockCircle } from "./ClockCircle";
 import {
   TrackCreateScopeField,
-  TrackCreateScopeOption,
 } from "components/features/ProgressTrack/TrackCreateScopeField";
 
 const segmentOptions = [4, 6, 8, 10];
@@ -30,9 +29,9 @@ export interface ClockDialogProps {
   onClock: (clock: Clock) => Promise<void>;
   shared?: boolean;
   createScopeLabel?: string;
-  createScopeOptions?: TrackCreateScopeOption[];
-  createScopeValue?: string;
-  onCreateScopeChange?: (value: string) => void;
+  createScopeChecked?: boolean;
+  createScopeHelperText?: string;
+  onCreateScopeChange?: (checked: boolean) => void;
 }
 
 export function ClockDialog(props: ClockDialogProps) {
@@ -43,8 +42,8 @@ export function ClockDialog(props: ClockDialogProps) {
     onClock,
     shared,
     createScopeLabel,
-    createScopeOptions,
-    createScopeValue,
+    createScopeChecked,
+    createScopeHelperText,
     onCreateScopeChange,
   } = props;
 
@@ -130,13 +129,13 @@ export function ClockDialog(props: ClockDialogProps) {
           />
           {!initialClock &&
             createScopeLabel &&
-            createScopeOptions &&
-            createScopeValue &&
+            createScopeHelperText &&
+            createScopeChecked !== undefined &&
             onCreateScopeChange && (
               <TrackCreateScopeField
                 label={createScopeLabel}
-                options={createScopeOptions}
-                value={createScopeValue}
+                checked={createScopeChecked}
+                helperText={createScopeHelperText}
                 onChange={onCreateScopeChange}
               />
             )}

@@ -31,7 +31,6 @@ import {
 } from "types/Track.type";
 import { EditOrCreateTrackDialog } from "./EditOrCreateTrackDialog";
 import { ProgressTrack } from "./ProgressTrack";
-import { TrackCreateScopeOption } from "./TrackCreateScopeField";
 import {
   getAvailableTrackTypes,
   getTrackTypeLabel,
@@ -65,11 +64,6 @@ const allTrackTypes: TrackSectionTracks[] = [
   TrackTypes.DelveSite,
   TrackTypes.SceneChallenge,
   TrackTypes.Clock,
-];
-
-const createScopeOptions: TrackCreateScopeOption[] = [
-  { value: "campaign", label: "Shared" },
-  { value: "character", label: "Character" },
 ];
 
 export function UnifiedTracksSection(props: UnifiedTracksSectionProps) {
@@ -148,6 +142,10 @@ export function UnifiedTracksSection(props: UnifiedTracksSectionProps) {
     mode === "campaign" || (isInCampaign && hasMultipleCharacters)
       ? "campaign"
       : "character";
+  const createScopeHelperText =
+    createSource === "campaign"
+      ? "Everyone in this campaign can see and use this track."
+      : "Only this character can see and use this track.";
 
   const items = useMemo(() => {
     const nextItems: UnifiedTrackItem[] = [];
@@ -360,13 +358,15 @@ export function UnifiedTracksSection(props: UnifiedTracksSectionProps) {
             open={!!createTrackType}
             handleClose={closeCreateDialog}
             shared={createSource === "campaign"}
-            createScopeLabel={canChooseCreateSource ? "Track owner" : undefined}
-            createScopeOptions={
-              canChooseCreateSource ? createScopeOptions : undefined
+            createScopeLabel={canChooseCreateSource ? "Shared" : undefined}
+            createScopeChecked={
+              canChooseCreateSource ? createSource === "campaign" : undefined
             }
-            createScopeValue={createSource}
-            onCreateScopeChange={(value) =>
-              setCreateSource(value as CreateSource)
+            createScopeHelperText={
+              canChooseCreateSource ? createScopeHelperText : undefined
+            }
+            onCreateScopeChange={(checked) =>
+              setCreateSource(checked ? "campaign" : "character")
             }
             onClock={handleAddTrack}
           />
@@ -376,13 +376,15 @@ export function UnifiedTracksSection(props: UnifiedTracksSectionProps) {
             handleClose={closeCreateDialog}
             trackType={createTrackType}
             trackTypeName={getTrackTypeLabel(createTrackType, isStarforged)}
-            createScopeLabel={canChooseCreateSource ? "Track owner" : undefined}
-            createScopeOptions={
-              canChooseCreateSource ? createScopeOptions : undefined
+            createScopeLabel={canChooseCreateSource ? "Shared" : undefined}
+            createScopeChecked={
+              canChooseCreateSource ? createSource === "campaign" : undefined
             }
-            createScopeValue={createSource}
-            onCreateScopeChange={(value) =>
-              setCreateSource(value as CreateSource)
+            createScopeHelperText={
+              canChooseCreateSource ? createScopeHelperText : undefined
+            }
+            onCreateScopeChange={(checked) =>
+              setCreateSource(checked ? "campaign" : "character")
             }
             handleTrack={handleAddTrack}
           />

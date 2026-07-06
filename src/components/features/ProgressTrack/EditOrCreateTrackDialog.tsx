@@ -25,7 +25,6 @@ import {
 } from "types/Track.type";
 import {
   TrackCreateScopeField,
-  TrackCreateScopeOption,
 } from "./TrackCreateScopeField";
 
 export interface EditOrCreateTrackDialogProps {
@@ -39,9 +38,9 @@ export interface EditOrCreateTrackDialogProps {
     track: ProgressTrack | SceneChallenge
   ) => Promise<boolean | void>;
   createScopeLabel?: string;
-  createScopeOptions?: TrackCreateScopeOption[];
-  createScopeValue?: string;
-  onCreateScopeChange?: (value: string) => void;
+  createScopeChecked?: boolean;
+  createScopeHelperText?: string;
+  onCreateScopeChange?: (checked: boolean) => void;
 }
 
 export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
@@ -54,8 +53,8 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
     onDelete,
     handleTrack,
     createScopeLabel,
-    createScopeOptions,
-    createScopeValue,
+    createScopeChecked,
+    createScopeHelperText,
     onCreateScopeChange,
   } = props;
 
@@ -194,13 +193,13 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
             />
             {!initialTrack &&
               createScopeLabel &&
-              createScopeOptions &&
-              createScopeValue &&
+              createScopeHelperText &&
+              createScopeChecked !== undefined &&
               onCreateScopeChange && (
                 <TrackCreateScopeField
                   label={createScopeLabel}
-                  options={createScopeOptions}
-                  value={createScopeValue}
+                  checked={createScopeChecked}
+                  helperText={createScopeHelperText}
                   onChange={onCreateScopeChange}
                 />
               )}
