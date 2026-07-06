@@ -345,6 +345,7 @@ export function UnifiedTracksSection(props: UnifiedTracksSectionProps) {
               <UnifiedTrackListItem
                 item={item}
                 isStarforged={isStarforged}
+                showSourceChip={mode === "campaign" || isInCampaign}
               />
             </Box>
           ))
@@ -396,8 +397,9 @@ export function UnifiedTracksSection(props: UnifiedTracksSectionProps) {
 function UnifiedTrackListItem(props: {
   item: UnifiedTrackItem;
   isStarforged: boolean;
+  showSourceChip: boolean;
 }) {
-  const { item, isStarforged } = props;
+  const { item, isStarforged, showSourceChip } = props;
   const { track } = item;
 
   const [editing, setEditing] = useState(false);
@@ -409,7 +411,7 @@ function UnifiedTrackListItem(props: {
 
   const metadata = (
     <Stack direction={"row"} spacing={1} mb={1} flexWrap={"wrap"} useFlexGap>
-      <Chip size={"small"} label={item.sourceLabel} />
+      {showSourceChip && <Chip size={"small"} label={item.sourceLabel} />}
       <Chip size={"small"} label={getTrackTypeLabel(track.type, isStarforged)} />
     </Stack>
   );
