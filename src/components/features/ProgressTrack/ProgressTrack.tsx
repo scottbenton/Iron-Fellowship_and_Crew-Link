@@ -21,32 +21,10 @@ import CompleteIcon from "@mui/icons-material/Check";
 import DieIcon from "@mui/icons-material/Casino";
 import { useConfirm } from "material-ui-confirm";
 import { useRoller } from "stores/appState/useRoller";
-import { GAME_SYSTEMS, GameSystemChooser } from "types/GameSystems.type";
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { useStore } from "stores/store";
 import { DebouncedClockCircle } from "../charactersAndCampaigns/Clocks/DebouncedClockCircle";
-
-export const trackMoveIdSystemValues: GameSystemChooser<{
-  [key in ProgressTracks | TrackTypes.SceneChallenge]: string;
-}> = {
-  [GAME_SYSTEMS.IRONSWORN]: {
-    [TrackTypes.Vow]: "move:classic/quest/fulfill_your_vow",
-    [TrackTypes.Journey]: "move:classic/adventure/reach_your_destination",
-    [TrackTypes.Fray]: "move:classic/combat/end_the_fight",
-    [TrackTypes.DelveSite]: "move:delve/delve/locate_your_objective",
-    [TrackTypes.SceneChallenge]: "",
-    [TrackTypes.BondProgress]: "",
-  },
-  [GAME_SYSTEMS.STARFORGED]: {
-    [TrackTypes.Vow]: "move:starforged/quest/fulfill_your_vow",
-    [TrackTypes.Journey]: "move:starforged/exploration/finish_an_expedition",
-    [TrackTypes.Fray]: "move:starforged/combat/take_decisive_action",
-    [TrackTypes.DelveSite]: "",
-    [TrackTypes.BondProgress]: "move:starforged/connection/forge_a_bond",
-    [TrackTypes.SceneChallenge]:
-      "move:starforged/scene_challenge/finish_the_scene",
-  },
-};
+import { trackMoveIdSystemValues } from "./trackMoveIdSystemValues";
 
 export interface BaseProgressTrackProps {
   trackType?: ProgressTracks | TrackTypes.SceneChallenge;
@@ -212,7 +190,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
 
   const handleRollClick = () => {
     if (trackType) {
-      openDialog(trackMoveIds[trackType]);
+      openDialog(resolvedTrackMoveIds[trackType]);
       rollTrackProgress(
         label || "",
         alwaysRollMax ? 10 : Math.min(Math.floor(value / 4), 10),

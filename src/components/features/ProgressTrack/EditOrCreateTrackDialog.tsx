@@ -23,6 +23,9 @@ import {
   TrackTypes,
   SceneChallenge,
 } from "types/Track.type";
+import {
+  TrackCreateScopeField,
+} from "./TrackCreateScopeField";
 
 export interface EditOrCreateTrackDialogProps {
   open: boolean;
@@ -34,6 +37,10 @@ export interface EditOrCreateTrackDialogProps {
   handleTrack: (
     track: ProgressTrack | SceneChallenge
   ) => Promise<boolean | void>;
+  createScopeLabel?: string;
+  createScopeChecked?: boolean;
+  createScopeHelperText?: string;
+  onCreateScopeChange?: (checked: boolean) => void;
 }
 
 export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
@@ -45,6 +52,10 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
     trackTypeName,
     onDelete,
     handleTrack,
+    createScopeLabel,
+    createScopeChecked,
+    createScopeHelperText,
+    onCreateScopeChange,
   } = props;
 
   const confirm = useConfirm();
@@ -180,6 +191,18 @@ export function EditOrCreateTrackDialog(props: EditOrCreateTrackDialogProps) {
               multiline
               minRows={3}
             />
+            {!initialTrack &&
+              createScopeLabel &&
+              createScopeHelperText &&
+              createScopeChecked !== undefined &&
+              onCreateScopeChange && (
+                <TrackCreateScopeField
+                  label={createScopeLabel}
+                  checked={createScopeChecked}
+                  helperText={createScopeHelperText}
+                  onChange={onCreateScopeChange}
+                />
+              )}
             <TextField
               label={"Difficulty"}
               value={difficulty ?? "-1"}

@@ -14,8 +14,6 @@ import { EmptyState } from "components/shared/EmptyState";
 import { IExpansionConfig, includedExpansions } from "data/rulesets";
 import { buildExpansionChanges } from "./expansionCascade";
 
-export { buildExpansionChanges } from "./expansionCascade";
-
 export interface ExpansionSelectorProps {
   enabledExpansionMap: Record<string, boolean>;
   toggleEnableExpansion: (changes: Record<string, boolean>) => void;

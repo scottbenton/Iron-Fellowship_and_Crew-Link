@@ -2,7 +2,6 @@ import { firestore } from "config/firebase.config";
 import {
   CollectionReference,
   DocumentReference,
-  Timestamp,
   WithFieldValue,
   collection,
   doc,
