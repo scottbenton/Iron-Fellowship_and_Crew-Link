@@ -65,6 +65,14 @@ The first step is to create firebase projects for Ironsworn and Starforged. You 
 1. Select and enable `Google`
 1. Add a new provider, and enable `Email/Password` with `Email link` sign in
 
+Sign in is served by two flows. Emailed one-time codes are the primary flow, at
+`/login` and `/join`; they are handled by the `requestOtpSignIn` and
+`verifyOtpSignIn` cloud functions and need the AWS SES setup below. The Firebase
+magic email link flow is kept as a backup at `/auth/login` and `/auth/signup`,
+which is also where outstanding magic links are configured to land. Google sign
+in is available on both. The `Email link` provider above is what the backup flow
+uses, so leave it enabled.
+
 ### Firestore
 
 1. Under the `Build` tab on the left, select `Firestore Database`
@@ -76,6 +84,72 @@ The first step is to create firebase projects for Ironsworn and Starforged. You 
 1. Under the `Build` tab on the left, select `Storage`
 1. Set up cloud storage, and wait for it to be created
 1. Once your storage has been created, click the `rules` tab, and copy the contents of the `storage.rules` file into the tab
+
+## Sign-in Codes (AWS SES)
+
+The primary sign in flow emails a 6 digit code through AWS SES. Without this
+configured, `/login` and `/join` cannot send codes, and sign in falls back to
+Google or the backup magic link flow at `/auth/login`.
+
+### AWS side
+
+1. Verify a sending identity in SES for the domain you send from (the code
+   defaults to `auth@send.scottbenton.dev`).
+1. Create two SES configuration sets, named `iron-fellowship-auth` and
+   `crew-link-auth`, or override the names with the env vars below.
+1. Request production access. A new SES account is in the sandbox, where mail
+   is only delivered to verified addresses -- that silently breaks sign up for
+   everyone else, so this step is not optional for a real deployment.
+1. Create an IAM user limited to `ses:SendEmail` and take its access key pair.
+
+### Firebase secrets
+
+All three must be set, or the functions fail for every caller:
+
+```
+firebase functions:secrets:set AWS_ACCESS_KEY_ID
+firebase functions:secrets:set AWS_SECRET_ACCESS_KEY
+firebase functions:secrets:set OTP_HASH_SECRET
+```
+
+`OTP_HASH_SECRET` should be a high-entropy random value. It keys the HMAC for
+both stored code hashes and rate-limit bucket ids, so rotating it invalidates
+every in-flight code and resets rate-limit windows. Redeploy functions after
+setting secrets.
+
+### Firestore TTL
+
+Sign-in attempts and rate-limit counters are written to the `authOtpAttempts`
+and `authOtpRateLimits` collections. Neither is client readable (the default
+deny rule in `firestore.rules` covers them), but both need a TTL policy so
+spent documents get cleaned up. This cannot be expressed in `firebase.json`:
+
+```
+gcloud firestore fields ttls update expiresAt \
+  --collection-group=authOtpAttempts --enable-ttl --project=<GCP_PROJECT_ID>
+
+gcloud firestore fields ttls update expiresAt \
+  --collection-group=authOtpRateLimits --enable-ttl --project=<GCP_PROJECT_ID>
+```
+
+TTL is a cleanup mechanism only, and deletion can lag by hours, so code expiry
+stays enforced in `functions/src/authOtp.ts` as well.
+
+### Optional env vars
+
+Plain (non-secret) config, all with sensible defaults:
+`SES_REGION` / `AWS_REGION`, `SES_IRONSWORN_CONFIGURATION_SET`,
+`SES_STARFORGED_CONFIGURATION_SET`, `SES_IRONSWORN_FROM_EMAIL`,
+`SES_STARFORGED_FROM_EMAIL`, `SES_FROM_EMAIL`, and the rate-limit caps
+`OTP_IP_HOURLY_LIMIT` (default 10), `OTP_EMAIL_HOURLY_LIMIT` (default 6) and
+`OTP_VERIFY_IP_HOURLY_LIMIT` (default 60).
+
+Per-IP caps are derived from the leftmost `x-forwarded-for` entry, which is
+client-supplied and therefore spoofable. They blunt cost and casual abuse; they
+are not an authentication control. The per-email cap is what actually bounds
+how much mail one address can be sent. Enabling Firebase App Check on both
+callables is the durable fix, and is worth doing before this carries real
+traffic.
 
 ## Posthog Setup (OPTIONAL)
 
