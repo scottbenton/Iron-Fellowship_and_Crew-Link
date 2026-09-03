@@ -112,23 +112,29 @@ const router = createBrowserRouter(
         </Route>
         {/* Unauthenticated Pages */}
         <Route>
+          {/*
+            Emailed one-time codes are the primary sign-in flow. The magic
+            email link flow is kept as a backup under /auth, and is where
+            outstanding magic links are configured to land (see
+            sendMagicEmailLink in lib/auth.lib.ts).
+          */}
           <Route path={basePaths[BASE_ROUTES.AUTH]}>
             <Route
               path={"login"}
-              lazy={() => import("pages/Authentication/OtpAuthPage")}
+              lazy={() => import("pages/Authentication/LoginPage")}
             />
             <Route
               path={"signup"}
-              lazy={() => import("pages/Authentication/OtpSignupPage")}
+              lazy={() => import("pages/Authentication/SignupPage")}
             />
           </Route>
           <Route
             path={basePaths[BASE_ROUTES.LOGIN]}
-            lazy={() => import("pages/Authentication/LoginPage")}
+            lazy={() => import("pages/Authentication/OtpAuthPage")}
           />
           <Route
             path={basePaths[BASE_ROUTES.SIGNUP]}
-            lazy={() => import("pages/Authentication/SignupPage")}
+            lazy={() => import("pages/Authentication/OtpSignupPage")}
           />
         </Route>
       </Route>

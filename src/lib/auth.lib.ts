@@ -49,8 +49,11 @@ export function sendMagicEmailLink(
   name?: string
 ): Promise<boolean> {
   return new Promise((resolve, reject) => {
+    // The backup magic link flow lives under /auth, since /login now serves
+    // the primary one-time code flow. Landing a magic link on /login would
+    // drop the user on the code form mid sign-in.
     const actionCodeSettings = {
-      url: window.location.origin + basePaths[BASE_ROUTES.LOGIN],
+      url: window.location.origin + basePaths[BASE_ROUTES.AUTH] + "/login",
       handleCodeInApp: true,
     };
 
