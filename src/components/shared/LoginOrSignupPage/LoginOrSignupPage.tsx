@@ -8,16 +8,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { PageContent, PageHeader } from "components/shared/Layout";
 import AccountIcon from "@mui/icons-material/Person";
-import { GoogleIcon } from "assets/GoogleIcon";
-import { useState } from "react";
-import { loginWithGoogle, sendMagicEmailLink } from "lib/auth.lib";
+import { AuthPageHeading, GoogleSignInButton } from "components/shared/Auth";
+import { PageContent, PageHeader } from "components/shared/Layout";
 import { FirebaseError } from "firebase/app";
-import { Link } from "react-router-dom";
-import { BASE_ROUTES, basePaths } from "routes";
-import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
-import { getErrorMessage } from "functions/getErrorMessage";
+import { sendMagicEmailLink } from "lib/auth.lib";
+import { FormEvent, useState } from "react";
 
 export interface LoginOrSignupPageProps {
   isLoginPage: boolean;
@@ -25,7 +21,6 @@ export interface LoginOrSignupPageProps {
 
 export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
   const { isLoginPage } = props;
-  const { error } = useSnackbar();
 
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -42,10 +37,12 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
 
     if (email.split("@").length < 2) {
       setErrorMessage("Please enter a valid email");
+      return;
     }
 
     if (!isLoginPage && !name.trim()) {
       setErrorMessage("Name is required");
+      return;
     }
 
     setLinkSendLoading(true);
@@ -62,81 +59,22 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
       });
   };
 
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    handleMagicLinkSignup();
+  };
+
   return (
     <>
       <PageHeader />
       <PageContent isPaper maxWidth={"sm"}>
         <Stack spacing={4}>
-          <Box>
-            <Box pt={2} display={"flex"} alignItems={"center"}>
-              <Box
-                sx={(theme) => ({
-                  display: "inline-flex",
-                  borderRadius: 999 || `${theme.shape.borderRadius}px`,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  p: 0.5,
-                  bgcolor: theme.palette.primary.main,
-                  color: theme.palette.common.white,
-                })}
-              >
-                <AccountIcon />
-              </Box>
-              <Typography
-                ml={1}
-                variant={"h4"}
-                fontFamily={(theme) => theme.fontFamilyTitle}
-                color={"textSecondary"}
-              >
-                {isLoginPage ? "Log in" : "Create an Account"}
-              </Typography>
-            </Box>
-            {isLoginPage ? (
-              <Typography>
-                Need an account?{" "}
-                <Typography
-                  component={Link}
-                  color={"primary"}
-                  to={basePaths[BASE_ROUTES.SIGNUP]}
-                >
-                  Create an Account
-                </Typography>
-              </Typography>
-            ) : (
-              <Typography>
-                Already have an account?{" "}
-                <Typography
-                  component={Link}
-                  color={"primary"}
-                  to={basePaths[BASE_ROUTES.LOGIN]}
-                >
-                  Login
-                </Typography>
-              </Typography>
-            )}
-          </Box>
+          <AuthPageHeading isLoginPage={isLoginPage} icon={<AccountIcon />} />
           {!linkSent ? (
             <>
-              <Button
-                variant={"contained"}
-                sx={(theme) => ({
-                  backgroundColor: "#fff",
-                  color: theme.palette.grey[900],
-                  "&:hover": {
-                    backgroundColor: theme.palette.grey[200],
-                  },
-                })}
-                startIcon={<GoogleIcon />}
-                onClick={() =>
-                  loginWithGoogle().catch((e) =>
-                    error(getErrorMessage(e, "Failed to log in"))
-                  )
-                }
-              >
-                {isLoginPage ? "Login with" : "Sign Up using"} Google
-              </Button>
+              <GoogleSignInButton isLoginPage={isLoginPage} />
               <Divider>OR</Divider>
-              <Stack spacing={2}>
+              <Stack spacing={2} component={"form"} onSubmit={handleSubmit}>
                 <Typography variant={"h6"}>Passwordless Sign in</Typography>
                 <Alert severity={"info"}>
                   {!isLoginPage &&
@@ -153,12 +91,14 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
                 <TextField
                   label={"Email Address"}
                   type={"email"}
+                  autoComplete={"email"}
                   value={email}
                   onChange={(evt) => setEmail(evt.currentTarget.value)}
                 ></TextField>
                 {!isLoginPage && (
                   <TextField
                     label={"Name"}
+                    autoComplete={"name"}
                     helperText={
                       "This will be visible to other players in a campaign."
                     }
@@ -168,8 +108,8 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
                 )}
                 <Box display={"flex"} justifyContent={"flex-end"}>
                   <Button
+                    type={"submit"}
                     variant={"contained"}
-                    onClick={() => handleMagicLinkSignup()}
                     disabled={linkSendLoading}
                   >
                     Send Sign In Link
