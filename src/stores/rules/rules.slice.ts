@@ -129,6 +129,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
 
         expansionIds.forEach((expansionId) => {
           let expansion: Datasworn.Expansion;
+          let isHomebrewExpansion = false;
           if (defaultExpansions[expansionId]) {
             expansion = defaultExpansions[expansionId];
             // merge expansion with base ruleset
@@ -136,6 +137,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
             expansion = thirdPartyExpansions[expansionId];
           } else {
             expansion = state.homebrew.expansions[expansionId];
+            isHomebrewExpansion = true;
           }
           if (expansion) {
             tree[expansion._id] = expansion;
@@ -158,10 +160,14 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
                   (move) =>
                     !move.enhances &&
                     !move.replaces &&
-                    !isFullyReplacingMoveCategory(
-                      move,
-                      moveMaps.nonReplacedMoveMap,
-                    ),
+                    // Homebrew keeps its headings. An author named that
+                    // collection deliberately, and while they are still
+                    // building it, it can hold nothing but replacements.
+                    (isHomebrewExpansion ||
+                      !isFullyReplacingMoveCategory(
+                        move,
+                        moveMaps.nonReplacedMoveMap,
+                      )),
                 )
                 .map((move) => move._id),
             );

@@ -164,6 +164,70 @@ describe("rendered move list", () => {
   });
 });
 
+describe("homebrew expansions", () => {
+  const homebrewExpansion = {
+    _id: "my_homebrew",
+    ruleset: "classic",
+    type: "expansion",
+    moves: {
+      my_moves: {
+        _id: "move_category:my_homebrew/my_moves",
+        type: "move_category",
+        name: "My Moves",
+        contents: {
+          face_danger: {
+            _id: "move:my_homebrew/my_moves/face_danger",
+            type: "move",
+            name: "Face Danger (homebrew)",
+            roll_type: "action_roll",
+            replaces: ["move:classic/adventure/face_danger"],
+            text: "",
+            trigger: { text: "", conditions: [] },
+            outcomes: {},
+          },
+        },
+      },
+    },
+    assets: {},
+    oracles: {},
+    truths: {},
+  } as unknown as Datasworn.Expansion;
+
+  function buildWithHomebrew() {
+    const state = {
+      homebrew: {
+        collections: {},
+        expansions: { my_homebrew: homebrewExpansion },
+      },
+    } as unknown as TestState;
+    state.rules = createRulesSlice(
+      ((updater: (store: TestState) => void) => updater(state)) as never,
+      (() => state) as never,
+      undefined as never,
+    );
+    state.rules.setBaseRuleset(classic);
+    state.rules.expansionIds = ["my_homebrew"];
+    state.rules.rebuildRules();
+    return state.rules;
+  }
+
+  it("keeps a homebrew heading even when every move is a replacement", () => {
+    const rules = buildWithHomebrew();
+
+    expect(rules.rootMoveCollectionIds).toContain(
+      "move_category:my_homebrew/my_moves",
+    );
+  });
+
+  it("still substitutes the homebrew move into the collection it replaces", () => {
+    const rules = buildWithHomebrew();
+
+    expect(
+      rules.moveMaps.moveMap["move:classic/adventure/face_danger"].name,
+    ).toBe("Face Danger (homebrew)");
+  });
+});
+
 describe("datasworn links", () => {
   /** Which rules packages are loaded, so links into absent ones can be skipped. */
   function loadedPackageIds(ruleset: Datasworn.Ruleset, expansionIds: string[]) {
