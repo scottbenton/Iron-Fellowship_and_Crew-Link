@@ -12,7 +12,7 @@ export function MoveContent(props: MoveContentProps) {
     <>
       <MoveRollers move={move} />
       <MarkdownRenderer markdown={move.text} />
-      {move.oracles && <MoveOracles oracles={move.oracles} />}
+      {move.oracles && <MoveOracles move={move} />}
     </>
   );
 }
