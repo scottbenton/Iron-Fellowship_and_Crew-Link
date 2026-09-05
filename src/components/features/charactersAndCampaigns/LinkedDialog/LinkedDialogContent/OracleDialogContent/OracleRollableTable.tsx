@@ -6,7 +6,13 @@ import {
 } from "components/shared/SimpleTable";
 
 export interface OracleRollableTableProps {
-  oracle: Datasworn.OracleRollableTable;
+  // Moves and asset abilities embed table oracles too. Those carry the same
+  // column_labels and rows, they just inherit _source from their parent.
+  oracle:
+    | Datasworn.OracleRollableTable
+    | Datasworn.EmbeddedOracleTableText
+    | Datasworn.EmbeddedOracleTableText2
+    | Datasworn.EmbeddedOracleTableText3;
 }
 
 export function OracleRollableTable(props: OracleRollableTableProps) {

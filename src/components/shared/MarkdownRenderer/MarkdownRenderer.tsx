@@ -74,6 +74,12 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
               }
             } else if (content.match(/^{{table:[^/]+\/truths\/[^}]+}}$/)) {
               return null;
+            } else if (content.match(/^{{table_columns>[^}]+}}$/)) {
+              // Asks for every oracle column of the move this text belongs to.
+              // MoveOracles renders those tables, with roll buttons, directly
+              // after this text - so drop the directive rather than printing it
+              // raw, which is what happened before.
+              return null;
             }
           }
           return (

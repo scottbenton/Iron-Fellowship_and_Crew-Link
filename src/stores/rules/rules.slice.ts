@@ -5,6 +5,8 @@ import { Datasworn, IdParser } from "@datasworn/core";
 import { parseOraclesIntoMaps } from "./helpers/parseOraclesIntoMaps";
 import { parseMovesIntoMaps } from "./helpers/parseMovesIntoMaps";
 import { parseAssetsIntoMaps } from "./helpers/parseAssetsIntoMaps";
+import { isFullyReplacingMoveCategory } from "./helpers/isFullyReplacingMoveCategory";
+import { collectEmbeddedContent } from "./helpers/collectEmbeddedContent";
 import { HomebrewNonLinearMeterDocument } from "api-calls/homebrew/rules/nonLinearMeters/_homebrewNonLinearMeter.type";
 import {
   defaultExpansions,
@@ -127,6 +129,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
 
         expansionIds.forEach((expansionId) => {
           let expansion: Datasworn.Expansion;
+          let isHomebrewExpansion = false;
           if (defaultExpansions[expansionId]) {
             expansion = defaultExpansions[expansionId];
             // merge expansion with base ruleset
@@ -134,6 +137,7 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
             expansion = thirdPartyExpansions[expansionId];
           } else {
             expansion = state.homebrew.expansions[expansionId];
+            isHomebrewExpansion = true;
           }
           if (expansion) {
             tree[expansion._id] = expansion;
@@ -152,7 +156,19 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
             moveMaps = mergeMoveMaps(moveMaps, expansionMoveMaps);
             rootMoveCollectionIds = rootMoveCollectionIds.concat(
               Object.values(expansion.moves)
-                .filter((move) => !move.enhances && !move.replaces)
+                .filter(
+                  (move) =>
+                    !move.enhances &&
+                    !move.replaces &&
+                    // Homebrew keeps its headings. An author named that
+                    // collection deliberately, and while they are still
+                    // building it, it can hold nothing but replacements.
+                    (isHomebrewExpansion ||
+                      !isFullyReplacingMoveCategory(
+                        move,
+                        moveMaps.nonReplacedMoveMap,
+                      )),
+                )
                 .map((move) => move._id),
             );
 
@@ -171,6 +187,12 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
             worldTruths = { ...worldTruths, ...expansion.truths };
           }
         });
+
+        ({ moveMaps, oracleMaps } = collectEmbeddedContent(
+          moveMaps,
+          assetMaps,
+          oracleMaps,
+        ));
 
         set((store) => {
           store.rules.oracleMaps = oracleMaps;
