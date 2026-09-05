@@ -3,6 +3,7 @@ import { LinkedDialogContentTitle } from "./LinkedDialogContentTitle";
 import { OracleDialogContent } from "./OracleDialogContent";
 import { MoveDialogContent } from "./MoveDialogContent";
 import { AssetDialogContent } from "./AssetDialogContent";
+import { getLinkedDialogKind } from "./getLinkedDialogKind";
 
 export interface LinkedDialogContentProps {
   id?: string;
@@ -34,18 +35,9 @@ export function LinkedDialogContent(props: LinkedDialogContentProps) {
     return unsupportedContent;
   }
 
-  if (matchId(id, "move")) {
-    return (
-      <MoveDialogContent
-        id={id}
-        handleBack={handleBack}
-        handleClose={handleClose}
-        isLastItem={isLastItem}
-      />
-    );
-  }
+  const dialogKind = getLinkedDialogKind(id);
 
-  if (matchId(id, "oracle_collection") || matchId(id, "oracle_rollable")) {
+  if (dialogKind === "oracle") {
     return (
       <OracleDialogContent
         id={id}
@@ -56,7 +48,18 @@ export function LinkedDialogContent(props: LinkedDialogContentProps) {
     );
   }
 
-  if (matchId(id, "asset")) {
+  if (dialogKind === "move") {
+    return (
+      <MoveDialogContent
+        id={id}
+        handleBack={handleBack}
+        handleClose={handleClose}
+        isLastItem={isLastItem}
+      />
+    );
+  }
+
+  if (dialogKind === "asset") {
     return (
       <AssetDialogContent
         id={id}
@@ -68,10 +71,4 @@ export function LinkedDialogContent(props: LinkedDialogContentProps) {
   }
 
   return unsupportedContent;
-}
-
-function matchId(id: string | undefined, type: string) {
-  if (!id) return false;
-  const regex = new RegExp(`^[^:]*${type}`);
-  return id.match(regex);
 }
