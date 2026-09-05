@@ -5,6 +5,7 @@ import { Datasworn, IdParser } from "@datasworn/core";
 import { parseOraclesIntoMaps } from "./helpers/parseOraclesIntoMaps";
 import { parseMovesIntoMaps } from "./helpers/parseMovesIntoMaps";
 import { parseAssetsIntoMaps } from "./helpers/parseAssetsIntoMaps";
+import { isFullyReplacingMoveCategory } from "./helpers/isFullyReplacingMoveCategory";
 import { HomebrewNonLinearMeterDocument } from "api-calls/homebrew/rules/nonLinearMeters/_homebrewNonLinearMeter.type";
 import {
   defaultExpansions,
@@ -152,7 +153,15 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
             moveMaps = mergeMoveMaps(moveMaps, expansionMoveMaps);
             rootMoveCollectionIds = rootMoveCollectionIds.concat(
               Object.values(expansion.moves)
-                .filter((move) => !move.enhances && !move.replaces)
+                .filter(
+                  (move) =>
+                    !move.enhances &&
+                    !move.replaces &&
+                    !isFullyReplacingMoveCategory(
+                      move,
+                      moveMaps.nonReplacedMoveMap,
+                    ),
+                )
                 .map((move) => move._id),
             );
 
