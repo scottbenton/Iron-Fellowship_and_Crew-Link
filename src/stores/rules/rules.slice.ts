@@ -6,6 +6,7 @@ import { parseOraclesIntoMaps } from "./helpers/parseOraclesIntoMaps";
 import { parseMovesIntoMaps } from "./helpers/parseMovesIntoMaps";
 import { parseAssetsIntoMaps } from "./helpers/parseAssetsIntoMaps";
 import { isFullyReplacingMoveCategory } from "./helpers/isFullyReplacingMoveCategory";
+import { collectEmbeddedContent } from "./helpers/collectEmbeddedContent";
 import { HomebrewNonLinearMeterDocument } from "api-calls/homebrew/rules/nonLinearMeters/_homebrewNonLinearMeter.type";
 import {
   defaultExpansions,
@@ -180,6 +181,12 @@ export const createRulesSlice: CreateSliceType<RulesSlice> = (
             worldTruths = { ...worldTruths, ...expansion.truths };
           }
         });
+
+        ({ moveMaps, oracleMaps } = collectEmbeddedContent(
+          moveMaps,
+          assetMaps,
+          oracleMaps,
+        ));
 
         set((store) => {
           store.rules.oracleMaps = oracleMaps;
