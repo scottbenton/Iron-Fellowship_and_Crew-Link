@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { License } from "types/Datasworn";
 import {
   MoveType,

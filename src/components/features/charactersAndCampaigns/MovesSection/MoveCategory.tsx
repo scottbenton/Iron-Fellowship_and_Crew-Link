@@ -2,7 +2,7 @@ import { Box, Collapse } from "@mui/material";
 import { useMemo, useState } from "react";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
 import { CATEGORY_VISIBILITY } from "./useFilterMoves";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { Move } from "./Move";
 
 export interface MoveCategoryProps {

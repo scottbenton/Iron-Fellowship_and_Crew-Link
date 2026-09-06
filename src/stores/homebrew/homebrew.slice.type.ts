@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { PartialWithFieldValue, Unsubscribe } from "firebase/firestore";
 import { HomebrewAssetDocument } from "api-calls/homebrew/assets/assets/_homebrewAssets.type";
 import { HomebrewAssetCollectionDocument } from "api-calls/homebrew/assets/collections/_homebrewAssetCollection.type";

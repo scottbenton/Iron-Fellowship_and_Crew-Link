@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { OracleRollableColumn } from "../charactersAndCampaigns/LinkedDialog/LinkedDialogContent/OracleDialogContent/OracleRollableColumn";
 import { OracleRollableTable } from "../charactersAndCampaigns/LinkedDialog/LinkedDialogContent/OracleDialogContent/OracleRollableTable";
 

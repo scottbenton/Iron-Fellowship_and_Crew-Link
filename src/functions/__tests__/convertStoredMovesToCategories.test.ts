@@ -292,7 +292,7 @@ describe("convertStoredMovesToCategories — ActionRoll move", () => {
       { combat: BASE_CATEGORY },
       { strike: ACTION_ROLL_MOVE },
     );
-    return result.combat.contents!["strike"] as import("@datasworn/core").Datasworn.MoveActionRoll;
+    return result.combat.contents!["strike"] as import("@datasworn-community/core").Datasworn.MoveActionRoll;
   }
 
   it("sets roll_type to action_roll", () => {
@@ -377,7 +377,7 @@ describe("convertStoredMovesToCategories — ActionRoll move", () => {
       { combat: BASE_CATEGORY },
       { strike: { ...ACTION_ROLL_MOVE, stats: [] } },
     );
-    const move = result.combat.contents!["strike"] as import("@datasworn/core").Datasworn.MoveActionRoll;
+    const move = result.combat.contents!["strike"] as import("@datasworn-community/core").Datasworn.MoveActionRoll;
     const statCond = move.trigger.conditions[0];
     expect(statCond.roll_options).toEqual([]);
   });
@@ -392,7 +392,7 @@ describe("convertStoredMovesToCategories — ProgressRoll move", () => {
       { combat: BASE_CATEGORY },
       { fulfill: PROGRESS_ROLL_MOVE },
     );
-    return result.combat.contents!["fulfill"] as import("@datasworn/core").Datasworn.MoveProgressRoll;
+    return result.combat.contents!["fulfill"] as import("@datasworn-community/core").Datasworn.MoveProgressRoll;
   }
 
   it("sets roll_type to progress_roll", () => {
@@ -439,7 +439,7 @@ describe("convertStoredMovesToCategories — SpecialTrack move", () => {
       { combat: BASE_CATEGORY },
       { advance: SPECIAL_TRACK_MOVE },
     );
-    return result.combat.contents!["advance"] as import("@datasworn/core").Datasworn.MoveSpecialTrack;
+    return result.combat.contents!["advance"] as import("@datasworn-community/core").Datasworn.MoveSpecialTrack;
   }
 
   it("sets roll_type to special_track", () => {

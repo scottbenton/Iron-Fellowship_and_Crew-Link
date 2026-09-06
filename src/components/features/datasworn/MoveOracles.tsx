@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { Box, Stack, Typography } from "@mui/material";
 import { OracleButton } from "../charactersAndCampaigns/OracleSection/OracleButton";
 import { MoveOracleContent } from "./MoveOracleContent";

@@ -12,7 +12,7 @@ import remarkGfm from "remark-gfm";
 import { useStore } from "stores/store";
 import { OracleTableRenderer } from "./OracleTableRenderer";
 import { idMap } from "data/idMap";
-import { Datasworn, IdParser } from "@datasworn/core";
+import { Datasworn, IdParser } from "@datasworn-community/core";
 
 export interface MarkdownRendererProps {
   inlineParagraph?: boolean;

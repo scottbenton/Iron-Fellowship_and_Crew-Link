@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { ListItemText } from "@mui/material";
 import { CATEGORY_VISIBILITY } from "./useFilterOracles";
 import { useRoller } from "stores/appState/useRoller";

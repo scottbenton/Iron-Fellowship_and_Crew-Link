@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { Box, Checkbox, Typography } from "@mui/material";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { AssetDocument } from "api-calls/assets/_asset.type";

@@ -1,18 +1,18 @@
 /** @vitest-environment jsdom */
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Datasworn, IdParser } from "@datasworn/core";
+import { Datasworn, IdParser } from "@datasworn-community/core";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { getTableIdsRenderedInMarkdown } from "../getTableIdsRenderedInMarkdown";
 import { MoveOracles } from "../MoveOracles";
 import { withoutRulesPackage } from "../getTableIdsRenderedInMarkdown";
-import classicJson from "@datasworn/ironsworn-classic/json/classic.json";
-import delveJson from "@datasworn/ironsworn-classic-delve/json/delve.json";
-import starforgedJson from "@datasworn/starforged/json/starforged.json";
-import sunderedIslesJson from "@datasworn/sundered-isles/json/sundered_isles.json";
-import starsmithJson from "@datasworn-community-content/starsmith/json/starsmith.json";
-import ironsmithJson from "@datasworn-community-content/ironsmith/json/ironsmith.json";
-import lodestarJson from "data/lodestar.json";
+import classicJson from "@datasworn-community/ironsworn-classic/json/classic.json";
+import delveJson from "@datasworn-community/ironsworn-classic-delve/json/delve.json";
+import starforgedJson from "@datasworn-community/starforged/json/starforged.json";
+import sunderedIslesJson from "@datasworn-community/sundered-isles/json/sundered_isles.json";
+import starsmithJson from "@datasworn-community/starsmith/json/starsmith.json";
+import ironsmithJson from "@datasworn-community/ironsmith/json/ironsmith.json";
+import lodestarJson from "@datasworn-community/ironsworn-classic-lodestar/json/lodestar.json";
 
 const PACKAGES = [
   ["classic", classicJson],

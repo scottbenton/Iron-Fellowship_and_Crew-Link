@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { Box, Card, IconButton, Tooltip } from "@mui/material";
 import { AssetAbilities } from "components/features/assets/AssetCard/AssetAbilities";
 import { AssetControls } from "components/features/assets/AssetCard/AssetControls";

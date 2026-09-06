@@ -1,7 +1,11 @@
 import { CreateSliceType } from "stores/store.type";
 import { RulesSlice, RulesSliceData } from "./rules.slice.type";
 import { defaultRulesSlice } from "./rules.slice.default";
-import { Datasworn, IdParser } from "@datasworn/core";
+import {
+  Datasworn,
+  IdParser,
+  PrimaryStringId,
+} from "@datasworn-community/core";
 import { parseOraclesIntoMaps } from "./helpers/parseOraclesIntoMaps";
 import { parseMovesIntoMaps } from "./helpers/parseMovesIntoMaps";
 import { parseAssetsIntoMaps } from "./helpers/parseAssetsIntoMaps";
@@ -14,7 +18,6 @@ import {
   loadIncludedRuleset,
   thirdPartyExpansions,
 } from "data/rulesets";
-import { Primary } from "@datasworn/core/dist/StringId";
 import { idMap } from "data/idMap";
 
 export const createRulesSlice: CreateSliceType<RulesSlice> = (
@@ -257,7 +260,7 @@ function mergeOracleMaps(
         }
         if (enhancesId.startsWith("oracle_collection")) {
           const replaceMatches = IdParser.getMatches(
-            enhancesId as Primary,
+            enhancesId as PrimaryStringId,
             IdParser.tree,
           );
           replaceMatches.forEach((val, key) => {
@@ -348,7 +351,7 @@ function mergeMoveMaps(
         }
         if (enhancesId.startsWith("move_category")) {
           const replaceMatches = IdParser.getMatches(
-            enhancesId as Primary,
+            enhancesId as PrimaryStringId,
             IdParser.tree,
           );
           replaceMatches.forEach((val, key) => {
@@ -418,7 +421,7 @@ function mergeAssetMaps(
         }
         if (enhancesId.startsWith("asset_collection")) {
           const replaceMatches = IdParser.getMatches(
-            enhancesId as Primary,
+            enhancesId as PrimaryStringId,
             IdParser.tree,
           );
           replaceMatches.forEach((val, key) => {

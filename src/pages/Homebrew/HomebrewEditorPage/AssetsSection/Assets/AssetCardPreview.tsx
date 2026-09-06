@@ -1,7 +1,7 @@
 import { Control, useWatch } from "react-hook-form";
 import { Form } from "./AssetDialogForm";
 import { Box, Card } from "@mui/material";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { AssetHeader } from "components/features/assets/AssetCard/AssetHeader";
 import { AssetNameAndDescription } from "components/features/assets/AssetCard/AssetNameAndDescription";
 import { AssetAbilities } from "components/features/assets/AssetCard/AssetAbilities";

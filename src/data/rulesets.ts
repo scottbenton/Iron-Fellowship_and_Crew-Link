@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { getSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 
@@ -41,7 +41,9 @@ export const ironswornConfig: IRulesetConfig = {
   type: "ruleset",
   isHomebrew: false,
   load: async () => {
-    const json = await import("@datasworn/ironsworn-classic/json/classic.json");
+    const json = await import(
+      "@datasworn-community/ironsworn-classic/json/classic.json"
+    );
     return getJsonDefault(json) as unknown as Datasworn.Ruleset;
   },
 };
@@ -52,7 +54,9 @@ export const starforgedConfig: IRulesetConfig = {
   type: "ruleset",
   isHomebrew: false,
   load: async () => {
-    const json = await import("@datasworn/starforged/json/starforged.json");
+    const json = await import(
+      "@datasworn-community/starforged/json/starforged.json"
+    );
     return getJsonDefault(json) as unknown as Datasworn.Ruleset;
   },
 };
@@ -66,7 +70,7 @@ export const ironswornDelveConfig: IExpansionConfig = {
   isHomebrew: false,
   load: async () => {
     const json = await import(
-      "@datasworn/ironsworn-classic-delve/json/delve.json"
+      "@datasworn-community/ironsworn-classic-delve/json/delve.json"
     );
     return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
@@ -78,7 +82,9 @@ export const ironswornLodestarConfig: IExpansionConfig = {
   type: "expansion",
   isHomebrew: false,
   load: async () => {
-    const json = await import("./lodestar.json");
+    const json = await import(
+      "@datasworn-community/ironsworn-classic-lodestar/json/lodestar.json"
+    );
     return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
 };
@@ -92,7 +98,7 @@ export const sunderedIslesConfig: IExpansionConfig = {
   isHomebrew: false,
   load: async () => {
     const json = await import(
-      "@datasworn/sundered-isles/json/sundered_isles.json"
+      "@datasworn-community/sundered-isles/json/sundered_isles.json"
     );
     return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
@@ -113,7 +119,7 @@ export const ironsmithConfig: IExpansionConfig = {
   },
   load: async () => {
     const json = await import(
-      "@datasworn-community-content/ironsmith/json/ironsmith.json"
+      "@datasworn-community/ironsmith/json/ironsmith.json"
     );
     return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
@@ -132,7 +138,7 @@ export const starsmithConfig: IExpansionConfig = {
   },
   load: async () => {
     const json = await import(
-      "@datasworn-community-content/starsmith/json/starsmith.json"
+      "@datasworn-community/starsmith/json/starsmith.json"
     );
     return getJsonDefault(json) as unknown as Datasworn.Expansion;
   },
@@ -152,7 +158,7 @@ export const starsmithConfig: IExpansionConfig = {
 //   },
 //   load: async () => {
 //     const json = await import(
-//       "@datasworn-community-content/fe-runners/json/fe_runners.json"
+//       "@datasworn-community/fe-runners/json/fe_runners.json"
 //     );
 //     return getJsonDefault(json) as unknown as Datasworn.Expansion;
 //   },

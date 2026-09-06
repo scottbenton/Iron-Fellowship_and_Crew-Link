@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { OracleTableRoll, ROLL_TYPE } from "types/DieRolls.type";
 import { rollDie } from "./rollDie";
 import { Theme } from "@mui/material";

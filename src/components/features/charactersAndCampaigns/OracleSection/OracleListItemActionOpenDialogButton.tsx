@@ -1,7 +1,7 @@
 import { IconButton } from "@mui/material";
 import TableIcon from "@mui/icons-material/ListAlt";
 import { useStore } from "stores/store";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 
 export interface OracleListItemActionOpenDialogButtonProps {
   item: Datasworn.OracleCollection | Datasworn.OracleRollable;

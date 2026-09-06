@@ -14,7 +14,7 @@ import { TrackTypes } from "types/Track.type";
 import { LEGACY_TrackTypes } from "types/LegacyTrack.type";
 import { rollOracle } from "./rollers/rollOracle";
 import { idMap } from "data/idMap";
-import { Datasworn, IdParser } from "@datasworn/core";
+import { Datasworn, IdParser } from "@datasworn-community/core";
 import { Dice } from "components/shared/Dice";
 import { Theme, useTheme } from "@mui/material";
 

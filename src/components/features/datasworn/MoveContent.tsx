@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { MoveRollers } from "../charactersAndCampaigns/LinkedDialog/LinkedDialogContent/MoveDialogContent/MoveRollers";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { MoveOracles } from "./MoveOracles";

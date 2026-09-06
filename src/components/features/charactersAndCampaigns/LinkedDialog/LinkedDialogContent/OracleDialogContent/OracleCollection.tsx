@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { useStore } from "stores/store";
 import { OracleCollection as OracleCollectionRenderer } from "components/features/charactersAndCampaigns/OracleSection/OracleCollection";
 import { CATEGORY_VISIBILITY } from "components/features/charactersAndCampaigns/OracleSection/useFilterOracles";

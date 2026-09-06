@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { Datasworn, IdParser } from "@datasworn/core";
+import { Datasworn, IdParser } from "@datasworn-community/core";
 import { parseMovesIntoMaps } from "../helpers/parseMovesIntoMaps";
 import { parseAssetsIntoMaps } from "../helpers/parseAssetsIntoMaps";
 import { parseOraclesIntoMaps } from "../helpers/parseOraclesIntoMaps";
 import { collectEmbeddedContent } from "../helpers/collectEmbeddedContent";
-import classicJson from "@datasworn/ironsworn-classic/json/classic.json";
-import delveJson from "@datasworn/ironsworn-classic-delve/json/delve.json";
-import starforgedJson from "@datasworn/starforged/json/starforged.json";
+import classicJson from "@datasworn-community/ironsworn-classic/json/classic.json";
+import delveJson from "@datasworn-community/ironsworn-classic-delve/json/delve.json";
+import starforgedJson from "@datasworn-community/starforged/json/starforged.json";
 
 const classic = classicJson as unknown as Datasworn.Ruleset;
 const delve = delveJson as unknown as Datasworn.Expansion;

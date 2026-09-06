@@ -14,7 +14,7 @@ import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { AssetCardSearch } from "./AssetCardSearch";
 import { AssetCardDialogCard } from "./AssetCardDialogCard";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { useStore } from "stores/store";
 
 export interface AssetCardDialogProps {

@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { defaultExpansions, thirdPartyExpansions } from "data/rulesets";
 import { useMemo } from "react";
 import { useStore } from "stores/store";
