@@ -6,34 +6,30 @@ import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { getTableIdsRenderedInMarkdown } from "../getTableIdsRenderedInMarkdown";
 import { MoveOracles } from "../MoveOracles";
 import { withoutRulesPackage } from "../getTableIdsRenderedInMarkdown";
-import classicJson from "@datasworn-community/ironsworn-classic/json/classic.json";
-import delveJson from "@datasworn-community/ironsworn-classic-delve/json/delve.json";
-import starforgedJson from "@datasworn-community/starforged/json/starforged.json";
-import sunderedIslesJson from "@datasworn-community/sundered-isles/json/sundered_isles.json";
-import starsmithJson from "@datasworn-community/starsmith/json/starsmith.json";
-import ironsmithJson from "@datasworn-community/ironsmith/json/ironsmith.json";
-import lodestarJson from "@datasworn-community/ironsworn-classic-lodestar/json/lodestar.json";
+import { classic } from "@datasworn-community/ironsworn-classic";
+import { delve } from "@datasworn-community/ironsworn-classic-delve";
+import { lodestar } from "@datasworn-community/ironsworn-classic-lodestar";
+import { starforged } from "@datasworn-community/starforged";
+import { sundered_isles } from "@datasworn-community/sundered-isles";
+import { starsmith } from "@datasworn-community/starsmith";
+import { ironsmith } from "@datasworn-community/ironsmith";
 
 const PACKAGES = [
-  ["classic", classicJson],
-  ["delve", delveJson],
-  ["lodestar", lodestarJson],
-  ["starforged", starforgedJson],
-  ["sundered isles", sunderedIslesJson],
-  ["starsmith", starsmithJson],
-  ["ironsmith", ironsmithJson],
+  ["classic", classic],
+  ["delve", delve],
+  ["lodestar", lodestar],
+  ["starforged", starforged],
+  ["sundered isles", sundered_isles],
+  ["starsmith", starsmith],
+  ["ironsmith", ironsmith],
 ] as const;
 
 IdParser.tree = Object.fromEntries(
-  PACKAGES.map(([, json]) => {
-    const pkg = json as unknown as Datasworn.RulesPackage;
-    return [pkg._id, pkg];
-  }),
+  PACKAGES.map(([, rulesPackage]) => [rulesPackage._id, rulesPackage]),
 );
 
-function movesWithOracles(json: unknown) {
-  const pkg = json as unknown as Datasworn.RulesPackage;
-  return Object.values(pkg.moves ?? {}).flatMap((category) =>
+function movesWithOracles(rulesPackage: Datasworn.RulesPackage) {
+  return Object.values(rulesPackage.moves ?? {}).flatMap((category) =>
     Object.values(category.contents ?? {}).filter(
       (move) => Object.keys(move.oracles ?? {}).length > 0,
     ),
@@ -152,7 +148,7 @@ describe("each of a move's oracle tables is drawn exactly once", () => {
   });
 
   it("leaves Reveal a Danger's table to the markdown", () => {
-    const move = movesWithOracles(delveJson).find(
+    const move = movesWithOracles(delve).find(
       (m) => m._id === "move:delve/delve/reveal_a_danger_alt",
     );
     const oracleId = Object.values(move?.oracles ?? {})[0]._id;
@@ -163,7 +159,7 @@ describe("each of a move's oracle tables is drawn exactly once", () => {
   });
 
   it("draws Delve the Depths' three tables itself", () => {
-    const move = movesWithOracles(delveJson).find(
+    const move = movesWithOracles(delve).find(
       (m) => m._id === "move:delve/delve/delve_the_depths",
     );
 
@@ -173,11 +169,10 @@ describe("each of a move's oracle tables is drawn exactly once", () => {
 });
 
 describe("MarkdownRenderer leaves no directive on screen", () => {
-  it.each(PACKAGES)("for every move in %s", (_label, json) => {
-    const pkg = json as unknown as Datasworn.RulesPackage;
+  it.each(PACKAGES)("for every move in %s", (_label, rulesPackage) => {
     const leaked: string[] = [];
 
-    Object.values(pkg.moves ?? {}).forEach((category) =>
+    Object.values(rulesPackage.moves ?? {}).forEach((category) =>
       Object.values(category.contents ?? {}).forEach((move) => {
         const html = renderToStaticMarkup(
           <MarkdownRenderer markdown={move.text} />,
@@ -192,7 +187,7 @@ describe("MarkdownRenderer leaves no directive on screen", () => {
   });
 
   it("renders Delve the Depths without its table_columns directive", () => {
-    const move = movesWithOracles(delveJson).find(
+    const move = movesWithOracles(delve).find(
       (m) => m._id === "move:delve/delve/delve_the_depths",
     );
     const html = renderToStaticMarkup(

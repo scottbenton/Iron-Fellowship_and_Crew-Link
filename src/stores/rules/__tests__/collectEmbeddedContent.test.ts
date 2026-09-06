@@ -4,13 +4,9 @@ import { parseMovesIntoMaps } from "../helpers/parseMovesIntoMaps";
 import { parseAssetsIntoMaps } from "../helpers/parseAssetsIntoMaps";
 import { parseOraclesIntoMaps } from "../helpers/parseOraclesIntoMaps";
 import { collectEmbeddedContent } from "../helpers/collectEmbeddedContent";
-import classicJson from "@datasworn-community/ironsworn-classic/json/classic.json";
-import delveJson from "@datasworn-community/ironsworn-classic-delve/json/delve.json";
-import starforgedJson from "@datasworn-community/starforged/json/starforged.json";
-
-const classic = classicJson as unknown as Datasworn.Ruleset;
-const delve = delveJson as unknown as Datasworn.Expansion;
-const starforged = starforgedJson as unknown as Datasworn.Ruleset;
+import { classic } from "@datasworn-community/ironsworn-classic";
+import { delve } from "@datasworn-community/ironsworn-classic-delve";
+import { starforged } from "@datasworn-community/starforged";
 
 function build(packages: Datasworn.RulesPackage[]) {
   const tree: Record<string, Datasworn.RulesPackage> = {};

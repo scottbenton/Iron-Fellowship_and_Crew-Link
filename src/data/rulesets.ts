@@ -26,13 +26,6 @@ export interface IExpansionConfig {
 
 export type IPackageConfig = IRulesetConfig | IExpansionConfig;
 
-function getJsonDefault<T>(json: T | { default: T }): T {
-  if (json && typeof json === "object" && "default" in json) {
-    return json.default;
-  }
-  return json;
-}
-
 // ─── Rulesets ────────────────────────────────────────────────────────────────
 
 export const ironswornConfig: IRulesetConfig = {
@@ -41,10 +34,8 @@ export const ironswornConfig: IRulesetConfig = {
   type: "ruleset",
   isHomebrew: false,
   load: async () => {
-    const json = await import(
-      "@datasworn-community/ironsworn-classic/json/classic.json"
-    );
-    return getJsonDefault(json) as unknown as Datasworn.Ruleset;
+    const { classic } = await import("@datasworn-community/ironsworn-classic");
+    return classic;
   },
 };
 
@@ -54,10 +45,8 @@ export const starforgedConfig: IRulesetConfig = {
   type: "ruleset",
   isHomebrew: false,
   load: async () => {
-    const json = await import(
-      "@datasworn-community/starforged/json/starforged.json"
-    );
-    return getJsonDefault(json) as unknown as Datasworn.Ruleset;
+    const { starforged } = await import("@datasworn-community/starforged");
+    return starforged;
   },
 };
 
@@ -69,10 +58,10 @@ export const ironswornDelveConfig: IExpansionConfig = {
   type: "expansion",
   isHomebrew: false,
   load: async () => {
-    const json = await import(
-      "@datasworn-community/ironsworn-classic-delve/json/delve.json"
+    const { delve } = await import(
+      "@datasworn-community/ironsworn-classic-delve"
     );
-    return getJsonDefault(json) as unknown as Datasworn.Expansion;
+    return delve;
   },
 };
 
@@ -82,10 +71,10 @@ export const ironswornLodestarConfig: IExpansionConfig = {
   type: "expansion",
   isHomebrew: false,
   load: async () => {
-    const json = await import(
-      "@datasworn-community/ironsworn-classic-lodestar/json/lodestar.json"
+    const { lodestar } = await import(
+      "@datasworn-community/ironsworn-classic-lodestar"
     );
-    return getJsonDefault(json) as unknown as Datasworn.Expansion;
+    return lodestar;
   },
 };
 
@@ -97,10 +86,10 @@ export const sunderedIslesConfig: IExpansionConfig = {
   type: "expansion",
   isHomebrew: false,
   load: async () => {
-    const json = await import(
-      "@datasworn-community/sundered-isles/json/sundered_isles.json"
+    const { sundered_isles } = await import(
+      "@datasworn-community/sundered-isles"
     );
-    return getJsonDefault(json) as unknown as Datasworn.Expansion;
+    return sundered_isles;
   },
 };
 
@@ -118,10 +107,8 @@ export const ironsmithConfig: IExpansionConfig = {
     author: "Eric Bright",
   },
   load: async () => {
-    const json = await import(
-      "@datasworn-community/ironsmith/json/ironsmith.json"
-    );
-    return getJsonDefault(json) as unknown as Datasworn.Expansion;
+    const { ironsmith } = await import("@datasworn-community/ironsmith");
+    return ironsmith;
   },
 };
 
@@ -137,10 +124,8 @@ export const starsmithConfig: IExpansionConfig = {
     author: "Eric Bright",
   },
   load: async () => {
-    const json = await import(
-      "@datasworn-community/starsmith/json/starsmith.json"
-    );
-    return getJsonDefault(json) as unknown as Datasworn.Expansion;
+    const { starsmith } = await import("@datasworn-community/starsmith");
+    return starsmith;
   },
 };
 
@@ -157,10 +142,8 @@ export const starsmithConfig: IExpansionConfig = {
 //     author: "Craig Smith",
 //   },
 //   load: async () => {
-//     const json = await import(
-//       "@datasworn-community/fe-runners/json/fe_runners.json"
-//     );
-//     return getJsonDefault(json) as unknown as Datasworn.Expansion;
+//     const { fe_runners } = await import("@datasworn-community/fe-runners");
+//     return fe_runners;
 //   },
 // };
 
