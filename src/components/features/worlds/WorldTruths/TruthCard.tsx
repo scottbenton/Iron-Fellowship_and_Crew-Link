@@ -15,7 +15,7 @@ import {
 // import { HexradioChecked } from "assets/HexradioChecked";
 import CheckIcon from "@mui/icons-material/CheckCircle";
 import { useState } from "react";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { TruthSelectorDialog } from "./TruthSelectorDialog";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 // import { HexradioChecked } from "assets/HexradioChecked";

@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { Box, Typography } from "@mui/material";
 import { DebouncedClockCircle } from "components/features/charactersAndCampaigns/Clocks/DebouncedClockCircle";
 

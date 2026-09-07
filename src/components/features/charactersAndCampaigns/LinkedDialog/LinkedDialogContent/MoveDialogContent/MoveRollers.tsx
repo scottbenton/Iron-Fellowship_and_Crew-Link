@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { Box, Chip, Stack } from "@mui/material";
 import { StatComponent } from "components/features/characters/StatComponent";
 import { useStore } from "stores/store";

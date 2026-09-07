@@ -1,15 +1,15 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { createRulesSlice } from "../rules.slice";
 import { getLinkedDialogKind } from "components/features/charactersAndCampaigns/LinkedDialog/LinkedDialogContent/getLinkedDialogKind";
 import { idMap } from "data/idMap";
-import classicJson from "@datasworn/ironsworn-classic/json/classic.json";
-import delveJson from "@datasworn/ironsworn-classic-delve/json/delve.json";
-import starforgedJson from "@datasworn/starforged/json/starforged.json";
-import sunderedIslesJson from "@datasworn/sundered-isles/json/sundered_isles.json";
-import starsmithJson from "@datasworn-community-content/starsmith/json/starsmith.json";
-import ironsmithJson from "@datasworn-community-content/ironsmith/json/ironsmith.json";
-import lodestarJson from "data/lodestar.json";
+import { classic } from "@datasworn-community/ironsworn-classic";
+import { delve } from "@datasworn-community/ironsworn-classic-delve";
+import { lodestar } from "@datasworn-community/ironsworn-classic-lodestar";
+import { starforged } from "@datasworn-community/starforged";
+import { sundered_isles as sunderedIsles } from "@datasworn-community/sundered-isles";
+import { starsmith } from "@datasworn-community/starsmith";
+import { ironsmith } from "@datasworn-community/ironsmith";
 
 const rulesetsMock = vi.hoisted(() => ({
   ruleset: undefined,
@@ -21,14 +21,6 @@ const rulesetsMock = vi.hoisted(() => ({
 
 vi.mock("hooks/useGameSystem", () => ({ getSystem: () => "ironsworn" }));
 vi.mock("data/rulesets", () => rulesetsMock);
-
-const classic = classicJson as unknown as Datasworn.Ruleset;
-const starforged = starforgedJson as unknown as Datasworn.Ruleset;
-const delve = delveJson as unknown as Datasworn.Expansion;
-const lodestar = lodestarJson as unknown as Datasworn.Expansion;
-const sunderedIsles = sunderedIslesJson as unknown as Datasworn.Expansion;
-const starsmith = starsmithJson as unknown as Datasworn.Expansion;
-const ironsmith = ironsmithJson as unknown as Datasworn.Expansion;
 
 const EXPANSIONS = [delve, lodestar, sunderedIsles, starsmith, ironsmith];
 

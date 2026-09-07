@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 
 /**
  * True when every move in a collection replaces a move that is already known.

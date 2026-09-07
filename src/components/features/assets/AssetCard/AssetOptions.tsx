@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { AssetOption } from "./AssetOption";
 import { Stack } from "@mui/material";
 import { AssetDocument } from "api-calls/assets/_asset.type";

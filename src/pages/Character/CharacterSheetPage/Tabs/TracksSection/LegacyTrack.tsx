@@ -20,7 +20,7 @@ import { LEGACY_TrackTypes } from "types/LegacyTrack.type";
 import { useConfirm } from "material-ui-confirm";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { useIsMobile } from "hooks/useIsMobile";
-import starforged from "@datasworn/starforged/json/starforged.json";
+import { starforged } from "@datasworn-community/starforged";
 
 export interface LegacyTrackProps {
   label: string;

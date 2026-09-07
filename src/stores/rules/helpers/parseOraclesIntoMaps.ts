@@ -1,6 +1,9 @@
-import { Datasworn, IdParser } from "@datasworn/core";
+import {
+  Datasworn,
+  IdParser,
+  PrimaryStringId,
+} from "@datasworn-community/core";
 import { RulesSliceData } from "../rules.slice.type";
-import { Primary } from "@datasworn/core/dist/StringId";
 import { idMap } from "data/idMap";
 
 export function parseOraclesIntoMaps(
@@ -41,7 +44,7 @@ export function parseOraclesIntoMaps(
         }
         if (replacesId.startsWith("oracle_collection:")) {
           const replaceMatches = IdParser.getMatches(
-            replacesId as Primary,
+            replacesId as PrimaryStringId,
             IdParser.tree
           );
           replaceMatches.forEach((val, key) => {
@@ -81,7 +84,7 @@ export function parseOraclesIntoMaps(
 
             if (replacesId.startsWith("oracle_rollable:")) {
               const replaceMatches = IdParser.getMatches(
-                replacesId as Primary,
+                replacesId as PrimaryStringId,
                 IdParser.tree
               );
               replaceMatches.forEach((val, key) => {

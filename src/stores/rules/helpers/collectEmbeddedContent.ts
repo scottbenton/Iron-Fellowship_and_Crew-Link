@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { RulesSliceData } from "../rules.slice.type";
 
 type MoveMaps = RulesSliceData["moveMaps"];

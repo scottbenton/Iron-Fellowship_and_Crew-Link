@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { Box, ListItemText, MenuItem, TextField } from "@mui/material";
 import { useState } from "react";
 import { useRoller } from "stores/appState/useRoller";

@@ -1,6 +1,9 @@
-import { Datasworn, IdParser } from "@datasworn/core";
+import {
+  Datasworn,
+  IdParser,
+  PrimaryStringId,
+} from "@datasworn-community/core";
 import { RulesSliceData } from "../rules.slice.type";
-import { Primary } from "@datasworn/core/dist/StringId";
 import { idMap } from "data/idMap";
 
 export function parseMovesIntoMaps(
@@ -40,7 +43,7 @@ export function parseMovesIntoMaps(
             }
             if (replacesId.startsWith("move")) {
               const replaceMatches = IdParser.getMatches(
-                replacesId as Primary,
+                replacesId as PrimaryStringId,
                 IdParser.tree
               );
               replaceMatches.forEach((val, key) => {
@@ -73,7 +76,7 @@ export function parseMovesIntoMaps(
           }
           if (replacesId.startsWith("move_category")) {
             const replaceMatches = IdParser.getMatches(
-              replacesId as Primary,
+              replacesId as PrimaryStringId,
               IdParser.tree
             );
             replaceMatches.forEach((val, key) => {

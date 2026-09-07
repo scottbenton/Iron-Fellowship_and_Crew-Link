@@ -2,7 +2,7 @@ import { Button, ButtonProps } from "@mui/material";
 import { useRoller } from "stores/appState/useRoller";
 import { useStore } from "stores/store";
 import RollIcon from "@mui/icons-material/Casino";
-import { Datasworn, IdParser } from "@datasworn/core";
+import { Datasworn, IdParser } from "@datasworn-community/core";
 
 export interface OracleButtonProps extends ButtonProps {
   oracleId: string;

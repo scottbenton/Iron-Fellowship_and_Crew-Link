@@ -59,7 +59,7 @@ import { createHomebrewNonLinearMeter } from "api-calls/homebrew/rules/nonLinear
 import { updateHomebrewNonLinearMeter } from "api-calls/homebrew/rules/nonLinearMeters/updateHomebrewNonLinearMeter";
 import { deleteHomebrewNonLinearMeter } from "api-calls/homebrew/rules/nonLinearMeters/deleteHomebrewNonLinearMeter";
 import { listenToHomebrewCollection } from "api-calls/homebrew/listenToHomebrewCollection";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { convertHomebrewToRules } from "functions/convertHomebrewToRules";
 
 enum ListenerRefreshes {
@@ -582,7 +582,7 @@ export const createHomebrewSlice: CreateSliceType<HomebrewSlice> = (
         title: expansion.base.title,
         description: expansion.base.description,
         type: "expansion",
-        datasworn_version: "0.1.0",
+        datasworn_version: "0.3.0",
         authors: [],
         date: "2000-01-01",
         url: "",

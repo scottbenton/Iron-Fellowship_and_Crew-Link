@@ -1,4 +1,4 @@
-import { IdParser } from "@datasworn/core";
+import { IdParser } from "@datasworn-community/core";
 import { describe, expect, it, vi } from "vitest";
 import { loadBaseRulesetForSync, syncDataswornTree } from "../useSyncDataswornTree";
 

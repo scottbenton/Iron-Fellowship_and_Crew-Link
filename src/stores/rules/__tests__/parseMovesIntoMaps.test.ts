@@ -1,18 +1,12 @@
 import { describe, expect, it, beforeEach } from "vitest";
-import { Datasworn, IdParser } from "@datasworn/core";
+import { Datasworn, IdParser } from "@datasworn-community/core";
 import { parseMovesIntoMaps } from "../helpers/parseMovesIntoMaps";
 import { isFullyReplacingMoveCategory } from "../helpers/isFullyReplacingMoveCategory";
-import classicJson from "@datasworn/ironsworn-classic/json/classic.json";
-import delveJson from "@datasworn/ironsworn-classic-delve/json/delve.json";
-import starforgedJson from "@datasworn/starforged/json/starforged.json";
-import sunderedIslesJson from "@datasworn/sundered-isles/json/sundered_isles.json";
-import lodestarJson from "data/lodestar.json";
-
-const classic = classicJson as unknown as Datasworn.Ruleset;
-const delve = delveJson as unknown as Datasworn.Expansion;
-const starforged = starforgedJson as unknown as Datasworn.Ruleset;
-const sunderedIsles = sunderedIslesJson as unknown as Datasworn.Expansion;
-const lodestar = lodestarJson as unknown as Datasworn.Expansion;
+import { classic } from "@datasworn-community/ironsworn-classic";
+import { delve } from "@datasworn-community/ironsworn-classic-delve";
+import { lodestar } from "@datasworn-community/ironsworn-classic-lodestar";
+import { starforged } from "@datasworn-community/starforged";
+import { sundered_isles as sunderedIsles } from "@datasworn-community/sundered-isles";
 
 /**
  * Parses one package with the given packages visible to the id parser. Merging

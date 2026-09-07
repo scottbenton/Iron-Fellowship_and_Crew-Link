@@ -11,7 +11,7 @@ import { useStore } from "stores/store";
 import { Truth } from "api-calls/world/_world.type";
 import { useState } from "react";
 import CheckIcon from "@mui/icons-material/CheckCircle";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { TruthCard } from "./TruthCard";
 import { CUSTOM_TRUTH_INDEX } from "./customTruthIndex";
 

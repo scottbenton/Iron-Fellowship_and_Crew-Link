@@ -7,7 +7,7 @@ import { AssetControls } from "./AssetControls";
 import { AssetHeader } from "./AssetHeader";
 import { AssetNameAndDescription } from "./AssetNameAndDescription";
 import { ForwardedRef, ReactNode, forwardRef } from "react";
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { idMap } from "data/idMap";
 
 export interface AssetCardProps {

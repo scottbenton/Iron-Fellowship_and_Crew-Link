@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { getIsLocalEnvironment } from "functions/getGameSystem";
 import LinkIcon from "@mui/icons-material/Link";

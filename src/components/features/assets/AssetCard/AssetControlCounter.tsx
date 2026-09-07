@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { Box, ButtonBase, Typography } from "@mui/material";
 import { useDebouncedState } from "hooks/useDebouncedState";
 import { useStore } from "stores/store";

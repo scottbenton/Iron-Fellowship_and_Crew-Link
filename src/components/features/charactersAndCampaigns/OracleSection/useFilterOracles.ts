@@ -1,4 +1,4 @@
-import { Datasworn } from "@datasworn/core";
+import { Datasworn } from "@datasworn-community/core";
 import { useMemo, useState } from "react";
 import { useStore } from "stores/store";
 import { License } from "types/Datasworn";
