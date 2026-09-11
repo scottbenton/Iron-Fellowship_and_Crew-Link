@@ -24,7 +24,7 @@
     "@datasworn-community/ironsworn-classic-giveaways": "^0.3.0",
     "@datasworn-community/ironsworn-classic-lodestar": "^0.3.0",
     "@datasworn-community/starforged": "^0.3.0",
-    "@datasworn-community/starforged-giveaways": "^0.3.0",
+    "@datasworn-community/starforged-giveaways": "^0.3.1",
     "@datasworn-community/starsmith": "^0.3.0",
     "@datasworn-community/sundered-isles": "^0.3.0",
     "@emotion/react": "^11.11.4",
