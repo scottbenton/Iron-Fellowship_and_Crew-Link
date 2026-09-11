@@ -6,48 +6,16 @@ import {
   FormControlLabel,
   FormGroup,
   Switch,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { EmptyState } from "components/shared/EmptyState";
-import { IExpansionConfig, includedExpansions } from "data/rulesets";
+import { includedExpansions } from "data/rulesets";
+import { ExpansionRow } from "./ExpansionRow";
 import { buildExpansionChanges } from "./expansionCascade";
 
 export interface ExpansionSelectorProps {
   enabledExpansionMap: Record<string, boolean>;
   toggleEnableExpansion: (changes: Record<string, boolean>) => void;
-}
-
-function ExpansionRow({
-  config,
-  checked,
-  onChange,
-}: {
-  config: IExpansionConfig;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-}) {
-  const label =
-    config.id === "lodestar" ? (
-      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-        {config.name}
-        <Tooltip title="Requires Ironsworn: Delve">
-          <InfoIcon fontSize="small" color="action" />
-        </Tooltip>
-      </Box>
-    ) : (
-      config.name
-    );
-
-  return (
-    <FormControlLabel
-      control={
-        <Switch checked={checked} onChange={(_, c) => onChange(c)} />
-      }
-      label={label}
-    />
-  );
 }
 
 export function ExpansionSelector(props: ExpansionSelectorProps) {

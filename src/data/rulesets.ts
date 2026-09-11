@@ -15,6 +15,8 @@ export interface IExpansionConfig {
   name: string;
   type: "expansion";
   isHomebrew: boolean;
+  /** Advisory text shown as a tooltip beside the expansion's name. */
+  note?: string;
   licenseInfo?: {
     license: string;
     licenseUrl: string;
@@ -70,11 +72,26 @@ export const ironswornLodestarConfig: IExpansionConfig = {
   name: "Ironsworn Lodestar",
   type: "expansion",
   isHomebrew: false,
+  note: "Requires Ironsworn: Delve",
   load: async () => {
     const { lodestar } = await import(
       "@datasworn-community/ironsworn-classic-lodestar"
     );
     return lodestar;
+  },
+};
+
+export const ironswornGiveawaysConfig: IExpansionConfig = {
+  id: "giveaways_classic",
+  name: "Giveaway Assets",
+  type: "expansion",
+  isHomebrew: false,
+  note: "Some assets reference content from Ironsworn: Delve.",
+  load: async () => {
+    const { giveaways_classic } = await import(
+      "@datasworn-community/ironsworn-classic-giveaways"
+    );
+    return giveaways_classic;
   },
 };
 
@@ -90,6 +107,19 @@ export const sunderedIslesConfig: IExpansionConfig = {
       "@datasworn-community/sundered-isles"
     );
     return sundered_isles;
+  },
+};
+
+export const starforgedGiveawaysConfig: IExpansionConfig = {
+  id: "giveaways_starforged",
+  name: "Giveaway Assets",
+  type: "expansion",
+  isHomebrew: false,
+  load: async () => {
+    const { giveaways_starforged } = await import(
+      "@datasworn-community/starforged-giveaways"
+    );
+    return giveaways_starforged;
   },
 };
 
@@ -162,10 +192,12 @@ export const includedExpansions: Record<
   [ironswornConfig.id]: {
     [ironswornDelveConfig.id]: ironswornDelveConfig,
     [ironswornLodestarConfig.id]: ironswornLodestarConfig,
+    [ironswornGiveawaysConfig.id]: ironswornGiveawaysConfig,
     [ironsmithConfig.id]: ironsmithConfig,
   },
   [starforgedConfig.id]: {
     [sunderedIslesConfig.id]: sunderedIslesConfig,
+    [starforgedGiveawaysConfig.id]: starforgedGiveawaysConfig,
     [starsmithConfig.id]: starsmithConfig,
     // [feRunnersConfig.id]: feRunnersConfig,
   },
