@@ -1,9 +1,11 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
+import { useSvgId } from "hooks/useSvgId";
 
 export interface HexboxCheckedProps extends SvgIconProps {}
 
 export function HexboxChecked(props: HexboxCheckedProps) {
   const { sx, ...rest } = props;
+  const clipId = useSvgId("hexbox-checked");
   return (
     <SvgIcon
       viewBox="0 0 32 32"
@@ -22,7 +24,7 @@ export function HexboxChecked(props: HexboxCheckedProps) {
       {...rest}
     >
       <defs>
-        <clipPath id="clipPath2">
+        <clipPath id={clipId}>
           <path
             d="m6.601 15.966-7.6042-7.6042 1.901-1.901 5.7031 5.7031 12.24-12.24 1.901 1.9011z"
             display="none"
@@ -37,7 +39,7 @@ export function HexboxChecked(props: HexboxCheckedProps) {
       <path
         transform="matrix(.99945 0 0 .99945 6.136 8.0598)"
         d="m22.123 15.081-12.254 7.0748-12.254-7.0748 1e-7 -14.15 12.254-7.0748 12.254 7.0748z"
-        clipPath="url(#clipPath2)"
+        clipPath={`url(#${clipId})`}
         strokeLinejoin="round"
         strokeWidth="1.8409"
       />
