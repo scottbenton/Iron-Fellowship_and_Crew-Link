@@ -1,8 +1,10 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
+import { useSvgId } from "hooks/useSvgId";
 
 export interface SpecialTrackIconProps extends SvgIconProps {}
 
 export function SpecialTrackIcon(props: SpecialTrackIconProps) {
+  const clipId = useSvgId("special-track-icon-clip");
   const { sx, ...rest } = props;
   return (
     <SvgIcon
@@ -20,7 +22,7 @@ export function SpecialTrackIcon(props: SpecialTrackIconProps) {
       fill={"none"}
       {...rest}
     >
-      <g clipPath='url(#clip0_390_295)'>
+      <g clipPath={`url(#${clipId})`}>
         <rect
           x='-25.5'
           y='69.5'
@@ -269,7 +271,7 @@ export function SpecialTrackIcon(props: SpecialTrackIconProps) {
         />
       </g>
       <defs>
-        <clipPath id='clip0_390_295'>
+        <clipPath id={clipId}>
           <rect width='128' height='128' fill='white' />
         </clipPath>
       </defs>

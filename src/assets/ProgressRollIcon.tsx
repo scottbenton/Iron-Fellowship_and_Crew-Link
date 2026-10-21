@@ -1,8 +1,10 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
+import { useSvgId } from "hooks/useSvgId";
 
 export interface ProgressRollIconProps extends SvgIconProps {}
 
 export function ProgressRollIcon(props: ProgressRollIconProps) {
+  const clipId = useSvgId("progress-roll-icon-clip");
   const { sx, ...rest } = props;
   return (
     <SvgIcon
@@ -20,7 +22,7 @@ export function ProgressRollIcon(props: ProgressRollIconProps) {
       fill={"none"}
       {...rest}
     >
-      <g clipPath='url(#clip0_390_257)'>
+      <g clipPath={`url(#${clipId})`}>
         <rect
           x='15.1316'
           y='52.869'
@@ -199,7 +201,7 @@ export function ProgressRollIcon(props: ProgressRollIconProps) {
         />
       </g>
       <defs>
-        <clipPath id='clip0_390_257'>
+        <clipPath id={clipId}>
           <rect width='128' height='128' fill='white' />
         </clipPath>
       </defs>

@@ -1,8 +1,11 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
+import { useSvgId } from "hooks/useSvgId";
 
 export interface ActionIconProps extends SvgIconProps {}
 
 export function ActionIcon(props: ActionIconProps) {
+  const clipId = useSvgId("action-icon-clip");
+  const maskId = useSvgId("action-icon-mask");
   const { sx, ...rest } = props;
   return (
     <SvgIcon
@@ -20,7 +23,7 @@ export function ActionIcon(props: ActionIconProps) {
       fill={"none"}
       {...rest}
     >
-      <g clipPath='url(#clip0_390_216)'>
+      <g clipPath={`url(#${clipId})`}>
         <rect
           x='60.7431'
           y='60.8697'
@@ -64,7 +67,7 @@ export function ActionIcon(props: ActionIconProps) {
           fill='white'
           strokeWidth='3'
         />
-        <mask id='path-12-inside-1_390_216' fill='white'>
+        <mask id={maskId} fill='white'>
           <path d='M15.3497 69.3472L25.6136 59.0833L68.9214 102.391L58.6575 112.655L15.3497 69.3472Z' />
         </mask>
         <path
@@ -74,7 +77,7 @@ export function ActionIcon(props: ActionIconProps) {
         <path
           d='M17.4711 71.4685L27.735 61.2046L23.4923 56.9619L13.2284 67.2258L17.4711 71.4685ZM66.8001 100.27L56.5362 110.534L60.7789 114.776L71.0428 104.512L66.8001 100.27Z'
           fill='currentcolor'
-          mask='url(#path-12-inside-1_390_216)'
+          mask={`url(#${maskId})`}
         />
         <rect
           x='14.5'
@@ -87,7 +90,7 @@ export function ActionIcon(props: ActionIconProps) {
         />
       </g>
       <defs>
-        <clipPath id='clip0_390_216'>
+        <clipPath id={clipId}>
           <rect width='128' height='128' fill='white' />
         </clipPath>
       </defs>
