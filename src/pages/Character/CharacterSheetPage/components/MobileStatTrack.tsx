@@ -50,8 +50,12 @@ export function MobileStatTrack(props: MobileStatTrackProps) {
   return (
     <Stack
       alignItems="center"
+      // Like the Momentum box beside it: the buttons sit at the edges and the
+      // value in the middle, rather than all three bunched to the left.
+      justifyContent={smallSize ? undefined : "space-between"}
       direction={smallSize ? "column" : "row"}
       sx={(theme) => ({
+        height: smallSize ? undefined : "100%",
         boxShadow: smallSize ? `inset 0px 0px 0px 1px ${theme.palette.divider}` : undefined,
         border: !smallSize ? `1px solid ${theme.palette.divider}` : undefined,
         borderRadius: theme.shape.borderRadius + "px",
