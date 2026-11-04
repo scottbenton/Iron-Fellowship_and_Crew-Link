@@ -6,5 +6,6 @@ export const defaultAppState: AppStateData = {
     previousIds: [],
   },
   rolls: {},
+  screenReaderAnnouncementId: 0,
   betaTests: {},
 };

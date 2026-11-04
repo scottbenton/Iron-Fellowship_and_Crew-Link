@@ -15,7 +15,8 @@ import { LEGACY_TrackTypes } from "types/LegacyTrack.type";
 import { rollOracle } from "./rollers/rollOracle";
 import { idMap } from "data/idMap";
 import { Datasworn, IdParser } from "@datasworn-community/core";
-import { Dice } from "components/shared/Dice";
+import { rollDice } from "./rollers/rollDice";
+import { useHide3dDice } from "hooks/useHide3dDice";
 import { Theme, useTheme } from "@mui/material";
 
 const SUPPORTED_3D_DIE_SIDES = new Set([4, 6, 8, 10, 12, 20, 100]);
@@ -25,28 +26,14 @@ export interface RollResult {
 }
 
 export const getRolls = async (challengeDice: number, actionDice: number, theme: Theme, hide3dDice: boolean): Promise<RollResult[]> => {
-  if (hide3dDice) {
-    const rolls: RollResult[] = [];
-    for(let challenges = 0; challenges < challengeDice; challenges++) {
-      rolls.push({
-        value: Math.floor(Math.random() * 10) + 1
-      });
-    }
-    for(let actions = 0; actions < actionDice; actions++) {
-      rolls.push({
-        value: Math.floor(Math.random() * 6) + 1
-      });
-    }
-    return rolls;
-  }
-
-  Dice.clear().show();
-  setTimeout(() => Dice.hide("fade-out"), 100);
-
-  return await Dice.roll([
-    { qty: challengeDice, sides: 10, themeColor: theme.palette.darkGrey.light },
-    { qty: actionDice, sides: 6, themeColor: theme.palette.primary.main }
-  ]);
+  const values = await rollDice(
+    [
+      { qty: challengeDice, sides: 10, themeColor: theme.palette.darkGrey.light },
+      { qty: actionDice, sides: 6, themeColor: theme.palette.primary.main },
+    ],
+    !hide3dDice
+  );
+  return values.map((value) => ({ value }));
 };
 
 export function useRoller() {
@@ -69,9 +56,7 @@ export function useRoller() {
     (store) => store.characters.currentCharacter.currentCharacter?.momentum ?? 0
   );
 
-  const hide3dDice = useStore(
-    (store) => store.auth.userDoc?.hide3dDice
-  );
+  const hide3dDice = useHide3dDice();
 
   const theme = useTheme();
 
@@ -83,7 +68,7 @@ export function useRoller() {
       adds?: number,
       showSnackbar = true
     ) => {
-      const results = await getRolls(2, 1, theme, hide3dDice === true);
+      const results = await getRolls(2, 1, theme, hide3dDice);
       const challenge1 = results[0].value;
       const challenge2 = results[1].value;
       const action = results[2].value;
@@ -163,7 +148,7 @@ export function useRoller() {
           verboseScreenReaderRolls
             ? announcement
             : `Rolled ${
-                move ? move.name + "using stat" + label : label
+                move ? move.name + " using stat " + label : label
               }. Your action die had a total of ${actionTotal} against ${challenge1} and ${challenge2}, for a ${getRollResultLabel(
                 result
               )}`
@@ -202,7 +187,7 @@ export function useRoller() {
         return undefined;
       }
 
-      const oracleRoll = await rollOracle(oracle, characterId, uid, gmsOnly, theme, !showSnackbar || hide3dDice === true);
+      const oracleRoll = await rollOracle(oracle, characterId, uid, gmsOnly, theme, !showSnackbar || hide3dDice);
       if (!oracleRoll) return undefined;
 
       let result = oracleRoll.result ?? "";
@@ -266,7 +251,7 @@ export function useRoller() {
       moveId: string,
       trackType?: TrackTypes | LEGACY_TrackTypes,
     ) => {
-      const results = await getRolls(2, 0, theme, hide3dDice === true);
+      const results = await getRolls(2, 0, theme, hide3dDice);
       const challenge1 = results[0].value;
       const challenge2 = results[1].value;
 
@@ -340,7 +325,7 @@ export function useRoller() {
 
       if (!oracle || oracle.type !== "oracle_rollable") return undefined;
 
-      const result = await rollOracle(oracle, null, uid, true, theme, hide3dDice === true);
+      const result = await rollOracle(oracle, null, uid, true, theme, hide3dDice);
 
       if (!result) return undefined;
 
@@ -414,23 +399,16 @@ export function useRoller() {
       const { diceCount, typeOfDice, modifier } = parsed;
       const use3D = !hide3dDice && SUPPORTED_3D_DIE_SIDES.has(typeOfDice);
 
-      let dieValues: number[];
-      if (use3D) {
-        Dice.clear().show();
-        setTimeout(() => Dice.hide("fade-out"), 100);
-        const results = await Dice.roll([
+      const dieValues = await rollDice(
+        [
           {
             qty: diceCount,
             sides: typeOfDice,
             themeColor: theme.palette.primary.main,
           },
-        ]);
-        dieValues = results.map((r: { value: number }) => r.value);
-      } else {
-        dieValues = Array.from({ length: diceCount }, () =>
-          Math.floor(Math.random() * typeOfDice) + 1
-        );
-      }
+        ],
+        use3D
+      );
 
       const total = dieValues.reduce((sum, v) => sum + v, 0) + modifier;
 

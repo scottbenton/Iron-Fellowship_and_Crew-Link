@@ -1,3 +1,4 @@
+import { useHide3dDice } from "hooks/useHide3dDice";
 import {
   IconButton,
   ListItemIcon,
@@ -59,7 +60,7 @@ export function SettingsMenu() {
     (store) => store.auth.status === AUTH_STATE.AUTHENTICATED
   );
 
-  const hide3dDice = useStore((store) => store.auth.userDoc?.hide3dDice);
+  const hide3dDice = useHide3dDice();
   const updateUser = useStore((store) => store.auth.updateUserDoc);
 
   const toggleDice = () => {

@@ -7,7 +7,7 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import OpenIcon from "@mui/icons-material/ChevronRight";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { MoveContent } from "components/features/datasworn/MoveContent";
 
 export interface MoveProps {
@@ -21,6 +21,7 @@ export function Move(props: MoveProps) {
   const { move, openMove, disabled, shouldExpandLocally } = props;
 
   const [isOpen, setIsOpen] = useState(false);
+  const contentId = useId();
 
   return (
     <>
@@ -35,6 +36,11 @@ export function Move(props: MoveProps) {
       >
         <ListItemButton
           disabled={disabled}
+          // In place, the move opens below its name; otherwise it opens the
+          // move dialog.
+          aria-expanded={shouldExpandLocally ? isOpen : undefined}
+          aria-controls={shouldExpandLocally ? contentId : undefined}
+          aria-haspopup={shouldExpandLocally ? undefined : "dialog"}
           onClick={() =>
             shouldExpandLocally
               ? setIsOpen((prevOpen) => !prevOpen)
@@ -66,7 +72,7 @@ export function Move(props: MoveProps) {
           </ListItemIcon>
         </ListItemButton>
       </ListItem>
-      <Collapse in={isOpen}>
+      <Collapse in={isOpen} id={contentId}>
         <Box
           bgcolor="background.paper"
           p={2}

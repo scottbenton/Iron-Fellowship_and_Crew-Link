@@ -18,14 +18,16 @@ export interface MoveOraclesProps {
  *
  * Most moves that carry an oracle already place it themselves with a
  * {{table>...}} directive in their text, which MarkdownRenderer turns into the
- * table. Rendering it again here would show it twice, so those are left to the
- * markdown and only the roll button is added.
+ * table, with the roll button above it (OracleTableRenderer). Those are left
+ * out here, so neither the table nor its button shows twice.
  */
 export function MoveOracles(props: MoveOraclesProps) {
   const { move } = props;
 
-  const oracles = Object.entries(move.oracles ?? {});
   const alreadyRendered = getTableIdsRenderedInMarkdown(move.text);
+  const oracles = Object.entries(move.oracles ?? {}).filter(
+    ([, oracle]) => !alreadyRendered.has(withoutRulesPackage(oracle._id)),
+  );
 
   if (oracles.length === 0) {
     return null;
@@ -44,9 +46,7 @@ export function MoveOracles(props: MoveOraclesProps) {
               variant={"outlined"}
               oracleId={oracle._id}
             />
-            {!alreadyRendered.has(withoutRulesPackage(oracle._id)) && (
-              <MoveOracleContent oracle={oracle} />
-            )}
+            <MoveOracleContent oracle={oracle} />
           </Box>
         ))}
       </Stack>
