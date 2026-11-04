@@ -5,6 +5,7 @@ import { Datasworn, IdParser } from "@datasworn-community/core";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { getTableIdsRenderedInMarkdown } from "../getTableIdsRenderedInMarkdown";
 import { MoveOracles } from "../MoveOracles";
+import { getMoveTableAction } from "../getMoveTableAction";
 import { withoutRulesPackage } from "../getTableIdsRenderedInMarkdown";
 import { classic } from "@datasworn-community/ironsworn-classic";
 import { delve } from "@datasworn-community/ironsworn-classic-delve";
@@ -111,8 +112,12 @@ describe("each of a move's oracle tables is drawn exactly once", () => {
    */
   function renderMoveBody(move: Datasworn.Move): string {
     return (
-      renderToStaticMarkup(<MarkdownRenderer markdown={move.text} />) +
-      renderToStaticMarkup(<MoveOracles move={move} />)
+      renderToStaticMarkup(
+        <MarkdownRenderer
+          markdown={move.text}
+          renderTableAction={getMoveTableAction(move)}
+        />,
+      ) + renderToStaticMarkup(<MoveOracles move={move} />)
     );
   }
 
@@ -146,6 +151,37 @@ describe("each of a move's oracle tables is drawn exactly once", () => {
 
     expect(wrong).toEqual([]);
   });
+
+  it.each(PACKAGES)(
+    "with one roll button per table, above it, in %s",
+    (_label, json) => {
+      const wrong: string[] = [];
+
+      movesWithOracles(json).forEach((move) => {
+        const html = renderMoveBody(move);
+        // Links in the text render as buttons too, so count MUI Buttons only.
+        const rollButton = /<button[^>]*\bMuiButton-root\b/g;
+        // Each oracle table, in order, with the markup since the last one.
+        const segments = html.split("<table").slice(0, -1);
+        const oracleTables = Object.keys(move.oracles ?? {}).length;
+        const buttons = html.match(rollButton)?.length ?? 0;
+
+        if (buttons !== oracleTables) {
+          wrong.push(`${move._id}: ${buttons} buttons for ${oracleTables} tables`);
+        }
+        // The prose tables Ask the Oracle writes out have no button of their
+        // own, so only check the oracle tables have one before them.
+        const tablesWithoutButton = segments.filter(
+          (segment) => !segment.match(rollButton),
+        ).length;
+        if (tablesWithoutButton > proseTableCount(move.text)) {
+          wrong.push(`${move._id}: a table comes before its roll button`);
+        }
+      });
+
+      expect(wrong).toEqual([]);
+    },
+  );
 
   it("leaves Reveal a Danger's table to the markdown", () => {
     const move = movesWithOracles(delve).find(

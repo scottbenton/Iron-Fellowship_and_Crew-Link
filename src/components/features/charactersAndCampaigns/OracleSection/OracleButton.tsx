@@ -9,7 +9,7 @@ export interface OracleButtonProps extends ButtonProps {
 }
 
 export function OracleButton(props: OracleButtonProps) {
-  const { oracleId, ...buttonProps } = props;
+  const { oracleId, children, ...buttonProps } = props;
 
   let oracle:
     | Datasworn.OracleRollable
@@ -45,7 +45,7 @@ export function OracleButton(props: OracleButtonProps) {
       onClick={() => rollOracleTable(oracleId, true, shouldOracleRollBeGMSOnly)}
       endIcon={<RollIcon />}
     >
-      {oracle.name}
+      {children ?? oracle.name}
     </Button>
   );
 }

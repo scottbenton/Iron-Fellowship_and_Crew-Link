@@ -13,6 +13,7 @@ import { useStore } from "stores/store";
 import { OracleTableRenderer } from "./OracleTableRenderer";
 import { idMap } from "data/idMap";
 import { Datasworn, IdParser } from "@datasworn-community/core";
+import { ReactNode } from "react";
 
 export interface MarkdownRendererProps {
   inlineParagraph?: boolean;
@@ -21,6 +22,10 @@ export interface MarkdownRendererProps {
   disableLinks?: boolean;
   typographyVariant?: TypographyProps["variant"];
   sx?: SxProps<Theme>;
+  // Drawn directly above a table the text places with a {{table>id}} or
+  // {{table:id}} directive, given the directive's id. A move puts its roll
+  // button here, so screen reader users reach it before a long table.
+  renderTableAction?: (tableId: string) => ReactNode;
 }
 
 export function MarkdownRenderer(props: MarkdownRendererProps) {
@@ -31,6 +36,7 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
     disableLinks,
     typographyVariant,
     sx,
+    renderTableAction,
   } = props;
 
   const openDialog = useStore((store) => store.appState.openDialog);
@@ -70,7 +76,12 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
                 // Empty - if oracle is undefined we will continue parsing
               }
               if (oracle) {
-                return <OracleTableRenderer oracle={oracle} />;
+                return (
+                  <>
+                    {renderTableAction?.(id)}
+                    <OracleTableRenderer oracle={oracle} />
+                  </>
+                );
               }
             } else if (content.match(/^{{table:[^/]+\/truths\/[^}]+}}$/)) {
               return null;

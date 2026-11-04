@@ -1,6 +1,6 @@
-import { Box, Fade } from "@mui/material";
+import { Box, Button, Fade } from "@mui/material";
 import { EditorContent, Editor as TTEditor } from "@tiptap/react";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 export interface EditorProps {
   outlined?: boolean;
@@ -9,6 +9,9 @@ export interface EditorProps {
   saving?: boolean;
   toolbar?: ReactNode;
   minHeight?: number;
+  // Names the editable area for screen readers, and the link that skips the
+  // toolbar to reach it ("Skip to note text").
+  label?: string;
 }
 
 export function Editor(props: EditorProps) {
@@ -19,7 +22,27 @@ export function Editor(props: EditorProps) {
     toolbar,
     saving,
     minHeight = 300,
+    label = "Text",
   } = props;
+
+  useEffect(() => {
+    if (!editor || editor.isDestroyed) {
+      return;
+    }
+    editor.setOptions({
+      editorProps: {
+        ...editor.options.editorProps,
+        attributes: {
+          ...(typeof editor.options.editorProps.attributes === "object"
+            ? editor.options.editorProps.attributes
+            : {}),
+          role: "textbox",
+          "aria-multiline": "true",
+          "aria-label": label,
+        },
+      },
+    });
+  }, [editor, label]);
 
   return (
     <Box
@@ -41,6 +64,33 @@ export function Editor(props: EditorProps) {
             }
       }
     >
+      {toolbar && editable && editor && (
+        // Before the toolbar, so keyboard and screen reader users can go
+        // straight to the text rather than through every formatting button.
+        // Hidden until focused, like Skip to Content.
+        <Button
+          variant={"contained"}
+          onClick={() => editor.chain().focus().run()}
+          sx={{
+            position: "absolute",
+            zIndex: 1,
+            m: 1,
+            "&:not(:focus)": {
+              width: "1px",
+              height: "1px",
+              p: 0,
+              m: "-1px",
+              overflow: "hidden",
+              clip: "rect(0, 0, 0, 0)",
+              clipPath: "inset(50%)",
+              whiteSpace: "nowrap",
+              border: 0,
+            },
+          }}
+        >
+          Skip to {label.toLowerCase()}
+        </Button>
+      )}
       {toolbar}
       <Box position={"relative"}>
         <Fade in={saving}>

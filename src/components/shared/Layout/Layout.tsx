@@ -59,7 +59,7 @@ export function Layout() {
         maxHeight={{ xs: undefined, sm: "100vh" }}
         flexGrow={1}
       >
-        <LiveRegion />
+        <LiveRegion id={"live-region"} />
         <SkipToContentButton />
         <LayoutPathListener />
         <TopNav />
@@ -70,9 +70,12 @@ export function Layout() {
             flexDirection: "column",
             flexGrow: 1,
             overflowY: { xs: "unset", sm: "auto" },
+            "&:focus": { outline: "none" },
           }}
           component={"main"}
           id={"main-content"}
+          // Lets Skip to Content move focus here, not just scroll, in Safari.
+          tabIndex={-1}
         >
           <Outlet />
         </Box>

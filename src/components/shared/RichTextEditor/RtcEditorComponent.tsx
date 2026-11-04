@@ -48,6 +48,7 @@ export function RtcEditorComponent(props: RtcRichTextEditorProps) {
       editable={!readOnly}
       editor={editor}
       saving={saving}
+      label={"Note text"}
       toolbar={
         editor &&
         !readOnly && (

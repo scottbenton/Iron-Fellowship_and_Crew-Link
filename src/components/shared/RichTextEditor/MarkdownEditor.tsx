@@ -61,6 +61,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
         </>
       }
       editor={editor}
+      label={label}
       editable
       outlined
       minHeight={100}

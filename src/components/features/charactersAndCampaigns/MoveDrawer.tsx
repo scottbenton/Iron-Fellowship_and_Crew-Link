@@ -1,6 +1,6 @@
-import { SwipeableDrawer } from "@mui/material";
 import { MovesSection } from "./MovesSection";
-import React, { useCallback } from "react";
+import React from "react";
+import { ReferenceDrawer } from "./ReferenceDrawer";
 
 export interface MoveDrawerProps {
   open: boolean;
@@ -10,18 +10,10 @@ export interface MoveDrawerProps {
 function MoveDrawerUnMemoized(props: MoveDrawerProps) {
   const { open, onClose } = props;
 
-  const openCallback = useCallback(() => {}, []);
   return (
-    <SwipeableDrawer
-      open={open}
-      onOpen={openCallback}
-      keepMounted
-      disableSwipeToOpen
-      disableDiscovery
-      onClose={onClose}
-    >
+    <ReferenceDrawer title={"Moves"} open={open} onClose={onClose}>
       <MovesSection />
-    </SwipeableDrawer>
+    </ReferenceDrawer>
   );
 }
 

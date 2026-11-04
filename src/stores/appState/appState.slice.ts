@@ -73,6 +73,7 @@ export const createAppStateSlice: CreateSliceType<AppStateSlice> = (set) => ({
   announce: (announcement) => {
     set((store) => {
       store.appState.screenReaderAnnouncement = announcement;
+      store.appState.screenReaderAnnouncementId += 1;
     });
   },
 

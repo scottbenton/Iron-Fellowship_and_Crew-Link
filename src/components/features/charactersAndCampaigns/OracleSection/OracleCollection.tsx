@@ -1,5 +1,5 @@
 import { Datasworn } from "@datasworn-community/core";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
 import { Collapse, List } from "@mui/material";
 import { OracleSelectableRollableCollectionListItem } from "./OracleSelectableRollableCollectionListItem";
@@ -56,6 +56,7 @@ export function OracleCollection(props: OracleCollectionProps) {
   };
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const contentsId = useId();
   const isExpandedOrForced = isExpanded || forceOpen;
 
   const collection = collections[collectionId];
@@ -133,8 +134,9 @@ export function OracleCollection(props: OracleCollectionProps) {
             />
         ) : undefined}
         hidden={hidden}
+        controlsId={contentsId}
       />
-      <Collapse in={isExpandedOrForced}>
+      <Collapse in={isExpandedOrForced} id={contentsId}>
         <List sx={{ py: 0, mb: isExpandedOrForced ? 0.5 : 0 }}>
           {oracleIds.map((oracleId) => {
             const hidden = hiddenOracles?.includes(oracleId);
