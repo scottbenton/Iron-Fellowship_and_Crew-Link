@@ -2,6 +2,7 @@ import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 import { Editor } from "./Editor";
+import { textboxAttributes } from "./textboxAttributes";
 import { Box, Typography } from "@mui/material";
 import { MarkdownEditorToolbar } from "./MarkdownEditorToolbar";
 import Link from "@tiptap/extension-link";
@@ -24,6 +25,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
         Link.extend({ inclusive: false }).configure({ openOnClick: false }),
       ],
       content,
+      editorProps: { attributes: textboxAttributes(label) },
       onBlur,
       onUpdate: ({ editor }) => {
         const markdown = editor.storage.markdown.getMarkdown();

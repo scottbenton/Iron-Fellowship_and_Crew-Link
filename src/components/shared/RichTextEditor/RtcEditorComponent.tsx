@@ -2,9 +2,12 @@ import { useEditor } from "@tiptap/react";
 import { WebrtcProvider } from "y-webrtc";
 import * as Y from "yjs";
 import { Editor } from "./Editor";
+import { textboxAttributes } from "./textboxAttributes";
 import { EditorToolbar } from "./EditorToolbar";
 import { useStore } from "stores/store";
 import { rtcExtensions } from "./rtcExtensions";
+
+const NOTE_TEXT_LABEL = "Note text";
 
 export interface RtcRichTextEditorProps {
   provider: WebrtcProvider;
@@ -38,6 +41,7 @@ export function RtcEditorComponent(props: RtcRichTextEditorProps) {
         withHeading,
       }),
       editable: !readOnly,
+      editorProps: { attributes: textboxAttributes(NOTE_TEXT_LABEL) },
     },
     [doc, provider, user, withHeading]
   );
@@ -48,7 +52,7 @@ export function RtcEditorComponent(props: RtcRichTextEditorProps) {
       editable={!readOnly}
       editor={editor}
       saving={saving}
-      label={"Note text"}
+      label={NOTE_TEXT_LABEL}
       toolbar={
         editor &&
         !readOnly && (

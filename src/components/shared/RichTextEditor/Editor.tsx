@@ -1,6 +1,6 @@
 import { Box, Button, Fade } from "@mui/material";
 import { EditorContent, Editor as TTEditor } from "@tiptap/react";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
 export interface EditorProps {
   outlined?: boolean;
@@ -9,8 +9,9 @@ export interface EditorProps {
   saving?: boolean;
   toolbar?: ReactNode;
   minHeight?: number;
-  // Names the editable area for screen readers, and the link that skips the
-  // toolbar to reach it ("Skip to note text").
+  // Names the link that skips the toolbar to reach the text ("Skip to note
+  // text"). The text's accessible name comes from textboxAttributes, passed
+  // where the editor is created.
   label?: string;
 }
 
@@ -24,25 +25,6 @@ export function Editor(props: EditorProps) {
     minHeight = 300,
     label = "Text",
   } = props;
-
-  useEffect(() => {
-    if (!editor || editor.isDestroyed) {
-      return;
-    }
-    editor.setOptions({
-      editorProps: {
-        ...editor.options.editorProps,
-        attributes: {
-          ...(typeof editor.options.editorProps.attributes === "object"
-            ? editor.options.editorProps.attributes
-            : {}),
-          role: "textbox",
-          "aria-multiline": "true",
-          "aria-label": label,
-        },
-      },
-    });
-  }, [editor, label]);
 
   return (
     <Box
