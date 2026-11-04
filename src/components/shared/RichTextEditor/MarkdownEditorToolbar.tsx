@@ -15,6 +15,8 @@ import StrikeThroughIcon from "@mui/icons-material/FormatStrikethrough";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import BulletListIcon from "@mui/icons-material/FormatListBulleted";
 import NumberedListIcon from "@mui/icons-material/FormatListNumbered";
+import IndentIcon from "@mui/icons-material/FormatIndentIncrease";
+import OutdentIcon from "@mui/icons-material/FormatIndentDecrease";
 import { useStore } from "stores/store";
 import MovesIcon from "@mui/icons-material/DirectionsRun";
 import { OracleIcon } from "assets/OracleIcon";
@@ -142,6 +144,32 @@ export function MarkdownEditorToolbar(props: MarkdownEditorToolbarProps) {
           >
             <NumberedListIcon />
           </ToggleButton>
+        </Tooltip>
+        <Tooltip title={"Indent"} enterDelay={300}>
+          <span>
+            <ToggleButton
+              value={"indent"}
+              onClick={() =>
+                editor.chain().focus().sinkListItem("listItem").run()
+              }
+              disabled={!editor.can().sinkListItem("listItem")}
+            >
+              <IndentIcon />
+            </ToggleButton>
+          </span>
+        </Tooltip>
+        <Tooltip title={"Outdent"} enterDelay={300}>
+          <span>
+            <ToggleButton
+              value={"outdent"}
+              onClick={() =>
+                editor.chain().focus().liftListItem("listItem").run()
+              }
+              disabled={!editor.can().liftListItem("listItem")}
+            >
+              <OutdentIcon />
+            </ToggleButton>
+          </span>
         </Tooltip>
         <Tooltip title={"Horizontal Rule"} enterDelay={300}>
           <ToggleButton
