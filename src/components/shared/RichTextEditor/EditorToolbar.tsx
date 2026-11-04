@@ -117,20 +117,6 @@ export function EditorToolbar(props: EditorToolbarProps) {
             <NumberedListIcon />
           </ToggleButton>
         </Tooltip>
-        <Tooltip title={"Indent"} enterDelay={300}>
-          <span>
-            <ToggleButton
-              size={"small"}
-              value={"indent"}
-              onClick={() =>
-                editor.chain().focus().sinkListItem("listItem").run()
-              }
-              disabled={!editor.can().sinkListItem("listItem")}
-            >
-              <IndentIcon />
-            </ToggleButton>
-          </span>
-        </Tooltip>
         <Tooltip title={"Outdent"} enterDelay={300}>
           <span>
             <ToggleButton
@@ -142,6 +128,20 @@ export function EditorToolbar(props: EditorToolbarProps) {
               disabled={!editor.can().liftListItem("listItem")}
             >
               <OutdentIcon />
+            </ToggleButton>
+          </span>
+        </Tooltip>
+        <Tooltip title={"Indent"} enterDelay={300}>
+          <span>
+            <ToggleButton
+              size={"small"}
+              value={"indent"}
+              onClick={() =>
+                editor.chain().focus().sinkListItem("listItem").run()
+              }
+              disabled={!editor.can().sinkListItem("listItem")}
+            >
+              <IndentIcon />
             </ToggleButton>
           </span>
         </Tooltip>
