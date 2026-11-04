@@ -5,7 +5,6 @@ import { Datasworn, IdParser } from "@datasworn-community/core";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { getTableIdsRenderedInMarkdown } from "../getTableIdsRenderedInMarkdown";
 import { MoveOracles } from "../MoveOracles";
-import { getMoveTableAction } from "../getMoveTableAction";
 import { withoutRulesPackage } from "../getTableIdsRenderedInMarkdown";
 import { classic } from "@datasworn-community/ironsworn-classic";
 import { delve } from "@datasworn-community/ironsworn-classic-delve";
@@ -112,12 +111,8 @@ describe("each of a move's oracle tables is drawn exactly once", () => {
    */
   function renderMoveBody(move: Datasworn.Move): string {
     return (
-      renderToStaticMarkup(
-        <MarkdownRenderer
-          markdown={move.text}
-          renderTableAction={getMoveTableAction(move)}
-        />,
-      ) + renderToStaticMarkup(<MoveOracles move={move} />)
+      renderToStaticMarkup(<MarkdownRenderer markdown={move.text} />) +
+      renderToStaticMarkup(<MoveOracles move={move} />)
     );
   }
 
