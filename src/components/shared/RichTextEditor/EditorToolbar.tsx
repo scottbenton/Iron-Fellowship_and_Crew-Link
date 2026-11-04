@@ -8,6 +8,8 @@ import QuoteIcon from "@mui/icons-material/FormatQuote";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import BulletListIcon from "@mui/icons-material/FormatListBulleted";
 import NumberedListIcon from "@mui/icons-material/FormatListNumbered";
+import IndentIcon from "@mui/icons-material/FormatIndentIncrease";
+import OutdentIcon from "@mui/icons-material/FormatIndentDecrease";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
 
@@ -114,6 +116,34 @@ export function EditorToolbar(props: EditorToolbarProps) {
           >
             <NumberedListIcon />
           </ToggleButton>
+        </Tooltip>
+        <Tooltip title={"Outdent"} enterDelay={300}>
+          <span>
+            <ToggleButton
+              size={"small"}
+              value={"outdent"}
+              onClick={() =>
+                editor.chain().focus().liftListItem("listItem").run()
+              }
+              disabled={!editor.can().liftListItem("listItem")}
+            >
+              <OutdentIcon />
+            </ToggleButton>
+          </span>
+        </Tooltip>
+        <Tooltip title={"Indent"} enterDelay={300}>
+          <span>
+            <ToggleButton
+              size={"small"}
+              value={"indent"}
+              onClick={() =>
+                editor.chain().focus().sinkListItem("listItem").run()
+              }
+              disabled={!editor.can().sinkListItem("listItem")}
+            >
+              <IndentIcon />
+            </ToggleButton>
+          </span>
         </Tooltip>
         <Tooltip title={"Horizontal Rule"} enterDelay={300}>
           <ToggleButton
