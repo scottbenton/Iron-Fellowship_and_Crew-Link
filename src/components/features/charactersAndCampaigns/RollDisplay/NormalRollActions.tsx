@@ -17,6 +17,8 @@ import { DieRerollDialog } from "./DieRerollDialog";
 import { ROLL_RESULT, ROLL_TYPE, Roll } from "types/DieRolls.type";
 import { useStore } from "stores/store";
 import { useCampaignType } from "hooks/useCampaignType";
+import { getRollTitle } from "functions/rollText";
+import { getRollResultLabel } from "./getRollResultLabel";
 
 export interface NormalRollActionsProps {
   rollId: string;
@@ -134,7 +136,12 @@ export function NormalRollActions(props: NormalRollActionsProps) {
       Promise.all(promises)
         .catch(() => {})
         .then(() => {
-          success("Burned Momentum");
+          // Says the new result, which screen readers otherwise miss.
+          success(
+            `Burned momentum. ${getRollTitle(roll)} is now a ${getRollResultLabel(
+              newRollResult
+            )}.`
+          );
         });
     }
   };
