@@ -156,15 +156,21 @@ export function ClockDialog(props: ClockDialogProps) {
               >
                 <CardActionArea
                   onClick={() => setSegments(segmentOption)}
+                  aria-pressed={segmentOption === segments}
                   sx={{ p: 1 }}
                 >
                   <Box display={"flex"} alignItems={"baseline"}>
-                    <Typography variant={"h5"}>{segmentOption}</Typography>
+                    <Typography variant={"h5"} component={"span"}>
+                      {segmentOption}
+                    </Typography>
                     <Typography variant={"subtitle1"} ml={1}>
                       segments
                     </Typography>
                   </Box>
-                  <ClockCircle segments={segmentOption} value={0} />
+                  {/* The button's text already says how many segments. */}
+                  <Box aria-hidden>
+                    <ClockCircle segments={segmentOption} value={0} />
+                  </Box>
                 </CardActionArea>
               </Card>
             ))}

@@ -1,6 +1,7 @@
 import { useDebouncedState } from "hooks/useDebouncedState";
 import { ClockCircle, ClockSize } from "./ClockCircle";
 import { useStore } from "stores/store";
+import { getClockValueText } from "functions/trackValueText";
 
 export interface DebouncedClockCircleProps {
   segments: number;
@@ -21,19 +22,16 @@ export function DebouncedClockCircle(props: DebouncedClockCircleProps) {
   const announce = useStore((store) => store.appState.announce);
 
   const handleIncrement = () => {
-    setLocalFilledSegments((prev) => {
-      const newValue = prev + 1;
-      if (segments < newValue) {
-        announce(
-          `Cannot increase clock ${voiceLabel} beyond ${segments}. Resetting field to 0`
-        );
-        return 0;
-      }
-      announce(
-        `Increased clock ${voiceLabel} by 1 for a total of ${newValue} of ${segments} segments.`
-      );
-      return newValue;
-    });
+    const newValue =
+      localFilledSegments + 1 > segments ? 0 : localFilledSegments + 1;
+    setLocalFilledSegments(newValue);
+    // Announced here rather than in a state updater, which React may run
+    // twice.
+    announce(
+      newValue === 0
+        ? `Cleared clock ${getClockValueText(voiceLabel, 0, segments)}`
+        : getClockValueText(voiceLabel, newValue, segments)
+    );
   };
 
   return (
@@ -41,7 +39,8 @@ export function DebouncedClockCircle(props: DebouncedClockCircleProps) {
       segments={segments}
       value={localFilledSegments}
       size={size}
-      onClick={handleIncrement}
+      onClick={onFilledSegmentsChange ? handleIncrement : undefined}
+      label={voiceLabel}
     />
   );
 }
