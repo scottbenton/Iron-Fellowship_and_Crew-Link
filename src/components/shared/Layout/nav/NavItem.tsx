@@ -1,6 +1,7 @@
 import { Box, ButtonBase, SxProps, Typography } from "@mui/material";
 import { LinkComponent } from "components/shared/LinkComponent";
 import { useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 export interface NavItemProps {
   label: string;
@@ -18,6 +19,10 @@ export function NavItem(props: NavItemProps) {
     props;
 
   const isHoveringRef = useRef(false);
+  const { pathname } = useLocation();
+  // Tells screen readers which section is shown: "current page" on the
+  // section's own page, "current" on a page inside it, like a character sheet.
+  const ariaCurrent = active ? (pathname === href ? "page" : "true") : undefined;
 
   const handleMouseEnter = () => {
     isHoveringRef.current = true;
@@ -59,6 +64,7 @@ export function NavItem(props: NavItemProps) {
       ]}
       LinkComponent={LinkComponent}
       href={href}
+      aria-current={ariaCurrent}
     >
       <Box
         sx={(theme) => ({

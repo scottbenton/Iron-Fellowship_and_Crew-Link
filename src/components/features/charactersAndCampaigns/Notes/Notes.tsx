@@ -129,6 +129,7 @@ export function Notes(props: NotesProps) {
                 <Link
                   underline="hover"
                   color="inherit"
+                  component={"button"}
                   onClick={() => setSelectedNote()}
                   sx={{ cursor: "pointer" }}
                 >

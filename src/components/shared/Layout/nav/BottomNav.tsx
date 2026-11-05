@@ -24,6 +24,7 @@ export function BottomNav() {
       <Box height={footerHeight} id={"footer-intersection-observer"} />
       <Slide in={isFooterVisible} direction="up">
         <Box
+          component={"nav"}
           sx={(theme) => ({
             display: "flex",
             alignItems: "center",

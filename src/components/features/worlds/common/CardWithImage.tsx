@@ -34,7 +34,7 @@ export function CardWithImage(props: CardWithImageProps) {
         onClick={handleClick}
         sx={(theme) => ({
           p: 2,
-          "& #portrait": {
+          "& .card-with-image-portrait": {
             marginTop: -3,
             marginLeft: -1,
             transitionProperty: "margin-top margin-bottom",
@@ -42,7 +42,7 @@ export function CardWithImage(props: CardWithImageProps) {
             transitionTimingFunction: theme.transitions.easing.easeInOut,
           },
           "&:hover, &:focus-visible": {
-            "& #portrait": {
+            "& .card-with-image-portrait": {
               marginTop: -1.5,
               marginBottom: -1.5,
             },
@@ -51,7 +51,7 @@ export function CardWithImage(props: CardWithImageProps) {
       >
         <Box display={"flex"} alignItems={"start"}>
           <Box
-            id={"portrait"}
+            className={"card-with-image-portrait"}
             sx={(theme) => ({
               marginRight: 2,
               width: 80,

@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { CampaignType } from "api-calls/campaign/_campaign.type";
+import { useId } from "react";
 
 import SoloIcon from "@mui/icons-material/Person4";
 import CoopIcon from "@mui/icons-material/Group";
@@ -45,6 +46,7 @@ export interface CampaignTypeChooserProps {
 
 export function CampaignTypeChooser(props: CampaignTypeChooserProps) {
   const { type, onChange, hideSolo } = props;
+  const idPrefix = useId();
 
   return (
     <Grid container spacing={1}>
@@ -77,8 +79,8 @@ export function CampaignTypeChooser(props: CampaignTypeChooserProps) {
                   alignItems: "flex-start",
                   justifyContent: "flex-start",
                 }}
-                aria-selected={key === type}
-                aria-labelledby={key + "-title"}
+                aria-pressed={key === type}
+                aria-labelledby={`${idPrefix}-${key}-title`}
                 onClick={() => onChange(key as CampaignType)}
               >
                 <Box display={"flex"} alignItems={"center"} sx={{ mb: 1 }}>
@@ -93,7 +95,12 @@ export function CampaignTypeChooser(props: CampaignTypeChooserProps) {
                   >
                     <Icon />
                   </Box>
-                  <Typography variant={"h6"} sx={{ ml: 1 }} id={key + "-title"}>
+                  <Typography
+                    variant={"h6"}
+                    component={"span"}
+                    sx={{ ml: 1 }}
+                    id={`${idPrefix}-${key}-title`}
+                  >
                     {title}
                   </Typography>
                 </Box>
