@@ -1,11 +1,6 @@
 import { Box, DialogTitle, IconButton, Typography } from "@mui/material";
-import {
-  PropsWithChildren,
-  ReactNode,
-  useId,
-  useLayoutEffect,
-  useRef,
-} from "react";
+import DialogContext from "@mui/material/Dialog/DialogContext";
+import { PropsWithChildren, ReactNode, useContext, useId } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { LiveRegion } from "./LiveRegion";
 
@@ -18,16 +13,11 @@ export function DialogTitleWithCloseButton(
 ) {
   const { children, actions, onClose } = props;
 
-  // MUI names the dialog after the whole title bar, which would make its name
-  // end in "Close Dialog" and any other buttons here. Point the dialog at the
-  // heading alone instead.
-  const titleId = useId();
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  useLayoutEffect(() => {
-    titleRef.current
-      ?.closest("[role='dialog']")
-      ?.setAttribute("aria-labelledby", titleId);
-  }, [titleId]);
+  // The dialog is named by whichever element holds its title id. MUI puts that
+  // id on DialogTitle, which here also holds the buttons, so the name would end
+  // in "Close Dialog". Give the id to the heading alone instead.
+  const { titleId } = useContext(DialogContext);
+  const titleBarId = useId();
 
   return (
     <>
@@ -37,8 +27,9 @@ export function DialogTitleWithCloseButton(
         alignItems={"center"}
         justifyContent={"space-between"}
         component={"div"}
+        id={titleBarId}
       >
-        <Typography variant={"h6"} component={"h2"} id={titleId} ref={titleRef}>
+        <Typography variant={"h6"} component={"h2"} id={titleId}>
           {children}
         </Typography>
         <Box display={"flex"} alignItems={"center"} flexShrink={0} ml={1}>

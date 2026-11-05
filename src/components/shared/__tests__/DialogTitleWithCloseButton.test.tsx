@@ -2,7 +2,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { act } from "react";
 import { createRoot, Root } from "react-dom/client";
-import { Dialog } from "@mui/material";
+// The ESM build, so the dialog shares the DialogContext the title reads
+// (the package root resolves to the CommonJS build under Node).
+import Dialog from "@mui/material/Dialog/Dialog";
 import { DialogTitleWithCloseButton } from "../DialogTitleWithCloseButton";
 
 (
