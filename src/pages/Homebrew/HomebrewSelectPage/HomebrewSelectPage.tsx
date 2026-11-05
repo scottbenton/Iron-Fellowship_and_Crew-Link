@@ -18,6 +18,7 @@ import { LinkComponent } from "components/shared/LinkComponent";
 import { constructHomebrewEditorPath } from "../routes";
 import { EmptyState } from "components/shared/EmptyState";
 import { FooterFab } from "components/shared/Layout/FooterFab";
+import { Head } from "providers/HeadProvider/Head";
 
 export function HomebrewSelectPage() {
   const sortedHomebrewIds = useStore(
@@ -40,6 +41,7 @@ export function HomebrewSelectPage() {
 
   return (
     <>
+      <Head title={"Your Homebrew Library"} />
       <PageHeader
         label={"Your Homebrew Library"}
         actions={

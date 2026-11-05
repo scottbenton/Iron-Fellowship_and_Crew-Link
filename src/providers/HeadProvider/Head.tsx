@@ -1,6 +1,7 @@
 import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { Helmet } from "react-helmet-async";
 import { appDetails } from "config/appDetails.config";
+import { getPageTitle } from "./getPageTitle";
 
 export interface HeadProps {
   title: string;
@@ -12,13 +13,12 @@ export function Head(props: HeadProps) {
   const { title, description, openGraphImageSrc } = props;
 
   const details = useGameSystemValue(appDetails);
+  const pageTitle = getPageTitle(title, details.title);
 
   return (
     <Helmet>
-      <title>
-        {title} | {details.title}
-      </title>
-      <meta property="og:title" content={`${title} | ${details.title}`} />
+      <title>{pageTitle}</title>
+      <meta property="og:title" content={pageTitle} />
       {description && <meta property="og:description" content={description} />}
       {openGraphImageSrc && (
         <>

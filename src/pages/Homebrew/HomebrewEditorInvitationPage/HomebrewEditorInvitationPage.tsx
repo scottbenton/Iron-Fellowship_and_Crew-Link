@@ -4,6 +4,7 @@ import { acceptEditorInvite } from "api-calls/homebrew/editorFunction/acceptEdit
 import { getHomebrewCollectionFromInviteUrl } from "api-calls/homebrew/editorFunction/getHomebrewCollectionFromInviteUrl";
 import { EmptyState } from "components/shared/EmptyState";
 import { PageContent, PageHeader } from "components/shared/Layout";
+import { Head } from "providers/HeadProvider/Head";
 import { useSnackbar } from "providers/SnackbarProvider";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -72,6 +73,7 @@ export function HomebrewEditorInvitationPage() {
 
   return (
     <>
+      <Head title={`Join ${homebrewDetails.title}`} />
       <PageHeader label={`Join ${homebrewDetails.title}`} />
       <PageContent isPaper>
         <Box display={"flex"} mt={4} justifyContent={"center"}>

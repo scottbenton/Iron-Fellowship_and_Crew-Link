@@ -19,6 +19,7 @@ import { MovesSection } from "./MovesSection";
 import { AssetsSection } from "./AssetsSection";
 import { arrayUnion } from "firebase/firestore";
 import { useSnackbar } from "providers/SnackbarProvider";
+import { Head } from "providers/HeadProvider/Head";
 
 enum TABS {
   ABOUT = "about",
@@ -93,6 +94,7 @@ export function HomebrewEditorPage() {
   if (!homebrewId || !homebrewDetails) {
     return (
       <>
+        <Head title={"Homebrew Collection not Found"} />
         <PageHeader />
         <PageContent isPaper>
           <EmptyState
@@ -168,6 +170,7 @@ export function HomebrewEditorPage() {
 
   return (
     <>
+      <Head title={homebrewName} />
       <PageHeader label={homebrewName} {...getPageHeaderProps()} />
       <PageContent isPaper>
         <Box

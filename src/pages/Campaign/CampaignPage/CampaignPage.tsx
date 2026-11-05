@@ -57,6 +57,7 @@ export function CampaignPage() {
   if (!isCampaignLoaded) {
     return (
       <>
+        <Head title={"Campaign not Found"} />
         <PageHeader />
         <PageContent isPaper>
           <EmptyState

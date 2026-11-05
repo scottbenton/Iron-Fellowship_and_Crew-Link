@@ -46,6 +46,7 @@ export function CharacterSheetPage() {
   if (!isCharacterLoaded) {
     return (
       <>
+        <Head title={"Character not Found"} />
         <PageHeader />
         <PageContent isPaper>
           <EmptyState
