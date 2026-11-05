@@ -44,11 +44,7 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={() => handleClose()}
-      aria-labelledby={titleId}
-    >
+    <Dialog open={open} onClose={() => handleClose()} aria-labelledby={titleId}>
       <DialogTitle
         id={titleBarId}
         component={"div"}

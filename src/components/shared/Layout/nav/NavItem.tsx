@@ -22,7 +22,11 @@ export function NavItem(props: NavItemProps) {
   const { pathname } = useLocation();
   // Tells screen readers which section is shown: "current page" on the
   // section's own page, "current" on a page inside it, like a character sheet.
-  const ariaCurrent = active ? (pathname === href ? "page" : "true") : undefined;
+  const ariaCurrent = active
+    ? pathname === href
+      ? "page"
+      : "true"
+    : undefined;
 
   const handleMouseEnter = () => {
     isHoveringRef.current = true;
