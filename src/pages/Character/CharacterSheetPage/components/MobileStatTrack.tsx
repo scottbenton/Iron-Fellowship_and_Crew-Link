@@ -5,6 +5,7 @@ import { StatComponent } from "components/features/characters/StatComponent";
 import { useEffect, useRef } from "react";
 import { useDebouncedState } from "hooks/useDebouncedState";
 import { useStore } from "stores/store";
+import { formatSignedValue } from "functions/trackValueText";
 
 export interface MobileStatTrackProps {
   label: string;
@@ -37,6 +38,8 @@ export function MobileStatTrack(props: MobileStatTrackProps) {
     if (typeof newValue === "number" && newValue >= min && newValue <= max) {
       hasUnsavedChangesRef.current = true;
       setLocalValue(newValue);
+      // The +/- buttons keep focus, so nothing else reads the new value.
+      announce(`${label} ${formatSignedValue(newValue)}`);
     }
   };
 

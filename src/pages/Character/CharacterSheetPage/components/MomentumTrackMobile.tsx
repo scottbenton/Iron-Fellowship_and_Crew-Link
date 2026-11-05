@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { useDebouncedState } from "hooks/useDebouncedState";
 import ResetIcon from "@mui/icons-material/Replay";
 import { useStore } from "stores/store";
+import { formatSignedValue } from "functions/trackValueText";
 
 export interface MomentumTrackMobileProps {
   value: number;
@@ -34,6 +35,8 @@ export function MomentumTrackMobile(props: MomentumTrackMobileProps) {
     if (typeof newValue === "number" && newValue >= min && newValue <= max) {
       hasUnsavedChangesRef.current = true;
       setLocalValue(newValue);
+      // The buttons keep focus, so nothing else reads the new value.
+      announce(`Momentum ${formatSignedValue(newValue)}`);
     }
   };
 

@@ -2,6 +2,7 @@ import { Box, ButtonBase, SxProps, Theme, Typography } from "@mui/material";
 import { useDebouncedState } from "hooks/useDebouncedState";
 import { useEffect, useId, useRef } from "react";
 import { useStore } from "stores/store";
+import { formatSignedValue } from "functions/trackValueText";
 import { HomebrewNonLinearMeterDocument } from "api-calls/homebrew/rules/nonLinearMeters/_homebrewNonLinearMeter.type";
 
 export interface NonLinearMeterProps {
@@ -96,10 +97,14 @@ export function NonLinearMeter(props: NonLinearMeterProps) {
             }}
             role={undefined}
             tabIndex={-1}
-            htmlFor={labelId + "-" + option.value + "-" + index}
+            htmlFor={labelId + "-" + index}
             disabled={disabled}
             component={"label"}
             sx={(theme) => ({
+              // The radio inside takes keyboard focus, so show its ring here.
+              "&:has(input:focus-visible)": {
+                boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}`,
+              },
               ...(index === localIndex
                 ? {
                     backgroundColor: theme.palette.background.paperInlayDarker,
@@ -125,6 +130,7 @@ export function NonLinearMeter(props: NonLinearMeterProps) {
           >
             <Typography
               variant={"button"}
+              aria-hidden
               color={(theme) => {
                 if (index === localIndex) {
                   return theme.palette.text.primary;
@@ -140,21 +146,30 @@ export function NonLinearMeter(props: NonLinearMeterProps) {
             </Typography>
 
             <input
+              // Invisible but covering its box, so a screen reader's touch
+              // exploration (iOS VoiceOver) lands on the radio itself.
               style={{
                 position: "absolute",
-                width: "1px",
-                height: "1px",
-                margin: "-1px",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                margin: 0,
                 padding: 0,
-                overflow: "hidden",
-                clip: "rect(0,0,0,0)",
-                border: 0,
+                opacity: 0,
+                cursor: "inherit",
               }}
+              aria-label={`${meter.label} ${
+                typeof option.value === "number"
+                  ? formatSignedValue(option.value)
+                  : option.value
+              }`}
               disabled={disabled}
               value={index}
               type={"radio"}
-              id={labelId + "-" + option.value + "-" + index}
-              name={meter.label}
+              id={labelId + "-" + index}
+              // Unique per meter, so a preview of a meter never shares a
+              // radio group with the meter on the sheet.
+              name={labelId}
               checked={index === localIndex}
               onChange={() => handleChange(index)}
             />
@@ -186,6 +201,7 @@ export function NonLinearMeter(props: NonLinearMeterProps) {
             <Typography
               fontFamily={(theme) => theme.fontFamilyTitle}
               variant={"subtitle1"}
+              component={"span"}
             >
               {option.value}
             </Typography>
