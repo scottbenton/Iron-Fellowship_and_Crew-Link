@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "../DialogTitleWithCloseButton";
-import { themes } from "providers/ThemeProvider/themes";
+import { getThemePrimary, themes } from "providers/ThemeProvider/themes";
 import { Themes } from "providers/ThemeProvider/themes/theme.types";
 import { useToggleTheme } from "providers/ThemeProvider";
 import CheckIcon from "@mui/icons-material/CheckCircle";
@@ -56,13 +56,16 @@ export function ThemeChooserDialog(props: ThemeChooserDialogProps) {
           {Object.keys(themes).map((themeKey) => {
             const theme = themes[themeKey as Themes];
             const themeConfig = theme.configs[themeType];
+            const primaryColor = (
+              getThemePrimary(theme, themeType) as { main: string }
+            ).main;
             return (
               <Grid item xs={12} sm={6} key={themeKey}>
                 <ButtonBase
                   aria-pressed={currentThemeKey === themeKey}
                   sx={{
                     border: `1px solid ${
-                      (theme.palette.primary as { main: string }).main
+                      primaryColor
                     }`,
                     bgcolor: themeConfig.background.paperInlay,
                     borderRadius: theme.borderRadius + "px",
@@ -82,7 +85,7 @@ export function ThemeChooserDialog(props: ThemeChooserDialogProps) {
                         position: "absolute",
                         top: currTheme.spacing(1),
                         right: currTheme.spacing(1),
-                        color: (theme.palette.primary as { main: string }).main,
+                        color: primaryColor,
                       })}
                     />
                   )}

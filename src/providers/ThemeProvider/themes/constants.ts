@@ -6,6 +6,13 @@ export const sunsetPink: PaletteColorOptions = {
   main: "#ff6584",
   dark: "#ff4d79",
 };
+// Light mode versions, dark enough to read as text and icons on white
+// (at least 4.5:1). Filled buttons then use white text.
+export const sunsetPinkLight: PaletteColorOptions = {
+  light: "#ff8093",
+  main: "#e0274c",
+  dark: "#c91d3f",
+};
 export const hinterlandsGreen: PaletteColorOptions = {
   light: "#059669",
   main: "#047857",
@@ -16,11 +23,21 @@ export const eidolonGold: PaletteColorOptions = {
   main: "#ca8a04",
   dark: "#a16207",
 };
+export const eidolonGoldLight: PaletteColorOptions = {
+  light: "#ca8a04",
+  main: "#a16207",
+  dark: "#854d0e",
+};
 export const myriadTeal: PaletteColorOptions = {
   light: "#2dd4bf",
   main: "#14b8a6",
   dark: "#0d9488",
   contrastText: "#042f2e",
+};
+export const myriadTealLight: PaletteColorOptions = {
+  light: "#0d9488",
+  main: "#0f766e",
+  dark: "#115e59",
 };
 
 // Grays

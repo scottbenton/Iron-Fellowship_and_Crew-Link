@@ -1,6 +1,6 @@
 import { ThemeConfig, ThemeType } from "./theme.types";
 import { IronswornDivider } from "./backgrounds/IronswornDivider";
-import { stone, sunsetPink } from "./constants";
+import { stone, sunsetPink, sunsetPinkLight } from "./constants";
 import { SunsetEmptyState } from "./emptyStates/SunsetEmptyState";
 
 export const sunsetTheme: ThemeConfig = {
@@ -18,6 +18,7 @@ export const sunsetTheme: ThemeConfig = {
   },
   configs: {
     [ThemeType.Light]: {
+      primary: sunsetPinkLight,
       darkGrey: {
         light: stone[600],
         main: stone[700],

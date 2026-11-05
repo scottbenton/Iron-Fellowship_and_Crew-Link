@@ -1,7 +1,7 @@
 import { HexboxUnchecked } from "assets/HexboxUnchecked";
 import { ThemeConfig, ThemeType } from "./theme.types";
 import { EidolonBackground } from "./backgrounds/EidolonBackground";
-import { slate, eidolonGold } from "./constants";
+import { slate, eidolonGold, eidolonGoldLight } from "./constants";
 import { EidolonEmptyState } from "./emptyStates/EidolonEmptyState";
 import { HexboxChecked } from "assets/HexboxChecked";
 
@@ -20,6 +20,7 @@ export const eidolonTheme: ThemeConfig = {
   },
   configs: {
     [ThemeType.Light]: {
+      primary: eidolonGoldLight,
       darkGrey: {
         light: slate[800],
         main: slate[900],

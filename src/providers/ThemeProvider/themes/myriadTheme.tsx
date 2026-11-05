@@ -1,6 +1,6 @@
 import { ThemeConfig, ThemeType } from "./theme.types";
 import { MyriadDivider } from "./backgrounds/MyriadDivider";
-import { blueGray, myriadTeal } from "./constants";
+import { blueGray, myriadTeal, myriadTealLight } from "./constants";
 import { MyriadEmptyState } from "./emptyStates/MyriadEmptyState";
 
 export const myriadTheme: ThemeConfig = {
@@ -18,6 +18,7 @@ export const myriadTheme: ThemeConfig = {
   },
   configs: {
     [ThemeType.Light]: {
+      primary: myriadTealLight,
       darkGrey: {
         light: blueGray[600],
         main: blueGray[700],
