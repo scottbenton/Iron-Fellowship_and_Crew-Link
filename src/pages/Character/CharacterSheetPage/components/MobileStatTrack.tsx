@@ -55,9 +55,7 @@ export function MobileStatTrack(props: MobileStatTrackProps) {
       alignItems="center"
       direction={smallSize ? "column" : "row"}
       sx={(theme) => ({
-        // As wide as the buttons and value, rather than the whole grid cell
-        // with all three bunched to the left of it.
-        width: smallSize ? undefined : "fit-content",
+        justifyContent: "space-between",
         boxShadow: smallSize ? `inset 0px 0px 0px 1px ${theme.palette.divider}` : undefined,
         border: !smallSize ? `1px solid ${theme.palette.divider}` : undefined,
         borderRadius: theme.shape.borderRadius + "px",
