@@ -262,7 +262,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
               borderLeft={onValueChange ? 0 : 1}
               borderRight={onValueChange ? 0 : 1}
               borderColor={(theme) => theme.palette.divider}
-              role={"meter"}
+              role={"progressbar"}
               aria-labelledby={labelId}
               aria-valuemin={0}
               aria-valuemax={40}

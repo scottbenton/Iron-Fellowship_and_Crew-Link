@@ -349,7 +349,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
               borderLeft={onValueChange ? 0 : 1}
               borderRight={onValueChange ? 0 : 1}
               borderColor={(theme) => theme.palette.divider}
-              role={"meter"}
+              role={"progressbar"}
               aria-labelledby={label ? labelId : undefined}
               aria-label={label ? undefined : trackName}
               aria-valuemin={0}
