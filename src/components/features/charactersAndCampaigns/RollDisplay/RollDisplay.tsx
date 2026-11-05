@@ -1,25 +1,56 @@
-import { Box, Card, CardActionArea, Divider, Typography } from "@mui/material";
+import { Box, Card, Divider, IconButton, Typography } from "@mui/material";
+import DismissIcon from "@mui/icons-material/Close";
 import { ROLL_TYPE, Roll } from "types/DieRolls.type";
 import { RollTitle } from "./RollTitle";
 import { RollValues } from "./RollValues";
 import { RollResult } from "./RollResult";
 import { getRollResultLabel } from "./getRollResultLabel";
 import { RollContainer } from "./RollContainer";
-import { ReactNode } from "react";
+import { ReactNode, Ref } from "react";
 import { useStore } from "stores/store";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
+import { ScreenReaderOnly } from "components/shared/ScreenReaderOnly";
+import { getRollDescription, getRollTitle } from "functions/rollText";
 
 export interface RollDisplayProps {
   roll: Roll;
-  onClick?: () => void;
   isExpanded: boolean;
   actions?: ReactNode;
+  // Shows a Dismiss button, which calls this.
+  onDismiss?: () => void;
+  dismissButtonRef?: Ref<HTMLButtonElement>;
+  // Read by screen readers before and after the description of the roll,
+  // such as who rolled it and when.
+  descriptionPrefix?: string;
+  descriptionSuffix?: string;
 }
 
+// Room kept beside the title for each icon button in the top corner.
+const BUTTON_SIZE = 40;
+
 export function RollDisplay(props: RollDisplayProps) {
-  const { roll, onClick, isExpanded, actions } = props;
+  const {
+    roll,
+    isExpanded,
+    actions,
+    onDismiss,
+    dismissButtonRef,
+    descriptionPrefix,
+    descriptionSuffix,
+  } = props;
 
   const oracles = useStore((store) => store.rules.oracleMaps.oracleRollableMap);
+
+  const isOracleMatch =
+    roll.type === ROLL_TYPE.ORACLE_TABLE &&
+    !!roll.oracleId &&
+    !!oracles[roll.oracleId]?.match &&
+    !Array.isArray(roll.roll) &&
+    checkIfMatch(roll.roll);
+
+  // The copy and more buttons, shown on an expanded card, then Dismiss.
+  const reservedButtonSpace =
+    ((isExpanded ? 2 : 0) + (onDismiss ? 1 : 0)) * BUTTON_SIZE;
 
   return (
     <Card
@@ -32,18 +63,25 @@ export function RollDisplay(props: RollDisplayProps) {
         position: "relative",
       })}
     >
-      <Box
-        component={onClick ? CardActionArea : "div"}
-        onClick={onClick ? onClick : undefined}
-        px={2}
-        py={1}
-      >
+      {/* The dice, totals and icons below are drawn for the eye. Screen
+          readers get the whole roll as sentences instead. */}
+      <ScreenReaderOnly>
+        {[
+          descriptionPrefix,
+          getRollDescription(roll, { oracleMatch: isOracleMatch }),
+          descriptionSuffix,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      </ScreenReaderOnly>
+      <Box px={2} py={1} aria-hidden>
         {roll.type === ROLL_TYPE.STAT && (
           <>
             <RollTitle
               title={roll.moveName ? roll.moveName : roll.rollLabel}
               overline={roll.moveName ? roll.rollLabel : undefined}
               isExpanded={isExpanded}
+              reservedSpace={reservedButtonSpace}
             />
             <RollContainer>
               <RollValues
@@ -81,7 +119,11 @@ export function RollDisplay(props: RollDisplayProps) {
         )}
         {roll.type === ROLL_TYPE.TRACK_PROGRESS && (
           <>
-            <RollTitle title={roll.rollLabel} isExpanded={isExpanded} />
+            <RollTitle
+              title={roll.rollLabel}
+              isExpanded={isExpanded}
+              reservedSpace={reservedButtonSpace}
+            />
             <RollContainer>
               <RollValues
                 fixedResult={{
@@ -106,19 +148,13 @@ export function RollDisplay(props: RollDisplayProps) {
               overline={roll.oracleCategoryName}
               title={roll.rollLabel}
               isExpanded={isExpanded}
+              reservedSpace={reservedButtonSpace}
             />
             <RollContainer>
               <RollValues d10Results={roll.roll} isExpanded={isExpanded} />
               <RollResult
                 markdown={roll.result}
-                extras={
-                  roll.oracleId &&
-                  !!oracles[roll.oracleId]?.match &&
-                  !Array.isArray(roll.roll) &&
-                  checkIfMatch(roll.roll)
-                    ? ["Match"]
-                    : undefined
-                }
+                extras={isOracleMatch ? ["Match"] : undefined}
               />
             </RollContainer>
             {isExpanded && roll.text2 && (
@@ -143,6 +179,7 @@ export function RollDisplay(props: RollDisplayProps) {
               overline={roll.oracleTitle}
               title={roll.rollLabel}
               isExpanded={isExpanded}
+              reservedSpace={reservedButtonSpace}
             />
             <RollContainer>
               <RollValues d10Results={roll.roll} isExpanded={isExpanded} />
@@ -155,7 +192,11 @@ export function RollDisplay(props: RollDisplayProps) {
         )}
         {roll.type === ROLL_TYPE.CUSTOM_DICE && (
           <>
-            <RollTitle title={roll.notation} isExpanded={isExpanded} />
+            <RollTitle
+              title={roll.notation}
+              isExpanded={isExpanded}
+              reservedSpace={reservedButtonSpace}
+            />
             <RollContainer>
               {isExpanded && (
                 <>
@@ -194,6 +235,16 @@ export function RollDisplay(props: RollDisplayProps) {
       </Box>
       <Box position={"absolute"} top={0} right={0}>
         {isExpanded && actions}
+        {onDismiss && (
+          <IconButton
+            aria-label={`Dismiss ${getRollTitle(roll)} roll`}
+            color={"inherit"}
+            onClick={onDismiss}
+            ref={dismissButtonRef}
+          >
+            <DismissIcon />
+          </IconButton>
+        )}
       </Box>
     </Card>
   );
