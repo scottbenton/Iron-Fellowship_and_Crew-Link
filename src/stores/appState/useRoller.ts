@@ -9,7 +9,13 @@ import {
   TrackProgressRoll,
 } from "types/DieRolls.type";
 import { parseDiceExpression } from "./rollers/diceExpressionParser";
-import { getRollResultLabel } from "components/features/charactersAndCampaigns/RollDisplay";
+import {
+  getClockProgressionRollAnnouncement,
+  getCustomDiceRollAnnouncement,
+  getOracleRollAnnouncement,
+  getStatRollAnnouncement,
+  getTrackProgressRollAnnouncement,
+} from "functions/rollText";
 import { TrackTypes } from "types/Track.type";
 import { LEGACY_TrackTypes } from "types/LegacyTrack.type";
 import { rollOracle } from "./rollers/rollOracle";
@@ -124,35 +130,7 @@ export function useRoller() {
         .catch(() => {});
 
       if (showSnackbar) {
-        let announcement = `Rolled ${
-          move ? move.name + " using stat " + label : label
-        }.`;
-        if (matchedNegativeMomentum) {
-          announcement += ` On your action die you rolled a ${
-            action === 10 ? "max of 10" : action
-          }, which matched your momentum of ${momentum}, so your action die got cancelled out. Your modifiers are ${modifier}${
-            adds ? " plus " + adds + " adds" : ""
-          } for a total of ${actionTotal}.`;
-        } else {
-          announcement += ` On your action die you rolled a ${
-            action === 10 ? "max of 10" : action
-          } plus ${modifier}${
-            adds ? " plus " + adds + " adds" : ""
-          } for a total of ${actionTotal}.`;
-        }
-
-        announcement += ` On your challenge die you rolled a ${challenge1} and a ${challenge2}, for a ${getRollResultLabel(
-          result
-        )}`;
-        announce(
-          verboseScreenReaderRolls
-            ? announcement
-            : `Rolled ${
-                move ? move.name + " using stat " + label : label
-              }. Your action die had a total of ${actionTotal} against ${challenge1} and ${challenge2}, for a ${getRollResultLabel(
-                result
-              )}`
-        );
+        announce(getStatRollAnnouncement(statRoll, !!verboseScreenReaderRolls));
       }
 
       return result;
@@ -221,11 +199,13 @@ export function useRoller() {
           );
         }
         announce(
-          `Rolled ${
-            verboseScreenReaderRolls
-              ? `a ${definedOracleRoll.roll} on the ${definedOracleRoll.rollLabel} table`
-              : definedOracleRoll.rollLabel
-          } and got result ${definedOracleRoll.result}`
+          getOracleRollAnnouncement(
+            definedOracleRoll,
+            !!verboseScreenReaderRolls,
+            !!oracle.match &&
+              !Array.isArray(definedOracleRoll.roll) &&
+              checkIfMatch(definedOracleRoll.roll)
+          )
         );
       }
 
@@ -288,17 +268,7 @@ export function useRoller() {
         })
         .catch(() => {});
 
-      const rollString = trackProgressRoll.trackType
-        ? `${trackProgressRoll.trackType} ${trackProgressRoll.rollLabel}`
-        : trackProgressRoll.rollLabel;
-
-      announce(
-        `Rolled progress for ${rollString}. Your progress was ${trackProgressRoll.trackProgress} against a ${
-          trackProgressRoll.challenge1
-        } and a ${trackProgressRoll.challenge2} for a ${getRollResultLabel(
-          trackProgressRoll.result
-        )}`
-      );
+      announce(getTrackProgressRollAnnouncement(trackProgressRoll));
 
       return result;
     },
@@ -356,25 +326,12 @@ export function useRoller() {
           addRollToScreen(rollId, clockRoll);
         })
         .catch(() => {});
-      if (verboseScreenReaderRolls) {
-        announce(
-          `Rolled for clock ${clockRoll.rollLabel} with a ${
-            clockRoll.roll
-          } against oracle ${clockRoll.oracleTitle}. Your clock ${
-            result.result === "Yes"
-              ? "progressed by one segment."
-              : "did not progress"
-          }`
-        );
-      } else {
-        announce(
-          `Your clock ${clockRoll.rollLabel} ${
-            result.result === "Yes"
-              ? "progressed by one segment."
-              : "did not progress"
-          }`
-        );
-      }
+      announce(
+        getClockProgressionRollAnnouncement(
+          clockRoll,
+          !!verboseScreenReaderRolls
+        )
+      );
 
       return clockRoll;
     },
@@ -436,15 +393,7 @@ export function useRoller() {
         })
         .catch(() => {});
 
-      const modifierText =
-        modifier > 0
-          ? ` plus ${modifier}`
-          : modifier < 0
-            ? ` minus ${Math.abs(modifier)}`
-            : "";
-      announce(
-        `Rolled ${notation}. Got ${dieValues.join(", ")}${modifierText} for a total of ${total}`
-      );
+      announce(getCustomDiceRollAnnouncement(customRoll));
 
       return total;
     },
