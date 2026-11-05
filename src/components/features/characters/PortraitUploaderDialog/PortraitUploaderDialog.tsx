@@ -7,9 +7,10 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useId, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 import { useSnackbar } from "providers/SnackbarProvider/useSnackbar";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
@@ -46,6 +47,9 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
   const { error } = useSnackbar();
 
   const [loading, setLoading] = useState<boolean>(false);
+  // Names the dialog with its title alone, not the close button beside it.
+  const titleId = useId();
+  const titleBarId = useId();
   const [file, setFile] = useState<File | string | undefined>(
     existingPortraitFile
   );
@@ -88,15 +92,19 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} aria-labelledby={titleId}>
       <DialogTitle
+        id={titleBarId}
+        component={"div"}
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
-        Upload Portrait
+        <Typography component={"h2"} variant={"inherit"} id={titleId}>
+          Upload Portrait
+        </Typography>
         <Box>
           <IconButton
             aria-label={"Close Dialog"}
