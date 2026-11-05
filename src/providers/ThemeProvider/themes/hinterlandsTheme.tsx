@@ -1,6 +1,6 @@
 import { ThemeConfig, ThemeType } from "./theme.types";
 import { IronswornDivider } from "./backgrounds/IronswornDivider";
-import { hinterlandsGreen, stone } from "./constants";
+import { hinterlandsGreen, hinterlandsGreenDark, stone } from "./constants";
 import { HinterlandsEmptyState } from "./emptyStates/HinterlandsEmptyState";
 
 export const hinterlandsTheme: ThemeConfig = {
@@ -32,6 +32,7 @@ export const hinterlandsTheme: ThemeConfig = {
       },
     },
     [ThemeType.Dark]: {
+      primary: hinterlandsGreenDark,
       darkGrey: {
         light: stone[800],
         main: stone[900],

@@ -18,6 +18,14 @@ export const hinterlandsGreen: PaletteColorOptions = {
   main: "#047857",
   dark: "#065f46",
 };
+// Dark mode version, light enough to read on the dark paper. White text
+// would fail on it, so filled buttons keep dark text.
+export const hinterlandsGreenDark: PaletteColorOptions = {
+  light: "#10b981",
+  main: "#059669",
+  dark: "#047857",
+  contrastText: "rgba(0, 0, 0, 0.87)",
+};
 export const eidolonGold: PaletteColorOptions = {
   light: "#eab308",
   main: "#ca8a04",

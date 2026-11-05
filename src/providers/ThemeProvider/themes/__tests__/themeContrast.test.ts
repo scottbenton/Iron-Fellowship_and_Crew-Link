@@ -4,12 +4,16 @@ import { getTheme } from "..";
 import { ThemeType, Themes } from "../theme.types";
 
 // The theme colour is used as text and icons (text buttons, tabs, checked
-// checkboxes), so in light mode it has to read on white at 4.5:1, and filled
-// buttons need their text to read on it.
-describe.each(Object.values(Themes))("%s light theme", (themeKey) => {
-  const { palette } = getTheme(themeKey, ThemeType.Light);
+// checkboxes), so it has to read on the paper at 4.5:1, and filled buttons
+// need their text to read on it.
+describe.each(
+  Object.values(Themes).flatMap((themeKey) =>
+    Object.values(ThemeType).map((type) => [themeKey, type] as const)
+  )
+)("%s %s theme", (themeKey, type) => {
+  const { palette } = getTheme(themeKey, type);
 
-  it("primary reads on white paper", () => {
+  it("primary reads on paper", () => {
     expect(
       getContrastRatio(palette.primary.main, palette.background.paper)
     ).toBeGreaterThanOrEqual(4.5);
