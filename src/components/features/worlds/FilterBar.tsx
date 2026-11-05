@@ -36,7 +36,7 @@ export function FilterBar(props: FilterBarProps) {
             </InputAdornment>
           ),
         }}
-        aria-label={searchPlaceholder}
+        inputProps={{ "aria-label": searchPlaceholder }}
         placeholder={searchPlaceholder}
         value={search}
         onChange={(evt) => setSearch(evt.currentTarget.value)}

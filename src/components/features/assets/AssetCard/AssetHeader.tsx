@@ -40,7 +40,11 @@ export function AssetHeader(props: AssetHeaderProps) {
         {actions}
         {onAssetRemove && (
           <Tooltip title={"Remove Asset"}>
-            <IconButton color={"inherit"} onClick={onAssetRemove}>
+            <IconButton
+              color={"inherit"}
+              onClick={onAssetRemove}
+              aria-label={`Remove ${asset.name}`}
+            >
               <DeleteIcon />
             </IconButton>
           </Tooltip>

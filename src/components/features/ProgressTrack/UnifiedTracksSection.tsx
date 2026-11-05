@@ -17,7 +17,7 @@ import { ClockDialog } from "components/features/charactersAndCampaigns/Clocks/C
 import { useCampaignType } from "hooks/useCampaignType";
 import { useGameSystem } from "hooks/useGameSystem";
 import { useIsMobile } from "hooks/useIsMobile";
-import { useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import { useStore } from "stores/store";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import {
@@ -129,6 +129,7 @@ export function UnifiedTracksSection(props: UnifiedTracksSectionProps) {
   const [createSource, setCreateSource] = useState<CreateSource>("character");
   const [addMenuOpen, setAddMenuOpen] = useState(false);
   const addMenuRef = useRef<HTMLButtonElement | null>(null);
+  const addMenuId = useId();
 
   const availableTrackTypes = getAvailableTrackTypes({
     isDelveEnabled,
@@ -303,6 +304,9 @@ export function UnifiedTracksSection(props: UnifiedTracksSectionProps) {
             <Button
               color={"inherit"}
               ref={addMenuRef}
+              aria-haspopup={"menu"}
+              aria-expanded={addMenuOpen}
+              aria-controls={addMenuOpen ? addMenuId : undefined}
               onClick={() => setAddMenuOpen(true)}
             >
               Add Track
@@ -311,6 +315,7 @@ export function UnifiedTracksSection(props: UnifiedTracksSectionProps) {
         }
       />
       <Menu
+        id={addMenuId}
         open={addMenuOpen}
         anchorEl={addMenuRef.current}
         onClose={() => setAddMenuOpen(false)}

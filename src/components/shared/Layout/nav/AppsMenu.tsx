@@ -74,12 +74,14 @@ export function AppsMenu() {
         placement={isMobile ? "bottom" : "right"}
       >
         <IconButton
-          aria-describedby="apps-menu"
+          aria-haspopup={"menu"}
+          aria-expanded={appsMenuOpen}
+          aria-controls={appsMenuOpen ? "apps-menu" : undefined}
           color={"inherit"}
           ref={appsMenuParent}
           onClick={() => setAppsMenuOpen(true)}
         >
-          <AppsIcon aria-label={"Other Apps and Resources"} />
+          <AppsIcon />
         </IconButton>
       </Tooltip>
       <Menu

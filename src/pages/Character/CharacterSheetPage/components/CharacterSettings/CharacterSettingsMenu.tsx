@@ -37,13 +37,14 @@ import { WorldExporter } from "services/export/exporters/exportWorld";
 import { Exporter } from "services/export";
 
 export interface CharacterSettingsMenuProps {
+  id?: string;
   open: boolean;
   onClose: () => void;
   anchorElement: HTMLElement | null;
 }
 
 export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
-  const { open, onClose, anchorElement } = props;
+  const { id, open, onClose, anchorElement } = props;
 
   const navigate = useNavigate();
   const confirm = useConfirm();
@@ -153,6 +154,7 @@ export function CharacterSettingsMenu(props: CharacterSettingsMenuProps) {
   return (
     <>
       <Menu
+        id={id}
         open={open}
         onClose={onClose}
         anchorEl={anchorElement}

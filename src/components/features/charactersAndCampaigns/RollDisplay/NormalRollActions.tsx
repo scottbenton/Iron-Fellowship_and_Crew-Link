@@ -5,7 +5,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import MoreIcon from "@mui/icons-material/MoreHoriz";
 import CopyIcon from "@mui/icons-material/CopyAll";
 import RerollIcon from "@mui/icons-material/Casino";
@@ -86,6 +86,7 @@ export function NormalRollActions(props: NormalRollActionsProps) {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuParent = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
   const [isDieRerollDialogOpen, setIsDieRerollDialogOpen] = useState(false);
 
   const { error, success } = useSnackbar();
@@ -150,7 +151,10 @@ export function NormalRollActions(props: NormalRollActionsProps) {
         <CopyIcon />
       </IconButton>
       <IconButton
-        aria-label={"Roll Menu"}
+        aria-label={"More Roll Options"}
+        aria-haspopup={"menu"}
+        aria-expanded={isMenuOpen}
+        aria-controls={isMenuOpen ? menuId : undefined}
         color={"inherit"}
         ref={menuParent}
         onClick={() => {
@@ -161,6 +165,7 @@ export function NormalRollActions(props: NormalRollActionsProps) {
       </IconButton>
       {isMenuOpen && (
         <Menu
+          id={menuId}
           sx={{
             zIndex: 10001,
           }}

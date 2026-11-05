@@ -120,6 +120,7 @@ export function Stats(props: StatsProps) {
                     <>
                       <Tooltip title={"Edit"}>
                         <IconButton
+                          aria-label={`Edit ${stats[statKey].label}`}
                           onClick={() => {
                             setStatDialogOpen(true);
                             setEditingStatKey(statKey);
@@ -129,7 +130,10 @@ export function Stats(props: StatsProps) {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title={"Delete"}>
-                        <IconButton onClick={() => handleDelete(statKey)}>
+                        <IconButton
+                          aria-label={`Delete ${stats[statKey].label}`}
+                          onClick={() => handleDelete(statKey)}
+                        >
                           <DeleteIcon />
                         </IconButton>
                       </Tooltip>
@@ -137,6 +141,7 @@ export function Stats(props: StatsProps) {
                   ) : (
                     <Tooltip title={"Preview"}>
                       <IconButton
+                        aria-label={`Preview ${stats[statKey].label}`}
                         onClick={() => {
                           setViewingStatKey(statKey);
                         }}

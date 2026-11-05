@@ -86,12 +86,18 @@ export function NonLinearMeterDialogOptions(
                     <Checkbox
                       {...field}
                       defaultChecked={field.value ?? false}
+                      inputProps={{
+                        "aria-label": `Cell ${index + 1} Read Only`,
+                      }}
                     />
                   )}
                 />
               </TableCell>
               <TableCell sx={{ width: 0, minWidth: "fit-content" }}>
-                <IconButton onClick={() => remove(index)}>
+                <IconButton
+                  aria-label={`Delete Cell ${index + 1}`}
+                  onClick={() => remove(index)}
+                >
                   <DeleteIcon />
                 </IconButton>
               </TableCell>

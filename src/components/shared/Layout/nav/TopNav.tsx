@@ -52,7 +52,7 @@ export function TopNav() {
               borderRadius: theme.shape.borderRadius + "px",
             })}
           >
-            <img alt={"icon"} width={32} height={32} src={iconPath} />
+            <img alt={""} width={32} height={32} src={iconPath} />
             <Typography
               fontFamily={(theme) => theme.fontFamilyTitle}
               variant={"h5"}

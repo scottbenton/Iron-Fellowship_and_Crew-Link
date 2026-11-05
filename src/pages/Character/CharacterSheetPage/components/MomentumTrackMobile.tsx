@@ -97,9 +97,9 @@ export function MomentumTrackMobile(props: MomentumTrackMobileProps) {
             },
           })}
           onClick={() => handleChange(resetValue)}
+          aria-label={`Reset Momentum to ${resetValue}, currently ${localValue}`}
         >
           <ResetIcon
-            aria-label={"Reset Momentum Button"}
             sx={(theme) => ({
               position: "absolute",
               top: theme.spacing(0.25),

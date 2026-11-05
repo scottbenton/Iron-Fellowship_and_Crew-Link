@@ -59,7 +59,7 @@ export function ThemeChooserDialog(props: ThemeChooserDialogProps) {
             return (
               <Grid item xs={12} sm={6} key={themeKey}>
                 <ButtonBase
-                  aria-selected={currentThemeKey === themeKey}
+                  aria-pressed={currentThemeKey === themeKey}
                   sx={{
                     border: `1px solid ${
                       (theme.palette.primary as { main: string }).main
@@ -95,12 +95,7 @@ export function ThemeChooserDialog(props: ThemeChooserDialogProps) {
                     alignSelf={"stretch"}
                     p={2}
                   >
-                    <img
-                      width={40}
-                      height={40}
-                      src={theme.iconPath}
-                      alt={theme.name}
-                    />
+                    <img width={40} height={40} src={theme.iconPath} alt={""} />
                   </Box>
                 </ButtonBase>
               </Grid>

@@ -36,6 +36,7 @@ export function AssetCardSearch(props: AssetCardSearchProps) {
         <TextField
           sx={{ mr: 2, minWidth: 200 }}
           {...params}
+          inputProps={{ ...params.inputProps, "aria-label": "Search Assets" }}
           placeholder="Search"
         />
       )}

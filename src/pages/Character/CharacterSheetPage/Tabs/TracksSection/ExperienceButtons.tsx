@@ -4,12 +4,14 @@ import MinusIcon from "@mui/icons-material/Remove";
 
 export interface ExperienceButtonsProps {
   label: string;
+  addLabel: string;
+  subtractLabel: string;
   handleAdd: () => void;
   handleSubtract: () => void;
 }
 
 export function ExperienceButtons(props: ExperienceButtonsProps) {
-  const { label, handleAdd, handleSubtract } = props;
+  const { label, addLabel, subtractLabel, handleAdd, handleSubtract } = props;
 
   return (
     <Box
@@ -21,6 +23,7 @@ export function ExperienceButtons(props: ExperienceButtonsProps) {
       overflow={"hidden"}
     >
       <ButtonBase
+        aria-label={subtractLabel}
         sx={(theme) => ({
           backgroundColor: theme.palette.darkGrey.main,
           color: theme.palette.darkGrey.contrastText,
@@ -41,6 +44,7 @@ export function ExperienceButtons(props: ExperienceButtonsProps) {
         {label}
       </Typography>
       <ButtonBase
+        aria-label={addLabel}
         sx={(theme) => ({
           backgroundColor: theme.palette.darkGrey.main,
           color: theme.palette.darkGrey.contrastText,

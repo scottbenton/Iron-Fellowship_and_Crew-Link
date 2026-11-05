@@ -61,24 +61,36 @@ export function MoveCard(props: MoveCardProps) {
           {isEditor ? (
             <>
               <Tooltip title={"Move Move"}>
-                <IconButton onClick={() => setMoveMoveDialogOpen(true)}>
+                <IconButton
+                  aria-label={`Move ${move.label} to another category`}
+                  onClick={() => setMoveMoveDialogOpen(true)}
+                >
                   <MoveIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title={"Edit Move"}>
-                <IconButton onClick={() => handleEdit()}>
+                <IconButton
+                  aria-label={`Edit ${move.label}`}
+                  onClick={() => handleEdit()}
+                >
                   <EditIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title={"Delete Move"}>
-                <IconButton onClick={() => handleDelete()}>
+                <IconButton
+                  aria-label={`Delete ${move.label}`}
+                  onClick={() => handleDelete()}
+                >
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
             </>
           ) : (
             <Tooltip title={"Preview Move"}>
-              <IconButton onClick={() => openDialog(dataswornId)}>
+              <IconButton
+                aria-label={`Preview ${move.label}`}
+                onClick={() => openDialog(dataswornId)}
+              >
                 <PreviewIcon />
               </IconButton>
             </Tooltip>

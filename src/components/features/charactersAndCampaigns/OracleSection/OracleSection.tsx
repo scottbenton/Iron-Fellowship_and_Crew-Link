@@ -56,7 +56,7 @@ export function OracleSection(props: OraclesSectionProps) {
                 />
               </InputAdornment>
             }
-            aria-label={"Filter Oracles"}
+            inputProps={{ "aria-label": "Filter Oracles" }}
             placeholder={"Filter Oracles"}
             onChange={(evt) => setSearch(evt.currentTarget.value)}
             color={"primary"}

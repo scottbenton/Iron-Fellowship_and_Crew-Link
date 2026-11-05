@@ -222,6 +222,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
   }, [max, value]);
 
   const labelId = useId();
+  const trackName = label || "Track";
 
   const getValueText = (value: number) => {
     return `${value} ticks: (${Math.floor(value / 4)} boxes fully filled)`;
@@ -255,6 +256,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
                   color={"inherit"}
                   component={"button"}
                   sx={{ ml: 2 }}
+                  aria-label={`Edit ${trackName}`}
                   onClick={() => onEdit()}
                 >
                   Edit
@@ -290,7 +292,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         >
           {trackType && !hideRollButton && smallRollButton && (
             <IconButton
-              aria-label="Roll Track"
+              aria-label={`Roll ${trackName}`}
               onClick={handleRollClick}
               sx={{ mr: 1.5, p: 0 }}
             >
@@ -300,7 +302,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
           <Box display={"flex"}>
             {onValueChange && (
               <ButtonBase
-                aria-label={"Decrement Track"}
+                aria-label={`Decrement ${trackName}`}
                 onClick={() => {
                   if (onValueChange) {
                     const newValue = Math.max(
@@ -370,7 +372,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
             </Box>
             {onValueChange && (
               <ButtonBase
-                aria-label={"Increment Track"}
+                aria-label={`Increment ${trackName}`}
                 onClick={() => {
                   if (onValueChange) {
                     const newValue = Math.min(
@@ -435,6 +437,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         <Button
           color={"inherit"}
           onClick={handleCompleteClick}
+          aria-label={`Complete Track: ${trackName}`}
           endIcon={<CompleteIcon />}
           variant={"outlined"}
           sx={{ mt: 2, mr: 1 }}
@@ -446,6 +449,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         <Button
           color={"inherit"}
           onClick={handleReopenClick}
+          aria-label={`Mark Incomplete: ${trackName}`}
           variant={"outlined"}
           sx={{ mt: 2, mr: 1 }}
         >
@@ -456,6 +460,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
         <Button
           color={"inherit"}
           onClick={handleRollClick}
+          aria-label={move ? `Roll ${move.name}: ${trackName}` : undefined}
           endIcon={<DieIcon />}
           variant={"outlined"}
           sx={{ mt: 2 }}
@@ -464,7 +469,12 @@ export function ProgressTrack(props: ProgressTracksProps) {
         </Button>
       )}
       {onDelete && status === TrackStatus.Completed && (
-        <Button color={"error"} sx={{ mt: 2 }} onClick={handleDeleteClick}>
+        <Button
+          color={"error"}
+          sx={{ mt: 2 }}
+          onClick={handleDeleteClick}
+          aria-label={`Delete Permanently: ${trackName}`}
+        >
           Delete Permanently
         </Button>
       )}
