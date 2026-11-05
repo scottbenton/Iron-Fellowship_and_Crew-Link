@@ -224,7 +224,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
               <Checkbox
                 checked={isLegacy}
                 disabled={!onIsLegacyChecked}
-                inputProps={{ "aria-label": `${label} Completed` }}
+                inputProps={{ "aria-label": `${label} 10 Completed` }}
                 onChange={(evt, value) =>
                   handleLegacyClick(value)
                 }
