@@ -149,6 +149,7 @@ export function MarkdownEditorToolbar(props: MarkdownEditorToolbarProps) {
           <span>
             <ToggleButton
               value={"outdent"}
+              aria-label={"Outdent"}
               onClick={() =>
                 editor.chain().focus().liftListItem("listItem").run()
               }
@@ -162,6 +163,7 @@ export function MarkdownEditorToolbar(props: MarkdownEditorToolbarProps) {
           <span>
             <ToggleButton
               value={"indent"}
+              aria-label={"Indent"}
               onClick={() =>
                 editor.chain().focus().sinkListItem("listItem").run()
               }

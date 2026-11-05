@@ -91,8 +91,9 @@ export function Component() {
                 LinkComponent={LinkComponent}
                 href={constructCharacterPath(CHARACTER_ROUTES.CREATE)}
                 color={"primary"}
+                aria-label={"Create a Character"}
               >
-                <AddCharacterIcon aria-label={"Create a Character"} />
+                <AddCharacterIcon />
               </FooterFab>
             </Hidden>
           </>

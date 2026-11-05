@@ -1,14 +1,7 @@
 import { Box, DialogTitle, IconButton, Typography } from "@mui/material";
-import {
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { useStore } from "stores/store";
-import { ScreenReaderOnly } from "./ScreenReaderOnly";
+import { LiveRegion } from "./LiveRegion";
 
 export interface DialogTitleWithCloseButtonProps extends PropsWithChildren {
   onClose: () => void;
@@ -19,26 +12,9 @@ export function DialogTitleWithCloseButton(
 ) {
   const { children, actions, onClose } = props;
 
-  const announcement = useStore(
-    (store) => store.appState.screenReaderAnnouncement
-  );
-
-  const [changedAnnouncement, setChangedAnnouncement] = useState<
-    string | undefined
-  >();
-  const isFirstLoadRef = useRef(true);
-  useEffect(() => {
-    if (!isFirstLoadRef.current) {
-      setChangedAnnouncement(announcement);
-    }
-    isFirstLoadRef.current = false;
-  }, [announcement]);
-
   return (
     <>
-      <ScreenReaderOnly id={"dialog-live-region"} live>
-        {changedAnnouncement}
-      </ScreenReaderOnly>
+      <LiveRegion />
       <DialogTitle
         display={"flex"}
         alignItems={"center"}

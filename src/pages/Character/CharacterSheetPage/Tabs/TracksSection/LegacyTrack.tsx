@@ -120,7 +120,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
 
   const rollButton = (
     <IconButton
-      aria-label="Roll Track"
+      aria-label={`Roll ${label}`}
       onClick={handleRollClick}
       sx={{
         p: 0,
@@ -135,6 +135,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
 
   const increaseButton = (
     <ButtonBase
+      aria-label={`Add 1 Tick to ${label}`}
       onClick={() => {
         if (onValueChange) {
           const newValue = Math.min(value + 1, 40);
@@ -169,6 +170,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
 
   const decreaseButton = (
     <ButtonBase
+      aria-label={`Remove 1 Tick from ${label}`}
       onClick={() => {
         if (onValueChange) {
           const newValue = Math.max(value - 1, 0);
@@ -222,6 +224,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
               <Checkbox
                 checked={isLegacy}
                 disabled={!onIsLegacyChecked}
+                inputProps={{ "aria-label": `${label} 10 Completed` }}
                 onChange={(evt, value) =>
                   handleLegacyClick(value)
                 }
@@ -303,6 +306,11 @@ export function LegacyTrack(props: LegacyTrackProps) {
                     checkedIcon={<CheckedIcon fontSize={"inherit"} />}
                     disabled={value !== 4 || !onExperienceChecked}
                     checked={checkedExperience[index * 2] ?? false}
+                    inputProps={{
+                      "aria-label": `${label} Experience ${
+                        isLegacy ? index + 1 : index * 2 + 1
+                      }`,
+                    }}
                     onChange={(evt, checked) =>
                       onExperienceChecked &&
                       onExperienceChecked(index * 2, checked)
@@ -315,6 +323,9 @@ export function LegacyTrack(props: LegacyTrackProps) {
                       checkedIcon={<CheckedIcon fontSize={"inherit"} />}
                       disabled={value !== 4 || !onExperienceChecked}
                       checked={checkedExperience[index * 2 + 1] ?? false}
+                      inputProps={{
+                        "aria-label": `${label} Experience ${index * 2 + 2}`,
+                      }}
                       onChange={(evt, checked) =>
                         onExperienceChecked &&
                         onExperienceChecked(index * 2 + 1, checked)

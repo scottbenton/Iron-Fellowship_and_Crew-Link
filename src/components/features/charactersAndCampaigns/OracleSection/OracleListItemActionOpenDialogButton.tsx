@@ -20,7 +20,7 @@ export function OracleListItemActionOpenDialogButton(
 
   return (
     <IconButton
-      aria-label={"View Full Table"}
+      aria-label={`View Full Table: ${item.name}`}
       disabled={disabled}
       id={"open-table"}
       onClick={handleOpenClick}

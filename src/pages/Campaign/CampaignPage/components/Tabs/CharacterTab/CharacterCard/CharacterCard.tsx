@@ -182,6 +182,7 @@ export function CharacterCard(props: CharacterCardProps) {
               <Button
                 color={"error"}
                 onClick={() => removeCharacterFromCampaign(uid, characterId)}
+                aria-label={`Remove Character: ${character.name}`}
               >
                 Remove Character
               </Button>
@@ -191,6 +192,7 @@ export function CharacterCard(props: CharacterCardProps) {
                 color={"inherit"}
                 LinkComponent={LinkComponent}
                 href={constructCharacterSheetPath(characterId)}
+                aria-label={`Open Sheet: ${character.name}`}
               >
                 Open Sheet
               </Button>

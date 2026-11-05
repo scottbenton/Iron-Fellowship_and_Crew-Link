@@ -75,17 +75,26 @@ export function OracleTableCard(props: OracleTableCardProps) {
           {isEditor ? (
             <>
               <Tooltip title={"Move Oracle"}>
-                <IconButton onClick={() => setMoveOracleDialogOpen(true)}>
+                <IconButton
+                  aria-label={`Move ${oracle.label} to another collection`}
+                  onClick={() => setMoveOracleDialogOpen(true)}
+                >
                   <MoveIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title={"Edit Oracle"}>
-                <IconButton onClick={onClick}>
+                <IconButton
+                  aria-label={`Edit ${oracle.label}`}
+                  onClick={onClick}
+                >
                   <EditIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title={"Delete Oracle"}>
-                <IconButton onClick={handleDeleteOracle}>
+                <IconButton
+                  aria-label={`Delete ${oracle.label}`}
+                  onClick={handleDeleteOracle}
+                >
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
@@ -93,7 +102,10 @@ export function OracleTableCard(props: OracleTableCardProps) {
           ) : (
             <>
               <Tooltip title={"Preview Oracle"}>
-                <IconButton onClick={onClick}>
+                <IconButton
+                  aria-label={`Preview ${oracle.label}`}
+                  onClick={onClick}
+                >
                   <ViewIcon />
                 </IconButton>
               </Tooltip>

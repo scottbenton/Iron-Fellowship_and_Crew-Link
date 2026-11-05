@@ -1,3 +1,4 @@
+import { useHide3dDice } from "hooks/useHide3dDice";
 import {
   Box,
   Button,
@@ -64,9 +65,7 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
     matchedNegativeMomentum,
   };
 
-  const hide3dDice = useStore(
-    (store) => store.auth.userDoc?.hide3dDice
-  );
+  const hide3dDice = useHide3dDice();
 
   const theme = useTheme();
 
@@ -75,8 +74,8 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
     type: "challenge" | "action"
   ) => {
     const roll = type === "challenge"
-      ? await getRolls(1, 0, theme, hide3dDice === true)
-      : await getRolls(0, 1, theme, hide3dDice === true);
+      ? await getRolls(1, 0, theme, hide3dDice)
+      : await getRolls(0, 1, theme, hide3dDice);
     setter(roll[0].value);
     info(`Rerolled ${type} die for a new value of ${roll[0].value}`);
   };

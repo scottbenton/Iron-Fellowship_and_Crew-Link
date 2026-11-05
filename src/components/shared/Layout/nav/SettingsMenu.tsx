@@ -1,3 +1,4 @@
+import { useHide3dDice } from "hooks/useHide3dDice";
 import {
   IconButton,
   ListItemIcon,
@@ -7,7 +8,7 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { logout } from "lib/auth.lib";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useToggleTheme } from "providers/ThemeProvider";
@@ -40,6 +41,7 @@ import { activeFeatureFlags } from "hooks/featureFlags/activeFeatureFlags";
 export function SettingsMenu() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
 
   const { themeType, toggleTheme } = useToggleTheme();
 
@@ -59,7 +61,7 @@ export function SettingsMenu() {
     (store) => store.auth.status === AUTH_STATE.AUTHENTICATED
   );
 
-  const hide3dDice = useStore((store) => store.auth.userDoc?.hide3dDice);
+  const hide3dDice = useHide3dDice();
   const updateUser = useStore((store) => store.auth.updateUserDoc);
 
   const toggleDice = () => {
@@ -75,7 +77,10 @@ export function SettingsMenu() {
         <IconButton
           color={"inherit"}
           className={"dark-focus-outline"}
-          aria-label={"User Settings Menu Toggle"}
+          aria-label={"User Settings"}
+          aria-haspopup={"menu"}
+          aria-expanded={menuOpen}
+          aria-controls={menuOpen ? menuId : undefined}
           ref={anchorRef}
           onClick={() => setMenuOpen(true)}
         >
@@ -90,6 +95,7 @@ export function SettingsMenu() {
         </IconButton>
       </Tooltip>
       <Menu
+        id={menuId}
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         anchorEl={anchorRef.current}

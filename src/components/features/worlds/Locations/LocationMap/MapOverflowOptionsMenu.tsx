@@ -1,5 +1,5 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { MapBackgroundImageFit, MapStrokeColors } from "types/Locations.type";
 import OverflowMenuIcon from "@mui/icons-material/MoreHoriz";
 import { useStore } from "stores/store";
@@ -26,6 +26,7 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isResizeDialogOpen, setIsResizeDialogOpen] = useState(false);
   const menuParentRef = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
   const mapInputRef = useRef<HTMLInputElement>(null);
 
   const updateLocation = useStore(
@@ -73,11 +74,16 @@ export function MapOverflowOptionsMenu(props: MapOverflowOptionsMenuProps) {
       <IconButton
         color={"inherit"}
         ref={menuParentRef}
+        aria-label={"Map Options"}
+        aria-haspopup={"menu"}
+        aria-expanded={isMenuOpen}
+        aria-controls={isMenuOpen ? menuId : undefined}
         onClick={() => setIsMenuOpen(true)}
       >
         <OverflowMenuIcon />
       </IconButton>
       <Menu
+        id={menuId}
         open={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         anchorEl={menuParentRef.current}

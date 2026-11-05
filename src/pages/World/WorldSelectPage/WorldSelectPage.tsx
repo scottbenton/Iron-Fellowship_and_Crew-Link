@@ -127,8 +127,12 @@ export function WorldSelectPage() {
           <Box height={80} />
         </Hidden>
         <Hidden smUp>
-          <FooterFab color={"primary"} onClick={() => handleWorldCreate()}>
-            <AddWorldIcon aria-label={"Create a World"} />
+          <FooterFab
+            color={"primary"}
+            onClick={() => handleWorldCreate()}
+            aria-label={"Create a World"}
+          >
+            <AddWorldIcon />
           </FooterFab>
         </Hidden>
       </PageContent>

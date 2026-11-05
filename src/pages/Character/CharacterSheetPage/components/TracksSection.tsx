@@ -155,6 +155,9 @@ export function TracksSection() {
             sx={{ flexGrow: 1 }}
           />
           <ButtonBase
+            aria-label={`Reset Momentum to ${
+              momentumResetValue ?? momentumTrack.startingValue
+            }`}
             sx={(theme) => ({
               backgroundColor: theme.palette.darkGrey.main,
               color: theme.palette.darkGrey.contrastText,

@@ -20,7 +20,7 @@ import { ILocationConfig, locationConfigs } from "config/locations.config";
 import { IconColors } from "types/Icon.type";
 import { GameIcon } from "components/shared/GameIcons/GameIcon";
 import MoveIcon from "@mui/icons-material/OpenWith";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { LocationWithGMProperties } from "stores/world/currentWorld/locations/locations.slice.type";
 import { AddMoveLocationChooserDialog } from "./AddMoveLocationChooserDialog";
 import DefaultPaintIcon from "@mui/icons-material/Brush";
@@ -46,6 +46,7 @@ export function MapToolChooser(props: MapToolChooserProps) {
   const [backgroundColorChooserOpen, setBackgroundColorChooserOpen] =
     useState(false);
   const backgroundColorButtonRef = useRef<HTMLButtonElement>(null);
+  const backgroundColorMenuId = useId();
 
   const getToolValue = () => {
     if (currentTool?.type === MapTools.AddPath) {
@@ -164,6 +165,11 @@ export function MapToolChooser(props: MapToolChooserProps) {
             <ToggleButton
               ref={backgroundColorButtonRef}
               value={"_paintBG"}
+              aria-haspopup={"menu"}
+              aria-expanded={backgroundColorChooserOpen}
+              aria-controls={
+                backgroundColorChooserOpen ? backgroundColorMenuId : undefined
+              }
               sx={(theme) => ({
                 bgcolor:
                   currentTool?.type === MapTools.BackgroundPaint ||
@@ -275,6 +281,7 @@ export function MapToolChooser(props: MapToolChooserProps) {
         }}
       />
       <Menu
+        id={backgroundColorMenuId}
         anchorEl={backgroundColorButtonRef.current}
         open={backgroundColorChooserOpen}
         onClose={() => setBackgroundColorChooserOpen(false)}

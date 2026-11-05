@@ -51,6 +51,7 @@ export function LocationsSidebarItem(props: LocationsSidebarItemProps) {
             value={locationId}
             selected={isExpanded}
             onChange={() => setIsExpanded(!isExpanded)}
+            aria-label={`Show Locations in ${locations[locationId].name}`}
             sx={(theme) => ({
               position: "absolute",
               left: 4,

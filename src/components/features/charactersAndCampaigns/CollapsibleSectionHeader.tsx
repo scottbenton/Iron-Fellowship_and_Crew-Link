@@ -19,11 +19,23 @@ export interface CollapsibleSectionHeaderProps {
   disabled?: boolean;
   actions?: React.JSX.Element;
   hidden?: boolean;
+  // The id of the element this header shows and hides, so screen readers can
+  // tie the two together.
+  controlsId?: string;
 }
 
 export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
-  const { component, text, open, forcedOpen, toggleOpen, disabled, actions, hidden } =
-    props;
+  const {
+    component,
+    text,
+    open,
+    forcedOpen,
+    toggleOpen,
+    disabled,
+    actions,
+    hidden,
+    controlsId,
+  } = props;
 
   if (forcedOpen) {
     return (
@@ -79,7 +91,12 @@ export function CollapsibleSectionHeader(props: CollapsibleSectionHeaderProps) {
     >
       {!forcedOpen ? (
         <>
-          <ListItemButton onClick={toggleOpen} disabled={disabled}>
+          <ListItemButton
+            onClick={toggleOpen}
+            disabled={disabled}
+            aria-expanded={open}
+            aria-controls={controlsId}
+          >
             <Box sx={{ flexGrow: 1 }}>{text}</Box>
 
             <ListItemIcon sx={{ minWidth: "unset" }}>

@@ -132,6 +132,7 @@ export function ConditionMeters(props: ConditionMetersProps) {
                     <>
                       <Tooltip title={"Edit"}>
                         <IconButton
+                          aria-label={`Edit ${conditionMeters[conditionMeterKey].label}`}
                           onClick={() => {
                             setConditionMeterDialogOpen(true);
                             setEditingConditionMeterKey(conditionMeterKey);
@@ -142,6 +143,7 @@ export function ConditionMeters(props: ConditionMetersProps) {
                       </Tooltip>
                       <Tooltip title={"Delete"}>
                         <IconButton
+                          aria-label={`Delete ${conditionMeters[conditionMeterKey].label}`}
                           onClick={() => handleDelete(conditionMeterKey)}
                         >
                           <DeleteIcon />
@@ -151,6 +153,7 @@ export function ConditionMeters(props: ConditionMetersProps) {
                   ) : (
                     <Tooltip title={"Preview"}>
                       <IconButton
+                        aria-label={`Preview ${conditionMeters[conditionMeterKey].label}`}
                         onClick={() => {
                           setPreviewingConditionMeterKey(conditionMeterKey);
                         }}

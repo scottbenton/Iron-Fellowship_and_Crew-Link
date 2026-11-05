@@ -1,5 +1,5 @@
 import { Box, Collapse } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { CollapsibleSectionHeader } from "../CollapsibleSectionHeader";
 import { CATEGORY_VISIBILITY } from "./useFilterMoves";
 import { Datasworn } from "@datasworn-community/core";
@@ -27,6 +27,7 @@ export function MoveCategory(props: MoveCategoryProps) {
   } = props;
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const contentsId = useId();
 
   const isExpandedOrForced = isExpanded || forceOpen;
 
@@ -47,9 +48,10 @@ export function MoveCategory(props: MoveCategoryProps) {
         forcedOpen={forceOpen}
         toggleOpen={() => !forceOpen && setIsExpanded((prev) => !prev)}
         text={category.name}
+        controlsId={contentsId}
       />
 
-      <Collapse in={isExpandedOrForced}>
+      <Collapse in={isExpandedOrForced} id={contentsId}>
         <Box
           sx={{
             mb: isExpandedOrForced ? 0.5 : 0,

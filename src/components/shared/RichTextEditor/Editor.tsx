@@ -1,4 +1,4 @@
-import { Box, Fade } from "@mui/material";
+import { Box, Button, Fade } from "@mui/material";
 import { EditorContent, Editor as TTEditor } from "@tiptap/react";
 import { ReactNode } from "react";
 
@@ -9,6 +9,10 @@ export interface EditorProps {
   saving?: boolean;
   toolbar?: ReactNode;
   minHeight?: number;
+  // Names the link that skips the toolbar to reach the text ("Skip to note
+  // text"). The text's accessible name comes from textboxAttributes, passed
+  // where the editor is created.
+  label?: string;
 }
 
 export function Editor(props: EditorProps) {
@@ -19,6 +23,7 @@ export function Editor(props: EditorProps) {
     toolbar,
     saving,
     minHeight = 300,
+    label = "Text",
   } = props;
 
   return (
@@ -41,6 +46,33 @@ export function Editor(props: EditorProps) {
             }
       }
     >
+      {toolbar && editable && editor && (
+        // Before the toolbar, so keyboard and screen reader users can go
+        // straight to the text rather than through every formatting button.
+        // Hidden until focused, like Skip to Content.
+        <Button
+          variant={"contained"}
+          onClick={() => editor.chain().focus().run()}
+          sx={{
+            position: "absolute",
+            zIndex: 1,
+            m: 1,
+            "&:not(:focus)": {
+              width: "1px",
+              height: "1px",
+              p: 0,
+              m: "-1px",
+              overflow: "hidden",
+              clip: "rect(0, 0, 0, 0)",
+              clipPath: "inset(50%)",
+              whiteSpace: "nowrap",
+              border: 0,
+            },
+          }}
+        >
+          Skip to {label.toLowerCase()}
+        </Button>
+      )}
       {toolbar}
       <Box position={"relative"}>
         <Fade in={saving}>

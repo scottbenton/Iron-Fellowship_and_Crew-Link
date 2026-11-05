@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import { DialogTitleWithCloseButton } from "components/shared/DialogTitleWithCloseButton";
 import { useStore } from "stores/store";
+import { useHide3dDice } from "hooks/useHide3dDice";
+import { AUTH_STATE } from "stores/auth/auth.slice.type";
 
 export interface AccessibilitySettingsDialogProps {
   open?: boolean;
@@ -27,6 +29,12 @@ export function AccessibilitySettingsDialog(
   const updateSettings = useStore(
     (store) => store.accessibilitySettings.updateSettings
   );
+
+  const isLoggedIn = useStore(
+    (store) => store.auth.status === AUTH_STATE.AUTHENTICATED
+  );
+  const hide3dDice = useHide3dDice();
+  const updateUserDoc = useStore((store) => store.auth.updateUserDoc);
 
   return (
     <Dialog open={open ?? false} onClose={onClose}>
@@ -47,6 +55,20 @@ export function AccessibilitySettingsDialog(
             label={"Announce rolls and modifiers when rolling?"}
             sx={{ textTransform: "capitalize", marginRight: 3 }}
           />
+          {isLoggedIn && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={!hide3dDice}
+                  onChange={(evt, value) =>
+                    updateUserDoc({ hide3dDice: !value })
+                  }
+                />
+              }
+              label={"Show animated 3D dice when rolling?"}
+              sx={{ textTransform: "capitalize", marginRight: 3 }}
+            />
+          )}
         </Box>
       </DialogContent>
       <DialogActions>

@@ -126,8 +126,9 @@ export function CampaignSelectPage() {
         <FooterFab
           onClick={() => setCreateCampaignDialogOpen(true)}
           color={"primary"}
+          aria-label={"Create a Campaign"}
         >
-          <CreateCampaignIcon aria-label={"Create a Campaign"} />
+          <CreateCampaignIcon />
         </FooterFab>
       </Hidden>
       <CreateCampaignDialog

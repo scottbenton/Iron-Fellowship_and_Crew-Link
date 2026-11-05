@@ -122,6 +122,7 @@ export function EditorToolbar(props: EditorToolbarProps) {
             <ToggleButton
               size={"small"}
               value={"outdent"}
+              aria-label={"Outdent"}
               onClick={() =>
                 editor.chain().focus().liftListItem("listItem").run()
               }
@@ -136,6 +137,7 @@ export function EditorToolbar(props: EditorToolbarProps) {
             <ToggleButton
               size={"small"}
               value={"indent"}
+              aria-label={"Indent"}
               onClick={() =>
                 editor.chain().focus().sinkListItem("listItem").run()
               }

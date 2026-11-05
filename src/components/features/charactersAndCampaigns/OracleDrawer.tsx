@@ -1,6 +1,6 @@
-import { SwipeableDrawer } from "@mui/material";
 import { OracleSection } from "./OracleSection";
-import React, { useCallback } from "react";
+import React from "react";
+import { ReferenceDrawer } from "./ReferenceDrawer";
 
 export interface OracleDrawerProps {
   open?: boolean;
@@ -10,18 +10,10 @@ export interface OracleDrawerProps {
 function OracleDrawerUnMemoized(props: OracleDrawerProps) {
   const { open, onClose } = props;
 
-  const openCallback = useCallback(() => {}, []);
   return (
-    <SwipeableDrawer
-      open={open}
-      onOpen={openCallback}
-      keepMounted
-      disableSwipeToOpen
-      disableDiscovery
-      onClose={onClose}
-    >
+    <ReferenceDrawer title={"Oracles"} open={!!open} onClose={onClose}>
       <OracleSection />
-    </SwipeableDrawer>
+    </ReferenceDrawer>
   );
 }
 

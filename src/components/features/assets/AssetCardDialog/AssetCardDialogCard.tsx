@@ -2,6 +2,8 @@ import { AssetCard } from "../AssetCard/AssetCard";
 import { LoadingButton } from "@mui/lab";
 import { useEffect, useRef, useState } from "react";
 import { CircularProgress } from "@mui/material";
+import { useStore } from "stores/store";
+import { idMap } from "data/idMap";
 
 export interface AssetCardDialogCardProps {
   assetId: string;
@@ -17,6 +19,9 @@ export function AssetCardDialogCard(props: AssetCardDialogCardProps) {
   const { assetId, selectAsset, searched, clearSearched, loading, selectLabel, disabled = false } = props;
 
   const assetRef = useRef<HTMLDivElement | null>(null);
+  const assetName = useStore(
+    (store) => store.rules.assetMaps.assetMap[idMap[assetId] ?? assetId]?.name
+  );
 
   const [buttonLoading, setButtonLoading] = useState(false);
 
@@ -46,6 +51,9 @@ export function AssetCardDialogCard(props: AssetCardDialogCardProps) {
             selectAsset()
           }}
           loading={buttonLoading}
+          aria-label={
+            assetName ? `${selectLabel ?? "Select"}: ${assetName}` : undefined
+          }
           variant={"contained"}
           disableRipple
           disableElevation

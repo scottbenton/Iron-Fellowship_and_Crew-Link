@@ -49,6 +49,7 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
       >
         <span>Add Character</span>
         <IconButton
+          aria-label={"Close Dialog"}
           onClick={() => handleClose()}
           disabled={addCharacterLoading}
           sx={{ ml: 2 }}

@@ -126,6 +126,7 @@ export function LegacyTracks(props: LegacyTracksProps) {
                     <>
                       <Tooltip title={"Edit"}>
                         <IconButton
+                          aria-label={`Edit ${legacyTracks[legacyTrackKey].label}`}
                           onClick={() => {
                             setLegacyTracksDialogOpen(true);
                             setEditingLegacyTrackKey(legacyTrackKey);
@@ -136,6 +137,7 @@ export function LegacyTracks(props: LegacyTracksProps) {
                       </Tooltip>
                       <Tooltip title={"Delete"}>
                         <IconButton
+                          aria-label={`Delete ${legacyTracks[legacyTrackKey].label}`}
                           onClick={() => handleDelete(legacyTrackKey)}
                         >
                           <DeleteIcon />
@@ -145,6 +147,7 @@ export function LegacyTracks(props: LegacyTracksProps) {
                   ) : (
                     <Tooltip title={"Preview"}>
                       <IconButton
+                        aria-label={`Preview ${legacyTracks[legacyTrackKey].label}`}
                         onClick={() => {
                           setViewingLegacyTrackKey(legacyTrackKey);
                         }}
