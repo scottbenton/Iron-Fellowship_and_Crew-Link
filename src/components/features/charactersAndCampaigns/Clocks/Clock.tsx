@@ -107,6 +107,7 @@ export function Clock(props: ClockProps) {
         <Typography
           fontFamily={(theme) => theme.fontFamilyTitle}
           variant={"h6"}
+          component={"p"}
         >
           {clock.label}
           {onEdit && (
@@ -133,6 +134,7 @@ export function Clock(props: ClockProps) {
       {clock.description && (
         <Typography
           variant={"subtitle1"}
+          component={"p"}
           color={(theme) => theme.palette.text.secondary}
           whiteSpace={"pre-wrap"}
         >

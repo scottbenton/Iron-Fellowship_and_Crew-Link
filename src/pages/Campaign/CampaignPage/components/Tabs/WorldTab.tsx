@@ -76,7 +76,9 @@ export function WorldTab() {
                 justifyContent: "space-between",
               }}
             >
-              <Typography variant={"h6"}>{world.name}</Typography>
+              <Typography variant={"h6"} component={"h2"}>
+                {world.name}
+              </Typography>
               <Button color={"inherit"} onClick={() => handleWorldRemove()}>
                 Remove World
               </Button>

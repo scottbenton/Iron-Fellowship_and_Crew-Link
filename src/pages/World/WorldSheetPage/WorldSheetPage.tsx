@@ -83,6 +83,7 @@ export function WorldSheetPage() {
         <PageHeader />
         <PageContent isPaper>
           <EmptyState
+            isPageTitle
             showImage
             title={"World not Found"}
             message={

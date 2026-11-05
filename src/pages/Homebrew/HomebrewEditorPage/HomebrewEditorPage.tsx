@@ -98,6 +98,7 @@ export function HomebrewEditorPage() {
         <PageHeader />
         <PageContent isPaper>
           <EmptyState
+            isPageTitle
             title={"Homebrew Collection not Found"}
             message={"Please try again from the homebrew selection page"}
             showImage

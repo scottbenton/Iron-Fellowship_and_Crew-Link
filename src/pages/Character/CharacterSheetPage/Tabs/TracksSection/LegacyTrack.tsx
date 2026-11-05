@@ -213,6 +213,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
         >
           <Typography
             variant={"h6"}
+            component={"p"}
             color={(theme) => theme.palette.text.primary}
             fontFamily={(theme) => theme.fontFamilyTitle}
             sx={{ mr: 4 }}

@@ -68,7 +68,9 @@ export function WorldSection() {
                 justifyContent: "space-between",
               }}
             >
-              <Typography variant={"h6"}>{world.name}</Typography>
+              <Typography variant={"h6"} component={"h2"}>
+                {world.name}
+              </Typography>
               {!campaignId && (
                 <Button
                   color={"inherit"}

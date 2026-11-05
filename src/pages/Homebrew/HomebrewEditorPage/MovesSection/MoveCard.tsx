@@ -50,7 +50,9 @@ export function MoveCard(props: MoveCardProps) {
         }}
       >
         <Box>
-          <Typography variant={"h6"}>{move.label}</Typography>
+          <Typography variant={"h6"} component={"h3"}>
+            {move.label}
+          </Typography>
           {move.replacesId && (
             <Typography color={"textSecondary"}>
               Replaces &quot;{moveMap[move.replacesId].name}&quot;

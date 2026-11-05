@@ -50,6 +50,7 @@ export function CharacterSheetPage() {
         <PageHeader />
         <PageContent isPaper>
           <EmptyState
+            isPageTitle
             title={"Character not Found"}
             message={"Please try again from the character selection page"}
             showImage

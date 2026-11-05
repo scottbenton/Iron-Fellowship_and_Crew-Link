@@ -38,6 +38,7 @@ export function WorldSheet(props: WorldSheetProps) {
       ) : (
         <Typography
           variant={"h5"}
+          component={"h2"}
           sx={(theme) => ({ py: 2, fontFamily: theme.fontFamilyTitle })}
         >
           {world.name}

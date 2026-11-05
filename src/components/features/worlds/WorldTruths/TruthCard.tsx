@@ -76,7 +76,9 @@ export function TruthCard(props: TruthCardProps) {
             alignItems={"baseline"}
             justifyContent={"space-between"}
           >
-            <Typography variant={"h6"}>{truth.name}</Typography>
+            <Typography variant={"h6"} component={"h3"}>
+              {truth.name}
+            </Typography>
             {canEdit && (
               <Link
                 color={"inherit"}

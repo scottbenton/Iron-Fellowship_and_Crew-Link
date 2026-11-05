@@ -61,6 +61,7 @@ export function CampaignPage() {
         <PageHeader />
         <PageContent isPaper>
           <EmptyState
+            isPageTitle
             title={"Campaign not Found"}
             message={"Please try again from the campaign selection page"}
             showImage

@@ -75,7 +75,9 @@ export function LoginOrSignupPage(props: LoginOrSignupPageProps) {
               <GoogleSignInButton isLoginPage={isLoginPage} />
               <Divider>OR</Divider>
               <Stack spacing={2} component={"form"} onSubmit={handleSubmit}>
-                <Typography variant={"h6"}>Passwordless Sign in</Typography>
+                <Typography variant={"h6"} component={"h2"}>
+                  Passwordless Sign in
+                </Typography>
                 <Alert severity={"info"}>
                   {!isLoginPage &&
                     "Get a sign in link emailed to you each time you log in. "}

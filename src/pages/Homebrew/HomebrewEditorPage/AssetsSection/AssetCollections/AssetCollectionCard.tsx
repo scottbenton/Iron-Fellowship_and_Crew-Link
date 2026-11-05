@@ -20,7 +20,9 @@ export function AssetCollectionCard(props: AssetCollectionCardProps) {
         <Typography variant={"overline"} color={"textSecondary"}>
           Category
         </Typography>
-        <Typography variant={"h6"}>{collection.label}</Typography>
+        <Typography variant={"h6"} component={"span"} display={"block"}>
+          {collection.label}
+        </Typography>
         {collection.replacesId && (
           <Typography color={"textSecondary"}>
             Replaces &quot;

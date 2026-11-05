@@ -73,6 +73,7 @@ export function CampaignJoinPage() {
   if (getCampaignError) {
     return (
       <EmptyState
+        isPageTitle
         title={"Error loading Campaign"}
         message={getCampaignError}
         showImage

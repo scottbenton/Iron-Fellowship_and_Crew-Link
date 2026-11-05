@@ -48,6 +48,7 @@ export function ErrorRoute() {
 
   return (
     <EmptyState
+      isPageTitle
       showImage
       title={`${appName} encountered an error`}
       message={

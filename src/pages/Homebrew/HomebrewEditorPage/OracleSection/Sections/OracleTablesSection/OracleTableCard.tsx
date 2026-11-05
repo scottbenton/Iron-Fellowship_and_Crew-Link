@@ -64,7 +64,9 @@ export function OracleTableCard(props: OracleTableCardProps) {
           <Typography variant={"overline"} color={"textSecondary"}>
             Table
           </Typography>
-          <Typography variant={"h6"}>{oracle.label}</Typography>
+          <Typography variant={"h6"} component={"h3"}>
+            {oracle.label}
+          </Typography>
           {oracle.replaces && (
             <Typography color={"textSecondary"}>
               Replaces &quot;{oracleMap[oracle.replaces]?.name}&quot;

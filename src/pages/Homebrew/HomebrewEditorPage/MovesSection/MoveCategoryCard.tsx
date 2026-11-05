@@ -31,7 +31,9 @@ export function MoveCategoryCard(props: MoveCategoryCardProps) {
           <Typography variant={"overline"} color={"textSecondary"}>
             Category
           </Typography>
-          <Typography variant={"h6"}>{category.label}</Typography>
+          <Typography variant={"h6"} component={"span"} display={"block"}>
+            {category.label}
+          </Typography>
           {category.replacesId && (
             <Typography color={"textSecondary"}>
               Replaces &quot;
