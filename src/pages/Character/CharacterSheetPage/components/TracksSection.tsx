@@ -89,83 +89,90 @@ export function TracksSection() {
 
   const isMobile = useIsMobile();
 
-  return (
-    <Grid
-      container
-      spacing={isMobile ? 1 : 2}
-      sx={isMobile ? { mt: 0 } : undefined}
-    >
-      {Object.keys(conditionMeters).map((conditionMeterKey) =>
-        isMobile ? (
-          <Grid item xs={6} key={conditionMeterKey}>
-            <MobileStatTrack
-              label={conditionMeters[conditionMeterKey].label}
-              value={getConditionMeterValue(conditionMeterKey)}
-              onChange={(newValue) =>
-                updateConditionMeter(conditionMeterKey, newValue)
-              }
-              disableRoll={!conditionMeters[conditionMeterKey].rollable}
-              min={conditionMeters[conditionMeterKey].min}
-              max={conditionMeters[conditionMeterKey].max}
-            />
-          </Grid>
-        ) : (
-          <Grid item xs={12} md={4} key={conditionMeterKey}>
-            <Track
-              label={conditionMeters[conditionMeterKey].label}
-              value={getConditionMeterValue(conditionMeterKey)}
-              onChange={(newValue) =>
-                updateConditionMeter(conditionMeterKey, newValue)
-              }
-              min={conditionMeters[conditionMeterKey].min}
-              max={conditionMeters[conditionMeterKey].max}
-            />
-          </Grid>
-        )
-      )}
-      {isMobile ? (
-        <Grid item xs={6}>
-          <MomentumTrackMobile
-            value={momentum}
-            onChange={(newValue) => updateMomentum(newValue)}
-            min={momentumTrack.min}
-            max={maxMomentum ?? momentumTrack.max}
-            resetValue={momentumResetValue ?? momentumTrack.startingValue}
-          />
-        </Grid>
-      ) : (
+  const conditionMeterKeys = Object.keys(conditionMeters);
+
+  if (isMobile) {
+    return (
+      <Grid container spacing={1} sx={{ mt: 0 }}>
         <Grid item xs={12}>
-          <Box display={"flex"}>
-            <Track
-              label={"Momentum"}
+          {/* Two columns as wide as the meters, centred on the screen */}
+          <Box
+            display={"grid"}
+            gridTemplateColumns={"repeat(2, max-content)"}
+            justifyContent={"center"}
+            gap={1}
+          >
+            {conditionMeterKeys.map((conditionMeterKey) => (
+              <MobileStatTrack
+                key={conditionMeterKey}
+                label={conditionMeters[conditionMeterKey].label}
+                value={getConditionMeterValue(conditionMeterKey)}
+                onChange={(newValue) =>
+                  updateConditionMeter(conditionMeterKey, newValue)
+                }
+                disableRoll={!conditionMeters[conditionMeterKey].rollable}
+                min={conditionMeters[conditionMeterKey].min}
+                max={conditionMeters[conditionMeterKey].max}
+              />
+            ))}
+            <MomentumTrackMobile
               value={momentum}
               onChange={(newValue) => updateMomentum(newValue)}
               min={momentumTrack.min}
               max={maxMomentum ?? momentumTrack.max}
-              sx={{ flexGrow: 1 }}
+              resetValue={momentumResetValue ?? momentumTrack.startingValue}
             />
-            <ButtonBase
-              sx={(theme) => ({
-                backgroundColor: theme.palette.darkGrey.main,
-                color: theme.palette.darkGrey.contrastText,
-                borderRadius: `${theme.shape.borderRadius}px`,
-                ml: 0.25,
-
-                "&:hover": {
-                  backgroundColor: theme.palette.darkGrey.dark,
-                },
-              })}
-              onClick={() =>
-                updateMomentum(
-                  momentumResetValue ?? momentumTrack.startingValue
-                )
-              }
-            >
-              <ResetIcon />
-            </ButtonBase>
           </Box>
         </Grid>
-      )}
+        <NonLinearMeters />
+      </Grid>
+    );
+  }
+
+  return (
+    <Grid container spacing={2}>
+      {conditionMeterKeys.map((conditionMeterKey) => (
+        <Grid item xs={12} md={4} key={conditionMeterKey}>
+          <Track
+            label={conditionMeters[conditionMeterKey].label}
+            value={getConditionMeterValue(conditionMeterKey)}
+            onChange={(newValue) =>
+              updateConditionMeter(conditionMeterKey, newValue)
+            }
+            min={conditionMeters[conditionMeterKey].min}
+            max={conditionMeters[conditionMeterKey].max}
+          />
+        </Grid>
+      ))}
+      <Grid item xs={12}>
+        <Box display={"flex"}>
+          <Track
+            label={"Momentum"}
+            value={momentum}
+            onChange={(newValue) => updateMomentum(newValue)}
+            min={momentumTrack.min}
+            max={maxMomentum ?? momentumTrack.max}
+            sx={{ flexGrow: 1 }}
+          />
+          <ButtonBase
+            sx={(theme) => ({
+              backgroundColor: theme.palette.darkGrey.main,
+              color: theme.palette.darkGrey.contrastText,
+              borderRadius: `${theme.shape.borderRadius}px`,
+              ml: 0.25,
+
+              "&:hover": {
+                backgroundColor: theme.palette.darkGrey.dark,
+              },
+            })}
+            onClick={() =>
+              updateMomentum(momentumResetValue ?? momentumTrack.startingValue)
+            }
+          >
+            <ResetIcon />
+          </ButtonBase>
+        </Box>
+      </Grid>
       <NonLinearMeters />
     </Grid>
   );
