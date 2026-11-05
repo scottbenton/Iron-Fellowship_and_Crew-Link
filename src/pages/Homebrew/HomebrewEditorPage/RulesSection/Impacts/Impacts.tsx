@@ -177,6 +177,7 @@ export function Impacts(props: ImpactsProps) {
                       <>
                         <Tooltip title={"Edit"}>
                           <IconButton
+                            aria-label={`Edit ${impactCategories[categoryKey].label}`}
                             onClick={() => {
                               setImpactCategoryDialogOpen(true);
                               setEditingImpactCategoryKey(categoryKey);
@@ -187,6 +188,7 @@ export function Impacts(props: ImpactsProps) {
                         </Tooltip>
                         <Tooltip title={"Delete"}>
                           <IconButton
+                            aria-label={`Delete ${impactCategories[categoryKey].label}`}
                             onClick={() => handleCategoryDelete(categoryKey)}
                           >
                             <DeleteIcon />
@@ -196,6 +198,7 @@ export function Impacts(props: ImpactsProps) {
                     ) : (
                       <Tooltip title={"Preview"}>
                         <IconButton
+                          aria-label={`Preview ${impactCategories[categoryKey].label}`}
                           onClick={() => {
                             setViewingImpactCategoryKey(categoryKey);
                           }}
@@ -242,6 +245,7 @@ export function Impacts(props: ImpactsProps) {
                               <Box display={"flex"}>
                                 <Tooltip title={"Edit"}>
                                   <IconButton
+                                    aria-label={`Edit ${impactCategories[categoryKey].contents[categoryContentKey].label}`}
                                     onClick={() => {
                                       setImpactDialogOpen(true);
                                       setEditingImpactCategoryKey(categoryKey);
@@ -253,6 +257,7 @@ export function Impacts(props: ImpactsProps) {
                                 </Tooltip>
                                 <Tooltip title={"Delete"}>
                                   <IconButton
+                                    aria-label={`Delete ${impactCategories[categoryKey].contents[categoryContentKey].label}`}
                                     onClick={() =>
                                       handleImpactDelete(
                                         categoryKey,

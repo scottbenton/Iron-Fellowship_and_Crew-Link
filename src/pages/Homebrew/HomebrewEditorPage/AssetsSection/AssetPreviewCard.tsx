@@ -155,12 +155,20 @@ export function AssetPreviewCard(props: AssetPreviewCardProps) {
           isEditor && (
             <>
               <Tooltip title={"Move asset to another collection"}>
-                <IconButton onClick={handleMoveAsset} color={"inherit"}>
+                <IconButton
+                  aria-label={`Move ${asset.name} to another collection`}
+                  onClick={handleMoveAsset}
+                  color={"inherit"}
+                >
                   <MoveIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title={"Edit Asset"}>
-                <IconButton onClick={handleEditAsset} color={"inherit"}>
+                <IconButton
+                  aria-label={`Edit ${asset.name}`}
+                  onClick={handleEditAsset}
+                  color={"inherit"}
+                >
                   <EditIcon />
                 </IconButton>
               </Tooltip>

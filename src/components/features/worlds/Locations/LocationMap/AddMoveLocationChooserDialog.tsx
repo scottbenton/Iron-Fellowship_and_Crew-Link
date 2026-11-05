@@ -70,7 +70,7 @@ export function AddMoveLocationChooserDialog(
                 </InputAdornment>
               ),
             }}
-            aria-label={"Search Locations"}
+            inputProps={{ "aria-label": "Search Locations" }}
             placeholder={"Search"}
             value={search}
             onChange={(evt) => setSearch(evt.currentTarget.value)}

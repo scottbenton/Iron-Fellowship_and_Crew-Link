@@ -57,11 +57,15 @@ export function ExperienceTrack() {
           handleAdd={() => handleEarnedExperienceChange(earnedExp + 1)}
           handleSubtract={() => handleEarnedExperienceChange(earnedExp - 1)}
           label={"Add Experience"}
+          addLabel={"Add 1 Earned Experience"}
+          subtractLabel={"Remove 1 Earned Experience"}
         />
         <ExperienceButtons
           handleAdd={() => handleSpentExperienceChange(spentExp + 1)}
           handleSubtract={() => handleSpentExperienceChange(spentExp - 1)}
           label={"Spend Experience"}
+          addLabel={"Add 1 Spent Experience"}
+          subtractLabel={"Remove 1 Spent Experience"}
         />
       </Box>
     </Box>

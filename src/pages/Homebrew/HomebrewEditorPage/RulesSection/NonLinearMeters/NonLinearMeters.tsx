@@ -129,6 +129,7 @@ export function NonLinearMeters(props: NonLinearMetersProps) {
                     <>
                       <Tooltip title={"Edit"}>
                         <IconButton
+                          aria-label={`Edit ${nonLinearMeters[meterKey].label}`}
                           onClick={() => {
                             setEditingNonLinearMeterKey(meterKey);
                             setNonLinearMeterDialogOpen(true);
@@ -138,7 +139,10 @@ export function NonLinearMeters(props: NonLinearMetersProps) {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title={"Delete"}>
-                        <IconButton onClick={() => handleDelete(meterKey)}>
+                        <IconButton
+                          aria-label={`Delete ${nonLinearMeters[meterKey].label}`}
+                          onClick={() => handleDelete(meterKey)}
+                        >
                           <DeleteIcon />
                         </IconButton>
                       </Tooltip>
@@ -146,6 +150,7 @@ export function NonLinearMeters(props: NonLinearMetersProps) {
                   ) : (
                     <Tooltip title={"Preview"}>
                       <IconButton
+                        aria-label={`Preview ${nonLinearMeters[meterKey].label}`}
                         onClick={() => {
                           setViewingNonLinearMeterKey(meterKey);
                         }}

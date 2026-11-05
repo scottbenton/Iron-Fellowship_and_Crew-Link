@@ -58,7 +58,7 @@ export function OracleSelectableRollableCollectionListItem(
         <Box display={"flex"} alignItems={"center"}>
           {keys.length > 0 && !actionIsHide && (
             <TextField
-              aria-label={"Oracle Option"}
+              inputProps={{ "aria-label": `${collection.name} Option` }}
               size={"small"}
               select
               sx={{ minWidth: 100 }}

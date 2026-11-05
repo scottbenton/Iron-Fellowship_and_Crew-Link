@@ -111,6 +111,7 @@ export function Clock(props: ClockProps) {
               color={"inherit"}
               component={"button"}
               sx={{ ml: 2 }}
+              aria-label={`Edit ${clock.label}`}
               onClick={() => onEdit()}
             >
               Edit
@@ -177,6 +178,7 @@ export function Clock(props: ClockProps) {
               color={"inherit"}
               endIcon={<DieIcon />}
               onClick={() => handleProgressionRoll()}
+              aria-label={`Roll Progress: ${clock.label}`}
             >
               Roll Progress
             </Button>
@@ -201,6 +203,7 @@ export function Clock(props: ClockProps) {
           variant={"outlined"}
           color={"inherit"}
           onClick={handleCompleteClick}
+          aria-label={`Complete Clock: ${clock.label}`}
           sx={{ mt: 1 }}
           endIcon={<CheckIcon />}
         >
@@ -208,7 +211,12 @@ export function Clock(props: ClockProps) {
         </Button>
       )}
       {handleDelete && clock.status === TrackStatus.Completed && (
-        <Button color={"error"} sx={{ mt: 1 }} onClick={handleDeleteClick}>
+        <Button
+          color={"error"}
+          sx={{ mt: 1 }}
+          onClick={handleDeleteClick}
+          aria-label={`Delete Permanently: ${clock.label}`}
+        >
           Delete Permanently
         </Button>
       )}

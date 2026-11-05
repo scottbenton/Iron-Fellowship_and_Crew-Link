@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/ManageAccounts";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { EditCampaign } from "./EditCampaign";
 import { useConfirm } from "material-ui-confirm";
 import { useNavigate } from "react-router-dom";
@@ -47,6 +47,7 @@ export function CampaignSettingsMenu() {
 
   const { campaignType, showGuidedPlayerView } = useCampaignType();
 
+  const menuId = useId();
   const [anchorElement, setAnchorElement] = useState<HTMLButtonElement | null>(
     null
   );
@@ -235,7 +236,10 @@ export function CampaignSettingsMenu() {
       <Tooltip title={"Campaign Settings"}>
         <IconButton
           color={"inherit"}
-          aria-label={"Settings"}
+          aria-label={"Campaign Settings"}
+          aria-haspopup={"menu"}
+          aria-expanded={!!anchorElement}
+          aria-controls={anchorElement ? menuId : undefined}
           onClick={(evt) => {
             setAnchorElement(evt.currentTarget);
           }}
@@ -244,6 +248,7 @@ export function CampaignSettingsMenu() {
         </IconButton>
       </Tooltip>
       <Menu
+        id={menuId}
         open={!!anchorElement}
         anchorEl={anchorElement}
         onClose={handleClose}

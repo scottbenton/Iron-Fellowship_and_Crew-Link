@@ -41,7 +41,7 @@ export function MovesSection(props: MovesSectionProps) {
               />
             </InputAdornment>
           }
-          aria-label={"Filter Moves"}
+          inputProps={{ "aria-label": "Filter Moves" }}
           placeholder={"Filter Moves"}
           onChange={(evt) => setSearch(evt.currentTarget.value)}
           color={"primary"}

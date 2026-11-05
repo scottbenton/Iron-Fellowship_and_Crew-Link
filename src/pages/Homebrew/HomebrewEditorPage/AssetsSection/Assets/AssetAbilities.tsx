@@ -108,8 +108,9 @@ export function AssetAbilities(props: AssetAbilitiesProps) {
                 variant={"outlined"}
                 color={"inherit"}
                 onClick={() => remove(index)}
+                aria-label={`Remove Ability ${index + 1}`}
               >
-                Remove Action
+                Remove Ability
               </Button>
             </AccordionActions>
           </Accordion>

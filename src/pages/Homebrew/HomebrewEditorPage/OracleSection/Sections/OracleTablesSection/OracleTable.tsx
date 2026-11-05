@@ -162,7 +162,10 @@ export function OracleTable(props: OracleTableProps) {
                 </TableCell>
               </OptionalDetailsColumn>
               <TableCell sx={{ width: 0, minWidth: "fit-content" }}>
-                <IconButton onClick={() => remove(index)}>
+                <IconButton
+                  aria-label={`Delete Row ${index + 1}`}
+                  onClick={() => remove(index)}
+                >
                   <DeleteIcon />
                 </IconButton>
               </TableCell>

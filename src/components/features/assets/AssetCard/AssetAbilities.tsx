@@ -21,6 +21,11 @@ export function AssetAbilities(props: AssetAbilitiesProps) {
               (ability.enabled || storedAsset?.enabledAbilities[index]) ?? false
             }
             disabled={ability.enabled || !onAbilityToggle}
+            inputProps={{
+              "aria-label": `${asset.name} Ability ${index + 1}${
+                ability.name ? `: ${ability.name}` : ""
+              }`,
+            }}
             onChange={(evt) =>
               onAbilityToggle && onAbilityToggle(index, evt.target.checked)
             }

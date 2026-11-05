@@ -98,7 +98,11 @@ export function PortraitUploaderDialog(props: PortraitUploaderDialogProps) {
       >
         Upload Portrait
         <Box>
-          <IconButton onClick={() => handleClose()} disabled={loading}>
+          <IconButton
+            aria-label={"Close Dialog"}
+            onClick={() => handleClose()}
+            disabled={loading}
+          >
             <CloseIcon />
           </IconButton>
         </Box>

@@ -24,7 +24,7 @@ import { CharacterHeaderMoveOracleButtons } from "./CharacterHeaderMoveOracleBut
 import { CharacterPortrait } from "./CharacterPortrait";
 import CharacterSettingsIcon from "@mui/icons-material/ManageAccounts";
 import { CharacterSettingsMenu } from "./CharacterSettings/CharacterSettingsMenu";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 export function CharacterHeader() {
   const characterName = useStore(
@@ -44,6 +44,7 @@ export function CharacterHeader() {
 
   const [characterSettingsMenuParent, setCharacterSettingsMenuParent] =
     useState<HTMLElement | null>(null);
+  const characterSettingsMenuId = useId();
 
   return (
     <StickyHeader
@@ -95,6 +96,13 @@ export function CharacterHeader() {
             <IconButton
               sx={{ ml: 2 }}
               color={"inherit"}
+              aria-haspopup={"menu"}
+              aria-expanded={!!characterSettingsMenuParent}
+              aria-controls={
+                characterSettingsMenuParent
+                  ? characterSettingsMenuId
+                  : undefined
+              }
               onClick={(evt) =>
                 setCharacterSettingsMenuParent(evt.currentTarget)
               }
@@ -103,6 +111,7 @@ export function CharacterHeader() {
             </IconButton>
           </Tooltip>
           <CharacterSettingsMenu
+            id={characterSettingsMenuId}
             open={!!characterSettingsMenuParent}
             onClose={() => setCharacterSettingsMenuParent(null)}
             anchorElement={characterSettingsMenuParent}

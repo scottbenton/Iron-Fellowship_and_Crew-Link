@@ -138,8 +138,9 @@ export function HomebrewSelectPage() {
         <FooterFab
           onClick={() => setCreateExpansionDialogOpen(true)}
           color={"primary"}
+          aria-label={"Create a Collection"}
         >
-          <CollectionCreateIcon aria-label={"Create a Collection"} />
+          <CollectionCreateIcon />
         </FooterFab>
       </Box>
     </>
