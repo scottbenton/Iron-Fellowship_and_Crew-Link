@@ -51,6 +51,8 @@ export function MomentumTrackMobile(props: MomentumTrackMobileProps) {
         borderRadius: theme.shape.borderRadius + "px",
         overflow: "hidden",
         height: "100%",
+        // As wide as its controls, like the condition meters beside it.
+        width: "fit-content",
         display: "flex",
         flexDirection: "column",
       })}
