@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  goToLatestBuild,
   reloadForStaleChunk,
   STALE_CHUNK_RELOAD_GUARD_MS,
 } from "../staleChunkReload.lib";
@@ -69,5 +70,21 @@ describe("reloadForStaleChunk", () => {
       false
     );
     expect(reload).not.toHaveBeenCalled();
+  });
+});
+
+describe("goToLatestBuild", () => {
+  it("goes to the page being navigated to, which isn't in the URL yet", () => {
+    const location = { assign: vi.fn(), reload: vi.fn() };
+    goToLatestBuild("/characters", location);
+    expect(location.assign).toHaveBeenCalledWith("/characters");
+    expect(location.reload).not.toHaveBeenCalled();
+  });
+
+  it("reloads the current page when no navigation is in progress", () => {
+    const location = { assign: vi.fn(), reload: vi.fn() };
+    goToLatestBuild(null, location);
+    expect(location.reload).toHaveBeenCalledOnce();
+    expect(location.assign).not.toHaveBeenCalled();
   });
 });

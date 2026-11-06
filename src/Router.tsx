@@ -28,6 +28,7 @@ import { useListenToHomebrew } from "stores/homebrew/useListenToHomebrew";
 import { HOMEBREW_ROUTES, homebrewPaths } from "pages/Homebrew/routes";
 import { useSyncCampaignWorldPermissions } from "stores/campaign/useSyncCampaignWorldPermissions";
 import { useSyncDataswornTree } from "hooks/useSyncDataswornTree";
+import { installStaleChunkReload } from "lib/staleChunkReload.lib";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -149,6 +150,11 @@ const router = createBrowserRouter(
     </>
   )
 );
+
+installStaleChunkReload(() => {
+  const pendingLocation = router.state.navigation.location;
+  return pendingLocation ? router.createHref(pendingLocation) : null;
+});
 
 export function Router() {
   useListenToAuth();

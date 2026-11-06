@@ -45,12 +45,31 @@ export function reloadForStaleChunk(deps: StaleChunkReloadDeps): boolean {
   return true;
 }
 
-export function installStaleChunkReload() {
+/**
+ * Loads the latest build. When the chunk was for a route being navigated to,
+ * React Router hasn't pushed that URL yet (it pushes once the route has
+ * loaded), so go to the destination rather than reloading the current page.
+ */
+export function goToLatestBuild(
+  navigationTarget: string | null,
+  location: Pick<Location, "assign" | "reload">
+) {
+  if (navigationTarget) {
+    location.assign(navigationTarget);
+  } else {
+    location.reload();
+  }
+}
+
+/** @param getNavigationTarget The href of the navigation in progress, if any. */
+export function installStaleChunkReload(
+  getNavigationTarget: () => string | null
+) {
   window.addEventListener("vite:preloadError", (event) => {
     const reloaded = reloadForStaleChunk({
       storage: window.sessionStorage,
       now: () => Date.now(),
-      reload: () => window.location.reload(),
+      reload: () => goToLatestBuild(getNavigationTarget(), window.location),
     });
     if (reloaded) {
       // Keep the failed import from surfacing an error page while the page reloads.
