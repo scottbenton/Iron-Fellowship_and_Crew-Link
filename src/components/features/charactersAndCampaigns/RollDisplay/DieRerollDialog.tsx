@@ -16,6 +16,7 @@ import { ROLL_RESULT, StatRoll } from "types/DieRolls.type";
 import { RollDisplay } from "./RollDisplay";
 import React, { useState } from "react";
 import { getRolls } from "stores/appState/useRoller";
+import { useSnackbar } from "providers/SnackbarProvider";
 import { useStore } from "stores/store";
 
 export interface DieRerollDialogProps {
@@ -32,7 +33,7 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
     (store) => store.characters.currentCharacter.currentCharacter?.momentum ?? 0
   );
 
-  const announce = useStore((store) => store.appState.announce);
+  const { info } = useSnackbar();
   const updateRoll = useStore((store) => store.gameLog.updateRoll);
   const [loading, setLoading] = useState(false);
 
@@ -76,10 +77,7 @@ export function DieRerollDialog(props: DieRerollDialogProps) {
       ? await getRolls(1, 0, theme, hide3dDice)
       : await getRolls(0, 1, theme, hide3dDice);
     setter(roll[0].value);
-    // Read out through the dialog's own live region. A snackbar sits outside
-    // the dialog, where screen readers cannot reach it while the dialog is
-    // open, and the new value already shows in the dialog.
-    announce(`Rerolled the ${type} die for a new value of ${roll[0].value}.`);
+    info(`Rerolled ${type} die for a new value of ${roll[0].value}`);
   };
 
   const handleSave = () => {
