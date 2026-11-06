@@ -25,6 +25,7 @@ import { useGameSystemValue } from "hooks/useGameSystemValue";
 import { useStore } from "stores/store";
 import { DebouncedClockCircle } from "../charactersAndCampaigns/Clocks/DebouncedClockCircle";
 import { trackMoveIdSystemValues } from "./trackMoveIdSystemValues";
+import { getProgressTrackValueText } from "functions/trackValueText";
 
 export interface BaseProgressTrackProps {
   trackType?: ProgressTracks | TrackTypes.SceneChallenge;
@@ -225,7 +226,7 @@ export function ProgressTrack(props: ProgressTracksProps) {
   const trackName = label || "Track";
 
   const getValueText = (value: number) => {
-    return `${value} ticks: (${Math.floor(value / 4)} boxes fully filled)`;
+    return getProgressTrackValueText(value, max);
   };
 
   return (
@@ -246,11 +247,11 @@ export function ProgressTrack(props: ProgressTracksProps) {
             <Typography
               variant={"h6"}
               component={"p"}
-              id={labelId}
               color={(theme) => theme.palette.text.primary}
               fontFamily={(theme) => theme.fontFamilyTitle}
             >
-              {label + " "}
+              {/* Names the track's meter, so it leaves out the Edit link. */}
+              <span id={labelId}>{label}</span>{" "}
               {onEdit && (
                 <Link
                   color={"inherit"}
@@ -311,9 +312,9 @@ export function ProgressTrack(props: ProgressTracksProps) {
                     );
                     onValueChange(newValue);
                     if (newValue === value) {
-                      announce(`${label} is already at zero ticks`);
+                      announce(`${trackName} is already at zero ticks`);
                     } else {
-                      announce(`Updated ${label} to ${getValueText(newValue)}`);
+                      announce(`Updated ${trackName} to ${getValueText(newValue)}`);
                     }
                   }
                 }}
@@ -348,8 +349,9 @@ export function ProgressTrack(props: ProgressTracksProps) {
               borderLeft={onValueChange ? 0 : 1}
               borderRight={onValueChange ? 0 : 1}
               borderColor={(theme) => theme.palette.divider}
-              role={"meter"}
-              aria-labelledby={labelId}
+              role={"progressbar"}
+              aria-labelledby={label ? labelId : undefined}
+              aria-label={label ? undefined : trackName}
               aria-valuemin={0}
               aria-valuemax={max}
               aria-valuenow={value}
@@ -382,10 +384,10 @@ export function ProgressTrack(props: ProgressTracksProps) {
                     onValueChange(newValue);
                     if (newValue === value) {
                       announce(
-                        `${label} is already at its maximum value of ${max} ticks`
+                        `${trackName} is already at its maximum value of ${max} ticks`
                       );
                     } else {
-                      announce(`Updated ${label} to ${getValueText(newValue)}`);
+                      announce(`Updated ${trackName} to ${getValueText(newValue)}`);
                     }
                   }
                 }}

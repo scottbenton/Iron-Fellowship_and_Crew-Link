@@ -21,6 +21,7 @@ import { useConfirm } from "material-ui-confirm";
 import { MarkdownRenderer } from "components/shared/MarkdownRenderer";
 import { useIsMobile } from "hooks/useIsMobile";
 import { starforged } from "@datasworn-community/starforged";
+import { getProgressTrackValueText } from "functions/trackValueText";
 
 export interface LegacyTrackProps {
   label: string;
@@ -65,7 +66,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
 
   const labelId = useId();
   const getValueText = (value: number) => {
-    return `${value} ticks: (${Math.floor(value / 4)} boxes fully filled)`;
+    return getProgressTrackValueText(value, 40);
   };
 
   const openDialog = useStore((store) => store.appState.openDialog);
@@ -261,7 +262,7 @@ export function LegacyTrack(props: LegacyTrackProps) {
               borderLeft={onValueChange ? 0 : 1}
               borderRight={onValueChange ? 0 : 1}
               borderColor={(theme) => theme.palette.divider}
-              role={"meter"}
+              role={"progressbar"}
               aria-labelledby={labelId}
               aria-valuemin={0}
               aria-valuemax={40}

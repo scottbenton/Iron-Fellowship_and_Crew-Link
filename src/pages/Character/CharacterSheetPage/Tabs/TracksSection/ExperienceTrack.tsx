@@ -4,6 +4,7 @@ import EarnedIcon from "@mui/icons-material/HighlightOff";
 import EmptyIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { ExperienceButtons } from "./ExperienceButtons";
 import { useStore } from "stores/store";
+import { getExperienceValueText } from "functions/trackValueText";
 
 const defaultTotalExp = 30;
 
@@ -25,21 +26,36 @@ export function ExperienceTrack() {
     updateCharacter({ [`experience.${type}`]: value }).catch(() => {});
   };
 
+  const announce = useStore((store) => store.appState.announce);
+
+  // The +/- buttons keep focus and the track is icons, so say what changed.
   const handleEarnedExperienceChange = (proposedValue: number) => {
     if (proposedValue >= spentExp) {
       updateExperience("earned", proposedValue);
+      announce(getExperienceValueText(proposedValue, spentExp));
+    } else {
+      announce("Earned experience cannot be less than spent experience");
     }
   };
 
   const handleSpentExperienceChange = (proposedValue: number) => {
     if (proposedValue >= 0 && proposedValue <= earnedExp) {
       updateExperience("spent", proposedValue);
+      announce(getExperienceValueText(earnedExp, proposedValue));
+    } else if (proposedValue < 0) {
+      announce("Spent experience is already 0");
+    } else {
+      announce("There is no unspent experience to spend");
     }
   };
 
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
-      <Box mr={2}>
+      <Box
+        mr={2}
+        role={"img"}
+        aria-label={getExperienceValueText(earnedExp, spentExp)}
+      >
         {new Array(spentExp).fill(undefined).map((key, index) => (
           <SpentIcon key={index} color={"action"} fontSize={"small"} />
         ))}

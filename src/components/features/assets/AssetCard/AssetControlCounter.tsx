@@ -22,28 +22,25 @@ export function AssetControlCounter(props: AssetControlCounterProps) {
 
   const announce = useStore((store) => store.appState.announce);
 
+  // Announced here rather than in a state updater, which React may run twice.
   const handleDecrement = () => {
-    setLocalValue((prev) => {
-      const newValue = prev - 1;
-      if (typeof field.min === "number" && field.min > newValue) {
-        announce(`Cannot decrease ${field.label} beyond ${field.max}`);
-        return prev;
-      }
-      announce(`Decreased ${field.label} by 1 for a total of ${newValue}`);
-      return newValue;
-    });
+    const newValue = localValue - 1;
+    if (typeof field.min === "number" && field.min > newValue) {
+      announce(`Cannot decrease ${field.label} beyond ${field.min}`);
+      return;
+    }
+    setLocalValue(newValue);
+    announce(`Decreased ${field.label} by 1 for a total of ${newValue}`);
   };
 
   const handleIncrement = () => {
-    setLocalValue((prev) => {
-      const newValue = prev + 1;
-      if (typeof field.max === "number" && field.max < newValue) {
-        announce(`Cannot increase ${field.label} beyond ${field.max}`);
-        return prev;
-      }
-      announce(`Increased ${field.label} by 1 for a total of ${newValue}`);
-      return newValue;
-    });
+    const newValue = localValue + 1;
+    if (typeof field.max === "number" && field.max < newValue) {
+      announce(`Cannot increase ${field.label} beyond ${field.max}`);
+      return;
+    }
+    setLocalValue(newValue);
+    announce(`Increased ${field.label} by 1 for a total of ${newValue}`);
   };
 
   return (

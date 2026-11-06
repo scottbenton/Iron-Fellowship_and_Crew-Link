@@ -4,6 +4,7 @@ import EmptyIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { useStore } from "stores/store";
 import { Box, Stack, Typography } from "@mui/material";
 import { ProgressTrack } from "components/features/ProgressTrack";
+import { getExperienceValueText } from "functions/trackValueText";
 
 const totalExp = 30;
 export interface IronswornTracksProps {
@@ -34,7 +35,11 @@ export function IronswornTracks(props: IronswornTracksProps) {
         Experience
       </Typography>
       <Box display={"flex"} flexWrap={"wrap"}>
-        <Box mr={2}>
+        <Box
+          mr={2}
+          role={"img"}
+          aria-label={getExperienceValueText(earnedExp, spentExp)}
+        >
           {new Array(spentExp).fill(undefined).map((key, index) => (
             <SpentIcon key={index} color={"action"} fontSize={"small"} />
           ))}

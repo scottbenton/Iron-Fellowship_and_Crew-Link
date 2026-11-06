@@ -16,6 +16,8 @@ import DieIcon from "@mui/icons-material/Casino";
 import { useRoller } from "stores/appState/useRoller";
 import { useSystemOracles } from "hooks/useSystemOracle";
 import { AskTheOracle } from "config/system.config";
+import { useStore } from "stores/store";
+import { getClockValueText } from "functions/trackValueText";
 
 export interface ClockProps {
   clock: IClock;
@@ -41,6 +43,7 @@ export function Clock(props: ClockProps) {
   const { rollClockProgression } = useRoller();
 
   const confirm = useConfirm();
+  const announce = useStore((store) => store.appState.announce);
 
   const handleCompleteClick = () => {
     if (onComplete) {
@@ -187,11 +190,15 @@ export function Clock(props: ClockProps) {
         <ClockCircle
           value={clock.value}
           segments={clock.segments}
+          label={clock.label}
           onClick={
             onValueChange
               ? () => {
-                  onValueChange(
-                    clock.value >= clock.segments ? 0 : clock.value + 1
+                  const newValue =
+                    clock.value >= clock.segments ? 0 : clock.value + 1;
+                  onValueChange(newValue);
+                  announce(
+                    getClockValueText(clock.label, newValue, clock.segments)
                   );
                 }
               : undefined

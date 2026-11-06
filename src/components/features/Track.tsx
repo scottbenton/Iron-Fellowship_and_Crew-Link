@@ -3,6 +3,7 @@ import { useDebouncedState } from "hooks/useDebouncedState";
 import { useEffect, useId, useRef, useState } from "react";
 import { useStore } from "stores/store";
 import { useRoller } from "stores/appState/useRoller";
+import { formatSignedValue } from "functions/trackValueText";
 
 export interface TrackProps {
   label?: string;
@@ -120,6 +121,7 @@ export function Track(props: TrackProps) {
             }
           }}
           component={(disabled || !rollable) ? "div" : ButtonBase}
+          aria-label={disabled || !rollable ? undefined : `Roll ${label}`}
         >
           <Typography
             fontFamily={(theme) => theme.fontFamilyTitle}
@@ -141,10 +143,14 @@ export function Track(props: TrackProps) {
           key={index}
           role={undefined}
           tabIndex={-1}
-          htmlFor={labelId + "-" + label + "-" + num}
+          htmlFor={labelId + "-" + num}
           disabled={disabled}
           component={"label"}
           sx={(theme) => ({
+            // The radio inside takes keyboard focus, so show its ring here.
+            "&:has(input:focus-visible)": {
+              boxShadow: `inset 0 0 0 2px ${theme.palette.info.main}`,
+            },
             ...(num === localValue
               ? {
                   backgroundColor: theme.palette.background.paperInlayDarker,
@@ -166,6 +172,7 @@ export function Track(props: TrackProps) {
         >
           <Typography
             variant={"button"}
+            aria-hidden
             color={(theme) => {
               if (num === localValue) {
                 return theme.palette.text.primary;
@@ -181,21 +188,30 @@ export function Track(props: TrackProps) {
           </Typography>
 
           <input
+            // Invisible but covering its box, so a screen reader's touch
+            // exploration (iOS VoiceOver) lands on the radio itself.
             style={{
               position: "absolute",
-              width: "1px",
-              height: "1px",
-              margin: "-1px",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              margin: 0,
               padding: 0,
-              overflow: "hidden",
-              clip: "rect(0,0,0,0)",
-              border: 0,
+              opacity: 0,
+              cursor: "inherit",
             }}
+            aria-label={
+              label
+                ? `${label} ${formatSignedValue(num)}`
+                : formatSignedValue(num)
+            }
             disabled={disabled}
             value={num}
             type={"radio"}
-            id={labelId + "-" + label + "-" + num}
-            name={label}
+            id={labelId + "-" + num}
+            // Unique per meter, so two meters with one label (companion
+            // assets' health) never share a radio group.
+            name={labelId}
             checked={num === localValue}
             onChange={() => handleChange(num)}
           />

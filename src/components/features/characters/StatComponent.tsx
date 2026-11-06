@@ -6,9 +6,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useStore } from "stores/store";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useIsMobile } from "hooks/useIsMobile";
 import { useRoller } from "stores/appState/useRoller";
+import { ScreenReaderOnly } from "components/shared/ScreenReaderOnly";
+import { formatSignedValue } from "functions/trackValueText";
 
 export interface StatComponentProps {
   label: string;
@@ -55,6 +57,12 @@ export function StatComponent(props: StatComponentProps) {
   };
 
   const isMobile = useIsMobile();
+
+  // Ends in "-label" for the label styles below. A label can hold spaces and
+  // repeat on one page, so it can't be the id itself.
+  const labelId = `${useId()}-label`;
+  const isRollButton = !(updateTrack || disableRoll);
+  const valueText = `${label} ${formatSignedValue(value)}`;
 
   return (
     <Card
@@ -104,6 +112,13 @@ export function StatComponent(props: StatComponentProps) {
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
       component={updateTrack || disableRoll ? "div" : ButtonBase}
+      aria-label={
+        isRollButton
+          ? `Roll ${valueText}${
+              hasAdds && label !== "Adds" ? ", with adds" : ""
+            }`
+          : undefined
+      }
       onClick={() => {
         if (!(updateTrack || disableRoll)) {
           rollStat(label, value, moveInfo, !ignoreAdds ? adds : 0);
@@ -120,13 +135,18 @@ export function StatComponent(props: StatComponentProps) {
         fontSize={14}
         component={"span"}
         lineHeight={1}
-        id={`${label}-label`}
+        id={labelId}
+        aria-hidden={!updateTrack}
       >
         {label}
         {hasAdds && label !== "Adds" && "*"}
       </Typography>
+      {!updateTrack && !isRollButton && (
+        <ScreenReaderOnly>{valueText}</ScreenReaderOnly>
+      )}
       {!updateTrack ? (
         <Typography
+          aria-hidden
           sx={[
             (theme) => ({
               color: theme.palette.text.primary,
@@ -150,7 +170,6 @@ export function StatComponent(props: StatComponentProps) {
       ) : (
         <TextField
           color={"primary"}
-          id={label}
           variant={"outlined"}
           value={inputValue}
           onChange={(evt) => handleStatUpdate(evt.target.value)}
@@ -166,7 +185,7 @@ export function StatComponent(props: StatComponentProps) {
           size={"small"}
           inputProps={{
             inputMode: "numeric",
-            "aria-labelledby": `${label}-label`,
+            "aria-labelledby": labelId,
           }}
           onFocus={() => setIsInputFocused(true)}
           onBlur={() => setIsInputFocused(false)}
