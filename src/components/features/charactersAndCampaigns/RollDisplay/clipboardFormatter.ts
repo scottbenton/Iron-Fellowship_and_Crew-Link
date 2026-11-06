@@ -184,7 +184,7 @@ interface TrackProgressRollContents {
   result: string;
 }
 
-function getTrackTypeLabel(type: TrackTypes | LEGACY_TrackTypes) {
+export function getTrackTypeLabel(type: TrackTypes | LEGACY_TrackTypes) {
   switch (type) {
     case TrackTypes.Vow:
       return "Vow";

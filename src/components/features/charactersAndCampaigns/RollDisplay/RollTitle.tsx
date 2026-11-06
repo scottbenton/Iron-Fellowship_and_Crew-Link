@@ -4,10 +4,12 @@ export interface RollTitleProps {
   overline?: string;
   title: string;
   isExpanded: boolean;
+  // Width kept clear for the buttons in the card's top corner.
+  reservedSpace: number;
 }
 
 export function RollTitle(props: RollTitleProps) {
-  const { isExpanded, title, overline } = props;
+  const { isExpanded, title, overline, reservedSpace } = props;
 
   return (
     <Box
@@ -35,9 +37,9 @@ export function RollTitle(props: RollTitleProps) {
           {title}
         </Typography>
       </div>
-      {isExpanded && (
+      {reservedSpace > 0 && (
         // Holds action space
-        <Box height={40 - 16} width={80 - 16} />
+        <Box height={40 - 16} width={reservedSpace - 16} />
       )}
     </Box>
   );

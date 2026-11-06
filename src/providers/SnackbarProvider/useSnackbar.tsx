@@ -14,12 +14,14 @@ export function createSuccessSnackbar(message: string) {
 export function createWarningSnackbar(message: string) {
   enqueueSnackbar(message, {
     variant: "warning",
+    persist: true,
   });
 }
 
 export function createErrorSnackbar(message: string) {
   enqueueSnackbar(message, {
     variant: "error",
+    persist: true,
   });
 }
 

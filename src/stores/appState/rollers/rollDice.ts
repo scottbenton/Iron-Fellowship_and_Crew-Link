@@ -9,6 +9,14 @@ export interface DiceGroup {
 // The dice settle in about 1.5 seconds. Well past that, something is wrong.
 const DICE_TIMEOUT_MS = 6000;
 
+// Once the 3D dice have failed or stalled, later rolls skip them for the rest
+// of the session, so a result is never held up by that wait twice.
+let diceUnavailable = false;
+
+export function markDiceUnavailable() {
+  diceUnavailable = true;
+}
+
 function rollWithoutAnimation(groups: DiceGroup[]): number[] {
   return groups.flatMap((group) =>
     Array.from(
@@ -29,14 +37,20 @@ export async function rollDice(
   groups: DiceGroup[],
   animate: boolean
 ): Promise<number[]> {
-  if (!animate) {
+  if (!animate || diceUnavailable) {
     return rollWithoutAnimation(groups);
   }
 
   let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
     Dice.clear().show();
-    setTimeout(() => Dice.hide("fade-out"), 100);
+    setTimeout(() => {
+      try {
+        Dice.hide("fade-out");
+      } catch {
+        // Only the animation is lost.
+      }
+    }, 100);
 
     const results: { value: number }[] = await Promise.race([
       Dice.roll(groups),
@@ -55,6 +69,7 @@ export async function rollDice(
     }
     return values;
   } catch {
+    markDiceUnavailable();
     try {
       Dice.clear();
     } catch {

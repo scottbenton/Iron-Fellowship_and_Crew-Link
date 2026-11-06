@@ -56,19 +56,21 @@ export async function rollOracle(
   let result3: string | undefined = undefined;
 
   if (oracle.oracle_type === "table_shared_rolls") {
+    // One column at a time, since each roll waits for its dice. (Mapping to
+    // promises and joining them gave "[object Promise]" as the result.)
     const tmpRolls: number[] = [];
-    resultString = Object.values(oracle.contents ?? {})
-      .sort((c1, c2) => c1.name.localeCompare(c2.name))
-      .map(async (col) => {
-        const rollResult = await rollOracleColumn(col, theme, hide3dDice);
-        if (!rollResult) {
-          return "";
-        } else {
-          tmpRolls.push(rollResult.roll);
-          return `* ${col.name}: ${rollResult.result.text}`;
-        }
-      })
-      .join("\n");
+    const lines: string[] = [];
+    const columns = Object.values(oracle.contents ?? {}).sort((c1, c2) =>
+      c1.name.localeCompare(c2.name)
+    );
+    for (const col of columns) {
+      const rollResult = await rollOracleColumn(col, theme, hide3dDice);
+      if (rollResult) {
+        tmpRolls.push(rollResult.roll);
+        lines.push(`* ${col.name}: ${rollResult.result.text}`);
+      }
+    }
+    resultString = lines.join("\n");
     rolls = tmpRolls;
   } else {
     const rollResult = await rollOracleColumn(oracle, theme, hide3dDice);
