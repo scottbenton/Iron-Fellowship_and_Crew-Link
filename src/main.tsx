@@ -8,7 +8,9 @@ import "./polyfills";
 import "@fontsource-variable/rubik";
 import "@fontsource/bebas-neue";
 import { Dice } from "components/shared/Dice";
+import { installStaleChunkReload } from "lib/staleChunkReload.lib";
 
+installStaleChunkReload();
 Dice.init();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
