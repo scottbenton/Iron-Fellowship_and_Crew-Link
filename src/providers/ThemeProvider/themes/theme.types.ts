@@ -30,6 +30,11 @@ export interface ThemeConfig {
 }
 
 export interface ThemeTypeConfig {
+  /**
+   * Replaces `palette.primary` in this mode. Light mode uses it where the
+   * theme colour is too light to read as text or icons on white (WCAG 4.5:1).
+   */
+  primary?: PaletteColorOptions;
   darkGrey: PaletteColorOptions;
   background: {
     paper: string;

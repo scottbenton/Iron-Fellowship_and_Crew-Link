@@ -1,4 +1,4 @@
-import { Theme, createTheme } from "@mui/material";
+import { PaletteColorOptions, Theme, createTheme } from "@mui/material";
 import { sunsetTheme } from "./sunsetTheme";
 import { hinterlandsTheme } from "./hinterlandsTheme";
 import { sharedStatusColors, baseFontFamilies } from "./constants";
@@ -14,6 +14,13 @@ export const themes: Record<Themes, ThemeConfig> = {
   [Themes.Myriad]: myriadTheme,
 };
 
+export function getThemePrimary(
+  config: ThemeConfig,
+  type: ThemeType
+): PaletteColorOptions {
+  return config.configs[type].primary ?? config.palette.primary;
+}
+
 export function getTheme(theme: Themes, type: ThemeType): Theme {
   let config = themes[theme];
   if (!config) {
@@ -22,7 +29,7 @@ export function getTheme(theme: Themes, type: ThemeType): Theme {
   return createTheme({
     palette: {
       mode: type === ThemeType.Light ? "light" : "dark",
-      primary: config.palette.primary,
+      primary: getThemePrimary(config, type),
       secondary: green,
       darkGrey: config.configs[type].darkGrey,
       background: {
