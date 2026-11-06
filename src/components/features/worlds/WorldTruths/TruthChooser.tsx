@@ -127,7 +127,9 @@ export function TruthChooser(props: TruthChooserProps) {
         >
           <Stack spacing={2}>
             <Box display={"flex"} justifyContent={"space-between"}>
-              <Typography variant={"h6"}>Custom Truth</Typography>
+              <Typography variant={"h6"} component={"p"}>
+                Custom Truth
+              </Typography>
               {selectedOptionIndex === CUSTOM_TRUTH_INDEX && (
                 <CheckIcon color={"primary"} />
               )}

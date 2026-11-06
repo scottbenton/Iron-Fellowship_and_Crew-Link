@@ -30,6 +30,7 @@ export function AuthPageHeading(props: AuthPageHeadingProps) {
         <Typography
           ml={1}
           variant={"h4"}
+          component={"h1"}
           fontFamily={(theme) => theme.fontFamilyTitle}
           color={"textSecondary"}
         >

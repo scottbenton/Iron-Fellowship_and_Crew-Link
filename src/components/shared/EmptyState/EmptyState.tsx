@@ -9,10 +9,23 @@ export interface EmptyStateProps {
   callToAction?: React.ReactNode;
   sx?: SxProps;
   leftAlign?: boolean;
+  /**
+   * Makes the title the page's h1, for a page that shows nothing but this
+   * state (not found, errors). Otherwise the title is plain text.
+   */
+  isPageTitle?: boolean;
 }
 
 export function EmptyState(props: EmptyStateProps) {
-  const { showImage, title, message, callToAction, leftAlign, sx } = props;
+  const {
+    showImage,
+    title,
+    message,
+    callToAction,
+    leftAlign,
+    isPageTitle,
+    sx,
+  } = props;
 
   const emptyStateImage = useThemeValue("emptyStateImage") as ReactNode;
 
@@ -32,7 +45,12 @@ export function EmptyState(props: EmptyStateProps) {
         alignItems={"center"}
       >
         {title && (
-          <Typography variant={"h4"} mt={2} textAlign={"center"}>
+          <Typography
+            variant={"h4"}
+            component={isPageTitle ? "h1" : "p"}
+            mt={2}
+            textAlign={"center"}
+          >
             {title}
           </Typography>
         )}

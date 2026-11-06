@@ -43,6 +43,7 @@ export function AssetOptions(props: AssetOptionsProps) {
       <SectionHeading
         floating
         label={"Options"}
+        headingComponent={"h3"}
         action={
           <Button
             variant={"outlined"}

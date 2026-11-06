@@ -201,6 +201,23 @@ export function LocationMap(props: LocationMapProps) {
     }
   };
 
+  const getHexLocationIds = (row: number, col: number): string[] => {
+    const hex = map[row]?.[col];
+    return hex?.type === MapEntryType.Location
+      ? getValidLocations(locationId, locationMap, hex.locationIds)
+      : [];
+  };
+
+  // The name shown on a hex holding these locations, if it holds any.
+  const getHexLocationName = (locationIds: string[]): string | undefined => {
+    if (locationIds.length === 1) {
+      return locationMap[locationIds[0]]?.name;
+    } else if (locationIds.length > 1) {
+      return `${locationIds.length} Locations`;
+    }
+    return undefined;
+  };
+
   const handleFillBackground = () => {
     if (mapTool?.type === MapTools.BackgroundPaint) {
       const color = mapTool.color;
@@ -252,7 +269,7 @@ export function LocationMap(props: LocationMapProps) {
             fill: theme.palette.grey[900],
             fillOpacity: "0%",
             color: theme.palette.grey[600],
-            "&:hover": {
+            "&:hover, &:focus-visible": {
               fill: theme.palette.grey[200],
               fillOpacity: "20%",
             },
@@ -353,6 +370,14 @@ export function LocationMap(props: LocationMapProps) {
                     ? mapEntry.locationIds
                     : [];
 
+                // With no tool chosen, a hex holding locations opens them, so
+                // it is a button for keyboards and screen readers. Painting
+                // with the tools stays pointer only; the Sub-Locations tab
+                // lists the same locations.
+                const hexLocationIds = !mapTool
+                  ? getHexLocationIds(row, col)
+                  : [];
+
                 return (
                   <LocationHexagon
                     locationId={locationId}
@@ -363,6 +388,8 @@ export function LocationMap(props: LocationMapProps) {
                     locationMap={locationMap}
                     mapEntry={mapEntry ?? undefined}
                     pathConnections={pathConnections}
+                    buttonLabel={getHexLocationName(hexLocationIds)}
+                    opensMenu={hexLocationIds.length > 1}
                     onClick={(cell) => {
                       if (
                         !mapTool ||
@@ -405,27 +432,12 @@ export function LocationMap(props: LocationMapProps) {
                 const y: number =
                   row * verticalSpacing + hexSize + firstRowOffset;
 
-                let locationIds: string[] = [];
-                const hex = map[row]?.[col];
-                if (hex?.type === MapEntryType.Location) {
-                  locationIds = getValidLocations(
-                    locationId,
-                    locationMap,
-                    hex.locationIds
-                  );
-                }
-
-                let name: string | undefined = undefined;
-
-                if (locationIds.length === 1) {
-                  name = locationMap[locationIds[0]]?.name;
-                } else if (locationIds.length > 1) {
-                  name = `${locationIds.length} Locations`;
-                }
+                const name = getHexLocationName(getHexLocationIds(row, col));
 
                 if (name) {
                   return (
-                    <g key={`${x}-${y}-group`}>
+                    // The hex button already reads the name out.
+                    <g key={`${x}-${y}-group`} aria-hidden={!mapTool}>
                       <text
                         key={`${x}-${y}`}
                         x={x}

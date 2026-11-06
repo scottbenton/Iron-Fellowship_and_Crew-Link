@@ -13,7 +13,7 @@ import { CharacterList } from "components/features/characters/CharacterList";
 import { Link } from "react-router-dom";
 import { constructCharacterCreateInCampaignUrl } from "pages/Character/routes";
 import { useStore } from "stores/store";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 export interface AddCharacterDialogProps {
   open: boolean;
@@ -31,6 +31,9 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
     (store) => store.campaigns.currentCampaign.addCharacter
   );
   const [addCharacterLoading, setAddCharacterLoading] = useState(false);
+  // Names the dialog with its title alone, not the close button beside it.
+  const titleId = useId();
+  const titleBarId = useId();
 
   const addCharacter = (characterId: string) => {
     setAddCharacterLoading(true);
@@ -41,13 +44,17 @@ export function AddCharacterDialog(props: AddCharacterDialogProps) {
   };
 
   return (
-    <Dialog open={open} onClose={() => handleClose()}>
+    <Dialog open={open} onClose={() => handleClose()} aria-labelledby={titleId}>
       <DialogTitle
+        id={titleBarId}
+        component={"div"}
         display={"flex"}
         justifyContent={"space-between"}
         alignItems={"center"}
       >
-        <span>Add Character</span>
+        <Typography component={"h2"} variant={"inherit"} id={titleId}>
+          Add Character
+        </Typography>
         <IconButton
           aria-label={"Close Dialog"}
           onClick={() => handleClose()}

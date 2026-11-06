@@ -64,6 +64,7 @@ export function CharacterHeader() {
           <Box display={"flex"} flexDirection={"column"} marginLeft={1}>
             <Typography
               variant={"h4"}
+              component={"h1"}
               lineHeight={1}
               color={"white"}
               fontFamily={(theme) => theme.fontFamilyTitle}

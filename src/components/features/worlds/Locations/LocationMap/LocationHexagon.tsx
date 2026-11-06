@@ -8,6 +8,7 @@ import { IconColors } from "types/Icon.type";
 import { MapEntry, MapEntryType, MapStrokeColors } from "types/Locations.type";
 import { backgroundColors } from "./backgroundColors";
 import { getValidLocations } from "./checkIsLocationCell";
+import { KeyboardEvent } from "react";
 
 const mapStrokeColors: Record<MapStrokeColors, string> = {
   [MapStrokeColors.Light]: "#ccc",
@@ -35,6 +36,10 @@ export interface LocationHexagonProps {
     bottomRight?: boolean;
   };
   onClick?: (ref: SVGPolygonElement) => void;
+  /** Makes the hex a focusable button with this name. */
+  buttonLabel?: string;
+  /** The button opens a menu (a hex holding several locations). */
+  opensMenu?: boolean;
   onMouseDown?: (ref: SVGPolygonElement) => void;
   onMouseUp?: (ref: SVGPolygonElement) => void;
   onMouseEnter?: (ref: SVGPolygonElement) => void;
@@ -52,6 +57,8 @@ export function LocationHexagon(props: LocationHexagonProps) {
     pathConnections,
     hasBackgroundImage,
     onClick,
+    buttonLabel,
+    opensMenu,
     onMouseDown,
     onMouseEnter,
     onMouseUp,
@@ -201,6 +208,20 @@ export function LocationHexagon(props: LocationHexagonProps) {
         }
         fill={"transparent"}
         strokeWidth="1"
+        {...(buttonLabel
+          ? {
+              role: "button",
+              tabIndex: 0,
+              "aria-label": buttonLabel,
+              "aria-haspopup": opensMenu ? "menu" : undefined,
+              onKeyDown: (evt: KeyboardEvent<SVGPolygonElement>) => {
+                if (evt.key === "Enter" || evt.key === " ") {
+                  evt.preventDefault();
+                  onClick?.(evt.currentTarget);
+                }
+              },
+            }
+          : {})}
         onClick={onClick ? (evt) => onClick(evt.currentTarget) : undefined}
         onMouseDown={
           onMouseDown ? (evt) => onMouseDown(evt.currentTarget) : undefined

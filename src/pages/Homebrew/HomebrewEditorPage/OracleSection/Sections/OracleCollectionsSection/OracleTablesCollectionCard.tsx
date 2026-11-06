@@ -33,7 +33,9 @@ export function OracleTablesCollectionCard(
           <Typography variant={"overline"} color={"textSecondary"}>
             Collection
           </Typography>
-          <Typography variant={"h6"}>{oracle.label}</Typography>
+          <Typography variant={"h6"} component={"span"} display={"block"}>
+            {oracle.label}
+          </Typography>
           {oracle.replacesId && (
             <Typography color={"textSecondary"}>
               Replaces &quot;

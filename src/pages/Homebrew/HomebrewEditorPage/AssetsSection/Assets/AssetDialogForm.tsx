@@ -168,7 +168,11 @@ export function AssetDialogForm(props: AssetDialogFormProps) {
               }}
             >
               <Stack spacing={2} sx={{ flexGrow: 1 }}>
-                <SectionHeading floating label={"Base Asset Info"} />
+                <SectionHeading
+                  floating
+                  label={"Base Asset Info"}
+                  headingComponent={"h3"}
+                />
                 <TextField
                   disabled={disabled}
                   label={"Asset Label"}

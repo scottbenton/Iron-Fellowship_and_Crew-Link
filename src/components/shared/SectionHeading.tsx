@@ -7,10 +7,19 @@ export interface SectionHeadingProps {
   breakContainer?: boolean;
   sx?: SxProps<Theme>;
   floating?: boolean;
+  /** The heading element. Sections of a page are h2; nest deeper ones. */
+  headingComponent?: "h2" | "h3" | "h4";
 }
 
 export function SectionHeading(props: SectionHeadingProps) {
-  const { label, action, breakContainer, floating, sx } = props;
+  const {
+    label,
+    action,
+    breakContainer,
+    floating,
+    sx,
+    headingComponent = "h2",
+  } = props;
 
   return (
     <Box
@@ -45,6 +54,7 @@ export function SectionHeading(props: SectionHeadingProps) {
     >
       <Typography
         variant={"h6"}
+        component={headingComponent}
         fontFamily={(theme) => theme.fontFamilyTitle}
         color={(theme) => theme.palette.text.secondary}
       >

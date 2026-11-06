@@ -79,9 +79,11 @@ export function WorldSheetPage() {
   if (!world || !worldId) {
     return (
       <>
+        <Head title={"World not Found"} />
         <PageHeader />
         <PageContent isPaper>
           <EmptyState
+            isPageTitle
             showImage
             title={"World not Found"}
             message={

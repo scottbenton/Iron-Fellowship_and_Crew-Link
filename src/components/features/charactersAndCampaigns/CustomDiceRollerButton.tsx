@@ -91,7 +91,12 @@ export function CustomDiceRollerButton() {
         transformOrigin={{ vertical: "bottom", horizontal: "right" }}
         slotProps={{ paper: { sx: { p: 2, minWidth: 300, maxWidth: 340 } } }}
       >
-        <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+        <Typography
+          variant="subtitle1"
+          component="p"
+          fontWeight="bold"
+          gutterBottom
+        >
           Custom Dice Roll
         </Typography>
 

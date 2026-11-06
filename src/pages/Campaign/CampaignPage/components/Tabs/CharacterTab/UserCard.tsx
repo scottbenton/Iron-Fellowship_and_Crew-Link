@@ -32,7 +32,7 @@ export function UserCard(props: UserCardProps) {
       <Box display={"flex"} alignItems={"center"} p={2}>
         <UserAvatar uid={uid} />
         <Box ml={1}>
-          <Typography variant={"h6"} lineHeight={1}>
+          <Typography variant={"h6"} component={"h3"} lineHeight={1}>
             {user.doc?.displayName}
           </Typography>
           {campaignType === CampaignType.Guided && gmIds.includes(uid) && (

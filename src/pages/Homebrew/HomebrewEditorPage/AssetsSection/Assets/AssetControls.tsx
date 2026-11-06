@@ -44,6 +44,7 @@ export function AssetControls(props: AssetControlsProps) {
       <SectionHeading
         floating
         label={"Controls"}
+        headingComponent={"h3"}
         action={
           <Button
             variant={"outlined"}

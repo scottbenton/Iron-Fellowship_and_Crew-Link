@@ -56,6 +56,7 @@ export function CreateCampaignDialog(props: CreateCampaignDialogProps) {
         />
         <Typography
           variant={"subtitle1"}
+          component={"p"}
           display={"block"}
           sx={{ mt: 2, mb: 1 }}
         >

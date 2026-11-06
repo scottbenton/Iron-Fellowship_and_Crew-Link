@@ -20,6 +20,7 @@ export function AssetNameAndDescription(props: AssetNameAndDescriptionProps) {
       >
         <Typography
           variant={"h5"}
+          component={"h3"}
           fontFamily={(theme) => theme.fontFamilyTitle}
         >
           {asset.name}

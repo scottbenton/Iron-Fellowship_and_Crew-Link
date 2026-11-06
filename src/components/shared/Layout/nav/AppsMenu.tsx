@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import AppsIcon from "@mui/icons-material/Apps";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useGameSystem } from "hooks/useGameSystem";
 import { GAME_SYSTEMS } from "types/GameSystems.type";
 import { useAppName } from "hooks/useAppName";
@@ -64,6 +64,8 @@ export function AppsMenu() {
 
   const [appsMenuOpen, setAppsMenuOpen] = useState(false);
   const appsMenuParent = useRef<HTMLButtonElement>(null);
+  // The menu is in both the top bar and the nav rail, so its id is unique.
+  const appsMenuId = useId();
 
   const isMobile = useIsMobile();
 
@@ -76,7 +78,7 @@ export function AppsMenu() {
         <IconButton
           aria-haspopup={"menu"}
           aria-expanded={appsMenuOpen}
-          aria-controls={appsMenuOpen ? "apps-menu" : undefined}
+          aria-controls={appsMenuOpen ? appsMenuId : undefined}
           color={"inherit"}
           ref={appsMenuParent}
           onClick={() => setAppsMenuOpen(true)}
@@ -85,7 +87,7 @@ export function AppsMenu() {
         </IconButton>
       </Tooltip>
       <Menu
-        id={"apps-menu"}
+        id={appsMenuId}
         open={appsMenuOpen}
         onClose={() => setAppsMenuOpen(false)}
         anchorEl={appsMenuParent.current}

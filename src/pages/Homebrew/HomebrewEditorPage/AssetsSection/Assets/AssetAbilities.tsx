@@ -40,6 +40,7 @@ export function AssetAbilities(props: AssetAbilitiesProps) {
       <SectionHeading
         floating
         label={"Abilities"}
+        headingComponent={"h3"}
         action={
           <Button
             variant={"outlined"}

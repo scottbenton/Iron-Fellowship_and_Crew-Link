@@ -55,6 +55,7 @@ export function AssetControlCounter(props: AssetControlCounterProps) {
       >
         <Typography
           variant={"subtitle1"}
+          component={"p"}
           fontFamily={(theme) => theme.fontFamilyTitle}
           sx={(theme) => ({
             bgcolor: (theme) =>

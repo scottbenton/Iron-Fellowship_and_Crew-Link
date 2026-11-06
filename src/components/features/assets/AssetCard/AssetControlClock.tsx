@@ -15,6 +15,7 @@ export function AssetControlClock(props: AssetControlClockProps) {
     <Box>
       <Typography
         variant={"subtitle1"}
+        component={"p"}
         fontFamily={(theme) => theme.fontFamilyTitle}
         color={"textSecondary"}
       >

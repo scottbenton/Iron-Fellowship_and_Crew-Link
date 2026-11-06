@@ -14,9 +14,13 @@ import { TopNav } from "./nav/TopNav";
 import { LayoutPathListener } from "./LayoutPathListener";
 import { UpdateDialog } from "./UpdateDialog";
 import { useThemeValue } from "providers/ThemeProvider/useThemeValue";
+import { useRef } from "react";
+import { useFocusMainOnNavigation } from "hooks/useFocusMainOnNavigation";
 
 export function Layout() {
   useSyncFeatureFlags();
+  const mainRef = useRef<HTMLElement>(null);
+  useFocusMainOnNavigation(mainRef);
   const state = useStore((store) => store.auth.status);
 
   const userNameDialogOpen = useStore((store) => store.auth.userNameDialogOpen);
@@ -71,8 +75,12 @@ export function Layout() {
             flexGrow: 1,
             overflowY: { xs: "unset", sm: "auto" },
             "&:focus": { outline: "none" },
+            // The page heading is focused after navigating, for screen
+            // readers. It is not a control, so it shows no focus ring.
+            "& h1[tabindex='-1']:focus": { outline: "none" },
           }}
           component={"main"}
+          ref={mainRef}
           id={"main-content"}
           // Lets Skip to Content move focus here, not just scroll, in Safari.
           tabIndex={-1}

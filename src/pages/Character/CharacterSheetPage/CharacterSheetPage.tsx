@@ -46,9 +46,11 @@ export function CharacterSheetPage() {
   if (!isCharacterLoaded) {
     return (
       <>
+        <Head title={"Character not Found"} />
         <PageHeader />
         <PageContent isPaper>
           <EmptyState
+            isPageTitle
             title={"Character not Found"}
             message={"Please try again from the character selection page"}
             showImage

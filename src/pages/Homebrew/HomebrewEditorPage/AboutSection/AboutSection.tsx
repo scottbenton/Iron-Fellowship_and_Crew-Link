@@ -169,7 +169,9 @@ export function AboutSection(props: AboutSectionProps) {
         )}
         <Grid item xs={12} sm={6}>
           <Card variant={"outlined"} sx={{ p: 2 }}>
-            <Typography variant={"h6"}>Editors</Typography>
+            <Typography variant={"h6"} component={"h3"}>
+              Editors
+            </Typography>
             {isEditor && (
               <>
                 <Typography color={"textSecondary"} variant={"body2"}>
@@ -199,7 +201,9 @@ export function AboutSection(props: AboutSectionProps) {
         {isEditor && (
           <Grid item xs={12} sm={6}>
             <Card variant={"outlined"} sx={{ p: 2 }}>
-              <Typography variant={"h6"}>Viewers</Typography>
+              <Typography variant={"h6"} component={"h3"}>
+                Viewers
+              </Typography>
               <Typography color={"textSecondary"} variant={"body2"}>
                 Viewers will be able to add this content to their own homebrew
                 libraries to use for characters and campaigns, but will not be

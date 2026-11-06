@@ -57,9 +57,11 @@ export function CampaignPage() {
   if (!isCampaignLoaded) {
     return (
       <>
+        <Head title={"Campaign not Found"} />
         <PageHeader />
         <PageContent isPaper>
           <EmptyState
+            isPageTitle
             title={"Campaign not Found"}
             message={"Please try again from the campaign selection page"}
             showImage

@@ -54,7 +54,7 @@ export function WorldTruths(props: WorldTruthsProps) {
         <Stack spacing={4} sx={{ mt: 2 }}>
           {Object.keys(worldTruths).map((truthKey, index) => (
             <Box key={index}>
-              <Typography variant={"h5"} sx={{ mb: 1 }}>
+              <Typography variant={"h5"} component={"h3"} sx={{ mb: 1 }}>
                 {index + 1 + ". " + worldTruths[truthKey].name}
               </Typography>
               {worldTruths[truthKey].your_character && (

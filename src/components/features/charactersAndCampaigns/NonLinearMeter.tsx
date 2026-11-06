@@ -81,6 +81,7 @@ export function NonLinearMeter(props: NonLinearMeterProps) {
         <Typography
           fontFamily={(theme) => theme.fontFamilyTitle}
           variant={"subtitle1"}
+          component={"p"}
           id={labelId}
         >
           {meter.label}

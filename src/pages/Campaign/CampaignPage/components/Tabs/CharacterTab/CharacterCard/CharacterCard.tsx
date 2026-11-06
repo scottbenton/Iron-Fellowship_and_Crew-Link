@@ -94,11 +94,17 @@ export function CharacterCard(props: CharacterCardProps) {
             <Box display={"flex"} flexDirection={"column"} ml={2}>
               <Typography
                 variant={"h6"}
+                component={"h3"}
                 fontFamily={(theme) => theme.fontFamilyTitle}
               >
                 {character.name}
               </Typography>
-              <Typography variant={"subtitle1"} mt={-1} color={"textSecondary"}>
+              <Typography
+                variant={"subtitle1"}
+                component={"p"}
+                mt={-1}
+                color={"textSecondary"}
+              >
                 {user ? user.displayName : "Loading..."}
               </Typography>
             </Box>

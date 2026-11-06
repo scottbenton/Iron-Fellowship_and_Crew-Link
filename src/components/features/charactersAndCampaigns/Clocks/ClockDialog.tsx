@@ -163,7 +163,7 @@ export function ClockDialog(props: ClockDialogProps) {
                     <Typography variant={"h5"} component={"span"}>
                       {segmentOption}
                     </Typography>
-                    <Typography variant={"subtitle1"} ml={1}>
+                    <Typography variant={"subtitle1"} component={"span"} ml={1}>
                       segments
                     </Typography>
                   </Box>
