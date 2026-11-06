@@ -46,33 +46,25 @@ export function reloadForStaleChunk(deps: StaleChunkReloadDeps): boolean {
 }
 
 /**
- * Loads the latest build. When the chunk was for a route being navigated to,
- * React Router hasn't pushed that URL yet (it pushes once the route has
- * loaded), so go to the destination rather than reloading the current page.
+ * @param afterPendingNavigation Runs the callback once any navigation in
+ * progress has finished. React Router pushes a navigation's URL only after its
+ * lazy route has loaded, so reloading straight away would reload the page the
+ * user was leaving, and going to the new URL would add a second history entry
+ * once the router pushes it.
  */
-export function goToLatestBuild(
-  navigationTarget: string | null,
-  location: Pick<Location, "assign" | "reload">
-) {
-  if (navigationTarget) {
-    location.assign(navigationTarget);
-  } else {
-    location.reload();
-  }
-}
-
-/** @param getNavigationTarget The href of the navigation in progress, if any. */
 export function installStaleChunkReload(
-  getNavigationTarget: () => string | null
+  afterPendingNavigation: (callback: () => void) => void
 ) {
   window.addEventListener("vite:preloadError", (event) => {
     const reloaded = reloadForStaleChunk({
       storage: window.sessionStorage,
       now: () => Date.now(),
-      reload: () => goToLatestBuild(getNavigationTarget(), window.location),
+      reload: () => afterPendingNavigation(() => window.location.reload()),
     });
     if (reloaded) {
-      // Keep the failed import from surfacing an error page while the page reloads.
+      // The failed import then resolves to nothing: the router finishes the
+      // navigation with an empty page, which the reload replaces, rather than
+      // showing an error page.
       event.preventDefault();
     }
   });

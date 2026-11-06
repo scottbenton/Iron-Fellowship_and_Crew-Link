@@ -24,26 +24,15 @@ export function ErrorRoute() {
       errorTrace = error.stack;
     }
 
-    // The App has updated in the background, lets grab the new versions of the pages by refreshing
-    if (
-      errorMessage?.includes("Failed to fetch dynamically imported module") ||
-      errorMessage?.includes(
-        "'text/html' is not a valid JavaScript MIME type."
-      ) ||
-      errorMessage?.includes("Importing a module script failed.") ||
-      errorMessage
-        ?.toLocaleLowerCase()
-        .includes("error loading dynamically imported module")
-    ) {
-      window.location.reload();
-    } else {
-      setErrorMessage(errorMessage);
-      reportPageError(
-        errorMessage ?? "Could not extract error message.",
-        errorTrace,
-        location.pathname
-      );
-    }
+    // A chunk missing after a deploy is handled by installStaleChunkReload,
+    // which loads the new build before an error reaches this page. Reloading
+    // here as well would loop when that guard has deliberately let it through.
+    setErrorMessage(errorMessage);
+    reportPageError(
+      errorMessage ?? "Could not extract error message.",
+      errorTrace,
+      location.pathname
+    );
   }, [error]);
 
   return (

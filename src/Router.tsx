@@ -151,9 +151,17 @@ const router = createBrowserRouter(
   )
 );
 
-installStaleChunkReload(() => {
-  const pendingLocation = router.state.navigation.location;
-  return pendingLocation ? router.createHref(pendingLocation) : null;
+installStaleChunkReload((callback) => {
+  if (router.state.navigation.state === "idle") {
+    callback();
+    return;
+  }
+  const unsubscribe = router.subscribe((state) => {
+    if (state.navigation.state === "idle") {
+      unsubscribe();
+      callback();
+    }
+  });
 });
 
 export function Router() {
