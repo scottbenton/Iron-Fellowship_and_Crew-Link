@@ -92,11 +92,10 @@ export function Clock(props: ClockProps) {
         result?.result.toLocaleLowerCase() === "yes" &&
         clock.value < clock.segments
       ) {
-        if (result.match) {
-          onValueChange(clock.value + 2);
-        } else {
-          onValueChange(clock.value + 1);
-        }
+        // A match advances two segments, but never past a full clock.
+        onValueChange(
+          Math.min(clock.segments, clock.value + (result.match ? 2 : 1))
+        );
       }
     }
   };

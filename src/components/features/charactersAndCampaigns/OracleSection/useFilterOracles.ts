@@ -2,6 +2,7 @@ import { Datasworn } from "@datasworn-community/core";
 import { useMemo, useState } from "react";
 import { useStore } from "stores/store";
 import { License } from "types/Datasworn";
+import { useAnnounceSearchResults } from "hooks/useAnnounceSearchResults";
 
 export enum CATEGORY_VISIBILITY {
   HIDDEN,
@@ -20,6 +21,80 @@ export type CombinedCollectionType =
   | Datasworn.OracleCollection
   | IPinnedOracleCollection;
 
+const SHARED_TEXT_TYPES = new Set([
+  "table_shared_text",
+  "table_shared_text2",
+  "table_shared_text3",
+]);
+
+/**
+ * How many oracles the filtered list shows, counted the way OracleCollection
+ * and OracleListItem draw them: a shared-text collection is one item, and
+ * oracles hidden by the campaign are left out.
+ */
+export function countVisibleOracles(
+  rootCollectionIds: string[],
+  collections: Record<string, CombinedCollectionType>,
+  oracles: Record<string, Datasworn.OracleRollable>,
+  visibleCollections: Record<string, CATEGORY_VISIBILITY>,
+  visibleOracles: Record<string, boolean>,
+  enhancesCollections: Record<string, string[]>,
+  hiddenIds: string[] = []
+): number {
+  const countCollection = (collectionId: string): number => {
+    const collection = collections[collectionId];
+    const visibility = visibleCollections[collectionId];
+    if (
+      !collection ||
+      visibility === CATEGORY_VISIBILITY.HIDDEN ||
+      hiddenIds.includes(collectionId)
+    ) {
+      return 0;
+    }
+    if (SHARED_TEXT_TYPES.has(collection.oracle_type)) {
+      return 1;
+    }
+
+    const oracleIds = Object.values(collection.contents ?? {}).map(
+      (oracle) => oracle._id
+    );
+    const subCollectionIds =
+      collection.oracle_type === "tables"
+        ? Object.values(collection.collections ?? {}).map((sub) => sub._id)
+        : [];
+    (enhancesCollections[collectionId] ?? []).forEach((enhancingId) => {
+      const enhancing = collections[enhancingId];
+      if (enhancing) {
+        oracleIds.push(
+          ...Object.values(enhancing.contents ?? {}).map((oracle) => oracle._id)
+        );
+        if (enhancing.oracle_type === "tables") {
+          subCollectionIds.push(
+            ...Object.values(enhancing.collections ?? {}).map((sub) => sub._id)
+          );
+        }
+      }
+    });
+
+    const shownOracles = oracleIds.filter(
+      (oracleId) =>
+        !!oracles[oracleId] &&
+        !hiddenIds.includes(oracleId) &&
+        (visibility === CATEGORY_VISIBILITY.ALL || visibleOracles[oracleId])
+    ).length;
+
+    return (
+      shownOracles +
+      subCollectionIds.reduce((total, id) => total + countCollection(id), 0)
+    );
+  };
+
+  return rootCollectionIds.reduce(
+    (total, collectionId) => total + countCollection(collectionId),
+    0
+  );
+}
+
 export function useFilterOracles() {
   const [search, setSearch] = useState("");
   const oracleCollectionsWithoutPinnedOracles = useStore(
@@ -31,6 +106,9 @@ export function useFilterOracles() {
   );
 
   const pinnedOracles = useStore((store) => store.settings.pinnedOraclesIds);
+  const hiddenOracleIds = useStore(
+    (store) => store.campaigns.currentCampaign.currentCampaign?.hiddenOracleIds
+  );
 
   const { oracleCollections, rootOracles } = useMemo<{
     oracleCollections: Record<string, CombinedCollectionType>;
@@ -173,6 +251,29 @@ export function useFilterOracles() {
       enhancesCollections,
     };
   }, [oracleCollections, search]);
+
+  const resultCount = useMemo(
+    () =>
+      countVisibleOracles(
+        rootOracles,
+        oracleCollections,
+        oracles,
+        visibleOracleCollectionIds,
+        visibleOracleIds,
+        enhancesCollections,
+        hiddenOracleIds
+      ),
+    [
+      rootOracles,
+      oracleCollections,
+      oracles,
+      visibleOracleCollectionIds,
+      visibleOracleIds,
+      enhancesCollections,
+      hiddenOracleIds,
+    ]
+  );
+  useAnnounceSearchResults(search, resultCount, "oracle", "oracles");
 
   return {
     oracleCollections,

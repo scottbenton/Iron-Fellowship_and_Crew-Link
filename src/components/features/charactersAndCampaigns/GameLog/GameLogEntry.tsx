@@ -60,6 +60,11 @@ export function GameLogEntry(props: GameLogEntryProps) {
     });
   };
 
+  const timeString = getLogTimeString(log.timestamp);
+
+  // Screen readers hear the entry as one piece: who rolled, the roll, and
+  // when. The name and time drawn above and below the card are hidden from
+  // them so they are not read twice.
   return (
     <Box
       p={2}
@@ -67,14 +72,16 @@ export function GameLogEntry(props: GameLogEntryProps) {
       flexDirection={"column"}
       alignItems={isYourEntry ? "flex-end" : "flex-start"}
     >
-      <Typography>{rollerName}</Typography>
+      <Typography aria-hidden>{rollerName}</Typography>
       <RollDisplay
         roll={log}
         isExpanded
+        descriptionPrefix={`${rollerName}:`}
+        descriptionSuffix={`${timeString}.`}
         actions={<NormalRollActions rollId={logId} roll={log} />}
       />
-      <Typography color={"textSecondary"} variant={"caption"}>
-        {getLogTimeString(log.timestamp)}
+      <Typography color={"textSecondary"} variant={"caption"} aria-hidden>
+        {timeString}
       </Typography>
     </Box>
   );

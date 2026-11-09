@@ -8,7 +8,9 @@ export function SnackbarProvider(props: PropsWithChildren) {
   return (
     <NotistackSnackbarProvider
       maxSnack={3}
-      autoHideDuration={5000}
+      // Long enough for a screen reader to finish reading the message and
+      // for someone to reach it. Errors and warnings stay until closed.
+      autoHideDuration={10000}
       anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
       preventDuplicate
       Components={{

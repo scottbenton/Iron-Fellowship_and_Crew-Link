@@ -1,10 +1,38 @@
+import { Datasworn } from "@datasworn-community/core";
 import { useMemo, useState } from "react";
 import { useStore } from "stores/store";
+import { useAnnounceSearchResults } from "hooks/useAnnounceSearchResults";
 
 export enum CATEGORY_VISIBILITY {
   HIDDEN,
   SOME,
   ALL,
+}
+
+/** How many moves the filtered list shows, counted the way MoveCategory draws them. */
+export function countVisibleMoves(
+  rootCategoryIds: string[],
+  categories: Record<string, Datasworn.MoveCategory>,
+  visibleCategories: Record<string, CATEGORY_VISIBILITY>,
+  visibleMoves: Record<string, boolean>
+): number {
+  return rootCategoryIds.reduce((total, categoryId) => {
+    const category = categories[categoryId];
+    const visibility = visibleCategories[categoryId];
+    if (!category || visibility === CATEGORY_VISIBILITY.HIDDEN) {
+      return total;
+    }
+    const moveIds = Object.values(category.contents ?? {}).map(
+      (move) => move._id
+    );
+    return (
+      total +
+      moveIds.filter(
+        (moveId) =>
+          visibility === CATEGORY_VISIBILITY.ALL || visibleMoves[moveId]
+      ).length
+    );
+  }, 0);
 }
 
 export function useFilterMoves() {
@@ -74,6 +102,18 @@ export function useFilterMoves() {
       isEmpty,
     };
   }, [moveCategories, search]);
+
+  const resultCount = useMemo(
+    () =>
+      countVisibleMoves(
+        rootMoveCategories,
+        moveCategories,
+        visibleMoveCategoryIds,
+        visibleMoveIds
+      ),
+    [rootMoveCategories, moveCategories, visibleMoveCategoryIds, visibleMoveIds]
+  );
+  useAnnounceSearchResults(search, resultCount, "move", "moves");
 
   return {
     moveCategories,
